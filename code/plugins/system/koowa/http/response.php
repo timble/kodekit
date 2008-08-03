@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: uri.php 281 2008-06-19 16:00:44Z laurens $
+ * @version     $Id$
  * @package     Koowa_Http
  * @subpackage  Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.

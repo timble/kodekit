@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: line.php 176 2008-03-30 19:46:02Z mjaz $
+ * @version     $Id$
  * @package     Koowa_Chart
  * @subpackage  Google
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.

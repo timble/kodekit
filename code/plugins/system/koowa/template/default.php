@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: abstract.php 152 2008-03-22 13:32:58Z jinx $
+ * @version		$Id$
  * @package		Koowa_View
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>

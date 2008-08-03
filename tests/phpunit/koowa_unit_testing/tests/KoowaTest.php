@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: KoowaTest.php 144 2008-03-21 16:04:13Z mjaz $
+ * @version		$Id$
  * @package		Koowa_Tests
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>

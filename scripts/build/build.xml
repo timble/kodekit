@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<!-- $Id: build.xml 305 2008-01-26 15:32:10Z mjaz $ -->
+<!-- $Id$ -->
 <project name="Koowa - Rapid Application Development Framework"
 	basedir="."
 	default="main">
 
 	<property
 		name="koowa_scm"
-		value="https://joomlatools.unfuddle.com/svn/joomlatools_koowa/releases/0.5/code"
+		value="https://joomlatools.unfuddle.com/svn/joomlatools_koowa/releases/0.6/code"
 		override="true" />
 
 	<property
@@ -23,7 +23,7 @@
 	<target name="main" description="Build Installable Packages">
 
 		<mkdir dir="${targetdir}" />
-		<delete file="${targetdir}/koowa_v0.5.2.tar.gz/" />
+		<delete file="${targetdir}/koowa_v0.6.tar.gz/" />
 
 		<phingcall target="clean" />
 
@@ -55,7 +55,7 @@
 		</copy>
 		
 		
-		<tar destfile="${targetdir}/koowa_v0.5.2.tar.gz" basedir="${targetdir}/pkg" compression="gzip"/>
+		<tar destfile="${targetdir}/koowa_v0.6.tar.gz" basedir="${targetdir}/pkg" compression="gzip"/>
 
 		<delete dir="${targetdir}/pkg/" includeemptydirs="true" />
 		<delete dir="${targetdir}/tmp/" includeemptydirs="true" />

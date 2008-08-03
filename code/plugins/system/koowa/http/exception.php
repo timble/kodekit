@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: exception.php 251 2008-06-14 10:06:53Z mjaz $
+ * @version     $Id$
  * @package     Koowa
  * @subpackage 	Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: reflection_vs_calluserfunc.php 308 2008-07-24 12:36:56Z mathias $
+ * @version     $Id$
  * @package     Koowa_Profiling
  * @subpackage  Reflection
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
