@@ -295,7 +295,7 @@ abstract class KModelAbstract extends KObject
      *
      * @return	string
      */
-    public function _getPrimaryKey() 
+    protected function _getPrimaryKey() 
     {
     	$name       = $this->getClassName();
         return $name['prefix'] .'_'. KInflector::singularize($name['suffix']) .'_id';
