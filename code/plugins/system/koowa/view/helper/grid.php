@@ -17,6 +17,24 @@
  */
 class KViewHelperGrid
 {
+
+	/**
+	 * Shows a true/false graphics
+	 * 
+	 * @author	Mathias Verraes <mathias@hoomlatools.org>
+	 *
+	 * @param	bool	Value
+	 * @param 	string	Image for true
+	 * @param 	string	Image for false
+	 * @param 	string 	Text for true
+	 * @param 	string	Text for false
+	 * @return 	string	Html img
+	 */
+	public static function boolean( $bool, $true_img = 'tick.png', $false_img = 'publish_x.png', $true_text = 'Yes', $false_text = 'No')
+	{
+		return '<img src="images/'. ($bool?$true_img:$false_img) .'" border="0" alt="'. JText::_($bool?$true_text:$false_text) .'" />';
+	}
+	
 	/**
 	 * @param	string	The link title
 	 * @param	string	The order field for the column
