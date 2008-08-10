@@ -30,8 +30,13 @@ class KViewHelperGrid
 	 * @param 	string	Text for false
 	 * @return 	string	Html img
 	 */
-	public static function boolean( $bool, $true_img = 'tick.png', $false_img = 'publish_x.png', $true_text = 'Yes', $false_text = 'No')
+	public static function boolean( $bool, $true_img = null, $false_img = null, $true_text = null, $false_text = null)
 	{
+		$true_img 	= $true_img 	? $true_img 	: 'tick.png';
+		$false_img 	= $false_img	? $false_img	: 'publish_x.png';
+		$true_text 	= $true_text 	? $true_text 	: 'Yes';
+		$false_text = $false_text 	? $false_text 	: 'No';
+		
 		return '<img src="images/'. ($bool?$true_img:$false_img) .'" border="0" alt="'. JText::_($bool?$true_text:$false_text) .'" />';
 	}
 	
