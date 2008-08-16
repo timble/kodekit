@@ -19,13 +19,27 @@ defined('_JEXEC') or die('Restricted access');
  */
 class plgSystemKoowa extends JPlugin
 {
-	public function onAfterInitialise()
+	public function __construct($subject, $config = array())
 	{
-		if( !plgSystemKoowa::isKoowaFriendly()) {	
-			return;	
+		// Require the library loader
+		if( self::canEnable()) {	
+			require_once dirname(__FILE__).DS.'koowa'.DS.'koowa.php';	
 		}
 		
-		// Decorate the database connector object and then replace it with the decorated version.
+		parent::__construct($subject, $config = array());
+	}
+
+	public function onAfterInitialise()
+	{
+		if( ! self::canEnable()) {	
+			return;
+		}
+	
+		// Proxy the application object 
+		$app  =& JFactory::getApplication();
+		$app  = new KApplicationDefault($app);
+		
+		// Proxy the database object
 		$db  =& JFactory::getDBO();
 		$db  = new KDatabaseDefault($db);
 	}
@@ -37,10 +51,9 @@ class plgSystemKoowa extends JPlugin
 	 *
 	 * @return	bool
 	 */
-	public static function isKoowaFriendly()
+	public static function canEnable()
 	{
 		$result = true;
-		
 		
 		// are we uninstalling a plugin?
 		if(JRequest::getCmd('option') == 'com_installer' 
@@ -51,10 +64,4 @@ class plgSystemKoowa extends JPlugin
 		
 		return $result;
 	}
-}
-
-
-if( plgSystemKoowa::isKoowaFriendly()) {	
-	// Require the library loader
-	require_once dirname(__FILE__).DS.'koowa'.DS.'koowa.php';	
 }
