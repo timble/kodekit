@@ -23,13 +23,11 @@ class KCommandEvent extends KPatternCommandHandler
 	 * @param string  $name		The command name
 	 * @param object  $args		The command arguments
 	 *
-	 * @return	boolean
+	 * @return array
 	 */
-	function onCommand( $name, $args ) 
+	function execute( $name, $args ) 
 	{
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger($name, (array) $args);
-
-		return true;
+		$dispatcher = KFactory::get('EventDispatcher');
+		return $dispatcher->trigger($name, (array) $args);
 	}
 }

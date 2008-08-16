@@ -50,9 +50,9 @@ class KApplicationAbstract extends KPatternProxy
 		$args->options    = $options;
 		$args->result     = false;
 		
-		if($this->_commandChain->execute('onBeforeApplicationInitialise', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationInitialise', $args) === true) {
 			$args->result = $this->getObject()->initialise($options);
-			$this->_commandChain->execute('onAfterApplicationInitialise', $args);
+			$this->_commandChain->run('onAfterApplicationInitialise', $args);
 		}
 
 		return $args->result;
@@ -70,9 +70,9 @@ class KApplicationAbstract extends KPatternProxy
 		$args->class_name = get_class($this);
 		$args->result     = false;
 		
-		if($this->_commandChain->execute('onBeforeApplicationRoute', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationRoute', $args) === true) {
 			$args->result = $this->getObject()->route();
-			$this->_commandChain->execute('onAfterApplicationRoute', $args);
+			$this->_commandChain->run('onAfterApplicationRoute', $args);
 		}
 
 		return $args->result;
@@ -91,9 +91,9 @@ class KApplicationAbstract extends KPatternProxy
 		$args->component  = $component;
 		$args->result     = false;
 		
-		if($this->_commandChain->execute('onBeforeApplicationDispatch', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationDispatch', $args) === true) {
 			$args->result = $this->getObject()->dispatch($component);
-			$this->_commandChain->execute('onAfterApplicationDispatch', $args);
+			$this->_commandChain->run('onAfterApplicationDispatch', $args);
 		}
 
 		return $args->result;
@@ -111,9 +111,9 @@ class KApplicationAbstract extends KPatternProxy
 		$args->class_name = get_class($this);
 		$args->result     = false;
 		
-		if($this->_commandChain->execute('onBeforeApplicationRender', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationRender', $args) === true) {
 			$args->result = $this->getObject()->render();
-			$this->_commandChain->execute('onAfterApplicationRender', $args);
+			$this->_commandChain->run('onAfterApplicationRender', $args);
 		}
 
 		return $args->result;
@@ -131,7 +131,7 @@ class KApplicationAbstract extends KPatternProxy
 		$args = new stdClass();
 		$args->class_name = get_class($this);
 		
-		if($this->_commandChain->execute('onBeforeApplicationExit', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationExit', $args) === true) {
 			$this->getObject()->close($code);
 		}
 
@@ -156,7 +156,7 @@ class KApplicationAbstract extends KPatternProxy
 		$args->message      = $msg;
 		$args->message_type = $msgType;
 		
-		if($this->_commandChain->execute('onBeforeApplicationRedirect', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationRedirect', $args) === true) {
 			$this->getObject()->redirect($url, $msg, $msgType);
 		}
 
@@ -179,9 +179,9 @@ class KApplicationAbstract extends KPatternProxy
 		$args->options     = $options;
 		$args->result      = false;
 		
-		if($this->_commandChain->execute('onBeforeApplicationLogin', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationLogin', $args) === true) {
 			$args->result = $this->getObject()->login($credentials, $options);
-			$this->_commandChain->execute('onAfterApplicationLogin', $args);
+			$this->_commandChain->run('onAfterApplicationLogin', $args);
 		}
 		
 		return $args->result;
@@ -203,9 +203,9 @@ class KApplicationAbstract extends KPatternProxy
 		$args->options     = $options;
 		$args->result      = false;
 		
-		if($this->_commandChain->execute('onBeforeApplicationLogout', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationLogout', $args) === true) {
 			$args->result = $this->getObject()->logout($userid, $options);
-			$this->_commandChain->execute('onAfterApplicationLogout', $args);
+			$this->_commandChain->run('onAfterApplicationLogout', $args);
 		}
 		
 		return $args->result;

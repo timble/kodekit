@@ -62,6 +62,8 @@ abstract class KViewAbstract extends KObject
 
 	/**
 	 * Constructor
+	 * 
+	 * @param	array An optional associative array of configuration settings.
 	 */
 	public function __construct($options = array())
 	{

@@ -8,7 +8,7 @@
  */
 
 /**
- * Koowa View Exception class
+ * Koowa Model Exception class
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Model

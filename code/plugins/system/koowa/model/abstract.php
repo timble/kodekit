@@ -69,7 +69,7 @@ abstract class KModelAbstract extends KObject
 	/**
 	 * Constructor
      *
-     * @param	array	Options
+     * @param	array An optional associative array of configuration settings.
 	 */
 	public function __construct($options = array())
 	{

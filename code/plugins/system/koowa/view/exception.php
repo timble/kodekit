@@ -12,6 +12,5 @@
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_View
- * @version     1.0
  */
 class KViewException extends KException {}

@@ -194,9 +194,9 @@ abstract class KControllerAbstract extends KObject
 		$args->task       = $task;
 		$args->result     = false;
 		
-		if($this->_commandChain->execute('onBeforeController'.ucfirst($doTask), $args) === true) {
+		if($this->_commandChain->run('onBeforeController'.ucfirst($doTask), $args) === true) {
 			$args->result = $this->$doTask();
-			$this->_commandChain->execute('onAfterController'.ucfirst($doTask), $args);
+			$this->_commandChain->run('onAfterController'.ucfirst($doTask), $args);
 		}
 		
 		return $args->result;

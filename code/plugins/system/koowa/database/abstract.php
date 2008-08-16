@@ -265,9 +265,9 @@ class KDatabaseAbstract extends KPatternProxy
 		$args->result = false;
 
 		//Excute the insert operation
-		if($this->_commandChain->execute('onBeforeDatabaseInsert', $args) === true) {
+		if($this->_commandChain->run('onBeforeDatabaseInsert', $args) === true) {
 			$args->result = $this->execute($sql);
-			$this->_commandChain->execute('onAfterDatabaseInsert', $args);
+			$this->_commandChain->run('onAfterDatabaseInsert', $args);
 		}
 		
 		return $args->result;
@@ -305,9 +305,9 @@ class KDatabaseAbstract extends KPatternProxy
 		$args->result = false;
 
 		//Excute the update operation
-		if($this->_commandChain->execute('onBeforeDatabaseUpdate', $args) ===  true) {
+		if($this->_commandChain->run('onBeforeDatabaseUpdate', $args) ===  true) {
 			$args->result = $this->execute($sql);
-			$this->_commandChain->execute('onAfterDatabaseUpdate', $args);
+			$this->_commandChain->run('onAfterDatabaseUpdate', $args);
 		}
 		
         return $args->result;
@@ -336,9 +336,9 @@ class KDatabaseAbstract extends KPatternProxy
 		$args->result = false;
 		
 		//Excute the delete operation
-		if($this->_commandChain->execute('onBeforeDatabaseDelete', $args) ===  true) {
+		if($this->_commandChain->run('onBeforeDatabaseDelete', $args) ===  true) {
 			$args->result = $this->execute($sql);
-			$this->_commandChain->execute('onAfterDatabaseDelete', $args);	
+			$this->_commandChain->run('onAfterDatabaseDelete', $args);	
 		}
 		
 		return $args->result;

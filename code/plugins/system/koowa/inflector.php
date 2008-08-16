@@ -117,7 +117,7 @@ class KInflector
 		'singularized' => array(),
 		'pluralized'   => array()
 	);
-
+	
    	/**
 	 * Singular English word to plural.
 	 *
