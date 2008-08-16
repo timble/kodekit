@@ -191,7 +191,8 @@ abstract class KControllerAbstract extends KObject
 		//Create the arguments object
 		$args = new stdClass();
 		$args->class_name = $this->getClassName();
-		$args->task  = $task;
+		$args->task       = $task;
+		$args->result     = false;
 		
 		if($this->_commandChain->execute('onBeforeController'.ucfirst($doTask), $args) === true) {
 			$args->result = $this->$doTask();
