@@ -298,20 +298,6 @@ abstract class KViewAbstract extends KObject
     }
 
 	/**
-	 * Method to get the model object
-	 *
-	 * @param	string	$name	The name of the model (optional)
-	 * @return	mixed			Model object
-	 */
-	public function getModel( $name = null )
-	{
-		if ($name === null) {
-			$name = $this->_defaultModel;
-		}
-		return $this->_models[strtolower( $name )];
-	}
-
-	/**
 	* Get the layout.
 	*
 	* @return string The layout name
@@ -321,29 +307,7 @@ abstract class KViewAbstract extends KObject
 	{
 		return $this->_layout;
 	}
-
-	/**
-	 * Method to add a model to the view.  We support a multiple model single
-	 * view system by which models are referenced by classname.  A caveat to the
-	 * classname referencing is that any classname prepended by KModel will be
-	 * referenced by the name without KModel, eg. KModelCategory is just
-	 * Category.
-	 *
-	 * @param	object	$model		The model to add to the view.
-	 * @param	boolean	$default	Is this the default model?
-	 * @return	object				The added model
-	 */
-	public function setModel( &$model, $default = false )
-	{
-		$name = strtolower($model->getClassName('suffix'));
-		$this->_models[$name] = &$model;
-
-		if ($default) {
-			$this->_defaultModel = $name;
-		}
-		return $model;
-	}
-
+	
    /**
 	* Sets the layout name to use
 	*
