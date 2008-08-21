@@ -13,7 +13,4 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package		Koowa_View
  */
-class KViewDefault extends KViewAbstract
-{
-
-}
+class KViewDefault extends KViewAbstract {}

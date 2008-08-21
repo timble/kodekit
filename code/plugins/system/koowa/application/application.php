@@ -13,7 +13,7 @@
 * @author Johan Janssens <johan@joomlatools.org>
 * @package Koowa_Application
 */
-class KApplicationAbstract extends KPatternProxy
+class KApplication extends KPatternProxy
 {
 	/**
 	 * The commandchain

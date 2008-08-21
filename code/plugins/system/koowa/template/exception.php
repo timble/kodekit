@@ -13,4 +13,4 @@
  * @author      Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Template
  */
-class KTemplateException extends KException {}
+class KTemplateException extends Exception {}

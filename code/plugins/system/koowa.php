@@ -37,11 +37,11 @@ class plgSystemKoowa extends JPlugin
 	
 		// Proxy the application object 
 		$app  =& JFactory::getApplication();
-		$app  = new KApplicationDefault($app);
+		$app  = new KApplication($app);
 		
 		// Proxy the database object
 		$db  =& JFactory::getDBO();
-		$db  = new KDatabaseDefault($db);
+		$db  = new KDatabase($db);
 	}
 	
 	/**

@@ -1,7 +1,7 @@
 <?php
 /**
  * @version 	$Id:factory.php 46 2008-03-01 18:39:32Z mjaz $
- * @package		Koowa
+ * @package		Koowa_Factory
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  */
@@ -10,7 +10,7 @@
  * KFactory class
  *
  * @author		Johan Janssens <johan@joomlatools.org>
- * @package     Koowa
+ * @package     Koowa_Factory
  * @version     1.0
  */
 class KFactory
@@ -98,7 +98,7 @@ class KFactory
 	 *
 	 * @param 	array	Object information
 	 * @param 	array	Object options
-	 * @throws	KException
+	 * @throws	KFactoryException
 	 * @return object
 	 */
 	public static function getInstance($object, $options = array())
@@ -146,7 +146,7 @@ class KFactory
 			$classNameDefault  = 'K'.ucfirst($base).ucfirst($default);
 
 			if(!class_exists($classNameDefault)) {
-				throw new KException("Class '$classNameDefault' doesn't exist.", KError::FACTORY_CLASS);
+				throw new KFactoryException("Class '$classNameDefault' doesn't exist.");
 			}
 
 			if (!class_exists( $classNameInstance ))
@@ -163,12 +163,12 @@ class KFactory
 				}
 
 				//Find the file
-				Koowa::import('joomla.filesystem.path');
+				Koowa::import('lib.joomla.filesystem.path');
 				if($file = JPath::find($options['base_path'], self::getFileName($classNameDefault, $name)))
 				{
 					require_once $file;
 					if (!class_exists( $classNameInstance )) {
-						throw new KException($classNameInstance.' not found in file.' );
+						throw new KFactoryException($classNameInstance.' not found in file.' );
 					}
 
 					//Set the view base_path in the options array

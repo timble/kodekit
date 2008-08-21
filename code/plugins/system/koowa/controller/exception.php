@@ -13,4 +13,4 @@
  * @author      Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Controller
  */
-class KControllerException extends KException {}
+class KControllerException extends Exception {}

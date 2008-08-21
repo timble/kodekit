@@ -13,7 +13,4 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Model
  */
-class KModelDefault extends KModelAbstract
-{
-
-}
+class KModelDefault extends KModelAbstract {}

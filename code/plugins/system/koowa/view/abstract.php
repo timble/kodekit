@@ -428,7 +428,7 @@ abstract class KViewAbstract extends KObject
 		$file = isset($tpl) ? $this->_layout.'_'.$tpl : $this->_layout;
 
 		// load the template script
-		Koowa::import('joomla.filesystem.path');
+		Koowa::import('lib.joomla.filesystem.path');
 		$this->_template = JPath::find($this->_path['template'], $file.'.php');
 		
 		if ($this->_template != false)

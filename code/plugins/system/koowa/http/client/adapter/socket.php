@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id:  $
+ * @version     $Id$
  * @package     Koowa
  * @subpackage  Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -78,12 +78,12 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
 			if (!$this->_socket) 
 			{
 				$this->disconnect();
-				throw new KException('Unable not connect to ' . $uri->getHost() . ':' . $uri->getPort() . '/' . $uri->getPath());
+				throw new KHttpException('Unable not connect to ' . $uri->getHost() . ':' . $uri->getPort() . '/' . $uri->getPath());
 			}
 			
 			if (!stream_set_timeout($this->_socket, $this->_configuration['timeout']))
 			{
-				throw new KException("Unable to set connection timeout");
+				throw new KHttpException("Unable to set connection timeout");
 			}
 			
 			$this->_connected_to = array($uri->getScheme() . '://' .$uri->getHost(), $uri->getPort());
@@ -164,7 +164,7 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
                     if (dechex($chunksize) != $hexchunksize) 
                     {
                         @fclose($this->socket);
-                        throw new KException('Invalid chunk size "' .  $hexchunksize . '" unable to read chunked body');
+                        throw new KHttpException('Invalid chunk size "' .  $hexchunksize . '" unable to read chunked body');
                     }
 
                     $left_to_read = $chunksize;
@@ -182,7 +182,7 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
             } 
             else 
             {
-                throw new KException('Cannot handle "' . $headers['transfer-encoding'] . '" transfer encoding');
+                throw new KHttpxception('Cannot handle "' . $headers['transfer-encoding'] . '" transfer encoding');
             }
 
         // Else, if we got the content-length header, read this number of bytes
@@ -215,14 +215,14 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
 	public function write(KHttpUri $uri, $options) {	
         if (!$this->_socket) 
         {
-            throw new KException('Trying to write but we are not connected');
+            throw new KHttpException('Trying to write but we are not connected');
         }
 
         $host = $uri->getScheme() . '://' .$uri->getHost();
         
         if ($this->_connected_to[0] != $host || $this->_connected_to[1] != $uri->getPort()) 
         {
-            throw new KException('Trying to write but we are connected to the wrong host');
+            throw new KHttpException('Trying to write but we are connected to the wrong host');
         }
 
         // Save request method for later
@@ -247,7 +247,7 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
 
         // Send the request
         if (!@fwrite($this->_socket, $request)) {
-            throw new KException('Error writing request to server');
+            throw new KHttpException('Error writing request to server');
         }
 
         return $request;

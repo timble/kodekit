@@ -14,4 +14,4 @@
  * @package     Koowa_Dispatcher
  * @version     1.0
  */
-class KDispatcherException extends KException {}
+class KDispatcherException extends Exception {}

@@ -13,4 +13,4 @@
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @package     Koowa_Http
  */
-class KHttpException extends KException {}
+class KHttpException extends Exception {}

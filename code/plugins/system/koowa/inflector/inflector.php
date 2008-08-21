@@ -1,7 +1,7 @@
 <?php
 /**
  * @version		$Id:inflector.php 46 2008-03-01 18:39:32Z mjaz $
- * @package		Koowa
+ * @package		Koowa_Inflector
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -12,7 +12,7 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @author		Mathias Verraes <mathias@joomlatools.org>
- * @package		Koowa
+ * @package		Koowa_Inflector
  *
  * @todo		http://en.wikipedia.org/wiki/English_plural
  */

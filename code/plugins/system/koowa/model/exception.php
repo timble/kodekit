@@ -14,4 +14,4 @@
  * @package     Koowa_Model
  * @version     1.0
  */
-class KModelException extends KException {}
+class KModelException extends Exception {}

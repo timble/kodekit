@@ -169,7 +169,7 @@ abstract class KChartGoogle extends KObject
     {
         $className = 'KChartGoogle'.$type;
         if(!class_exists($className)) {
-            throw new KException("Chart type $type doesn't exist");
+            throw new KChartException("Chart type $type doesn't exist");
         }
 
         return new $className;

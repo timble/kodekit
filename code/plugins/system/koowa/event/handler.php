@@ -21,7 +21,7 @@ class KEventHandler extends KObserver
 	 * @param array Arguments
 	 * @return mixed Routine return value
 	 */
-	public function update($event, $args = array())
+	public function onNotify($event, $args = array())
 	{
 		if (method_exists($this, $event)) {
 			return call_user_func_array ( array($this, $event), $args );

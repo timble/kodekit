@@ -40,9 +40,9 @@ abstract class KPatternObserver extends KObject
 	}
 
 	/**
-	 * Method to update the state of observable objects
+	 * Event received in case the observables states has changed
 	 *
 	 * @return mixed
 	 */
-	abstract public function update() { }
+	abstract public function onNotify() { }
 }

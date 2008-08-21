@@ -262,7 +262,7 @@ abstract class KModelAbstract extends KObject
         // Get the data if it doesn't already exist
         if (!isset($this->_pagination))
         {
-            Koowa::import('joomla.html.pagination');
+            Koowa::import('lib.joomla.html.pagination');
             $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
         }
 

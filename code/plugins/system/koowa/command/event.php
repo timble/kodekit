@@ -27,7 +27,7 @@ class KCommandEvent extends KPatternCommandHandler
 	 */
 	function execute( $name, $args ) 
 	{
-		$dispatcher = KFactory::get('EventDispatcher');
+		$dispatcher = JDispatcher::getInstance();
 		return $dispatcher->trigger($name, (array) $args);
 	}
 }

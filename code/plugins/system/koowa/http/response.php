@@ -118,14 +118,14 @@ class KHttpResponse extends KObject
     {
         // Make sure the response code is valid and set it
         if (self::responseCodeAsText($code) === null) {
-            throw new KException("{$code} is not a valid HTTP response code");
+            throw new KHttpException("{$code} is not a valid HTTP response code");
         }
 
         $this->code = $code;
 
         // Make sure we got valid headers and set them
         if (! is_array($headers)) {
-            throw new KException('No valid headers were passed');
+            throw new KHttpException('No valid headers were passed');
 		}
 
         foreach ($headers as $name => $value) {
@@ -140,7 +140,7 @@ class KHttpResponse extends KObject
 
         // Set the HTTP version
         if (! preg_match('|^\d\.\d$|', $version)) {
-            throw new KException("Invalid HTTP response version: $version");
+            throw new KHttpException("Invalid HTTP response version: $version");
         }
 
         $this->version = $version;
@@ -517,7 +517,7 @@ class KHttpResponse extends KObject
         
         while (trim($body)) {
             if (!preg_match("/^([\da-fA-F]+)[^\r\n]*\r\n/sm", $body, $m)) {
-                throw new KException("Error parsing body - doesn't seem to be a chunked message");
+                throw new KHttpException("Error parsing body - doesn't seem to be a chunked message");
             }
 
             $length = hexdec(trim($m[1]));

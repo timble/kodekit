@@ -8,7 +8,7 @@
  * @link        http://www.koowa.org
  */
 
-Koowa::import('koowa.chart.renderer.sparkline.Sparkline_Line');
+Koowa::import('lib.koowa.chart.renderer.sparkline.Sparkline_Line');
 
 /**
  * Sparkline Line

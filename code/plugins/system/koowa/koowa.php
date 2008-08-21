@@ -64,6 +64,17 @@ class Koowa
 
         return self::$_path;
     }
+    
+  	/**
+     * Get the URL to the folder containing all media assets
+     *
+     * @param 	boolean	Return the relative path only
+     * @return 	string	URL
+     */
+    public static function getMediaURL()
+    {
+    	return JURI::root().'media/plg_koowa/';
+    }
 
 	/**
      * Load the file for a class
@@ -88,17 +99,19 @@ class Koowa
 		switch(substr($class, 0, 1))
 		{
 			case 'K' :
-                switch(strtoupper(substr(PHP_OS, 0, 3)))
-                {
-                    case 'WIN':
-                        $path = strtolower(preg_replace('/(?<=\\w)([A-Z])/', DS.'\$1', ltrim($class, 'K')));
-                        break;
-                    default:
-                        $path = strtolower(preg_replace('/(?<=\\w)([A-Z])/', DS.'$1', ltrim($class, 'K')));
-                        break;
-                }
+			{
+				$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', substr_replace($class, '', 0, 1)));
+				$parts = explode('_', $word);
+			
+				if(count($parts) > 1) {
+					$path = str_replace('_', DS, $word);
+				} else {
+					$path = $word.DS.$word;
+				}
+				
 				self::register($class,  dirname(__FILE__).DS.$path.'.php');
-                break;
+				
+			} break;
 		}
 
 		$classes = self::register();
@@ -137,11 +150,27 @@ class Koowa
 		$result = '';
 		switch($parts[0])
 		{
-			case 'joomla'    :
-				$result = JLoader::import($path, null, 'libraries.' );
-				break;
-
+			case 'lib' :
+			{
+				if($parts[1] == 'joomla') 
+				{
+					unset($parts[0]);
+					$path   = implode('.', $parts);
+					$result = JLoader::import($path, null, 'libraries.' );
+				} 
+				
+				if($parts[1] == 'koowa') 
+				{
+					unset($parts[0]);
+					unset($parts[1]);
+					$path   = implode('.', $parts);
+					$result = JLoader::import($path, Koowa::getPath());
+				}
+				
+			} break;
+				
 			case 'com'   :
+			{
 				$name   = $parts[1];
 
 				unset($parts[0]);
@@ -151,21 +180,17 @@ class Koowa
 				$path   = implode('.', $parts);
 
 				$result = JLoader::import($path, $base, $name.'.' );
-				break;
+				
+			} break;
 
         	case 'plg'   :
+        	{
 				unset($parts[0]);
 				$base   = JPATH_PLUGINS;
 				$path   = implode('.', $parts);
 				$result = JLoader::import($path, $base, '.' );
-				break;
-
-       	 	case 'koowa':
-				unset($parts[0]);
-				$base   = Koowa::getPath();
-				$path   = implode('.', $parts);
-				$result = JLoader::import($path, $base);
-				break;
+				
+        	} break;
 
 			default :
 				$result = JLoader::import($path, JPATH_COMPONENT, substr(basename(JPATH_COMPONENT), 4).'.' );
@@ -175,15 +200,4 @@ class Koowa
 
 		return $result;
 	}
-	
-    /**
-     * Get the URL to the folder containing all media assets
-     *
-     * @param 	boolean	Return the relative path only
-     * @return 	string	URL
-     */
-    public static function getMediaURL()
-    {
-    	return JURI::root().'media/plg_koowa/';
-    }
 }

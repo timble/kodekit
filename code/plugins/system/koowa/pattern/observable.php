@@ -48,7 +48,7 @@ abstract class KPatternObservable extends KObject
 		while($iterator->valid()) 
 		{
     		$observer = $iterator->current();
-			$result[] = $observer->update();
+			$result[] = $observer->onNotify();
     		$iterator->next();
 		}	
 	

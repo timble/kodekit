@@ -13,7 +13,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Database
  */
-class KDatabaseAbstract extends KPatternProxy
+class KDatabase extends KPatternProxy
 {
 	/**
 	 * The for offset for the limit

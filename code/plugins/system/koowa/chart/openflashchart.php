@@ -8,7 +8,7 @@
  * @link     	http://www.koowa.org
  */
 
-Koowa::import('koowa.chart.renderer.open-flash-chart.open-flash-chart');
+Koowa::import('lib.koowa.chart.renderer.open-flash-chart.open-flash-chart');
 
 /**
  * Chart Data class with Open Flash Chart

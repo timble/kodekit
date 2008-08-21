@@ -13,4 +13,4 @@
  * @author      Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Command
  */
-class KApplicationException extends KException {}
+class KApplicationException extends Exception {}

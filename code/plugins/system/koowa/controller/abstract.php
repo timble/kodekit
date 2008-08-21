@@ -15,6 +15,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package		Koowa_Controller
  * @uses		KPatternClass
+ * @uses 		KCommandChain
  */
 abstract class KControllerAbstract extends KObject
 {

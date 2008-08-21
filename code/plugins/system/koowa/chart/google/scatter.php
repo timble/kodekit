@@ -26,6 +26,6 @@ class KChartGoogleScatter extends KChartGoogle
      */
     public function __construct()
     {
-        throw new KException(__CLASS__. ' is not implemented yet.');
+        throw new KChartException(__CLASS__. ' is not implemented yet.');
     }
 }

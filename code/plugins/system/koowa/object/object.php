@@ -140,7 +140,7 @@ class KObject
     public function set( $property, $value = null )
     {
         if('_' == substr($property, 0, 1)) {
-        	throw new KException("Protected or private properties can't be set outside of object scope in ".get_class($this));
+        	throw new KObjectException("Protected or private properties can't be set outside of object scope in ".get_class($this));
         }
         $this->$property = $value;
         return $this;
