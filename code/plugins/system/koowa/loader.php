@@ -1,0 +1,149 @@
+<?php
+/**
+* @version      $Id:koowa.php 251 2008-06-14 10:06:53Z mjaz $
+* @package      Koowa
+* @copyright    Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
+* @license      GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+*/
+
+/**
+ * Register Koowa::loadClass() with SPL.
+ */
+spl_autoload_register(array('KLoader', 'loadClass'));
+
+/**
+ * Koowa class
+ *
+ * Loads classes and files, and provides metadata for Koowa such as version info
+ *
+ * @author		Johan Janssens <johan@joomlatools.org>
+ * @package     Koowa
+ * @version     1.0
+ */
+class KLoader
+{
+	/**
+     * Load the file for a class
+     *
+     * Is capable of autoloading Koowa library classes based on a camelcased
+     * classname that represents the directory structure.
+     *
+     * @param   string  $class  The class that will be loaded
+     * @return  boolean True on success
+     */
+    public static function loadClass( $class )
+    {
+    	// pre-empt further searching for the named class or interface.
+		// do not use autoload, because this method is registered with
+		// spl_autoload already.
+		if (class_exists($class, false) || interface_exists($class, false)) {
+			return;
+		}
+
+		// if class start with a 'K' it is a Koowa framework class.
+		// create the path and register it with the loader.
+		switch(substr($class, 0, 1))
+		{
+			case 'K' :
+			{
+				$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', substr_replace($class, '', 0, 1)));
+				$parts = explode('_', $word);
+			
+				if(count($parts) > 1) {
+					$path = str_replace('_', DS, $word);
+				} else {
+					$path = $word.DS.$word;
+				}
+				
+				self::register($class,  dirname(__FILE__).DS.$path.'.php');
+				
+			} break;
+		}
+
+		$classes = self::register();
+        if(array_key_exists( strtolower($class), $classes)) {
+            include($classes[strtolower($class)]);
+            return true;
+        }
+
+        return false;
+    }
+
+	/**
+ 	 * Intelligent file importer
+	 *
+ 	 * @package		Koowa
+ 	 * @param string $path A dot syntax path
+ 	 */
+	public static function loadFile( $path, $basepath = '')
+	{
+		$parts = explode( '.', $path );
+
+		$result = '';
+		switch($parts[0])
+		{
+			case 'lib' :
+			{
+				if($parts[1] == 'joomla') 
+				{
+					unset($parts[0]);
+					$path   = implode('.', $parts);
+					$result = JLoader::import($path, null, 'libraries.' );
+				} 
+				
+				if($parts[1] == 'koowa') 
+				{
+					unset($parts[0]);
+					unset($parts[1]);
+					$path   = implode('.', $parts);
+					$result = JLoader::import($path, Koowa::getPath());
+				}
+				
+			} break;
+				
+			case 'com'   :
+			{
+				$name   = $parts[1];
+
+				unset($parts[0]);
+				unset($parts[1]);
+
+				$base   = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_'.$name;
+				$path   = implode('.', $parts);
+
+				$result = JLoader::import($path, $base, $name.'.' );
+				
+			} break;
+
+        	case 'plg'   :
+        	{
+				unset($parts[0]);
+				$base   = JPATH_PLUGINS;
+				$path   = implode('.', $parts);
+				$result = JLoader::import($path, $base, '.' );
+				
+        	} break;
+
+			default :
+				$result = JLoader::import($path, JPATH_COMPONENT, substr(basename(JPATH_COMPONENT), 4).'.' );
+				break;
+
+		}
+
+		return $result;
+	}
+	
+  	/**
+     * Add a class to autoload
+     *
+     * Proxies the JLoader::register function
+     *
+     * @param	string $classname	The class name
+     * @param	string $file		Full path to the file that holds the class
+     * @return	array|boolean  		Array of classes
+     * @see JLoader::register
+     */
+    public static function register ($class = null, $file = null) {
+        return JLoader::register($class, $file);
+    }
+}
