@@ -23,7 +23,8 @@ class plgSystemKoowa extends JPlugin
 	{
 		// Require the library loader
 		if( self::canEnable()) {	
-			require_once dirname(__FILE__).DS.'koowa'.DS.'koowa.php';	
+			require_once dirname(__FILE__).DS.'koowa'.DS.'koowa.php';
+			require_once dirname(__FILE__).DS.'koowa'.DS.'loader.php';	
 		}
 		
 		parent::__construct($subject, $config = array());
