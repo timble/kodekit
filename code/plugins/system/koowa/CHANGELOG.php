@@ -19,5 +19,8 @@ Legend:
  - -> Removed
  ! -> Note
 
+2008-08-24 Mathias Verraes
+ + Added KFilter and KRequest
+
 2008-08-22 Mathias Verraes
  + Added changelog, license and readme 
