@@ -37,42 +37,15 @@ abstract class KChartSparkline extends KPatternProxy
         $type = ucfirst(strtolower($type));
 
         $classname = "KChartSparkline$type";
-        if(class_exists($classname))
-        {
-            return call_user_func(array($classname, 'getInstance'), array($config));
+        if(!class_exists($classname)) {
+        	throw new KChartException( "Sparkline type '$type' doesn't exist." );
+            
         }
-        JError::raiseWarning( 0, "Sparkline type '$type' doesn't exist." );
-        return false;
+        
+        return call_user_func(array($classname, 'getInstance'), array($config));
     }
 
     abstract public function render($width, $height);
-
-    /**
-     * @deprecated
-     */
-    final public function renderResampled()
-    {
-        JError::raiseWarning(0, 'Use KChartSparkline::setResample() to change rendering behaviour');
-        return false;
-    }
-
-    /**
-     * @deprecated
-     */
-    final public function output()
-    {
-        JError::raiseWarning(0, 'Use KChartSparkline::render() to render sparklines');
-        return false;
-    }
-
-    /**
-     * @deprecated
-     */
-    final public function outputToFile()
-    {
-    	JError::raiseWarning(0, 'Use KChartSparkline::render() to render sparklines');
-        return false;
-    }
 
     /**
      * Set resampling on or off

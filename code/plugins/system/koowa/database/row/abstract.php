@@ -148,7 +148,7 @@ abstract class KDatabaseRowAbstract extends KObject
         else $this->_table->insert($this->getProperties());
 
         if($err = $this->_table->getError()) {
-            $this->setError($this->getClassName('all').'::save() failed: '.$err);
+            throw new KDatabaseRowException($this->getClassName('all').'::save() failed: '.$err);
         }
 
         return $this;

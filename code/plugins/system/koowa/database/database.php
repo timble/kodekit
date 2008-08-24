@@ -365,10 +365,8 @@ class KDatabase extends KPatternProxy
 		//If autoexec is on, execute the query and return the affected rows
 		if($this->_autoexec)
 		{
-			if (!$this->query())
-            {
-				$this->setError($this->_object->getErrorMsg());
-				return false;
+			if (!$this->query()) {
+				throw new KDatabaseException($this->getError());
 			}
 
 			//Force affected rows to 1 in case query was successfull and no rows where returned

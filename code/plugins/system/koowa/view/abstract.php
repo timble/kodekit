@@ -166,10 +166,6 @@ abstract class KViewAbstract extends KObject
 	public function display($tpl = null)
 	{
 		$result = $this->loadTemplate($tpl);
-		if (JError::isError($result)) {
-			return $result;
-		}
-
 		echo $result;
 	}
 
@@ -395,33 +391,31 @@ abstract class KViewAbstract extends KObject
 		Koowa::import('lib.joomla.filesystem.path');
 		$this->_template = JPath::find($this->_path['template'], $file.'.php');
 		
-		if ($this->_template != false)
-		{
-			// unset so as not to introduce into template scope
-			unset($tpl);
-			unset($file);
-
-			// never allow a 'this' property
-			if (isset($this->this)) {
-				unset($this->this);
-			}
-
-			// start capturing output into a buffer
-			ob_start();
-			// include the requested template filename in the local scope
-			// (this will execute the view logic).
-			include 'tmpl://'.$this->_template;
-
-			// done with the requested template; get the buffer and
-			// clear it.
-			$this->_output = ob_get_contents();
-			ob_end_clean();
-
-			return $this->_output;
+		if ($this->_template === false) {
+			throw new KViewException( 'Layout "' . $file . '" not found' );
 		}
-		else {
-			return JError::raiseError( 500, 'Layout "' . $file . '" not found' );
+			
+		// unset so as not to introduce into template scope
+		unset($tpl);
+		unset($file);
+
+		// never allow a 'this' property
+		if (isset($this->this)) {
+			unset($this->this);
 		}
+
+		// start capturing output into a buffer
+		ob_start();
+		// include the requested template filename in the local scope
+		// (this will execute the view logic).
+		include 'tmpl://'.$this->_template;
+
+		// done with the requested template; get the buffer and
+		// clear it.
+		$this->_output = ob_get_contents();
+		ob_end_clean();
+
+		return $this->_output;		
 	}
 
 	/**

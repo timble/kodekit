@@ -62,10 +62,6 @@ class KControllerPage extends KControllerAbstract
 			$id  = $table->getDBO()->insertid();
 		}
 
-        if(!$ret) {
-        	JError::raiseError(500, $table->getError());
-        }
-
 		$redirect = 'format='.JRequest::getCmd('format', 'html');
 		switch($this->getTask())
 		{
@@ -111,7 +107,7 @@ class KControllerPage extends KControllerAbstract
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
 
 		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::sprintf( 'Select an item to %s', JText::_($this->getTask()), true ) );
+			throw new KControllerException(JText::sprintf( 'Select an item to %s', JText::_($this->getTask()), true ) );
 		}
 
 		// Get the table object attached to the model
@@ -119,11 +115,8 @@ class KControllerPage extends KControllerAbstract
 		$prefix = $this->getClassName('prefix');
 
 		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
-
-		if(!$table->delete($cid)) {
-			JError::raiseError(500, $table->getError(true));
-		}
-
+		$table->delete($cid);
+		
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
 			.'&format='.JRequest::getCmd('format', 'html')
@@ -139,7 +132,7 @@ class KControllerPage extends KControllerAbstract
 		$enable  = $this->getTask() == 'enable' ? 1 : 0;
 
 		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::sprintf( 'Select a item to %s', JText::_($this->getTask()), true ) );
+			throw new KControllerException(JText::sprintf( 'Select a item to %s', JText::_($this->getTask()), true ));
 		}
 
 		// Get the table object attached to the model
@@ -147,11 +140,8 @@ class KControllerPage extends KControllerAbstract
 		$prefix = $this->getClassName('prefix');
 
 		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
-
-		if(!$table->update(array('enabled' => $enable), $cid)) {
-			JError::raiseError(500, $table->getError(true));
-		}
-
+		$table->update(array('enabled' => $enable), $cid);
+	
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
 			.'&format='.JRequest::getCmd('format', 'html')
@@ -170,11 +160,8 @@ class KControllerPage extends KControllerAbstract
 		$prefix = $this->getClassName('prefix');
 
 		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
-
-		if(!$table->update(array('access' => $access), $cid)) {
-			JError::raiseError(500, $table->getError(true));
-		}
-
+		$table->update(array('access' => $access), $cid);
+	
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
 			.'&format='.JRequest::getCmd('format', 'html'), 

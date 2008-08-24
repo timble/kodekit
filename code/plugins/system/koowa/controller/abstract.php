@@ -299,11 +299,10 @@ abstract class KControllerAbstract extends KObject
 		if ( !$view = KFactory::getInstance($object, $options) )
 		{
             $format = isset($options['format']) ? $options['format'] : 'html';
-			$result = JError::raiseError( 500,
-                        JText::_('View not found [name, format, prefix]:')
-                        ." $name, $format, $prefix"
-				);
-			return $result;
+			throw new KControllerException(
+					JText::_('View not found [name, format, prefix]:')
+                    ." $name, $format, $prefix"
+			);
 		}
 
 		return $view;

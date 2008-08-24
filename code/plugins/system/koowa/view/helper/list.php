@@ -74,7 +74,7 @@ class KViewHelperList
 		$order = array();
 		$db->setQuery( $sql );
 		if (!($orders = $db->loadObjectList())) {
-			if ($db->getErrorNum()) {
+			if ($db->getError()) {
 				echo $db->stderr();
 				return false;
 			} else {

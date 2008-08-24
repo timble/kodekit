@@ -428,7 +428,7 @@ abstract class KDatabaseTableAbstract extends KObject
 
 		$result = $this->_db->insert($table, $data);
 		if($err = $this->_db->getError()) {
-        	$this->setError($err);
+        	throw new KDatabaseTableException($err);
         }
 		return $result;
 	}
@@ -462,7 +462,7 @@ abstract class KDatabaseTableAbstract extends KObject
 
 		$result = $this->_db->update($table, $data, $where);
 		if($err = $this->_db->getError()) {
-        	$this->setError($err);
+        	throw new KDatabaseTableException($err);
         }
         return $result;
 	}
@@ -495,8 +495,9 @@ abstract class KDatabaseTableAbstract extends KObject
 
 		$result = $this->_db->delete($table, $where);
 		if($err = $this->_db->getError()) {
-        	$this->setError($err);
+        	throw new KDatabaseTableException($err);
         }
+        
 		return $result;
 	}
 

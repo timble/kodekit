@@ -20,13 +20,6 @@
 class KObject
 {
     /**
-	 * An array of errors
-	 *
-	 * @var		array of error messages
-     */
-	protected $_errors = array();
-
-    /**
      * Mixed in objects
      *
      * @var array
@@ -75,50 +68,6 @@ class KObject
     }
 
 	/**
-	 * Get the most recent error message
-	 *
-	 * @param	integer	$i Option error index
-	 * @param	boolean	$toString Indicates if JError objects should return their error message
-	 * @return	string	Error message
-	 */
-	public function getError($i = null, $toString = true )
-	{
-		// Find the error
-		if ( $i === null)
-        {
-			// Default, return the last message
-			$error = end($this->_errors);
-		}
-		elseif( !array_key_exists($i, $this->_errors ))
-        {
-			// If $i has been specified but does not exist, return false
-			return false;
-		}
-		else
-        {
-			$error	= $this->_errors[$i];
-		}
-
-		// Check if only the string is requested
-		if ( JError::isError($error) && $toString )
-        {
-			return $error->toString();
-		}
-
-		return $error;
-	}
-
-	/**
-	 * Return all errors, if any
-	 *
-	 * @return	array	Array of error messages or JErrors
-	 */
-	public function getErrors()
-	{
-		return $this->_errors;
-	}
-	
-	/**
 	 * This function returns an unique identifier for the object. This id can be used as 
 	 * a hash key for storing objects or for identifying an object
 	 * 
@@ -162,19 +111,6 @@ class KObject
 
         return $this;
     }
-
-	/**
-	 * Add an error message
-	 *
-	 * @param	string $error Error message
-     * @return 	this
-	 */
-	public function setError($error)
-	{
-		array_push($this->_errors, $error);
-
-        return $this;
-	}
 
     /**
      * Mixin an object

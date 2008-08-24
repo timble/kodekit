@@ -69,30 +69,20 @@ class KViewHelper
 			{
 				require_once $path;
 
-				if (!class_exists( $className ))
-				{
-					JError::raiseWarning( 0, $className.'::' .$func. ' not found in file.' );
-					return false;
+				if (!class_exists( $className )) {
+					throw new KViewHelperException($className.'::' .$func. ' not found in file.' );
 				}
 			}
-			else
-			{
-				JError::raiseWarning( 0, $prefix.$file . ' not supported. File not found.' );
-				return false;
-			}
+			else throw new KViewHelperException( $prefix.$file . ' not supported. File not found.' );
 		}
 
-		if (is_callable( array( $className, $func ) ))
-		{
-			$args = func_get_args();
-			array_shift( $args );
-			return call_user_func_array( array( $className, $func ), $args );
-		}
-		else
-		{
-			JError::raiseWarning( 0, $className.'::'.$func.' not supported.' );
-			return false;
-		}
+		if (!is_callable( array( $className, $func ) )) {
+			throw new KViewHelperException( $className.'::'.$func.' not supported.' );
+		}	
+		
+		$args = func_get_args();
+		array_shift( $args );
+		return call_user_func_array( array( $className, $func ), $args );
 	}
 	
 
@@ -176,8 +166,4 @@ class KViewHelper
 		$document->addStylesheet( $path.$filename, 'text/css', null, $attribs );
 		return;
 	}
-
-
-
-
 }

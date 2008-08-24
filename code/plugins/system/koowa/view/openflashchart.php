@@ -37,11 +37,7 @@ class KViewOpenflashchart extends KViewAbstract
 
     public function display($tpl = null)
     {
-        $result = $this->loadTemplate($tpl);
-		if (JError::isError($result)) {
-			return $result;
-		}
-
+        $this->loadTemplate($tpl);
 		echo $this->chart->render();
     }
 }

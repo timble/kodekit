@@ -48,11 +48,11 @@ class KChartSparklineBar extends KChartSparkline
     {
         $c = $this->getObject();
         $c->render($height);
-        if($c->isError())
-        {
-        	JError::raiseError(500, array_pop($c->getError()));
-            return false;
+        
+    	if($c->isError()) {
+            throw new KChartException(array_pop($c->getError()));
         }
+        
         $c->output();
         KFactory::get('Application')->close();
     }

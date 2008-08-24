@@ -18,6 +18,11 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+ 
+2008-08-24 Johan Janssens
+ - Removed KObject::getError, setError and getErrors
+ ^ Replaced all calls to JError::raiseError by throwing KExceptions
+ ! Need to have a look at how to deal with JError::raiseNotice and raiseWarning  
 
 2008-08-24 Mathias Verraes
  + Added KFilter and KRequest
