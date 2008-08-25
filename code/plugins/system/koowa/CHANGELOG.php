@@ -21,7 +21,7 @@ Legend:
 
 
 2008-08-25 Mathias Verraes
- + Added KFilterAscii
+ + Added KFilterAscii, KFilterArray*
  
 2008-08-24 Johan Janssens
  - Removed KObject::getError, setError and getErrors
