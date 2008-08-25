@@ -21,7 +21,7 @@ class KFilterBoolean implements KFilterInterface
 	 *  Returns TRUE for boolean values: "1", "true", "on" and "yes", "0", 
 	 * "false", "off", "no", and "". Returns FALSE for all non-boolean values. 
 	 *
-	 * @param	scalar	Variable to be validated
+	 * @param	mixed	Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	public function validate($var)
@@ -34,8 +34,8 @@ class KFilterBoolean implements KFilterInterface
 	 * 
 	 * Returns TRUE for "1", "true", "on" and "yes". Returns FALSE for all other values. 
 	 *
-	 * @param	scalar	Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	Variable to be sanitized
+	 * @return	bool
 	 */
 	public function sanitize($var)
 	{

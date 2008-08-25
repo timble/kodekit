@@ -18,7 +18,7 @@ class KFilterUrl implements KFilterInterface
 	/**
 	 * Validate a variable
 	 *
-	 * @param	scalar	Variable to be validated
+	 * @param	mixed	Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	public function validate($var)
@@ -29,8 +29,8 @@ class KFilterUrl implements KFilterInterface
 	/**
 	 * Sanitize a variable
 	 *
-	 * @param	scalar	Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	Variable to be sanitized
+	 * @return	string
 	 */
 	public function sanitize($var)
 	{

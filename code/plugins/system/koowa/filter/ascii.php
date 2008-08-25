@@ -72,7 +72,7 @@ class KFilterAscii implements KFilterInterface
 	 * 
 	 * Returns true if the string only contains US-ASCII
 	 *
-	 * @param	scalar	Variable to be validated
+	 * @param	mixed	Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	public function validate($var)
@@ -101,8 +101,8 @@ class KFilterAscii implements KFilterInterface
 	 * @link 	http://www.sitepoint.com/blogs/2006/03/03/us-ascii-transliterations-of-unicode-text/
 	 * @link 	http://phputf8.sourceforge.net/#UTF_8_Validation_and_Cleaning
 	 *
-	 * @param	scalar	Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	Variable to be sanitized
+	 * @return	string
 	 */
 	public function sanitize($var)
 	{

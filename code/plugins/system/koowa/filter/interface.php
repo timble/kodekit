@@ -23,7 +23,7 @@ interface KFilterInterface
 	 * NOTE: This should always be a simple yes/no question (is $var valid?), so 
 	 * only true or false should be returned
 	 * 
-	 * @param	scalar	Variable to be validated
+	 * @param	mixed	Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	public function validate($var);
@@ -31,8 +31,8 @@ interface KFilterInterface
 	/**
 	 * Sanitize a variable
 	 *
-	 * @param	scalar	Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	Variable to be sanitized
+	 * @return	mixed
 	 */
 	public function sanitize($var);
 }
