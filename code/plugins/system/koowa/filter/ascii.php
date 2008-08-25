@@ -16,11 +16,16 @@
 class KFilterAscii implements KFilterInterface
 {
 	/**
-	 * Default cahracter to use when there's is no replacement character.
-	 *
-	 * @var	string
+	 * Options constant: Default character when no replacement was found
 	 */
-	protected $_default_char;
+	const DEFAULT_CHAR = 'default_char';
+	
+	/**
+	 * Options for the filter
+	 *
+	 * @var	array
+	 */
+	protected $_options;
 	
 	/**
 	 * Transliteration data from ascii/data/*
@@ -39,11 +44,14 @@ class KFilterAscii implements KFilterInterface
 	/**
 	 * Constructor
 	 *
-	 * @param	array	Options array containing [default_char]
+	 * @param	array	Options array
 	 */
 	public function __construct($options = array())
 	{
-		$this->_default_char = isset($options['default_char']) ? $options['default_char'] : '?';
+		if(!isset($options[self::DEFAULT_CHAR])) {
+			$options[self::DEFAULT_CHAR] = '?';
+		}
+		$this->_options = $options;
 		$this->_data_dir = dirname(__FILE__).DS.'ascii'.DS.'data';
 	}
 	
@@ -55,7 +63,7 @@ class KFilterAscii implements KFilterInterface
 	 */
 	public function setDefaultChar($char)
 	{
-		$this->_default_char = $char;
+		$this->_options[self::DEFAULT_CHAR] = $char;
 		return $this;
 	}
 	
@@ -196,7 +204,7 @@ class KFilterAscii implements KFilterInterface
 	        if ( array_key_exists($newchar, self::$_data[$bank]) ) {
 	            echo self::$_data[$bank][$newchar];
 	        } else {
-	            echo $this->_default_char;
+	            echo $this->_options[self::DEFAULT_CHAR];
 	        }
 	        
 	        $i += $increment;
