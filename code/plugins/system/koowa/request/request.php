@@ -14,6 +14,7 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Request
  * @version     1.0
+ * @uses 		KFilterInterface
  */
 class KRequest
 {
@@ -44,6 +45,8 @@ class KRequest
 	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, classname, or array of objects or classnames
 	 * @param 	mixed	Default value when the variable doesn't exist
 	 * @return 	mixed	(Sanitized) variable
+	 * 
+	 * @uses 	KFilterInterface
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
 	{

@@ -18,6 +18,10 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+
+
+2008-08-25 Mathias Verraes
+ + Added KFilterAscii
  
 2008-08-24 Johan Janssens
  - Removed KObject::getError, setError and getErrors
