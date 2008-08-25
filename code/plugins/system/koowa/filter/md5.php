@@ -15,7 +15,7 @@
  * @package     Koowa_Filter
  * @version     1.0
  */
-class KFilterMd5 implements KFilterInterface
+class KFilterMd5 extends KObject implements KFilterInterface
 {
 	/**
 	 * Validate a variable

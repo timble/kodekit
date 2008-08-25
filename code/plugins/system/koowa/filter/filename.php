@@ -13,7 +13,7 @@
  * @package     Koowa_Filter
  * @version     1.0
  */
-class KFilterFilename implements KFilterInterface
+class KFilterFilename extends KObject implements KFilterInterface
 {
 	/**
 	 * Validate a variable

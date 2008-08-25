@@ -13,7 +13,7 @@
  * @package     Koowa_Filter
  * @version     1.0
  */
-class KFilterAscii implements KFilterInterface
+class KFilterAscii extends KObject implements KFilterInterface
 {
 	/**
 	 * Options constant: Default character when no replacement was found

@@ -15,7 +15,7 @@
  * @package     Koowa_Filter
  * @version     1.0
  */
-class KFilterRaw implements KFilterInterface
+class KFilterRaw extends KObject implements KFilterInterface
 {
 	/**
 	 * Validate a variable
