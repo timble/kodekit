@@ -34,7 +34,7 @@ class KFilterFloat extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
-		return filter_var($var, FILTER_SANITIZE_NUMBER_FLOAT, 
+		return (float) filter_var($var, FILTER_SANITIZE_NUMBER_FLOAT, 
 			FILTER_FLAG_ALLOW_FRACTION & FILTER_FLAG_ALLOW_THOUSAND & FILTER_FLAG_ALLOW_SCIENTIFIC);
 	}
 }

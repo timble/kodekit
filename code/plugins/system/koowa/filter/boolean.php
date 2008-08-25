@@ -39,6 +39,6 @@ class KFilterBoolean extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
-		return filter_var($var, FILTER_VALIDATE_BOOLEAN);
+		return (bool) filter_var($var, FILTER_VALIDATE_BOOLEAN);
 	}
 }

@@ -34,7 +34,7 @@ class KFilterInt extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
-		return filter_var($var, FILTER_SANITIZE_NUMBER_INT);
+		return (int) filter_var($var, FILTER_SANITIZE_NUMBER_INT);
 	}
 }
 
