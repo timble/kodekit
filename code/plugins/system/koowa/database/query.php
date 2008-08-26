@@ -14,6 +14,8 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Database
  * @subpackage  Query
+ * @uses        KObject
+ * @uses        KFactory
  */
 class KDatabaseQuery extends KObject
 {
@@ -103,7 +105,7 @@ class KDatabaseQuery extends KObject
         $options  = $this->_initialize($options);
 
 		//set the model dbo
-		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('Database');
+		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
 	}
 
 

@@ -15,7 +15,7 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Http
  * @subpackage  Uri
- * @version     1.0
+ * @uses		KObject
  */
 class KHttpUri extends KObject 
 {

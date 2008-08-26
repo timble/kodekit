@@ -19,6 +19,12 @@ Legend:
  - -> Removed
  ! -> Note
 
+2008-08-27 Johan Janssens
+ ^ Completely refactored the factory package, implemented support for factory adapters
+ + Added koow, joomla and component specific factory adapters
+ - Removed KViewAbstract::getFileName, now handled by the component factory adapter
+ ^ Fixed docblocks, added @uses to package blocks and @throws to function blocks
+ ^ Renamed KPatternClass to KHelperClass and moved to helper package
 
 2008-08-25 Mathias Verraes
  + Added KFilterAscii, KFilterArray*

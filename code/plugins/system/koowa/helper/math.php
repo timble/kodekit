@@ -14,7 +14,7 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Helper
  * @subpackage 	Math
- * @version     1.0
+ * @static
  */
 class KHelperMath
 {

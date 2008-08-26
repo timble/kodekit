@@ -12,6 +12,8 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Database
+ * @uses 		KPatternCommandChain
+ * @uses        KPatternProxy
  */
 class KDatabase extends KPatternProxy
 {
@@ -349,6 +351,7 @@ class KDatabase extends KPatternProxy
 	 * Returns number of affected rows.
 	 *
 	 * @param  string 	$sql 		The query to run.
+	 * @throws KDatabaseException
 	 * @return integer 	The number of rows affected by $sql.
 	 */
 	public function execute($sql)

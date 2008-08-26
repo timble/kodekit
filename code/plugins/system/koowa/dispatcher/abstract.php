@@ -12,7 +12,9 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Dispatcher
- * @uses		KPatternClass
+ * @uses		KHelperClass
+ * @uses        KObject
+ * @uses        KFactory
  */
 
 abstract class KDispatcherAbstract extends KObject
@@ -36,7 +38,7 @@ abstract class KDispatcherAbstract extends KObject
         $options  = $this->_initialize($options);
 
         // Mixin the KClass
-        $this->mixin(new KPatternClass($this, 'Dispatcher'));
+        $this->mixin(new KHelperClass($this, 'Dispatcher'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
@@ -134,13 +136,7 @@ abstract class KDispatcherAbstract extends KObject
 			$prefix = $this->getClassName('prefix');
 		}
 
-		$object = array(
-			'type' 		=> 'controller'  ,
-			'component'	=> $prefix,
-			'name'		=> $name
-		);
-
-		$controller = KFactory::getInstance($object, $options);
+		$controller = KFactory::get('com.'.$prefix.'.controller.'.$name, $options);
 		return $controller;
 	}
 }

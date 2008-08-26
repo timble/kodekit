@@ -11,7 +11,6 @@
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Filter
- * @version     1.0
  */
 class KFilterDirname extends KObject implements KFilterInterface
 {

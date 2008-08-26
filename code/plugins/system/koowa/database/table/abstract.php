@@ -17,7 +17,8 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Database
  * @subpackage  Table
- * @uses		KPatternClass
+ * @uses		KHelperClass
+ * @uses        KFactory
  */
 abstract class KDatabaseTableAbstract extends KObject
 {
@@ -112,8 +113,8 @@ abstract class KDatabaseTableAbstract extends KObject
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KPatternClass
-        $this->mixin(new KPatternClass($this, 'Table'));
+        // Mixin the KHelperClass
+        $this->mixin(new KHelperClass($this, 'Table'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
@@ -134,7 +135,7 @@ abstract class KDatabaseTableAbstract extends KObject
 		$this->_primary	= $options['primary'];
 
 		//set the dbo
-		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('Database');
+		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
 	}
 
     /**
@@ -316,12 +317,6 @@ abstract class KDatabaseTableAbstract extends KObject
         $options['table']     = $this;
 		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
 		
-		$object = array(
-			'type' 		=> 'rowset'  ,
-			'component'	=> $this->getClassName('prefix'),
-			'name'		=> $this->getClassName('suffix')
-		);
-
         // Get the data
 		$query = $query->select('*')
         		->from('#__'.$this->getTableName())
@@ -329,7 +324,7 @@ abstract class KDatabaseTableAbstract extends KObject
         $this->_db->select($query, $offset, $limit);
 		$options['data'] = $this->_db->loadAssocList();
 
-		return KFactory::getInstance($object, $options);
+		return KFactory::get('com.'.$this->getClassName('prefix').'.rowset.'.$this->getClassName('suffix'), $options);
     }
 
     /**
@@ -396,13 +391,7 @@ abstract class KDatabaseTableAbstract extends KObject
         $options['table']     = $this;
 		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
 
-		$object = array(
-			'type' 		=> 'row'  ,
-			'component'	=> $this->getClassName('prefix'),
-			'name'		=> $this->getClassName('suffix')
-		);
-
-        return KFactory::getInstance($object, $options);
+        return KFactory::get('com.'.$this->getClassName('prefix').'.row.'.$this->getClassName('suffix'), $options);
     }
 
 	/**
@@ -419,6 +408,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 * Table insert method
 	 *
 	 * @param  array	An associative array of data to be inserted
+	 * @throws KDatabaseTableException
 	 * @return integer The new object's primary key value, or throw an exception if any errors occur.
 	 */
 	public function insert( $data )
@@ -438,6 +428,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 *
 	 * @param  array	An associative array of data to be updated
 	 * @param  mixed	Can either be a row, an array of rows or a query object
+	 * @throws KDatabaseTableException
 	 * @return boolean True if successful otherwise returns false
 	 */
 	public function update( $data, $where = null)
@@ -471,6 +462,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 * Table delete method
 	 *
 	 * @param  mixed	Can either be a row, an array of rows or a query object
+	 * @throws KDatabaseTableException
 	 * @return boolean True if successful otherwise returns false
 	 */
 	public function delete( $where )

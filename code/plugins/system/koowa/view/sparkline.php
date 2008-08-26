@@ -14,6 +14,7 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_View
  * @subpackage  Sparkline
+ * @uses 		KChartSparkline
  */
 class KViewSparkline extends KViewAbstract
 {
@@ -40,8 +41,7 @@ class KViewSparkline extends KViewAbstract
      */
     public function getChart($type = 'line')
     {
-    	if(!isset($this->_chart))
-        {
+    	if(!isset($this->_chart)) {
         	$this->_chart = KChartSparkline::getInstance($type);
         }
         return $this->_chart;

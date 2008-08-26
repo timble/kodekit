@@ -14,6 +14,7 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package		Koowa_View
  * @subpackage	Helper
+ * @uses   		KFactory
  */
 class KViewHelper
 {	
@@ -33,6 +34,7 @@ class KViewHelper
 	 * @param	string	The name of helper method to load, (prefix).(class).function
 	 *                  prefix and class are optional and can be used to load custom
 	 *                  html helpers.
+	 * @throws KViewHelperException
 	 */
 	public static function _( $type )
 	{
@@ -144,7 +146,7 @@ class KViewHelper
 			$path =  JURI::root(true).'/'.$path;
 		};
 
-		$document = &JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 		$document->addScript( $path.$filename );
 		return;
 	}
@@ -162,7 +164,7 @@ class KViewHelper
 			$path =  JURI::root(true).'/'.$path;
 		};
 
-		$document = &JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 		$document->addStylesheet( $path.$filename, 'text/css', null, $attribs );
 		return;
 	}

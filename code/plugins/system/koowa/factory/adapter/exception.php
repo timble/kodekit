@@ -1,16 +1,16 @@
 <?php
 /**
  * @version     $Id$
- * @package     Koowa_Model
+ * @package     Koowa_Factory
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link        http://www.koowa.org
  */
 
 /**
- * Koowa Model Exception class
+ * Koowa Date Exception class
  *
- * @author      Mathias Verraes <mathias@joomlatools.org>
- * @package     Koowa_Model
+ * @author      Johan Janssens <johan@joomlatools.org>
+ * @package     Koowa_Factory
  */
-class KModelException extends Exception {}
+class KFactoryAdapterException extends Exception {}

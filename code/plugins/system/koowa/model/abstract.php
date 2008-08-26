@@ -12,7 +12,10 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Model
- * @uses		KPatternClass
+ * @uses		KHelperClass
+ * @uses		KInflector
+ * @uses		KObject
+ * @uses		KFactory
  */
 abstract class KModelAbstract extends KObject
 {
@@ -77,7 +80,7 @@ abstract class KModelAbstract extends KObject
         $options  = $this->_initialize($options);
 
         // Mixin the KClass
-        $this->mixin(new KPatternClass($this, 'Model'));
+        $this->mixin(new KHelperClass($this, 'Model'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
@@ -93,7 +96,7 @@ abstract class KModelAbstract extends KObject
 
 
 		//set the model dbo
-		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('Database');
+		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
 	}
 
     /**
@@ -191,13 +194,7 @@ abstract class KModelAbstract extends KObject
 			$options['dbo'] = $this->getDBO();;
 		}
 
-		$object = array(
-			'type' 		=> 'table',
-			'component'	=> $prefix,
-			'name'		=> $name
-		);
-
-		$table = KFactory::getInstance($object, $options );
+		$table = KFactory::get('com.'.$prefix.'.table.'.$name, $options );
 
 		return $table;
 	}
@@ -390,6 +387,7 @@ abstract class KModelAbstract extends KObject
 	 * @param	string The query
 	 * @param	int Offset
 	 * @param	int The number of records
+	 * @throws KModelException
 	 * @return	array
 	 */
 	protected function _getList( $query, $limitstart=0, $limit=0 )
@@ -455,7 +453,7 @@ abstract class KModelAbstract extends KObject
      */
     protected function _setDefaultStates()
     {
-        $app        = KFactory::get('Application');
+        $app        = KFactory::get('lib.joomla.application');
 
         $ns         = $this->getClassName('prefix').'.'.$this->getClassName('suffix');
 

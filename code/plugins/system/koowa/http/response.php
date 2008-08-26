@@ -14,7 +14,7 @@
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @package     Koowa_Http
  * @subpackage  Uri
- * @version     1.0
+ * @uses		KObject
  */
 class KHttpResponse extends KObject 
 {
@@ -114,6 +114,11 @@ class KHttpResponse extends KObject
      */
     protected $_body;
     
+    /*
+     * Constructor
+     * 
+     * @throws KHttpException
+     */
     public function __construct($code, $headers, $body = null, $version = '1.1', $message = null)
     {
         // Make sure the response code is valid and set it
@@ -509,6 +514,7 @@ class KHttpResponse extends KObject
      * Decode a "chunked" transfer-encoded body and return the decoded text
      *
      * @param string $body
+     * @throws KHttpException
      * @return string
      */
     public static function decodeChunkedBody($body)

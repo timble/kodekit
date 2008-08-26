@@ -14,7 +14,7 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Helper
  * @subpacakge	Array
- * @version     1.0
+ * @static
  */
 class KHelperArray
 {
@@ -30,12 +30,9 @@ class KHelperArray
     {
         foreach($array as $k => $v)
         {
-            if($recursive AND is_array($v))
-            {
+            if($recursive AND is_array($v)) {
                 $array[$k] = self::settype($v, $type, $recursive);
-            }
-            else
-            {
+            } else {
             	settype($array[$k], $type);
             }
         }

@@ -15,7 +15,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Database
  * @subpackage  Rowset
- * @uses 		KPatternClass
+ * @uses 		KHelperClass
  */
 abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterator, Countable
 {
@@ -78,14 +78,14 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KPatternClass
-        $this->mixin(new KPatternClass($this, 'Rowset'));
+        // Mixin the KHelperClass
+        $this->mixin(new KHelperClass($this, 'Rowset'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
 
 		// Set table object and class name
-		$this->_tableClass  = ucfirst($this->getClassName('prefix')).'Table'.ucfirst($this->getClassName('suffix'));
+		$this->_tableClass  = 'com.'.$this->getClassName('prefix').'.table.'.$this->getClassName('suffix');
 		$this->_table       = isset($options['table']) ? $options['table'] : KFactory::get($this->_tableClass);
 
 		// Set data
@@ -264,8 +264,8 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
      * Required by interface SeekableIterator.
      *
      * @param int $position the position to seek to
-     * @return KDatabaseRowsetAbstract
      * @throws KDatabaseRowsetException
+     * @return KDatabaseRowsetAbstract
      */
     public function seek($position)
     {

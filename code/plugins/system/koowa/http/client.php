@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id:  $
+ * @version     $Id$
  * @package     Koowa_Http
  * @subpackage  Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -14,7 +14,7 @@
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @package     Koowa_Http
  * @subpackage  Client
- * @version     1.0
+ * @uses		KObject
  */
 class KHttpClient extends KObject 
 {
@@ -60,6 +60,9 @@ class KHttpClient extends KObject
     	}
 	}
 	
+	/*
+	 * @throws KHttpException
+	 */
 	public function setURI($uri) 
 	{
 		if (is_string($uri)) {
@@ -87,6 +90,9 @@ class KHttpClient extends KObject
 		return $this->_uri;
 	}
 	
+	/*
+	 * @throws KHttpException
+	 */
 	public function setMethod($method) 
 	{
 		if (!preg_match('/^[A-Za-z_]+$/', $method)) {
@@ -137,6 +143,9 @@ class KHttpClient extends KObject
 		}
 	}
 	
+	/*
+	 * @throws KHttpException
+	 */
 	public function send($uri, $data) 
 	{
 		$prerequisites = array(

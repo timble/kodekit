@@ -14,12 +14,12 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Request
  * @version     1.0
- * @uses 		KFilterInterface
+ * @uses 		KInflector
+ * @uses		KFilter
+ * @static
  */
 class KRequest
-{
-	protected static $_is_initialized;
-	
+{	
 	/**
 	 * Input from all sources
 	 *
@@ -35,25 +35,30 @@ class KRequest
 	protected static $_hashes = array('COOKIE', 'DELETE', 'ENV', 'FILES', 'GET', 'POST', 'PUT', 'SERVER');
 	
 	/**
+	 * Constructor
+	 * 
+	 * Prevent creating instances of this class by making the contrucgtor private
+	 */
+	private function __construct() { }
+	
+	/**
 	 * Get a validated and optionally sanitized variable from the request. 
-	 *
-	 * @throws	KRequestException	When the variable doesn't validate
 	 * 
 	 * @param	string	Variable name
 	 * @param 	string  Hash [GET|POST|PUT|DELETE|COOKIE|ENV|SERVER]
 	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects or classnames 
 	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, classname, or array of objects or classnames
 	 * @param 	mixed	Default value when the variable doesn't exist
+	 * @throws	KRequestException	When the variable doesn't validate
 	 * @return 	mixed	(Sanitized) variable
-	 * 
-	 * @uses 	KFilterInterface
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
 	{
-		if(!isset(self::$_is_initialized)) {
+		static $initialized;
+	
+		if(!isset($initialized)) {
 			self::_initialize();
 		}
-		
 		
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
@@ -104,7 +109,6 @@ class KRequest
 		}
 		
 		return $result;
-		
 	}
 	
 	/**
@@ -133,6 +137,7 @@ class KRequest
 		
 		// Get PUT and DELETE from the input stream
 		$method = self::getMethod();
+		
 		if('PUT' == $method) {
 			parse_str(file_get_contents('php://input'), self::$_input['PUT']);
 		} elseif('DELETE' == $method) {

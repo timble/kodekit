@@ -16,7 +16,7 @@ Koowa::import('lib.koowa.chart.renderer.open-flash-chart.open-flash-chart');
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Chart
  * @subpackage  OpenFlashChart
- * @version		1.0
+ * @uses KObject
  */
 class KChartOpenflashchart extends KObject
 {

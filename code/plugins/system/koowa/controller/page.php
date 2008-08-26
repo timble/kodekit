@@ -13,6 +13,9 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @author 		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Controller
+ * @uses        KSecurityToken
+ * @uses        KInflector
+ * @uses        KHelperArray
  */
 class KControllerPage extends KControllerAbstract
 {
@@ -31,6 +34,9 @@ class KControllerPage extends KControllerAbstract
 		$this->registerTask( 'add'    , 'edit'  );
 	}
 
+	/*
+	 * Generic edit action
+	 */
 	public function edit()
 	{
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
@@ -39,6 +45,9 @@ class KControllerPage extends KControllerAbstract
 		$this->setRedirect('view='.$this->getClassName('suffix').'&layout=form&id='.$id);
 	}
 
+	/*
+	 * Generic save action
+	 */
 	public function save()
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
@@ -53,7 +62,7 @@ class KControllerPage extends KControllerAbstract
 		$suffix = $this->getClassName('suffix');
 		$prefix = $this->getClassName('prefix');
 
-		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
+		$table = KFactory::get('com.'.$prefix.'.model.'.$suffix)->getTable();
 		
 		if (!empty($id)) {
 			$ret = $table->update($data, $id);
@@ -77,21 +86,9 @@ class KControllerPage extends KControllerAbstract
 		$this->setRedirect($redirect);
 	}
 		
-	/**
-	 * Wrapper for JRequest::get(). Override this method to modify the GET/POST data before saving
-	 *
-	 * @see		JRequest::get()
-	 * 
-	 * @param	string	$hash	to get (POST, GET, FILES, METHOD)
-	 * @param	int		$mask	Filter mask for the variable
-	 * @return	mixed	Request hash
-	 * @return array
+	/*
+	 * Generic cancel action
 	 */
-	protected function _getRequest($hash = 'default', $mask = 0)
-	{
-		return JRequest::get($hash, $mask);
-	}
-
 	public function cancel()
 	{
 		$this->setRedirect(
@@ -99,7 +96,12 @@ class KControllerPage extends KControllerAbstract
 			.'&format='.JRequest::getCmd('format', 'html')
 			);
 	}
-
+	
+	/*
+	 * Generic delete function
+	 *  
+	 * @throws KControllerException
+	 */
 	public function delete()
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
@@ -114,7 +116,7 @@ class KControllerPage extends KControllerAbstract
 		$suffix = $this->getClassName('suffix');
 		$prefix = $this->getClassName('prefix');
 
-		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
+		$table = KFactory::get('com.'.$prefix.'.model.'.$suffix)->getTable();
 		$table->delete($cid);
 		
 		$this->setRedirect(
@@ -123,6 +125,9 @@ class KControllerPage extends KControllerAbstract
 		);
 	}
 
+	/*
+	 * Generic delete action
+	 */
 	public function enable()
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
@@ -139,7 +144,7 @@ class KControllerPage extends KControllerAbstract
 		$suffix = $this->getClassName('suffix');
 		$prefix = $this->getClassName('prefix');
 
-		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
+		$table = KFactory::get('com.'.$prefix.'.model.'.$suffix)->getTable();
 		$table->update(array('enabled' => $enable), $cid);
 	
 		$this->setRedirect(
@@ -159,7 +164,7 @@ class KControllerPage extends KControllerAbstract
 		$suffix = $this->getClassName('suffix');
 		$prefix = $this->getClassName('prefix');
 
-		$table = KFactory::get(ucfirst($prefix).'Model'.ucfirst($suffix))->getTable();
+		$table = KFactory::get('com.'.$prefix.'.model.'.$suffix)->getTable();
 		$table->update(array('access' => $access), $cid);
 	
 		$this->setRedirect(
@@ -182,5 +187,20 @@ class KControllerPage extends KControllerAbstract
 	public function accessspecial()
 	{
 		$this->_setAccess(2);
+	}
+	
+	/**
+	 * Wrapper for JRequest::get(). Override this method to modify the GET/POST data before saving
+	 *
+	 * @see		JRequest::get()
+	 * 
+	 * @param	string	$hash	to get (POST, GET, FILES, METHOD)
+	 * @param	int		$mask	Filter mask for the variable
+	 * @return	mixed	Request hash
+	 * @return array
+	 */
+	protected function _getRequest($hash = 'default', $mask = 0)
+	{
+		return JRequest::get($hash, $mask);
 	}
 }

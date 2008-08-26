@@ -14,8 +14,10 @@
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa
+ * @uses 		KObject
+ * @uses		KInflector
  */
-class KPatternClass extends KObject
+class KHelperClass extends KObject
 {
     /**
      * Object

@@ -15,7 +15,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Database
  * @subpackage  Row
- * @uses 		KPatternClass
+ * @uses 		KHelperClass
  */
 abstract class KDatabaseRowAbstract extends KObject
 {
@@ -52,14 +52,14 @@ abstract class KDatabaseRowAbstract extends KObject
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KPatternClass
-        $this->mixin(new KPatternClass($this, 'Row'));
+        // Mixin the KHelperClass
+        $this->mixin(new KHelperClass($this, 'Row'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
 
 		// Set table object and class name
-		$this->_tableClass  = ucfirst($this->getClassName('prefix')).'Table'.ucfirst($this->getClassName('suffix'));
+		$this->_tableClass  = 'com.'.$this->getClassName('prefix').'.table.'.$this->getClassName('suffix');
 		$this->_table       = isset($options['table']) ? $options['table'] : KFactory::get($this->_tableClass);
 
 		// Set data
@@ -133,6 +133,7 @@ abstract class KDatabaseRowAbstract extends KObject
      *
      * Can be overloaded/supplemented by the child class
      *
+     * @throws KDatabaseRowException
      * @return mixed The primary key value(s), as an associative array if the
      *     			 key is compound, or a scalar if the key is single-column.
      */

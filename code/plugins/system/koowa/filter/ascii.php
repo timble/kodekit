@@ -101,8 +101,9 @@ class KFilterAscii extends KObject implements KFilterInterface
 	 * @link 	http://www.sitepoint.com/blogs/2006/03/03/us-ascii-transliterations-of-unicode-text/
 	 * @link 	http://phputf8.sourceforge.net/#UTF_8_Validation_and_Cleaning
 	 *
-	 * @param	mixed	Variable to be sanitized
-	 * @return	string
+	 * @param	scalar	Variable to be sanitized
+	 * @throws KFilterException
+	 * @return	scalar
 	 */
 	public function sanitize($var)
 	{
@@ -212,7 +213,6 @@ class KFilterAscii extends KObject implements KFilterInterface
 	    }
 	    die(var_dump(__METHOD__, $this, self::$_data));
 	 
-	    return ob_get_clean();
-	    
+	    return ob_get_clean();  
 	}
 }

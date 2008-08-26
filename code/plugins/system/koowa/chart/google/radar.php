@@ -23,6 +23,8 @@ class KChartGoogleRadar extends KChartGoogle
 
     /**
      * Constructor
+     * 
+     * @throws KChartException
      */
     public function __construct()
     {

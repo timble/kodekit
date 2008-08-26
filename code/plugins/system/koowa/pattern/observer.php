@@ -14,6 +14,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Pattern
  * @subpackage  Observer
+ * @uses		KObject
  */
 abstract class KPatternObserver extends KObject 
 {

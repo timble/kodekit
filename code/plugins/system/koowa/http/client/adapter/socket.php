@@ -14,7 +14,7 @@
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @package     Koowa
  * @subpackage  Client
- * @version     1.0
+ * @uses 		KObject
  */
 
 class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter 
@@ -58,6 +58,7 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
 	 * Connect to the given URI.
 	 *
 	 * @param KHttpUri
+	 * @throws KHttpException
 	 */
 	public function connect(KHttpUri $uri) 
 	{
@@ -104,6 +105,9 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
 		}
 	}
 	
+	/*
+	 * @throws KHttpException
+	 */
 	public function read() 
 	{
 		// First, read headers only
@@ -212,7 +216,11 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
         return $response;
 	}
 	
-	public function write(KHttpUri $uri, $options) {	
+	/*
+	 * @throws KHttpException
+	 */
+	public function write(KHttpUri $uri, $options) 
+	{	
         if (!$this->_socket) 
         {
             throw new KHttpException('Trying to write but we are not connected');

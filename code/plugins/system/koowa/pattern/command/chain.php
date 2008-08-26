@@ -26,7 +26,7 @@ class KPatternCommandChain extends KObject
 	 *
 	 * @var array
 	 */
-	protected $_command;
+	protected $_command = null;
 	
 	
 	/**
@@ -34,7 +34,7 @@ class KPatternCommandChain extends KObject
 	 *
 	 * @var array
 	 */
-	protected $_priority;
+	protected $_priority = null;
 
 	/**
 	 * Constructor
@@ -66,7 +66,7 @@ class KPatternCommandChain extends KObject
   	}
   	
 	/**
-	 * Attach a command to the chain
+	 * Remove a command from the chain
 	 * 
 	 * @param object 	$cmd		A KPatternCommandHandler 
 	 * @param integer	$priority	The command priority

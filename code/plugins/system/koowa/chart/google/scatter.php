@@ -23,6 +23,8 @@ class KChartGoogleScatter extends KChartGoogle
 
     /**
      * Constructor
+     * 
+     * @throws KChartException
      */
     public function __construct()
     {

@@ -21,7 +21,6 @@
  * 
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Security
- * @version     1.0
  */
 class KSecurityToken
 {

@@ -14,7 +14,6 @@
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @package     Koowa
  * @subpackage 	Client
- * @version     1.0
  */
 class KHttpClientAdapterException extends KHttpException
 {

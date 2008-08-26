@@ -20,20 +20,10 @@ abstract class KPatternCommandHandler extends KObject
 	/**
 	 * Generic Command handler
 	 * 
-	 * This functions creates a specific command based on the command name and calls it
-	 * 
 	 * @param string  $name		The command name
 	 * @param object  $args		The command arguments
 	 *
-	 * @return	mixed
+	 * @return	boolean
 	 */
-	function execute( $name, $args ) 
-	{
-		$result = null;
-		if(method_exists($this, $name)) {
-			$result = $this->$name($args);
-		}
-		
-		return $result;
-	}
+	abstract public function execute( $name, $args);
 }

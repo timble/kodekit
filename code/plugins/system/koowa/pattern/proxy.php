@@ -14,6 +14,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Pattern
  * @subpackage  Proxy
+ * @uses 		KObject
  */
 abstract class KPatternProxy extends KObject
 {

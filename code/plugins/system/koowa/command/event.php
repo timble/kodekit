@@ -12,22 +12,21 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Command
+ * @uses 		KPatternCommandHandler
  */
 class KCommandEvent extends KPatternCommandHandler
 {
 	/**
-	 * Generic Command handler
-	 * 
-	 * This functions creates a specific command based on the command name and calls it
+	 * Command handler
 	 * 
 	 * @param string  $name		The command name
 	 * @param object  $args		The command arguments
 	 *
-	 * @return array
+	 * @return boolean
 	 */
-	function execute( $name, $args ) 
+	public function execute( $name, $args ) 
 	{
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = KFactory::get('lib.koowa.event.dispatcher');
 		return $dispatcher->trigger($name, (array) $args);
 	}
 }

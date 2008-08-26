@@ -12,7 +12,9 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package		Koowa_View
- * @uses		KPatternClass
+ * @uses		KHelperClass
+ * @uses 		KTemplateDefault
+ * @uses 		KFactory
  */
 abstract class KViewAbstract extends KObject
 {
@@ -70,8 +72,8 @@ abstract class KViewAbstract extends KObject
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KPatternClass
-        $this->mixin(new KPatternClass($this, 'Controller'));
+        // Mixin the KHelperClass
+        $this->mixin(new KHelperClass($this, 'View'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
@@ -107,7 +109,7 @@ abstract class KViewAbstract extends KObject
 		if ($options['document']) {
 			$this->assignRef('document', $options['document']);
 		} else {
-			$this->assignRef('document', KFactory::get('Document'));
+			$this->assignRef('document', KFactory::get('lib.joomla.document'));
 		}
 
 		//Register the view stream wrapper
@@ -330,21 +332,6 @@ abstract class KViewAbstract extends KObject
     }
 	
 	/**
-	 * Get the filename for a resource.
-	 *
-	 * @param	array	An associative array of filename information. Optional.
-	 * @return	string	The filename.
-	 */
-	public static function getFileName( $parts = array() )
-	{
-		//Get the document type
-		$type   = KFactory::get('Document')->getType();
-
-		$filename = strtolower($parts['name']).DS.$type.'.php';
-		return $filename;
-	}
-
-	/**
 	 * Adds to the stack of view script paths in LIFO order.
 	 *
 	 * @param string|array The directory (-ies) to add.
@@ -374,6 +361,7 @@ abstract class KViewAbstract extends KObject
 	 *
 	 * @param string $tpl The name of the template source file ...
 	 * automatically searches the template paths and compiles as needed.
+	 * @throws KViewException
 	 * @return string The output of the the template script.
 	 */
 	public function loadTemplate( $tpl = null)
@@ -386,7 +374,7 @@ abstract class KViewAbstract extends KObject
 
 		//create the template file name based on the layout
 		$file = isset($tpl) ? $this->_layout.'_'.$tpl : $this->_layout;
-
+		
 		// load the template script
 		Koowa::import('lib.joomla.filesystem.path');
 		$this->_template = JPath::find($this->_path['template'], $file.'.php');
@@ -455,7 +443,7 @@ abstract class KViewAbstract extends KObject
 		{
 			case 'template':
 			{
-				$app = KFactory::get('Application');
+				$app = KFactory::get('lib.joomla.application');
 				$option = JRequest::getCmd('option');
 				
 				// set the alternative template search dir

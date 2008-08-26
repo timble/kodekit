@@ -12,6 +12,7 @@
  *
  * @author Johan Janssens <johan@joomlatools.org>
  * @package Koowa_Event
+ * @uses 	KPatternObservable
  */
 class KEventDispatcher extends KPatternObservable
 {

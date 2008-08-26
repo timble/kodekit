@@ -84,6 +84,7 @@ class KObject
      *
      * @param   string $property The name of the property
      * @param   mixed  $value The value of the property to set
+     * @throws KObjectException
      * @return  this
      */
     public function set( $property, $value = null )

@@ -16,7 +16,6 @@ Koowa::import('lib.koowa.chart.renderer.sparkline.Sparkline_Line');
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Chart
  * @subpackage  Sparkline
- * @version     1.0
  */
 class KChartSparklineLine extends KChartSparkline
 {
@@ -42,6 +41,7 @@ class KChartSparklineLine extends KChartSparkline
      *
      * @param	int	width
      * @param	int height
+     * @throws KChartException
      */
     public function render($width, $height)
     {
@@ -61,7 +61,7 @@ class KChartSparklineLine extends KChartSparkline
         
         $c->output();
 
-        KFactory::get('Application')->close();
+        KFactory::get('lib.joomla.application')->close();
     }
 
 }

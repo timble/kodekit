@@ -14,8 +14,10 @@
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package		Koowa_Controller
- * @uses		KPatternClass
+ * @uses		KHelperClass
  * @uses 		KCommandChain
+ * @uses        KObject
+ * @uses        KFactory
  */
 abstract class KControllerAbstract extends KObject
 {
@@ -107,8 +109,8 @@ abstract class KControllerAbstract extends KObject
         $this->_commandChain = $options['command_chain'];
         $this->_commandChain->enqueue(new KCommandEvent());
 
-        // Mixin the KPatternClass and KPatternCommandChain
-        $this->mixin(new KPatternClass($this, 'Controller'));
+        // Mixin the KHelperClass
+        $this->mixin(new KHelperClass($this, 'Controller'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
@@ -225,7 +227,7 @@ abstract class KControllerAbstract extends KObject
 		if ($cachable)
 		{
 			global $option;
-			$cache = KFactory::get('Cache', $option, 'view');
+			$cache = KFactory::get('lib.joomla.cache', $option, 'view');
 			$cache->get($view, 'display');
 		}
 		else
@@ -243,7 +245,7 @@ abstract class KControllerAbstract extends KObject
 	{
 		if ($this->_redirect)
 		{
-			$app = KFactory::get('Application');
+			$app = KFactory::get('lib.joomla.application');
 			$app->redirect( $this->_redirect, $this->_message, $this->_messageType );
 		}
 
@@ -277,6 +279,7 @@ abstract class KControllerAbstract extends KObject
 	 * @param	string	The class prefix. Optional.
 	 * @param	array	Options array for view. Optional.
 	 * @return	object	Reference to the view or an error.
+	 * @throws KControllerException
 	 */
 	public function getView( $name = '', $prefix = '', $options = array() )
 	{
@@ -290,13 +293,8 @@ abstract class KControllerAbstract extends KObject
 
 		//Add the basepath to the configuration
 		$options['base_path'] = $this->_path['view'][0];
-		$object = array(
-			'type' 		=> 'view'  ,
-			'component'	=> $prefix ,
-			'name'		=> $name
-		);
-
-		if ( !$view = KFactory::getInstance($object, $options) )
+		
+		if ( !$view = KFactory::get('com.'.$prefix.'.view.'.$name, $options) )
 		{
             $format = isset($options['format']) ? $options['format'] : 'html';
 			throw new KControllerException(

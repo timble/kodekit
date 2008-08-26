@@ -13,6 +13,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package		Koowa_Inflector
+ * @static
  *
  * @todo		http://en.wikipedia.org/wiki/English_plural
  */
@@ -118,6 +119,14 @@ class KInflector
 		'pluralized'   => array()
 	);
 	
+	/**
+	 * Constructor
+	 * 
+	 * Prevent creating instances of this class by making the contrucgtor private
+	 */
+	private function __construct() { }
+	
+	
    	/**
 	 * Singular English word to plural.
 	 *
@@ -208,7 +217,7 @@ class KInflector
 	 */
 	public static function camelize($word)
 	{
-		$result = str_replace(" ", "", ucwords(str_replace("_", " ", $word)));
+		$result = str_replace(' ', '', ucwords(str_replace('_', ' ', $word)));
 		return $result;
 	}
 
@@ -238,6 +247,18 @@ class KInflector
 	public static function explode($word)
 	{
 		$result = explode('_', self::underscore($word));
+		return $result;
+	}
+	
+	/**
+	 * Convert  an array of strings into a "CamelCased" word
+	 *
+	 * @param  array    $words   Array to implode
+	 * @return string  UpperCamelCasedWord
+	 */
+	public static function implode($words)
+	{
+		$result = self::camelize(implode('_', $words));
 		return $result;
 	}
 

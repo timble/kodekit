@@ -16,7 +16,7 @@ Koowa::import('lib.koowa.chart.renderer.sparkline.Sparkline');
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Chart
  * @subpackage  Sparkline
- * @version     1.0
+ * $uses KPatternProxy
  */
 abstract class KChartSparkline extends KPatternProxy
 {
@@ -31,6 +31,7 @@ abstract class KChartSparkline extends KPatternProxy
      * Get an instance of a Sparkline object by type
      *
      * @param string Type [bar|line]
+     * @throws KChartException
      */
     static public function getInstance($type, $config = array())
     {

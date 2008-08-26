@@ -12,6 +12,8 @@
 *
 * @author Johan Janssens <johan@joomlatools.org>
 * @package Koowa_Application
+* @uses KPatternCommandChain
+* @uses KPatternProxy
 */
 class KApplication extends KPatternProxy
 {

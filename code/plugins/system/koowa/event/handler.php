@@ -12,6 +12,7 @@
  *
  * @author Johan Janssens <johan@joomlatools.org>
  * @package Koowa_Event
+ * @uses 	KObserver
  */
 class KEventHandler extends KObserver
 {

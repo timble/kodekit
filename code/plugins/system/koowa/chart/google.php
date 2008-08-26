@@ -16,7 +16,7 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Chart
  * @subpackage  Google
- * @version     1.0
+ * @uses KObject
  */
 abstract class KChartGoogle extends KObject
 {
@@ -164,6 +164,7 @@ abstract class KChartGoogle extends KObject
      *
      * @param	string	Type
      * @return	object	KChartGoogle object
+     * @throws KChartException
      */
     public static function getInstance($type)
     {

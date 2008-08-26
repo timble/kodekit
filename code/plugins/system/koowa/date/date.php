@@ -45,7 +45,7 @@ define( 'SECONDS_IN_DAY', 86400 );
  * @author      Johan Janssens <johan@joomlatools.org>
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Date
- * @version     1.0
+ * @uses 		KObject
  */
 class KDate extends KObject
 {
