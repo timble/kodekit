@@ -22,7 +22,7 @@ class KFilterInt extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
-		return (false !== filter_var($var, FILTER_VALIDATE_INT));
+		return empty($var) || (false !== filter_var($var, FILTER_VALIDATE_INT));
 	}
 	
 	/**

@@ -15,7 +15,7 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Filter
  */
-class KFilterCommand extends KObject implements KFilterInterface
+class KFilterCmd extends KObject implements KFilterInterface
 {
 	/**
 	 * Validate a variable
@@ -26,7 +26,7 @@ class KFilterCommand extends KObject implements KFilterInterface
 	public function validate($var)
 	{
 	   	$pattern = '/^[A-Za-z0-9.\-_]*$/';
-    	return (is_string($var) && preg_match($pattern, $var) == 1);
+    	return (is_string($var) && (preg_match($pattern, $var)) == 1);
 	}
 	
 	/**

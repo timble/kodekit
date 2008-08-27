@@ -17,6 +17,7 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Filter
  * @version     1.0
+ * @uses		KHelperClass
  */
 abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 {	
@@ -26,19 +27,14 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 	 * @var KFilterInterface
 	 */
 	protected $_filter;
-	
-	/**
-	 * Enter description here...
-	 *
-	 * @param unknown_type $options
-	 */
+
 	public function __construct($options = array())
 	{
 		// Initialize the options
         $options  = $this->_initialize($options);
         
        // Mixin the KClass
-		$this->mixin(new KPatternClass($this, 'FilterArray'));
+		$this->mixin(new KHelperClass($this, 'FilterArray'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
