@@ -61,7 +61,7 @@ class KFactory
 			return self::$_container->offsetGet($identifier);
 		}
 		
-		throw new KFactoryException('Cannot instanciate object :'.$identifier);
+		throw new KFactoryException('Cannot instantiate object :'.$identifier);
 	}
 	
 	/**

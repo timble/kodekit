@@ -374,7 +374,7 @@ abstract class KViewAbstract extends KObject
 
 		//create the template file name based on the layout
 		$file = isset($tpl) ? $this->_layout.'_'.$tpl : $this->_layout;
-		
+
 		// load the template script
 		Koowa::import('lib.joomla.filesystem.path');
 		$this->_template = JPath::find($this->_path['template'], $file.'.php');
@@ -444,11 +444,10 @@ abstract class KViewAbstract extends KObject
 			case 'template':
 			{
 				$app = KFactory::get('lib.joomla.application');
-				$option = JRequest::getCmd('option');
+				// validating option as a command, but sanitizing it to use as a filename
+				$option = KRequest::get('option', 'request', KFactory::get('lib.koowa.filter.cmd'), KFactory::get('lib.koowa.filter.filename'));
 				
 				// set the alternative template search dir
-				$option = JRequest::getCmd('option');
-				$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $option);
 				$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->getClassName('suffix');
 				$this->_addPath('template', $fallback);
 			}	break;

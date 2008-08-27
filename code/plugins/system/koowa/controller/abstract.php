@@ -215,8 +215,10 @@ abstract class KControllerAbstract extends KObject
 	 */
 	public function display($cachable = false)
 	{
-		$viewName	= JRequest::getCmd( 'view', $this->getClassName('suffix') );
-		$viewLayout	= JRequest::getCmd( 'layout', 'default' );
+		$filter 	= KFactory::get('lib.koowa.filter.cmd');
+		$option 	= KRequest::get('option', 'request', $filter);
+		$viewName	= KRequest::get('view', 'request', $filter, null, $this->getClassName('suffix') );
+		$viewLayout	= KRequest::get('layout', 'request', $filter, null, 'default' );
 
 		$view       = $this->getView($viewName);
 
@@ -226,7 +228,6 @@ abstract class KControllerAbstract extends KObject
 		// Display the view
 		if ($cachable)
 		{
-			global $option;
 			$cache = KFactory::get('lib.joomla.cache', $option, 'view');
 			$cache->get($view, 'display');
 		}

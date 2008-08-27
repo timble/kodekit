@@ -9,7 +9,10 @@
 /**
  * Request class
  *
- * Allows to get input from GET, POST, PUT, DELETE, COOKIE, ENV, SERVER
+ * Allows to get input from GET, POST, PUT, DELETE, COOKIE, ENV, SERVER, REQUEST
+ * 
+ * @todo Ideally, REQUEST should never be used, unfortunately Joomla has too 
+ * many places where you can't get around it. WIP
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Request
@@ -19,47 +22,29 @@
  * @static
  */
 class KRequest
-{	
-	/**
-	 * Input from all sources
-	 *
-	 * @var	array
-	 */
-	protected static $_input = array();
-	
+{
 	/**
 	 * List of accepted hashes
-	 *
+	 * 
 	 * @var	array
 	 */
-	protected static $_hashes = array('COOKIE', 'DELETE', 'ENV', 'FILES', 'GET', 'POST', 'PUT', 'SERVER');
-	
-	/**
-	 * Constructor
-	 * 
-	 * Prevent creating instances of this class by making the contrucgtor private
-	 */
-	private function __construct() { }
+	protected static $_hashes = array('COOKIE', 'DELETE', 'ENV', 'FILES', 'GET', 'POST', 'PUT', 'SERVER', 'REQUEST');
 	
 	/**
 	 * Get a validated and optionally sanitized variable from the request. 
 	 * 
 	 * @param	string	Variable name
 	 * @param 	string  Hash [GET|POST|PUT|DELETE|COOKIE|ENV|SERVER]
-	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects or classnames 
-	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, classname, or array of objects or classnames
+	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects 
+	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, or array of objects
 	 * @param 	mixed	Default value when the variable doesn't exist
 	 * @throws	KRequestException	When the variable doesn't validate
-	 * @return 	mixed	(Sanitized) variable
+	 * @return 	mixed	(Sanitized) variable 
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
 	{
-		static $initialized;
-	
-		if(!isset($initialized)) {
-			self::_initialize();
-		}
-		
+		self::_initialize();
+
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
 		if(!in_array($hash, self::$_hashes)) {
@@ -67,27 +52,21 @@ class KRequest
 		}		
 		
 		// return the default value if $var wasn't set in the request
-		if(!isset(self::$_input[$hash][$var])) {
+		if(!isset($GLOBALS['_'.$hash][$var])) {
 			return $default; 	
 		}
-		$result = self::$_input[$hash][$var];
-		
-		// $validators and $sanitizers can be strings (classnames), objects (instances of the filters), or arrays (of mixed classnames and instances)
-		if(!is_array($validators)) {
-			$validators = array($validators);
-		}
-		if(!is_array($sanitizers)) {
-			$sanitizers = array($sanitizers);
-		}
+		$result = $GLOBALS['_'.$hash][$var];
+	
+		// turn $validators or $sanitizers is an object, turn it into an array of objects
+		// don't use settype because it will convert objects to arrays
+		$validators = is_array($validators) ? $validators : (empty($validators) ? array() : array($validators));
+		$sanitizers = is_array($sanitizers) ? $sanitizers : (empty($sanitizers) ? array() : array($sanitizers));
 		
 		// validate the variable
 		foreach($validators as $filter)
 		{
-			if(!is_object($filter)) {
-				$filter = new $filter;
-			}
 			if(!($filter instanceof KFilterInterface)) {
-				throw new KRequestException('Invalid filter passed');
+				throw new KRequestException('Invalid filter passed: '.get_class($filter));
 			}
 			if(!$filter->validate($result)) 
 			{
@@ -99,16 +78,44 @@ class KRequest
 		// sanitize the variable
 		foreach($sanitizers as $filter)
 		{
-			if(!is_object($filter)) {
-				$filter = new $filter;
-			}
 			if(!($filter instanceof KFilterInterface)) {
-				throw new KRequestException('Invalid filter passed');
+				throw new KRequestException('Invalid filter passed: '.get_class($filter));
 			}
 			$result = $filter->sanitize($result);		 
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Set a variable in the request
+	 *
+	 * @param 	mixed	Variable name
+	 * @param 	mixed	Variable value
+	 * @param 	string	Hash
+	 */
+	public static function set($var, $value, $hash) 
+	{
+		self::_initialize();
+		
+		// Is the hash in our list?
+		$hash = strtoupper($hash);
+		if(!in_array($hash, self::$_hashes)) {
+			throw new KRequestException('Unknown hash: '.$hash);
+		}
+		if('REQUEST' == $hash) {
+			throw new KRequestException('Can\'t set _REQUEST values, use GET, POST or COOKIE');
+		}
+		
+		
+		// add to hash in the superglobal
+		$GLOBALS['_'.$hash][$var] 		= $value;
+		
+		// Add to _REQUEST hash if original hash is get, post, or cookies
+		if(in_array($hash, array('GET', 'POST', 'COOKIE'))) {
+			$GLOBALS['_REQUEST'][$var] 	= $value;
+		}
+		
 	}
 	
 	/**
@@ -118,7 +125,7 @@ class KRequest
 	 */
 	public static function getMethod()
 	{
-		return strtoupper(self::$_input['SERVER']['REQUEST_METHOD']);
+		return strtoupper($GLOBALS['_SERVER']['REQUEST_METHOD']);
 	}
 	
 	/**
@@ -126,26 +133,31 @@ class KRequest
 	 */	
 	protected static function _initialize()
 	{	
-		self::$_input['COOKIE'] = $_COOKIE;
-		self::$_input['DELETE'] = array();
-		self::$_input['ENV'] 	= $_ENV;
-		self::$_input['FILES'] 	= $_FILES;
-		self::$_input['GET']	= $_GET;
-		self::$_input['POST'] 	= $_POST;
-		self::$_input['PUT'] 	= array();		
-		self::$_input['SERVER'] = $_SERVER;
-		
+		static $is_initialized;
+		if(isset($is_initialized)) {
+			return;
+		}
+
 		// Get PUT and DELETE from the input stream
 		$method = self::getMethod();
-		
 		if('PUT' == $method) {
-			parse_str(file_get_contents('php://input'), self::$_input['PUT']);
+			parse_str(file_get_contents('php://input'), $GLOBALS['_PUT']);
 		} elseif('DELETE' == $method) {
-			parse_str(file_get_contents('php://input'), self::$_input['DELETE']);	
+			parse_str(file_get_contents('php://input'), $GLOBALS['_DELETE']);	
 		}
 		
-		// TODO: in a koowa-only environment, all input superglobals should be 
-		// unset, so that input can only be accessed throug KRequest
+		$is_initialized = true;
+	}
+	
+	/**
+	 * Strip slashes recursively
+	 *
+	 * @param	mixed	Value
+	 * @return 	mixed
+	 */
+	protected static function _stripslashes($value)
+	{
+		return is_array($value) ? array_map(array('self', '_stripSlashesRecursive'), $value) : stripslashes($value);
 	}
 	
 }

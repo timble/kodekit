@@ -83,10 +83,10 @@ abstract class KDispatcherAbstract extends KObject
 		$defaultView = array_key_exists('default_view', $params) ? $params['default_view'] : $this->getClassName('suffix');
 
 		// Require specific controller if requested
-		$view		= JRequest::getCmd('view', $defaultView);
-        $controller = JRequest::getCmd('controller', $view);
+		$view		= KRequest::get('view', 'request', KFactory::get('lib.koowa.filter.cmd'), null, $defaultView);
+        $controller = KRequest::get('controller', 'request', KFactory::get('lib.koowa.filter.cmd'), null, $view);
         // Push the view back in the request in case a default view is used
-        JRequest::setVar('view', $view);
+        KRequest::set('view', $view, 'get');
 
 		$path       = $this->_basePath.DS.'views';
 
@@ -96,7 +96,7 @@ abstract class KDispatcherAbstract extends KObject
 			$result = explode('.', $controller);
 
 			//Set the actual view name
-			JRequest::setVar('view', $result[1]);
+			KRequest::set('view', $result[1], 'get');
 
 			//Set the controller based on the parent
 			$controller = $result[0];
@@ -112,9 +112,9 @@ abstract class KDispatcherAbstract extends KObject
 		);
 		
         $controller = $this->getController($controller, '', $options);
-        
-		// Perform the Request task
-		$controller->execute(JRequest::getCmd('task'));
+
+        // Perform the Request task
+		$controller->execute(KRequest::get('task', 'request', KFactory::get('lib.koowa.filter.cmd')));
 		
 		// Redirect if set by the controller
 		$controller->redirect();

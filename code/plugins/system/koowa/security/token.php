@@ -71,26 +71,8 @@ class KSecurityToken
         $token		= $session->get('koowa.security.token', null);
 		$age 		= time() - $session->get('koowa.security.tokentime');
 		
-		// Using getVar instead of getString, because if the request is not a string, 
-		// we consider it a hacking attempt
-        $req		= JRequest::getVar('_token', null, 'post');
+        $req		= KRequest::get('_token', 'post', KFactory::get('lib.koowa.filter.md5')); 
 		
-        return (self::isMd5($req) && $req===$token && $age <= $max_age);
+        return ($req===$token && $age <= $max_age);
     }
-    
-    /**
-     * Check if a string is a valid md5 (32 digit hexadecimal number)
-     * 
-     * @todo	Move to a separate validation class?
-     * 
-     * @param 	mixed	Variable to be tested
-     * @return 	bool
-     */
-    static public function isMd5($var)
-    {
-    	$pattern = '/^[0-9a-f]{32}$/';
-    	return (is_string($var) && preg_match($pattern, $var) == 1);
-    }
-
-
 }

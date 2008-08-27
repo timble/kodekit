@@ -39,9 +39,9 @@ class KControllerPage extends KControllerAbstract
 	 */
 	public function edit()
 	{
-		$cid = JRequest::getVar('cid', array(0), '', 'array');
-		$id  = JRequest::getInt('id', $cid[0], null);
-		
+		$cid = KRequest::get('cid', 'get', KFactory::get('lib.koowa.filter.array.ints'), null, array(0));
+		$id	 = KRequest::get('id', 'get', KFactory::get('lib.koowa.filter.int'), null, $cid[0]);
+		 
 		$this->setRedirect('view='.$this->getClassName('suffix').'&layout=form&id='.$id);
 	}
 
@@ -55,8 +55,8 @@ class KControllerPage extends KControllerAbstract
 		// Get the post data from the request
 		$data = $this->_getRequest('post');
 
-		// Get the table id from the session.
-		$id  = JRequest::getInt('id', '', null);
+		// Get the id
+		$id	 = KRequest::get('id', 'request', KFactory::get('lib.koowa.filter.int'));
 
 		// Get the table object attached to the model
 		$suffix = $this->getClassName('suffix');
@@ -71,7 +71,7 @@ class KControllerPage extends KControllerAbstract
 			$id  = $table->getDBO()->insertid();
 		}
 
-		$redirect = 'format='.JRequest::getCmd('format', 'html');
+		$redirect = 'format='.KRequest::get('format', 'get', KFactory::get('lib.koowa.filter.cmd'), null, 'html');
 		switch($this->getTask())
 		{
 			case 'apply' :
@@ -93,7 +93,7 @@ class KControllerPage extends KControllerAbstract
 	{
 		$this->setRedirect(
 			'view='.KInflector::pluralize($this->getClassName('suffix'))
-			.'&format='.JRequest::getCmd('format', 'html')
+			.'&format='.KRequest::get('format', 'get', KFactory::get('lib.koowa.filter.cmd'), null, 'html')
 			);
 	}
 	
@@ -106,7 +106,7 @@ class KControllerPage extends KControllerAbstract
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 		
-		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
+		$cid = KRequest::get('cid', 'post', KFactory::get('lib.koowa.filter.array.ints'), null, array());
 
 		if (count( $cid ) < 1) {
 			throw new KControllerException(JText::sprintf( 'Select an item to %s', JText::_($this->getTask()), true ) );
@@ -121,18 +121,18 @@ class KControllerPage extends KControllerAbstract
 		
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
-			.'&format='.JRequest::getCmd('format', 'html')
+			.'&format='.KRequest::get('format', 'get', KFactory::get('lib.koowa.filter.cmd'), null, 'html')
 		);
 	}
 
 	/*
-	 * Generic delete action
+	 * Generic enable action
 	 */
 	public function enable()
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 	
-		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
+		$cid = KRequest::get('cid', 'post', KFactory::get('lib.koowa.filter.array.ints'), null, array());
 
 		$enable  = $this->getTask() == 'enable' ? 1 : 0;
 
@@ -149,17 +149,19 @@ class KControllerPage extends KControllerAbstract
 	
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
-			.'&format='.JRequest::getCmd('format', 'html')
+			.'&format='.KRequest::get('format', 'get', KFactory::get('lib.koowa.filter.cmd'), null, 'html')
 		);
 	}
 	
-	protected function access($access)
+	/**
+	 * Generic method to modify the access level of items
+	 */
+	public function access($access)
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 		
-		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
-		$access = JRequest::getInt( 'access', '', null);
-		KHelperArray::settype($cid, 'integer', false);
+		$cid 	= KRequest::get('cid', 'post', KFactory::get('lib.koowa.filter.array.ints'), null, array());
+		$access = KRequest::get('access', 'post', KFactory::get('lib.koowa.filter.int'));
 		
 		// Get the table object attached to the model
 		$suffix = $this->getClassName('suffix');
@@ -170,7 +172,7 @@ class KControllerPage extends KControllerAbstract
 	
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
-			.'&format='.JRequest::getCmd('format', 'html'), 
+			.'&format='.KRequest::get('format', 'get', KFactory::get('lib.koowa.filter.cmd'), null, 'html'), 
 			JText::_( 'Changed items access level')
 		);
 	}

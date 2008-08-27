@@ -27,8 +27,10 @@ class KViewSparkline extends KViewAbstract
 
     public function display($tpl = null)
     {
-        $width      = JRequest::getInt('w', 80);
-        $height     = JRequest::getInt('h', 20);
+    	lib.koowa.filter.
+    	$filter 	=  KFactory::get('lib.koowa.filter.int');
+        $width      = KRequest::get('w', 'get', $filter, null, 80);
+        $height     = KRequest::get('h', 'get', $filter, null, 20);
 
         return $this->getChart()->render($width, $height);
     }
