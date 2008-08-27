@@ -153,11 +153,12 @@ class KControllerPage extends KControllerAbstract
 		);
 	}
 	
-	protected function _setAccess($access)
+	protected function access($access)
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 		
 		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
+		$access = JRequest::getInt( 'access', '', null);
 		KHelperArray::settype($cid, 'integer', false);
 		
 		// Get the table object attached to the model
@@ -174,21 +175,6 @@ class KControllerPage extends KControllerAbstract
 		);
 	}
 
-	public function accesspublic()
-	{
-		$this->_setAccess(0);
-	}
-
-	public function accessregistered()
-	{
-		$this->_setAccess(1);
-	}
-
-	public function accessspecial()
-	{
-		$this->_setAccess(2);
-	}
-	
 	/**
 	 * Wrapper for JRequest::get(). Override this method to modify the GET/POST data before saving
 	 *
