@@ -12,7 +12,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Factory
  */
-abstract class KFactoryAdapterAbstract extends KPatternCommandHandler
+abstract class KFactoryAdapterAbstract extends KObject implements KPatternCommandInterface, KFactoryAdapterInterface
 {
 	/**
 	 * Generic Command handler
@@ -20,26 +20,25 @@ abstract class KFactoryAdapterAbstract extends KPatternCommandHandler
 	 * @param string  $name		The command name
 	 * @param object  $args		The command arguments
 	 *
-	 * @return	mixed
+	 * @return string|object|false
 	 */
 	final public function execute($name, $args) 
 	{
-		$instance = $this->getInstance($name, $args);
-		if($instance != false) {
-			KFactory::set($name, $instance);
-			return false;
+		//Create the handle based on the class identifier
+		$handle = $this->createHandle($name);
+			
+		//Return if no handle could be created
+		if($handle === false) {
+		 	return false;
 		}
 		
-		return true;
+		//Create the instance based on the instance handle
+		if(KFactory::has($handle) === false) 
+		{
+			$instance = $this->createInstance($handle, $args);
+			KFactory::set($handle, $instance);
+		}
+		
+		return $handle;
 	}
-	
-	/**
-	 * Get an instance of a class based on a class identifier
-	 *
-	 * @param mixed  $string 	The class identifier
-	 * @param array  $options 	An optional associative array of configuration settings.
-	 *
-	 * @return object
-	 */
-	abstract public function getInstance($identifier, $options = array());
 }

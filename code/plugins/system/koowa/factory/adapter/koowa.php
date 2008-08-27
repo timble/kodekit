@@ -16,19 +16,31 @@
 class KFactoryAdapterKoowa extends KFactoryAdapterAbstract
 {
 	/**
-	 * Get an instance of a class based on a class identifier
+	 * Parse a class identifier to determine if it can be processed
 	 *
 	 * @param mixed  $string 	The class identifier
-	 * @param array  $options 	An optional associative array of configuration settings.
-	 *
-	 * @return object
+	 * @return string|false
 	 */
-	public function getInstance($identifier, $options = array())
+	public function createHandle($identifier)
 	{
 		$parts = explode('.', $identifier);
 		if($parts[0] != 'lib' || $parts[1] != 'koowa') {
 			return false;
 		}
+	
+		return $identifier;
+	}
+
+	/**
+	 * Create an instance of a class based on a class identifier
+	 *
+	 * @param mixed  $string 	The class identifier
+	 * @param array  $options 	An optional associative array of configuration settings.
+	 * @return object
+	 */
+	public function createInstance($identifier, $options)
+	{
+		$parts = explode('.', $identifier);
 		
 		unset($parts[0]);
 		unset($parts[1]);
@@ -46,7 +58,6 @@ class KFactoryAdapterKoowa extends KFactoryAdapterAbstract
                         
 			$classname = 'K'.KInflector::implode($parts).'Default';
 		}
-		
 		
 		$instance = new $classname($options);
 		return $instance;

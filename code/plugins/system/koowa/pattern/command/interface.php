@@ -9,13 +9,13 @@
  */
 
 /**
- * Command interface
+ * Abstract Command 
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @package     Koowa_Pattern
  * @subpackage  Command
  */
-abstract class KPatternCommandHandler extends KObject
+interface KPatternCommandInterface
 {
 	/**
 	 * Generic Command handler
@@ -25,5 +25,13 @@ abstract class KPatternCommandHandler extends KObject
 	 *
 	 * @return	boolean
 	 */
-	abstract public function execute( $name, $args);
+	public function execute( $name, $args);
+	
+	/**
+	 * This function returns an unique identifier for the object. This id can be used as 
+	 * a hash key for storing objects or for identifying an object
+	 * 
+	 * @return string A string that is unique
+	 */
+	public function getHandle();
 }

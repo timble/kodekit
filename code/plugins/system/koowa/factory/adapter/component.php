@@ -24,16 +24,14 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
         'row'       => 'DatabaseRow',
       	'rowset'    => 'DatabaseRowset'
 	);
-
+	
 	/**
-	 * Get an instance of a class based on a class identifier
+	 * Parse a class identifier to determine if it can be processed
 	 *
 	 * @param mixed  $string 	The class identifier
-	 * @param array  $options 	An optional associative array of configuration settings.
-	 *
-	 * @return object
+	 * @return string|false
 	 */
-	public function getInstance($identifier, $options = array())
+	public function createHandle($identifier)
 	{
 		$parts = explode('.', $identifier);
 		if(strpos($parts[0], 'com') === false) {
@@ -41,21 +39,42 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 		}
 	
 		//Parse the client from the object string
-		if(strpos($parts[0], '::'))
+		if(strpos($parts[0], '::') === false)
 		{
-			$name = explode('::', $parts[0]);
-			$name = ($name[0] == 'admin') ? 'administrator' : $name[0];
-			$result['application'] = $name;
-		}
+			$name = KFactory::get('lib.joomla.application')->getName();
+			$identifier = $name.'::'.$identifier;
+		} 
+		else $identifier = str_replace('admin::', 'administrator::', $identifier);
+		
+		return $identifier;
+	}
 
+	/**
+	 * Create an instance of a class based on a class identifier
+	 *
+	 * @param mixed  $string 	The class identifier
+	 * @param array  $options 	An optional associative array of configuration settings.
+	 * @return object
+	 */
+	public function createInstance($identifier, $options)
+	{
+		$parts = explode('.', $identifier);
+		
+		//Set the application
+		$name = explode('::', $parts[0]);
+		$result['application'] = $name[0];
+		
+		//Set the component
 		if(isset($parts[1])) {
 			$result['component'] = $parts[1];
-		}
+		} 
 
+		//Set the object type
 		if(isset($parts[2])) {
 			$result['type'] = $parts[2];
 		}
 
+		//Set the object name
 		if(isset($parts[3])) {
 			$result['name'] = $parts[3];
 		}
@@ -103,9 +122,9 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 			$base = $object['type'];
 		}
 
-        $classNameInstance = ucfirst($component).ucfirst($type).ucfirst($name);
+        $classname = ucfirst($component).ucfirst($type).ucfirst($name);
 		
-		if (!class_exists( $classNameInstance ))
+		if (!class_exists( $classname ))
 		{
 			//Create path
 			if(!isset($options['base_path']))
@@ -123,8 +142,8 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 			if($file = JPath::find($options['base_path'], self::_getFileName($type, $name)))
 			{
 				require_once $file;
-				if (!class_exists( $classNameInstance )) {
-					throw new KFactoryAdapterException($classNameInstance.' not found in file.' );
+				if (!class_exists( $classname )) {
+					throw new KFactoryAdapterException($classname.' not found in file.' );
 				}
 
 				//Set the view base_path in the options array
@@ -133,9 +152,9 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 			else 
 			{
 				if(class_exists( 'K'.ucfirst($base).ucfirst($name))) {
-					$classNameInstance = 'K'.ucfirst($base).ucfirst($name);
+					$classname = 'K'.ucfirst($base).ucfirst($name);
 				} else {
-					$classNameInstance = 'K'.ucfirst($base).'Default';
+					$classname = 'K'.ucfirst($base).'Default';
 				}	
 			}
 		}
@@ -144,7 +163,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 		$options['name'] = array('prefix' => $component, 'base' => $base, 'suffix' => $name);
 			
 		// Create the object
-		$instance = new $classNameInstance($options);
+		$instance = new $classname($options);
 		return $instance;
 	}
 
@@ -154,7 +173,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	 * Function checks to see if the class has a static getFileName function,
 	 * otherwise it returns a default name.
 	 *
-	 * return string The file name for the class
+	 * @return string The file name for the class
 	 */
 	protected static function _getFileName($class, $name)
 	{

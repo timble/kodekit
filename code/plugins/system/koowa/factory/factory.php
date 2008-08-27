@@ -27,7 +27,7 @@ class KFactory
 	 *
 	 * @var	object
 	 */
-	protected static $_commandChain = null;
+	protected static $_chain = null;
 	
 	/**
 	 * Constructor
@@ -51,21 +51,25 @@ class KFactory
 	
 		if(!isset($initialized)) {
 			self::_initialize();
+			$initialized = true;
 		}
 		
+		//Check if the object already exists
 		if(self::$_container->offsetExists($identifier)) {
 			return self::$_container->offsetGet($identifier);
-		}
+		} 
 		
-		if(self::$_commandChain->run($identifier, $options) === false) {
-			return self::$_container->offsetGet($identifier);
-		}
+		//Get a handle for the oject 
+		$handle = self::$_chain->run($identifier, $options);
+		if($handle !== false) {	
+			return self::$_container->offsetGet($handle);
+		}	
 		
-		throw new KFactoryException('Cannot instantiate object :'.$identifier);
+		throw new KFactoryException('Cannot create object from identifier : '.$identifier);
 	}
 	
 	/**
-	 * Set an instance of a class based on a class identifier
+	 * Insert the object instance using the identifier
 	 *
 	 * @param mixed  $identifier 	The class identifier
 	 * @param object $object 		The object instance to store
@@ -76,7 +80,7 @@ class KFactory
 	}
 	
 	/**
-	 * Unset an instance of a class based on a class identifier
+	 * Remove the object instance using the identifier
 	 *
 	 * @param mixed  $identifier 	The class identifier
 	 *
@@ -93,6 +97,22 @@ class KFactory
 	}
 	
 	/**
+	 * Check if the object instance exists based on the identifier
+	 *
+	 * @param mixed  $identifier 	The class identifier
+	 *
+	 * @return boolean Returns TRUE on success or FALSE on failure.
+	 */
+	public static function has($identifier)
+	{
+		if(self::$_container->offsetExists($identifier)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Register a factory adapter
 	 * 
 	 * @param object 	$adapter	A KFactoryAdapter
@@ -100,9 +120,9 @@ class KFactory
 	 *
 	 * @return boolean Returns TRUE on success or FALSE on failure. 
 	 */
-	public function registerAdapter(KFactoryAdapterAbstract $adapter, $priority = 1)
+	public function registerAdapter(KFactoryAdapterInterface $adapter, $priority = 1)
 	{
-		self::$_commandChain->enqueue($adapter, $priority);
+		self::$_chain->enqueue($adapter, $priority);
 		return true;
 	}
 	
@@ -115,7 +135,7 @@ class KFactory
 		self::$_container    = new ArrayObject();
 	
 		//Create the command chain and register the adapters
-        self::$_commandChain = new KPatternCommandChain();
+        self::$_chain = new KFactoryChain();
         self::registerAdapter(new KFactoryAdapterKoowa());
        	self::registerAdapter(new KFactoryAdapterJoomla());
         self::registerAdapter(new KFactoryAdapterComponent());

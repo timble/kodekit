@@ -14,7 +14,7 @@
  * @package     Koowa_Command
  * @uses 		KPatternCommandHandler
  */
-class KCommandEvent extends KPatternCommandHandler
+class KCommandEvent extends KObject implements KPatternCommandInterface 
 {
 	/**
 	 * Command handler

@@ -43,8 +43,13 @@ class KRequest
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
 	{
-		self::_initialize();
-
+		static $initialized;
+	
+		if(!isset($initialized)) {
+			self::_initialize();
+			$initialized = true;
+		}
+	
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
 		if(!in_array($hash, self::$_hashes)) {

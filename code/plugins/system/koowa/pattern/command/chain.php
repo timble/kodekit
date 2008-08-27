@@ -55,7 +55,7 @@ class KPatternCommandChain extends KObject
 	 *
 	 * @return	void
 	 */
-	public function enqueue( KPatternCommandHandler $cmd, $priority = 1)
+	public function enqueue( KPatternCommandInterface $cmd, $priority = 1)
 	{
 		$handle = $cmd->getHandle(); //get the object handle
 		
@@ -73,7 +73,7 @@ class KPatternCommandChain extends KObject
 	 *
 	 * @return 	boolean True if the command handler was detached
 	 */
-	public function dequeue( KPatternCommandHandler $cmd)
+	public function dequeue( KPatternCommandInterface $cmd)
 	{
 		$handle = $cmd->getHandle(); //get the object handle
 		
@@ -122,7 +122,7 @@ class KPatternCommandChain extends KObject
 	 *
 	 * @return	void
 	 */
-  	public function setPriority(KPatternCommandHandler $cmd, $priority)
+  	public function setPriority(KPatternCommandInterface $cmd, $priority)
   	{
   		$hanlde = $cmd->getHandle(); //get the object handle
 		
@@ -141,7 +141,7 @@ class KPatternCommandChain extends KObject
 	 *
 	 * @return	integer The command priority
 	 */
-  	public function getPriority(KPatternCommandHandler $cmd)
+  	public function getPriority(KPatternCommandInterface $cmd)
   	{
   		$hanlde = $cmd->getHandle(); //get the object handle
   	
