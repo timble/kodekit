@@ -56,10 +56,13 @@ class plgSystemKoowa extends JPlugin
 	{
 		$result = true;
 		
+		$filter	= KFactory::get('lib.koowa.filter.cmd');
+		$option	= KRequest::get('option', 'request', $filter);
+		$task	= KRequest::get('task',   'request', $filter);
+		$type	= KRequest::get('type',   'request', $filter);
+		
 		// are we uninstalling a plugin?
-		if(JRequest::getCmd('option') == 'com_installer' 
-			AND JRequest::getCmd('task') == 'remove'
-			AND JRequest::getCmd('type') == 'plugins' ) {
+		if('com_installer' == $option && 'remove' == $task && 'plugins' == $type ) {
 			$result = false;
 		}
 		
