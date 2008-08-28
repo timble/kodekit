@@ -132,9 +132,9 @@ class KHttpUri extends KObject
 		$uri = '';
 		$uri .= !empty($this->_scheme)  ? $this->_scheme.'://' : '';
 		
-		if(!empty($this->_user) AND !empty($this->_pass)) {
+		if(!empty($this->_user) && !empty($this->_pass)) {
 			$uri .= $this->_user . ':' . $this->_pass . '@';
-		} elseif(!empty($this->_user) AND empty($this->_pass)) {
+		} elseif(!empty($this->_user) && empty($this->_pass)) {
 			$uri .= $this->_user . '@';
 		}
 		

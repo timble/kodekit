@@ -252,7 +252,7 @@ abstract class KDatabaseTableAbstract extends KObject
  	            }
 
                 // Set the primary key (if not set)
-                if(!isset($this->_primary) AND $description->primary) {
+                if(!isset($this->_primary) && $description->primary) {
                 	$this->_primary = $description->name;
                 }
 

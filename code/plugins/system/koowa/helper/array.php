@@ -30,7 +30,7 @@ class KHelperArray
     {
         foreach($array as $k => $v)
         {
-            if($recursive AND is_array($v)) {
+            if($recursive && is_array($v)) {
                 $array[$k] = self::settype($v, $type, $recursive);
             } else {
             	settype($array[$k], $type);

@@ -58,8 +58,8 @@ class plgSystemKoowa extends JPlugin
 		
 		// are we uninstalling a plugin?
 		if(JRequest::getCmd('option') == 'com_installer' 
-			AND JRequest::getCmd('task') == 'remove'
-			AND JRequest::getCmd('type') == 'plugins' ) {
+			&& JRequest::getCmd('task') == 'remove'
+			&& JRequest::getCmd('type') == 'plugins' ) {
 			$result = false;
 		}
 		
