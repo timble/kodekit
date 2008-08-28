@@ -33,6 +33,9 @@ class KRequest
 	/**
 	 * Get a validated and optionally sanitized variable from the request. 
 	 * 
+	 * When no sanitizers are supplied, the same filters as the validators will 
+	 * be used.
+	 * 
 	 * @param	string	Variable name
 	 * @param 	string  Hash [GET|POST|PUT|DELETE|COOKIE|ENV|SERVER]
 	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects 
@@ -65,8 +68,10 @@ class KRequest
 		// turn $validators or $sanitizers is an object, turn it into an array of objects
 		// don't use settype because it will convert objects to arrays
 		$validators = is_array($validators) ? $validators : (empty($validators) ? array() : array($validators));
-		$sanitizers = is_array($sanitizers) ? $sanitizers : (empty($sanitizers) ? array() : array($sanitizers));
+		// if no sanitizers are given, use the validators
+		$sanitizers = empty($sanitizers) ? $validators : (is_array($sanitizers) ? $sanitizers : array($sanitizers));
 		
+
 		// validate the variable
 		foreach($validators as $filter)
 		{
