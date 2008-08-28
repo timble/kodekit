@@ -22,6 +22,7 @@ class KFilterUrl extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
+		$var = trim($var);
 		return (false !== filter_var($var, FILTER_VALIDATE_URL));
 	}
 	

@@ -22,6 +22,7 @@ class KFilterEmail extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
+		$var = trim($var);
 		return (false !== filter_var($var, FILTER_VALIDATE_EMAIL));
 	}
 	
@@ -35,6 +36,7 @@ class KFilterEmail extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
+		$var = trim($var);
 		return filter_var($var, FILTER_SANITIZE_EMAIL);
 	}
 }

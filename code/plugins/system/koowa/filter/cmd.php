@@ -25,6 +25,7 @@ class KFilterCmd extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
+		$var = trim($var);
 	   	$pattern = '/^[A-Za-z0-9.\-_]*$/';
     	return (is_string($var) && (preg_match($pattern, $var)) == 1);
 	}
@@ -37,6 +38,7 @@ class KFilterCmd extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
+		$var = trim($var);
 		$pattern 	= '/[^A-Za-z0-9.\-_]*/';
     	return preg_replace($pattern, '', $var);
 	}

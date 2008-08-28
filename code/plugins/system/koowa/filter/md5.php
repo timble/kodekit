@@ -24,6 +24,7 @@ class KFilterMd5 extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
+		$var = trim($var);
 	   	$pattern = '/^[a-f0-9]{32}$/';
     	return (is_string($var) && preg_match($pattern, $var) == 1);
 	}
@@ -36,7 +37,7 @@ class KFilterMd5 extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
-		$var 		= strtolower($var);
+		$var 		= trim(strtolower($var));
 		$pattern 	= '/[^a-f0-9]*/';
     	return substr(preg_replace($pattern, '', $var), 0, 32);
 	}

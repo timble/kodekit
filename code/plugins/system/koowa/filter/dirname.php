@@ -22,6 +22,7 @@ class KFilterDirname extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
+		$var = trim($var);
 	   	return ((string) $var === $this->sanitize($var));
 	}
 	
@@ -33,6 +34,7 @@ class KFilterDirname extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
+		$var = trim($var);
     	return dirname($var);
 	}
 }
