@@ -161,24 +161,6 @@ class KViewHelperGrid
 		return $href;
 	}
 
-	public static function state( $filter_state='*', $published='Published', $unpublished='Unpublished', $archived=NULL, $trashed=NULL )
-	{
-		$state[] = KViewHelper::_('select.option',  '', '- '. JText::_( 'Select State' ) .' -' );
-		//Jinx : Why is this used ?
-		//$state[] = KViewHelper::_('select.option',  '*', JText::_( 'Any' ) );
-		$state[] = KViewHelper::_('select.option',  'P', JText::_( $published ) );
-		$state[] = KViewHelper::_('select.option',  'U', JText::_( $unpublished ) );
-
-		if ($archived) {
-			$state[] = KViewHelper::_('select.option',  'A', JText::_( $archived ) );
-		}
-
-		if ($trashed) {
-			$state[] = KViewHelper::_('select.option',  'T', JText::_( $trashed ) );
-		}
-
-		return KViewHelper::_('select.genericlist',   $state, 'filter_state', 'class="inputbox" size="1" onchange="submitform( );"', 'value', 'text', $filter_state );
-	}
 
 	public static function order( $rows, $image='filesave.png', $task="saveorder" )
 	{

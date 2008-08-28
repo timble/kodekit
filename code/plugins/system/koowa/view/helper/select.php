@@ -42,7 +42,7 @@ class KViewHelperSelect
 	public static function optgroup( $text, $value_name = 'value', $text_name = 'text' )
 	{
 		$obj = new stdClass;
-		$obj->$value_name	= '<OPTGROUP>';
+		$obj->$value_name	= '<optgroup>';
 		$obj->$text_name	= $text;
 		return $obj;
 	}
