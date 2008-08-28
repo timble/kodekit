@@ -60,7 +60,7 @@ class KRequest
 		if(!isset($GLOBALS['_'.$hash][$var])) {
 			return $default; 	
 		}
-		$result = $GLOBALS['_'.$hash][$var];
+		$result = trim($GLOBALS['_'.$hash][$var]);
 	
 		// turn $validators or $sanitizers is an object, turn it into an array of objects
 		// don't use settype because it will convert objects to arrays
