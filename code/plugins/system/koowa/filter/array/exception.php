@@ -13,4 +13,4 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Filter
  */
-class KFilterArrayException extends Exception {}
+class KFilterArrayException extends KFilterException {}
