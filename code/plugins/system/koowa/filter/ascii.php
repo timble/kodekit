@@ -206,7 +206,6 @@ class KFilterAscii extends KObject implements KFilterInterface
 	        $i += $increment;
 	        
 	    }
-	    die(var_dump(__METHOD__, $this, self::$_data));
 	 
 	    return ob_get_clean();  
 	}
