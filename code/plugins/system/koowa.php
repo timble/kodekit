@@ -56,6 +56,8 @@ class plgSystemKoowa extends JPlugin
 	{
 		$result = true;
 		
+		// Note: can't use KRequest, Koowa isn't loaded yet
+		
 		// are we uninstalling a plugin?
 		if(JRequest::getCmd('option') == 'com_installer' 
 			&& JRequest::getCmd('task') == 'remove'
