@@ -19,10 +19,11 @@ class KEventHandler extends KObserver
 	/**
 	 * Method to trigger events
 	 *
-	 * @param array Arguments
+	 * @param  string 	$event	 The name of the event to call
+	 * @param  array	$args	 The event arguments
 	 * @return mixed Routine return value
 	 */
-	public function onNotify($event, $args = array())
+	public function onNotify($event, array $args)
 	{
 		if (method_exists($this, $event)) {
 			return call_user_func_array ( array($this, $event), $args );

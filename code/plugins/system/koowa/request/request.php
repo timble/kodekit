@@ -60,7 +60,7 @@ class KRequest
 		}		
 		
 		// return the default value if $var wasn't set in the request
-		if(!isset($GLOBALS['_'.$hash][$var])) {
+		if(empty($GLOBALS['_'.$hash][$var])) {
 			return $default; 	
 		}
 		$result = trim($GLOBALS['_'.$hash][$var]);
@@ -113,10 +113,10 @@ class KRequest
 		if(!in_array($hash, self::$_hashes)) {
 			throw new KRequestException('Unknown hash: '.$hash);
 		}
+		
 		if('REQUEST' == $hash) {
 			throw new KRequestException('Can\'t set _REQUEST values, use GET, POST or COOKIE');
 		}
-		
 		
 		// add to hash in the superglobal
 		$GLOBALS['_'.$hash][$var] 		= $value;
@@ -125,7 +125,6 @@ class KRequest
 		if(in_array($hash, array('GET', 'POST', 'COOKIE'))) {
 			$GLOBALS['_REQUEST'][$var] 	= $value;
 		}
-		
 	}
 	
 	/**

@@ -100,7 +100,7 @@ abstract class KControllerAbstract extends KObject
 	 * Recognized key values include 'name', 'default_task', 'view_path'
 	 * (this list is not meant to be comprehensive).
 	 */
-	public function __construct( $options = array() )
+	public function __construct( array $options = array() )
 	{
         // Initialize the options
         $options  = $this->_initialize($options);
@@ -152,7 +152,7 @@ abstract class KControllerAbstract extends KObject
      * @param   array   Options
      * @return  array   Options
      */
-    protected function _initialize($options)
+    protected function _initialize(array $options)
     {
         $defaults = array(
             'base_path'     => null,
@@ -282,7 +282,7 @@ abstract class KControllerAbstract extends KObject
 	 * @return	object	Reference to the view or an error.
 	 * @throws KControllerException
 	 */
-	public function getView( $name = '', $prefix = '', $options = array() )
+	public function getView( $name = '', $prefix = '', array $options = array() )
 	{
 		if ( empty( $prefix ) ) {
 			$prefix = $this->getClassName('prefix');

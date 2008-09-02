@@ -42,20 +42,19 @@ class KHttpClient extends KObject
 
 	protected $_adapter = null;
 	
-	public function __construct($options = null) 
+	public function __construct(array $options = array()) 
 	{
 		$this->setConfig($options);
 	}
 	
-	public function setConfig($config) 
+	public function setConfig(array $config) 
 	{
 		$this->_config = array(
 	        'maxredirects'	=> 5,
 			'timeout'		=> 10
     	);
     	
-    	if (!is_null($config))
-    	{
+    	if (!is_null($config)) {
     		array_merge($this->_config, $config);
     	}
 	}

@@ -17,7 +17,7 @@
  */
 class KViewJson extends KViewAbstract
 {
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
 		parent::__construct($options);
 

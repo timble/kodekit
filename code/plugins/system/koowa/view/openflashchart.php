@@ -25,7 +25,7 @@ class KViewOpenflashchart extends KViewAbstract
      */
     public $chart;
 
-    public function __construct($options = array())
+    public function __construct(array $options = array())
     {
         parent::__construct($options);
 

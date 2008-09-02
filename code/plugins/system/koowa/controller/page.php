@@ -24,7 +24,7 @@ class KControllerPage extends KControllerAbstract
 	 *
 	 * @param array An optional associative array of configuration settings.
 	 */
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
 		parent::__construct($options);
 

@@ -92,7 +92,7 @@ class KPatternCommandChain extends KObject
 	 * If a command return false the executing is halted
 	 * 
 	 * @param string  $name		The command name
-	 * @param object  $args		The command arguments
+	 * @param mixed   $args		The command arguments
 	 *
 	 * @return	void
 	 */

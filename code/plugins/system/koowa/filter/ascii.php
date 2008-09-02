@@ -41,7 +41,7 @@ class KFilterAscii extends KObject implements KFilterInterface
 	 *
 	 * @param	array	Options array
 	 */
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
 		if(!isset($options['default_char'])) {
 			$options['default_char'] = '?';

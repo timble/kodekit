@@ -49,7 +49,7 @@ class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter
 	 */
 	protected $_method;
 	
-	public function __construct($options = null) 
+	public function __construct(array $options = array()) 
 	{
 		$this->_configuration = $options;
 	}

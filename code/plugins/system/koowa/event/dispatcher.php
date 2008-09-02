@@ -33,10 +33,10 @@ class KEventDispatcher extends KPatternObservable
 	 * the event and returning their return values.
 	 *
 	 * @param	string	$event			The event name
-	 * @param	array	$args			An array of arguments
+	 * @param	mixed	$args			An array of arguments
 	 * @return	array	An array of results from each function call
 	 */
-	public function trigger($event, $args = array())
+	public function trigger($event, $args)
 	{
 		// Initialize variables
 		$result = array ();

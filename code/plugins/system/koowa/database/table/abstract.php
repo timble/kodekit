@@ -108,7 +108,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 * Recognized key values include 'name', 'table', 'primary' and 'dbo' (this
 	 * list is not meant to be comprehensive).
 	 */
-	public function __construct( $options = array() )
+	public function __construct( array $options = array() )
 	{
         // Initialize the options
         $options  = $this->_initialize($options);
@@ -146,7 +146,7 @@ abstract class KDatabaseTableAbstract extends KObject
      * @param   array   Options
      * @return  array   Options
      */
-    protected function _initialize($options)
+    protected function _initialize(array $options)
     {
         $defaults = array(
             'base_path'     => null,
@@ -357,7 +357,7 @@ abstract class KDatabaseTableAbstract extends KObject
      * @param	array	Config
      * @return	object 	KDatabaseRow object
      */
-    public function fetchRow($query = null, $options = array())
+    public function fetchRow($query = null, array $options = array())
     {
         $row = $this->fetchNew($options);
 
@@ -385,7 +385,7 @@ abstract class KDatabaseTableAbstract extends KObject
      * @param	array	Options
      * @return	object 	KDatabaseRow object
      */
-    public function fetchNew($options = array())
+    public function fetchNew(array $options = array())
     {
         // Options
         $options['table']     = $this;
@@ -411,7 +411,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 * @throws KDatabaseTableException
 	 * @return integer The new object's primary key value, or throw an exception if any errors occur.
 	 */
-	public function insert( $data )
+	public function insert( array $data )
 	{
 		$data  = $this->filter($data);
 		$table = $this->getTableName();
@@ -431,7 +431,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 * @throws KDatabaseTableException
 	 * @return boolean True if successful otherwise returns false
 	 */
-	public function update( $data, $where = null)
+	public function update( array $data, $where = null)
 	{
 		$data  = $this->filter($data);
 		$table = $this->getTableName();

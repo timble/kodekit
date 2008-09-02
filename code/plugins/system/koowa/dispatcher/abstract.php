@@ -32,7 +32,7 @@ abstract class KDispatcherAbstract extends KObject
 	 * @param	array An optional associative array of configuration settings.
 	 * Recognized key values include 'name', 'base_path'
 	 */
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
         // Initialize the options
         $options  = $this->_initialize($options);
@@ -55,7 +55,7 @@ abstract class KDispatcherAbstract extends KObject
      * @param	array	Options
      * @return 	array	Options
      */
-    protected function _initialize($options)
+    protected function _initialize(array $options)
     {
         $defaults = array(
             'base_path'     => JPATH_COMPONENT,
@@ -77,7 +77,7 @@ abstract class KDispatcherAbstract extends KObject
 	 *
 	 * @param	array An optional associative array of parameters to be passed in
 	 */
-	public function dispatch($params = array())
+	public function dispatch(array $params = array())
 	{
 		// Set the default view in case no view is passed with the request
 		$defaultView = array_key_exists('default_view', $params) ? $params['default_view'] : $this->getClassName('suffix');
@@ -128,7 +128,7 @@ abstract class KDispatcherAbstract extends KObject
 	 * @param	array	Options array for the controller. Optional.
 	 * @return	object	The controller.
 	 */
-	public function getController( $name, $prefix = '', $options = array() )
+	public function getController( $name, $prefix = '', array $options = array() )
 	{
 		$name = KInflector::singularize($name);
 

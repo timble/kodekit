@@ -49,8 +49,7 @@ class KFilterLang extends KObject implements KFilterInterface
     	$result = implode('-', $parts);
 		
 		// just making sure :-)
-		if($this->validate($result))
-		{
+		if($this->validate($result)) {
 			return $result;
 		}
 		

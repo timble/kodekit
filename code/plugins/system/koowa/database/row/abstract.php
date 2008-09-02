@@ -47,7 +47,7 @@ abstract class KDatabaseRowAbstract extends KObject
      *
      * @param 	array	Options containing 'table', 'name'
      */
-    public function __construct($options = array())
+    public function __construct(array $options = array())
     {
         // Initialize the options
         $options  = $this->_initialize($options);
@@ -81,7 +81,7 @@ abstract class KDatabaseRowAbstract extends KObject
      * @param   array   Options
      * @return  array   Options
      */
-    protected function _initialize($options)
+    protected function _initialize(array $options)
     {
         $defaults = array(
             'base_path' => null,

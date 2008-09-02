@@ -111,7 +111,7 @@ abstract class KPatternProxy extends KObject
 	 * @param  array  $arguments	The function arguments
 	 * @return mixed The result of the function
 	 */
-	public function __call($method, $arguments)
+	public function __call($method, array $arguments)
 	{
 		if(method_exists($this->getObject(), $method)) {
 			return call_user_func_array(array($this->getObject(), $method), $arguments);

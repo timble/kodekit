@@ -20,13 +20,13 @@ class KCommandEvent extends KObject implements KPatternCommandInterface
 	 * Command handler
 	 * 
 	 * @param string  $name		The command name
-	 * @param object  $args		The command arguments
+	 * @param mixed   $args		The command arguments
 	 *
 	 * @return boolean
 	 */
-	public function execute( $name, $args ) 
+	public function execute( $name, $args) 
 	{
 		$dispatcher = KFactory::get('lib.koowa.event.dispatcher');
-		return $dispatcher->trigger($name, (array) $args);
+		return $dispatcher->trigger($name, $args);
 	}
 }

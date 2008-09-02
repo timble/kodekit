@@ -45,7 +45,7 @@ class KFactory
 	 * @throws KFactoryException
 	 * @return object
 	 */
-	public static function get($identifier, $options = array())
+	public static function get($identifier, array $options = array())
 	{
 		static $initialized;
 	

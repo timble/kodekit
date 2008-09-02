@@ -52,7 +52,7 @@ abstract class KTemplateAbstract
 	 * 
 	 * @param $rules array	Associative array of rules(es) to be replaced.
 	 */
-	public static function addRules($rules = array()) 
+	public static function addRules(array $rules = array()) 
 	{
 		self::$_rules = array_merge(self::$_rules, $rules);
 	}
@@ -62,7 +62,7 @@ abstract class KTemplateAbstract
 	 * 
 	 * @param $rules array	Associative array of rules(es) to be replaced.
 	 */
-	public static function delRules($rules = array()) 
+	public static function delRules(array $rules = array()) 
 	{
 		self::$_rules = array_diff_assoc(self::$_rules, $rules);
 	}

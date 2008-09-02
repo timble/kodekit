@@ -85,7 +85,7 @@ class KHelperClass extends KObject
      *
      * @param	array Array with optional prefix, base, suffix
      */
-    public function setClassName($array)
+    public function setClassName(array $array)
     {
         foreach(array('prefix', 'base', 'suffix') as $part)
         {

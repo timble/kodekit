@@ -162,7 +162,7 @@ class KDatabaseQueryParser
      * @param integer $i       position
      * @return mixed true on success, otherwise Error
      */
-    public function getParams(&$values, &$types, $i = 0)
+    public function getParams(array &$values, array &$types, $i = 0)
     {
         $values = array();
         $types  = array();

@@ -28,7 +28,7 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 	 */
 	protected $_filter;
 
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
 		// Initialize the options
         $options  = $this->_initialize($options);
@@ -56,7 +56,7 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
      * @param   array   Options
      * @return  array   Options
      */
-    protected function _initialize($options)
+    protected function _initialize(array $options)
     {
         $defaults = array(
             'name'          => array(
@@ -75,18 +75,15 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 	 * @param	array	Array to be validated
 	 * @return	bool	True when the array is valid
 	 */
-	public function validate($arr)
+	public function validate(array $arr)
 	{
-		if(!is_array($arr)) {
-			return false;
-		}
-		
 		foreach($arr as $var) 
 		{
 			if(false === $this->_filter->validate($var)) {
 				return false;
 			}
 		}
+		
 		return true;
 	}
 	
@@ -96,13 +93,12 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 	 * @param	mixed	Array to be sanitized
 	 * @return	array
 	 */
-	public function sanitize($arr)
+	public function sanitize(array $arr)
 	{
-		settype($arr, 'array');
-		
 		foreach($arr as & $var) {
 			$var = $this->_filter->sanitize($var);
 		}
+		
 		return $arr;
 	}
 }

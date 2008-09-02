@@ -20,8 +20,8 @@ interface KPatternCommandInterface
 	/**
 	 * Generic Command handler
 	 * 
-	 * @param string  $name		The command name
-	 * @param object  $args		The command arguments
+	 * @param string $name		The command name
+	 * @param mixed  $args		The command arguments
 	 *
 	 * @return	boolean
 	 */

@@ -290,7 +290,7 @@ class KDatabase extends KPatternProxy
      *
      * @return integer  		Number of rows affected
      */
-	public function insert($table, $data)
+	public function insert($table, array $data)
 	{
 		foreach($data as $key => $val)
 		{
@@ -330,7 +330,7 @@ class KDatabase extends KPatternProxy
      *
      * @return integer Number of rows affected
      */
-	public function update($table, $data, $where = null)
+	public function update($table, array $data, $where = null)
 	{
 		foreach($data as $key => $val) {
 			$vals[] = '`'.$key.'` = '.$this->_object->Quote($val);
@@ -449,25 +449,13 @@ class KDatabase extends KPatternProxy
 	 * @param	boolean			Only return field types, default true
 	 * @return	array An array of fields by table
 	 */
-	public function getTableFields( $tables )
+public function getTableFields( $tables )
 	{
 		settype($tables, 'array'); //force to array
 		$result = array();
-
+		
 		foreach ($tables as $tblval)
 		{  
-			$table = $tblval;	
-		
-			//Check the table if it already has a table prefix applied.
-			if(substr($tblval, 0, 3) != '#__') {
-				$table = '#__'.$tblval;
-			}
-		
-			$this->select( 'SHOW FIELDS FROM ' . $this->nameQuote($table));
-			$fields = $this->loadObjectList();
-
-			foreach ($fields as $field) {
-				$result[$tblval][$field->Field] = $field;
 			$table = $tblval;
 
 			if(!isset($this->_tables_cache[$tblval])) 

@@ -74,7 +74,7 @@ abstract class KModelAbstract extends KObject
      *
      * @param	array An optional associative array of configuration settings.
 	 */
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
         // Initialize the options
         $options  = $this->_initialize($options);
@@ -107,7 +107,7 @@ abstract class KModelAbstract extends KObject
      * @param   array   Options
      * @return  array   Options
      */
-    protected function _initialize($options)
+    protected function _initialize(array $options)
     {
         $defaults = array(
             'base_path'     => null,
@@ -179,7 +179,7 @@ abstract class KModelAbstract extends KObject
 	 * @param	array	Options array for table. Optional.
 	 * @return	object	The table
 	 */
-	public function getTable($name = '', $prefix = '', $options = array())
+	public function getTable($name = '', $prefix = '', array $options = array())
 	{
 		if ( empty( $prefix ) ) {
 			$prefix = $this->getClassName('prefix');

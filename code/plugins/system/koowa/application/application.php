@@ -44,7 +44,7 @@ class KApplication extends KPatternProxy
 	 * @param	array An optional associative array of configuration settings
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
 	 */
-	public function initialise($options = array())
+	public function initialise(array $options = array())
 	{
 		//Create the arguments object
 		$args = new stdClass();
@@ -172,7 +172,7 @@ class KApplication extends KPatternProxy
 	 * @param	array 	Array( 'remember' => boolean )
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
 	 */
-	public function login($credentials, $options = array())
+	public function login($credentials, array $options = array())
 	{
 		//Create the arguments object
 		$args = new stdClass();
@@ -196,7 +196,7 @@ class KApplication extends KPatternProxy
 	 * @param	array 	$options  Array( 'clientid' => array of client id's )
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
 	 */
-	public function logout($userid = null, $options = array())
+	public function logout($userid = null, array $options = array())
 	{
 		//Create the arguments object
 		$args = new stdClass();

@@ -26,7 +26,7 @@ class KHelperArray
      * @param	boolean	Recursive
      * @return	array
      */
-    public static function settype($array, $type, $recursive = true)
+    public static function settype(array $array, $type, $recursive = true)
     {
         foreach($array as $k => $v)
         {
@@ -46,7 +46,7 @@ class KHelperArray
      * @param   string  The index of the column or name of object property
      * @return  array   Column of values from the source array
      */
-    public static function getColumn($array, $index)
+    public static function getColumn(array $array, $index)
     {
         $result = array();
         
@@ -68,7 +68,7 @@ class KHelperArray
      * @param	array
      * @return	int
      */
-    public static function count($array)
+    public static function count(array $array)
     {
         $count = 0;
 
