@@ -31,6 +31,13 @@ class KRequest
 	protected static $_hashes = array('COOKIE', 'DELETE', 'ENV', 'FILES', 'GET', 'POST', 'PUT', 'SERVER', 'REQUEST');
 	
 	/**
+	 * True if the request has been initialized
+	 *
+	 * @var	object
+	 */
+	private static $_initialized = false;
+	
+	/**
 	 * Get a validated and optionally sanitized variable from the request. 
 	 * 
 	 * When no sanitizers are supplied, the same filters as the validators will 
@@ -46,12 +53,7 @@ class KRequest
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
 	{
-		static $initialized;
-	
-		if(!isset($initialized)) {
-			self::_initialize();
-			$initialized = true;
-		}
+		self::_initialize(); //Initialise the request
 	
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
@@ -63,9 +65,9 @@ class KRequest
 		if(empty($GLOBALS['_'.$hash][$var])) {
 			return $default; 	
 		}
+
 		$result = $GLOBALS['_'.$hash][$var];
 		$result = is_scalar($result) ? trim($GLOBALS['_'.$hash][$var]) : $result;
-		
 	
 		// turn $validators or $sanitizers is an object, turn it into an array of objects
 		// don't use settype because it will convert objects to arrays
@@ -73,13 +75,18 @@ class KRequest
 		// if no sanitizers are given, use the validators
 		$sanitizers = empty($sanitizers) ? $validators : (is_array($sanitizers) ? $sanitizers : array($sanitizers));
 		
-
 		// validate the variable
 		foreach($validators as $filter)
 		{
+			//Create the filter if needed
+			if(is_string($filter)) {
+				$filter = KFactory::tmp('lib.koowa.filter.'.$filter);
+			}
+		
 			if(!($filter instanceof KFilterInterface)) {
 				throw new KRequestException('Invalid filter passed: '.get_class($filter));
 			}
+			
 			if(!$filter->validate($result)) 
 			{
 				$filtername = KInflector::getPart(get_class($filter), -1);
@@ -90,9 +97,15 @@ class KRequest
 		// sanitize the variable
 		foreach($sanitizers as $filter)
 		{
+			//Create the filter if needed
+			if(is_string($filter)) {
+				$filter = KFactory::tmp('lib.koowa.filter.'.$filter);
+			}
+		
 			if(!($filter instanceof KFilterInterface)) {
 				throw new KRequestException('Invalid filter passed: '.get_class($filter));
 			}
+			
 			$result = $filter->sanitize($result);		 
 		}
 		
@@ -144,10 +157,11 @@ class KRequest
 	 */	
 	protected static function _initialize()
 	{	
-		static $is_initialized;
-		if(isset($is_initialized)) {
+		if(self::$_initialized === true) {
 			return;
 		}
+		
+		self::$_initialized = true;
 
 		// Get PUT and DELETE from the input stream
 		$method = self::getMethod();

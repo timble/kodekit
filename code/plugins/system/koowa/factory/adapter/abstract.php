@@ -23,22 +23,8 @@ abstract class KFactoryAdapterAbstract extends KObject implements KPatternComman
 	 * @return string|object|false
 	 */
 	final public function execute($name, $args) 
-	{
-		//Create the handle based on the class identifier
-		$handle = $this->createHandle($name);
-			
-		//Return if no handle could be created
-		if($handle === false) {
-		 	return false;
-		}
-		
-		//Create the instance based on the instance handle
-		if(KFactory::has($handle) === false) 
-		{
-			$instance = $this->createInstance($handle, $args);
-			KFactory::set($handle, $instance);
-		}
-		
-		return $handle;
+	{	
+		$instance = $this->createInstance($name, $args);
+		return $instance;
 	}
 }

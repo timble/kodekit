@@ -174,29 +174,32 @@ abstract class KModelAbstract extends KObject
 	 * This function overrides the default model behavior and sets the table
 	 * prefix based on the model prefix.
 	 *
-	 * @param	string  The table name
-	 * @param	string  The class prefix
-	 * @param	array	Options array for table. Optional.
+	 * @param	string	$table 			The name of the table. Optional, defaults to the class name.
+	 * @param	string	$component		The name of the component. Optional.
+	 * @param	string	$application	The name of the application. Optional.
+	 * @param	array	$opations		Options array for view. Optional.
 	 * @return	object	The table
 	 */
-	public function getTable($name = '', $prefix = '', array $options = array())
+	public function getTable($table = '', $component = '', $application = '', array $options = array())
 	{
-		if ( empty( $prefix ) ) {
-			$prefix = $this->getClassName('prefix');
+		if (empty($table)) {
+			$table = KInflector::tableize($this->getClassName('suffix'));
 		}
-
-		if (empty($name)) {
-			$name = KInflector::tableize($this->getClassName('suffix'));
+	
+		if ( empty( $component ) ) {
+			$componentn = $this->getClassName('prefix');
+		}
+		
+		if (empty( $application) )  {
+			$application = KFactory::get('lib.joomla.application')->getName();
 		}
 
 		//Make sure we are returning a DBO object
 		if (!array_key_exists('dbo', $options))  {
 			$options['dbo'] = $this->getDBO();;
 		}
-
-		$table = KFactory::get('com.'.$prefix.'.table.'.$name, $options );
-
-		return $table;
+		
+		return KFactory::get($application.'::com.'.$component.'.table.'.$view, $options);
 	}
 
     /**
@@ -463,7 +466,7 @@ abstract class KModelAbstract extends KObject
         $order      = $app->getUserStateFromRequest($ns.'filter_order', 'filter_order', '', 'cmd');
         $order_Dir  = $app->getUserStateFromRequest($ns.'filter_order_Dir', 'filter_order_Dir', 'ASC', 'word');
         $filter     = $app->getUserStateFromRequest($ns.'filter', 'filter', '', 'string');
-        $id         = KRequest::get('id', 'request', KFactory::get('lib.koowa.filter.int'));
+        $id         = KRequest::get('id', 'request', 'int');
 
         // Push the environment states into the object
         $this->setState('limit',        $limit);

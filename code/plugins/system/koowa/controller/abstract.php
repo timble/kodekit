@@ -215,10 +215,9 @@ abstract class KControllerAbstract extends KObject
 	 */
 	public function display($cachable = false)
 	{
-		$filter 	= KFactory::get('lib.koowa.filter.cmd');
-		$option 	= KRequest::get('option', 'request', $filter);
-		$viewName	= KRequest::get('view', 'request', $filter, null, $this->getClassName('suffix') );
-		$viewLayout	= KRequest::get('layout', 'request', $filter, null, 'default' );
+		$option 	= KRequest::get('option', 'request', 'cmd');
+		$viewName	= KRequest::get('view', 'request', 'cmd', null, $this->getClassName('suffix') );
+		$viewLayout	= KRequest::get('layout', 'request', 'cmd', null, 'default' );
 
 		$view       = $this->getView($viewName);
 
@@ -276,31 +275,36 @@ abstract class KControllerAbstract extends KObject
 	/**
 	 * Method to get a reference to the current view and load it if necessary.
 	 *
-	 * @param	string	The view name. Optional, defaults to the controller name.
-	 * @param	string	The class prefix. Optional.
-	 * @param	array	Options array for view. Optional.
+	 * @param	string	$view 			The name of the view. Optional, defaults to the class name.
+	 * @param	string	$component		The name of the component. Optional.
+	 * @param	string	$application	The name of the application. Optional.
+	 * @param	array	$opations		Options array for view. Optional.
 	 * @return	object	Reference to the view or an error.
 	 * @throws KControllerException
 	 */
-	public function getView( $name = '', $prefix = '', array $options = array() )
+	public function getView( $view = '', $component = '', $application = '', array $options = array() )
 	{
-		if ( empty( $prefix ) ) {
-			$prefix = $this->getClassName('prefix');
+		if ( empty( $view ) ) {
+			$view = $this->getClassName('suffix');
+		}
+	
+		if ( empty( $component ) ) {
+			$component = $this->getClassName('prefix');
 		}
 
-		if ( empty( $name ) ) {
-			$name = $this->getClassName('suffix');
+		if (empty( $application) )  {
+			$application = KFactory::get('lib.joomla.application')->getName();
 		}
 
 		//Add the basepath to the configuration
 		$options['base_path'] = $this->_path['view'][0];
 		
-		if ( !$view = KFactory::get('com.'.$prefix.'.view.'.$name, $options) )
+		if ( !$view = KFactory::get($application.'::com.'.$component.'.view.'.$view, $options) )
 		{
             $format = isset($options['format']) ? $options['format'] : 'html';
 			throw new KControllerException(
-					JText::_('View not found [name, format, prefix]:')
-                    ." $name, $format, $prefix"
+					JText::_('View not found [application, componennt, name, format]:')
+                    ." $application, $component, $view, $format"
 			);
 		}
 

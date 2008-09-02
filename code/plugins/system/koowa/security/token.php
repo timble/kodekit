@@ -71,7 +71,7 @@ class KSecurityToken
         $token		= $session->get('koowa.security.token', null);
 		$age 		= time() - $session->get('koowa.security.tokentime');
 		
-        $req		= KRequest::get('_token', 'post', KFactory::get('lib.koowa.filter.md5')); 
+        $req		= KRequest::get('_token', 'post', 'md5'); 
 		
         return ($req===$token && $age <= $max_age);
     }

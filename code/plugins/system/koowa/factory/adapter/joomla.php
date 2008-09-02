@@ -15,22 +15,6 @@
 class KFactoryAdapterJoomla extends KFactoryAdapterAbstract
 {
 	/**
-	 * Parse a class identifier to determine if it can be processed
-	 *
-	 * @param mixed  $string 	The class identifier
-	 * @return string|false
-	 */
-	public function createHandle($identifier)
-	{
-		$parts = explode('.', $identifier);
-		if($parts[0] != 'lib' || $parts[1] != 'joomla') {
-			return false;
-		}
-	
-		return $identifier;
-	}
-
-	/**
 	 * Create an instance of a class based on a class identifier
 	 *
 	 * @param mixed  $string 	The class identifier
@@ -40,6 +24,9 @@ class KFactoryAdapterJoomla extends KFactoryAdapterAbstract
 	public function createInstance($identifier, $options)
 	{
 		$parts = explode('.', $identifier);
+		if($parts[0] != 'lib' || $parts[1] != 'joomla') {
+			return false;
+		}
 		
 		$name = ucfirst($parts[2]);
 	

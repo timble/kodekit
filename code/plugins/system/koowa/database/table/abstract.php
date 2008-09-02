@@ -323,8 +323,13 @@ abstract class KDatabaseTableAbstract extends KObject
                 ->toString();
         $this->_db->select($query, $offset, $limit);
 		$options['data'] = $this->_db->loadAssocList();
+		
+		// Get the table object attached to the model
+		$component = $this->getClassName('suffix');
+		$table     = $this->getClassName('prefix');
+		$app   	   = KFactory::get('lib.joomla.application')->getName();
 
-		return KFactory::get('com.'.$this->getClassName('prefix').'.rowset.'.$this->getClassName('suffix'), $options);
+		return KFactory::get($app.'::com.'.$component.'.rowset.'.$table, $options);
     }
 
     /**
@@ -391,7 +396,12 @@ abstract class KDatabaseTableAbstract extends KObject
         $options['table']     = $this;
 		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
 
-        return KFactory::get('com.'.$this->getClassName('prefix').'.row.'.$this->getClassName('suffix'), $options);
+		// Get the table object attached to the model
+		$component = $this->getClassName('suffix');
+		$table     = $this->getClassName('prefix');
+		$app   	   = KFactory::get('lib.joomla.application')->getName();
+
+		return KFactory::get($app.'::com.'.$component.'.row.'.$table, $options);
     }
 
 	/**

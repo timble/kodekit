@@ -449,7 +449,7 @@ class KDatabase extends KPatternProxy
 	 * @param	boolean			Only return field types, default true
 	 * @return	array An array of fields by table
 	 */
-public function getTableFields( $tables )
+	public function getTableFields( $tables )
 	{
 		settype($tables, 'array'); //force to array
 		$result = array();

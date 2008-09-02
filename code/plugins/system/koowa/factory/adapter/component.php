@@ -26,30 +26,6 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	);
 	
 	/**
-	 * Parse a class identifier to determine if it can be processed
-	 *
-	 * @param mixed  $string 	The class identifier
-	 * @return string|false
-	 */
-	public function createHandle($identifier)
-	{
-		$parts = explode('.', $identifier);
-		if(strpos($parts[0], 'com') === false) {
-			return false;
-		}
-	
-		//Parse the client from the object string
-		if(strpos($parts[0], '::') === false)
-		{
-			$name = KFactory::get('lib.joomla.application')->getName();
-			$identifier = $name.'::'.$identifier;
-		} 
-		else $identifier = str_replace('admin::', 'administrator::', $identifier);
-		
-		return $identifier;
-	}
-
-	/**
 	 * Create an instance of a class based on a class identifier
 	 *
 	 * @param mixed  $string 	The class identifier
@@ -59,9 +35,13 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	public function createInstance($identifier, $options)
 	{
 		$parts = explode('.', $identifier);
+		if(strpos($parts[0], 'com') === false) {
+			return false;
+		}
 		
 		//Set the application
 		$name = explode('::', $parts[0]);
+		$name[0] = ($name[0] == 'admin') ? 'administrator' : $name[0];
 		$result['application'] = $name[0];
 		
 		//Set the component
@@ -95,7 +75,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 		if(array_key_exists('application', $object)) {
 			$client = $object['application'];
 		} else {
-			$client = KFactory::get('lib.joomla.application')->getName();
+			$client = '';
 		}
 
 		if(array_key_exists('component', $object)) {

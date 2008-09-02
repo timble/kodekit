@@ -30,6 +30,13 @@ class KFactory
 	protected static $_chain = null;
 	
 	/**
+	 * True if the factory has been initialized
+	 *
+	 * @var	object
+	 */
+	private static $_initialized = false;
+	
+	/**
 	 * Constructor
 	 * 
 	 * Prevent creating instances of this class by making the contrucgtor private
@@ -37,7 +44,8 @@ class KFactory
 	private function __construct() { }
 	
 	/**
-	 * Get an instance of a class based on a class identifier
+	 * Get an instance of a class based on a class identifier only creating it
+	 * if it doesn't exist yet.
 	 *
 	 * @param mixed  $identifier	The class identifier
 	 * @param array  $options 		An optional associative array of configuration settings.
@@ -47,25 +55,44 @@ class KFactory
 	 */
 	public static function get($identifier, array $options = array())
 	{
-		static $initialized;
-	
-		if(!isset($initialized)) {
-			self::_initialize();
-			$initialized = true;
-		}
+		self::_initialize(); //Initialise the factory
 		
 		//Check if the object already exists
 		if(self::$_container->offsetExists($identifier)) {
 			return self::$_container->offsetGet($identifier);
 		} 
 		
-		//Get a handle for the oject 
-		$handle = self::$_chain->run($identifier, $options);
-		if($handle !== false) {	
-			return self::$_container->offsetGet($handle);
+		//Get an instance based on the identifier
+		$object = self::$_chain->run($identifier, $options);
+		if($object === false) {
+			throw new KFactoryException('Cannot create object from identifier : '.$identifier);	
 		}	
 		
-		throw new KFactoryException('Cannot create object from identifier : '.$identifier);
+		self::$_container->offsetSet($identifier, $object);
+		return $object;
+	}
+	
+	/**
+	 * Get an instance of a class based on a class identifier always creating a 
+	 * new instance.
+	 *
+	 * @param mixed  $identifier	The class identifier
+	 * @param array  $options 		An optional associative array of configuration settings.
+	 *
+	 * @throws KFactoryException
+	 * @return object
+	 */
+	public static function tmp($identifier, array $options = array())
+	{
+		self::_initialize(); //Initialise the factory
+		
+		//Get an instance based on the identifier
+		$object = self::$_chain->run($identifier, $options);
+		if($object === false) {
+			throw new KFactoryException('Cannot create object from identifier : '.$identifier);	
+		}	
+		
+		return $object;
 	}
 	
 	/**
@@ -130,7 +157,13 @@ class KFactory
 	 * Initialize
 	 */	
 	protected static function _initialize()
-	{	
+	{
+		if(self::$_initialized === true) {
+			return;
+		}
+		
+		self::$_initialized = true;
+	
 		//Created the object container
 		self::$_container    = new ArrayObject();
 	

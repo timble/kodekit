@@ -15,15 +15,6 @@
 interface KFactoryAdapterInterface
 {
 	/**
-	 * Create a object handle based on a class identifier
-	 *
-	 * @param mixed  $string 	The class identifier
-	 *
-	 * @return string|false
-	 */
-	public function createHandle($identifier);
-
-	/**
 	 * Create an object instance based on a class identifier
 	 *
 	 * @param mixed  $string 	The class identifier

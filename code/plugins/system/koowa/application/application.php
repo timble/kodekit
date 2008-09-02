@@ -38,8 +38,22 @@ class KApplication extends KPatternProxy
         $this->_commandChain = new KPatternCommandChain();
 	}
 	
+	/**
+	 * Proxy the application getName() method
+	 */
+	function getName()
+	{
+		//Create a shortcut for the administrator name
+		$name = $this->_object->getName();
+		if($name == 'administrator') {
+			$name = 'admin';
+		}
+		
+		return $name;
+	}
+	
   	/**
-	 * Initialise the application.
+	 * Proxy the application initialise() method
 	 *
 	 * @param	array An optional associative array of configuration settings
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
@@ -61,7 +75,7 @@ class KApplication extends KPatternProxy
 	}
 	
   	/**
-	 * Route the application.
+	 * Proxy the application route() method
 	 * 
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
 	 */
@@ -81,7 +95,7 @@ class KApplication extends KPatternProxy
  	}
  	
    	/**
-	 * Dispatch the applicaiton.
+	 * Proxy the application dispatch() method
 	 * 
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
 	 */
@@ -102,7 +116,7 @@ class KApplication extends KPatternProxy
  	}
  	
 	/**
-	 * Render the application.
+	 * Proxy the application render() method
 	 * 
 	 * @return	mixed|false The value returned by the proxied method, false in error case.
 	 */
@@ -122,7 +136,7 @@ class KApplication extends KPatternProxy
 	}
 	
 	/**
-	 * Exit the application.
+	 * Proxy the application close() method
 	 *
 	 * @param	int	Exit code
 	 * @return	none|false The value returned by the proxied method, false in error case.
@@ -141,7 +155,7 @@ class KApplication extends KPatternProxy
 	}
 	
 	/**
-	 * Redirect to another URL.
+	 * Proxy the application redirect() method
 	 *
 	 * @param	string	$url	The URL to redirect to.
 	 * @param	string	$msg	An optional message to display on redirect.
@@ -166,7 +180,7 @@ class KApplication extends KPatternProxy
 	}
 	
 	/**
-	 * Login authentication function.
+	 * Proxy the application login() method
 	 *
 	 * @param	array 	Array( 'username' => string, 'password' => string )
 	 * @param	array 	Array( 'remember' => boolean )
@@ -190,7 +204,7 @@ class KApplication extends KPatternProxy
 	}
 	
 	/**
-	 * Logout authentication function.
+	 * Proxy the application logout() method
 	 *
 	 * @param 	int 	$userid   The user to load - Can be an integer or string - If string, it is converted to ID automatically
 	 * @param	array 	$options  Array( 'clientid' => array of client id's )
