@@ -75,8 +75,12 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 	 * @param	array	Array to be validated
 	 * @return	bool	True when the array is valid
 	 */
-	public function validate(array $arr)
+	public function validate($arr)
 	{
+		if(!is_array($arr)) {
+			return false;
+		}
+		
 		foreach($arr as $var) 
 		{
 			if(false === $this->_filter->validate($var)) {
@@ -93,8 +97,10 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 	 * @param	mixed	Array to be sanitized
 	 * @return	array
 	 */
-	public function sanitize(array $arr)
+	public function sanitize($arr)
 	{
+		settype($arr, 'array');
+		
 		foreach($arr as & $var) {
 			$var = $this->_filter->sanitize($var);
 		}
