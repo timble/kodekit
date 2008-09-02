@@ -39,6 +39,13 @@ class KDatabase extends KPatternProxy
 	protected $_autoexec = true;
 	
 	/**
+	 * Cached table metadata information
+	 *
+	 * @var 	array
+	 */
+	protected $_tables_cache;
+	
+	/**
 	 * The commandchain
 	 *
 	 * @var	object
@@ -81,7 +88,7 @@ class KDatabase extends KPatternProxy
 					break;
 				}
 
-				$table = $query['table_names'][0];
+				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
 
                 if(!isset($query['column_names'] ))
                 {
@@ -108,9 +115,12 @@ class KDatabase extends KPatternProxy
 					$this->select($sql);
 					break;
 				}
+				
+				//Make sure the where statement is uppercase
+				$sql = str_replace('where', 'WHERE', $sql);
 
 				$where = substr($sql, strpos($sql, 'WHERE'));
-				$table = $query['table_names'][0];
+				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
 
 				$data  = array();
 				foreach($query['column_names'] as $key => $column_name) {
@@ -130,9 +140,12 @@ class KDatabase extends KPatternProxy
 					$this->select($sql);
 					break;
 				}
+				
+				//Make sure the where statement is uppercase
+				$sql = str_replace('where', 'WHERE', $sql);
 
 				$where = substr($sql, strpos($sql, 'WHERE'));
-				$table = $query['table_names'][0];
+				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
 
 				$result = $this->delete($table, $where);
 			} break;
@@ -207,6 +220,36 @@ class KDatabase extends KPatternProxy
 		}
 
 		return $this->update( $this->replaceTablePrefix($table, '', '#__'), $data, $where);
+	}
+	
+	/**
+	 * Proxy the database connector loadObject() method
+	 * 
+	 * This functions also adds support for the legacy API. In case the object is passed
+	 * in by reference instead of returned. 
+	 */
+	public function loadObject( &$object = null )
+	{
+		if ($object != null)
+		{
+			if (!($cur = $this->query())) {
+				return false;
+			}
+
+			if ($array = mysql_fetch_assoc( $cur ))
+			{
+				mysql_free_result( $cur );
+				$object = JArrayHelper::toObject($array);
+				return true;
+			} else {
+				return false;
+			}
+		}
+		else
+		{
+			$object = $this->_object->loadObject($object);
+			return $object;
+		}
 	}
 
 	/**
@@ -425,9 +468,56 @@ class KDatabase extends KPatternProxy
 
 			foreach ($fields as $field) {
 				$result[$tblval][$field->Field] = $field;
+			$table = $tblval;
+
+			if(!isset($this->_tables_cache[$tblval])) 
+			{
+				//Check the table if it already has a table prefix applied.
+				if(strpos($tblval, $this->getObject()->getPrefix()) === false) 
+				{
+					if(substr($tblval, 0, 3) != '#__') {
+						$table = '#__'.$tblval;
+					}
+				} 
+				else 
+				{
+					$tblval = $this->replaceTablePrefix($tblval, '');
+				}
+			
+				$this->select( 'SHOW FIELDS FROM ' . $this->nameQuote($table));
+				$fields = $this->loadObjectList();
+			
+				foreach ($fields as $field) {
+					$this->_tables_cache[$tblval][$field->Field] = $field;
+				}
 			}
+			
+			//Add the requested table to the result
+			$result[$tblval] = $this->_tables_cache[$tblval];
 		}
+		
 		return $result;
+	}
+	
+	/**
+	 * Get the result of the SHOW TABLE STATUS statement
+	 * 
+	 * @param	string	LIKE clause, can cotnains a tablename with % wildcards
+	 * @param 	string	WHERE clause (MySQL5+ only)
+	 * @return	array	List of objects with table info
+	 */
+	public function getTableStatus($like = null, $where = null)
+	{
+		if(!empty($like)) {
+			$like = ' LIKE '.$this->quote($like);
+		}
+		
+		if(!empty($where)) {
+			$where = ' WHERE '.$where;
+		}
+		
+		$this->setQuery( 'SHOW TABLE STATUS'.$like.$where );
+		return $this->loadObjectList('Name');
 	}
 
 	/**
@@ -525,26 +615,4 @@ class KDatabase extends KPatternProxy
     {
     	return $this->getObject()->getErrorMsg();
     }
-    
-
-	/**
-	 * Get the result of the SHOW TABLE STATUS statement
-	 * 
-	 * @param	string	LIKE clause, can cotnains a tablename with % wildcards
-	 * @param 	string	WHERE clause (MySQL5+ only)
-	 * @return	array	List of objects with table info
-	 */
-	public function getTableStatus($like = null, $where = null)
-	{
-		if(!empty($like)) {
-			$like = ' LIKE '.$this->quote($like);
-		}
-		
-		if(!empty($where)) {
-			$where = ' WHERE '.$where;
-		}
-		
-		$this->setQuery( 'SHOW TABLE STATUS'.$like.$where );
-		return $this->loadObjectList('Name');
-	}
 }
