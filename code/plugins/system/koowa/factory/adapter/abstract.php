@@ -20,7 +20,7 @@ abstract class KFactoryAdapterAbstract extends KObject implements KPatternComman
 	 * @param string  $name		The command name
 	 * @param mixed   $args		The command arguments
 	 *
-	 * @return string|object|false
+	 * @return object
 	 */
 	final public function execute($name, $args) 
 	{	
