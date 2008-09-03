@@ -9,7 +9,7 @@
 /**
  * Request class
  *
- * Allows to get input from GET, POST, PUT, DELETE, COOKIE, ENV, SERVER, REQUEST
+ * Allows to get input from GET, POST, COOKIE, ENV, SERVER, REQUEST
  * 
  * @todo Ideally, REQUEST should never be used, unfortunately Joomla has too 
  * many places where you can't get around it. WIP
@@ -28,14 +28,8 @@ class KInput
 	 * 
 	 * @var	array
 	 */
-	protected static $_hashes = array('COOKIE', 'DELETE', 'ENV', 'FILES', 'GET', 'POST', 'PUT', 'SERVER', 'REQUEST');
+	protected static $_hashes = array('COOKIE', 'ENV', 'FILES', 'GET', 'POST', 'SERVER', 'REQUEST');
 	
-	/**
-	 * True if the request has been initialized
-	 *
-	 * @var	object
-	 */
-	private static $_initialized = false;
 	
 	/**
 	 * Get a validated and optionally sanitized variable from the request. 
@@ -44,7 +38,7 @@ class KInput
 	 * be used.
 	 * 
 	 * @param	string	Variable name
-	 * @param 	string  Hash [GET|POST|PUT|DELETE|COOKIE|ENV|SERVER]
+	 * @param 	string  Hash [GET|POST|COOKIE|ENV|SERVER]
 	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects 
 	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, or array of objects
 	 * @param 	mixed	Default value when the variable doesn't exist
@@ -53,8 +47,6 @@ class KInput
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
 	{
-		self::_initialize(); //Initialise the request
-	
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
 		if(!in_array($hash, self::$_hashes)) {
@@ -151,38 +143,4 @@ class KInput
 	{
 		return strtoupper($GLOBALS['_SERVER']['REQUEST_METHOD']);
 	}
-	
-	/**
-	 * Initialize
-	 */	
-	protected static function _initialize()
-	{	
-		if(self::$_initialized === true) {
-			return;
-		}
-		
-		self::$_initialized = true;
-
-		// Get PUT and DELETE from the input stream
-		$method = self::getMethod();
-		if('PUT' == $method) {
-			parse_str(file_get_contents('php://input'), $GLOBALS['_PUT']);
-		} elseif('DELETE' == $method) {
-			parse_str(file_get_contents('php://input'), $GLOBALS['_DELETE']);	
-		}
-		
-		$is_initialized = true;
-	}
-	
-	/**
-	 * Strip slashes recursively
-	 *
-	 * @param	mixed	Value
-	 * @return 	mixed
-	 */
-	protected static function _stripslashes($value)
-	{
-		return is_array($value) ? array_map(array('self', '_stripSlashesRecursive'), $value) : stripslashes($value);
-	}
-	
 }
