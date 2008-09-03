@@ -38,7 +38,7 @@ class KViewHelperBehavior
 
 		// If no debugging value is set, use the configuration setting
 		if ($debug === null) {
-			$config = &JFactory::getConfig();
+			$config = KFactory::get('lib.joomla.config');
 			$debug = $config->getValue('config.debug');
 		}
 
@@ -103,7 +103,7 @@ class KViewHelperBehavior
 		$options = KViewHelperBehavior::_getJSObject($opt);
 
 		// Attach tooltips to document
-		$document =& JFactory::getDocument();
+		$document =& KFactory::get('lib.joomla.document');
 		$tooltipInit = '		window.addEvent(\'domready\', function(){ var JTooltips = new Tips($$(\''.$selector.'\'), '.$options.'); });';
 		$document->addScriptDeclaration($tooltipInit);
 
@@ -118,7 +118,7 @@ class KViewHelperBehavior
 		static $modals;
 		static $included;
 
-		$document =& JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset($included)) {
@@ -212,7 +212,7 @@ class KViewHelperBehavior
 		$options = KViewHelperBehavior::_getJSObject($opt);
 
 		// Attach tooltips to document
-		$document =& JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 		$uploaderInit = 'sBrowseCaption=\''.JText::_('Browse Files', true).'\';
 				sRemoveToolTip=\''.JText::_('Remove from queue', true).'\';
 				window.addEvent(\'load\', function(){
@@ -271,7 +271,7 @@ class KViewHelperBehavior
 			tree'.$treeName.'.adopt(\''.$id.'\');})';
 
 		// Attach tooltips to document
-		$document =& JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 		$document->addScriptDeclaration($js);
 
 		// Set static array
@@ -281,7 +281,7 @@ class KViewHelperBehavior
 
 	public static function calendar()
 	{
-		$document =& JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 		KViewHelper::stylesheet('calendar-jos.css', 'media/system/css/', array(' title' => JText::_( 'green' ) ,' media' => 'all' ));
 		KViewHelper::script( 'calendar.js', 'media/system/js/' );
 		KViewHelper::script( 'calendar-setup.js', 'media/system/js/' );
@@ -300,12 +300,12 @@ class KViewHelperBehavior
 		// Include mootools framework
 		KViewHelperBehavior::mootools();
 
-		$config 	 =& JFactory::getConfig();
+		$config 	 = KFactory::get('lib.joomla.config');
 		$lifetime 	 = ( $config->getValue('lifetime') * 60000 );
 		$refreshTime =  ( $lifetime <= 60000 ) ? 30000 : $lifetime - 60000;
 		//refresh time is 1 minute less than the liftime assined in the configuration.php file
 
-		$document =& JFactory::getDocument();
+		$document = KFactory::get('lib.joomla.document');
 		$script  = '';
 		$script .= 'function keepAlive( ) {';
 		$script .=  '	var myAjax = new Ajax( "index.php", { method: "get" } ).request();';

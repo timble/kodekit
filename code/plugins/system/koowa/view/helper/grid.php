@@ -110,7 +110,7 @@ class KViewHelperGrid
 
 	public static function checkedOut( &$row, $i, $identifier = 'id' )
 	{
-		$user   =& JFactory::getUser();
+		$user   = KFactory::get('lib.joomla.user');
 		$userid = $user->get('id');
 
 		$result = false;

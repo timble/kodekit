@@ -23,6 +23,7 @@ Legend:
  + Added KFactory::tmp method to create an object witout storing it in the factory 
    container
  ^ Reworked KRequest::get to also accept filter names as strings.
+ ^ Renamed KRequest to KInput
 
 2008-08-27 Johan Janssens
  ^ Completely refactored the factory package, implemented support for factory adapters

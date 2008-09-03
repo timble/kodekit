@@ -39,8 +39,8 @@ class KControllerPage extends KControllerAbstract
 	 */
 	public function edit()
 	{
-		$cid = KRequest::get('cid', 'get', 'array.ints', null, array(0));
-		$id	 = KRequest::get('id', 'get', 'int', null, $cid[0]);
+		$cid = KInput::get('cid', 'get', 'array.ints', null, array(0));
+		$id	 = KInput::get('id', 'get', 'int', null, $cid[0]);
 		 
 		$this->setRedirect('view='.$this->getClassName('suffix').'&layout=form&id='.$id);
 	}
@@ -56,7 +56,7 @@ class KControllerPage extends KControllerAbstract
 		$data = $this->_getRequest('post');
 
 		// Get the id
-		$id	 = KRequest::get('id', 'request', 'int');
+		$id	 = KInput::get('id', 'request', 'int');
 
 		// Get the table object attached to the model
 		$component = $this->getClassName('suffix');
@@ -72,7 +72,7 @@ class KControllerPage extends KControllerAbstract
 			$id  = $table->getDBO()->insertid();
 		}
 
-		$redirect = 'format='.KRequest::get('format', 'get', 'cmd', null, 'html');
+		$redirect = 'format='.KInput::get('format', 'get', 'cmd', null, 'html');
 		switch($this->getTask())
 		{
 			case 'apply' :
@@ -94,7 +94,7 @@ class KControllerPage extends KControllerAbstract
 	{
 		$this->setRedirect(
 			'view='.KInflector::pluralize($this->getClassName('suffix'))
-			.'&format='.KRequest::get('format', 'get', 'cmd', null, 'html')
+			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html')
 			);
 	}
 	
@@ -107,7 +107,7 @@ class KControllerPage extends KControllerAbstract
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 		
-		$cid = KRequest::get('cid', 'post', 'array.ints', null, array());
+		$cid = KInput::get('cid', 'post', 'array.ints', null, array());
 
 		if (count( $cid ) < 1) {
 			throw new KControllerException(JText::sprintf( 'Select an item to %s', JText::_($this->getTask()), true ) );
@@ -123,7 +123,7 @@ class KControllerPage extends KControllerAbstract
 		
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
-			.'&format='.KRequest::get('format', 'get', 'cmd', null, 'html')
+			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html')
 		);
 	}
 
@@ -134,7 +134,7 @@ class KControllerPage extends KControllerAbstract
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 	
-		$cid = KRequest::get('cid', 'post', 'array.ints', null, array());
+		$cid = KInput::get('cid', 'post', 'array.ints', null, array());
 
 		$enable  = $this->getTask() == 'enable' ? 1 : 0;
 
@@ -152,7 +152,7 @@ class KControllerPage extends KControllerAbstract
 	
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
-			.'&format='.KRequest::get('format', 'get', 'cmd', null, 'html')
+			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html')
 		);
 	}
 	
@@ -163,8 +163,8 @@ class KControllerPage extends KControllerAbstract
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 		
-		$cid 	= KRequest::get('cid', 'post', 'array.ints', null, array());
-		$access = KRequest::get('access', 'post', 'int');
+		$cid 	= KInput::get('cid', 'post', 'array.ints', null, array());
+		$access = KInput::get('access', 'post', 'int');
 		
 		// Get the table object attached to the model
 		$component = $this->getClassName('suffix');
@@ -176,7 +176,7 @@ class KControllerPage extends KControllerAbstract
 	
 		$this->setRedirect(
 			'view='.KInflector::pluralize($suffix)
-			.'&format='.KRequest::get('format', 'get', 'cmd', null, 'html'), 
+			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html'), 
 			JText::_( 'Changed items access level')
 		);
 	}

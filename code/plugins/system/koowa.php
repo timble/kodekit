@@ -56,7 +56,7 @@ class plgSystemKoowa extends JPlugin
 	{
 		$result = true;
 		
-		// Note: can't use KRequest, Koowa isn't loaded yet
+		// Note: can't use KInput, Koowa isn't loaded yet
 		
 		// are we uninstalling a plugin?
 		if(JRequest::getCmd('option') == 'com_installer' 

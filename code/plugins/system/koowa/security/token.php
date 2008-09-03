@@ -42,8 +42,8 @@ class KSecurityToken
         if($forceNew || !isset(self::$_token))
         {
             self::$_token 	= md5(uniqid(rand(), TRUE));
-            $session 		= JFactory::getSession()->set('koowa.security.token', self::$_token);
-            $session 		= JFactory::getSession()->set('koowa.security.tokentime', time());
+            $session 		= KFactory::get('lib.joomla.session')->set('koowa.security.token', self::$_token);
+            $session 		= KFactory::get('lib.joomla.session')->set('koowa.security.tokentime', time());
         }
 
         return self::$_token;
@@ -67,11 +67,11 @@ class KSecurityToken
      */
     static public function check($max_age = 600)
     {
-    	$session	= JFactory::getSession();
+    	$session	= KFactory::get('lib.joomla.session');
         $token		= $session->get('koowa.security.token', null);
 		$age 		= time() - $session->get('koowa.security.tokentime');
 		
-        $req		= KRequest::get('_token', 'post', 'md5'); 
+        $req		= KInput::get('_token', 'post', 'md5'); 
 		
         return ($req===$token && $age <= $max_age);
     }

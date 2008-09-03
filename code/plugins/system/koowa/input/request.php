@@ -1,7 +1,7 @@
 <?php
 /**
  * @version      $Id:koowa.php 251 2008-06-14 10:06:53Z mjaz $
- * @package      Koowa_Request
+ * @package      Koowa_Input
  * @copyright    Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license      GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  */
@@ -15,13 +15,13 @@
  * many places where you can't get around it. WIP
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
- * @package     Koowa_Request
+ * @package     Koowa_Input
  * @version     1.0
  * @uses 		KInflector
  * @uses		KFilter
  * @static
  */
-class KRequest
+class KInput
 {
 	/**
 	 * List of accepted hashes
@@ -48,7 +48,7 @@ class KRequest
 	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects 
 	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, or array of objects
 	 * @param 	mixed	Default value when the variable doesn't exist
-	 * @throws	KRequestException	When the variable doesn't validate
+	 * @throws	KInputException	When the variable doesn't validate
 	 * @return 	mixed	(Sanitized) variable 
 	 */
 	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
@@ -84,13 +84,13 @@ class KRequest
 			}
 		
 			if(!($filter instanceof KFilterInterface)) {
-				throw new KRequestException('Invalid filter passed: '.get_class($filter));
+				throw new KInputException('Invalid filter passed: '.get_class($filter));
 			}
 			
 			if(!$filter->validate($result)) 
 			{
 				$filtername = KInflector::getPart(get_class($filter), -1);
-				throw new KRequestException('Input is not a valid '.$filtername);
+				throw new KInputException('Input is not a valid '.$filtername);
 			}			 
 		}
 		
@@ -103,7 +103,7 @@ class KRequest
 			}
 		
 			if(!($filter instanceof KFilterInterface)) {
-				throw new KRequestException('Invalid filter passed: '.get_class($filter));
+				throw new KInputException('Invalid filter passed: '.get_class($filter));
 			}
 			
 			$result = $filter->sanitize($result);		 
@@ -126,11 +126,11 @@ class KRequest
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
 		if(!in_array($hash, self::$_hashes)) {
-			throw new KRequestException('Unknown hash: '.$hash);
+			throw new KInputException('Unknown hash: '.$hash);
 		}
 		
 		if('REQUEST' == $hash) {
-			throw new KRequestException('Can\'t set _REQUEST values, use GET, POST or COOKIE');
+			throw new KInputException('Can\'t set _REQUEST values, use GET, POST or COOKIE');
 		}
 		
 		// add to hash in the superglobal

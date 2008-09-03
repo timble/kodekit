@@ -22,7 +22,7 @@ class KViewHelperList
 	*/
 	public static function accesslevel( &$row )
 	{
-		$db =& JFactory::getDBO();
+		$db = KFactory::get('lib.joomla.database');
 
 		$query = 'SELECT id AS value, name AS text'
 		. ' FROM #__groups'
