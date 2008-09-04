@@ -33,24 +33,12 @@ class KEventDispatcher extends KPatternObservable
 	 * the event and returning their return values.
 	 *
 	 * @param	string	$event			The event name
-	 * @param	mixed	$args			An array of arguments
+	 * @param	array	$args			An associative array of arguments
 	 * @return	array	An array of results from each function call
 	 */
-	public function trigger($event, $args)
+	public function dispatch($event, array $args = array())
 	{
-		// Initialize variables
-		$result = array ();
-
-		/*
-		 * Iterate through all of the registered observers and trigger the event for 
-		 * each observer that handles the event.
-		 */
-		foreach ($this->_observers as $observer)
-		{
-			if (method_exists($observer, $event)) {
-				$result[] = $observer->update($event, $args);
-			}
-		}
-		return $result;
+		$args['event'] = $event;
+		return $this->notify($args);
 	}
 }

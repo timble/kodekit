@@ -38,9 +38,10 @@ abstract class KPatternObservable extends KObject
 	/**
 	 * Update each attached observer object and return an array of their return values
 	 *
+	 * @param	array	$args	An associative array of arguments
 	 * @return array Array of return values from the observers
 	 */
-	public function notify()
+	public function notify(array $args)
 	{
 		$result = array();
 		$iterator = $this->_observers->getIterator();
@@ -49,7 +50,7 @@ abstract class KPatternObservable extends KObject
 		while($iterator->valid()) 
 		{
     		$observer = $iterator->current();
-			$result[] = $observer->onNotify();
+			$result[] = $observer->onNotify($args);
     		$iterator->next();
 		}	
 	
@@ -64,9 +65,9 @@ abstract class KPatternObservable extends KObject
 	 */
 	public function attach( KPatternObserver $observer )
 	{
-		$hanlde = $observer->getHandle(); //get the object handle
+		$handle = $observer->getHandle(); //get the object handle
 		
-		$this->_observers->offsetSet($handle, $cmd);
+		$this->_observers->offsetSet($handle, $observer);
 	}
 
 	/**
@@ -77,7 +78,7 @@ abstract class KPatternObservable extends KObject
 	 */
 	public function detach( KPatternObserver $observer)
 	{
-		$hanlde = $observer->getHandle(); //get the object handle
+		$handle = $observer->getHandle(); //get the object handle
 
 		$result = false;
   		if($this->_observers->offsetExist($handle)) {

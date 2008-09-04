@@ -18,7 +18,7 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
- 
+  
 2008-09-03 Johan Janssens
  + Added KFactory::tmp method to create an object witout storing it in the factory 
    container

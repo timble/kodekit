@@ -27,6 +27,6 @@ class KCommandEvent extends KObject implements KPatternCommandInterface
 	public function execute( $name, $args) 
 	{
 		$dispatcher = KFactory::get('lib.koowa.event.dispatcher');
-		return $dispatcher->trigger($name, $args);
+		return $dispatcher->dispatch($name, $args);
 	}
 }

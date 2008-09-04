@@ -14,19 +14,18 @@
  * @package Koowa_Event
  * @uses 	KObserver
  */
-class KEventHandler extends KObserver
+class KEventHandler extends KPatternObserver
 {
 	/**
 	 * Method to trigger events
 	 *
-	 * @param  string 	$event	 The name of the event to call
 	 * @param  array	$args	 The event arguments
 	 * @return mixed Routine return value
 	 */
-	public function onNotify($event, array $args)
+	public function onNotify(array $args)
 	{
-		if (method_exists($this, $event)) {
-			return call_user_func_array ( array($this, $event), $args );
+		if (method_exists($this, $args['event'])) {
+			return call_user_func_array ( array($this, $args['event']), $args );
 		} 
 		
 		return null;
