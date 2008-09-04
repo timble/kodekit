@@ -187,7 +187,7 @@ abstract class KModelAbstract extends KObject
 		}
 	
 		if ( empty( $component ) ) {
-			$componentn = $this->getClassName('prefix');
+			$component = $this->getClassName('prefix');
 		}
 		
 		if (empty( $application) )  {
@@ -196,10 +196,10 @@ abstract class KModelAbstract extends KObject
 
 		//Make sure we are returning a DBO object
 		if (!array_key_exists('dbo', $options))  {
-			$options['dbo'] = $this->getDBO();;
+			$options['dbo'] = $this->getDBO();
 		}
 		
-		return KFactory::get($application.'::com.'.$component.'.table.'.$view, $options);
+		return KFactory::get($application.'::com.'.$component.'.table.'.$table, $options);
 	}
 
     /**
