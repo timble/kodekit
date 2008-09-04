@@ -12,4 +12,22 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Filter
  */
-class KFilterArrayDefault extends KFilterArrayAbstract {}
+class KFilterArrayDefault extends KFilterArrayAbstract 
+{
+	/**
+	 * Set a scalar filter to use for the FilterArray
+	 *
+	 * @param 	KFilterInterface $filter
+	 * @return	this
+	 */
+	public function setFilter(KFilterInterface $filter)
+	{
+		$this->_filter = $filter;
+		$this->setClassName(array(
+				'prefix' => KInflector::getPart($filter, 0), 
+				'base'=>'FilterArray', 
+				'suffix'=>KInflector::getPart($filter, 1)
+		));	
+		return $this;
+	}
+}
