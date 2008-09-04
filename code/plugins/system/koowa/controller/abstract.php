@@ -192,17 +192,17 @@ abstract class KControllerAbstract extends KObject
 		$this->_doTask = $doTask;
 		
 		//Create the arguments object
-		$args = new stdClass();
-		$args->class_name = $this->getClassName();
-		$args->task       = $task;
-		$args->result     = false;
+		$args = new ArrayObject();
+		$args['class_name'] = $this->getClassName();
+		$args['task']       = $task;
+		$args['result']     = false;
 		
 		if($this->_commandChain->run('onBeforeController'.ucfirst($doTask), $args) === true) {
-			$args->result = $this->$doTask();
+			$args['result'] = $this->$doTask();
 			$this->_commandChain->run('onAfterController'.ucfirst($doTask), $args);
 		}
 		
-		return $args->result;
+		return $args['result'];
 	}
 
 	/**

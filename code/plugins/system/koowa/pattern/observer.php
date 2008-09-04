@@ -43,8 +43,8 @@ abstract class KPatternObserver extends KObject
 	/**
 	 * Event received in case the observables states has changed
 	 *
-	 * @param	array	$args	An associative array of arguments
+	 * @param	object	$args	An associative array of arguments
 	 * @return mixed
 	 */
-	abstract public function onNotify(array $args);
+	abstract public function onNotify(ArrayObject $args);
 }

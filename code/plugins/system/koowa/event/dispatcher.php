@@ -33,10 +33,10 @@ class KEventDispatcher extends KPatternObservable
 	 * the event and returning their return values.
 	 *
 	 * @param	string	$event			The event name
-	 * @param	array	$args			An associative array of arguments
+	 * @param	object	$args			An associative array of arguments
 	 * @return	array	An array of results from each function call
 	 */
-	public function dispatch($event, array $args = array())
+	public function dispatch($event, ArrayObject $args)
 	{
 		$args['event'] = $event;
 		return $this->notify($args);

@@ -303,19 +303,18 @@ class KDatabase extends KPatternProxy
 
 		
 		//Create the arguments object
-		$args = new stdClass();
-		$args->table  = $table;
-		$args->data   = $data;	
-		$args->class  = get_class($this);
-		$args->result = false;
+		$args = new ArrayObject();
+		$args['table'] = $table;
+		$args['date']  = $data;	
+		$args['class'] = get_class($this);
 
 		//Excute the insert operation
 		if($this->_commandChain->run('onBeforeDatabaseInsert', $args) === true) {
-			$args->result = $this->execute($sql);
+			$args['result'] = $this->execute($sql);
 			$this->_commandChain->run('onAfterDatabaseInsert', $args);
 		}
 		
-		return $args->result;
+		return $args['result'];
 	}
 
 	/**
@@ -343,19 +342,18 @@ class KDatabase extends KPatternProxy
 		;
 		
 		//Create the arguments object
-		$args = new stdClass();
-		$args->table  = $table;
-		$args->data   = $data;	
-		$args->class  = get_class($this);
-		$args->result = false;
+		$args = new ArrayObject();
+		$args['table']  = $table;
+		$args['data']   = $data;	
+		$args['class']  = get_class($this);
 
 		//Excute the update operation
 		if($this->_commandChain->run('onBeforeDatabaseUpdate', $args) ===  true) {
-			$args->result = $this->execute($sql);
+			$args['result'] = $this->execute($sql);
 			$this->_commandChain->run('onAfterDatabaseUpdate', $args);
 		}
 		
-        return $args->result;
+        return $args['result'];
 	}
 
 	/**
@@ -374,19 +372,18 @@ class KDatabase extends KPatternProxy
 		;
 
 		//Create the arguments object
-		$args = new stdClass();
-		$args->table  = $table;
-		$args->data   = null;	
-		$args->class  = get_class($this);
-		$args->result = false;
+		$args = new ArrayObject();
+		$args['table']  = $table;
+		$args['data']   = null;	
+		$args['class']  = get_class($this);
 		
 		//Excute the delete operation
 		if($this->_commandChain->run('onBeforeDatabaseDelete', $args) ===  true) {
-			$args->result = $this->execute($sql);
+			$args['result'] = $this->execute($sql);
 			$this->_commandChain->run('onAfterDatabaseDelete', $args);	
 		}
 		
-		return $args->result;
+		return $args['result'];
 	}
 
 	/**
