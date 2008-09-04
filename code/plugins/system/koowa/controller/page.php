@@ -59,8 +59,9 @@ class KControllerPage extends KControllerAbstract
 		$id	 = KInput::get('id', 'request', 'int');
 
 		// Get the table object attached to the model
-		$component = $this->getClassName('suffix');
-		$model     = $this->getClassName('prefix');
+		$component = $this->getClassName('prefix');
+		$model     = $this->getClassName('suffix');
+		$view	   = $model;
 
 		$app   = KFactory::get('lib.joomla.application')->getName();
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
@@ -76,12 +77,12 @@ class KControllerPage extends KControllerAbstract
 		switch($this->getTask())
 		{
 			case 'apply' :
-				$redirect = '&view='.$suffix.'&layout=form&id='.$id;
+				$redirect = '&view='.$view.'&layout=form&id='.$id;
 				break;
 
 			case 'save' :
 			default     :
-				$redirect = '&view='.KInflector::pluralize($suffix);
+				$redirect = '&view='.KInflector::pluralize($view);
 		}
 
 		$this->setRedirect($redirect);
@@ -114,15 +115,16 @@ class KControllerPage extends KControllerAbstract
 		}
 
 		// Get the table object attached to the model
-		$component = $this->getClassName('suffix');
-		$model     = $this->getClassName('prefix');
+		$component = $this->getClassName('prefix');
+		$model     = $this->getClassName('suffix');
+		$view	   = $model;
 
 		$app   = KFactory::get('lib.joomla.application')->getName();
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
 		$table->delete($cid);
 		
 		$this->setRedirect(
-			'view='.KInflector::pluralize($suffix)
+			'view='.KInflector::pluralize($view)
 			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html')
 		);
 	}
@@ -143,15 +145,16 @@ class KControllerPage extends KControllerAbstract
 		}
 
 		// Get the table object attached to the model
-		$component = $this->getClassName('suffix');
-		$model     = $this->getClassName('prefix');
+		$component = $this->getClassName('prefix');
+		$model     = $this->getClassName('suffix');
+		$view	   = $model;
 
 		$app   = KFactory::get('lib.joomla.application')->getName();
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
 		$table->update(array('enabled' => $enable), $cid);
 	
 		$this->setRedirect(
-			'view='.KInflector::pluralize($suffix)
+			'view='.KInflector::pluralize($view)
 			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html')
 		);
 	}
@@ -167,15 +170,16 @@ class KControllerPage extends KControllerAbstract
 		$access = KInput::get('access', 'post', 'int');
 		
 		// Get the table object attached to the model
-		$component = $this->getClassName('suffix');
-		$model     = $this->getClassName('prefix');
+		$component = $this->getClassName('prefix');
+		$model     = $this->getClassName('suffix');
+		$view	   = $model;
 
 		$app   = KFactory::get('lib.joomla.application')->getName();
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
 		$table->update(array('access' => $access), $cid);
 	
 		$this->setRedirect(
-			'view='.KInflector::pluralize($suffix)
+			'view='.KInflector::pluralize($view)
 			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html'), 
 			JText::_( 'Changed items access level')
 		);

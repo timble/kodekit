@@ -43,9 +43,13 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 		if(empty($classname['suffix'])) {
 			throw new KFilterArrayExeption('Incorrect classname: '.get_class($this));
 		}
-		$filtername = ucfirst($classname['prefix']).'Filter'.ucfirst(KInflector::singularize($classname['suffix']));
-	
-		$this->_filter = new $filtername($options);	
+		
+		if(!isset($options['filter']))
+		{
+			$filtername = ucfirst($classname['prefix']).'Filter'.ucfirst(KInflector::singularize($classname['suffix']));
+			$options['filter'] = new $filtername($options);
+		}
+		$this->_filter = $options['filter']; 	
 	}
 	
     /**

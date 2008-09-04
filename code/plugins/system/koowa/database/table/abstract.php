@@ -216,7 +216,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 * @return string
 	 */
 	public function getFields()
-	{
+	{	
 		if(!isset($this->_fields))
 		{
 			$fields = $this->_db->getTableFields($this->getTableName());
