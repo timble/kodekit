@@ -113,8 +113,6 @@ class KInput
 	 */
 	public static function set($var, $value, $hash) 
 	{
-		self::_initialize();
-		
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
 		if(!in_array($hash, self::$_hashes)) {
