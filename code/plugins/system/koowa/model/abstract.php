@@ -466,7 +466,7 @@ abstract class KModelAbstract extends KObject
         $order      = $app->getUserStateFromRequest($ns.'filter_order', 'filter_order', '', 'cmd');
         $order_Dir  = $app->getUserStateFromRequest($ns.'filter_order_Dir', 'filter_order_Dir', 'ASC', 'word');
         $filter     = $app->getUserStateFromRequest($ns.'filter', 'filter', '', 'string');
-        $id         = KInput::get('id', 'request', 'int');
+        $id         = KInput::get('id', 'request', 'slug', 'int');
 
         // Push the environment states into the object
         $this->setState('limit',        $limit);
