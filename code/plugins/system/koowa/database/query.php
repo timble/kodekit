@@ -1,6 +1,7 @@
 <?php
 /**
  * @version		$Id$
+ * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Query
  * @copyright	(C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -12,6 +13,7 @@
  * Database Select Class for SQL select statement generation
  *
  * @author		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Query
  * @uses        KObject

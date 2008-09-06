@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id:openflashchart.php 251 2008-06-14 10:06:53Z mjaz $
+ * @category	Koowa
  * @package     Koowa_View
  * @subpackage 	Helper
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -15,6 +16,7 @@ defined('_JEXEC') or die('Restricted access');
  * Open Flash Chart HTML helper
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_View
  * @subpackage 	Helper
  * @version		1.0

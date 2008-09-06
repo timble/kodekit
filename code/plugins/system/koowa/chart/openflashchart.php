@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id:openflashchart.php 137 2007-11-20 18:32:09Z mjaz $
+ * @category	Koowa
  * @package     Koowa_Chart
  * @subpackage  OpenFlashChart
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -14,6 +15,7 @@ Koowa::import('lib.koowa.chart.renderer.open-flash-chart.open-flash-chart');
  * Chart Data class with Open Flash Chart
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Chart
  * @subpackage  OpenFlashChart
  * @uses KObject

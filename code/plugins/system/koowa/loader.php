@@ -1,6 +1,7 @@
 <?php
 /**
 * @version      $Id:koowa.php 251 2008-06-14 10:06:53Z mjaz $
+* @category		Koowa
 * @package      Koowa
 * @copyright    Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
 * @license      GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
@@ -17,6 +18,7 @@ spl_autoload_register(array('KLoader', 'loadClass'));
  * Loads classes and files, and provides metadata for Koowa such as version info
  *
  * @author		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa
  * @version     1.0
  */

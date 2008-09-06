@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id$
+ * @category	Koowa
  * @package     Koowa_Event
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
@@ -10,9 +11,10 @@
 /**
  * Class to handle dispatching of events.
  *
- * @author Johan Janssens <johan@joomlatools.org>
- * @package Koowa_Event
- * @uses 	KPatternObservable
+ * @author 		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
+ * @package 	Koowa_Event
+ * @uses 		KPatternObservable
  */
 class KEventDispatcher extends KPatternObservable
 {

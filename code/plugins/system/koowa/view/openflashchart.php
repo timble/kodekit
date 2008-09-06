@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id$
+ * @category	Koowa
  * @package     Koowa_View
  * @subpackage  OpenFlashCahrt
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -12,6 +13,7 @@
  * View Open Flash Chart Class
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_View
  * @subpackage  OpenFlashCahrt
  */

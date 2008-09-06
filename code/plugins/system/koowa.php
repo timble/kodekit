@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id:koowa.php 251 2008-06-14 10:06:53Z mjaz $
+ * @category	Koowa
  * @package     Koowa
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPLv2
@@ -14,6 +15,7 @@ defined('_JEXEC') or die('Restricted access');
  * Koowa System plugin
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package		Koowa
  * @version		1.0
  */

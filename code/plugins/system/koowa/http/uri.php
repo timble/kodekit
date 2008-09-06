@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id:uri.php 275 2008-06-19 10:41:12Z mjaz $
+ * @category	Koowa
  * @package     Koowa_Http
  * @subpackage  Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -13,6 +14,7 @@
  * 
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @author		Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Http
  * @subpackage  Uri
  * @uses		KObject

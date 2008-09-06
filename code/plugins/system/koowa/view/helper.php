@@ -1,6 +1,7 @@
 <?php
 /**
  * @version		$Id:helper.php 251 2008-06-14 10:06:53Z mjaz $
+ * @category	Koowa
  * @package		Koowa_View
  * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -12,6 +13,7 @@
  * View Helper Class
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package		Koowa_View
  * @subpackage	Helper
  * @uses   		KFactory

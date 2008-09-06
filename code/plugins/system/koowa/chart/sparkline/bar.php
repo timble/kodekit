@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id$
+ * @category	Koowa
  * @package     Koowa_Chart
  * @subpackage  Sparkline
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -14,6 +15,7 @@ Koowa::import('lib.koowa.chart.renderer.sparkline.Sparkline_Bar');
  * Sparkline Bar
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Chart
  * @subpackage  Sparkline
  */

@@ -1,6 +1,7 @@
 <?php
 /**
  * @version		$Id:proxy.php 46 2008-03-01 18:39:32Z mjaz $
+ * @category	Koowa
  * @package		Koowa_Pattern
  * @subpackage	Command
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -16,6 +17,7 @@
  * of responsability or chain of command pattern
  *
  * @author		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Pattern
  * @subpackage  Command
  */

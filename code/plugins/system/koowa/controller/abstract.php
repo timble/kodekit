@@ -1,6 +1,7 @@
 <?php
 /**
  * @version		$Id$
+ * @category	Koowa
  * @package		Koowa_Controller
  * @copyright	Copyright (C) 2007 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
@@ -13,6 +14,7 @@
  * Note: Concrete controllers must have a singular name
  *
  * @author		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
  * @package		Koowa_Controller
  * @uses		KHelperClass
  * @uses 		KCommandChain

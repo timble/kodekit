@@ -1,6 +1,7 @@
 <?php
 /**
  * @version		$Id$
+ * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Rowset
  * @copyright	(C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -13,6 +14,7 @@
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @author		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Rowset
  * @uses 		KHelperClass

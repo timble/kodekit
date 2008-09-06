@@ -1,6 +1,7 @@
 <?php
 /**
  * @version     $Id$
+ * @category	Koowa
  * @package     Koowa_Chart
  * @subpackage  Google
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -14,6 +15,7 @@
  * Forked from GChartPhp {@link http://code.google.com/p/gchartphp/}
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
+ * @category	Koowa
  * @package     Koowa_Chart
  * @subpackage  Google
  * @uses KObject

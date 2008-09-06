@@ -1,7 +1,8 @@
 <?php
 /**
  * @version     $Id:object.php 46 2008-03-01 18:39:32Z mjaz $
- * @package     Koowa
+ * @category	Koowa
+ * @package     Koowa_Helper
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link        http://www.koowa.org
@@ -13,7 +14,8 @@
  * Can be used as a mixin in classes that rely on their name, such as KView
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
- * @package     Koowa
+ * @category	Koowa
+ * @package     Koowa_Helper
  * @uses 		KObject
  * @uses		KInflector
  */
