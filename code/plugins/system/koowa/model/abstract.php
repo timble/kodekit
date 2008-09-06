@@ -132,7 +132,7 @@ abstract class KModelAbstract extends KObject
 	 * @param	mixed	The value of the property to set
 	 * @return	this
 	 */
-	public function setState( $property, $value=null )
+	public function setState( $property, $value = null )
 	{
 		$this->_state->set($property, $value);
 		return $this;
@@ -142,11 +142,12 @@ abstract class KModelAbstract extends KObject
 	 * Method to get model state variables
 	 *
 	 * @param	string	Optional parameter name
+	 * @param   mixed	Optional default value
 	 * @return	object	The property where specified, the state object where omitted
 	 */
-	public function getState($property = null)
+	public function getState($property = null, $default = null)
 	{
-		return $property === null ? $this->_state : $this->_state->get($property);
+		return $property === null ? $this->_state : $this->_state->get($property, $default);
 	}
 
 	/**
