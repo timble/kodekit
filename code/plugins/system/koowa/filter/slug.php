@@ -67,7 +67,7 @@ class KFilterSlug extends KObject implements KFilterInterface
 				return $int->sanitize($parts[0]);
 				break;
 			case 2:
-				return $int->sanitize($parts[0]) .':'. $cmd->sanitize($part[1]);
+				return $int->sanitize($parts[0]) .':'. $cmd->sanitize($parts[1]);
 				break; 
 		}
 	}
