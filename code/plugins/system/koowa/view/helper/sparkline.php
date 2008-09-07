@@ -9,8 +9,7 @@
  * @link     	http://www.joomlatools.org
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+
 
 /**
  * Sparkline HTML helper
