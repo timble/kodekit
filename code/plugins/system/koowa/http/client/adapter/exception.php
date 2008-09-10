@@ -1,7 +1,7 @@
 <?php
 /**
  * @version     $Id$
- * @package     Koowa
+ * @package     Koowa_Http
  * @subpackage 	Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
@@ -12,7 +12,7 @@
  * Koowa HTTP Client Adapter Exception class
  *
  * @author      Laurens Vandeput <laurens@joomlatools.org>
- * @package     Koowa
+ * @package     Koowa_Http
  * @subpackage 	Client
  */
 class KHttpClientAdapterException extends KHttpException

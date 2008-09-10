@@ -1,7 +1,7 @@
 <?php
 /**
  * @version     $Id$
- * @package     Koowa
+ * @package     Koowa_Http
  * @subpackage  Client
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
@@ -12,11 +12,10 @@
  * HTTP Client Adapter interface
  * 
  * @author      Laurens Vandeput <laurens@joomlatools.org>
- * @package     Koowa
+ * @package     Koowa_Http
  * @subpackage  Client
  * @uses 		KObject
  */
-
 class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter 
 {
 
