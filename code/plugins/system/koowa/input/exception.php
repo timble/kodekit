@@ -13,6 +13,6 @@
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
- * @package     Koowa_Request
+ * @package     Koowa_Input
  */
 class KInputException extends Exception {}
