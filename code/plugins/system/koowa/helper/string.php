@@ -42,7 +42,7 @@ if (function_exists('iconv') || ((!strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' &&
  * @subpacakge	String
  * @static
  */
-class KHelperKHelperString
+class KHelperString
 {
 	/**
 	 * UTF-8 aware alternative to strpos
@@ -516,7 +516,6 @@ class KHelperKHelperString
     	return preg_replace_callback($pattern, 'KHelperString::ucwords_callback',$str);
 	}
 
-
 	/**
 	 * Callback function for preg_replace_callback call in utf8_ucwords
 	 * 
@@ -556,7 +555,6 @@ class KHelperKHelperString
 		}
 	}
 	
-
 	/**
 	 * Tests a string as to whether it's valid UTF-8 and supported by the Unicode standard
 	 * 
