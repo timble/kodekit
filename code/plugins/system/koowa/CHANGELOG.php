@@ -20,6 +20,11 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-10 Johan Janssens
+ + Added KDocument package
+ + Added toString method to JHelperArray
+ ^ Improved loader to be able to look for files in directories with the same name
+ 
 2008-09-08 Johan Janssens
  + Added KHelperString class to easily handle multi-byte strings 
   

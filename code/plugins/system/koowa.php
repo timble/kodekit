@@ -8,8 +8,6 @@
  * @link        http://www.koowa.org
  */
 
-
-
 /**
  * Koowa System plugin
  *
@@ -27,24 +25,38 @@ class plgSystemKoowa extends JPlugin
 		{	
 			require_once JPATH_PLUGINS.DS.'system'.DS.'koowa'.DS.'koowa.php';
 			require_once JPATH_PLUGINS.DS.'system'.DS.'koowa'.DS.'loader.php';
+			
+			// Proxy the application object 
+			$app  =& JFactory::getApplication();
+			$app  = new KApplication($app);
+		
+			// Proxy the database object
+			$db  =& JFactory::getDBO();
+			$db  = new KDatabase($db);
 		}
 		
 		parent::__construct($subject, $config = array());
 	}
 
-	public function onAfterInitialise()
+	public function onBeforeApplicationRoute()
 	{
 		if( ! self::canEnable()) {	
 			return;
 		}
-	
-		// Proxy the application object 
-		$app  =& JFactory::getApplication();
-		$app  = new KApplication($app);
 		
-		// Proxy the database object
-		$db  =& JFactory::getDBO();
-		$db  = new KDatabase($db);
+		//Replace the document object
+		$lang = KFactory::get('lib.joomla.language');
+		
+		$options = array (
+			'charset'	=> 'utf-8',
+			'language'	=> $lang->getTag(),
+			'direction'	=> $lang->isRTL() ? 'rtl' : 'ltr'
+		);
+		
+		$format = KInput::get('format', 'GET', 'word', 'word', 'html');
+			
+		$doc =& JFactory::getDocument();
+		$doc = KFactory::get('lib.koowa.document.'.$format, $options);
 	}
 	
 	/**

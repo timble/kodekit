@@ -57,6 +57,10 @@ class KLoader
 					$path = $word.DS.$word;
 				}
 				
+				if(!is_file(dirname(__FILE__).DS.$path.'.php')) {
+					$path = $path.DS.array_pop($parts);	
+				}
+					
 				self::register($class,  dirname(__FILE__).DS.$path.'.php');
 				
 			} break;

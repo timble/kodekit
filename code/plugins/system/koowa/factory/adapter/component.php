@@ -34,7 +34,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	 * @param array  $options 	An optional associative array of configuration settings.
 	 * @return object
 	 */
-	public function createInstance($identifier, $options)
+	public function createInstance($identifier, array $options)
 	{
 		$parts = explode('.', $identifier);
 		if(strpos($parts[0], 'com') === false) {
@@ -72,7 +72,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	 * @throws	KFactoryAdapterException
 	 * @return object
 	 */
-	protected static function _getInstanceByArray($object, $options = array())
+	protected static function _getInstanceByArray($object, array $options = array())
 	{
 		if(array_key_exists('application', $object)) {
 			$client = $object['application'];

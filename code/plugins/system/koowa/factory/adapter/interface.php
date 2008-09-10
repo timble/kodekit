@@ -24,5 +24,5 @@ interface KFactoryAdapterInterface
 	 *
 	 * @return object
 	 */
-	public function createInstance($identifier, $options);
+	public function createInstance($identifier, array $options);
 }

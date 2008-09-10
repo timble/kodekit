@@ -40,7 +40,7 @@ class KInput
 	 * be used.
 	 * 
 	 * @param	string	Variable name
-	 * @param 	string  Hash [GET|POST|COOKIE|ENV|SERVER]
+	 * @param 	string  Hash [GET|POST|COOKIE|ENV|SERVER|REQUEST]
 	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects 
 	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, or array of objects
 	 * @param 	mixed	Default value when the variable doesn't exist

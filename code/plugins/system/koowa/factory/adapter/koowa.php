@@ -24,7 +24,7 @@ class KFactoryAdapterKoowa extends KFactoryAdapterAbstract
 	 * @param array  $options 	An optional associative array of configuration settings.
 	 * @return object
 	 */
-	public function createInstance($identifier, $options)
+	public function createInstance($identifier, array $options)
 	{
 		$parts = explode('.', $identifier);
 		if($parts[0] != 'lib' || $parts[1] != 'koowa') {
@@ -47,7 +47,7 @@ class KFactoryAdapterKoowa extends KFactoryAdapterAbstract
                         
 			$classname = 'K'.KInflector::implode($parts).'Default';
 		}
-		
+				
 		$instance = new $classname($options);
 		return $instance;
 	}

@@ -56,7 +56,7 @@ class KViewHelperBehavior
 		return;
 	}
 
-		public static function caption() {
+	public static function caption() {
 		KViewHelper::script('caption.js', 'media/system/js/');
 	}
 

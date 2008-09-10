@@ -41,6 +41,26 @@ class KHelperArray
         return $array;
     }
     
+ 	/**
+     * Count array items recursively
+     * 
+     * @param	array
+     * @return	int
+     */
+    public static function count(array $array)
+    {
+        $count = 0;
+
+        foreach($array as $v){
+            if(is_array($v)){
+                $count += self::count($v);
+            } else {
+                $count++;
+            }
+        }
+        return $count;
+    }
+    
     /**
      * Extracts a column from an array of arrays or objects
      *
@@ -63,25 +83,38 @@ class KHelperArray
         
         return $result;
     }
+ 
+	/**
+	 * Utility function to map an array to a string
+	 *
+	 * @static
+	 * @param	array	$array		The array to map.
+	 * @param	string	$inner_glue 	The inner glue to use, default '='
+	 * @param	string	$outer_glue		The outer glue to use, defaut  ' '
+	 * @param	boolean	$keepOuterKey	
+	 * @return	string	The string mapped from the given array
+	 */
+	public static function toString( array $array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false )
+	{
+		$output = array();
 
-    /**
-     * Count array items recursively
-     * 
-     * @param	array
-     * @return	int
-     */
-    public static function count(array $array)
-    {
-        $count = 0;
+		if (is_array($array))
+		{
+			foreach ($array as $key => $item)
+			{
+				if (is_array ($item))
+				{
+					if ($keepOuterKey) {
+						$output[] = $key;
+					}
+					
+					// This is value is an array, go and do it again!
+					$output[] = KHelperArray::toString( $item, $inner_glue, $outer_glue, $keepOuterKey);
+				}
+				else $output[] = $key.$inner_glue.'"'.$item.'"';
+			}
+		}
 
-        foreach($array as $v){
-            if(is_array($v)){
-                $count += self::count($v);
-            } else {
-                $count++;
-            }
-        }
-        return $count;
-    
-    }
+		return implode( $outer_glue, $output);
+	}
 }
