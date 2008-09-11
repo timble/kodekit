@@ -129,10 +129,12 @@ class KDocumentFeedItem extends KObject
 	 /**
 	 * Set the KDocumentFeedEnclosure for this item
 	 *
-	 * @param object $enclosure The KDocumentFeedEnclosure to add to the feed.
+	 * @param 	KDocumentFeedEnclosure $enclosure The KDocumentFeedEnclosure to add to the feed.
+	 * @return 	this
 	 */
 	 public function setEnclosure($enclosure)	
 	 {
 		 $this->enclosure = $enclosure;
+		 return $this;
 	 }
 }

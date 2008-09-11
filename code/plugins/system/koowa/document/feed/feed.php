@@ -211,11 +211,14 @@ class KDocumentFeed extends KDocumentAbstract
 	/**
 	 * Adds an KDocumentFeedItem to the feed.
 	 *
-	 * @param object KDocumentFeedItem $item The feeditem to add to the feed.
+	 * @param 	KDocumentFeedItem $item The feeditem to add to the feed.
+	 * @return 	this
 	 */
-	public function addItem( &$item )
+	public function addItem( $item )
 	{
 		$item->source = $this->link;
 		$this->items[] = $item;
+		
+		return $this;
 	}
 }

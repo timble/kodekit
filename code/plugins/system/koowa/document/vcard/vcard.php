@@ -75,8 +75,14 @@ class KDocumentVcard extends KDocumentAbstract
 		
 		return $data;
 	}
-	
-	// type may be PREF | WORK | HOME | VOICE | FAX | MSG | CELL | PAGER | BBS | CAR | MODEM | ISDN | VIDEO or any senseful combination, e.g. "PREF;WORK;VOICE"
+
+	/**
+	 * Set a phone number
+	 *
+	 * @param	string	Phone number
+	 * @param 	string	Type [PREF|WORK|HOME|VOICE|FAX|MSG|CELL|PAGER|BBS|CAR|MODEM|ISDN|VIDEO] or a combination, e.g. "PREF;WORK;VOICE"
+	 * @return 	this
+	 */
 	public function setPhoneNumber($number, $type='') 
 	{
 		$key = 'TEL';
@@ -86,32 +92,76 @@ class KDocumentVcard extends KDocumentAbstract
 		$key.= ';ENCODING=QUOTED-PRINTABLE';
 
 		$this->_properties[$key] = $this->quoted_printable_encode($number);
+		return $this;
 	}
 
-	// $type = "GIF" | "JPEG"
+	/**
+	 * Set a photo
+	 *
+	 * @param	string 	Type [GIF|JPEG]
+	 * @param 	string	Photo
+	 * @return 	this
+	 */
 	public function setPhoto($type, $photo) 
 	{ 
 		$this->_properties["PHOTO;TYPE=$type;ENCODING=BASE64"] = base64_encode($photo);
+		return $this;
 	}
 
+	/**
+	 * Set formatted name
+	 *
+	 * @param	string	Name
+	 * @return 	this
+	 */
 	public function setFormattedName($name) 
 	{
 		$this->_properties['FN'] = $this->quoted_printable_encode($name);
+		return $this;
 	}
 	
+	/**
+	 * Set name
+	 *
+	 * @param 	string	Family name
+	 * @param 	string	First name
+	 * @param 	string	Additional name
+	 * @param 	string	Prefix
+	 * @param 	string 	Suffix
+	 * @return 	this
+	 */
 	public function setName( $family='', $first='', $additional='', $prefix='', $suffix='' ) 
 	{
 		$this->_properties["N"] 	= "$family;$first;$additional;$prefix;$suffix";
 		$this->setFormattedName( trim( "$prefix $first $additional $family $suffix" ) );
+		return $this;
 	}
 
-	// $date format is YYYY-MM-DD
+	/**
+	 * Set birthday
+	 *
+	 * @param 	string	Date YYYY-MM-DD
+	 * @return 	this
+	 */
 	public function setBirthday($date) 
 	{ 
 		$this->_properties['BDAY'] = $date;
+		return $this;
 	}
 
-	// $type may be DOM | INTL | POSTAL | PARCEL | HOME | WORK or any combination of these: e.g. "WORK;PARCEL;POSTAL"
+	/**
+	 * Set Address
+	 *
+	 * @param 	string Postoffice
+	 * @param	string Extended
+	 * @param 	string Street
+	 * @param 	string City
+	 * @param 	string Region
+	 * @param 	string Zip
+	 * @param 	string Country
+	 * @param 	string Type [DOM|INTL|POSTAL|PARCEL|HOME|WORK] or a combination e.g. "WORK;PARCEL;POSTAL"
+	 * @return 	this
+	 */
 	public function setAddress( $postoffice='', $extended='', $street='', $city='', $region='', $zip='', $country='', $type='HOME;POSTAL' ) 
 	{
 		$separator = ';';
@@ -131,8 +181,22 @@ class KDocumentVcard extends KDocumentAbstract
 		$return .= $separator . $this->encode( $country );
 
 		$this->_properties[$key] = $return;
+		return $this;
 	}
 
+	/**
+	 * Set label
+	 *
+	 * @param 	string Postoffice
+	 * @param	string Extended
+	 * @param 	string Street
+	 * @param 	string City
+	 * @param 	string Region
+	 * @param 	string Zip
+	 * @param 	string Country
+	 * @param 	string Type [DOM|INTL|POSTAL|PARCEL|HOME|WORK] or a combination e.g. "WORK;PARCEL;POSTAL"
+	 * @return 	this
+	 */
 	public function setLabel($postoffice='', $extended='', $street='', $city='', $region='', $zip='', $country='', $type='HOME;POSTAL') 
 	{
 		$label = '';
@@ -171,19 +235,42 @@ class KDocumentVcard extends KDocumentAbstract
 		}
 
 		$this->_properties["LABEL;$type;ENCODING=QUOTED-PRINTABLE"] = $this->quoted_printable_encode($label);
+		return $this;
 	}
 
+	/**
+	 * Set Email
+	 *
+	 * @param 	string Email
+	 * @return 	this
+	 */
 	public function setEmail($address) 
 	{
 		$this->_properties['EMAIL;INTERNET'] = $address;
+		return $this;
 	}
 
+	/**
+	 * Set note
+	 *	
+	 * @param 	string	Note
+	 * @return 	this
+	 */
 	public function setNote($note) 
 	{
 		$this->_properties['NOTE;ENCODING=QUOTED-PRINTABLE'] = $this->quoted_printable_encode($note);
+		return $this;
 	}
 
 	// $type may be WORK | HOME
+	
+	/**
+	 * Set URL
+	 *
+	 * @param 	string	Url
+	 * @param 	string	Type [WORK|HOME]
+	 * @return 	this
+	 */
 	public function setURL($url, $type='') 
 	{
 		$key = 'URL';
@@ -192,36 +279,78 @@ class KDocumentVcard extends KDocumentAbstract
 		}
 
 		$this->_properties[$key] = $url;
+		return $this;
 	}
 	
+	/**
+	 * Set filename
+	 *
+	 * @param 	string	Filename
+	 * @return 	this
+	 */
 	public function setFilename( $filename ) 
 	{
 		$this->_filename = $filename .'.vcf';
+		return $this;
 	}
 	
+	/**
+	 * Set title
+	 *
+	 * @param 	string	Title
+	 * @return 	this
+	 */
 	public function setTitle( $title ) 
 	{
 		$title 	= trim( $title );
 		$this->_properties['TITLE'] 	= $title;
+		return $this;
 	}
 	
+	
+	/**
+	 * Set organisation
+	 *
+	 * @param 	string	Organisation
+	 * @return 	this
+	 */
 	public function setOrg( $org ) 
 	{
 		$org 	= trim( $org );
 		$this->_properties['ORG'] = $org;
+		return $this;
 	}
 
 
+	/**
+	 * Encode
+	 *
+	 * @param 	string	String to encode
+	 * @return 	string	Encoded string
+	 */
 	public function encode($string) 
 	{
 		return $this->escape($this->quoted_printable_encode($string));
 	}
 
+	/**
+	 * Escape
+	 *
+	 * @param 	string	String to escape
+	 * @return 	string	Escaped string
+	 */
 	public function escape($string) 
 	{
 		return str_replace(';',"\;",$string);
 	}
 
+	/**
+	 * Quote for printable output
+	 *
+	 * @param 	string 	Input
+	 * @param 	int		Max line length
+	 * @return 	string
+	 */
 	public function quoted_printable_encode($input, $line_max = 76) 
 	{
 		$hex 		= array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');

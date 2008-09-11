@@ -80,6 +80,7 @@ class KDocumentHtml extends KDocumentAbstract
 	 * Set the html document head data
 	 *
 	 * @param	array	$data	The document head data in array form
+	 * @return 	this
 	 */
 	public function setHeadData(array $data)
 	{
@@ -93,16 +94,20 @@ class KDocumentHtml extends KDocumentAbstract
 		$this->_scripts		= (isset($data['scripts'])) ? $data['scripts'] : $this->_scripts;
 		$this->_script		= (isset($data['script'])) ? $data['script'] : $this->_script;
 		$this->_custom		= (isset($data['custom'])) ? $data['custom'] : $this->_custom;
+		
+		return $this;
 	}
 	
 	/**
 	 * Adds a custom html string to the head block
 	 *
-	 * @param string $html The html to add to the head
+	 * @param 	string $html The html to add to the head
+	 * @return 	this
 	 */
 	function addCustomTag( $html )
 	{
 		$this->_custom[] = trim( $html );
+		return $this;
 	}
 
 	 /**
@@ -116,12 +121,14 @@ class KDocumentHtml extends KDocumentAbstract
 	 * @param	string  $relation   Relation of link.
 	 * @param	string  $relType	Relation type attribute.  Either rel or rev (default: 'rel').
 	 * @param	array   $attributes Associative array of remaining attributes.
+	 * @return 	this
 	 */
 	public function addHeadLink($href, $relation, $relType = 'rel', array $attribs = array())
 	{
 		$attribs = KHelperArray::toString($attribs);
 		$generatedTag = '<link href="'.$href.'" '.$relType.'="'.$relation.'" '.$attribs;
 		$this->_links[] = $generatedTag;
+		return $this;
 	}
 
 	 /**
@@ -134,11 +141,13 @@ class KDocumentHtml extends KDocumentAbstract
 	 * @param	 string  $href		The link that is being related.
 	 * @param	 string  $type		File type
 	 * @param	 string  $relation	Relation of link
+	 * @return 	this
 	 */
 	public function addFavicon($href, $type = 'image/x-icon', $relation = 'shortcut icon')
 	{
 		$href = str_replace( '\\', '/', $href );
 		$this->_links[] = '<link href="'.$href.'" rel="'.$relation.'" type="'.$type.'"';
+		return $this;
 	}
 
 	/**
@@ -177,13 +186,15 @@ class KDocumentHtml extends KDocumentAbstract
 	/**
 	 * Set the contents a document include
 	 *
-	 * @param string 	$type		The type of renderer
-	 * @param string 	$name		oke The name of the element to render
-	 * @param string 	$content	The content to be set in the buffer
+	 * @param 	string 	$type		The type of renderer
+	 * @param 	string 	$name		oke The name of the element to render
+	 * @param 	string 	$content	The content to be set in the buffer
+	 * @return 	this
 	 */
 	public function setBuffer($contents, $type, $name = null)
 	{
 		$this->_buffer[$type][$name] = $contents;
+		return $this;
 	}
 
 	/**

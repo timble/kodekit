@@ -65,7 +65,7 @@ abstract class KDocumentAbstract extends KObject
 	 *
 	 * @var		string
 	 */
-	 protected $_generator = 'Koowa 0.6 - Open Web Publishing Framework';
+	protected $_generator = 'Koowa 0.6 - Open Web Publishing Framework';
 
 	/**
 	 * Document modified date
@@ -204,6 +204,7 @@ abstract class KDocumentAbstract extends KObject
 	 * Set the document head data
 	 *
 	 * @param	array	$data	The document head data in array form
+	 * @return	this
 	 */
 	abstract public function setHeadData(array $data);
 
@@ -221,10 +222,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Set the contents of the document buffer
 	 *
 	 * @param string 	$content	The content to be set in the buffer
+	 * @return	this
 	 */
 	public function setBuffer($content) 
 	{
 		$this->_buffer = $content;
+		return $this;
 	}
 
 	/**
@@ -267,6 +270,7 @@ abstract class KDocumentAbstract extends KObject
 	 * @param string  $name			Value of name or http-equiv tag
 	 * @param string  $content		Value of the content tag
 	 * @param bool	$http_equiv	 META type "http-equiv" defaults to null
+	 * @return	this
 	 */
 	public function setMetaData($name, $content, $http_equiv = false)
 	{
@@ -287,6 +291,7 @@ abstract class KDocumentAbstract extends KObject
 				$type = ($http_equiv == true) ? 'http-equiv' : 'standard';
 				$this->_metaTags[$type][$name] = $content;
 		}
+		return $this;
 	}
 
 	 /**
@@ -294,10 +299,12 @@ abstract class KDocumentAbstract extends KObject
 	 *
 	 * @param	string  $url		URL to the linked script
 	 * @param	string  $type		Type of script. Defaults to 'text/javascript'
+	 * @return	this
 	 */
 	public function addScript($url, $type="text/javascript") 
 	{
 		$this->_scripts[$url] = $type;
+		return $this;
 	}
 
 	/**
@@ -305,6 +312,7 @@ abstract class KDocumentAbstract extends KObject
 	 *
 	 * @param	string  $content   Script
 	 * @param	string  $type	Scripting mime (defaults to 'text/javascript')
+	 * @return	this
 	 */
 	public function addScriptDeclaration($content, $type = 'text/javascript')
 	{
@@ -313,6 +321,7 @@ abstract class KDocumentAbstract extends KObject
 		} else {
 			$this->_script[strtolower($type)] .= chr(13).$content;
 		}
+		return $this;
 	}
 
 	/**
@@ -321,12 +330,14 @@ abstract class KDocumentAbstract extends KObject
 	 * @param	string  $url	URL to the linked style sheet
 	 * @param	string  $type   Mime encoding type
 	 * @param	string  $media  Media type that this stylesheet applies to
+	 * @return	this
 	 */
 	public function addStyleSheet($url, $type = 'text/css', $media = null, $attribs = array())
 	{
 		$this->_styleSheets[$url]['mime']		= $type;
 		$this->_styleSheets[$url]['media']		= $media;
 		$this->_styleSheets[$url]['attribs']	= $attribs;
+		return $this;
 	}
 
 	 /**
@@ -334,6 +345,7 @@ abstract class KDocumentAbstract extends KObject
 	 *
 	 * @param	string  $content   Style declarations
 	 * @param	string  $type		Type of stylesheet (defaults to 'text/css')
+	 * @return	this
 	 */
 	public function addStyleDeclaration($content, $type = 'text/css')
 	{
@@ -342,16 +354,19 @@ abstract class KDocumentAbstract extends KObject
 		} else {
 			$this->_style[strtolower($type)] .= chr(13).$content;
 		}
+		return $this;
 	}
 
 	 /**
 	 * Sets the document charset
 	 *
 	 * @param   string   $type  Charset encoding string
+	 * @return	this
 	 */
 	public function setCharset($type = 'utf-8') 
 	{
 		$this->_charset = $type;
+		return $this;
 	}
 
 	/**
@@ -368,16 +383,19 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the global document language declaration. Default is English (en-gb).
 	 *
 	 * @param   string   $lang
+	 * @return	this
 	 */
 	public function setLanguage($lang = "en-gb") 
 	{
 		$this->language = strtolower($lang);
+		return $this;
 	}
 
 	/**
 	 * Returns the document language.
 	 *
 	 * @return string
+	 * 
 	 */
 	public function getLanguage() 
 	{
@@ -388,10 +406,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the global document direction declaration. Default is left-to-right (ltr).
 	 *
 	 * @param   string   $dir
+	 * @return	this
 	 */
 	public function setDirection($dir = "ltr") 
 	{
 		$this->direction = strtolower($dir);
+		return $this;
 	}
 
 	/**
@@ -408,10 +428,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the title of the document
 	 *
 	 * @param	string	$title
+	 * @return	this
 	 */
 	public function setTitle($title) 
 	{
 		$this->title = $title;
+		return $this;
 	}
 
 	/**
@@ -428,10 +450,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the base URI of the document
 	 *
 	 * @param	string	$base
+	 * @return	this
 	 */
 	public function setBase($base) 
 	{
 		$this->base = $base;
+		return $this;
 	}
 
 	/**
@@ -448,10 +472,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the description of the document
 	 *
 	 * @param	string	$description
+	 * @return	this
 	 */
 	public function setDescription($description) 
 	{
 		$this->description = $description;
+		return $this;
 	}
 
 	/**
@@ -468,10 +494,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the document link
 	 *
 	 * @param   string   $url  A url
+	 * @return	this
 	 */
 	public function setLink($url) 
 	{
 		$this->link = $url;
+		return $this;
 	}
 
 	/**
@@ -488,10 +516,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the document generator
 	 *
 	 * @param   string  $generator
+	 * @return	this
 	 */
 	public function setGenerator($generator) 
 	{
 		$this->_generator = $generator;
+		return $this;
 	}
 
 	/**
@@ -508,10 +538,12 @@ abstract class KDocumentAbstract extends KObject
 	 * Sets the document modified date
 	 *
 	 * @param   string 	$date
+	 * @return	this
 	 */
 	public function setModifiedDate($date) 
 	{
 		$this->_mdate = $date;
+		return $this;
 	}
 
 	/**
@@ -527,17 +559,19 @@ abstract class KDocumentAbstract extends KObject
 	/**
 	 * Sets the document MIME encoding that is sent to the browser.
 	 *
-	 * <p>This usually will be text/html because most browsers cannot yet
+	 * This usually will be text/html because most browsers cannot yet
 	 * accept the proper mime settings for XHTML: application/xhtml+xml
 	 * and to a lesser extent application/xml and text/xml. See the W3C note
 	 * ({@link http://www.w3.org/TR/xhtml-media-types/
-	 * http://www.w3.org/TR/xhtml-media-types/}) for more details.</p>
+	 * http://www.w3.org/TR/xhtml-media-types/}) for more details.
 	 *
 	 * @param	string	$type
+	 * @return	this
 	 */
 	public function setMimeEncoding($type = 'text/html') 
 	{
 		$this->_mime = strtolower($type);
+		return $this;
 	}
 	
 	/**

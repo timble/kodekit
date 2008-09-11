@@ -144,11 +144,12 @@ class KDocumentPdf extends KDocumentAbstract
 	 * Sets the document name
 	 *
 	 * @param   string   $name	Document name
-	 * @return  void
+	 * @return  this
 	 */
 	public function setName($name = 'koowa') 
 	{
 		$this->_name = $name;
+		return $this;
 	}
 
 	/**
@@ -165,11 +166,12 @@ class KDocumentPdf extends KDocumentAbstract
 	 * Sets the document header string
 	 *
 	 * @param   string   $text	Document header string
-	 * @return  void
+	 * @return  this
 	 */
 	public function setHeader($text) 
 	{
 		$this->_header = $text;
+		return $this;
 	}
 
 	/**
