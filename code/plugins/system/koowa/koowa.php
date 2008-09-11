@@ -62,19 +62,25 @@ class Koowa
     }
     
   	/**
-     * Get the URL to the folder containing all media assets
+     * Get the URL to a Koowa folder
      *
-     * @param string	$type	The type of URL to return, default 'media'
+     * @param string	$type	The type of URL to return [root|media|...]
      * @return 	string	URL
      */
-    public static function getURL($type = 'media')
+    public static function getURL($type)
     {
     	$url = '';
     	
     	switch($type) 
     	{
+    		case 'root' :
+    			$url = JURI::root();
+    			break;
     		case 'media' :
     			$url = JURI::root().'media/plg_koowa/';
+    			break;
+    		default:
+    			throw new KException('No url of type: '.$type);	
     			break;
     	}
     	
