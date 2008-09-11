@@ -599,12 +599,12 @@ abstract class KDocumentAbstract extends KObject
 	/**
 	 * Outputs the document
 	 *
-	 * @param boolean 	$cache		If true, cache the output
-	 * @param boolean 	$compress	If true, compress the output
-	 * @param array		$params		Associative array of attributes
-	 * @return 	The rendered data
+	 * @param 	boolean 	$cache		If true, cache the output
+	 * @param 	boolean 	$compress	If true, compress the output
+	 * @param 	array		$params		Associative array of attributes
+	 * @return 	mixed		The rendered data
 	 */
-	public function render( $cache = false, array $params = array())
+	abstract public function render( $cache = false, array $params = array())
 	{
 		JResponse::setHeader( 'Expires', gmdate( 'D, d M Y H:i:s', time() + 900 ) . ' GMT' );
 		JResponse::setHeader( 'Content-Type', $this->_mime .  '; charset=' . $this->_charset);
