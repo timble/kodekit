@@ -3,7 +3,7 @@
  * @version		$Id$
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Helper
+ * @subpackage	Html
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -15,15 +15,13 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Helper
+ * @subpackage	Html
  */
-class KViewHelperGrid
+class KViewHtmlHelperGrid
 {
 
 	/**
 	 * Shows a true/false graphics
-	 * 
-	 * @author	Mathias Verraes <mathias@hoomlatools.org>
 	 *
 	 * @param	bool	Value
 	 * @param 	string	Image for true
@@ -70,7 +68,6 @@ class KViewHelperGrid
 	* @param int The record id
 	* @param boolean
 	* @param string The name of the form element
-	*
 	* @return string
 	*/
 	public static function id( $rowNum, $recId, $checkedOut=false, $name='cid' )
@@ -124,9 +121,9 @@ class KViewHelperGrid
 
 		$checked = '';
 		if ( $result ) {
-			$checked = KViewHelperGrid::_checkedOut( $row );
+			$checked = KViewHtmlHelperGrid::_checkedOut( $row );
 		} else {
-			$checked = KViewHelper::_('grid.id', $i, $row->$identifier );
+			$checked = KViewHelper::_('html.grid.id', $i, $row->$identifier );
 		}
 
 		return $checked;
@@ -166,11 +163,10 @@ class KViewHelperGrid
 
 	public static function order( $rows, $image='filesave.png', $task="saveorder" )
 	{
-		$image = KViewHelper::_('image.administrator',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
+		$image = KViewHelper::_('html.image.administrator',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
 		$href = '<a href="javascript:saveorder('.(count( $rows )-1).', \''.$task.'\')" title="'.JText::_( 'Save Order' ).'">'.$image.'</a>';
 		return $href;
 	}
-
 
 	protected static function _checkedOut( &$row, $overlib = 1 )
 	{

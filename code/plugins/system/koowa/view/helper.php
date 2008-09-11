@@ -3,7 +3,6 @@
  * @version		$Id:helper.php 251 2008-06-14 10:06:53Z mjaz $
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -15,7 +14,6 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Helper
  * @uses   		KFactory
  */
 class KViewHelper
@@ -36,13 +34,14 @@ class KViewHelper
 	 * @param	string	The name of helper method to load, (prefix).(class).function
 	 *                  prefix and class are optional and can be used to load custom
 	 *                  html helpers.
-	 * @throws KViewHelperException
+	 * @throws KViewException
 	 */
 	public static function _( $type )
 	{
 		//Initialise variables
 		$prefix = 'KViewHelper';
 		$file   = '';
+		$format = '';
 		$func   = $type;
 
 		// Check to see if we need to load a helper file
@@ -50,17 +49,20 @@ class KViewHelper
 
 		switch(count($parts))
 		{
-			case 3 :
+			case 4 :
 			{
-				$prefix		= preg_replace( '#[^A-Z0-9_]#i', '', $parts[0] ).'Helper';
-				$file		= preg_replace( '#[^A-Z0-9_]#i', '', $parts[1] );
-				$func		= preg_replace( '#[^A-Z0-9_]#i', '', $parts[2] );
+				$format 	= $parts[1];
+				$prefix		= ucfirst($parts[0]).ucfirst($format).'Helper';
+				$file		= $parts[2];
+				$func		= $parts[3];
 			} break;
 
-			case 2 :
+			case 3 :
 			{
-				$file		= preg_replace( '#[^A-Z0-9_]#i', '', $parts[0] );
-				$func		= preg_replace( '#[^A-Z0-9_]#i', '', $parts[1] );
+				$format 	= $parts[0];
+				$prefix		= 'KView'.ucfirst($format).'Helper';
+				$file		= $parts[1];
+				$func		= $parts[2];
 			} break;
 		}
 
@@ -69,19 +71,19 @@ class KViewHelper
 		if (!class_exists( $className ))
 		{
 			jimport('joomla.filesystem.path');
-			if ($path = JPath::find(KViewHelper::getIncludePaths(), strtolower($file).'.php'))
+			if ($path = JPath::find(KViewHelper::getIncludePaths(), $format.DS.$file.'.php'))
 			{
 				require_once $path;
 
 				if (!class_exists( $className )) {
-					throw new KViewHelperException($className.'::' .$func. ' not found in file.' );
+					throw new KViewException($className.'::' .$func. ' not found in file.' );
 				}
 			}
-			else throw new KViewHelperException( $prefix.$file . ' not supported. File not found.' );
+			else throw new KViewException( $prefix.$file . ' not supported. File not found.' );
 		}
 
 		if (!is_callable( array( $className, $func ) )) {
-			throw new KViewHelperException( $className.'::'.$func.' not supported.' );
+			throw new KViewException( $className.'::'.$func.' not supported.' );
 		}	
 		
 		$args = func_get_args();
@@ -89,7 +91,6 @@ class KViewHelper
 		return call_user_func_array( array( $className, $func ), $args );
 	}
 	
-
 	/**
 	 * Add a directory where KViewHelper should search for helpers. You may
 	 * either pass a string or an array of directories.
@@ -133,15 +134,14 @@ class KViewHelper
 	 *
 	 * @access	public
 	 * @param	string 	The name of the script file
-	 * * @param	string 	The relative or absolute path of the script file
+	 * @param	string 	The relative or absolute path of the script file
 	 * @param	boolean If true, the mootools library will be loaded
-	 * @since	1.5
 	 */
 	public static function script($filename, $path = 'media/plg_koowa/js/', $mootools = true)
 	{
 		// Include mootools framework
 		if($mootools) {
-			KViewHelper::_('behavior.mootools');
+			KViewHelper::_('html.behavior.mootools');
 		}
 
 		if(strpos($path, 'http') !== 0) {
@@ -158,7 +158,6 @@ class KViewHelper
 	 *
 	 * @access	public
 	 * @param	string 	The relative URL to use for the href attribute
-	 * @since	1.5
 	 */
 	public static function stylesheet($filename, $path = 'media/plg_koowa/css/', $attribs = array())
 	{
@@ -169,5 +168,32 @@ class KViewHelper
 		$document = KFactory::get('lib.joomla.document');
 		$document->addStylesheet( $path.$filename, 'text/css', null, $attribs );
 		return;
+	}
+	
+	/**
+	 * Returns formated date according to current local and adds time offset
+	 *
+	 * @access	public
+	 * @param	string	date in an US English date format
+	 * @param	string	format optional format for strftime
+	 * @returns	string	formated date
+	 * @see		strftime
+	 */
+	public static function date($date, $format = null, $offset = NULL)
+	{
+		if ( ! $format ) {
+			$format = JText::_('DATE_FORMAT_LC1');
+		}
+
+		if(is_null($offset))
+		{
+			$config = KFactory::get('lib.joomla.config');
+			$offset = $config->getValue('config.offset');
+		}
+		
+		$instance = KFactory::get('lib.joomla.date', array($date));
+		$instance->setOffset($offset);
+
+		return $instance->toFormat($format);
 	}
 }

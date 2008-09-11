@@ -64,12 +64,21 @@ class Koowa
   	/**
      * Get the URL to the folder containing all media assets
      *
-     * @param 	boolean	Return the relative path only
+     * @param string	$type	The type of URL to return, default 'media'
      * @return 	string	URL
      */
-    public static function getMediaURL()
+    public static function getURL($type = 'media')
     {
-    	return JURI::root().'media/plg_koowa/';
+    	$url = '';
+    	
+    	switch($type) 
+    	{
+    		case 'media' :
+    			$url = JURI::root().'media/plg_koowa/';
+    			break;
+    	}
+    	
+    	return $url;
     }
 
 	/**

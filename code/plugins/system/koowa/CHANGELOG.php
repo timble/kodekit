@@ -20,6 +20,11 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-11 Johan Janssens
+ ^ Refactored KViewHelper, added format specifier and moved current helpers into
+   html subdirectory.
+ ^ Renamed Koowa::getMediaURL to Koowa::getURL
+ 
 2008-09-10 Johan Janssens
  + Added KDocument package
  + Added toString method to JHelperArray

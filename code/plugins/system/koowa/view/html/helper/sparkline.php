@@ -3,13 +3,11 @@
  * @version     $Id$
  * @category	Koowa
  * @package     Koowa_View
- * @subpackage 	Helper
+ * @subpackage 	Html
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.joomlatools.org
  */
-
-
 
 /**
  * Sparkline HTML helper
@@ -17,10 +15,9 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_View
- * @subpackage  Helper
- * @version		1.0
+ * @subpackage  Html
  */
-class KViewHelperSparkline
+class KViewHtmlHelperSparkline
 {
     /**
      * Renders the <img> tag for a sparkline
@@ -30,7 +27,7 @@ class KViewHelperSparkline
      * @param	array	Parameters (w, h, ...)
      * @return  string	HTML
      */
-    public static function img($url, $link = '', $title='', $params=array())
+    public static function img($url, $link = '', $title='', $params = array())
     {
         $params['format'] = 'sparkline';
         $uri = JURI::getInstance($url);

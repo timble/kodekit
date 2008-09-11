@@ -25,7 +25,7 @@ class KViewHtml extends KViewAbstract
 		$prefix = $this->getClassName('prefix');
 
 		//Set the main stylesheet for the component
-		KViewHelper::_('stylesheet', "$prefix.css", "media/com_$prefix/css/");
+		KViewHelper::_('stylesheet', $prefix.'.css', 'media/com_'.$prefix.'/css/');
 
 		parent::display($tpl);
 	}

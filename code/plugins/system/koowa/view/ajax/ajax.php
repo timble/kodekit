@@ -17,7 +17,4 @@
  * @package		Koowa_View
  * @subpackage 	Ajax
  */
-class KViewAjax extends KViewAbstract
-{
-
-}
+class KViewAjax extends KViewAbstract { }
