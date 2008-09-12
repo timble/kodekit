@@ -57,7 +57,7 @@ class KViewHtmlHelperGrid
 		$html = '<a href="javascript:tableOrdering(\''.$order.'\',\''.$direction.'\',\''.$task.'\');" title="'.JText::_( 'Click to sort this column' ).'">';
 		$html .= JText::_( $title );
 		if ($order == $selected ) {
-			$html .= KViewHelper::_('image.administrator',  $images[$index], '/images/', NULL, NULL);
+			$html .= KViewHelper::_('html.image.administrator',  $images[$index], '/images/', NULL, NULL);
 		}
 		$html .= '</a>';
 		return $html;
