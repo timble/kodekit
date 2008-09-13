@@ -38,16 +38,24 @@ class KSecurityToken
     /**
      * Generate new token and store it in the session
      * 
-     * @param	bool	Force to generate a new token
+     * @param	bool	Reuse from session (defaults to false, useful for ajax forms)
      * @return	string	Token
      */
-    static public function get($forceNew = false)
+    static public function get($reuse = false)
     {
-        if($forceNew || !isset(self::$_token))
+        if(!isset(self::$_token))
         {
-            self::$_token 	= md5(uniqid(rand(), TRUE));
-            $session 		= KFactory::get('lib.joomla.session')->set('koowa.security.token', self::$_token);
-            $session 		= KFactory::get('lib.joomla.session')->set('koowa.security.tokentime', time());
+        	$session 		= KFactory::get('lib.joomla.session');
+        	if($reuse && $token = $session->get('koowa.security.token')) {
+        		// Re-use the previous token from the session
+        		self::$_token = $token;
+        	} else {
+        		// Generate a new token
+        		self::$_token = md5(uniqid(rand(), TRUE));
+        	}
+
+            $session->set('koowa.security.token', self::$_token);
+            $session->set('koowa.security.tokentime', time());
         }
 
         return self::$_token;
@@ -56,11 +64,12 @@ class KSecurityToken
     /**
      * Render the hidden input field with the token
      *
+     * @param	bool	Reuse from session (defaults to false, useful for ajax forms)
      * @return	string	Html hidden input field
      */
-    static public function render()
+    static public function render($reuse = false)
     {
-    	return '<input type="hidden" name="_token" value="'.self::get().'" />';
+    	return '<input type="hidden" name="_token" value="'.self::get($reuse).'" />';
     }
 
     /**

@@ -149,8 +149,7 @@ abstract class KViewAbstract extends KObject
 						'@text'	    => 'JText::_',
 						'@helper'   => '@loadHelper',
 						'@route'    => 'JRoute::_', 
-                        '@token'	=> 'echo KSecurityToken::render()',
-                        '</form>'   => '<?php echo KSecurityToken::render()?></form>'
+                        '@token'	=> 'KSecurityToken::render'
 						),
             'template_path' => null
         );

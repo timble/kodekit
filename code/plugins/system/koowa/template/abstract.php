@@ -130,6 +130,13 @@ abstract class KTemplateAbstract
         $this->_data = str_replace(array('@$', '@'), '$this->', $this->_data);
         
         /**
+         * If there's a form and it doesn't have a security token, we'll add one in 
+         */
+        if(strpos($this->_data, '</form>') && !strpos($this->_data, 'KSecurityToken')) {
+        	$this->_data = str_replace('</form>', '<?php echo KSecurityToken::render()?></form>', $this->_data);
+        }
+        
+        /**
          * file_get_contents() won't update PHP's stat cache, so performing
          * another stat() on it will hit the filesystem again.  Since the file
          * has been successfully read, avoid this and just fake the stat
