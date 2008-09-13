@@ -20,6 +20,10 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-13 Mathias Verraes
+ + Automatically added tokens in forms  can now be overriden using @token(bool $reuse)
+ ^ Tokens can be reused from the previous request
+ 
 2008-09-11 Johan Janssens
  ^ Refactored KViewHelper, added format specifier and moved current helpers into
    html subdirectory.
