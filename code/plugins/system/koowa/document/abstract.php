@@ -179,8 +179,8 @@ abstract class KDocumentAbstract extends KObject
 			$this->setBase($options['base']);
 		}
 		
-		 // Mixin the KHelperClass
-        $this->mixin(new KHelperClass($this, 'Document'));
+		 // Mixin the KMixinClass
+        $this->mixin(new KMixinClass($this, 'Document'));
 	}
 
 	/**

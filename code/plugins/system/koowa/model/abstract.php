@@ -14,7 +14,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Model
- * @uses		KHelperClass
+ * @uses		KMixinClass
  * @uses		KInflector
  * @uses		KObject
  * @uses		KFactory
@@ -82,7 +82,7 @@ abstract class KModelAbstract extends KObject
         $options  = $this->_initialize($options);
 
         // Mixin the KClass
-        $this->mixin(new KHelperClass($this, 'Model'));
+        $this->mixin(new KMixinClass($this, 'Model'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

@@ -17,7 +17,7 @@
  * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Row
- * @uses 		KHelperClass
+ * @uses 		KMixinClass
  */
 abstract class KDatabaseRowAbstract extends KObject
 {
@@ -54,8 +54,8 @@ abstract class KDatabaseRowAbstract extends KObject
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KHelperClass
-        $this->mixin(new KHelperClass($this, 'Row'));
+        // Mixin the KMixinClass
+        $this->mixin(new KMixinClass($this, 'Row'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

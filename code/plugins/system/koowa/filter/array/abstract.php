@@ -19,7 +19,7 @@
  * @category	Koowa
  * @package     Koowa_Filter
  * @version     1.0
- * @uses		KHelperClass
+ * @uses		KMixinClass
  */
 abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
 {	
@@ -36,7 +36,7 @@ abstract class KFilterArrayAbstract extends KObject implements KFilterInterface
         $options  = $this->_initialize($options);
         
        // Mixin the KClass
-		$this->mixin(new KHelperClass($this, 'FilterArray'));
+		$this->mixin(new KMixinClass($this, 'FilterArray'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

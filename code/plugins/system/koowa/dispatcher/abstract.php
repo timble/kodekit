@@ -14,7 +14,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Dispatcher
- * @uses		KHelperClass
+ * @uses		KMixinClass
  * @uses        KObject
  * @uses        KFactory
  */
@@ -40,7 +40,7 @@ abstract class KDispatcherAbstract extends KObject
         $options  = $this->_initialize($options);
 
         // Mixin the KClass
-        $this->mixin(new KHelperClass($this, 'Dispatcher'));
+        $this->mixin(new KMixinClass($this, 'Dispatcher'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

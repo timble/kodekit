@@ -12,7 +12,7 @@
  *
  * Allows to get input from GET, POST, COOKIE, ENV, SERVER, REQUEST
  * 
- * @todo Ideally, REQUEST should never be used, unfortunately Joomla has too 
+ * TODO : Ideally, REQUEST should never be used, unfortunately Joomla has too 
  * many places where you can't get around it. WIP
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>

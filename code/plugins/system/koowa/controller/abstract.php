@@ -16,7 +16,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_Controller
- * @uses		KHelperClass
+ * @uses		KMixinClass
  * @uses 		KCommandChain
  * @uses        KObject
  * @uses        KFactory
@@ -111,8 +111,8 @@ abstract class KControllerAbstract extends KObject
         $this->_commandChain = $options['command_chain'];
         $this->_commandChain->enqueue(new KCommandEvent());
 
-        // Mixin the KHelperClass
-        $this->mixin(new KHelperClass($this, 'Controller'));
+        // Mixin the KMixinClass
+        $this->mixin(new KMixinClass($this, 'Controller'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

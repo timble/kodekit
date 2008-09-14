@@ -48,6 +48,7 @@ class KFilterAscii extends KObject implements KFilterInterface
 		if(!isset($options['default_char'])) {
 			$options['default_char'] = '?';
 		}
+		
 		$this->_options = $options;
 		$this->_data_dir = dirname(__FILE__).DS.'ascii'.DS.'data';
 	}

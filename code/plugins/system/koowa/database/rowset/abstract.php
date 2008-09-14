@@ -17,7 +17,7 @@
  * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Rowset
- * @uses 		KHelperClass
+ * @uses 		KMixinClass
  */
 abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterator, Countable
 {
@@ -80,8 +80,8 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KHelperClass
-        $this->mixin(new KHelperClass($this, 'Rowset'));
+        // Mixin the KMixinClass
+        $this->mixin(new KMixinClass($this, 'Rowset'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

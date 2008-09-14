@@ -14,7 +14,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
- * @uses		KHelperClass
+ * @uses		KMixinClass
  * @uses 		KTemplateDefault
  * @uses 		KFactory
  */
@@ -74,8 +74,8 @@ abstract class KViewAbstract extends KObject
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KHelperClass
-        $this->mixin(new KHelperClass($this, 'View'));
+        // Mixin the KMixinClass
+        $this->mixin(new KMixinClass($this, 'View'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

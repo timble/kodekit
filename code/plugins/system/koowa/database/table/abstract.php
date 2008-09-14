@@ -19,7 +19,7 @@
  * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Table
- * @uses		KHelperClass
+ * @uses		KMixinClass
  * @uses        KFactory
  */
 abstract class KDatabaseTableAbstract extends KObject
@@ -115,8 +115,8 @@ abstract class KDatabaseTableAbstract extends KObject
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KHelperClass
-        $this->mixin(new KHelperClass($this, 'Table'));
+        // Mixin the KMixinClass
+        $this->mixin(new KMixinClass($this, 'Table'));
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);

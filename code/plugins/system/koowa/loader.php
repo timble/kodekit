@@ -116,7 +116,7 @@ class KLoader
 
 				$base   = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_'.$name;
 				$path   = implode('.', $parts);
-
+					
 				$result = JLoader::import($path, $base, $name.'.' );
 				
 			} break;
