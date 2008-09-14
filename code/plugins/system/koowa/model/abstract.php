@@ -22,13 +22,6 @@
 abstract class KModelAbstract extends KObject
 {
 	/**
-	 * The base path
-	 *
-	 * @var		string
-	 */
-	protected $_basePath;
-
-	/**
 	 * Database Connector
 	 *
 	 * @var object
@@ -86,9 +79,6 @@ abstract class KModelAbstract extends KObject
 
         // Assign the classname with values from the config
         $this->setClassName($options['name']);
-
-		// Set a base path for use by the view
-		$this->_basePath	= $options['base_path'];
 
 		//set the model state
         // TODO move to KRegistry
