@@ -20,7 +20,10 @@ Legend:
  - -> Removed
  ! -> Note
  
-2008-09_14 Johan Janssens
+2008-09-16 Mathias Verraes
+ + Added KFilterDigit
+ 
+2008-09-14 Johan Janssens
  ^ Moved KHelperClass to KMixinClass
  
 2008-09-13 Mathias Verraes
