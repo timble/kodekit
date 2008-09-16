@@ -20,6 +20,9 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-17 Mathias Verraes
+ + Added KInflector::addWord(), removed the feature from singualrize and pluralize 
+ 
 2008-09-16 Mathias Verraes
  + Added KFilterDigit
  

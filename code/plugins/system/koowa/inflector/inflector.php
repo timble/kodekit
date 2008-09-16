@@ -128,24 +128,30 @@ class KInflector
 	 */
 	private function __construct() { }
 	
+	/**
+	 * Add a word to the cache, useful to make exceptions or to add words in 
+	 * other languages
+	 *
+	 * @param	string	Singular word
+	 * @param 	string	Plural word
+	 */
+	public function addWord($singular, $plural)
+	{
+		self::$_cache['pluralized'][$singular]	= $plural;
+		self::$_cache['singularized'][$plural] 	= $singular;
+	}
 	
    	/**
 	 * Singular English word to plural.
 	 *
-	 * @param 	string $word 	Word to pluralize.
-	 * @param 	string $plural 	Plural noun of $word
+	 * @param 	string Word to pluralize
 	 * @return 	string Plural noun
 	 */
-	public static function pluralize($word, $plural = null)
+	public static function pluralize($word)
 	{
-        //Set the plural in the cache
-        if(isset($plural)){
- 	    	self::$_cache['pluralized'][$word] = $plural;
- 	   	}
-
 		//Get the cached noun of it exists
- 	   	if(isset(self::$_cache['pluzalized'][$word])) {
-			return self::$_cache['pluzalized'][$word];
+ 	   	if(isset(self::$_cache['pluralized'][$word])) {
+			return self::$_cache['pluralized'][$word];
  	   	}
 
 		//Create the plural noun
@@ -170,17 +176,11 @@ class KInflector
    	/**
 	 * Plural English word to singular.
 	 *
-	 * @param 	string $word 	 Word to singularize.
-	 * @param 	string $singular Singular noun of $word
+	 * @param 	string Word to singularize.
 	 * @return 	string Singular noun
 	 */
-	public static function singularize($word, $singular = null)
+	public static function singularize($word)
 	{
-		//Set the plural in the cache
-        if(isset($singular)){
- 	    	self::$_cache['singularized'][$word] = $singular;
- 	   	}
-
 		//Get the cached noun of it exists
  	   	if(isset(self::$_cache['singularized'][$word])) {
 			return self::$_cache['singularized'][$word];
