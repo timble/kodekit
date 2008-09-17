@@ -38,6 +38,7 @@ class KApplication extends KPatternProxy
 		
 		 //Create the command chain
         $this->_commandChain = new KPatternCommandChain();
+        $this->_commandChain->enqueue(new KCommandEvent());
 	}
 	
 	/**
@@ -64,7 +65,7 @@ class KApplication extends KPatternProxy
 	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name'] = get_class($this);
+		$args['notifier']     = $this;
 		$args['options']    = $options;
 	
 		if($this->_commandChain->run('onBeforeApplicationInitialise', $args) === true) {
@@ -84,7 +85,7 @@ class KApplication extends KPatternProxy
  	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name'] = get_class($this);
+		$args['notifier']     = $this;
 	
 		if($this->_commandChain->run('onBeforeApplicationRoute', $args) === true) {
 			$args['result'] = $this->getObject()->route();
@@ -103,7 +104,7 @@ class KApplication extends KPatternProxy
  	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name'] = get_class($this);
+		$args['notifier']   = $this;
 		$args['component']  = $component;
 		
 		if($this->_commandChain->run('onBeforeApplicationDispatch', $args) === true) {
@@ -123,7 +124,7 @@ class KApplication extends KPatternProxy
 	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name'] = get_class($this);
+		$args['notifier']     = $this;
 		
 		if($this->_commandChain->run('onBeforeApplicationRender', $args) === true) {
 			$args['result'] = $this->getObject()->render();
@@ -139,11 +140,11 @@ class KApplication extends KPatternProxy
 	 * @param	int	Exit code
 	 * @return	none|false The value returned by the proxied method, false in error case.
 	 */
-	function close( $code = 0 ) 
+	public function close( $code = 0 ) 
 	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name'] = get_class($this);
+		$args['notifier']   = $this;
 		$args['code']		= $code;
 		
 		if($this->_commandChain->run('onBeforeApplicationExit', $args) === true) {
@@ -166,13 +167,13 @@ class KApplication extends KPatternProxy
 	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name']   = get_class($this);
+		$args['notifier']     = $this;
 		$args['url']          = $url;
 		$args['message']      = $msg;
 		$args['message_type'] = $msgType;
 		
 		if($this->_commandChain->run('onBeforeApplicationRedirect', $args) === true) {
-			$this->getObject()->redirect($args['url'], $args['msg'], $args['msgType']);
+			$this->getObject()->redirect($args['url'], $args['message'], $args['message_type']);
 		}
 
 		return false;
@@ -189,7 +190,7 @@ class KApplication extends KPatternProxy
 	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name']  = get_class($this);
+		$args['notifier']    = $this;
 		$args['credentials'] = $credentials;
 		$args['options']     = $options;
 		
@@ -212,7 +213,7 @@ class KApplication extends KPatternProxy
 	{
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name']  = get_class($this);
+		$args['notifier']    = $this;
 		$args['credentials'] = array('userid' => $userid);
 		$args['options']     = $options;
 		

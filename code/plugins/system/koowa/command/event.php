@@ -14,7 +14,7 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Command
- * @uses 		KPatternCommandHandler
+ * @uses 		KFactory
  */
 class KCommandEvent extends KObject implements KPatternCommandInterface 
 {

@@ -20,6 +20,10 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-17 Johan Janssen
+ ^ Changed Koowa::import to follow KFactory conventions. You can now import files from
+   either site or admin.
+
 2008-09-17 Mathias Verraes
  + Added KInflector::addWord(), removed the feature from singualrize and pluralize 
  

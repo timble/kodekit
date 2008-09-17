@@ -106,18 +106,21 @@ class KLoader
 				}
 				
 			} break;
-				
-			case 'com'   :
+			
+			case 'site::com'    :
+			case 'admin::com'   :
 			{
-				$name   = $parts[1];
+				$app = explode( '::', $parts[0] );
+				$app = ($app[0] == 'admin') ? JPATH_ADMINISTRATOR : JPATH_SITE;
+				$com = $parts[1];
 
 				unset($parts[0]);
 				unset($parts[1]);
 
-				$base   = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_'.$name;
+				$base   = $app.DS.'components'.DS.'com_'.$com;
 				$path   = implode('.', $parts);
 					
-				$result = JLoader::import($path, $base, $name.'.' );
+				$result = JLoader::import($path, $base, $com.'.' );
 				
 			} break;
 

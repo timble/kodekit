@@ -38,7 +38,7 @@ class plgSystemKoowa extends JPlugin
 		parent::__construct($subject, $config = array());
 	}
 
-	public function onBeforeApplicationRoute()
+	public function onAfterRoute()
 	{
 		if( ! self::canEnable()) {	
 			return;
@@ -56,7 +56,7 @@ class plgSystemKoowa extends JPlugin
 		$format = KInput::get('format', 'GET', 'word', 'word', 'html');
 			
 		$doc =& JFactory::getDocument();
-		$doc = KFactory::get('lib.koowa.document.'.$format, $options);
+		//$doc = KFactory::get('lib.koowa.document.'.$format, $options);
 	}
 	
 	/**

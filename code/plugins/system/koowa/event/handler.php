@@ -25,9 +25,9 @@ class KEventHandler extends KPatternObserver
 	 * @return mixed Routine return value
 	 */
 	public function onNotify(ArrayObject $args)
-	{
+	{		
 		if (method_exists($this, $args['event'])) {
-			return call_user_func_array ( array($this, $args['event']), $args );
+			return $this->{$args['event']}($args);
 		} 
 		
 		return null;
