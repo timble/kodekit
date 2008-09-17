@@ -307,7 +307,7 @@ class KDatabase extends KPatternProxy
 		//Create the arguments object
 		$args = new ArrayObject();
 		$args['table'] = $table;
-		$args['date']  = $data;	
+		$args['data']  = $data;	
 		$args['class'] = get_class($this);
 
 		//Excute the insert operation
