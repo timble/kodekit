@@ -23,6 +23,8 @@ Legend:
 2008-09-17 Johan Janssen
  ^ Changed Koowa::import to follow KFactory conventions. You can now import files from
    either site or admin.
+ + Added KRouter package, router now implements a command chain and to allow sending of
+   events.
 
 2008-09-17 Mathias Verraes
  + Added KInflector::addWord(), removed the feature from singualrize and pluralize 

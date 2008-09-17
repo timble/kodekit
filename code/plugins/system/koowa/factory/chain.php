@@ -13,7 +13,8 @@
  * Factory Command Chain
  *
  * The factory chain overrides the run method to be able to halt the chain
- * when a 
+ * when a command return a value. If the command returns false the chain 
+ * will keep running.
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa

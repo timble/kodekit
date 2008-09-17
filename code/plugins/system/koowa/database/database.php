@@ -9,7 +9,7 @@
  */
 
 /**
- * Database Class
+ * Database Proxy
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa

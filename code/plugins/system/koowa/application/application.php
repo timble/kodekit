@@ -9,14 +9,14 @@
 */
  
 /**
-* Application Class
-*
-* @author 	Johan Janssens <johan@joomlatools.org>
-* @category	Koowa
-* @package 	Koowa_Application
-* @uses 	KPatternCommandChain
-* @uses 	KPatternProxy
-*/
+ * Application Proxy
+ *
+ * @author 		Johan Janssens <johan@joomlatools.org>
+ * @category	Koowa
+ * @package 	Koowa_Application
+ * @uses 		KPatternCommandChain
+ * @uses 		KPatternProxy
+ */
 class KApplication extends KPatternProxy
 {
 	/**
@@ -53,6 +53,23 @@ class KApplication extends KPatternProxy
 		}
 		
 		return $name;
+	}
+	
+	/**
+	 * Proxy the application getRouter() method
+	 *
+	 * @param  array	$options 	An optional associative array of configuration settings.
+	 * @return object KRouter.
+	 */
+	public function getRouter($name = null, array $options = array())
+	{
+		$router =& $this->_object->getRouter();
+		
+		if($router instanceof JRouter) {
+			$router = new KRouter($router);
+		}
+		
+		return $router;
 	}
 	
   	/**
