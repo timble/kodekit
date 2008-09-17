@@ -18,7 +18,6 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Input
- * @version     1.0
  * @uses 		KInflector
  * @uses		KFilter
  * @static

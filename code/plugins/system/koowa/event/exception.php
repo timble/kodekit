@@ -14,6 +14,5 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Dispatcher
- * @version     1.0
  */
 class KEventException extends Exception {}

@@ -20,7 +20,6 @@ spl_autoload_register(array('KLoader', 'loadClass'));
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package     Koowa
- * @version     1.0
  */
 class KLoader
 {

@@ -27,7 +27,6 @@ if(!defined('DS')) {
  * @author		Johan Janssens <johan@joomlatools.org>
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa
- * @version     1.0
  */
 class Koowa
 {

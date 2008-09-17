@@ -14,7 +14,6 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa
- * @version		1.0
  */
 class plgSystemKoowa extends JPlugin
 {

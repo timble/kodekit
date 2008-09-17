@@ -14,7 +14,6 @@
  * @author      Laurens Vandeput <laurens@joomlatools.org>
  * @package     Koowa_Http
  * @subpackage  Client
- * @uses 		KObject
  */
 class KHttpClientAdapterSocket extends KObject implements KHttpClientAdapter 
 {
