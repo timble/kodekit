@@ -167,7 +167,7 @@ class KDocumentFeed extends KDocumentAbstract
 	 * @param array		$params		Associative array of attributes
 	 * @return 	The rendered data
 	 */
-	public function render( $cache = false, $params = array())
+	public function render( $cache = false, array $params = array())
 	{
 		global $option;
 
@@ -189,7 +189,7 @@ class KDocumentFeed extends KDocumentAbstract
 		$file = $cache_path.DS.$file.'_'.$option.'.xml';
 
 		// Instantiate feed renderer and set the mime encoding
-		$renderer = $this-getRenderer($type);
+		$renderer = $this->getRenderer($type);
 		
 		//output
 		// Generate prolog
@@ -202,7 +202,7 @@ class KDocumentFeed extends KDocumentAbstract
 		}
 
 		// Render the feed
-		$data .= $renderer->render();
+		$data .= $renderer->render(null);
 
 		parent::render();
 		return $data;

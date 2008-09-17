@@ -275,6 +275,8 @@ class KDocumentHtml extends KDocumentAbstract
 	 */
 	protected function _loadTemplate($directory, $filename)
 	{
+		global $mainframe, $option;
+		
 		$contents = '';
 
 		//Check to see if we have a valid template file

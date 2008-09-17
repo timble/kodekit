@@ -198,7 +198,10 @@ abstract class KDocumentAbstract extends KObject
 	 *
 	 * @return	array	The document head data in array form
 	 */
-	abstract public function getHeadData();
+	public function getHeadData() 
+	{ 
+		
+	}
 
 	/**
 	 * Set the document head data
@@ -206,7 +209,10 @@ abstract class KDocumentAbstract extends KObject
 	 * @param	array	$data	The document head data in array form
 	 * @return	this
 	 */
-	abstract public function setHeadData(array $data);
+	public function setHeadData(array $data) 
+	{ 
+		
+	}
 
 	/**
 	 * Get the contents of the document buffer
@@ -604,7 +610,7 @@ abstract class KDocumentAbstract extends KObject
 	 * @param 	array		$params		Associative array of attributes
 	 * @return 	mixed		The rendered data
 	 */
-	abstract public function render( $cache = false, array $params = array())
+	public function render( $cache = false, array $params = array())
 	{
 		JResponse::setHeader( 'Expires', gmdate( 'D, d M Y H:i:s', time() + 900 ) . ' GMT' );
 		JResponse::setHeader( 'Content-Type', $this->_mime .  '; charset=' . $this->_charset);

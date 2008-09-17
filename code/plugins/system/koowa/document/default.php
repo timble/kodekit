@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id$
+ * @version     $Id: raw.php 427 2008-09-10 23:54:09Z Johan $
  * @category	Koowa
  * @package     Koowa_Document
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -9,17 +9,14 @@
  */
 
 /**
- * Provides an easy interface to parse and display raw output
+ * Provides a default implementation of KDocument
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_Document
- * @subpackage	Raw
  */
-
-class KDocumentRaw extends KDocumentAbstract
+class KDocumentDefault extends KDocumentAbstract
 {
-
 	/**
 	 * Class constructore
 	 *

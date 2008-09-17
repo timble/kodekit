@@ -97,7 +97,7 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 			$strHtml .= '	<style type="'.$type.'">';
 
 			// This is for full XHTML support.
-			if ($document->_mime == 'text/html' ) {
+			if ($document->getMimeEncoding() == 'text/html' ) {
 				$strHtml .= '		<!--';
 			} else {
 				$strHtml .= '		<![CDATA[';

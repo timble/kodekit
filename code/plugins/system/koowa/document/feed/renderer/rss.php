@@ -26,7 +26,7 @@ class KDocumentFeedRendererRSS extends KDocumentRenderer
 	 *
 	 * @return	string
 	 */
-	public function render()
+	public function render($name, array $params = array(), $content = null)
 	{
 		$now	= KFactory::get('lib.joomla.date');
 		$data	= $this->_doc;
