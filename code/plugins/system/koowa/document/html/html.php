@@ -244,7 +244,7 @@ class KDocumentHtml extends KDocumentAbstract
 	}
 
 	/**
-	 * Count the modules based on the given condition
+	 * Count the modules based on the given condition. Empty modules are not counted.
 	 *
 	 * @param  string 	$condition	The condition to use
 	 * @return integer  Number of modules found
@@ -258,11 +258,18 @@ class KDocumentHtml extends KDocumentAbstract
 		{
 			// odd parts (modules)
 			$name		= strtolower($words[$i]);
-			$words[$i]	= ((isset($this->_buffer['modules'][$name])) && ($this->_buffer['modules'][$name] === false)) ? 0 : count(JModuleHelper::getModules($name));
+			$words[$i]	= 0;
+			
+			if(!isset($this->_buffer['modules'][$name])) 
+			{
+				$modules = JModuleHelper::getModules($name);
+				$result  = $this->getBuffer('modules', $name);
+				$words[$i] += !empty($result);
+			}
 		}
-
+	
 		$str = 'return '.implode(' ', $words).';';
-
+		
 		return eval($str);
 	}
 
