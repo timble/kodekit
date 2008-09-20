@@ -76,8 +76,10 @@ class KRouter extends KPatternProxy
 		$args = new ArrayObject();
 		$args['notifier']     = $this;
 		$args['uri']    	  = $uri;
+		$args['vars']		  = array();
+		$args['task']		  = 'build';
 	
-		$this->_commandChain->run('onRouterBuildRoute', $args);
+		$this->_commandChain->run('onRouterBuild', $args);
 	}
 
 	/**
@@ -93,8 +95,9 @@ class KRouter extends KPatternProxy
 		$args['notifier']     = $this;
 		$args['uri']    	  = $uri;
 		$args['vars']		  = array();
+		$args['task']		  = 'parse';
 	
-		$this->_commandChain->run('onRouterParseRoute', $args);
+		$this->_commandChain->run('onRouterParse', $args);
 		return $args['vars'];
 	}
 }

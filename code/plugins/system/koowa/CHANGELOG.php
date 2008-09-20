@@ -20,7 +20,12 @@ Legend:
  - -> Removed
  ! -> Note
  
-2008-09-17 Johan Janssen
+2008-09-17 Johan Janssens
+ + Add ability to Koowa to load it's own plugins from 'koowa' group
+ + Added example koowa plugin to list all events and added basic docblock information
+ ^ Renamed database and application events
+ 
+2008-09-17 Johan Janssens
  ^ Changed Koowa::import to follow KFactory conventions. You can now import files from
    either site or admin.
  + Added KRouter package, router now implements a command chain and to allow sending of

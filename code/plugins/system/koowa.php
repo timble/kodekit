@@ -2,7 +2,8 @@
 /**
  * @version     $Id:koowa.php 251 2008-06-14 10:06:53Z mjaz $
  * @category	Koowa
- * @package     Koowa
+ * @package     Koowa_Plugins
+ * @subpackage  System
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPLv2
  * @link        http://www.koowa.org
@@ -32,6 +33,9 @@ class plgSystemKoowa extends JPlugin
 			// Proxy the database object
 			$db  =& JFactory::getDBO();
 			$db  = new KDatabase($db);
+			
+			//Load the koowa plugins
+			JPluginHelper::importPlugin('koowa', null, true, KFactory::get('lib.koowa.event.dispatcher'));
 		}
 		
 		parent::__construct($subject, $config = array());

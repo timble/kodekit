@@ -306,14 +306,15 @@ class KDatabase extends KPatternProxy
 		
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['table'] = $table;
-		$args['data']  = $data;	
-		$args['class'] = get_class($this);
+		$args['table'] 		= $table;
+		$args['data'] 		= $data;	
+		$args['class']  	= get_class($this);
+		$args['operation'] 	= 'INSERT'; 
 
 		//Excute the insert operation
-		if($this->_commandChain->run('onBeforeDatabaseInsert', $args) === true) {
+		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) === true) {
 			$args['result'] = $this->execute($sql);
-			$this->_commandChain->run('onAfterDatabaseInsert', $args);
+			$this->_commandChain->run('onAfterDatabaseExecute', $args);
 		}
 		
 		return $args['result'];
@@ -345,14 +346,15 @@ class KDatabase extends KPatternProxy
 		
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['table']  = $table;
-		$args['data']   = $data;	
-		$args['class']  = get_class($this);
+		$args['table'] 		= $table;
+		$args['data']  		= $data;	
+		$args['class'] 		= get_class($this);
+		$args['operation'] 	= 'UPDATE'; 
 
 		//Excute the update operation
-		if($this->_commandChain->run('onBeforeDatabaseUpdate', $args) ===  true) {
+		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) ===  true) {
 			$args['result'] = $this->execute($sql);
-			$this->_commandChain->run('onAfterDatabaseUpdate', $args);
+			$this->_commandChain->run('onAfterDatabaseExecute', $args);
 		}
 		
         return $args['result'];
@@ -375,14 +377,15 @@ class KDatabase extends KPatternProxy
 
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['table']  = $table;
-		$args['data']   = null;	
-		$args['class']  = get_class($this);
+		$args['table'] 		= $table;
+		$args['data']  		= null;	
+		$args['class'] 		= get_class($this);
+		$args['operation']  = 'DELETE'; 
 		
 		//Excute the delete operation
-		if($this->_commandChain->run('onBeforeDatabaseDelete', $args) ===  true) {
+		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) ===  true) {
 			$args['result'] = $this->execute($sql);
-			$this->_commandChain->run('onAfterDatabaseDelete', $args);	
+			$this->_commandChain->run('onAfterDatabaseExecute', $args);	
 		}
 		
 		return $args['result'];
