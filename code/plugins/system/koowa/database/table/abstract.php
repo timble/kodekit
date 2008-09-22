@@ -304,6 +304,26 @@ abstract class KDatabaseTableAbstract extends KObject
 		return array_keys($fields);
 	}
 
+ 	/**
+     * Find a row by the table's primary key
+     *
+     * @param	int		Id of the primary key
+     * @return	object	KDatabaseRow object
+     */
+    public function find($id = 0)
+    {
+        $key = $this->getPrimaryKey();
+
+        $query = null;
+        if($id)
+        {
+            $query = new KDatabaseQuery();
+            $query->where($key, '=', $id);
+        }
+
+        return $this->fetchRow($query);
+    }
+	
 	/**
      * Fetch a set of rows
      *
@@ -332,26 +352,6 @@ abstract class KDatabaseTableAbstract extends KObject
 		$app   	   = KFactory::get('lib.joomla.application')->getName();
 
 		return KFactory::get($app.'::com.'.$component.'.rowset.'.$table, $options);
-    }
-
-    /**
-     * Find a row by the table's primary key
-     *
-     * @param	int		Id of the primary key
-     * @return	object	KDatabaseRow object
-     */
-    public function find($id = 0)
-    {
-        $key = $this->getPrimaryKey();
-
-        $query = null;
-        if($id)
-        {
-            $query = new KDatabaseQuery();
-            $query->where($key, '=', $id);
-        }
-
-        return $this->fetchRow($query);
     }
 
     /**

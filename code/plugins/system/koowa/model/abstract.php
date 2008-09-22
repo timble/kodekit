@@ -63,7 +63,6 @@ abstract class KModelAbstract extends KObject
      */
     protected $_item;
 
-
 	/**
 	 * Constructor
      *
@@ -459,7 +458,7 @@ abstract class KModelAbstract extends KObject
         $order      = $app->getUserStateFromRequest($ns.'filter_order', 'filter_order', '', 'cmd');
         $order_Dir  = $app->getUserStateFromRequest($ns.'filter_order_Dir', 'filter_order_Dir', 'ASC', 'word');
         $filter     = $app->getUserStateFromRequest($ns.'filter', 'filter', '', 'string');
-        $id         = KInput::get('id', 'request', 'slug', 'int');
+        //$id         = KInput::get('id', 'request', 'slug', 'int'); //conflicts with new routing handling
 
         // Push the environment states into the object
         $this->setState('limit',        $limit);
@@ -467,7 +466,7 @@ abstract class KModelAbstract extends KObject
         $this->setState('order',        $order);
         $this->setState('order_Dir',    $order_Dir);
         $this->setState('filter',       $filter);
-        $this->setState('id',           $id);
+        //$this->setState('id',           $id); //conflicts with new routing handling
     }
 
 }

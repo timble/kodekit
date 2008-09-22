@@ -55,23 +55,6 @@ class KApplication extends KPatternProxy
 		return $name;
 	}
 	
-	/**
-	 * Proxy the application getRouter() method
-	 *
-	 * @param  array	$options 	An optional associative array of configuration settings.
-	 * @return object KRouter.
-	 */
-	public function getRouter($name = null, array $options = array())
-	{
-		$router =& $this->_object->getRouter();
-		
-		if($router instanceof JRouter) {
-			$router = new KRouter($router);
-		}
-		
-		return $router;
-	}
-	
   	/**
 	 * Proxy the application initialise() method
 	 *
@@ -242,9 +225,7 @@ class KApplication extends KPatternProxy
 		$args['options']     = $options;
 		$args['task']        = 'logout';
 		
-		return $this->execute('logout', $args);
-		
-		if($this->_commandChain->run('onBeforeApplicationExecte', $args) === true) {
+		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
 			$args['result'] = $this->getObject()->logout($args['credentials']['userid'], $args['options']);
 			$this->_commandChain->run('onAfterApplicationExecute', $args);
 		}

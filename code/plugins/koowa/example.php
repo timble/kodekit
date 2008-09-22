@@ -82,20 +82,4 @@ class plgKoowaExample extends KEventHandler
 	 * @return mixed
 	 */
 	public function onAfterDatabaseExecute(ArrayObject $args)     { }
-	
-	/**
-	 * Router event handler
-	 *
-	 * @param  object	$args	 The event arguments
-	 * @return mixed
-	 */
-	public function onRouterParse(ArrayObject $args)     		  { }
-	
-	/**
-	 * Router event handler
-	 *
-	 * @param  object	$args	 The event arguments
-	 * @return mixed
-	 */
-	public function onRouterBuild(ArrayObject $args)     		  { }
 }
