@@ -20,6 +20,11 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-23 Johan Janssens
+ ^ Added OPERATION constants to KDatabase, the database events now pass the constants
+ ^ Replaced slug filtering in KModel::getDefaultStates by cmd filter. Slug filter has
+   issues with new routing without id information.
+ 
 2008-09-17 Johan Janssens
  + Add ability to Koowa to load it's own plugins from 'koowa' group
  + Added example koowa plugin to list all events and added basic docblock information

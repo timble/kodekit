@@ -53,6 +53,21 @@ class KDatabase extends KPatternProxy
 	 * @var	object
 	 */
 	protected $_commandChain = null;
+	
+	/**
+     * Operation = update
+     */
+    const OPERATION_UPDATE  =  1;
+	
+	/**
+     * Operation = insert
+     */
+    const OPERATION_INSERT  =  2;
+	
+	/**
+     *  Operation = delete
+     */
+    const OPERATION_DELETE  =  4;
 
 	/**
 	 * Constructor
@@ -308,8 +323,8 @@ class KDatabase extends KPatternProxy
 		$args = new ArrayObject();
 		$args['table'] 		= $table;
 		$args['data'] 		= $data;	
-		$args['class']  	= get_class($this);
-		$args['operation'] 	= 'INSERT'; 
+		$args['notifier']   = $this;
+		$args['operation'] 	= self::OPERATION_INSERT; 
 
 		//Excute the insert operation
 		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) === true) {
@@ -348,8 +363,8 @@ class KDatabase extends KPatternProxy
 		$args = new ArrayObject();
 		$args['table'] 		= $table;
 		$args['data']  		= $data;	
-		$args['class'] 		= get_class($this);
-		$args['operation'] 	= 'UPDATE'; 
+		$args['notifier']   = $this;
+		$args['operation'] 	= self::OPERATION_UPDATE;
 
 		//Excute the update operation
 		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) ===  true) {
@@ -379,8 +394,8 @@ class KDatabase extends KPatternProxy
 		$args = new ArrayObject();
 		$args['table'] 		= $table;
 		$args['data']  		= null;	
-		$args['class'] 		= get_class($this);
-		$args['operation']  = 'DELETE'; 
+		$args['notifier']   = $this;
+		$args['operation']  = self::OPERATION_DELETE;
 		
 		//Excute the delete operation
 		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) ===  true) {
