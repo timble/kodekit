@@ -24,6 +24,8 @@ Legend:
  ^ Added OPERATION constants to KDatabase, the database events now pass the constants
  ^ Replaced slug filtering in KModel::getDefaultStates by cmd filter. Slug filter has
    issues with new routing without id information.
+ + Added event triggers to select database operations. Allows for easy implemenation
+   of a logger and or query cache.
  
 2008-09-17 Johan Janssens
  + Add ability to Koowa to load it's own plugins from 'koowa' group

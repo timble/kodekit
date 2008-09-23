@@ -68,6 +68,11 @@ class KDatabase extends KPatternProxy
      *  Operation = delete
      */
     const OPERATION_DELETE  =  4;
+    
+    /**
+     *  Operation = delete
+     */
+    const OPERATION_SELECT  =  8;
 
 	/**
 	 * Constructor
@@ -292,8 +297,21 @@ class KDatabase extends KPatternProxy
      */
 	public function select($sql, $offset = 0, $limit = 0)
 	{
-		$result = $this->_object->setQuery( $sql, $offset, $limit );
-		return $result;
+		//Create the arguments object
+		$args = new ArrayObject();
+		$args['sql'] 		= $sql;
+		$args['offset'] 	= $offset;	
+		$args['limit'] 		= $limit;	
+		$args['notifier']   = $this;
+		$args['operation'] 	= self::OPERATION_SELECT; 
+
+		//Excute the insert operation
+		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) === true) {
+			$args['result'] = $this->_object->setQuery( $sql, $offset, $limit );
+			$this->_commandChain->run('onAfterDatabaseExecute', $args);
+		}
+		
+		return $args['result'];
 	}
 
 	/**
