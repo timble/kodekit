@@ -262,11 +262,11 @@ class KDatabaseQuery extends KObject
 		$query = '';
 
 		if (!empty($this->_select)) {
-			$query .= 'SELECT '.implode(',', $this->_select);
+			$query .= 'SELECT '.implode(' , ', $this->_select);
 		}
 
 		if (!empty($this->_from)) {
-			$query .= ' FROM '.implode(',', $this->_from);
+			$query .= ' FROM '.implode(' , ', $this->_from);
 		}
 
 		if (!empty($this->_where)) {
@@ -274,19 +274,19 @@ class KDatabaseQuery extends KObject
 		}
 
 		if (!empty($this->_group)) {
-			$query .= ' GROUP BY '.implode(',', $this->_group);
+			$query .= ' GROUP BY '.implode(' , ', $this->_group);
 		}
 
 		if (!empty($this->_having)) {
-			$query .= ' HAVING '.implode(',', $this->_having);
+			$query .= ' HAVING '.implode(' , ', $this->_having);
 		}
 
 		if (!empty($this->_order)) {
-			$query .= ' ORDER BY '.implode(',', $this->_order);
+			$query .= ' ORDER BY '.implode(' , ', $this->_order);
 		}
 
 		if (isset($this->_limit)) {
-			$query .= ' LIMIT '.$this->_limit.','.$this->_offset;
+			$query .= ' LIMIT '.$this->_limit.' , '.$this->_offset;
 		}
 
 		return $query;

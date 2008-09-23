@@ -204,8 +204,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 */
 	public function getPrimaryKey()
 	{
-        if(!isset($this->_primary))
-        {
+        if(!isset($this->_primary)) {
         	$this->getFields();
         }
 
@@ -223,7 +222,7 @@ abstract class KDatabaseTableAbstract extends KObject
 		{
 			$fields = $this->_db->getTableFields($this->getTableName());
         	$fields = $fields[$this->getTableName()];
-
+        	
         	foreach ($fields as $field)
         	{
  	            $name = $field->Field;
@@ -275,8 +274,13 @@ abstract class KDatabaseTableAbstract extends KObject
         if(!isset($defaults))
         {
             $defaults = array();
-        	foreach($this->getFields() as $name => $description) {
-        	   $defaults[$name] = $description->default;
+        	foreach($this->getFields() as $name => $description) 
+        	{
+        	  	if($name == $this->getPrimaryKey()) {
+        	  		$name = 'id';
+        	  	}
+        	  	
+        	    $defaults[$name] = $description->default;
             }
         }
     	return $defaults;
@@ -313,13 +317,14 @@ abstract class KDatabaseTableAbstract extends KObject
     public function find($id = 0)
     {
         $key = $this->getPrimaryKey();
-
+        
         $query = null;
         if($id) {
             $query = $this->getDBO()->getQuery()->where($key, '=', $id);
         }
-
-        return $this->fetchRow($query);
+        
+        $result = $this->fetchRow($query);
+        return $result;
     }
 	
 	/**
@@ -364,21 +369,22 @@ abstract class KDatabaseTableAbstract extends KObject
     public function fetchRow($query = null, array $options = array())
     {
         $row = $this->fetchNew($options);
-
+        
         $data = array();
         if($query)
         {
             // Get the row
             $query->select('*')
+            	->select($this->getPrimaryKey().' as id ')
             	->from('#__'.$this->getTableName());
             $this->_db->select($query, 0, 1);
             $data = $this->_db->loadAssoc();
         }
-
+         
         if(!empty($data)) {
         	$row->setProperties($data);
         }
-
+        
         return $row;
     }
 

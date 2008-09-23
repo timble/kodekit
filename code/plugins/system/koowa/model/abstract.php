@@ -202,8 +202,7 @@ abstract class KModelAbstract extends KObject
     public function getItem()
     {
         // Get the data if it doesn't already exist
-        if (!isset($this->_item))
-        {
+        if (!isset($this->_item)) {
             $this->_getItem();
         }
 
@@ -402,30 +401,7 @@ abstract class KModelAbstract extends KObject
 	 */
 	protected function _getItem()
 	{
-		//Get the table
-		$table = $this->getTable();
-
-		if ($this->getState('id'))
-        {
-        	$this->_db->select('SELECT *, '.$table->getPrimaryKey().' as id FROM '.'#__'.$table->getTableName().' WHERE '.$table->getPrimaryKey().' = '.(int)$this->getState('id'));
-            $this->_item = $this->_db->loadObject();
-        }
-        else
-        {
-        	foreach($table->getFields() as $field)
-			{
-            	//If this is the primary key, change it's name to id
-                if($field->primary) {
-                	$field->name = 'id';
-                }
-                $this->_item[$field->name] = $field->default;
-                // TODO implement this when $field->phptype or something similar is implemented
-                // settype($this->_item[$field->name], $field->type);
-            }
-
-            settype($this->_item, 'object');
-        }
-        
+		$this->_item = $this->getTable()->find((int)$this->getState('id'));
         return $this->_item;
 	}
 

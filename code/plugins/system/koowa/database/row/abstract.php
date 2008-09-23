@@ -254,7 +254,7 @@ abstract class KDatabaseRowAbstract extends KObject
     public function setProperties( $properties )
     {
         $properties = (array) $properties;
-
+        
         foreach ($this->_data as $k => $v) {
             if(isset($properties[$k])) {
                 $this->_data[$k] = $properties[$k];
