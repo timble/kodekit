@@ -63,9 +63,7 @@ abstract class KControllerAbstract extends KObject
 	 *
 	 * @var array
 	 */
-	protected $_path = array(
-		'view'	=> array(),
-	);
+	protected $_viewPath = array();
 
 	/**
 	 * URL for redirection.
@@ -143,7 +141,7 @@ abstract class KControllerAbstract extends KObject
 		$this->registerDefaultTask( $options['default_task'] );
 
         // set the default view search path
-		$this->_setPath( 'view', $options['view_path'] );
+		$this->setViewPath( $options['view_path'] );
 	}
 
     /**
@@ -299,7 +297,7 @@ abstract class KControllerAbstract extends KObject
 		}
 
 		//Add the basepath to the configuration
-		$options['base_path'] = $this->_path['view'][0];
+		$options['base_path'] = $this->_viewPath[0];
 		
 		if ( !$view = KFactory::get($application.'::com.'.$component.'.view.'.$view, $options) )
 		{
@@ -321,7 +319,39 @@ abstract class KControllerAbstract extends KObject
 	 */
 	public function addViewPath( $path )
 	{
-		$this->_addPath( 'view', $path );
+		// just force path to array
+		settype( $path, 'array' );
+
+		// loop through the path directories
+		foreach ( $path as $dir )
+		{
+			// no surrounding spaces allowed!
+			$dir = trim( $dir );
+
+			// add trailing separators as needed
+			if ( substr( $dir, -1 ) != DIRECTORY_SEPARATOR ) {
+				// directory
+				$dir .= DIRECTORY_SEPARATOR;
+			}
+
+			// add to the top of the search dirs
+			array_unshift( $this->_viewPath, $dir );
+		}
+	}
+	
+	/**
+ 	 * Sets an entire array of search paths for resources.
+	 *
+	 * @param	string|array	The new set of search paths. If null or false,
+	 * 							resets to the current directory only.
+	 */
+	public function setViewPath( $path )
+	{
+		// clear out the prior search dirs
+		$this->_viewPath = array();
+
+		// actually add the user-specified directories
+		$this->addViewPath( $path );
 	}
 
 	/**
@@ -390,49 +420,4 @@ abstract class KControllerAbstract extends KObject
 
 		$this->_messageType	= $type;
 	}
-
-	/**
-	* Sets an entire array of search paths for resources.
-	*
-	* @param	string	The type of path to set, typically 'view' or 'model'.
-	* @param	string|array	The new set of search paths. If null or false,
-	* resets to the current directory only.
-	*/
-	protected function _setPath( $type, $path )
-	{
-		// clear out the prior search dirs
-		$this->_path[$type] = array();
-
-		// actually add the user-specified directories
-		$this->_addPath( $type, $path );
-	}
-
-	/**
-	* Adds to the search path for templates and resources.
-	*
-	* @param	string The path type (e.g. 'model', 'view'.
-	* @param	string|array The directory or stream to search.
-	* @return	void
-	*/
-	protected function _addPath( $type, $path )
-	{
-		// just force path to array
-		settype( $path, 'array' );
-
-		// loop through the path directories
-		foreach ( $path as $dir )
-		{
-			// no surrounding spaces allowed!
-			$dir = trim( $dir );
-
-			// add trailing separators as needed
-			if ( substr( $dir, -1 ) != DIRECTORY_SEPARATOR ) {
-				// directory
-				$dir .= DIRECTORY_SEPARATOR;
-			}
-
-			// add to the top of the search dirs
-			array_unshift( $this->_path[$type], $dir );
-		}
-    }
 }

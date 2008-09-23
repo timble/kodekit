@@ -35,13 +35,11 @@ abstract class KViewAbstract extends KObject
 	protected $_layout = 'default';
 
 	/**
-	* The set of search directories for resources (templates)
+	* The set of search directories for templatex
 	*
 	* @var array
 	*/
-	protected $_path = array(
-		'template' => array(),
-	);
+	protected $_templatePath = array();
 
 	/**
 	* The name of the default template source file.
@@ -99,9 +97,9 @@ abstract class KViewAbstract extends KObject
 		// set the default template search path
 		if ($options['template_path']) {
 			// user-defined dirs
-			$this->_setPath('template', $options['template_path']);
+			$this->setTemplatePath($options['template_path']);
 		} else {
-			$this->_setPath('template', $this->_basePath.DS.'tmpl');
+			$this->setTemplatePath($this->_basePath.DS.'tmpl');
 		}
 
 		// set the layout
@@ -340,7 +338,50 @@ abstract class KViewAbstract extends KObject
 	 */
 	public function addTemplatePath($path)
 	{
-		$this->_addPath('template', $path);
+		// just force to array
+		settype($path, 'array');
+
+		// loop through the path directories
+		foreach ($path as $dir)
+		{
+			// no surrounding spaces allowed!
+			$dir = trim($dir);
+
+			// add trailing separators as needed
+			if (substr($dir, -1) != DIRECTORY_SEPARATOR) {
+				// directory
+				$dir .= DIRECTORY_SEPARATOR;
+			}
+
+			// add to the top of the search dirs
+			array_unshift($this->_templatePath, $dir);
+		}
+	}
+	
+	/**
+	 * Sets an entire array of search paths for templates or resources.
+	 *
+	 * @param string $type The type of path to set, typically 'template'.
+	 * @param string|array $path The new set of search paths.  If null or
+	 * false, resets to the current directory only.
+	 */
+	public function setTemplatePath($path)
+	{
+		// clear out the prior search dirs
+		$this->_templatePath = array();
+
+		// actually add the user-specified directories
+		$this->addTemplatePath($path);
+
+		// always add the fallback directories as last resort
+		$app = KFactory::get('lib.joomla.application');
+		
+		// validating option as a command, but sanitizing it to use as a filename
+		$option = KInput::get('option', 'request', 'cmd', 'filename');
+				
+		// set the alternative template search dir
+		$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->getClassName('suffix');
+		$this->addTemplatePath($fallback);
 	}
 
 	/**
@@ -378,7 +419,7 @@ abstract class KViewAbstract extends KObject
 
 		// load the template script
 		Koowa::import('lib.joomla.filesystem.path');
-		$this->_template = JPath::find($this->_path['template'], $file.'.php');
+		$this->_template = JPath::find($this->_templatePath, $file.'.php');
 		
 		if ($this->_template === false) {
 			throw new KViewException( 'Layout "' . $file . '" not found' );
@@ -422,63 +463,5 @@ abstract class KViewAbstract extends KObject
 	{
 		$args = func_get_args();
 		return call_user_func_array(array('KViewHelper', '_'), $args );
-	}
-
-	/**
-	* Sets an entire array of search paths for templates or resources.
-	*
-	* @param string $type The type of path to set, typically 'template'.
-	* @param string|array $path The new set of search paths.  If null or
-	* false, resets to the current directory only.
-	*/
-	protected function _setPath($type, $path)
-	{
-		// clear out the prior search dirs
-		$this->_path[$type] = array();
-
-		// actually add the user-specified directories
-		$this->_addPath($type, $path);
-
-		// always add the fallback directories as last resort
-		switch (strtolower($type))
-		{
-			case 'template':
-			{
-				$app = KFactory::get('lib.joomla.application');
-				// validating option as a command, but sanitizing it to use as a filename
-				$option = KInput::get('option', 'request', 'cmd', 'filename');
-				
-				// set the alternative template search dir
-				$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->getClassName('suffix');
-				$this->_addPath('template', $fallback);
-			}	break;
-		}
-	}
-
-	/**
-	* Adds to the search path for templates and resources.
-	*
-	* @param string|array $path The directory or stream to search.
-	*/
-	protected function _addPath($type, $path)
-	{
-		// just force to array
-		settype($path, 'array');
-
-		// loop through the path directories
-		foreach ($path as $dir)
-		{
-			// no surrounding spaces allowed!
-			$dir = trim($dir);
-
-			// add trailing separators as needed
-			if (substr($dir, -1) != DIRECTORY_SEPARATOR) {
-				// directory
-				$dir .= DIRECTORY_SEPARATOR;
-			}
-
-			// add to the top of the search dirs
-			array_unshift($this->_path[$type], $dir);
-		}
 	}
 }
