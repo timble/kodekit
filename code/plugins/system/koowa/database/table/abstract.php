@@ -315,10 +315,8 @@ abstract class KDatabaseTableAbstract extends KObject
         $key = $this->getPrimaryKey();
 
         $query = null;
-        if($id)
-        {
-            $query = new KDatabaseQuery();
-            $query->where($key, '=', $id);
+        if($id) {
+            $query = $this->getDBO()->getQuery()->where($key, '=', $id);
         }
 
         return $this->fetchRow($query);
@@ -341,8 +339,7 @@ abstract class KDatabaseTableAbstract extends KObject
 		
         // Get the data
 		$query = $query->select('*')
-        		->from('#__'.$this->getTableName())
-                ->toString();
+        		->from('#__'.$this->getTableName());
         $this->_db->select($query, $offset, $limit);
 		$options['data'] = $this->_db->loadAssocList();
 		
@@ -372,9 +369,8 @@ abstract class KDatabaseTableAbstract extends KObject
         if($query)
         {
             // Get the row
-            $query = $query->select('*')
-                                ->from('#__'.$this->getTableName())
-                                ->toString();
+            $query->select('*')
+            	->from('#__'.$this->getTableName());
             $this->_db->select($query, 0, 1);
             $data = $this->_db->loadAssoc();
         }

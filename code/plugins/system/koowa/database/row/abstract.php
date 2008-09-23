@@ -145,7 +145,8 @@ abstract class KDatabaseRowAbstract extends KObject
 
         if($this->$key)
         {
-            $where = KDatabaseQuery::getInstance()->where($key, '=', $this->$key);
+            $where = $this->_table->getDBO()->getQuery()
+            			->where($key, '=', $this->$key);
             $this->_table->update($this->getProperties(), $where);
         }
         else $this->_table->insert($this->getProperties());

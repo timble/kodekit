@@ -126,17 +126,6 @@ class KDatabaseQuery extends KObject
         return array_merge($defaults, $options);
     }
 
-    /**
-     * Get a KDatabaseQuery object, always creating it
-     *
-     * @param	array	Options array
-     * @return 	object	KDatabaseQuery
-     */
-    public static function getInstance($options = array())
-    {
-        return new KDatabaseQuery($options);
-    }
-
 	/**
 	 * Built a select query
 	 *
@@ -302,12 +291,4 @@ class KDatabaseQuery extends KObject
 
 		return $query;
 	}
-
-    /**
-     * Alias of __toString()
-     */
-    public function toString()
-    {
-        return $this->__toString();
-    }
 }
