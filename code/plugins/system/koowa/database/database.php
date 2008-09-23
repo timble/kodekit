@@ -148,7 +148,7 @@ class KDatabase extends KPatternProxy
 				foreach($query['column_names'] as $key => $column_name) {
 					$data[$column_name] = $query['values'][$key]['value'];
 				}
-
+				
 				//force to true in case we where not able to determine the rows affected
 				$this->_autoexec = false;
 				$result = $this->update($table, $data, $where);
@@ -382,6 +382,7 @@ class KDatabase extends KPatternProxy
 		$args['table'] 		= $table;
 		$args['data']  		= $data;	
 		$args['notifier']   = $this;
+		$args['where']   	= $where;
 		$args['operation'] 	= self::OPERATION_UPDATE;
 
 		//Excute the update operation
