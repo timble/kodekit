@@ -97,7 +97,7 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
 		}
 		
 		// Instantiate an empty row to use for cloning later
-		$this->_emptyRow = $this->_table->fetchNew();
+		$this->_emptyRow = $this->_table->fetchRow();
     }
 
     /**
@@ -199,7 +199,8 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
         }
 
 		// do we already have a row object for this position?
-        if (!isset($this->_rows[$this->_pointer])) {
+        if (!isset($this->_rows[$this->_pointer])) 
+        {
         	// cloning is faster than instantiating
             $this->_rows[$this->_pointer] = clone $this->_emptyRow;
             $this->_rows[$this->_pointer]->setProperties($this->_data[$this->_pointer]);

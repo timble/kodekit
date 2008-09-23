@@ -63,16 +63,14 @@ abstract class KDatabaseRowAbstract extends KObject
 		// Set table object and class name
 		$this->_tableClass  = 'com.'.$this->getClassName('prefix').'.table.'.$this->getClassName('suffix');
 		$this->_table       = isset($options['table']) ? $options['table'] : KFactory::get($this->_tableClass);
+		
+		// Reset the row
+		$this->reset();
 
-		// Set data
+		// Set the row data
 		if(isset($options['data']))  {
-			$this->_data = $options['data'];
+			$this->setProperties($options['data']);
 		}
-        else
-        {
-        	// Set defaults
-            $this->reset();
-        }
     }
 
     /**

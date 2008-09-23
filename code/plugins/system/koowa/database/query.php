@@ -174,9 +174,9 @@ class KDatabaseQuery extends KObject
 	 *
 	 * Automatically quotes the data values. If constraint is 'IN' the data values will not be quoted.
 	 *
-	 * @param   string 	The name of the property the constraint applies too
-	 * @param	string  The comparison used for the constraint
-	 * @param	string	The value compared to the property value using the constraint
+	 * @param   string 			The name of the property the constraint applies too
+	 * @param	string  		The comparison used for the constraint
+	 * @param	string|array	The value compared to the property value using the constraint
 	 * @return 	object 	KDatabaseQuery
 	 */
 	public function where( $property, $constraint, $value )
@@ -188,7 +188,12 @@ class KDatabaseQuery extends KObject
 		if($constraint != 'IN') {
 			$value = $this->_db->Quote($value);
 		}
-
+		
+		//Apply quotes to the propety value
+		if ( $constraint == 'IN' && is_array($value) )  {
+            $value = implode(',', $value);   
+        }
+		
 		//Create the constraint
 		$where = $property.' '.$constraint.' '.$value;
 

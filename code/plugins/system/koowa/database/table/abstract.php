@@ -311,49 +311,69 @@ abstract class KDatabaseTableAbstract extends KObject
  	/**
      * Find a row by the table's primary key
      *
-     * @param	int		Id of the primary key
-     * @return	object	KDatabaseRow object
+     * @param	integer|array	A primary key or an array of primary keys
+     * @return	object			KDatabaseRow or KDatabaseRowset object
      */
-    public function find($id = 0)
+    public function find($id)
     {
-        $key = $this->getPrimaryKey();
+        $key   = $this->getPrimaryKey();
+        $query = $this->getDBO()->getQuery();
         
-        $query = null;
-        if($id) {
-            $query = $this->getDBO()->getQuery()->where($key, '=', $id);
+        if(!is_array($id)) 
+        {
+            $query->where($key, '=', $id);
+         	$result = $this->fetchRow($query);
+        } 
+        else 
+        {
+			$query->where($key, 'IN', $id);         
+        	$result = $this->fetchAll($query);
         }
-        
-        $result = $this->fetchRow($query);
+        	
         return $result;
-    }
-	
+    }       
+        
 	/**
      * Fetch a set of rows
      *
-     * @param	object	Query object or null for an empty set
+     * @param	object	KDatabaseQuery object or null for an empty rowset
      * @param 	int		Offset
      * @param	int		Limit
      * @param 	array	Config
      * @return	object	KDatabaseRowset object
      */
-    public function fetchAll($query = null, $offset = 0, $limit = 0, $options = array())
+    public function fetchAll(KDatabaseQuery $query = null, $offset = 0, $limit = 0, $options = array())
     {
 	   	// fetch an empty rowset
         $options['table']     = $this;
 		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
-		
-        // Get the data
-		$query = $query->select('*')
-        		->from('#__'.$this->getTableName());
-        $this->_db->select($query, $offset, $limit);
-		$options['data'] = $this->_db->loadAssocList();
-		
-		// Get the table object attached to the model
-		$component = $this->getClassName('suffix');
-		$table     = $this->getClassName('prefix');
-		$app   	   = KFactory::get('lib.joomla.application')->getName();
+	
+    	$component = $this->getClassName('suffix');
+   		$rowset    = $this->getClassName('prefix');
+   	 	$app       = KFactory::get('lib.joomla.application')->getName();
 
-		return KFactory::get($app.'::com.'.$component.'.rowset.'.$table, $options);
+        // Get the data
+        if(isset($query))
+        {
+        	$query = $query->select('*')
+        		->from('#__'.$this->getTableName());
+        	$this->_db->select($query, $offset, $limit);
+			$result = (array) $this->_db->loadAssocList();
+		
+			$rowset = array();
+			$row    = $this->fetchRow(null, $options);
+
+    		foreach($result as $item)
+    		{                       
+        		$row->setProperties($item);
+        		array_push($rowset,clone $row);
+    		}
+
+   			$options['data'] = $rowset;
+        }
+        
+        //return a row set
+    	$rowset = KFactory::get($app.'::com.'.$component.'.rowset.'.$rowset, $options);
     }
 
     /**
@@ -362,50 +382,32 @@ abstract class KDatabaseTableAbstract extends KObject
      * The name of the resulting class is based on the table class name
      * eg <Mycomp>Table<Tablename> -> <Mycomp>Row<Tablename>
      *
-     * @param	object	Query object
+     * @param	object	KDatabaseQuery object or null for an empty row
      * @param	array	Config
      * @return	object 	KDatabaseRow object
      */
-    public function fetchRow($query = null, array $options = array())
+    public function fetchRow(KDatabaseQuery $query = null, array $options = array())
     {
-        $row = $this->fetchNew($options);
-        
-        $data = array();
-        if($query)
+       // fetch an empty row
+        $options['table']     = $this;
+		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
+
+		$component = $this->getClassName('suffix');
+		$row       = KInflector::singularize($this->getClassName('suffix'));
+		$app   	   = KFactory::get('lib.joomla.application')->getName();
+
+        //Get the data and push it in the row
+		if(isset($query))
         {
-            // Get the row
             $query->select('*')
             	->select($this->getPrimaryKey().' as id ')
             	->from('#__'.$this->getTableName());
             $this->_db->select($query, 0, 1);
-            $data = $this->_db->loadAssoc();
+            $options['data'] = (array) $this->_db->loadAssoc();
         }
-         
-        if(!empty($data)) {
-        	$row->setProperties($data);
-        }
-        
+           
+        $row = KFactory::get($app.'::com.'.$component.'.row.'.$row, $options); 
         return $row;
-    }
-
-    /**
-     * Fetch a new row
-     *
-     * @param	array	Options
-     * @return	object 	KDatabaseRow object
-     */
-    public function fetchNew(array $options = array())
-    {
-        // Options
-        $options['table']     = $this;
-		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
-
-		// Get the table object attached to the model
-		$component = $this->getClassName('suffix');
-		$table     = $this->getClassName('prefix');
-		$app   	   = KFactory::get('lib.joomla.application')->getName();
-
-		return KFactory::get($app.'::com.'.$component.'.row.'.$table, $options);
     }
 
 	/**
