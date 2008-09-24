@@ -20,6 +20,10 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-24 Johan Janssens
+ ^ Implemented KDatabaseTable::fetchAll and KDatabaseTable::fetchRow in KModelAbstract.
+ ^ General cleanup in KModel query building helper functions
+ 
 2008-09-23 Johan Janssens
  ^ Added OPERATION constants to KDatabase, the database events now pass the constants
  ^ Replaced slug filtering in KModel::getDefaultStates by cmd filter. Slug filter has

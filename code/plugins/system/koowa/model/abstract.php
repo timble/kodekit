@@ -197,30 +197,33 @@ abstract class KModelAbstract extends KObject
     /**
      * Method to get a item object which represents a table row
      *
-     * @return  object
+     * @return  object KDatabaseRow
      */
     public function getItem()
     {
         // Get the data if it doesn't already exist
         if (!isset($this->_item)) {
-            $this->_getItem();
+            $this->_item = $this->getTable()->find((int)$this->getState('id'));
         }
 
         return $this->_item;
     }
 
     /**
-     * Get a list of items
+     * Get a list of items which represnts a  table rowset
      *
-     * @return  array   List of objects
+     * @return  object KDatabaseRowset
      */
     public function getList()
     {
         // Get the data if it doesn't already exist
-        if (!isset($this->_list))
+        if (!isset($this->_list)) 
         {
-            $query = $this->_buildQuery();
-            $this->_list = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
+        	$this->_list = $this->getTable()->fetchAll(
+        		$this->_buildQuery(), 
+        		$this->getState('offset'), 
+        		$this->getState('limit')
+        	);
         }
 
         return $this->_list;
@@ -234,10 +237,10 @@ abstract class KModelAbstract extends KObject
     public function getTotal()
     {
         // Get the data if it doesn't already exist
-        if (!isset($this->_total))
+        if (!isset($this->_total)) 
         {
-            $query = $this->_buildQuery();
-            $this->_total = $this->_getListCount($query);
+            $this->_db->select( $this->_buildCountQuery());
+			$this->_total = $this->_db->loadResult();
         }
 
         return $this->_total;
@@ -254,7 +257,7 @@ abstract class KModelAbstract extends KObject
         if (!isset($this->_pagination))
         {
             Koowa::import('lib.joomla.html.pagination');
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
+            $this->_pagination = new JPagination($this->getTotal(), $this->getState('offset'), $this->getState('limit'));
         }
 
         return $this->_pagination;
@@ -272,7 +275,7 @@ abstract class KModelAbstract extends KObject
         if (is_null($filters))
         {
             $filters['limit']       = $this->getState('limit');
-            $filters['limitstart']  = $this->getState('limitstart');
+            $filters['limitstart']  = $this->getState('offset');
             $filters['order']       = $this->getState('order');
             $filters['order_Dir']   = $this->getState('order_Dir');
             $filters['filter']      = $this->getState('filter');
@@ -305,6 +308,22 @@ abstract class KModelAbstract extends KObject
                 . $this->_buildQueryJoins().' '
                 . $this->_buildQueryWhere().' '
                 . $this->_buildQueryOrder();
+                
+		return $query;
+    }
+    
+ 	/**
+     * Builds a generic SELECT COUNT(*) query
+     *
+     * @return  string  SELECT query
+     */
+    protected function _buildCountQuery()
+    {
+        $query  = 'SELECT COUNT(*)'
+                . $this->_buildQueryFields().' '
+                . $this->_buildQueryFrom().' '
+                . $this->_buildQueryJoins().' '
+                . $this->_buildQueryWhere();
                 
 		return $query;
     }
@@ -374,51 +393,7 @@ abstract class KModelAbstract extends KObject
 
         return $orderby;
     }
-
-	/**
-	 * Returns an object list
-	 *
-	 * @param	string The query
-	 * @param	int Offset
-	 * @param	int The number of records
-	 * @throws KModelException
-	 * @return	array
-	 */
-	protected function _getList( $query, $limitstart=0, $limit=0 )
-	{
-		$this->_db->select( $query, $limitstart, $limit );
-		$result = $this->_db->loadObjectList($this->_getPrimaryKey());
-		if($err = $this->_db->errorMsg()) {
-			throw new KModelException($err);
-		}
-		return $result;
-	}
-	
-	/**
-	 * Returns an item
-	 *
-	 * @param	object	Item
-	 */
-	protected function _getItem()
-	{
-		$this->_item = $this->getTable()->find((int)$this->getState('id'));
-        return $this->_item;
-	}
-
-	/**
-	 * Returns a record count for the query
-	 *
-	 * @param	string The query
-	 * @return	int
-	 */
-	protected function _getListCount( $query )
-	{
-		$this->_db->select( $query );
-		$this->_db->query();
-
-		return $this->_db->getNumRows();
-	}
-
+    
     /**
      * Set default states
      */
@@ -430,7 +405,7 @@ abstract class KModelAbstract extends KObject
 
         // Get the display environment variables
         $limit      = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'), 'int');
-        $limitstart = $app->getUserStateFromRequest($ns.'limitstart', 'limitstart', 0, 'int');
+        $offset	 	= $app->getUserStateFromRequest($ns.'limitstart', 'limitstart', 0, 'int');
         $order      = $app->getUserStateFromRequest($ns.'filter_order', 'filter_order', '', 'cmd');
         $order_Dir  = $app->getUserStateFromRequest($ns.'filter_order_Dir', 'filter_order_Dir', 'ASC', 'word');
         $filter     = $app->getUserStateFromRequest($ns.'filter', 'filter', '', 'string');
@@ -438,7 +413,7 @@ abstract class KModelAbstract extends KObject
 
         // Push the environment states into the object
         $this->setState('limit',        $limit);
-        $this->setState('limitstart',   $limitstart);
+        $this->setState('offset',   	$offset);
         $this->setState('order',        $order);
         $this->setState('order_Dir',    $order_Dir);
         $this->setState('filter',       $filter);

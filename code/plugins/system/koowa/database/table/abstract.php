@@ -336,13 +336,13 @@ abstract class KDatabaseTableAbstract extends KObject
 	/**
      * Fetch a set of rows
      *
-     * @param	object	KDatabaseQuery object or null for an empty rowset
+     * @param	object	KDatabaseQuery object or query string, or null for an empty row
      * @param 	int		Offset
      * @param	int		Limit
      * @param 	array	Config
      * @return	object	KDatabaseRowset object
      */
-    public function fetchAll(KDatabaseQuery $query = null, $offset = 0, $limit = 0, $options = array())
+    public function fetchAll($query = null, $offset = 0, $limit = 0, $options = array())
     {
 	   	// fetch an empty rowset
         $options['table']     = $this;
@@ -351,29 +351,25 @@ abstract class KDatabaseTableAbstract extends KObject
     	$component = $this->getClassName('suffix');
    		$rowset    = $this->getClassName('prefix');
    	 	$app       = KFactory::get('lib.joomla.application')->getName();
-
+   	 	
         // Get the data
         if(isset($query))
         {
-        	$query = $query->select('*')
-        		->from('#__'.$this->getTableName());
+        	if($query instanceof KDatabaseQuery) 
+            {
+        		$query = $query->select('*')
+        			->from('#__'.$this->getTableName());
+            }
+        		
         	$this->_db->select($query, $offset, $limit);
 			$result = (array) $this->_db->loadAssocList();
-		
-			$rowset = array();
-			$row    = $this->fetchRow(null, $options);
-
-    		foreach($result as $item)
-    		{                       
-        		$row->setProperties($item);
-        		array_push($rowset,clone $row);
-    		}
-
-   			$options['data'] = $rowset;
+			
+   			$options['data'] = $result;
         }
         
         //return a row set
     	$rowset = KFactory::get($app.'::com.'.$component.'.rowset.'.$rowset, $options);
+    	return $rowset;
     }
 
     /**
@@ -382,11 +378,11 @@ abstract class KDatabaseTableAbstract extends KObject
      * The name of the resulting class is based on the table class name
      * eg <Mycomp>Table<Tablename> -> <Mycomp>Row<Tablename>
      *
-     * @param	object	KDatabaseQuery object or null for an empty row
+     * @param	object	KDatabaseQuery object or query string, or null for an empty row
      * @param	array	Config
      * @return	object 	KDatabaseRow object
      */
-    public function fetchRow(KDatabaseQuery $query = null, array $options = array())
+    public function fetchRow($query = null, array $options = array())
     {
        // fetch an empty row
         $options['table']     = $this;
@@ -399,9 +395,13 @@ abstract class KDatabaseTableAbstract extends KObject
         //Get the data and push it in the row
 		if(isset($query))
         {
-            $query->select('*')
+            if($query instanceof KDatabaseQuery) 
+            {
+            	$query->select('*')
             	->select($this->getPrimaryKey().' as id ')
-            	->from('#__'.$this->getTableName());
+            	->from('#__'.$this->getTableName());	
+            }
+        	
             $this->_db->select($query, 0, 1);
             $options['data'] = (array) $this->_db->loadAssoc();
         }

@@ -197,9 +197,6 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function __get($columnName)
     {
-        if (!array_key_exists($columnName, $this->_data)) {
-            throw new KDatabaseRowException('Specified column '.$columnName.' is not in the row');
-        }
         return $this->_data[$columnName];
     }
 
@@ -213,12 +210,7 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function __set($columnName, $value)
     {
-      	if (!array_key_exists($columnName, $this->_data)) {
-            throw new KDatabaseRowException('Specified column '.$columnName.' is not in the row');
-        }
         $this->_data[$columnName] = $value;
-		// TODO implement this?
-		//$this->_modifiedFields[$columnName] = true;
    }
 
 	/**
@@ -253,10 +245,8 @@ abstract class KDatabaseRowAbstract extends KObject
     {
         $properties = (array) $properties;
         
-        foreach ($this->_data as $k => $v) {
-            if(isset($properties[$k])) {
-                $this->_data[$k] = $properties[$k];
-            }
+        foreach ($properties as $k => $v) {
+         	$this->_data[$k] = $properties[$k];
         }
 
         return $this;
