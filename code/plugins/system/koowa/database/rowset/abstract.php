@@ -169,6 +169,32 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
         }
         return $row;
     }
+    
+	/**
+     * Returns a KDatabaseRow from a known position into the Iterator
+     *
+     * @param string $key   the key to search for
+     * @param mixed  $value the value to search for
+     * @return KDatabaseRow
+     */
+    public function findRow($key, $value)
+    {
+   		$result = null;
+    	
+    	$this->rewind();
+    	
+    	while($this->valid()) 
+		{
+			$row = $this->current();
+			if($row->$key == $value) {
+				$result = $row;
+				break;
+			}
+    		$this->next();
+		}
+		
+		return $result;
+    }
 
 	/**
      * Rewind the Iterator to the first element.
@@ -199,15 +225,15 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
         }
 
 		// do we already have a row object for this position?
-        if (!isset($this->_rows[$this->_pointer])) 
+        if (!isset($this->_rows[$this->key()])) 
         {
         	// cloning is faster than instantiating
-            $this->_rows[$this->_pointer] = clone $this->_emptyRow;
-            $this->_rows[$this->_pointer]->setProperties($this->_data[$this->_pointer]);
+            $this->_rows[$this->key()] = clone $this->_emptyRow;
+            $this->_rows[$this->key()]->setProperties($this->_data[$this->key()]);
         }
 
     	// return the row object
-        return $this->_rows[$this->_pointer];
+        return $this->_rows[$this->key()];
     }
 
 	/**
@@ -290,7 +316,7 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
      */
     public function toArray()
     {
-        foreach ($this->_rows as $i => $row) {
+    	foreach ($this->_rows as $i => $row) {
             $this->_data[$i] = $row->toArray();
         }
         return $this->_data;

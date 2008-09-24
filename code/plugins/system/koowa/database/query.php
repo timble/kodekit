@@ -149,6 +149,11 @@ class KDatabaseQuery extends KObject
 	public function from( $tables )
 	{
 		settype($tables, 'array'); //force to an array
+		
+		//Prepend the table modifier
+		foreach ($tables as $key => $value) {
+			$tables[$key] = '#__'.$value;
+		}
 
 		$this->_from = array_unique( array_merge( $this->_from, $tables ) );
 		return $this;

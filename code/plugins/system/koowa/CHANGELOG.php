@@ -23,6 +23,7 @@ Legend:
 2008-09-24 Johan Janssens
  ^ Implemented KDatabaseTable::fetchAll and KDatabaseTable::fetchRow in KModelAbstract.
  ^ General cleanup in KModel query building helper functions
+ + Added KDatabaseRowset::findRow method
  
 2008-09-23 Johan Janssens
  ^ Added OPERATION constants to KDatabase, the database events now pass the constants

@@ -200,7 +200,7 @@ class KDatabase extends KPatternProxy
 			$data[$k] = $v;
 		}
 
-		if($result = $this->insert( $this->replaceTablePrefix($table, '', '#__'), $data ))
+		if($result = $this->insert( $this->replaceTablePrefix($table, ''), $data ))
 		{
 			$id = $this->insertid();
 			if ($keyName && $id) {
@@ -241,7 +241,7 @@ class KDatabase extends KPatternProxy
 			$data[$k] = $val;
 		}
 
-		return $this->update( $this->replaceTablePrefix($table, '', '#__'), $data, $where);
+		return $this->update( $this->replaceTablePrefix($table, ''), $data, $where);
 	}
 	
 	/**

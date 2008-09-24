@@ -65,7 +65,7 @@ class KViewHtmlHelperSelect
 		foreach ($arr as $i => $option)
 		{
 			$element =& $arr[$i]; // since current doesn't return a reference, need to do this
-
+			
 			$isArray = is_array( $element );
 			$extra	 = '';
 			if ($isArray)
@@ -86,7 +86,7 @@ class KViewHtmlHelperSelect
 					$extra .= ' disabled="disabled"';
 				}
 			}
-
+			
 			// This is real dirty, open to suggestions,
 			// barring doing a propper object to handle it
 			if ($k === '<OPTGROUP>') {

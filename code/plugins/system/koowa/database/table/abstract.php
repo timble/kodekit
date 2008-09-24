@@ -309,7 +309,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	}
 
  	/**
-     * Find a row by the table's primary key
+     * Find a row or rowset by a signle or list of the table's primary key(s)
      *
      * @param	integer|array	A primary key or an array of primary keys
      * @return	object			KDatabaseRow or KDatabaseRowset object
@@ -358,9 +358,9 @@ abstract class KDatabaseTableAbstract extends KObject
         	if($query instanceof KDatabaseQuery) 
             {
         		$query = $query->select('*')
-        			->from('#__'.$this->getTableName());
+        			->from($this->getTableName());
             }
-        		
+
         	$this->_db->select($query, $offset, $limit);
 			$result = (array) $this->_db->loadAssocList();
 			
@@ -399,9 +399,9 @@ abstract class KDatabaseTableAbstract extends KObject
             {
             	$query->select('*')
             	->select($this->getPrimaryKey().' as id ')
-            	->from('#__'.$this->getTableName());	
+            	->from($this->getTableName());	
             }
-        	
+            
             $this->_db->select($query, 0, 1);
             $options['data'] = (array) $this->_db->loadAssoc();
         }

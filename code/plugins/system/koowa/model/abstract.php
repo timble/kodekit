@@ -85,7 +85,6 @@ abstract class KModelAbstract extends KObject
 		$this->_state->merge($options['state']);
 		$this->_setDefaultStates();
 
-
 		//set the model dbo
 		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
 	}
@@ -409,8 +408,8 @@ abstract class KModelAbstract extends KObject
         $order      = $app->getUserStateFromRequest($ns.'filter_order', 'filter_order', '', 'cmd');
         $order_Dir  = $app->getUserStateFromRequest($ns.'filter_order_Dir', 'filter_order_Dir', 'ASC', 'word');
         $filter     = $app->getUserStateFromRequest($ns.'filter', 'filter', '', 'string');
-        $id         = KInput::get('id', 'request', 'cmd', 'cmd');
-
+        $id         = KInput::get('id', 'request', 'raw'); //TODO fix this filter
+        
         // Push the environment states into the object
         $this->setState('limit',        $limit);
         $this->setState('offset',   	$offset);
