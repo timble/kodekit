@@ -20,6 +20,9 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-25 Johan Janssens
+ + Added KFilterHtml and KFilterText
+ 
 2008-09-24 Johan Janssens
  ^ Implemented KDatabaseTable::fetchAll and KDatabaseTable::fetchRow in KModelAbstract.
  ^ General cleanup in KModel query building helper functions

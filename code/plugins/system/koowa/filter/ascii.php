@@ -21,7 +21,7 @@ class KFilterAscii extends KObject implements KFilterInterface
 	 *
 	 * @var	array
 	 */
-	protected $_options;
+	protected $_default_char = '?';
 	
 	/**
 	 * Transliteration data from ascii/data/*
@@ -44,11 +44,10 @@ class KFilterAscii extends KObject implements KFilterInterface
 	 */
 	public function __construct(array $options = array())
 	{
-		if(!isset($options['default_char'])) {
-			$options['default_char'] = '?';
+		if(isset($options['default_char'])) {
+			$this->_default_char = $options['default_char'];
 		}
 		
-		$this->_options = $options;
 		$this->_data_dir = dirname(__FILE__).DS.'ascii'.DS.'data';
 	}
 	
@@ -60,7 +59,7 @@ class KFilterAscii extends KObject implements KFilterInterface
 	 */
 	public function setDefaultChar($char)
 	{
-		$this->_options['default_char'] = $char;
+		$this->_default_char = $char;
 		return $this;
 	}
 	
@@ -202,7 +201,7 @@ class KFilterAscii extends KObject implements KFilterInterface
 	        if ( array_key_exists($newchar, self::$_data[$bank]) ) {
 	            echo self::$_data[$bank][$newchar];
 	        } else {
-	            echo $this->_options['default_char'];
+	            echo $this->_default_char;
 	        }
 	        
 	        $i += $increment;
