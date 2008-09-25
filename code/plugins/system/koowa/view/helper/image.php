@@ -3,7 +3,7 @@
  * @version		$Id$
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Html
+ * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -15,9 +15,9 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Html
+ * @subpackage	Helper
  */
-class KViewHtmlHelperImage
+class KViewHelperImage
 {
 	/**
 	 * Creates a tooltip with an image as button
@@ -29,7 +29,7 @@ class KViewHtmlHelperImage
 	 * @param	string	$href An URL that will be used to create the link
 	 * @return	string
 	 */
-	public static function tooltip($tooltip, $title='', $image='tooltip.png', $text='', $href='')
+	public static function tooltip($tooltip, $title = '', $image = 'tooltip.png', $text = '', $href = '')
 	{
 		$tooltip	= addslashes(htmlspecialchars($tooltip));
 		$title		= addslashes(htmlspecialchars($title));
@@ -72,7 +72,7 @@ class KViewHtmlHelperImage
 	* @param	array	An associative array of attributes to add
 	* @param	boolean	True (default) to display full tag, false to return just the path
 	*/
-	public static function site( $file, $folder='/images/M_images/', $altFile=NULL, $altFolder='/images/M_images/', $alt=NULL, $attribs = null, $asTag = 1)
+	public static function site( $file, $folder='/images/M_images/', $altFile = NULL, $altFolder='/images/M_images/', $alt = NULL, $attribs = null, $asTag = 1)
 	{
 		static $paths;
 
@@ -139,7 +139,7 @@ class KViewHtmlHelperImage
 	* @param	array	An associative array of attributes to add
 	* @param	boolean	True (default) to display full tag, false to return just the path
 	*/
-	public static function administrator( $file, $directory='/images/', $param=NULL, $param_directory='/images/', $alt = NULL, $attribs = null, $type = 1 )
+	public static function administrator( $file, $directory = '/images/', $param = NULL, $param_directory = '/images/', $alt = NULL, $attribs = null, $type = 1 )
 	{
 		if (is_array( $attribs )) {
 			$attribs = JArrayHelper::toString( $attribs );

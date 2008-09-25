@@ -3,7 +3,7 @@
  * @version     $Id:openflashchart.php 251 2008-06-14 10:06:53Z mjaz $
  * @category	Koowa
  * @package     Koowa_View
- * @subpackage 	Html
+ * @subpackage 	Helper
  * @copyright   Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license     GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.joomlatools.org
@@ -15,9 +15,9 @@
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_View
- * @subpackage 	Html
+ * @subpackage 	Helper
  */
-class KViewHtmlHelperOpenflashchart
+class KViewHelperOpenflashchart
 {
     /**
      * Renders the <object> tag for Open Flash Chart

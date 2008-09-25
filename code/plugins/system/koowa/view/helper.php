@@ -3,6 +3,7 @@
  * @version		$Id:helper.php 251 2008-06-14 10:06:53Z mjaz $
  * @category	Koowa
  * @package		Koowa_View
+ * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -14,6 +15,7 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
+ * @subpackage	Helper
  * @uses   		KFactory
  */
 class KViewHelper
@@ -41,7 +43,6 @@ class KViewHelper
 		//Initialise variables
 		$prefix = 'KViewHelper';
 		$file   = '';
-		$format = '';
 		$func   = $type;
 
 		// Check to see if we need to load a helper file
@@ -49,20 +50,18 @@ class KViewHelper
 
 		switch(count($parts))
 		{
-			case 4 :
-			{
-				$format 	= $parts[1];
-				$prefix		= ucfirst($parts[0]).ucfirst($format).'Helper';
-				$file		= $parts[2];
-				$func		= $parts[3];
-			} break;
-
 			case 3 :
 			{
-				$format 	= $parts[0];
-				$prefix		= 'KView'.ucfirst($format).'Helper';
+				$prefix		= ucfirst($parts[0]).'Helper';
 				$file		= $parts[1];
 				$func		= $parts[2];
+			} break;
+
+			case 2 :
+			{
+				$prefix		= 'KViewHelper';
+				$file		= $parts[0];
+				$func		= $parts[1];
 			} break;
 		}
 
@@ -71,7 +70,7 @@ class KViewHelper
 		if (!class_exists( $className ))
 		{
 			jimport('joomla.filesystem.path');
-			if ($path = JPath::find(KViewHelper::getIncludePaths(), $format.DS.$file.'.php'))
+			if ($path = JPath::find(KViewHelper::getIncludePaths(), $file.'.php'))
 			{
 				require_once $path;
 
@@ -141,7 +140,7 @@ class KViewHelper
 	{
 		// Include mootools framework
 		if($mootools) {
-			KViewHelper::_('html.behavior.mootools');
+			KViewHelper::_('behavior.mootools');
 		}
 
 		if(strpos($path, 'http') !== 0) {

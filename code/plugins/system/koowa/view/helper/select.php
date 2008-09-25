@@ -3,7 +3,7 @@
  * @version		$Id$
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Html
+ * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -15,9 +15,9 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Html
+ * @subpackage	Helper
  */
-class KViewHtmlHelperSelect
+class KViewHelperSelect
 {
 	/**
 	 * @param	string	The value of the option
@@ -26,7 +26,7 @@ class KViewHtmlHelperSelect
 	 * @param	string	The returned object property name for the text
 	 * @return	object
 	 */
-	public static function option( $value, $text='', $value_name='value', $text_name='text', $disable=false )
+	public static function option( $value, $text = '', $value_name = 'value', $text_name = 'text', $disable = false )
 	{
 		$obj = new stdClass;
 		$obj->$value_name	= $value;
@@ -215,7 +215,7 @@ class KViewHtmlHelperSelect
 		$id		= str_replace(']','',$id);
 
 		$html	= '<select name="'. $name .'" id="'. $id .'" '. $attribs .'>';
-		$html	.= KViewHtmlHelperSelect::Options( $arr, $key, $text, $selected, $translate );
+		$html	.= KViewHelperSelect::Options( $arr, $key, $text, $selected, $translate );
 		$html	.= '</select>';
 
 		return $html;
@@ -243,10 +243,10 @@ class KViewHtmlHelperSelect
 		for ($i=$start; $i <= $end; $i+=$inc)
 		{
 			$fi = $format ? sprintf( "$format", $i ) : "$i";
-			$arr[] = KViewHelper::_('html.select.option',  $fi, $fi );
+			$arr[] = KViewHelper::_('select.option',  $fi, $fi );
 		}
 
-		return KViewHelper::_('html.select.genericlist',   $arr, $name, $attribs, 'value', 'text', $selected );
+		return KViewHelper::_('select.genericlist',   $arr, $name, $attribs, 'value', 'text', $selected );
 	}
 
 	/**
@@ -311,12 +311,12 @@ class KViewHtmlHelperSelect
 	* @param mixed The key that is selected
 	* @returns string HTML for the radio list
 	*/
-	public static function booleanlist( $name, $attribs = null, $selected = null, $yes='yes', $no='no', $id=false )
+	public static function booleanlist( $name, $attribs = null, $selected = null, $yes = 'yes', $no = 'no', $id = false )
 	{
 		$arr = array(
-			KViewHelper::_('html.select.option',  '0', JText::_( $no ) ),
-			KViewHelper::_('html.select.option',  '1', JText::_( $yes ) )
+			KViewHelper::_('select.option',  '0', JText::_( $no ) ),
+			KViewHelper::_('select.option',  '1', JText::_( $yes ) )
 		);
-		return KViewHelper::_('html.select.radiolist',  $arr, $name, $attribs, 'value', 'text', (int) $selected, $id );
+		return KViewHelper::_('select.radiolist',  $arr, $name, $attribs, 'value', 'text', (int) $selected, $id );
 	}
 }

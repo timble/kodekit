@@ -17,7 +17,7 @@
  * @package		Koowa_View
  * @subpackage	Html
  */
-class KViewHtmlHelperBehavior
+class KViewHelperBehavior
 {
 	/**
 	 * Method to load the mootools framework into the document head
@@ -49,7 +49,7 @@ class KViewHtmlHelperBehavior
 		$loaded = true;
 		return;
 	}
-
+	
 	public static function caption() {
 		KViewHelper::script('caption.js', 'media/system/js/');
 	}
@@ -109,7 +109,7 @@ class KViewHtmlHelperBehavior
 		$opt['onShow']		= (isset($params['onShow'])) ? $params['onShow'] : null;
 		$opt['onHide']		= (isset($params['onHide'])) ? $params['onHide'] : null;
 
-		$options = KViewHtmlHelperBehavior::_getJSObject($opt);
+		$options = KViewHelperBehavior::_getJSObject($opt);
 
 		// Attach modal behavior to document
 		$document->addScriptDeclaration("
@@ -166,7 +166,7 @@ class KViewHtmlHelperBehavior
 		$opt['onAllComplete']		= (isset($params['onAllComplete'])) ? '\\'.$params['onAllComplete'] : null;
 
 		//types: Object with (description: extension) pairs, default: Images (*.jpg; *.jpeg; *.gif; *.png)
-		$options = KViewHtmlHelperBehavior::_getJSObject($opt);
+		$options = KViewHelperBehavior::_getJSObject($opt);
 
 		// Attach tooltips to document
 		$document = KFactory::get('lib.joomla.document');
@@ -256,7 +256,7 @@ class KViewHtmlHelperBehavior
 	public static function keepalive()
 	{
 		// Include mootools framework
-		KViewHtmlHelperBehavior::mootools();
+		KViewHelperBehavior::mootools();
 
 		$config 	 = KFactory::get('lib.joomla.config');
 		$lifetime 	 = ( $config->getValue('lifetime') * 60000 );
@@ -300,7 +300,7 @@ class KViewHtmlHelperBehavior
 				$object .= (is_numeric($v) || strpos($v, '\\') === 0) ? (is_numeric($v)) ? $v : substr($v, 1) : "'".$v."'";
 				$object .= ',';
 			} else {
-				$object .= ' '.$k.': '.KViewHtmlHelperBehavior::_getJSObject($v).',';
+				$object .= ' '.$k.': '.KViewHelperBehavior::_getJSObject($v).',';
 			}
 		}
 		if (substr($object, -1) == ',') {

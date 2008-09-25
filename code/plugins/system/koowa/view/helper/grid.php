@@ -3,7 +3,7 @@
  * @version		$Id$
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Html
+ * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
@@ -15,9 +15,9 @@
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_View
- * @subpackage	Html
+ * @subpackage	Helper
  */
-class KViewHtmlHelperGrid
+class KViewHelperGrid
 {
 
 	/**
@@ -47,7 +47,7 @@ class KViewHtmlHelperGrid
 	 * @param	string	The selected ordering
 	 * @param	string	An optional task override
 	 */
-	public static function sort( $title, $order, $direction = 'asc', $selected = 0, $task=NULL )
+	public static function sort( $title, $order, $direction = 'asc', $selected = 0, $task = NULL )
 	{
 		$direction	= strtolower( $direction );
 		$images		= array( 'sort_asc.png', 'sort_desc.png' );
@@ -57,7 +57,7 @@ class KViewHtmlHelperGrid
 		$html = '<a href="javascript:tableOrdering(\''.$order.'\',\''.$direction.'\',\''.$task.'\');" title="'.JText::_( 'Click to sort this column' ).'">';
 		$html .= JText::_( $title );
 		if ($order == $selected ) {
-			$html .= KViewHelper::_('html.image.administrator',  $images[$index], '/images/', NULL, NULL);
+			$html .= KViewHelper::_('image.administrator',  $images[$index], '/images/', NULL, NULL);
 		}
 		$html .= '</a>';
 		return $html;
@@ -70,7 +70,7 @@ class KViewHtmlHelperGrid
 	* @param string The name of the form element
 	* @return string
 	*/
-	public static function id( $rowNum, $recId, $checkedOut=false, $name='cid' )
+	public static function id( $rowNum, $recId, $checkedOut = false, $name = 'cid' )
 	{
 		if ( $checkedOut ) {
 			return '';
@@ -79,7 +79,7 @@ class KViewHtmlHelperGrid
 		}
 	}
 
-	public static function access( &$row, $i, $archived = NULL )
+	public static function access( $row, $i, $archived = NULL )
 	{
 		if ( !$row->access )  {
 			$color_access = 'style="color: green;"';
@@ -107,7 +107,7 @@ class KViewHtmlHelperGrid
 		return $href;
 	}
 
-	public static function checkedOut( &$row, $i, $identifier = 'id' )
+	public static function checkedOut( $row, $i, $identifier = 'id' )
 	{
 		$user   = KFactory::get('lib.joomla.user');
 		$userid = $user->get('id');
@@ -121,15 +121,15 @@ class KViewHtmlHelperGrid
 
 		$checked = '';
 		if ( $result ) {
-			$checked = KViewHtmlHelperGrid::_checkedOut( $row );
+			$checked = KViewHelperGrid::_checkedOut( $row );
 		} else {
-			$checked = KViewHelper::_('html.grid.id', $i, $row->$identifier );
+			$checked = KViewHelper::_('grid.id', $i, $row->$identifier );
 		}
 
 		return $checked;
 	}
 
-	public static function published( &$row, $i, $imgY = 'tick.png', $imgX = 'publish_x.png', $prefix='' )
+	public static function published( $row, $i, $imgY = 'tick.png', $imgX = 'publish_x.png', $prefix='' )
 	{
 		$img 	= $row->published ? $imgY : $imgX;
 		$task 	= $row->published ? 'unpublish' : 'publish';
@@ -163,7 +163,7 @@ class KViewHtmlHelperGrid
 
 	public static function order( $rows, $image='filesave.png', $task="saveorder" )
 	{
-		$image = KViewHelper::_('html.image.administrator',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
+		$image = KViewHelper::_('image.administrator',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
 		$href = '<a href="javascript:saveorder('.(count( $rows )-1).', \''.$task.'\')" title="'.JText::_( 'Save Order' ).'">'.$image.'</a>';
 		return $href;
 	}
