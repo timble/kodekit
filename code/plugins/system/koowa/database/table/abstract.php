@@ -368,7 +368,7 @@ abstract class KDatabaseTableAbstract extends KObject
         }
         
         //return a row set
-    	$rowset = KFactory::get($app.'::com.'.$component.'.rowset.'.$rowset, $options);
+    	$rowset = KFactory::tmp($app.'::com.'.$component.'.rowset.'.$rowset, $options);
     	return $rowset;
     }
 
@@ -406,7 +406,7 @@ abstract class KDatabaseTableAbstract extends KObject
             $options['data'] = (array) $this->_db->loadAssoc();
         }
            
-        $row = KFactory::get($app.'::com.'.$component.'.row.'.$row, $options); 
+        $row = KFactory::tmp($app.'::com.'.$component.'.row.'.$row, $options); 
         return $row;
     }
 
