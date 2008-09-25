@@ -57,7 +57,7 @@ class KViewHelperGrid
 		$html = '<a href="javascript:tableOrdering(\''.$order.'\',\''.$direction.'\',\''.$task.'\');" title="'.JText::_( 'Click to sort this column' ).'">';
 		$html .= JText::_( $title );
 		if ($order == $selected ) {
-			$html .= KViewHelper::_('image.administrator',  $images[$index], '/images/', NULL, NULL);
+			$html .= KViewHelper::_('image.template',  $images[$index], '/images/', NULL, NULL);
 		}
 		$html .= '</a>';
 		return $html;
@@ -163,7 +163,7 @@ class KViewHelperGrid
 
 	public static function order( $rows, $image='filesave.png', $task="saveorder" )
 	{
-		$image = KViewHelper::_('image.administrator',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
+		$image = KViewHelper::_('image.template',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
 		$href = '<a href="javascript:saveorder('.(count( $rows )-1).', \''.$task.'\')" title="'.JText::_( 'Save Order' ).'">'.$image.'</a>';
 		return $href;
 	}
