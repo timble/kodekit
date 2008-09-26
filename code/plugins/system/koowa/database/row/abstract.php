@@ -147,9 +147,12 @@ abstract class KDatabaseRowAbstract extends KObject
             			->where($key, '=', $this->$key);
             $this->_table->update($this->getProperties(), $where);
         }
-        else $this->_table->insert($this->getProperties());
+        else 
+        {
+        	$this->_table->insert($this->getProperties());
+        }
 
-        if($err = $this->_table->getError()) {
+         if($err = $this->_table->getError()) {
             throw new KDatabaseRowException($this->getClassName('all').'::save() failed: '.$err);
         }
 

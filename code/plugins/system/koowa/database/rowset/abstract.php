@@ -19,22 +19,15 @@
  * @subpackage  Rowset
  * @uses 		KMixinClass
  */
-abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterator, Countable
+abstract class KDatabaseRowsetAbstract extends KObjectArray
 {
-   /**
-     * The original data for each row.
-     *
-     * @var array
-     */
-    protected $_data = array();
-
-	 /**
-     * Collection of instantiated KDatabaseRow objects.
-     *
-     * @var array
-     */
-    protected $_rows = array();
-
+	/**
+	 * Original data passed to the object
+	 * 
+	 * @var 	array 
+	 */
+	protected $_orig_data = array();
+	
 	/**
      * KDatabaseTableAbstract parent class or instance.
      *
@@ -49,19 +42,6 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
      */
     protected $_tableClass;
 
-	/**
-     * Iterator pointer.
-     *
-     * @var integer
-     */
-    protected $_pointer = 0;
-
-    /**
-     * How many data rows there are.
-     *
-     * @var integer
-     */
-    protected $_count = 0;
 
     /**
      * Empty row to use for cloning
@@ -92,8 +72,8 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
 
 		// Set data
 		if(isset($options['data']))  {
-			$this->_data 	= $options['data'];
-			$this->_count 	= count($this->_data);
+			$this->_orig_data = $options['data'];
+			$this->setCount(count($this->_orig_data));
 		}
 		
 		// Instantiate an empty row to use for cloning later
@@ -123,6 +103,49 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
         return array_merge($defaults, $options);
     }
 
+    
+	/**
+     * Overridden current() method
+     * 
+     * Used to delay de creation of KDatabaseRow objects, for performance reasons
+     *
+     * @return KDatabaseRowAbstract Current element from the collection
+     */
+    public function current()
+    {
+    	if ($this->valid() === false) {
+            return null;
+        }
+
+		// do we already have a row object for this position?
+        if (!isset($this[$this->key()])) 
+        {
+        	// cloning is faster than instantiating
+            $this[$this->key()] = clone $this->_emptyRow;
+            $this[$this->key()]->setProperties($this->_orig_data[$this->key()]);
+        }
+
+    	// return the row object
+        return $this[$this->key()];
+    }
+    
+    /**
+     * Overridden offsetSet() method that doesn't update the count automatically
+     *
+     * @param 	int 	The offset of the item
+     * @param 	mixed	The item's value
+     * @return  this
+     */
+	public function offsetSet($offset, $value) 
+	{
+		if(empty($offset)) {
+			$this->__data[] = $value;
+		} else {
+			$this->__data[$offset] = $value;
+		}	
+		return $this;
+	}
+    
 	/**
      * Returns the table object, or null if this is disconnected row
      *
@@ -197,129 +220,19 @@ abstract class KDatabaseRowsetAbstract extends KObject implements SeekableIterat
     }
 
 	/**
-     * Rewind the Iterator to the first element.
-     *
-     * Similar to the reset() function for arrays in PHP.
-     * Required by interface Iterator.
-     *
-     * @return KDatabaseRowsetAbstract Fluent interface.
-     */
-    public function rewind()
-    {
-        $this->_pointer = 0;
-        return $this;
-    }
-
-	/**
-     * Return the current element.
-     *
-     * Similar to the current() function for arrays in PHP
-     * Required by interface Iterator.
-     *
-     * @return KDatabaseRowsetAbstract current element from the collection
-     */
-    public function current()
-    {
-    	if ($this->valid() === false) {
-            return null;
-        }
-
-		// do we already have a row object for this position?
-        if (!isset($this->_rows[$this->key()])) 
-        {
-        	// cloning is faster than instantiating
-            $this->_rows[$this->key()] = clone $this->_emptyRow;
-            $this->_rows[$this->key()]->setProperties($this->_data[$this->key()]);
-        }
-
-    	// return the row object
-        return $this->_rows[$this->key()];
-    }
-
-	/**
-     * Return the identifying key of the current element.
-     *
-     * Similar to the key() function for arrays in PHP.
-     * Required by interface Iterator.
-     *
-     * @return int
-     */
-    public function key()
-    {
-    	return $this->_pointer;
-    }
-
-	/**
-     * Move forward to next element.
-     *
-     * Similar to the next() function for arrays in PHP.
-     * Required by interface Iterator.
-     *
-     * @return	this
-     */
-    public function next()
-    {
-    	++$this->_pointer;
-    	return $this;
-    }
-
-	/**
-     * Check if there is a current element after calls to rewind() or next().
-     *
-     * Used to check if we've iterated to the end of the collection.
-     * Required by interface Iterator.
-     *
-     * @return bool False if there's nothing more to iterate over
-     */
-    public function valid()
-    {
-        return $this->_pointer < $this->_count;
-    }
-
-	/**
-     * Returns the number of elements in the collection.
-     *
-     * Implements Countable::count()
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return $this->_count;
-    }
-
-	/**
-     * Take the Iterator to position $position
-     * Required by interface SeekableIterator.
-     *
-     * @param int $position the position to seek to
-     * @throws KDatabaseRowsetException
-     * @return KDatabaseRowsetAbstract
-     */
-    public function seek($position)
-    {
-        $position = (int) $position;
-        if ($position < 0 || $position > $this->_count) {
-            throw new KDatabaseRowsetException("Illegal index $position");
-        }
-        $this->_pointer = $position;
-        return $this;
-    }
-
-	/**
      * Returns all data as an array.
      *
-     * This works only if we have iterated through the result set once to instantiate the rows.
-     * Updates the $_data property with current row object values.
+     * This works only if we have iterated through the result set once to 
+     * instantiate the rows.
      *
      * @return array
      */
     public function toArray()
     {
-    	foreach ($this->_rows as $i => $row) {
-            $this->_data[$i] = $row->toArray();
+    	$result = array();
+    	foreach ($this as $i => $row) {
+            $result[$i] = $row->toArray();
         }
-        return $this->_data;
+        return $result;
     }
-
 }

@@ -21,6 +21,7 @@ Legend:
  ! -> Note
 
 2008-09-26 Mathias Verraes
+ + KDatabaseRowsetAbstract extends KObjectArray
  + Added KObjectArray 
  
 2008-09-25 Johan Janssens
