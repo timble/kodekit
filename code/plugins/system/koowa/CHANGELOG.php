@@ -1,6 +1,6 @@
 <?php
 /**
-* @version      $Id:koowa.php 251 2008-06-14 10:06:53Z mjaz $
+* @version      $Id$
 * @category		Koowa
 * @package      Koowa
 * @copyright    Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -19,6 +19,9 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+
+2008-09-26 Mathias Verraes
+ + Added KObjectArray 
  
 2008-09-25 Johan Janssens
  + Added KFilterHtml and KFilterText

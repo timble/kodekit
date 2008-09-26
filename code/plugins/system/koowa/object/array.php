@@ -13,146 +13,254 @@
  *
  * Provides getters and setters, mixin, object handles
  *
- * @author		Johan Janssens <johan@joomlatools.org>
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package		Koowa_Object
  * @example		mixins.php	Mixin example
  */
-class KObjectArray extends ArrayObject
+class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Countable
 {
-    /**
-     * Mixed in objects
+	/**
+     * Array data
      *
      * @var array
      */
-    protected $_mixinObjects = array();
-
+    protected $__data = array();
+    
     /**
-     * Mixed in methods
+     * Array count
      *
-     * @var array
+     * @var int
      */
-    protected $_mixinMethods = array();
+    private $__count = 0;
+    
+	/**
+     * Iterator pointer
+     *
+     * @var integer
+     */
+    private $__pointer = 0;
 
-    /**
-     * Returns a property of the object or the default value if the property is not set.
+	/**
+     * Rewind the Iterator to the first element.
      *
-     * @param   string $property The name of the property
-     * @param   mixed  $default The default value
-     * @return  mixed The value of the property
+     * Similar to the reset() function for arrays in PHP.
+     * Required by interface Iterator.
+     *
+     * @return this
      */
-    public function get($property, $default=null)
+    public function rewind()
     {
-        if(isset($this->$property)) {
-            return $this->$property;
-        }
-        return $default;
-    }
-
-    /**
-     * Returns an associative array of object properties
-     *
-     * @return  array
-     */
-    public function getProperties()
-    {
-        $vars  = get_object_vars($this);
-
-        foreach ($vars as $key => $value)
-        {
-            if ('_' == substr($key, 0, 1)) {
-                unset($vars[$key]);
-            }
-        }
-
-        return $vars;
+        $this->setKey(0);
+        return $this;
     }
 
 	/**
-	 * Get a handle for this object
-	 * 
-	 * This function returns an unique identifier for the object. This id can be used as 
-	 * a hash key for storing objects or for identifying an object
-	 * 
-	 * @return string A string that is unique
+     * Return the current element.
+     *
+     * Similar to the current() function for arrays in PHP
+     * Required by interface Iterator.
+     *
+     * @return Current element from the collection
+     */
+    public function current()
+    {
+    	if ($this->valid() === false) {
+            return null;
+        }
+
+        return $this->__data[$this->key()];
+    }
+
+	/**
+     * Return the identifying key of the current element.
+     *
+     * Similar to the key() function for arrays in PHP.
+     * Required by interface Iterator.
+     *
+     * @return int
+     */
+    public function key()
+    {
+    	return $this->__pointer;
+    }
+    
+	/**
+	 * Set the identifying key of the current element.
+	 *
+	 * @param 	int	Pointer
+	 * @return 	this
 	 */
-	public function getHandle()
+	public function setKey($pointer)
 	{
-		return spl_object_hash( $this );
+		$this->__pointer = $pointer;
+		return $this;
+	}
+
+	/**
+     * Move forward to next element.
+     *
+     * Similar to the next() function for arrays in PHP.
+     * Required by interface Iterator.
+     *
+     * @return	this
+     */
+    public function next()
+    {
+    	++$this->__pointer;
+    	return $this;
+    }
+
+	/**
+     * Check if there is a current element after calls to rewind() or next().
+     *
+     * Used to check if we've iterated to the end of the collection.
+     * Required by interface Iterator.
+     *
+     * @return bool False if there's nothing more to iterate over
+     */
+    public function valid()
+    {
+        return $this->key() < $this->count();
+    }
+
+	/**
+     * Returns the number of elements in the collection.
+     *
+     * Implements Countable::count()
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->__count;
+    }
+    
+    /**
+     * Set the count of the array
+     *
+     * @param 	int	Count
+     * @return	this
+     */
+    public function setCount($count)
+    {
+    	$this->__count = $count;
+    	return $this;
+    }
+    
+	/**
+     * Reset the count of the array
+     *
+     * @return	this
+     */
+    public function resetCount()
+    {
+    	$this->__count	= count($this->__data);
+    	return $this;
+    }
+
+	/**
+     * Take the Iterator to position $position
+     * 
+     * Required by interface SeekableIterator.
+     *
+     * @param 	int $position The position to seek to
+     * @throws 	KObjectException
+     * @return  this
+     */
+    public function seek($position)
+    {
+        settype($position, 'int');
+        if ($position < 0 || $position > $this->count()) {
+            throw new KObjectException("Illegal index $position");
+        }
+        $this->__pointer = $position;
+        return $this;
+    }
+    
+    /**
+     * Check if the offset exists
+     * 
+     * Required by interface ArrayAccess
+     *
+     * @param 	int 	The offset
+     * @return  bool
+     */
+	public function offsetExists($offset) 
+	{
+        return isset($this->__data[$offset]);
 	}
 
     /**
-     * Modifies a property of the object, creating it if it does not already exist.
+     * Get an item from the array by offset
+     * 
+     * Required by interface ArrayAccess
      *
-     * @param   string $property The name of the property
-     * @param   mixed  $value The value of the property to set
-     * @throws KObjectException
+     * @param 	int 	The offset
+     * @return  mixed	The item from the array
+     */
+	public function offsetGet($offset) 
+	{
+        return $this->__data[$offset];
+	}
+
+    /**
+     * Set an item in the array
+     * 
+     * Required by interface ArrayAccess
+     *
+     * @param 	int 	The offset of the item
+     * @param 	mixed	The item's value
      * @return  this
      */
-    public function set( $property, $value = null )
-    {
-        if('_' == substr($property, 0, 1)) {
-        	throw new KObjectException("Protected or private properties can't be set outside of object scope in ".get_class($this));
-        }
-        $this->$property = $value;
-        return $this;
-    }
+	public function offsetSet($offset, $value) 
+	{
+		if(empty($offset)) {
+			$this->__data[] = $value;
+		} else {
+			$this->__data[$offset] = $value;
+		}	
+		$this->resetCount();
+		return $this;
+	}
 
     /**
-    * Set the object properties based on a named array/hash
-    *
-    * @param    $array  mixed Either and associative array or another object
-    * @return   this
-    */
-    public function setProperties( $properties )
-    {
-        $properties = (array) $properties;
-
-        foreach ($properties as $k => $v) {
-            $this->set($k, $v);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Mixin an object
+     * Unset an item in the array
+     * 
+     * Required by interface ArrayAccess
      *
-     * When using mixin(), the calling object inherits the methods of the mixed
-     * in objects, in a LIFO order
-     *
-     * @param	object
-     * @return	this
+     * @param 	int 	The offset of the item
+     * @return  this
      */
-    public function mixin($object)
-    {
-        array_unshift($this->_mixinObjects, $object);
-
-        $remove = array('__construct', '__destruct');
-        $methods = array_diff(get_class_methods($object), get_class_methods($this), $remove);
-
-        foreach($methods as $method) {
-            $this->_mixinMethods[$method] = $object;
-        }
-
+	public function offsetUnset($offset)
+	{
+        unset($this->__data[$offset]);
+        $this->resetCount();
         return $this;
-    }
+	}
+	
+	/**
+	 * Get the array
+	 *
+	 * @return 	array
+	 */
+	public function getArray()
+	{
+		return $this->__data;
+	}
+	
+	/**
+	 * Set the array
+	 *
+	 * @param 	array 	$array
+	 * @return	this
+	 */
+	public function setArray($array)
+	{
+		$this->__data 	= $array;
+		$this->resetCount();
+		return $this;
+	}
+	
 
-    /**
-     * Search the method map, and call the method or trigger an error
-     *
-   	 * @param  string $function		The function name
-	 * @param  array  $arguments	The function arguments
-	 * @return mixed The result of the function
-     */
-    public function __call($method, $args)
-    {
-        if(isset($this->_mixinMethods[$method])) {
-            return call_user_func_array(array($this->_mixinMethods[$method], $method), $args);
-        }
-
-        $trace = debug_backtrace();
-        trigger_error("Call to undefined method {$trace[1]['class']}::$method()", E_USER_ERROR);
-    }
 }
