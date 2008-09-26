@@ -9,7 +9,7 @@
  */
 
 /**
- * Object class
+ * Object Array class
  *
  * Provides getters and setters, mixin, object handles
  *
@@ -19,7 +19,7 @@
  * @package		Koowa_Object
  * @example		mixins.php	Mixin example
  */
-class KObject
+class KObjectArray extends ArrayObject
 {
     /**
      * Mixed in objects
