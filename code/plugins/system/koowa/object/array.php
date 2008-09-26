@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id:object.php 46 2008-03-01 18:39:32Z mjaz $
+ * @version		$Id$
  * @category	Koowa
  * @package		Koowa_Object
  * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
@@ -11,7 +11,7 @@
 /**
  * Object Array class
  *
- * Provides getters and setters, mixin, object handles
+ * Allows objects to be handled as arrays
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
