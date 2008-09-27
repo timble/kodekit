@@ -103,6 +103,34 @@ abstract class KDocumentAbstract extends KObject
 	protected $_profile = '';
 
 	/**
+	 * Array of linked scripts
+	 *
+	 * @var		array
+	 */
+	protected $_scripts = array();
+
+	/**
+	 * Array of scripts placed in the header
+	 *
+	 * @var  array
+	 */
+	protected $_script = array();
+
+	 /**
+	 * Array of linked style sheets
+	 *
+	 * @var	 array
+	 */
+	protected $_styleSheets = array();
+
+	/**
+	 * Array of included style declarations
+	 *
+	 * @var	 array
+	 */
+	protected $_style = array();
+
+	/**
 	 * Array of meta tags
 	 *
 	 * @var	 array
@@ -163,6 +191,27 @@ abstract class KDocumentAbstract extends KObject
 	public function getType() 
 	{
 		return $this->getClassName('suffix');
+	}
+
+	/**
+	 * Get the document head data
+	 *
+	 * @return	array	The document head data in array form
+	 */
+	public function getHeadData() 
+	{ 
+		
+	}
+
+	/**
+	 * Set the document head data
+	 *
+	 * @param	array	$data	The document head data in array form
+	 * @return	this
+	 */
+	public function setHeadData(array $data) 
+	{ 
+		
 	}
 
 	/**
@@ -247,6 +296,69 @@ abstract class KDocumentAbstract extends KObject
 				
 				$type = ($http_equiv == true) ? 'http-equiv' : 'standard';
 				$this->_metaTags[$type][$name] = $content;
+		}
+		return $this;
+	}
+
+	 /**
+	 * Adds a linked script to the page
+	 *
+	 * @param	string  $url		URL to the linked script
+	 * @param	string  $type		Type of script. Defaults to 'text/javascript'
+	 * @return	this
+	 */
+	public function addScript($url, $type="text/javascript") 
+	{
+		$this->_scripts[$url] = $type;
+		return $this;
+	}
+
+	/**
+	 * Adds a script to the page
+	 *
+	 * @param	string  $content   Script
+	 * @param	string  $type	Scripting mime (defaults to 'text/javascript')
+	 * @return	this
+	 */
+	public function addScriptDeclaration($content, $type = 'text/javascript')
+	{
+		if (!isset($this->_script[strtolower($type)])) {
+			$this->_script[strtolower($type)] = $content;
+		} else {
+			$this->_script[strtolower($type)] .= chr(13).$content;
+		}
+		return $this;
+	}
+
+	/**
+	 * Adds a linked stylesheet to the page
+	 *
+	 * @param	string  $url	URL to the linked style sheet
+	 * @param	string  $type   Mime encoding type
+	 * @param	string  $media  Media type that this stylesheet applies to
+	 * @return	this
+	 */
+	public function addStyleSheet($url, $type = 'text/css', $media = null, $attribs = array())
+	{
+		$this->_styleSheets[$url]['mime']		= $type;
+		$this->_styleSheets[$url]['media']		= $media;
+		$this->_styleSheets[$url]['attribs']	= $attribs;
+		return $this;
+	}
+
+	 /**
+	 * Adds a stylesheet declaration to the page
+	 *
+	 * @param	string  $content   Style declarations
+	 * @param	string  $type		Type of stylesheet (defaults to 'text/css')
+	 * @return	this
+	 */
+	public function addStyleDeclaration($content, $type = 'text/css')
+	{
+		if (!isset($this->_style[strtolower($type)])) {
+			$this->_style[strtolower($type)] = $content;
+		} else {
+			$this->_style[strtolower($type)] .= chr(13).$content;
 		}
 		return $this;
 	}
