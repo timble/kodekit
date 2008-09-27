@@ -55,22 +55,22 @@ class KDatabase extends KPatternProxy
 	protected $_commandChain = null;
 	
 	/**
-     * Operation = update
+     * Update operation
      */
     const OPERATION_UPDATE  =  1;
 	
 	/**
-     * Operation = insert
+     * Insert operation
      */
     const OPERATION_INSERT  =  2;
 	
 	/**
-     *  Operation = delete
+     *  Delete operation
      */
     const OPERATION_DELETE  =  4;
     
     /**
-     *  Operation = delete
+     *  Select operation
      */
     const OPERATION_SELECT  =  8;
 
@@ -333,7 +333,7 @@ class KDatabase extends KPatternProxy
 			$keys[] = '`'.$key.'`';
 		}
 
-		$sql = 'INSERT INTO '.$this->_object->nameQuote('#__'.$table)
+		$sql = 'INSERT INTO '.$this->quoteName('#__'.$table)
 			 . '('.implode(', ', $keys).') VALUES ('.implode(', ', $vals).')';
 
 		
@@ -372,7 +372,7 @@ class KDatabase extends KPatternProxy
 		}
 
 		//Create query statement
-		$sql = 'UPDATE '.$this->_object->nameQuote('#__'.$table)
+		$sql = 'UPDATE '.$this->quoteName('#__'.$table)
 			  .' SET '.implode(', ', $vals)
 			  .' '.$where
 		;
@@ -405,7 +405,7 @@ class KDatabase extends KPatternProxy
 	public function delete($table, $where)
 	{
 		//Create query statement
-		$sql = 'DELETE FROM '.$this->_object->nameQuote('#__'.$table)
+		$sql = 'DELETE FROM '.$this->quoteName('#__'.$table)
 			  .' '.$where
 		;
 
@@ -508,7 +508,7 @@ class KDatabase extends KPatternProxy
 					$tblval = $this->replaceTablePrefix($tblval, '');
 				}
 			
-				$this->select( 'SHOW FIELDS FROM ' . $this->nameQuote($table));
+				$this->select( 'SHOW FIELDS FROM ' . $this->quoteName($table));
 				$fields = $this->loadObjectList();
 			
 				foreach ($fields as $field) {
@@ -639,4 +639,105 @@ class KDatabase extends KPatternProxy
     {
     	return $this->getObject()->getErrorMsg();
     }
+    
+   	/**
+     * Quotes a single identifier name (table, table alias, table column, 
+     * index, sequence).  Ignores empty values.
+     * 
+     * If the name contains ' AS ', this method will separately quote the
+     * parts before and after the ' AS '.
+     * 
+     * If the name contains a space, this method will separately quote the
+     * parts before and after the space.
+     * 
+     * If the name contains a dot, this method will separately quote the
+     * parts before and after the dot.
+     * 
+     * @param string|array $spec The identifier name to quote.  If an array,
+     * quotes each element in the array as an identifier name.
+     * 
+     * @return string|array The quoted identifier name (or array of names).
+     * 
+     * @see _quoteName()
+     */
+    public function quoteName($spec)
+    {
+    	if (is_array($spec)) 
+        {
+            foreach ($spec as $key => $val) {
+                $spec[$key] = $this->quoteName($val);
+            }
+            return $spec;
+        }
+        
+        // no extraneous spaces
+        $spec = trim($spec);
+        
+        // `original` AS `alias`
+        $pos = strrpos($spec, ' AS ');
+        if ($pos) 
+        {
+        	// recurse to allow for "table.col"
+            $orig  = $this->quoteName(substr($spec, 0, $pos));
+            // use as-is
+            $alias = $this->_quoteName(substr($spec, $pos + 4));
+           
+            return "$orig AS $alias";
+        }
+        
+     	// `original` `alias`
+        $pos = strrpos($spec, ' = ');
+        if ($pos) 
+        {
+            // recurse to allow for "table.col"
+            $orig = $this->quoteName(substr($spec, 0, $pos));
+            // recurse to allow for "table.col"
+            $alias = $this->quoteName(substr($spec, $pos + 3));
+            return "$orig = $alias";
+        }
+        
+        // `original` `alias`
+        $pos = strrpos($spec, ' ');
+        if ($pos) 
+        {
+            // recurse to allow for "table.col"
+            $orig = $this->quoteName(substr($spec, 0, $pos));
+            // use as-is
+            $alias = $this->_quoteName(substr($spec, $pos + 1));
+            return "$orig $alias";
+        }
+        
+        // `table`.`column`
+        $pos = strrpos($spec, '.');
+        if ($pos) 
+        {
+            // use both as-is
+            $table = $this->_quoteName(substr($spec, 0, $pos));
+            $col   = $this->_quoteName(substr($spec, $pos + 1));
+            return "$table.$col";
+        }
+        
+        // `name`
+        return $this->_quoteName($spec);
+    }
+    
+    /**
+     * Quotes an identifier name (table, index, etc). Ignores empty values.
+     * 
+     * @param string $name The identifier name to quote.
+     * @return string The quoted identifier name.
+     * @see quoteName()
+     */
+    protected function _quoteName($name)
+    {
+        $name = trim($name);
+        
+        //Special cases
+        if ($name == '*' || is_numeric($name)) {
+            return $name;
+        } 
+        
+        return $this->_object->_nameQuote. $name.$this->_object->_nameQuote;
+    }
+    
 }

@@ -19,6 +19,13 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+ 
+2008-09-26 Johan Janssens
+ ^ KDatabaseQuery refactoring, added support for :
+ 	- DISTINCT
+ 	- SELECT COUNT(*)
+ 	- JOINS
+ + Added KDatabase::qouteName function to improve quoting 
 
 2008-09-26 Mathias Verraes
  + KDatabaseRowsetAbstract extends KObjectArray
