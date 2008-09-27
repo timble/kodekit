@@ -20,6 +20,10 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-27 Mathias Verraes
+ ^ Cleaned up KDocument, moved html-specific methods to KDocumentHtml, moved rendering logic to KDocumentHtmlRendererHead
+ + Turned on KDocument 
+ 
 2008-09-26 Johan Janssens
  ^ KDatabaseQuery refactoring, added support for :
  	- DISTINCT

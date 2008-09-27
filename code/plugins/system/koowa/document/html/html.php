@@ -35,7 +35,20 @@ class KDocumentHtml extends KDocumentAbstract
 	 * @var	 array
 	 */
 	protected $_custom = array();
-	
+		
+	/**
+	 * Array of declared and linked scripts
+	 *
+	 * @var		array
+	 */
+	protected $_scripts = array();
+
+	/**
+	 * Array of included style sheets and declarations
+	 *
+	 * @var	 array
+	 */
+	protected $_styles = array();
 
 	/**
 	 * Class constructor
@@ -67,10 +80,8 @@ class KDocumentHtml extends KDocumentAbstract
 		$data['link']		= $this->link;
 		$data['metaTags']	= $this->_metaTags;
 		$data['links']		= $this->_links;
-		$data['styleSheets']= $this->_styleSheets;
-		$data['style']		= $this->_style;
+		$data['styles']		= $this->_styles;
 		$data['scripts']	= $this->_scripts;
-		$data['script']		= $this->_script;
 		$data['custom']		= $this->_custom;
 		
 		return $data;
@@ -125,9 +136,13 @@ class KDocumentHtml extends KDocumentAbstract
 	 */
 	public function addHeadLink($href, $relation, $relType = 'rel', array $attribs = array())
 	{
-		$attribs = KHelperArray::toString($attribs);
-		$generatedTag = '<link href="'.$href.'" '.$relType.'="'.$relation.'" '.$attribs;
-		$this->_links[] = $generatedTag;
+		$this->_links[] = array(
+			'href'		=> $href,
+			'relation'	=> $relation,
+			'relType'	=> $relType,
+			'attribs' 	=> $attribs
+		);
+
 		return $this;
 	}
 
@@ -145,9 +160,7 @@ class KDocumentHtml extends KDocumentAbstract
 	 */
 	public function addFavicon($href, $type = 'image/x-icon', $relation = 'shortcut icon')
 	{
-		$href = str_replace( '\\', '/', $href );
-		$this->_links[] = '<link href="'.$href.'" rel="'.$relation.'" type="'.$type.'"';
-		return $this;
+		return $this->addHeadLink($href, $relation, 'rel', array('type'=>$type));
 	}
 
 	/**
@@ -374,5 +387,75 @@ class KDocumentHtml extends KDocumentAbstract
 			}
 		}
 		return $retarray;
+	}
+	
+	 /**
+	 * Adds a linked script to the page
+	 *
+	 * @param	string  $src		URL to the linked script
+	 * @param	string  $mime		Scripting mime (defaults to 'text/javascript')
+	 * @return	this
+	 */
+	public function addScript($src, $mime='text/javascript') 
+	{
+		$sig = md5($src.$mime);
+		$this->_scripts[$sig] = array('type' => 'linked', 'mime' => $mime, 'src' => $src);
+		return $this;
+	}
+
+	/**
+	 * Adds a script to the page
+	 *
+	 * @param	string  $content   	Script
+	 * @param	string  $mime		Scripting mime (defaults to 'text/javascript')
+	 * @return	this
+	 */
+	public function addScriptDeclaration($content, $mime = 'text/javascript')
+	{
+		$sig = md5($content.$mime);
+		$this->_scripts[$sig] = array('type' => 'declared', 'mime' => $mime, 'content' => $content);
+		return $this;
+	}
+
+	/**
+	 * Adds a linked stylesheet to the page
+	 *
+	 * @param	string  $src	URL to the linked style sheet
+	 * @param	string  $mime   Mime encoding type (defaults to 'text/css')
+	 * @param	string  $media  Media type that this stylesheet applies to
+	 * @param	array	$attribs Attributes
+	 * @return	this
+	 */
+	public function addStyleSheet($src, $mime = 'text/css', $media = null, $attribs = array())
+	{
+		$sig = md5($src.$mime);
+		$this->_styles[$sig] = array(
+			'type'		=> 'linked',
+			'src'		=> $src,
+			'mime'		=> $mime,
+			'media' 	=> $media,
+			'attribs'	=> $attribs
+		);
+
+		return $this;
+	}
+
+	 /**
+	 * Adds a stylesheet declaration to the page
+	 *
+	 * @param	string  $content	Style declarations
+	 * @param	string  $mime		Mime encoding type (defaults to 'text/css')
+	 * @return	this
+	 */
+	public function addStyleDeclaration($content, $mime = 'text/css')
+	{
+		$sig = md5($content.$mime);
+		$this->_styles[$sig] = array(
+			'type'		=> 'declared',
+			'content'	=> $content,
+			'mime'		=> $mime
+		);
+
+		return $this;
 	}
 }

@@ -52,7 +52,7 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 		// Generate base tag (need to happen first)
 		$base = $document->getBase();
 		if(!empty($base)) {
-			$strHtml .= '	<base href="'.$document->getBase().'" />';
+			$strHtml .= '	<base href="'.$document->getBase().'" />'.PHP_EOL;
 		}
 
 		// Generate META tags (needs to happen as early as possible in the head)
@@ -61,82 +61,93 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 			foreach ($tag as $name => $content)
 			{
 				if ($type == 'http-equiv') {
-					$strHtml .= '	<meta http-equiv="'.$name.'" content="'.$content.'" />';
+					$strHtml .= '	<meta http-equiv="'.$name.'" content="'.$content.'" />'.PHP_EOL;
 				} elseif ($type == 'standard') {
-					$strHtml .= '	<meta name="'.$name.'" content="'.$content.'" />';
+					$strHtml .= '	<meta name="'.$name.'" content="'.$content.'" />'.PHP_EOL;
 				}
 			}
 		}
 
-		$strHtml .= '	<meta name="description" content="'.$document->getDescription().'" />';
-		$strHtml .= '	<meta name="generator" content="'.$document->getGenerator().'" />';
+		$strHtml .= '	<meta name="description" content="'.$document->getDescription().'" />'.PHP_EOL;
+		$strHtml .= '	<meta name="generator" content="'.$document->getGenerator().'" />'.PHP_EOL;
 
-		$strHtml .= '	<title>'.htmlspecialchars($document->getTitle()).'</title>';
+		$strHtml .= '	<title>'.htmlspecialchars($document->getTitle()).'</title>'.PHP_EOL;
 
 		// Generate link declarations
-		foreach ($document->_links as $link) {
-			$strHtml .= $link.' />';
-		}
-
-		// Generate stylesheet links
-		foreach ($data['styleSheets'] as $strSrc => $strAttr )
+		foreach ($data['links'] as $link) 
 		{
-			$strHtml .= '	<link rel="stylesheet" href="'.$strSrc.'" type="'.$strAttr['mime'].'"';
-			if (!is_null($strAttr['media'])){
-				$strHtml .= ' media="'.$strAttr['media'].'" ';
-			}
-			if ($temp = KHelperArray::toString($strAttr['attribs'])) {
-				$strHtml .= ' '.$temp;;
-			}
-			$strHtml .= ' />';
+			$attribs = KHelperArray::toString($link['attribs']);
+			$strHtml .= '	<link href="'.$link['href'].'" '
+				.$link['relType'].'="'.$link['relation'].'" '.$attribs.' />'.PHP_EOL;
 		}
-
-		// Generate stylesheet declarations
-		foreach ($data['style'] as $type => $content)
+		
+		// Generate style sheet links and declarations in FIFO order
+		foreach ($data['styles'] as $style) 
 		{
-			$strHtml .= '	<style type="'.$type.'">';
+			switch($style['type']) 
+			{
+				case 'linked':
+					$strHtml .= '	<link rel="stylesheet" href="'
+							.$style['src'].'" type="'.$style['mime'].'"';
+					if (!is_null($style['media'])){
+						$strHtml .= ' media="'.$style['media'].'" ';
+					}
+					if ($temp = KHelperArray::toString($style['attribs'])) {
+						$strHtml .= ' '.$temp;;
+					}
+					$strHtml .= ' />'.PHP_EOL;
+					break;			
+				case 'declared':
+					$strHtml .= '	<style type="'.$style['mime'].'">'.PHP_EOL;
 
-			// This is for full XHTML support.
-			if ($document->getMimeEncoding() == 'text/html' ) {
-				$strHtml .= '		<!--';
-			} else {
-				$strHtml .= '		<![CDATA[';
+					// This is for full XHTML support.
+					if ($document->getMimeEncoding() == 'text/html' ) {
+						$strHtml .= '		<!--';
+					} else {
+						$strHtml .= '		<![CDATA[';
+					}
+		
+					$strHtml .= $content;
+		
+					// See above note
+					if ($document->getMimeEncoding() == 'text/html' ) {
+						$strHtml .= '		-->'.PHP_EOL;
+					} else {
+						$strHtml .= '		]]>'.PHP_EOL;
+					}
+					$strHtml .= '	</style>'.PHP_EOL;
+					break;
 			}
-
-			$strHtml .= $content;
-
-			// See above note
-			if ($document->getMimeEncoding() == 'text/html' ) {
-				$strHtml .= '		-->';
-			} else {
-				$strHtml .= '		]]>';
-			}
-			$strHtml .= '	</style>';
 		}
 
-		// Generate script file links
-		foreach ($data['scripts'] as $strSrc => $strType) {
-			$strHtml .= '	<script type="'.$strType.'" src="'.$strSrc.'"></script>';
-		}
-
-		// Generate script declarations
-		foreach ($data['script'] as $type => $content)
+		// Generate script file links and declarations in FIFO order
+		foreach ($data['scripts'] as $script) 
 		{
-			$strHtml .= '	<script type="'.$type.'">';
-
-			// This is for full XHTML support.
-			if ($document->getMimeEncoding() != 'text/html' ) {
-				$strHtml .= '		<![CDATA[';
+			switch($script['type']) 
+			{
+				case 'linked':
+					$strHtml .= '	<script type="'.$script['mime']
+								.'" src="'.$script['src'].'"></script>'.PHP_EOL;
+					break;			
+				case 'declared':
+					$strHtml .= '	<script type="'.$script['mime'].'">'.PHP_EOL;
+	
+					// This is for full XHTML support.
+					if ($document->getMimeEncoding() != 'text/html' ) {
+						$strHtml .= '		<![CDATA[';
+					}
+		
+					$strHtml .= $script['content'];
+		
+					// See above note
+					if ($document->getMimeEncoding() != 'text/html' ) {
+						$strHtml .= '		// ]]>'.PHP_EOL;
+					}
+					$strHtml .= '	</script>'.PHP_EOL;
+					break;
 			}
-
-			$strHtml .= $content;
-
-			// See above note
-			if ($document->getMimeEncoding() != 'text/html' ) {
-				$strHtml .= '		// ]]>';
-			}
-			$strHtml .= '	</script>';
 		}
+
 
 		foreach($data['custom'] as $custom) {
 			$strHtml .= $custom;
