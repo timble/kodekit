@@ -15,4 +15,4 @@
  * @category	Koowa
  * @package     Koowa_Model
  */
-class KModelDefault extends KModelAbstract {}
+class KModelDefault extends KModelTable {}

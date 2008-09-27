@@ -78,6 +78,15 @@ class Koowa
     		case 'media' :
     			$url = JURI::root().'media/plg_koowa/';
     			break;
+    		case 'css' :
+    			$url = JURI::root().'media/plg_koowa/css/';
+    			break;
+    		case 'images' :
+    			$url = JURI::root().'media/plg_koowa/images/';
+    			break;
+    		case 'js' :
+    			$url = JURI::root().'media/plg_koowa/js/';
+    			break;	
     		default:
     			throw new KException('No url of type: '.$type);	
     			break;

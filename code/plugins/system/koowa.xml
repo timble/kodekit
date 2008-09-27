@@ -17,6 +17,7 @@
 	
 	<media destination="plg_koowa" folder="media">
 		<folder>swf</folder>
+		<folder>js</folder>
 	</media>
 
 	

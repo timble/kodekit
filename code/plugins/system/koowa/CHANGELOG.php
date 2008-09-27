@@ -20,8 +20,15 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-27 Johan Janssens
+ + Added KModelTable class
+ ^ Refactored state handling in KModelAbstract
+ 	- Renamed setDefaultStates function to getDefaultState
+ 	- Changed state store from JRegistry to KObject
+ + Added new koowa.js file
+ ! Still need to rework the model filter implementation
+ 
 2008-09-27 Mathias Verraes
- ^ Cleaned up KDocument, moved html-specific methods to KDocumentHtml, moved rendering logic to KDocumentHtmlRendererHead
  + Turned on KDocument 
  
 2008-09-26 Johan Janssens
