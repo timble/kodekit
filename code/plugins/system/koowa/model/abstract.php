@@ -318,7 +318,7 @@ abstract class KModelAbstract extends KObject
      */
     protected function _buildCountQuery()
     {
-        $query  = 'SELECT COUNT(*)'
+        $query  = 'SELECT COUNT(*) '
                 . $this->_buildQueryFields().' '
                 . $this->_buildQueryFrom().' '
                 . $this->_buildQueryJoins().' '

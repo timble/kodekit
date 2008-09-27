@@ -388,7 +388,7 @@ abstract class KDatabaseTableAbstract extends KObject
         $options['table']     = $this;
 		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
 
-		$component = $this->getClassName('suffix');
+		$component = $this->getClassName('prefix');
 		$row       = KInflector::singularize($this->getClassName('suffix'));
 		$app   	   = KFactory::get('lib.joomla.application')->getName();
 
