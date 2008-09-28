@@ -20,6 +20,10 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-09-28 Johan Janssens
+ + Added KViewAbstract::creatRoute function. Function allows for shorter routes 
+   in the views by adding missing information himself.
+ 
 2008-09-27 Johan Janssens
  + Added KModelTable class
  ^ Refactored state handling in KModelAbstract
