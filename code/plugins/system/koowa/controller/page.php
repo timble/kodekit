@@ -150,7 +150,7 @@ class KControllerPage extends KControllerAbstract
 		$component = $this->getClassName('prefix');
 		$model     = $this->getClassName('suffix');
 		$view	   = $model;
-
+		
 		$app   = KFactory::get('lib.joomla.application')->getName();
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
 		$table->update(array('enabled' => $enable), $cid);

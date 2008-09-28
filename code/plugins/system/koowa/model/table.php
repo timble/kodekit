@@ -14,12 +14,8 @@
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Model
- * @uses		KMixinClass
- * @uses		KInflector
- * @uses		KObject
- * @uses		KFactory
  */
-abstract class KModelTable extends KModelAbstract
+class KModelTable extends KModelAbstract
 {
 	/**
 	 * Database Connector
@@ -121,8 +117,9 @@ abstract class KModelTable extends KModelAbstract
         // Get the data if it doesn't already exist
         if (!isset($this->_list)) 
         {
+        	$query = $this->_buildQuery();
         	$this->_list = $this->getTable()->fetchAll(
-        		$this->_buildQuery(), 
+        		$query->__toString(), 
         		$this->getState('offset'), 
         		$this->getState('limit')
         	);
@@ -141,7 +138,8 @@ abstract class KModelTable extends KModelAbstract
         // Get the data if it doesn't already exist
         if (!isset($this->_total)) 
         {
-            $this->_db->select( $this->_buildCountQuery());
+            $query = $this->_buildCountQuery();
+        	$this->_db->select( $query );
 			$this->_total = $this->_db->loadResult();
         }
 
@@ -165,118 +163,87 @@ abstract class KModelTable extends KModelAbstract
     }
     
     /**
-     * Get the primary key's name
-     *
-     * @return	string
-     */
-    protected function _buildPrimaryKey() 
-    {
-    	$name       = $this->getClassName();
-        return $name['prefix'] .'_'. KInflector::singularize($name['suffix']) .'_id';
-    }
-
-    /**
      * Builds a generic SELECT query
      *
      * @return  string  SELECT query
      */
     protected function _buildQuery()
     {
-        $query  = 'SELECT '
-                . $this->_buildQueryFields().' '
-                . $this->_buildQueryFrom().' '
-                . $this->_buildQueryJoins().' '
-                . $this->_buildQueryWhere().' '
-                . $this->_buildQueryOrder();
-                
+    	$query = $this->_db->getQuery();
+    	$key   = $this->getTable()->getPrimaryKey();
+        $query->select(array('tbl.*',  'tbl.'.$key.' AS id'));
+        
+        $this->_buildQueryFields($query);
+        $this->_buildQueryFrom($query);
+        $this->_buildQueryJoins($query);
+        $this->_buildQueryWhere($query);
+        $this->_buildQueryOrder($query);
+               
 		return $query;
     }
     
  	/**
      * Builds a generic SELECT COUNT(*) query
-     *
-     * @return  string  SELECT query
      */
     protected function _buildCountQuery()
     {
-        $query  = 'SELECT COUNT(*) '
-                . $this->_buildQueryFrom().' '
-                . $this->_buildQueryJoins().' '
-                . $this->_buildQueryWhere();
-                
-		return $query;
+        $query = $this->_db->getQuery();
+        $query->count();
+       
+        $this->_buildQueryFrom($query);
+        $this->_buildQueryJoins($query);
+        $this->_buildQueryWhere($query);
+        
+        return $query;
     }
     
     /**
      * Builds SELECT fields list for the query
-     *
-     * @return  string  Fields list
      */
-    protected function _buildQueryFields()
+    protected function _buildQueryFields(KDatabaseQuery $query)
     {
-    	$keyname = $this->_buildPrimaryKey();
-        return "tbl.*, tbl.`$keyname` AS id";
-    }
+    	
+    } 
     
 	/**
      * Builds FROM tables list for the query
-     *
-     * @return  string  FROm tables list
      */
-    protected function _buildQueryFrom()
+    protected function _buildQueryFrom(KDatabaseQuery $query)
     {
-    	$name       = $this->getClassName();
-        $tablename  = $name['prefix'] .'_'. KInflector::tableize($name['suffix']);
-        return "FROM `#__$tablename` AS tbl";
+    	$name = $this->getTable()->getTableName();
+    	$query->from($name.' AS tbl');
     }
 
     /**
      * Builds LEFT JOINS clauses for the query
-     *
-     * @return  string  LEFT JOIN clauses
      */
-    protected function _buildQueryJoins()
+    protected function _buildQueryJoins(KDatabaseQuery $query)
     {
-        return '';
+        
     }
 
     /**
      * Builds a WHERE clause for the query
-     *
-     * @return  string  WHERE clause
      */
-    protected function _buildQueryWhere()
+    protected function _buildQueryWhere(KDatabaseQuery $query)
     {
-        // TODO a generic WHERE clause based on filters?
-        return 'WHERE 1';
+       
     }
 
     /**
      * Builds a generic ORDER BY clasue based on the model's state
-     *
-     * @return  string  ORDER BY clause or empty
      */
-    protected function _buildQueryOrder()
+    protected function _buildQueryOrder(KDatabaseQuery $query)
     {
-        static $orderby;
-
-        if (!isset($orderby))
-        {
-            // Assemble the clause pieces
-            $order      = $this->getState('order');
-            $order_Dir  = strtoupper($this->getState('order_Dir'));
-
-            // Assemble the clause
-            $orderby    = $order ? 'ORDER BY '.$order.' '.$order_Dir : '';
-        }
-
-        return $orderby;
+       	$order      = $this->getState('order');
+       	$direction  = strtoupper($this->getState('direction'));
+    	if($order) {
+    		$query->order($order, $direction);
+    	}
     }
     
  	/**
      * Get the default states
-     * 
-     * @return array The array with the default state information
      */
     public function getDefaultState()
     {

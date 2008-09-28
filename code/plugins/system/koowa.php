@@ -58,8 +58,8 @@ class plgSystemKoowa extends JPlugin
 		
 		$format = KInput::get('format', 'GET', 'word', 'word', 'html');
 			
-		$doc =& JFactory::getDocument();
-		$doc = KFactory::get('lib.koowa.document.'.$format, $options);
+		//$doc =& JFactory::getDocument();
+		//$doc = KFactory::get('lib.koowa.document.'.$format, $options);
 	}
 	
 	/**

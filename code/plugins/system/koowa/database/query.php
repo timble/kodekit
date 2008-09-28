@@ -238,7 +238,7 @@ class KDatabaseQuery extends KObject
 		$property = $this->_db->quoteName($property);
 
 		//Apply quotes to the propety value
-		if($constraint != 'IN') {
+		if($constraint != 'IN' && !is_numeric($value)) {
 			$value = $this->_db->Quote($value);
 		}
 		
@@ -301,8 +301,15 @@ class KDatabaseQuery extends KObject
 		
 		//Quote the identifiers
 		$columns = $this->_db->quoteName($columns);
+		
+		foreach($columns as $column) 
+		{
+			$this->_order[] = array(
+        		'column'  	=> $column,
+        		'direction' => $direction
+        	);
+		}
 
-		$this->_order[$direction] = array_unique( array_merge( $this->_order, $columns ));
 		return $this;
 	}
 
@@ -345,19 +352,17 @@ class KDatabaseQuery extends KObject
             foreach ($this->_join as $join) 
             {
             	$tmp = '';
-                // add the type (LEFT, INNER, etc)
-                if (! empty($join['type'])) {
+                
+            	if (! empty($join['type'])) {
                     $tmp .= $join['type'] . ' ';
                 }
-                // add the table name and condition
+               
                 $tmp .= 'JOIN ' . $join['table'];
                 $tmp .= ' ON ' . $join['condition'];
-                
-                // add to the list
+           
                 $list[] = $tmp;
             }
             
-            // add the list of all joins
             $query .= implode("\n", $list) . "\n";
 		}
 
@@ -372,15 +377,19 @@ class KDatabaseQuery extends KObject
 		if (!empty($this->_having)) {
 			$query .= ' HAVING '.implode(' , ', $this->_having)."\n";
 		}
-
-		if (!empty($this->_order['DESC'])) {
-			$query .= ' ORDER BY '.implode(' , ', $this->_order['DESC']). ' DESC '."\n";
-		}
 		
-		if (!empty($this->_order['ASC'])) {
-			$query .= ' ORDER BY '.implode(' , ', $this->_order['ASC']). ' DESC '."\n";
+		if (!empty($this->_order) ) 
+		{
+			$query .= 'ORDER BY ';
+			
+			$list = array();
+            foreach ($this->_order as $order) {
+            	$list[] = $order['column'].' '.$order['direction'];
+            }
+            
+            $query .= implode(' , ', $list) . "\n";
 		}
-
+	
 		if (isset($this->_limit)) {
 			$query .= ' LIMIT '.$this->_limit.' , '.$this->_offset."\n";
 		}

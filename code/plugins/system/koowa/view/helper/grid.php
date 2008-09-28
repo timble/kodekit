@@ -45,16 +45,15 @@ class KViewHelperGrid
 	 * @param	string	The order field for the column
 	 * @param	string	The current direction
 	 * @param	string	The selected ordering
-	 * @param	string	An optional task override
 	 */
-	public static function sort( $title, $order, $direction = 'asc', $selected = 0, $task = NULL )
+	public static function sort( $title, $order, $direction = 'asc', $selected = 0)
 	{
 		$direction	= strtolower( $direction );
 		$images		= array( 'sort_asc.png', 'sort_desc.png' );
 		$index		= intval( $direction == 'desc' );
 		$direction	= ($direction == 'desc') ? 'asc' : 'desc';
 
-		$html = '<a href="javascript:KTableOrdering(\''.$order.'\',\''.$direction.'\',\''.$task.'\');" title="'.JText::_( 'Click to sort this column' ).'">';
+		$html = '<a href="javascript:KTableOrdering(\''.$order.'\',\''.$direction.'\');" title="'.JText::_( 'Click to sort this column' ).'">';
 		$html .= JText::_( $title );
 		if ($order == $selected ) {
 			$html .= KViewHelper::_('image.template',  $images[$index], '/images/', NULL, NULL);
