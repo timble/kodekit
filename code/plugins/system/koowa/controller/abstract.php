@@ -295,7 +295,7 @@ abstract class KControllerAbstract extends KObject
 		if (empty( $application) )  {
 			$application = KFactory::get('lib.joomla.application')->getName();
 		}
-
+		
 		//Add the basepath to the configuration
 		$options['base_path'] = $this->_viewPath[0];
 		
@@ -307,7 +307,7 @@ abstract class KControllerAbstract extends KObject
                     ." $application, $component, $view, $format"
 			);
 		}
-
+			
 		return $view;
 	}
 
