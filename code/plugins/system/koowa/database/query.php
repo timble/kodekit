@@ -16,8 +16,6 @@
  * @category	Koowa
  * @package     Koowa_Database
  * @subpackage  Query
- * @uses        KObject
- * @uses        KFactory
  */
 class KDatabaseQuery extends KObject
 {
@@ -26,70 +24,70 @@ class KDatabaseQuery extends KObject
 	 *
 	 * @var array
 	 */
-	protected $_operation = '';
+	public $operation = '';
 	
 	/**
 	 * The columns
 	 *
 	 * @var array
 	 */
-	protected $_columns = array();
+	public $columns = array();
 	
 	/**
 	 * The from element
 	 *
 	 * @var array
 	 */
-	protected $_from = array();
+	public $from = array();
 
 	/**
 	 * The join element
 	 *
 	 * @var array
 	 */
-	protected $_join = array();
+	public $join = array();
 
 	/**
 	 * The where element
 	 *
 	 * @var array
 	 */
-	protected $_where = array();
+	public $where = array();
 
 	/**
 	 * The group element
 	 *
 	 * @var array
 	 */
-	protected $_group = array();
+	public $group = array();
 
 	/**
 	 * The having element
 	 *
 	 * @var array
 	 */
-	protected $_having = array();
+	public $having = array();
 
 	/**
 	 * The order element
 	 *
 	 * @var string
 	 */
-	protected $_order = array();
+	public $order = array();
 
 	/**
 	 * The limit element
 	 *
 	 * @var integer
 	 */
-	protected $_limit = null;
+	public $limit = null;
 
 	/**
 	 * The limit offset element
 	 *
 	 * @var integer
 	 */
-	protected $_offset = null;
+	public $offset = null;
 
 	/**
 	 * Database connector
@@ -145,8 +143,8 @@ class KDatabaseQuery extends KObject
 		//Quote the identifiers
 		$columns = $this->_db->quoteName($columns);
 
-		$this->_operation = 'SELECT';
-		$this->_columns   = array_unique( array_merge( $this->_columns, $columns ) );
+		$this->operation = 'SELECT';
+		$this->columns   = array_unique( array_merge( $this->columns, $columns ) );
 		return $this;
 	}
 	
@@ -157,8 +155,8 @@ class KDatabaseQuery extends KObject
 	 */
 	public function count()
 	{
-		$this->_operation = 'SELECT COUNT(*) ';
-		$this->_columns    = array();
+		$this->operation = 'SELECT COUNT(*) ';
+		$this->columns    = array();
 		return $this;
 	}
 	
@@ -169,7 +167,7 @@ class KDatabaseQuery extends KObject
 	 */
 	public function distinct()
 	{
-		$this->_operation = 'SELECT DISTINCT ';
+		$this->operation = 'SELECT DISTINCT ';
 		return $this;
 	}
 
@@ -189,7 +187,7 @@ class KDatabaseQuery extends KObject
 		//Quote the identifiers
 		$tables = $this->_db->quoteName($tables);
 		
-		$this->_from = array_unique( array_merge( $this->_from, $tables ) );
+		$this->from = array_unique( array_merge( $this->from, $tables ) );
 		return $this;
 	}
 	
@@ -213,7 +211,7 @@ class KDatabaseQuery extends KObject
 		$condition = $this->_db->quoteName($condition);
 		$columns   = $this->_db->quoteName($columns);
 	    	
-    	$this->_join[] = array(
+    	$this->join[] = array(
         	'type'  	=> $type,
         	'table' 	=> $table,
         	'condition' => $condition,
@@ -250,7 +248,7 @@ class KDatabaseQuery extends KObject
 		//Create the constraint
 		$where = $property.' '.$constraint.' '.$value;
 
-		$this->_where = array_unique( array_merge( $this->_where, array($where) ));
+		$this->where = array_unique( array_merge( $this->where, array($where) ));
 		return $this;
 	}
 
@@ -267,7 +265,7 @@ class KDatabaseQuery extends KObject
 		//Quote the identifiers
 		$columns = $this->_db->quoteName($columns);
 
-		$this->_group = array_unique( array_merge( $this->_group, $columns));
+		$this->group = array_unique( array_merge( $this->group, $columns));
 		return $this;
 	}
 
@@ -284,7 +282,7 @@ class KDatabaseQuery extends KObject
 		//Quote the identifiers
 		$columns = $this->_db->quoteName($columns);
 
-		$this->_having = array_unique( array_merge( $this->_having, $columns ));
+		$this->having = array_unique( array_merge( $this->having, $columns ));
 		return $this;
 	}
 
@@ -304,7 +302,7 @@ class KDatabaseQuery extends KObject
 		
 		foreach($columns as $column) 
 		{
-			$this->_order[] = array(
+			$this->order[] = array(
         		'column'  	=> $column,
         		'direction' => $direction
         	);
@@ -322,8 +320,8 @@ class KDatabaseQuery extends KObject
 	 */
 	public function limit( $limit, $offset = null )
 	{
-		$this->_limit  = $limit;
-		$this->_offset = $offset;
+		$this->limit  = $limit;
+		$this->offset = $offset;
 		return $this;
 	}
 
@@ -336,20 +334,20 @@ class KDatabaseQuery extends KObject
 	{
 		$query = '';
 		
-		$query .= $this->_operation."\n";
+		$query .= $this->operation."\n";
 
-		if (!empty($this->_columns)) {
-			$query .= implode(' , ', $this->_columns)."\n";
+		if (!empty($this->columns)) {
+			$query .= implode(' , ', $this->columns)."\n";
 		}
 
-		if (!empty($this->_from)) {
-			$query .= ' FROM '.implode(' , ', $this->_from)."\n";
+		if (!empty($this->from)) {
+			$query .= ' FROM '.implode(' , ', $this->from)."\n";
 		}
 		
-		if (!empty($this->_join))
+		if (!empty($this->join))
 		{
 			 $list = array();
-            foreach ($this->_join as $join) 
+            foreach ($this->join as $join) 
             {
             	$tmp = '';
                 
@@ -366,32 +364,32 @@ class KDatabaseQuery extends KObject
             $query .= implode("\n", $list) . "\n";
 		}
 
-		if (!empty($this->_where)) {
-			$query .= ' WHERE '.implode(' AND ', $this->_where)."\n";
+		if (!empty($this->where)) {
+			$query .= ' WHERE '.implode(' AND ', $this->where)."\n";
 		}
 
 		if (!empty($this->_group)) {
-			$query .= ' GROUP BY '.implode(' , ', $this->_group)."\n";
+			$query .= ' GROUP BY '.implode(' , ', $this->group)."\n";
 		}
 
 		if (!empty($this->_having)) {
-			$query .= ' HAVING '.implode(' , ', $this->_having)."\n";
+			$query .= ' HAVING '.implode(' , ', $this->having)."\n";
 		}
 		
-		if (!empty($this->_order) ) 
+		if (!empty($this->order) ) 
 		{
 			$query .= 'ORDER BY ';
 			
 			$list = array();
-            foreach ($this->_order as $order) {
+            foreach ($this->order as $order) {
             	$list[] = $order['column'].' '.$order['direction'];
             }
             
             $query .= implode(' , ', $list) . "\n";
 		}
 	
-		if (isset($this->_limit)) {
-			$query .= ' LIMIT '.$this->_limit.' , '.$this->_offset."\n";
+		if (isset($this->limit)) {
+			$query .= ' LIMIT '.$this->limit.' , '.$this->offset."\n";
 		}
 
 		return $query;
