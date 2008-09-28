@@ -117,9 +117,8 @@ class KModelTable extends KModelAbstract
         // Get the data if it doesn't already exist
         if (!isset($this->_list)) 
         {
-        	$query = $this->_buildQuery();
         	$this->_list = $this->getTable()->fetchAll(
-        		$query->__toString(), 
+        		$this->_buildQuery(), 
         		$this->getState('offset'), 
         		$this->getState('limit')
         	);
