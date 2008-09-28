@@ -183,7 +183,9 @@ abstract class KDocumentAbstract extends KObject
         $this->mixin(new KMixinClass($this, 'Document'));
 		
 		// Assign the classname with values from the config
-        $this->setClassName($options['name']);
+		if(isset($options['name'])) {
+        	$this->setClassName($options['name']);
+		}
 	}
 
 	/**
