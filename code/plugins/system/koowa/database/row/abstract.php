@@ -152,10 +152,6 @@ abstract class KDatabaseRowAbstract extends KObject
         	$this->_table->insert($this->getProperties());
         }
 
-         if($err = $this->_table->getError()) {
-            throw new KDatabaseRowException($this->getClassName('all').'::save() failed: '.$err);
-        }
-
         return $this;
     }
 
@@ -253,6 +249,19 @@ abstract class KDatabaseRowAbstract extends KObject
         }
 
         return $this;
+    }
+    
+    /**
+     * Check if the row contains valid data
+     * 
+     * By default, we only check if there's an id. The method can be overridden 
+     * to check data integrity etc
+     *
+     * @return 	boolean
+     */
+    public function isValid()
+    {
+    	return (bool) $this->id;
     }
 
 }
