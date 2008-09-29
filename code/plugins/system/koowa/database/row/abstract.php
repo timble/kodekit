@@ -141,10 +141,10 @@ abstract class KDatabaseRowAbstract extends KObject
     {
         $key = $this->_table->getPrimaryKey();
 
-        if($this->$key)
+        if($this->_data[$key])
         {
             $where = $this->_table->getDBO()->getQuery()
-            			->where($key, '=', $this->$key);
+            			->where($key, '=', $this->_data[$key]);
             $this->_table->update($this->getProperties(), $where);
         }
         else 

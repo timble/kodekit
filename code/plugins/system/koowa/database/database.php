@@ -336,17 +336,18 @@ class KDatabase extends KPatternProxy
 		$sql = 'INSERT INTO '.$this->quoteName('#__'.$table)
 			 . '('.implode(', ', $keys).') VALUES ('.implode(', ', $vals).')';
 
-		
 		//Create the arguments object
 		$args = new ArrayObject();
 		$args['table'] 		= $table;
+
 		$args['data'] 		= $data;	
 		$args['notifier']   = $this;
 		$args['operation'] 	= self::OPERATION_INSERT; 
-
+		
 		//Excute the insert operation
 		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) === true) {
 			$args['result'] = $this->execute($sql);
+			$args['insertid']	= $this->insertid();
 			$this->_commandChain->run('onAfterDatabaseExecute', $args);
 		}
 		

@@ -276,11 +276,11 @@ abstract class KDatabaseTableAbstract extends KObject
             $defaults = array();
         	foreach($this->getFields() as $name => $description) 
         	{
-        	  	if($name == $this->getPrimaryKey()) {
-        	  		$name = 'id';
+        	    $defaults[$name] = $description->default;
+        	    if($name == $this->getPrimaryKey()) {
+        	  		$defaults['id'] = $description->default;
         	  	}
         	  	
-        	    $defaults[$name] = $description->default;
             }
         }
     	return $defaults;
@@ -389,7 +389,7 @@ abstract class KDatabaseTableAbstract extends KObject
      */
     public function fetchRow($query = null, array $options = array())
     {
-       // fetch an empty row
+        // fetch an empty row
         $options['table']     = $this;
 		$options['base_path'] = array_key_exists('path', $options) ? $options['path'] : null;
 
