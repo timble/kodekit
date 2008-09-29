@@ -143,11 +143,11 @@ abstract class KViewAbstract extends KObject
                         'suffix'    => 'default'
                         ),
 			'template_rules' => array(
-						'@template' => '@loadTemplate',
-						'@text'	    => 'JText::_',
-						'@helper'   => '@loadHelper',
-						'@route'    => '@createRoute', 
-                        '@token'	=> 'KSecurityToken::render'
+						'@template('	=> '@loadTemplate(',
+						'@text('	 	=> 'JText::_(',
+						'@helper('   	=> '@loadHelper(',
+						'@route('    	=> '@createRoute(', 
+                        '@token('		=> 'KSecurityToken::render('
 						),
             'template_path' => null
         );
