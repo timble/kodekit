@@ -40,6 +40,7 @@ class KFilterInternalurl extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
+		// @todo
 		die('Not implemented:' .__METHOD__);
 	}
 }
