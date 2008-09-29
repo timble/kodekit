@@ -135,7 +135,7 @@ class KInflector
 	 * @param	string	Singular word
 	 * @param 	string	Plural word
 	 */
-	public function addWord($singular, $plural)
+	public static function addWord($singular, $plural)
 	{
 		self::$_cache['pluralized'][$singular]	= $plural;
 		self::$_cache['singularized'][$plural] 	= $singular;
