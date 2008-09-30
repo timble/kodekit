@@ -194,22 +194,21 @@ class KDatabaseQuery extends KObject
 	/**
      * Built the join clause of the query
      * 
-     * @param string 		$type  The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
-     * @param string 		$table The table name to join to.
-     * @param string 		$cond  Join on this condition.
+     * @param string 		$type  		The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
+     * @param string 		$table 		The table name to join to.
+     * @param string|array 	$condition  Join on this condition.
      * @param array|string 	$cols  The columns to select from the joined table.
      * @return object KDatabaseQuery
      */
     public function join($type, $table, $condition)
     {     
-		settype($columns, 'array'); //force to an array
+		settype($condition, 'array'); //force to an array
     	
 		$this->_prefix($table); //add a prefix to the table
     	
 		//Quote the identifiers
 		$table     = $this->_db->quoteName($table);
 		$condition = $this->_db->quoteName($condition);
-		$columns   = $this->_db->quoteName($columns);
 	    	
     	$this->join[] = array(
         	'type'  	=> $type,
@@ -346,7 +345,7 @@ class KDatabaseQuery extends KObject
 		
 		if (!empty($this->join))
 		{
-			 $list = array();
+			$joins = array();
             foreach ($this->join as $join) 
             {
             	$tmp = '';
@@ -356,12 +355,12 @@ class KDatabaseQuery extends KObject
                 }
                
                 $tmp .= 'JOIN ' . $join['table'];
-                $tmp .= ' ON ' . $join['condition'];
+                $tmp .= ' ON ' . implode(' AND ', $join['condition']);
            
-                $list[] = $tmp;
+                $joins[] = $tmp;
             }
             
-            $query .= implode("\n", $list) . "\n";
+            $query .= implode("\n", $joins) . "\n";
 		}
 
 		if (!empty($this->where)) {
