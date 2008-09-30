@@ -40,8 +40,8 @@ class KFilterInternalurl extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
-		// @todo
-		die('Not implemented:' .__METHOD__);
+		//TODO : internal url's should not only have path and query information
+		return filter_var($var, FILTER_SANITIZE_URL);
 	}
 }
 
