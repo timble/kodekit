@@ -171,6 +171,8 @@ class KFactory
 	
 		//Create the command chain and register the adapters
         self::$_chain = new KFactoryChain();
+        
+        //TODO : move the registration of the adapters out of the initialize
         self::registerAdapter(new KFactoryAdapterKoowa());
        	self::registerAdapter(new KFactoryAdapterJoomla());
         self::registerAdapter(new KFactoryAdapterComponent());

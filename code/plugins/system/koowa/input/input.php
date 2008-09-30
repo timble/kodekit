@@ -5,6 +5,7 @@
  * @package    	Koowa_Input
  * @copyright  	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
  * @license    	GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+ * @link 		http://www.koowa.org
  */
 
 /**
@@ -51,7 +52,7 @@ class KInput
 		// Is the hash in our list?
 		$hash = strtoupper($hash);
 		if(!in_array($hash, self::$_hashes)) {
-			throw new KRequestException('Unknown hash: '.$hash);
+			throw new KInputException('Unknown hash: '.$hash);
 		}		
 		
 		// return the default value if $var wasn't set in the request
