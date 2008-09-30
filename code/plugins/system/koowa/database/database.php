@@ -55,26 +55,6 @@ class KDatabase extends KPatternProxy
 	protected $_commandChain = null;
 	
 	/**
-     * Update operation
-     */
-    const OPERATION_UPDATE  =  1;
-	
-	/**
-     * Insert operation
-     */
-    const OPERATION_INSERT  =  2;
-	
-	/**
-     *  Delete operation
-     */
-    const OPERATION_DELETE  =  4;
-    
-    /**
-     *  Select operation
-     */
-    const OPERATION_SELECT  =  8;
-
-	/**
 	 * Constructor
 	 *
 	 * @param	object	$dbo 	The database object to proxy
@@ -303,12 +283,11 @@ class KDatabase extends KPatternProxy
 		$args['offset'] 	= $offset;	
 		$args['limit'] 		= $limit;	
 		$args['notifier']   = $this;
-		$args['operation'] 	= self::OPERATION_SELECT; 
 
 		//Excute the insert operation
-		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) === true) {
+		if($this->_commandChain->run('database.before.select', $args) === true) {
 			$args['result'] = $this->_object->setQuery( $sql, $offset, $limit );
-			$this->_commandChain->run('onAfterDatabaseExecute', $args);
+			$this->_commandChain->run('database.after.select', $args);
 		}
 		
 		return $args['result'];
@@ -339,16 +318,15 @@ class KDatabase extends KPatternProxy
 		//Create the arguments object
 		$args = new ArrayObject();
 		$args['table'] 		= $table;
-
 		$args['data'] 		= $data;	
 		$args['notifier']   = $this;
-		$args['operation'] 	= self::OPERATION_INSERT; 
+	
 		
 		//Excute the insert operation
-		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) === true) {
+		if($this->_commandChain->run('database.before.insert', $args) === true) {
 			$args['result'] = $this->execute($sql);
 			$args['insertid']	= $this->insertid();
-			$this->_commandChain->run('onAfterDatabaseExecute', $args);
+			$this->_commandChain->run('database.after.insert', $args);
 		}
 		
 		return $args['result'];
@@ -384,12 +362,11 @@ class KDatabase extends KPatternProxy
 		$args['data']  		= $data;	
 		$args['notifier']   = $this;
 		$args['where']   	= $where;
-		$args['operation'] 	= self::OPERATION_UPDATE;
-
+	
 		//Excute the update operation
-		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) ===  true) {
+		if($this->_commandChain->run('database.before.insert', $args) ===  true) {
 			$args['result'] = $this->execute($sql);
-			$this->_commandChain->run('onAfterDatabaseExecute', $args);
+			$this->_commandChain->run('database.after.insert', $args);
 		}
 		
         return $args['result'];
@@ -415,12 +392,11 @@ class KDatabase extends KPatternProxy
 		$args['table'] 		= $table;
 		$args['data']  		= null;	
 		$args['notifier']   = $this;
-		$args['operation']  = self::OPERATION_DELETE;
-		
+
 		//Excute the delete operation
-		if($this->_commandChain->run('onBeforeDatabaseExecute', $args) ===  true) {
+		if($this->_commandChain->run('database.before.delete', $args) ===  true) {
 			$args['result'] = $this->execute($sql);
-			$this->_commandChain->run('onAfterDatabaseExecute', $args);	
+			$this->_commandChain->run('database.after.delete', $args);	
 		}
 		
 		return $args['result'];

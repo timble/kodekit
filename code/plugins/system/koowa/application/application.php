@@ -67,11 +67,10 @@ class KApplication extends KPatternProxy
 		$args = new ArrayObject();
 		$args['notifier'] = $this;
 		$args['options']  = $options;
-		$args['task']     = 'initialise';
 	
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.initialise', $args) === true) {
 			$args['result'] = $this->getObject()->initialise($args['options']);
-			$this->_commandChain->run('onAfterApplicationExecute', $args);
+			$this->_commandChain->run('application.after.initialise', $args);
 		}
 
 		return $args['result'];
@@ -87,11 +86,10 @@ class KApplication extends KPatternProxy
 		//Create the arguments object
 		$args = new ArrayObject();
 		$args['notifier'] = $this;
-		$args['task']     = 'route';
 	
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.route', $args) === true) {
 			$args['result'] = $this->getObject()->route();
-			$this->_commandChain->run('onAfterApplicationExecute', $args);
+			$this->_commandChain->run('application.after.route', $args);
 		}
 
 		return $args['result'];
@@ -108,11 +106,10 @@ class KApplication extends KPatternProxy
 		$args = new ArrayObject();
 		$args['notifier']   = $this;
 		$args['component']  = $component;
-		$args['task']       = 'dispatch';
 		
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.dispatch', $args) === true) {
 			$args['result'] = $this->getObject()->dispatch($args['component']);
-			$this->_commandChain->run('onAfterApplicationExecute', $args);
+			$this->_commandChain->run('application.after.dispatch', $args);
 		}
 
 		return $args['result'];
@@ -128,11 +125,10 @@ class KApplication extends KPatternProxy
 		//Create the arguments object
 		$args = new ArrayObject();
 		$args['notifier']     = $this;
-		$args['task']        = 'render';
 		
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.render', $args) === true) {
 			$args['result'] = $this->getObject()->render();
-			$this->_commandChain->run('onAfterApplicationExecute', $args);
+			$this->_commandChain->run('application.after.render', $args);
 		}
 
 		return $args['result'];
@@ -152,7 +148,7 @@ class KApplication extends KPatternProxy
 		$args['code']		= $code;
 		$args['task']       = 'close';
 		
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.execute', $args) === true) {
 			$this->getObject()->close($args['code']);
 		}
 
@@ -178,7 +174,7 @@ class KApplication extends KPatternProxy
 		$args['message_type'] = $msgType;
 		$args['task']        = 'redirect';
 		
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.redirect', $args) === true) {
 			$this->getObject()->redirect($args['url'], $args['message'], $args['message_type']);
 		}
 
@@ -201,9 +197,9 @@ class KApplication extends KPatternProxy
 		$args['options']     = $options;
 		$args['task']        = 'login';
 		
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.login', $args) === true) {
 			$args['result'] = $this->getObject()->login($args['credentials'], $args['options']);
-			$this->_commandChain->run('onAfterApplicationExecute', $args);
+			$this->_commandChain->run('application.after.execute', $args);
 		}
 		
 		return $args['result'];
@@ -225,9 +221,9 @@ class KApplication extends KPatternProxy
 		$args['options']     = $options;
 		$args['task']        = 'logout';
 		
-		if($this->_commandChain->run('onBeforeApplicationExecute', $args) === true) {
+		if($this->_commandChain->run('application.before.logout', $args) === true) {
 			$args['result'] = $this->getObject()->logout($args['credentials']['userid'], $args['options']);
-			$this->_commandChain->run('onAfterApplicationExecute', $args);
+			$this->_commandChain->run('application.after.logout', $args);
 		}
 		
 		return $args['result'];
