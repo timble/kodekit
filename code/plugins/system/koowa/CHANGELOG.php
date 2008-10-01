@@ -19,6 +19,9 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+
+2008-10-01 Mathias Verraes
+ ^ KDatabaseQuery::join() now requires a query object instead of a string 
  
 2008-09-28 Johan Janssens
  + Added KViewAbstract::creatRoute function. Function allows for shorter routes 
