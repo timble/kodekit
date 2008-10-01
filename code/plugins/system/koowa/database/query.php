@@ -398,7 +398,7 @@ class KDatabaseQuery extends KObject
 	 */
 	protected function _prefix(&$data)
 	{	
-		//Prepend the table modifier
-		$data = '#__'.$data;
+		// Prepend the table modifier
+		$data = $this->_db->getPrefix().$data;
 	}
 }
