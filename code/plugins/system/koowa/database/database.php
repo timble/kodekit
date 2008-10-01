@@ -269,7 +269,7 @@ class KDatabase extends KPatternProxy
 	 */
 	public function getQuery()
 	{
-		$query = new KDatabaseQuery();
+		$query = new KDatabaseQuery(array('table_prefix' => $this->getPrefix()));
 		return $query;
 	}
 
@@ -330,10 +330,11 @@ class KDatabase extends KPatternProxy
 		$args['data'] 		= $data;	
 		$args['notifier']   = $this;
 		$args['operation']	= self::OPERATION_INSERT;
+		$args['insertid']	= null;
 		
 		//Excute the insert operation
 		if($this->_commandChain->run('database.before.insert', $args) === true) {
-			$args['result'] = $this->execute($sql);
+			$args['result']     = $this->execute($sql);
 			$args['insertid']	= $this->insertid();
 			$this->_commandChain->run('database.after.insert', $args);
 		}

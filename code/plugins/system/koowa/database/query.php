@@ -97,6 +97,13 @@ class KDatabaseQuery extends KObject
 	protected $_db;
 	
 	/**
+	 * Table prefix
+	 *
+	 * @var		object
+	 */
+	protected $_prefix = '';
+	
+	/**
 	 * Object constructor
 	 *
 	 * Can be overloaded/supplemented by the child class
@@ -105,13 +112,18 @@ class KDatabaseQuery extends KObject
 	 *                Recognized key values include 'dbo' (this list is not
 	 * 				  meant to be comprehensive).
 	 */
-	public function __construct( $options = array() )
+	public function __construct( array $options = array() )
 	{
         // Initialize the options
         $options  = $this->_initialize($options);
 
 		//set the model dbo
-		$this->_db = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
+		$this->_db    = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
+		
+		//set the table prefix
+		if(isset($options['table_prefix'])) {
+			$this->_prefix = $options['table_prefix'];
+		}
 	}
 
 
@@ -386,7 +398,7 @@ class KDatabaseQuery extends KObject
 		if (isset($this->limit)) {
 			$query .= ' LIMIT '.$this->limit.' , '.$this->offset."\n";
 		}
-
+		
 		return $query;
 	}
 	
@@ -399,6 +411,6 @@ class KDatabaseQuery extends KObject
 	protected function _prefix(&$data)
 	{	
 		// Prepend the table modifier
-		$data = $this->_db->getPrefix().$data;
+		$data = $this->_prefix.$data;
 	}
 }

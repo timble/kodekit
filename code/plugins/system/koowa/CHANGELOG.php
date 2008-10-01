@@ -19,6 +19,10 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+ 
+2008-10-01 Johan Janssens
+ ^ Fixed coupling between KDatabaseQuery and KDatabase prefix. Prefix can now be pushed
+   into the query object. This happens by default by a call to KDatabase::getQuery.
 
 2008-10-01 Mathias Verraes
  ^ KDatabaseQuery::join() now requires a query object instead of a string 
