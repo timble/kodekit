@@ -52,7 +52,7 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 		// Generate base tag (need to happen first)
 		$base = $document->getBase();
 		if(!empty($base)) {
-			$strHtml .= '	<base href="'.$document->getBase().'" />';
+			$strHtml .= '	<base href="'.$document->getBase().'" />'.PHP_EOL;
 		}
 
 		// Generate META tags (needs to happen as early as possible in the head)
@@ -61,21 +61,21 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 			foreach ($tag as $name => $content)
 			{
 				if ($type == 'http-equiv') {
-					$strHtml .= '	<meta http-equiv="'.$name.'" content="'.$content.'" />';
+					$strHtml .= '	<meta http-equiv="'.$name.'" content="'.$content.'" />'.PHP_EOL;
 				} elseif ($type == 'standard') {
-					$strHtml .= '	<meta name="'.$name.'" content="'.$content.'" />';
+					$strHtml .= '	<meta name="'.$name.'" content="'.$content.'" />'.PHP_EOL;
 				}
 			}
 		}
 
-		$strHtml .= '	<meta name="description" content="'.$document->getDescription().'" />';
-		$strHtml .= '	<meta name="generator" content="'.$document->getGenerator().'" />';
+		$strHtml .= '	<meta name="description" content="'.$document->getDescription().'" />'.PHP_EOL;
+		$strHtml .= '	<meta name="generator" content="'.$document->getGenerator().'" />'.PHP_EOL;
 
-		$strHtml .= '	<title>'.htmlspecialchars($document->getTitle()).'</title>';
+		$strHtml .= '	<title>'.htmlspecialchars($document->getTitle()).'</title>'.PHP_EOL;
 
 		// Generate link declarations
 		foreach ($document->_links as $link) {
-			$strHtml .= $link.' />';
+			$strHtml .= '	'.$link.' />'.PHP_EOL;
 		}
 
 		// Generate stylesheet links
@@ -88,7 +88,7 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 			if ($temp = KHelperArray::toString($strAttr['attribs'])) {
 				$strHtml .= ' '.$temp;;
 			}
-			$strHtml .= ' />';
+			$strHtml .= ' />'.PHP_EOL;
 		}
 
 		// Generate stylesheet declarations
@@ -111,12 +111,12 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 			} else {
 				$strHtml .= '		]]>';
 			}
-			$strHtml .= '	</style>';
+			$strHtml .= '	</style>'.PHP_EOL;
 		}
 
 		// Generate script file links
 		foreach ($data['scripts'] as $strSrc => $strType) {
-			$strHtml .= '	<script type="'.$strType.'" src="'.$strSrc.'"></script>';
+			$strHtml .= '	<script type="'.$strType.'" src="'.$strSrc.'"></script>'.PHP_EOL;
 		}
 
 		// Generate script declarations
@@ -135,11 +135,11 @@ class KDocumentHtmlRendererHead extends KDocumentRenderer
 			if ($document->getMimeEncoding() != 'text/html' ) {
 				$strHtml .= '		// ]]>';
 			}
-			$strHtml .= '	</script>';
+			$strHtml .= '	</script>'.PHP_EOL;
 		}
 
 		foreach($data['custom'] as $custom) {
-			$strHtml .= $custom;
+			$strHtml .= $custom.PHP_EOL;
 		}
 
 		return $strHtml;

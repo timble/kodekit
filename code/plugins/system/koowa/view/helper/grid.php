@@ -48,6 +48,9 @@ class KViewHelperGrid
 	 */
 	public static function sort( $title, $order, $direction = 'asc', $selected = 0)
 	{
+		//Load koowa javascript
+		KViewHelper::_('script', 'koowa.js', Koowa::getURL('js'));
+		
 		$direction	= strtolower( $direction );
 		$images		= array( 'sort_asc.png', 'sort_desc.png' );
 		$index		= intval( $direction == 'desc' );
