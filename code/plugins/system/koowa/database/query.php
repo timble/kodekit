@@ -206,20 +206,24 @@ class KDatabaseQuery extends KObject
 	/**
      * Built the join clause of the query
      * 
-     * @param 	string 			$type  		The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
-     * @param 	string 			$table 		The table name to join to.
-     * @param 	KDatabaseQuery 	$condition  Join on this condition.
-     * @return 	KDatabaseQuery
+     * @param string 		$type  		The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
+     * @param string 		$table 		The table name to join to.
+     * @param string|array 	$condition  Join on this condition.
+     * @param array|string 	$cols  The columns to select from the joined table.
+     * @return object KDatabaseQuery
      */
-    public function join($type, $table, KDatabaseQuery $condition)
+    public function join($type, $table, $condition)
     {     
+		settype($condition, 'array'); //force to an array
+    	
 		$this->_prefix($table); //add a prefix to the table
     	
 		//Quote the identifiers
 		$table     = $this->_db->quoteName($table);
+		$condition = $this->_db->quoteName($condition);
 	    	
     	$this->join[] = array(
-        	'type'  	=> strtoupper($type),
+        	'type'  	=> $type,
         	'table' 	=> $table,
         	'condition' => $condition,
         );
@@ -363,8 +367,8 @@ class KDatabaseQuery extends KObject
                 }
                
                 $tmp .= 'JOIN ' . $join['table'];
-           		$tmp .= ' ON ' . implode(' AND ', $join['condition']->where);
-                
+                $tmp .= ' ON ' . implode(' AND ', $join['condition']);
+           
                 $joins[] = $tmp;
             }
             
