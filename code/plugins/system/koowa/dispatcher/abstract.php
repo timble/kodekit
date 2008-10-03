@@ -91,7 +91,7 @@ abstract class KDispatcherAbstract extends KObject
         // Push the view back in the request in case a default view is used
         KInput::set('view', $view, 'get');
 
-		$path       = $this->_basePath.DS.'views';
+		$path = $this->_basePath.DS.'views';
 
 		//In case we are loading a child view set the view path accordingly
 		if(strpos($controller, '.') !== false)
