@@ -396,15 +396,20 @@ abstract class KDatabaseTableAbstract extends KObject
 		$component = $this->getClassName('prefix');
 		$row       = KInflector::singularize($this->getClassName('suffix'));
 		$app   	   = KFactory::get('lib.joomla.application')->getName();
-
+	
         //Get the data and push it in the row
 		if(isset($query))
         {
             if($query instanceof KDatabaseQuery) 
             {
-            	$query->select('*')
-            	->select($this->getPrimaryKey().' AS id ')
-            	->from($this->getTableName());	
+            	if(!count($query->columns)) {
+        			$query->select('*')
+        				->select($this->getPrimaryKey().' AS id ');
+        		}
+        		
+        		if(!count($query->from)) {
+        			$query->from($this->getTableName());
+        		}
             }
               
             $this->_db->select($query, 0, 1);
