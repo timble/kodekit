@@ -21,6 +21,7 @@ Legend:
  ! -> Note
 
 2008-10-04 Mathias Verraes
+ + Added KTemplateRule to allow for more powerful template transformations 
  + Added defaultVar param to javascript $get 
  
 2008-10-01 Johan Janssens

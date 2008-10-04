@@ -142,12 +142,10 @@ abstract class KViewAbstract extends KObject
                         'base'      => 'view',
                         'suffix'    => 'default'
                         ),
-			'template_rules' => array(
-						'@template('	=> '@loadTemplate(',
-						'@text('	 	=> 'JText::_(',
-						'@helper('   	=> '@loadHelper(',
-						'@route('    	=> '@createRoute(', 
-                        '@token('		=> 'KSecurityToken::render('
+			'template_rules' => array( 
+                        KFactory::get('lib.koowa.template.rule.shorttags'),
+                        KFactory::get('lib.koowa.template.rule.helpers'),
+                        KFactory::get('lib.koowa.template.rule.variables')
 						),
             'template_path' => null
         );
@@ -377,7 +375,7 @@ abstract class KViewAbstract extends KObject
 		$app = KFactory::get('lib.joomla.application');
 		
 		// validating option as a command, but sanitizing it to use as a filename
-		$option = KInput::get('option', 'request', 'cmd', 'filename');
+		$option = KInput::get('option', array('post', 'get'), 'cmd', 'filename');
 				
 		// set the alternative template search dir
 		$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->getClassName('suffix');

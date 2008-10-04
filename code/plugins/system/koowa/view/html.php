@@ -20,6 +20,14 @@
 
 class KViewHtml extends KViewAbstract
 {
+	public function __construct($options = array())
+	{
+		// add a rule to the template for KSecurityToken
+		KTemplateDefault::addRules(array(KFactory::get('lib.koowa.template.rule.tokens')));
+		
+		parent::__construct($options);
+	}
+	
 	public function display($tpl = null)
 	{
 		$prefix = $this->getClassName('prefix');
