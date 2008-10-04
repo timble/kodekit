@@ -29,7 +29,8 @@ class KFilterLang extends KObject implements KFilterInterface
 	{
 		$var = trim($var);
    	   	$pattern = '/^[a-z]{2}-[A-Z]{2}$/';
-    	return (is_string($var) && preg_match($pattern, $var) == 1);
+    	return (empty($var)) 
+    			|| (is_string($var) && preg_match($pattern, $var) == 1);
 	}
 	
 	/**
