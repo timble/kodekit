@@ -143,9 +143,9 @@ abstract class KViewAbstract extends KObject
                         'suffix'    => 'default'
                         ),
 			'template_rules' => array( 
-                        KFactory::get('lib.koowa.template.rule.shorttags'),
-                        KFactory::get('lib.koowa.template.rule.helpers'),
-                        KFactory::get('lib.koowa.template.rule.variables')
+                        KFactory::get('lib.koowa.template.rule.shorttag'),
+                        KFactory::get('lib.koowa.template.rule.token'),
+                        KFactory::get('lib.koowa.template.rule.variable')
 						),
             'template_path' => null
         );
