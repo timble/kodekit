@@ -247,12 +247,12 @@ class KDatabaseQuery extends KObject
 		$property = $this->_db->quoteName($property);
 
 		//Apply quotes to the propety value
-		if($constraint != 'IN' && !is_numeric($value)) {
+		if(!in_array($constraint, array('IN', 'NOT IN')) && !is_numeric($value)) {
 			$value = $this->_db->Quote($value);
 		}
 		
 		//Apply quotes to the propety value
-		if ( $constraint == 'IN' && is_array($value) )  {
+		if (in_array($constraint, array('IN', 'NOT IN')) && is_array($value) )  {
             $value = implode(',', $value);   
         }
 		
