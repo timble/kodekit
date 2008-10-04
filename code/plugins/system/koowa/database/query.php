@@ -239,9 +239,10 @@ class KDatabaseQuery extends KObject
 	 * @param   string 			The name of the property the constraint applies too
 	 * @param	string  		The comparison used for the constraint
 	 * @param	string|array	The value compared to the property value using the constraint
+	 * @param	string			The where condition, defaults to 'AND'
 	 * @return 	object 	KDatabaseQuery
 	 */
-	public function where( $property, $constraint, $value )
+	public function where( $property, $constraint, $value, $condition = 'AND' )
 	{
 		// Apply quotes to the property name
 		$property = $this->_db->quoteName($property);
@@ -255,9 +256,14 @@ class KDatabaseQuery extends KObject
 		if (in_array($constraint, array('IN', 'NOT IN')) && is_array($value) )  {
             $value = implode(',', $value);   
         }
-		
-		//Create the constraint
+        
+        //Create the constraint
 		$where = $property.' '.$constraint.' '.$value;
+        
+		//Prepend the condition
+        if(count($this->where)) {
+            $where = $condition .' '. $where;
+        }
 
 		$this->where = array_unique( array_merge( $this->where, array($where) ));
 		return $this;
@@ -376,7 +382,7 @@ class KDatabaseQuery extends KObject
 		}
 
 		if (!empty($this->where)) {
-			$query .= ' WHERE '.implode(' AND ', $this->where)."\n";
+			$query .= ' WHERE '.implode(' ', $this->where)."\n";
 		}
 
 		if (!empty($this->_group)) {
