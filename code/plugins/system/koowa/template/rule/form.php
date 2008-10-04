@@ -10,14 +10,15 @@
 */
 
 /**
- * Template rule to add security tokens
+ * Template rule to handle form html elements
+ *
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Template
  * @subpackage	Rule 
  */
-class KTemplateRuleTokens extends KObject implements KTemplateRuleInterface
+class KTemplateRuleForm extends KObject implements KTemplateRuleInterface
 {
 	/**
 	 * Add unique token field 

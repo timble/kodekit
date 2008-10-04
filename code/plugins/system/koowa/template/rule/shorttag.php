@@ -17,7 +17,7 @@
  * @package     Koowa_Template
  * @subpackage	Rule 
  */
-class KTemplateRuleShorttags extends KObject implements KTemplateRuleInterface
+class KTemplateRuleShorttag extends KObject implements KTemplateRuleInterface
 {
 	/**
 	 * Convert <?= ?> to long-form <?php echo ?> when needed

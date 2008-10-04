@@ -1,6 +1,6 @@
 <?php
 /**
-* @version      $Id$
+* @version      $Id: helpers.php 506 2008-10-04 14:40:02Z mathias $
 * @category		Koowa
 * @package      Koowa_Template
 * @subpackage	Rule
@@ -10,14 +10,14 @@
 */
 
 /**
- * Template rule for helper tags such as @template, @text, @helper, @route
+ * Template rule for tokens such as @template, @text, @helper, @route
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Template
  * @subpackage	Rule 
  */
-class KTemplateRuleHelpers extends KObject implements KTemplateRuleInterface
+class KTemplateRuleToken extends KObject implements KTemplateRuleInterface
 {
 	/**
 	 * Tags => replacement

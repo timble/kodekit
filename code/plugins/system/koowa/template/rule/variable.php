@@ -17,7 +17,7 @@
  * @package     Koowa_Template
  * @subpackage	Rule 
  */
-class KTemplateRuleVariables extends KObject implements KTemplateRuleInterface
+class KTemplateRuleVariable extends KObject implements KTemplateRuleInterface
 {
 	/**
 	 * Convert @$ to $this->
