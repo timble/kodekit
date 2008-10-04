@@ -19,6 +19,9 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+
+2008-10-04 Mathias Verraes
+ + Added defaultVar param to javascript $get 
  
 2008-10-01 Johan Janssens
  ^ Fixed coupling between KDatabaseQuery and KDatabase prefix. Prefix can now be pushed

@@ -18,13 +18,14 @@ function KTableOrdering( order, dir, task )
 	submitform( task );
 }
 
-function $get(key)
+function $get(key, defaultValue)
 {
 	if(key == "") return;
 	
-	 var uri   = location.search.parseUri();
-	 var query = uri['query'].parseQueryString();
-	 return query[key]; 
+	var uri   = location.search.parseUri();
+	var query = uri['query'].parseQueryString();
+	if($defined(query[key])) return query[key]
+		else return defaultValue;
 }	
 
 String.extend({
