@@ -22,7 +22,7 @@ class KViewAjax extends KViewAbstract
 	public function __construct($options = array())
 	{
 		// add a rule to the template for KSecurityToken
-		KTemplateDefault::addRules(array(KFactory::get('lib.koowa.template.rule.tokens')));
+		KTemplateDefault::addRules(array(KFactory::get('lib.koowa.template.rule.token')));
 		
 		parent::__construct($options);
 	}
