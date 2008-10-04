@@ -30,40 +30,65 @@ class KInput
 	 * 
 	 * @var	array
 	 */
-	protected static $_hashes = array('COOKIE', 'ENV', 'FILES', 'GET', 'POST', 'SERVER', 'REQUEST');
+	protected static $_hashes = array('COOKIE', 'ENV', 'FILES', 'GET', 'POST', 'SERVER');
 	
 	
 	/**
 	 * Get a validated and optionally sanitized variable from the request. 
 	 * 
+	 * When an array of hashes is supplied, the hash will be prioritized in the 
+	 * same order. Eg. array('post', 'get'). Use this (if you really have to) as
+	 * a safer equivalent for $_REQUEST
+	 * 
 	 * When no sanitizers are supplied, the same filters as the validators will 
 	 * be used.
 	 * 
-	 * @param	string	Variable name
-	 * @param 	string  Hash [GET|POST|COOKIE|ENV|SERVER|REQUEST]
-	 * @param 	mixed	Validator(s), can be a KFilterInterface object, or array of objects 
-	 * @param 	mixed	Sanitizer(s), can be a KFilterInterface object, or array of objects
-	 * @param 	mixed	Default value when the variable doesn't exist
+	 * @param	string			Variable name
+	 * @param 	string|array  	Hash(es) [COOKIE|ENV|FILES|GET|POST|SERVER]
+	 * @param 	mixed			Validator(s), can be a KFilterInterface object, or array of objects 
+	 * @param 	mixed			Sanitizer(s), can be a KFilterInterface object, or array of objects
+	 * @param 	mixed			Default value when the variable doesn't exist
 	 * @throws	KInputException	When the variable doesn't validate
-	 * @return 	mixed	(Sanitized) variable 
+	 * @return 	mixed			(Sanitized) variable 
 	 */
-	public static function get($var, $hash, $validators, $sanitizers = array(), $default = null)
+	public static function get($var, $hashes, $validators, $sanitizers = array(), $default = null)
 	{
+		settype($hashes, 'array');
+
 		// Is the hash in our list?
-		$hash = strtoupper($hash);
-		if(!in_array($hash, self::$_hashes)) {
-			throw new KInputException('Unknown hash: '.$hash);
-		}		
+		foreach($hashes as $k => $hash) 
+		{
+			$hashes[$k] = strtoupper($hash);
+			if(!in_array($hashes[$k], self::$_hashes)) {
+				throw new KInputException('Unknown hash: '.$hash);
+			}		
+		}
 		
-		// return the default value if $var wasn't set in the request
-		if(empty($GLOBALS['_'.$hash][$var])) {
+		// find $var in the hashes
+		$result = null;
+		foreach($hashes as $hash) 
+		{
+			if(isset($GLOBALS['_'.$hash][$var])) 
+			{
+				$result = $GLOBALS['_'.$hash][$var];
+				break;
+			}
+		}
+				
+		// return the default value if $var wasn't set in any of the hashes
+		if(is_null($result)) {
 			return $default; 	
 		}
 
-		$result = $GLOBALS['_'.$hash][$var];
-		$result = is_scalar($result) ? trim($GLOBALS['_'.$hash][$var]) : $result;
+		// trim values
+		if(is_scalar($result)) {
+			$result = trim($result);
+		} else {
+			array_walk_recursive($result, 'trim');
+		}
+		
 	
-		// turn $validators or $sanitizers is an object, turn it into an array of objects
+		// if $validators or $sanitizers is an object, turn it into an array of objects
 		// don't use settype because it will convert objects to arrays
 		$validators = is_array($validators) ? $validators : (empty($validators) ? array() : array($validators));
 		// if no sanitizers are given, use the validators
@@ -80,7 +105,7 @@ class KInput
 			if(!($filter instanceof KFilterInterface)) {
 				throw new KInputException('Invalid filter passed: '.get_class($filter));
 			}
-			
+	
 			if(!$filter->validate($result)) 
 			{
 				$filtername = KInflector::getPart(get_class($filter), -1);
@@ -111,7 +136,7 @@ class KInput
 	 *
 	 * @param 	mixed	Variable name
 	 * @param 	mixed	Variable value
-	 * @param 	string	Hash
+	 * @param 	string|array  	Hash(es) [COOKIE|ENV|FILES|GET|POST|SERVER]
 	 */
 	public static function set($var, $value, $hash) 
 	{
@@ -121,14 +146,11 @@ class KInput
 			throw new KInputException('Unknown hash: '.$hash);
 		}
 		
-		if('REQUEST' == $hash) {
-			throw new KInputException('Can\'t set _REQUEST values, use GET, POST or COOKIE');
-		}
-		
 		// add to hash in the superglobal
 		$GLOBALS['_'.$hash][$var] 		= $value;
 		
 		// Add to _REQUEST hash if original hash is get, post, or cookies
+		// Even though we are not using $_REQUEST, other extensions do 
 		if(in_array($hash, array('GET', 'POST', 'COOKIE'))) {
 			$GLOBALS['_REQUEST'][$var] 	= $value;
 		}

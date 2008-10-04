@@ -58,7 +58,7 @@ class KControllerPage extends KControllerAbstract
 		$data = $this->_getRequest('post');
 
 		// Get the id
-		$id	 = KInput::get('id', 'request', 'int');
+		$id	 = KInput::get('id', array('post', 'get'), 'int');
 
 		// Get the table object attached to the model
 		$component = $this->getClassName('prefix');

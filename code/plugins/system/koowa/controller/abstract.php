@@ -215,10 +215,9 @@ abstract class KControllerAbstract extends KObject
 	 */
 	public function display($cachable = false)
 	{
-		$option 	= KInput::get('option', 'request', 'cmd');
-		$viewName	= KInput::get('view', 'request', 'cmd', null, $this->getClassName('suffix') );
-		$viewLayout	= KInput::get('layout', 'request', 'cmd', null, 'default' );
-
+		$option 	= KInput::get('option', array('post', 'get'), 'cmd');
+		$viewName	= KInput::get('view', array('post', 'get'), 'cmd', null, $this->getClassName('suffix') );
+		$viewLayout	= KInput::get('layout', array('post', 'get'), 'cmd', null, 'default' );
 		$view       = $this->getView($viewName);
 
 		// Set the layout

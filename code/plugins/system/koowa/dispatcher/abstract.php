@@ -85,8 +85,8 @@ abstract class KDispatcherAbstract extends KObject
 		$defaultView = array_key_exists('default_view', $params) ? $params['default_view'] : $this->getClassName('suffix');
 
 		// Require specific controller if requested
-		$view		= KInput::get('view', 'request', 'cmd', null, $defaultView);
-        $controller = KInput::get('controller', 'request', 'cmd', null, $view);
+		$view		= KInput::get('view', array('post', 'get'), 'cmd', null, $defaultView);
+        $controller = KInput::get('controller', array('post', 'get'), 'cmd', null, $view);
         
         // Push the view back in the request in case a default view is used
         KInput::set('view', $view, 'get');
@@ -117,7 +117,7 @@ abstract class KDispatcherAbstract extends KObject
         $controller = $this->getController($controller, '', '', $options);
 
         // Perform the Request task
-		$controller->execute(KInput::get('task', 'request', 'cmd'));
+		$controller->execute(KInput::get('task', array('post', 'get'), 'cmd'));
 		
 		// Redirect if set by the controller
 		$controller->redirect();

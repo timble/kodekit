@@ -21,6 +21,8 @@ Legend:
  ! -> Note
 
 2008-10-04 Mathias Verraes
+ - Deprecated REQUEST hash, use KInput::get('varname', array('post', 'get'), $filter);
+ + KInput::get() accepts an array of hash names as the second parameter
  + Added KTemplateRule to allow for more powerful template transformations 
  + Added defaultVar param to javascript $get 
  
