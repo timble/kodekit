@@ -97,14 +97,6 @@ abstract class KDatabaseRowAbstract extends KObject
     }
 
     /**
-     * Returns the row's id
-     */
-    public function getId()
-    {
-    	return $this->{$this->_table->getPrimaryKey()};
-    }
-
-    /**
      * Returns the table object, or null if this is disconnected row
      *
      * @return object|null 	KDatabaseTableAbstract
@@ -149,7 +141,9 @@ abstract class KDatabaseRowAbstract extends KObject
         }
         else 
         {
-        	$this->_table->insert($this->getProperties());
+        	if($this->_table->insert($this->getProperties())) {
+        		$this->id = $this->_table->getDBO()->insertid();
+        	}
         }
 
         return $this;
@@ -196,7 +190,15 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function __get($columnName)
     {
-        return $this->_data[$columnName];
+        $data = null;
+    	
+    	if($columnName == 'id') {
+        	$data = $this->{$this->_table->getPrimaryKey()};
+        } else {
+        	$data = $this->_data[$columnName];
+        }
+    	
+    	return $data;
     }
 
     /**
@@ -209,7 +211,11 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function __set($columnName, $value)
     {
-        $this->_data[$columnName] = $value;
+    	if($columnName == 'id') {
+        	$this->{$this->_table->getPrimaryKey()} = $value;
+        } else {
+        	$this->_data[$columnName] = $value;
+        }
    }
 
 	/**
@@ -220,7 +226,11 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function __isset($columnName)
     {
-        return array_key_exists($columnName, $this->_data);
+        if($columnName == 'id') {
+        	$columnName = $this->{$this->_table->getPrimaryKey()};
+        }
+    	
+    	return array_key_exists($columnName, $this->_data);
     }
 
     /**

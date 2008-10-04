@@ -170,7 +170,7 @@ class KModelTable extends KModelAbstract
     {
     	$query = $this->_db->getQuery();
     	$key   = $this->getTable()->getPrimaryKey();
-        $query->select(array('tbl.*',  'tbl.'.$key.' AS id'));
+        $query->select(array('tbl.*'));
         
         $this->_buildQueryFields($query);
         $this->_buildQueryFrom($query);
