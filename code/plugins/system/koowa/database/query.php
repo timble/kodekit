@@ -88,6 +88,13 @@ class KDatabaseQuery extends KObject
 	 * @var integer
 	 */
 	public $offset = null;
+	
+	/**
+     * Data to bind into the query as key => value pairs.
+     * 
+     * @var array
+     */
+    protected $_bind = array();
 
 	/**
 	 * Database connector
@@ -234,8 +241,6 @@ class KDatabaseQuery extends KObject
 	/**
 	 * Built the where clause of the query
 	 *
-	 * Automatically quotes the data values. If constraint is 'IN' the data values will not be quoted.
-	 *
 	 * @param   string 			The name of the property the constraint applies too
 	 * @param	string  		The comparison used for the constraint
 	 * @param	string|array	The value compared to the property value using the constraint
@@ -244,27 +249,27 @@ class KDatabaseQuery extends KObject
 	 */
 	public function where( $property, $constraint, $value, $condition = 'AND' )
 	{
-		// Apply quotes to the property name
-		$property = $this->_db->quoteName($property);
-
-		//Apply quotes to the propety value
-		if(!in_array($constraint, array('IN', 'NOT IN')) && !is_numeric($value)) {
-			$value = $this->_db->Quote($value);
+		if(empty($property)) {
+			return $this;
 		}
 		
-		//Apply quotes to the propety value
-		if (in_array($constraint, array('IN', 'NOT IN')) && is_array($value) )  {
-            $value = implode(',', $value);   
-        }
-        
+		// Apply quotes to the property name
+		$property = $this->_db->quoteName($property);
+		
+		// Apply quotes to the value
+		$value    = $this->_db->quote($value);
+		if($constraint == 'LIKE') {
+			$value = addcslashes( $value, '%_' );
+		}
+
         //Create the constraint
 		$where = $property.' '.$constraint.' '.$value;
         
 		//Prepend the condition
         if(count($this->where)) {
             $where = $condition .' '. $where;
-        }
-
+        } 
+        
 		$this->where = array_unique( array_merge( $this->where, array($where) ));
 		return $this;
 	}
@@ -341,6 +346,63 @@ class KDatabaseQuery extends KObject
 		$this->offset = $offset;
 		return $this;
 	}
+	
+	/**
+     * Adds data to bind into the query.
+     * 
+     * @param 	mixed 	$key The replacement key in the query.  If this is an
+     * 						 array or object, the $val parameter is ignored, 
+     * 						 and all the key-value pairs in the array (or all 
+     *   					 properties of the object) are added to the bind.
+     * @param 	mixed 	$val The value to use for the replacement key.
+     * @return object KDatabaseQuery
+     */
+    public function bind($key, $val = null)
+    {
+        if (is_array($key)) {
+            $this->_bind = array_merge($this->_bind, $key);
+        } elseif (is_object($key)) {
+            $this->_bind = array_merge((array) $this->_bind, $key);
+        } else {
+            $this->_bind[$key] = $val;
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Unsets bound data.
+     * 
+     * @param 	mixed 	$spec 	The key to unset.  If a string, unsets that one
+     * 							bound value; if an array, unsets the list of values; 
+     * 							if empty, unsets all bound values (the default).
+     * @return object KDatabaseQuery
+     */
+    public function unbind($spec = null)
+    {
+        if (empty($spec)) {
+            $this->_bind = array();
+        } else {
+            settype($spec, 'array');
+            foreach ($spec as $key) {
+                unset($this->_bind[$key]);
+            }
+        }
+        
+        return $this;
+    }
+
+	/*
+	 * Callback for array_walk to prefix elements of array with given 
+	 * prefix
+	 * 
+	 * @param string $data 	The data to be prefixed
+	 */
+	protected function _prefix(&$data)
+	{	
+		// Prepend the table modifier
+		$data = $this->_prefix.$data;
+	}
 
 	/**
 	 * Render the query to a string
@@ -410,17 +472,5 @@ class KDatabaseQuery extends KObject
 		}
 		
 		return $query;
-	}
-	
-	/*
-	 * Callback for array_walk to prefix elements of array with given 
-	 * prefix
-	 * 
-	 * @param string $data 	The data to be prefixed
-	 */
-	protected function _prefix(&$data)
-	{	
-		// Prepend the table modifier
-		$data = $this->_prefix.$data;
 	}
 }

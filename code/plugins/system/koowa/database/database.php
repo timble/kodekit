@@ -629,6 +629,40 @@ class KDatabase extends KPatternProxy
     	return $this->getObject()->getErrorMsg();
     }
     
+    /**
+     * Safely quotes a value for an SQL statement.
+     * 
+     * If an array is passed as the value, the array values are quoted
+     * and then returned as a comma-separated string; this is useful 
+     * for generating IN() lists.
+     * 
+     * @param 	mixed 	$value 	The value to quote.
+     * @param	boolean	$escae	Default true to escape string, false to 
+     * 							leave the string unchanged
+     * 
+     * @return string An SQL-safe quoted value (or a string of separated-
+     * 				  and-quoted values).
+     */
+    public function quote($value, $escape = true)
+    {
+        if (is_array($value)) 
+        {
+            // quote array values, not keys, then combine with commas.
+            foreach ($value as $k => $v) {
+                $value[$k] = $this->quote($v, $escape);
+            }
+            return implode(', ', $val);
+        } 
+        else 
+        {
+        	if(!is_numeric($value)) {
+        		return $this->getObject()->quote($value, $escape);
+        	}
+        	
+        	return $value;
+        }
+    }
+    
    	/**
      * Quotes a single identifier name (table, table alias, table column, 
      * index, sequence).  Ignores empty values.
