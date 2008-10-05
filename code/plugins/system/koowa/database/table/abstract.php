@@ -470,10 +470,8 @@ abstract class KDatabaseTableAbstract extends KObject
 			//Create where statement
 			if (count($rows))
 			{
-            	$rows = "'".implode("','", $rows)."'";
-
             	$where = $this->_db->getQuery()
-            		->where($this->getPrimaryKey(), 'IN', '( '.$rows.' )');
+            		->where($this->getPrimaryKey(), 'IN', $rows);
 			}
 		}
 
@@ -501,13 +499,10 @@ abstract class KDatabaseTableAbstract extends KObject
 			$rows = (array) $where;
 
 			//Create where statement
-			if (count($rows))
+			if (count($rows)) 
 			{
-            	// Is the primary key an integer?
-            	$rows = "'".implode("','", $rows)."'";
-
             	$where = $this->_db->getQuery()
-            		->where($this->getPrimaryKey(), 'IN', '( '.$rows.' )');
+            		->where($this->getPrimaryKey(), 'IN', $rows);
 			}
 		}
 

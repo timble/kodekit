@@ -262,7 +262,11 @@ class KDatabaseQuery extends KObject
 			$value = addcslashes( $value, '%_' );
 		}
 
-        //Create the constraint
+       	//Create the where clause
+        if(in_array($constraint, array('IN', 'NOT IN'))) {
+        	$value = ' ( '.$value. ' ) ';
+        }
+		
 		$where = $property.' '.$constraint.' '.$value;
         
 		//Prepend the condition
