@@ -115,8 +115,35 @@ abstract class KPatternProxy extends KObject
 	 */
 	public function __call($method, array $arguments)
 	{
-		if(method_exists($this->getObject(), $method)) {
-			return call_user_func_array(array($this->getObject(), $method), $arguments);
+		$object = $this->getObject();
+		if(method_exists($object, $method)) 
+		{
+ 			$result = null;
+			
+			// Call_user_func_array is ~3 times slower than direct method calls. 
+ 		    switch(count($arguments)) 
+ 		    { 
+ 		    	case 0 :
+ 		    		$result = $object->$method();
+ 		    		break;
+ 		    	case 1 : 
+ 	              	$result = $object->$method($arguments[0]); 
+ 		           	break; 
+ 	           	case 2: 
+ 	               	$result = $object->$method($arguments[0], $arguments[1]); 
+ 		           	break; 
+ 		      	case 3: 
+ 	              	$result = $object->$method($arguments[0], $arguments[1], $arguments[2]); 
+ 	               	break; 
+ 	           	case 4: 
+ 	               	$result = $object->$method($arguments[0], $arguments[1], $arguments[2], $arguments[3]); 
+ 		            break; 
+ 	           	default: 
+ 	             	// Resort to using call_user_func_array for many segments 
+ 		            $result = call_user_func_array(array($object, $method), $arguments);                               
+ 	         } 
+ 	         
+ 	         return $result;
 		}
 	
 		return parent::__call($method, $arguments);
