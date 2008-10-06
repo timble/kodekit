@@ -403,19 +403,18 @@ abstract class KDatabaseTableAbstract extends KObject
             if($query instanceof KDatabaseQuery) 
             {
             	if(!count($query->columns)) {
-        			$query->select('*')
-        				->select($this->getPrimaryKey().' AS id ');
+        			$query->select('*');
         		}
         		
         		if(!count($query->from)) {
         			$query->from($this->getTableName());
         		}
             }
-              
+               
             $this->_db->select($query, 0, 1);
             $options['data'] = (array) $this->_db->loadAssoc();
         }
-           
+        
         $row = KFactory::tmp($app.'::com.'.$component.'.row.'.$row, $options); 
         return $row;
     }

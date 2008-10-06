@@ -191,9 +191,9 @@ abstract class KDatabaseRowAbstract extends KObject
     public function __get($columnName)
     {
         $data = null;
-    	
+        
     	if($columnName == 'id') {
-        	$data = $this->{$this->_table->getPrimaryKey()};
+        	$data = $this->_data[$this->_table->getPrimaryKey()];
         } else {
         	$data = $this->_data[$columnName];
         }
@@ -212,7 +212,7 @@ abstract class KDatabaseRowAbstract extends KObject
     public function __set($columnName, $value)
     {
     	if($columnName == 'id') {
-        	$this->{$this->_table->getPrimaryKey()} = $value;
+        	$this->_data[$this->_table->getPrimaryKey()] = $value;
         } else {
         	$this->_data[$columnName] = $value;
         }
@@ -227,7 +227,7 @@ abstract class KDatabaseRowAbstract extends KObject
     public function __isset($columnName)
     {
         if($columnName == 'id') {
-        	$columnName = $this->{$this->_table->getPrimaryKey()};
+        	$columnName = $this->_data[$this->_table->getPrimaryKey()];
         }
     	
     	return array_key_exists($columnName, $this->_data);
