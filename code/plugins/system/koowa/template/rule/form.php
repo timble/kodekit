@@ -12,11 +12,11 @@
 /**
  * Template rule to handle form html elements
  *
- *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
  * @package     Koowa_Template
  * @subpackage	Rule 
+ * @uses		KSecurityToken
  */
 class KTemplateRuleForm extends KObject implements KTemplateRuleInterface
 {
@@ -27,14 +27,15 @@ class KTemplateRuleForm extends KObject implements KTemplateRuleInterface
 	 */
 	public function parse(&$text) 
 	{		 
-		// TODO don't add the field when method='get'
-		// TODO add support for <?=@disable_token 
-		 
-        if(strpos($text, '</form>') && !strpos($text, 'KSecurityToken')) 
+		$contains_form 	= strpos($text, '</form>');
+		$is_get			= preg_match('/method=[\'"]get[\'"]/', $text);
+		$has_token		= strpos($text, 'KSecurityToken');
+				 
+        if( $contains_form && !$is_get && !$has_token) 
         {
         	$text = str_replace(
         		'</form>', 
-        		'<?php echo KSecurityToken::render()?>'.PHP_EOL.'</form>', 
+        		KSecurityToken::render().PHP_EOL.'</form>', 
         		$text
         	);
         }
