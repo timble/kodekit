@@ -65,7 +65,7 @@ class KDocumentHtmlRendererModule extends KDocumentRenderer
 		$contents = '';
 		if ($mod_params->get('cache', 0) && $conf->getValue( 'config.caching' ))
 		{
-			$cache = KFactory::get('lib.joomla.cache', array($module->module));
+			$cache = KFactory::tmp('lib.joomla.cache', array($module->module));
 
 			$cache->setLifeTime( $mod_params->get( 'cache_time', $conf->getValue( 'config.cachetime' ) * 60 ) );
 			$cache->setCacheValidation(true);

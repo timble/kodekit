@@ -167,7 +167,7 @@ class KFactory
 		self::$_initialized = true;
 	
 		//Created the object container
-		self::$_container    = new ArrayObject();
+		self::$_container = new ArrayObject();
 	
 		//Create the command chain and register the adapters
         self::$_chain = new KFactoryChain();
