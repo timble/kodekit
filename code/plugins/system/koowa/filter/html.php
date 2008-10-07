@@ -40,14 +40,14 @@ class KFilterHtml extends KObject implements KFilterInterface
 	 *
 	 * @var boolean
 	 */
-	protected $_tagsMethod = false;
+	protected $_tagsMethod = true;
 	
 	/**
 	 * If false, use whiteList method, if true use blackList method
 	 *
 	 * @var boolean
 	 */
-	protected $_attrMethod = false;
+	protected $_attrMethod = true;
 
 	/**
 	 * If true, only auto clean essentials, if false allow clean blacklisted tags/attr

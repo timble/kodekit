@@ -28,7 +28,10 @@ class KFilterString extends KObject implements KFilterInterface
 	 */
 	public function validate($var)
 	{
-		return is_scalar($var);
+		$options = array('tag_method' => false, 'attribute_method' => false);
+		$html = KFactory::tmp('lib.koowa.filter.html', $options);
+		
+		return $html->validate($var);
 	}
 	
 	/**
@@ -39,7 +42,10 @@ class KFilterString extends KObject implements KFilterInterface
 	 */
 	public function sanitize($var)
 	{
-		return (string) $var;
+		$options = array('tag_method' => false, 'attribute_method' => false);
+		$html = KFactory::tmp('lib.koowa.filter.html', $options);
+		
+		return (string) $html->sanitize($var);
 	}
 }
 
