@@ -230,7 +230,7 @@ class KDatabaseQuery extends KObject
 		$condition = $this->_db->quoteName($condition);
 	    	
     	$this->join[] = array(
-        	'type'  	=> $type,
+        	'type'  	=> strtoupper($type),
         	'table' 	=> $table,
         	'condition' => $condition,
         );
@@ -417,14 +417,14 @@ class KDatabaseQuery extends KObject
 	{
 		$query = '';
 		
-		$query .= $this->operation."\n";
+		$query .= $this->operation.PHP_EOL;
 
 		if (!empty($this->columns)) {
-			$query .= implode(' , ', $this->columns)."\n";
+			$query .= implode(' , ', $this->columns).PHP_EOL;
 		}
 
 		if (!empty($this->from)) {
-			$query .= ' FROM '.implode(' , ', $this->from)."\n";
+			$query .= ' FROM '.implode(' , ', $this->from).PHP_EOL;
 		}
 		
 		if (!empty($this->join))
@@ -444,19 +444,19 @@ class KDatabaseQuery extends KObject
                 $joins[] = $tmp;
             }
             
-            $query .= implode("\n", $joins) . "\n";
+            $query .= implode(PHP_EOL, $joins) .PHP_EOL;
 		}
 
 		if (!empty($this->where)) {
-			$query .= ' WHERE '.implode(' ', $this->where)."\n";
+			$query .= ' WHERE '.implode(' ', $this->where).PHP_EOL;
 		}
 
 		if (!empty($this->_group)) {
-			$query .= ' GROUP BY '.implode(' , ', $this->group)."\n";
+			$query .= ' GROUP BY '.implode(' , ', $this->group).PHP_EOL;
 		}
 
 		if (!empty($this->_having)) {
-			$query .= ' HAVING '.implode(' , ', $this->having)."\n";
+			$query .= ' HAVING '.implode(' , ', $this->having).PHP_EOL;
 		}
 		
 		if (!empty($this->order) ) 
@@ -468,11 +468,11 @@ class KDatabaseQuery extends KObject
             	$list[] = $order['column'].' '.$order['direction'];
             }
             
-            $query .= implode(' , ', $list) . "\n";
+            $query .= implode(' , ', $list) . PHP_EOL;
 		}
 	
 		if (isset($this->limit)) {
-			$query .= ' LIMIT '.$this->limit.' , '.$this->offset."\n";
+			$query .= ' LIMIT '.$this->limit.' , '.$this->offset.PHP_EOL;
 		}
 		
 		return $query;

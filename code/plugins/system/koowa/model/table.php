@@ -23,7 +23,14 @@ class KModelTable extends KModelAbstract
 	 * @var object
 	 */
 	protected $_db;
-
+	
+	/**
+	 * Table class (APP::com.COMPONENT.table.TABLENAME)
+	 *
+	 * @var	string
+	 */
+	protected $_tableClass;
+	
 	/**
 	 * Constructor
      *
@@ -35,6 +42,17 @@ class KModelTable extends KModelAbstract
 		$this->_db = isset($options['dbo']) ? $options['dbo'] : KFactory::get('lib.joomla.database');
 		
 		parent::__construct($options);
+		
+		// set the table associated to the model
+		if(isset($options['tableClass'])) {
+			$this->_tableClass = $options['tableClass'];
+		} else
+		{
+			$table 			= KInflector::tableize($this->getClassName('suffix'));
+			$component		= $this->getClassName('prefix');
+			$application 	= KFactory::get('lib.joomla.application')->getName();
+			$this->_tableClass = $application.'::com.'.$component.'.table.'.$table;
+		}
 	}
 
 	/**
@@ -61,35 +79,12 @@ class KModelTable extends KModelAbstract
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * This function overrides the default model behavior and sets the table
-	 * prefix based on the model prefix.
-	 *
-	 * @param	string	$table 			The name of the table. Optional, defaults to the class name.
-	 * @param	string	$component		The name of the component. Optional.
-	 * @param	string	$application	The name of the application. Optional.
-	 * @param	array	$opations		Options array for view. Optional.
-	 * @return	object	The table
+	 * @param	array	$operations		Options array for view. Optional.
+	 * @return	object	The table object
 	 */
-	public function getTable($table = '', $component = '', $application = '', array $options = array())
+	public function getTable(array $options = array())
 	{
-		if (empty($table)) {
-			$table = KInflector::tableize($this->getClassName('suffix'));
-		}
-	
-		if ( empty( $component ) ) {
-			$component = $this->getClassName('prefix');
-		}
-		
-		if (empty( $application) )  {
-			$application = KFactory::get('lib.joomla.application')->getName();
-		}
-
-		//Make sure we are returning a DBO object
-		if (!array_key_exists('dbo', $options))  {
-			$options['dbo'] = $this->getDBO();
-		}
-		
-		return KFactory::get($application.'::com.'.$component.'.table.'.$table, $options);
+		return KFactory::get($this->_tableClass, $options);
 	}
 
     /**
@@ -255,7 +250,7 @@ class KModelTable extends KModelAbstract
         $state['order']      = $app->getUserStateFromRequest($ns.'filter_order', 'filter_order', '', 'cmd');
         $state['direction']  = $app->getUserStateFromRequest($ns.'filter_direction', 'filter_direction', 'ASC', 'word');
         $state['filter']     = $app->getUserStateFromRequest($ns.'filter', 'filter', '', 'string');
-        $state['id']         = KInput::get('id', array('post', 'get'), 'raw'); //TODO fix this filter
+        $state['id']         = KInput::get('id', array('post', 'get'), 'raw', 'int');
          
   		return $state;
     }

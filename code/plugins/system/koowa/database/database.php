@@ -84,11 +84,10 @@ class KDatabase extends KPatternProxy
 	 */
 	public function setQuery($sql, $offset = 0, $limit = 0, $prefix = '#__')
 	{
-		$result = false;
+		$result 	= false;
+		$operation 	= preg_split('/\s/', trim($sql), 2,  PREG_SPLIT_NO_EMPTY);
 
-		$query  = explode(' ', trim($sql));
-
-		switch( strtoupper($query[0]))
+		switch(strtoupper($operation[0]))
 		{
 			case 'INSERT' :
 			{
@@ -285,7 +284,7 @@ class KDatabase extends KPatternProxy
      */
 	public function select($sql, $offset = 0, $limit = 0)
 	{
-		//Create the arguments object
+		// Create the arguments object
 		$args = new ArrayObject();
 		$args['sql'] 		= $sql;
 		$args['offset'] 	= $offset;	
@@ -293,12 +292,12 @@ class KDatabase extends KPatternProxy
 		$args['notifier']   = $this;
 		$args['operation']	= self::OPERATION_SELECT;
 
-		//Excute the insert operation
+		// Excute the insert operation
 		if($this->_commandChain->run('database.before.select', $args) === true) {
 			$args['result'] = $this->_object->setQuery( $sql, $offset, $limit );
 			$this->_commandChain->run('database.after.select', $args);
 		}
-		
+
 		return $args['result'];
 	}
 
@@ -499,7 +498,7 @@ class KDatabase extends KPatternProxy
 			
 				$this->select( 'SHOW FIELDS FROM ' . $this->quoteName($table));
 				$fields = $this->loadObjectList();
-			
+				
 				foreach ($fields as $field) {
 					$this->_tables_cache[$tblval][$field->Field] = $field;
 				}

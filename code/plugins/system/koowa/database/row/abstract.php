@@ -178,7 +178,9 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function toArray()
     {
-        return $this->_data;
+        $array = $this->_data;
+        $array['id'] = $this->id;
+        return $array;
     }
 
 	/**
