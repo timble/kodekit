@@ -35,24 +35,24 @@ abstract class KViewAbstract extends KObject
 	protected $_layout = 'default';
 
 	/**
-	* The set of search directories for templatex
-	*
-	* @var array
-	*/
+	 * The set of search directories for templatex
+	 *
+	 * @var array
+	 */
 	protected $_templatePath = array();
 
 	/**
-	* The name of the default template source file.
-	*
-	* @var string
-	*/
+	 * The name of the default template source file.
+	 *
+	 * @var string
+	 */
 	protected $_template;
 
 	/**
-	* The output of the template script.
-	*
-	* @var string
-	*/
+	 * The output of the template script.
+	 *
+	 * @var string
+	 */
 	protected $_output = null;
 
 	/**
@@ -61,6 +61,13 @@ abstract class KViewAbstract extends KObject
      * @var string
      */
     protected $_escape;
+    
+    /**
+	 * The document object
+	 *
+	 * @var object
+	 */
+	protected $_document;
 
 	/**
 	 * Constructor
@@ -91,9 +98,6 @@ abstract class KViewAbstract extends KObject
 			$this->_basePath	= JPATH_COMPONENT.DS.'views'.DS.$this->getClassName('suffix');
 		}
 
-		// Set a base path for use by the view
-		$this->assign('baseurl',	$options['base_url']);
-
 		// set the default template search path
 		if ($options['template_path']) {
 			// user-defined dirs
@@ -101,16 +105,16 @@ abstract class KViewAbstract extends KObject
 		} else {
 			$this->setTemplatePath($this->_basePath.DS.'tmpl');
 		}
+		
+		// assign the document object
+		if ($options['document']) {
+			$this->_document = $options['document'];
+		} else {
+			$this->_document = KFactory::get('lib.joomla.document');
+		}
 
 		// set the layout
 		$this->setLayout($options['layout']);
-
-		// assign the document object
-		if ($options['document']) {
-			$this->assignRef('document', $options['document']);
-		} else {
-			$this->assignRef('document', KFactory::get('lib.joomla.document'));
-		}
 
 		//Register the view stream wrapper
 		KTemplateDefault::register();
@@ -175,11 +179,11 @@ abstract class KViewAbstract extends KObject
 	* an object, an associative array, or a single value by name.
 	*
 	* You are not allowed to set variables that begin with an underscore;
-	* these are either private properties for JView or private variables
+	* these are either private properties for KView or private variables
 	* within the template script itself.
 	*
 	* <code>
-	* $view = new JView();
+	* $view = new KViewDefault();
 	*
 	* // assign directly
 	* $view->var1 = 'something';
@@ -201,7 +205,7 @@ abstract class KViewAbstract extends KObject
 	*
 	* </code>
 	*
-	* @return bool True on success, false on failure.
+	* @return object KViewAbstract
 	*/
 	public function assign()
 	{
@@ -219,7 +223,7 @@ abstract class KViewAbstract extends KObject
 					$this->$key = $val;
 				}
 			}
-			return true;
+			return $this;
 		}
 
 		// assign by associative array
@@ -231,21 +235,19 @@ abstract class KViewAbstract extends KObject
 					$this->$key = $val;
 				}
 			}
-			return true;
+			return $this;
 		}
 
 		// assign by string name and mixed value.
 
 		// we use array_key_exists() instead of isset() becuase isset()
 		// fails if the value is set to null.
-		if (is_string($arg0) && substr($arg0, 0, 1) != '_' && func_num_args() > 1)
+		if (is_string($arg0) && substr($arg0, 0, 1) != '_' && func_num_args() > 1) 
 		{
 			$this->$arg0 = $arg1;
-			return true;
 		}
 
-		// $arg0 was not object, array, or string.
-		return false;
+		return $this;
 	}
 
 
@@ -268,19 +270,15 @@ abstract class KViewAbstract extends KObject
 	*
 	* @param string $key The name for the reference in the view.
 	* @param mixed &$val The referenced variable.
-	*
-	* @return bool True on success, false on failure.
+	* @return object KViewAbstract
 	*/
-
 	public function assignRef($key, &$val)
 	{
-		if (is_string($key) && substr($key, 0, 1) != '_')
-		{
+		if (is_string($key) && substr($key, 0, 1) != '_') {
 			$this->$key =& $val;
-			return true;
 		}
 
-		return false;
+		return $this;
 	}
 
 	/**
@@ -308,31 +306,32 @@ abstract class KViewAbstract extends KObject
    /**
 	* Sets the layout name to use
 	*
-	* @param	string $template The template name.
-	* @return	string Previous value
+	* @param	string 	$template The template name.
+	* @return 	object 	KViewAbstract
 	*/
 	public function setLayout($layout)
 	{
-		$previous		= $this->_layout;
 		$this->_layout = $layout;
-		return $previous;
+		return $this;
 	}
 
 	 /**
      * Sets the _escape() callback.
      *
-     * @param mixed $spec The callback for _escape() to use.
+     * @param 	mixed 	$spec The callback for _escape() to use.
+     * @return 	object 	KViewAbstract
      */
     public function setEscape($spec)
     {
         $this->_escape = $spec;
+        return $this;
     }
 	
 	/**
 	 * Adds to the stack of view script paths in LIFO order.
 	 *
 	 * @param string|array The directory (-ies) to add.
-	 * @return void
+	 * @return object KViewAbstract
 	 */
 	public function addTemplatePath($path)
 	{
@@ -354,14 +353,17 @@ abstract class KViewAbstract extends KObject
 			// add to the top of the search dirs
 			array_unshift($this->_templatePath, $dir);
 		}
+		
+		return $this;
 	}
 	
 	/**
 	 * Sets an entire array of search paths for templates or resources.
 	 *
-	 * @param string $type The type of path to set, typically 'template'.
+	 * @param string 	   $type The type of path to set, typically 'template'.
 	 * @param string|array $path The new set of search paths.  If null or
-	 * false, resets to the current directory only.
+	 * 							 false, resets to the current directory only.
+	 * @return object KViewAbstract
 	 */
 	public function setTemplatePath($path)
 	{
@@ -380,6 +382,8 @@ abstract class KViewAbstract extends KObject
 		// set the alternative template search dir
 		$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->getClassName('suffix');
 		$this->addTemplatePath($fallback);
+		
+		return $this;
 	}
 
 	/**
@@ -389,11 +393,12 @@ abstract class KViewAbstract extends KObject
 	 * to the KViewHelper include paths
 	 *
 	 * @param string|array The directory (-ies) to add.
-	 * @return void
+	 * @return object KViewAbstract
 	 */
 	public function addHelperPath($path)
 	{
 		KViewHelper::addIncludePath($path);
+		return $this;
 	}
 
 	/**

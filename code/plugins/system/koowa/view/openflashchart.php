@@ -32,7 +32,7 @@ class KViewOpenflashchart extends KViewAbstract
         parent::__construct($options);
 
         //Set the correct mime type
-		$this->document->setMimeEncoding('text/plain');
+		$this->_document->setMimeEncoding('text/plain');
 
         $this->chart = new KChartOpenflashchart();
     }
