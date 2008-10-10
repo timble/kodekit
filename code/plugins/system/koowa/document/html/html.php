@@ -23,7 +23,7 @@ class KDocumentHtml extends KDocumentAbstract
 	 * Array of Header <link> tags
 	 * 
 	 * TODO : change this back to protected, public for now due to 
-	 * direct use in mod_syndicate. Reported as bug.
+	 * direct use in mod_syndicate. Needs to be reported as bug.
 	 *
 	 * @var	 array
 	 */
@@ -368,8 +368,7 @@ class KDocumentHtml extends KDocumentAbstract
 		if (is_array($attr))
 		{
 			$numPairs = count($attr[1]);
-			for($i = 0; $i < $numPairs; $i++ )
-			{
+			for($i = 0; $i < $numPairs; $i++ ) {
 				$retarray[$attr[1][$i]] = $attr[2][$i];
 			}
 		}

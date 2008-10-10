@@ -26,14 +26,14 @@ class KDocumentHtmlRendererMessage extends KDocumentRenderer
 	 * @param array 	$params		Associative array of values
 	 * @return string	The output of the script
 	 */
-	public function render($name, array $params = array (), $content = null)
+	public function render($name, array $params = array (), $contents = null)
 	{
 		// Initialize variables
 		$contents	= null;
 		$lists		= null;
 
 		// Get the message queue
-		$messages = KFactory::get('lib.joomla.application')->getMessageQueue();
+		$messages = KFactory::get('lib.joomla.application')->getMessageQueue(); 
 
 		// Build the sorted message list
 		if (is_array($messages) && count($messages)) 
@@ -46,27 +46,26 @@ class KDocumentHtmlRendererMessage extends KDocumentRenderer
 			}
 		}
 
+		$contents .= "\n<dl id=\"system-message\" style=\"margin: 0px;\">";
 		// If messages exist render them
 		if (is_array($lists))
 		{
 			// Build the return string
-			$contents .= "\n<dl id=\"system-message\">";
 			foreach ($lists as $type => $msgs)
 			{
 				if (count($msgs)) {
 					$contents .= "\n<dt class=\"".strtolower($type)."\">".JText::_( $type )."</dt>";
 					$contents .= "\n<dd class=\"".strtolower($type)." message fade\">";
 					$contents .= "\n\t<ul>";
-					foreach ($msgs as $msg)
-					{
+					foreach ($msgs as $msg) {
 						$contents .="\n\t\t<li>".$msg."</li>";
 					}
 					$contents .= "\n\t</ul>";
 					$contents .= "\n</dd>";
 				}
 			}
-			$contents .= "\n</dl>";
 		}
+		$contents .= "\n</dl>";
 		return $contents;
 	}
 }
