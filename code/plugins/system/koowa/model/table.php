@@ -76,15 +76,31 @@ class KModelTable extends KModelAbstract
 		$this->_db = $db;
 	}
 
-	/**
+	/*
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param	array	$operations		Options array for view. Optional.
+	 * @param	array	$operations	 Options array for view. Optional.
 	 * @return	object	The table object
 	 */
 	public function getTable(array $options = array())
 	{
-		return KFactory::get($this->_tableClass, $options);
+		if(!is_object($this->_tableClass)) {
+			return KFactory::get($this->_tableClass, $options);
+		}
+
+		return $this->_tableClass;
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param	string|object $identifier The table identifier to be used in KFactory or a table object
+	 * @return	object	KModelTable
+	 */
+	public function setTable($identifier)
+	{
+		$this->_tableClass = $identifier;
+		return $this;
 	}
 
     /**
