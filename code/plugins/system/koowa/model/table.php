@@ -25,7 +25,7 @@ class KModelTable extends KModelAbstract
 	protected $_db;
 	
 	/**
-	 * Table bject or identifier (APP::com.COMPONENT.table.TABLENAME)
+	 * Table object or identifier (APP::com.COMPONENT.table.TABLENAME)
 	 *
 	 * @var	string|object
 	 */
@@ -51,7 +51,7 @@ class KModelTable extends KModelAbstract
 			$table 			= KInflector::tableize($this->getClassName('suffix'));
 			$component		= $this->getClassName('prefix');
 			$application 	= KFactory::get('lib.joomla.application')->getName();
-			$this->_tableClass = $application.'::com.'.$component.'.table.'.$table;
+			$this->_table   = $application.'::com.'.$component.'.table.'.$table;
 		}
 	}
 
@@ -84,11 +84,11 @@ class KModelTable extends KModelAbstract
 	 */
 	public function getTable(array $options = array())
 	{
-		if(!is_object($this->_tableClass)) {
-			return KFactory::get($this->_tableClass, $options);
+		if(!is_object($this->_table)) {
+			return KFactory::get($this->_table, $options);
 		}
 
-		return $this->_tableClass;
+		return $this->_table;
 	}
 
 	/**
@@ -99,7 +99,7 @@ class KModelTable extends KModelAbstract
 	 */
 	public function setTable($identifier)
 	{
-		$this->_tableClass = $identifier;
+		$this->_table = $identifier;
 		return $this;
 	}
 
