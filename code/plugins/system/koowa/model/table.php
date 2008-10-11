@@ -25,11 +25,11 @@ class KModelTable extends KModelAbstract
 	protected $_db;
 	
 	/**
-	 * Table class (APP::com.COMPONENT.table.TABLENAME)
+	 * Table bject or identifier (APP::com.COMPONENT.table.TABLENAME)
 	 *
-	 * @var	string
+	 * @var	string|object
 	 */
-	protected $_tableClass;
+	protected $_table;
 	
 	/**
 	 * Constructor
@@ -44,8 +44,8 @@ class KModelTable extends KModelAbstract
 		parent::__construct($options);
 		
 		// set the table associated to the model
-		if(isset($options['tableClass'])) {
-			$this->_tableClass = $options['tableClass'];
+		if(isset($options['table'])) {
+			$this->_table = $options['table'];
 		} else
 		{
 			$table 			= KInflector::tableize($this->getClassName('suffix'));
@@ -76,7 +76,7 @@ class KModelTable extends KModelAbstract
 		$this->_db = $db;
 	}
 
-	/*
+	/**
 	 * Method to get a table object, load it if necessary.
 	 *
 	 * @param	array	$operations	 Options array for view. Optional.
@@ -92,7 +92,7 @@ class KModelTable extends KModelAbstract
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to set a table object or identifier
 	 *
 	 * @param	string|object $identifier The table identifier to be used in KFactory or a table object
 	 * @return	object	KModelTable
