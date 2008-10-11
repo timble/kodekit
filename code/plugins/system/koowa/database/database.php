@@ -59,8 +59,8 @@ class KDatabase extends KPatternProxy
 	 */
 	const OPERATION_SELECT = 1;
 	const OPERATION_INSERT = 2;
-	const OPERATION_UPDATE = 3;
-	const OPERATION_DELETE = 4;
+	const OPERATION_UPDATE = 4;
+	const OPERATION_DELETE = 8;
 	
 	/**
 	 * Constructor
