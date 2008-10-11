@@ -262,8 +262,6 @@ class KDocumentVcard extends KDocumentAbstract
 		return $this;
 	}
 
-	// $type may be WORK | HOME
-	
 	/**
 	 * Set URL
 	 *
