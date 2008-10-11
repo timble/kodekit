@@ -25,6 +25,13 @@ class KFilterAscii extends KObject implements KFilterInterface
 	protected $_default_char = '?';
 	
 	/**
+	 * Produce an URL safe string
+	 *
+	 * @var	array
+	 */
+	protected $_url_safe = true;
+	
+	/**
 	 * Transliteration data from ascii/data/*
 	 *
 	 * @var	array
@@ -47,6 +54,10 @@ class KFilterAscii extends KObject implements KFilterInterface
 	{
 		if(isset($options['default_char'])) {
 			$this->_default_char = $options['default_char'];
+		}
+		
+		if(isset($options['url_safe'])) {
+			$this->_url_safe = $options['url_safe'];
 		}
 		
 		$this->_data_dir = dirname(__FILE__).DS.'ascii'.DS.'data';
@@ -209,6 +220,18 @@ class KFilterAscii extends KObject implements KFilterInterface
 	        
 	    }
 	 
-	    return ob_get_clean();  
+	    $result = ob_get_clean(); 
+	    
+	    //Convert the string to an URL safe string
+	    if($this->_url_safe)
+	    {
+			// remove any duplicate whitespace, and ensure all characters are alphanumeric
+			$result = preg_replace(array('/\s+/','/[^A-Za-z0-9\-]/'), array('-',''), $result);
+
+			// lowercase and trim
+			$result = trim(strtolower($result));
+	    }
+		
+		return $result;
 	}
 }
