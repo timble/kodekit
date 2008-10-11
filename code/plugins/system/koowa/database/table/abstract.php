@@ -36,7 +36,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 *
 	 * @var 	string
 	 */
-	protected $_table;
+	protected $_table_name;
 
 	/**
 	 * Name of the primary key field in the table
@@ -125,12 +125,13 @@ abstract class KDatabaseTableAbstract extends KObject
 		$this->_basePath = $options['base_path'];
 
 		// Set the tablename
-		if ($options['table']) {
-			$this->_table	= $options['table'];
-		} else {
+		if ($options['table_name']) {
+			$this->_table_name	= $options['table_name'];
+		} else 
+		{
             $prefix         = $this->getClassName('prefix');
             $suffix         = $this->getClassName('suffix');
-			$this->_table	= empty($prefix) ? $suffix : $prefix.'_'.$suffix;
+			$this->_table_name = empty($prefix) ? $suffix : $prefix.'_'.$suffix;
 		}
 
 		// Set a primary key
@@ -159,7 +160,7 @@ abstract class KDatabaseTableAbstract extends KObject
                         'suffix'    => 'default'
                         ),
             'primary'       => null,
-            'table'         => null
+            'table_name'         => null
         );
 
         return array_merge($defaults, $options);
@@ -194,7 +195,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	 */
 	public function getTableName()
     {
-		return $this->_table;
+		return $this->_table_name;
 	}
 
 	/**
