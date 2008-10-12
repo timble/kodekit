@@ -266,9 +266,15 @@ class KDatabase extends KPatternProxy
 	 *
 	 * @return object KDatabaseQuery
 	 */
-	public function getQuery()
+	public function getQuery(array $options = array())
 	{
-		$query = new KDatabaseQuery(array('table_prefix' => $this->getPrefix()));
+		if(isset($options['table_prefix'])) {
+			$prefix = $options['table_prefix'];
+		} else {
+			$prefix = $this->getPrefix();
+		}
+		
+		$query = new KDatabaseQuery(array('table_prefix' => $prefix));
 		return $query;
 	}
 
@@ -374,9 +380,9 @@ class KDatabase extends KPatternProxy
 		$args['operation']	= self::OPERATION_UPDATE;
 	
 		//Excute the update operation
-		if($this->_commandChain->run('database.before.insert', $args) ===  true) {
+		if($this->_commandChain->run('database.before.update', $args) ===  true) {
 			$args['result'] = $this->execute($sql);
-			$this->_commandChain->run('database.after.insert', $args);
+			$this->_commandChain->run('database.after.update', $args);
 		}
 		
         return $args['result'];
@@ -757,8 +763,8 @@ class KDatabase extends KPatternProxy
         //Special cases
         if ($name == '*' || is_numeric($name)) {
             return $name;
-        } 
-        
+        }
+         
         return $this->_object->_nameQuote. $name.$this->_object->_nameQuote;
     }
     

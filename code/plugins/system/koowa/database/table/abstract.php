@@ -411,7 +411,7 @@ abstract class KDatabaseTableAbstract extends KObject
         			$query->from($this->getTableName());
         		}
             }
-               
+
             $this->_db->select($query, 0, 1);
             $options['data'] = (array) $this->_db->loadAssoc();
         }
