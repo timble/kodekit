@@ -14,20 +14,22 @@
  * @author 		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package 	Koowa_Event
- * @uses 		KPatternObservable
  */
 class KEventDispatcher extends KPatternObservable
 {
 	/**
 	 * Registers an event handler to the event dispatcher
 	 *
-	 * @param	string	$handler	Name of the event handler
+	 * @param	string|object	$handler	Name of the event handler or an instance
 	 */
 	public function register($handler)
 	{
-		if (class_exists($handler)) {
-			$this->attach(new $handler($this));
-		}
+		if(!$handler instanceof KEventHandler) 
+		{
+			if (class_exists($handler)) {
+				$this->attach(new $handler());
+			}
+		} else $this->attach($handler);
 	}
 
 	/**

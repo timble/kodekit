@@ -16,37 +16,22 @@
  * @category	Koowa
  * @package     Koowa_Pattern
  * @subpackage  Observer
- * @uses		KObject
  */
-abstract class KPatternObserver extends KObject 
+interface KPatternObserver
 {
-	/**
-	 * Event object to observe
-	 *
-	 * @var object
-	 */
-	protected $_subject;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param	object	$subject	The subject to observer
-	 * @return	void
-	 */
-	public function __construct(KPatternObservable $subject)
-	{
-		// Register the observer ($this) so we can be notified
-		$subject->attach($this);
-
-		// Set the subject to observe
-		$this->_subject = $subject;
-	}
-
 	/**
 	 * Event received in case the observables states has changed
 	 *
 	 * @param	object	$args	An associative array of arguments
 	 * @return mixed
 	 */
-	abstract public function onNotify(ArrayObject $args);
+	public function onNotify(ArrayObject $args);
+	
+	/**
+	 * This function returns an unique identifier for the object. This id can be used as 
+	 * a hash key for storing objects or for identifying an object
+	 * 
+	 * @return string A string that is unique
+	 */
+	public function getHandle();
 }

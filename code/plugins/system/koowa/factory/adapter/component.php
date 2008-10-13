@@ -133,11 +133,15 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 			}
 			else 
 			{
-				if(class_exists( 'K'.ucfirst($base).ucfirst($name))) {
+				if(class_exists( 'K'.ucfirst($base).ucfirst($name))) 
+				{
 					$classname = 'K'.ucfirst($base).ucfirst($name);
-				} else {
+				} 
+				elseif(class_exists( 'K'.ucfirst($base).'Default')) 
+				{
 					$classname = 'K'.ucfirst($base).'Default';
-				}	
+				} 
+				else return null;
 			}
 		}
 

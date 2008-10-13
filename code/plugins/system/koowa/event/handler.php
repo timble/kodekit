@@ -14,9 +14,8 @@
  * @author 		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
  * @package 	Koowa_Event
- * @uses 		KObserver
  */
-class KEventHandler extends KPatternObserver
+class KEventHandler extends KObject implements KPatternObserver
 {
 	/**
 	 * Method to trigger events
