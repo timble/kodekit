@@ -147,12 +147,11 @@ class KFactory
 	 * @param object 	$adapter	A KFactoryAdapter
 	 * @param integer	$priority	The command priority
 	 *
-	 * @return boolean Returns TRUE on success or FALSE on failure. 
+	 * @return void
 	 */
-	public function registerAdapter(KFactoryAdapterInterface $adapter, $priority = 1)
+	public static function registerAdapter(KFactoryAdapterInterface $adapter, $priority = 1)
 	{
 		self::$_chain->enqueue($adapter, $priority);
-		return true;
 	}
 	
 	/**
