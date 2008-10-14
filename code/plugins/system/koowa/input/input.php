@@ -11,10 +11,7 @@
 /**
  * Request class
  *
- * Allows to get input from GET, POST, COOKIE, ENV, SERVER, REQUEST
- * 
- * TODO : Ideally, REQUEST should never be used, unfortunately Joomla has too 
- * many places where you can't get around it. WIP
+ * Allows to get input from GET, POST, COOKIE, ENV, SERVER
  *
  * @author		Mathias Verraes <mathias@joomlatools.org>
  * @category	Koowa
