@@ -34,6 +34,10 @@ class plgSystemKoowa extends JPlugin
 			$db  =& JFactory::getDBO();
 			$db  = new KDatabase($db);
 			
+			//ACL uses the unwrapped DBO
+	        $acl = JFactory::getACL();
+	        $acl->_db = $db->getObject(); // getObject returns the unwrapped DBO
+			
 			//Load the koowa plugins
 			JPluginHelper::importPlugin('koowa', null, true, KFactory::get('lib.koowa.event.dispatcher'));
 		}
