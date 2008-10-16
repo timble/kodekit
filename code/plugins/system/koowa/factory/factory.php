@@ -65,13 +65,13 @@ class KFactory
 		} 
 		
 		//Get an instance based on the identifier
-		$object = self::$_chain->run($identifier, $options);
-		if($object === false) {
-			throw new KFactoryException('Cannot create object from identifier : '.$identifier);	
+		$instance = self::$_chain->run($identifier, $options);
+		if(!is_object($instance)) {
+			throw new KFactoryException('Cannot create object instance from identifier : '.$identifier);	
 		}	
 		
-		self::$_container->offsetSet($identifier, $object);
-		return $object;
+		self::$_container->offsetSet($identifier, $instance);
+		return $instance;
 	}
 	
 	/**

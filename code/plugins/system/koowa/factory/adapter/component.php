@@ -141,7 +141,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 				{
 					$classname = 'K'.ucfirst($base).'Default';
 				} 
-				else return null;
+				else return false;
 			}
 		}
 
