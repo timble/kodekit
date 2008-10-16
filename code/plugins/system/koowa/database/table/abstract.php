@@ -363,7 +363,7 @@ abstract class KDatabaseTableAbstract extends KObject
         		}
         		
         		if(!count($query->from)) {
-        			$query->from($this->getTableName());
+        			$query->from($this->getTableName().' AS tbl');
         		}
             }
 
