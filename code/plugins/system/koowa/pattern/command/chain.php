@@ -53,11 +53,11 @@ class KPatternCommandChain extends KObject
 	 * Attach a command to the chain
 	 * 
 	 * @param object 	$cmd		A KPatternCommandHandler 
-	 * @param integer	$priority	The command priority
+	 * @param integer	$priority	The command priority, usually between 1 (high priority) and 5 (low), default is 3
 	 *
 	 * @return	void
 	 */
-	public function enqueue( KPatternCommandInterface $cmd, $priority = 1)
+	public function enqueue( KPatternCommandInterface $cmd, $priority = 3)
 	{
 		$handle = $cmd->getHandle(); //get the object handle
 		

@@ -20,6 +20,9 @@ Legend:
  - -> Removed
  ! -> Note
 
+2008-10-17 Mathias Verraes
+ ^ Changed default priority in KPatternCommandChain::enqueue() to 3
+
 2008-10-06 Mathias Verraes
  ^ GET forms no longer attach a token to the URL
 
