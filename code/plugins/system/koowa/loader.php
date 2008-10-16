@@ -15,7 +15,7 @@ spl_autoload_register(array('KLoader', 'loadClass'));
 /**
  * Koowa class
  *
- * Loads classes and files, and provides metadata for Koowa such as version info
+ * Loads classes and files
  *
  * @author		Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
