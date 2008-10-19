@@ -203,10 +203,7 @@ abstract class KDocumentAbstract extends KObject
 	 *
 	 * @return	array	The document head data in array form
 	 */
-	public function getHeadData() 
-	{ 
-		
-	}
+	abstract public function getHeadData();
 
 	/**
 	 * Set the document head data
@@ -214,10 +211,7 @@ abstract class KDocumentAbstract extends KObject
 	 * @param	array	$data	The document head data in array form
 	 * @return	this
 	 */
-	public function setHeadData(array $data) 
-	{ 
-		
-	}
+	abstract public function setHeadData(array $data);
 
 	/**
 	 * Get the contents of the document buffer

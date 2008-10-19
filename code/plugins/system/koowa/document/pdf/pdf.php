@@ -139,6 +139,21 @@ class KDocumentPdf extends KDocumentAbstract
 		$this->_engine->SetFooterMargin($this->_margin_footer);
 		$this->_engine->setImageScale($this->_image_scale);
 	}
+	
+	/**
+	 * Get the document head data
+	 *
+	 * @return	array	The document head data in array form
+	 */
+	public function getHeadData() { }
+
+	/**
+	 * Set the document head data
+	 *
+	 * @param	array	$data	The document head data in array form
+	 * @return	this
+	 */
+	public function setHeadData(array $data) { }
 
 	 /**
 	 * Sets the document name
