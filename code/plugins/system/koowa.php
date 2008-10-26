@@ -28,7 +28,7 @@ class plgSystemKoowa extends JPlugin
 			
 			// Proxy the application object 
 			$app  =& JFactory::getApplication();
-			$app  = new KApplication($app);
+			$app  = new KProxyJoomlaApplication($app);
 		
 			// Proxy the database object
 			$db  =& JFactory::getDBO();
