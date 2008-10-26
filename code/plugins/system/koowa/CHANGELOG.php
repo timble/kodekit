@@ -19,6 +19,9 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+ 
+2008-10-26 Johan Janssens
+ ^ Smaller changes to the loader to allow loading auto-loading of applicaiton specific files.
 
 2008-10-17 Mathias Verraes
  ^ Changed default priority in KPatternCommandChain::enqueue() to 3

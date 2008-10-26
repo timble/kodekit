@@ -106,11 +106,17 @@ class KLoader
 				
 			} break;
 			
-			case 'site::com'    :
-			case 'admin::com'   :
+			default :
 			{
-				$app = explode( '::', $parts[0] );
-				$app = ($app[0] == 'admin') ? JPATH_ADMINISTRATOR : JPATH_SITE;
+				if(strpos($parts[0], '::') !== false) {
+					$app  = explode( '::', $parts[0] );	
+					$name =  $app[0];
+				} else {
+					$app  = KFactory::get('lib.joomla.application');
+					$name = $app->getName(); 
+				}
+				
+				$app = ($name == 'site') ? JPATH_SITE : JPATH_ADMINISTRATOR;
 				$com = $parts[1];
 
 				unset($parts[0]);
@@ -122,20 +128,6 @@ class KLoader
 				$result = JLoader::import($path, $base, $com.'.' );
 				
 			} break;
-
-        	case 'plg'   :
-        	{
-				unset($parts[0]);
-				$base   = JPATH_PLUGINS;
-				$path   = implode('.', $parts);
-				$result = JLoader::import($path, $base, '.' );
-				
-        	} break;
-
-			default :
-				$result = JLoader::import($path, JPATH_COMPONENT, substr(basename(JPATH_COMPONENT), 4).'.' );
-				break;
-
 		}
 
 		return $result;
