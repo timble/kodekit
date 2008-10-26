@@ -261,7 +261,7 @@ class KDatabaseQuery extends KObject
 		if($constraint == 'LIKE') {
 			$value = addcslashes( $value, '%_' );
 		}
-
+		
        	//Create the where clause
         if(in_array($constraint, array('IN', 'NOT IN'))) {
         	$value = ' ( '.$value. ' ) ';
