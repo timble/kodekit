@@ -41,14 +41,16 @@ class KTemplateRuleShorttag extends KObject implements KTemplateRuleInterface
          * probably be the biggest headache.
          */
                 
-		// convert "<?=" to "<?php echo"
-        $find = '/\<\?\=\s?(.*?)\?>/';
-        $replace = "<?php echo \$1 ?>";
+        // convert "<?=" to "<?php echo"
+        $find = '/\<\?\=\s?(.*?)/';
+        $replace = "<?php echo \$1";
         $text = preg_replace($find, $replace, $text);
         
         // convert "<?" to "<?php"
-        $find = '/\<\?\s(.*?)\?>/';
-        $replace = "<?php \$1 ?>";
+        $find = '/\<\?\s(.*?)/';
+        $replace = "<?php \$1";
         $text = preg_replace($find, $replace, $text);
+        
+
 	}
 }
