@@ -170,6 +170,23 @@ abstract class KDatabaseRowAbstract extends KObject
         $this->_data = $this->_table->getDefaults();
         return $this;
     }
+    
+    /**
+     * Increase hit counter by 1
+     *
+     * @return this
+     */
+	public function hit()
+	{
+		if (!in_array('hits', $this->getTable()->getColumns())) {
+			return;
+		}
+
+		$this->hits++;
+		$this->save();		
+		
+		return $this;
+	}
 
 	/**
      * Returns the column/value data as an array.
