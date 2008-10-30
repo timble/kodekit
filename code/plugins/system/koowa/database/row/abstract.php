@@ -259,7 +259,9 @@ abstract class KDatabaseRowAbstract extends KObject
      */
     public function getProperties()
     {
-        return $this->_data;
+    	$result = $this->_data;
+    	$result['id'] = $this->id;
+        return $result;
     }
 
 
@@ -271,10 +273,15 @@ abstract class KDatabaseRowAbstract extends KObject
     */
     public function setProperties( $properties )
     {
-        $properties = (array) $properties;
+    	$properties = (array) $properties;
+        $pk = $this->_table->getPrimaryKey();
         
         foreach ($properties as $k => $v) {
-         	$this->_data[$k] = $properties[$k];
+         	if('id' == $k) {
+         		$this->_data[$pk] = $v;
+         	} else {
+         		$this->_data[$k] = $v;
+         	}
         }
 
         return $this;
