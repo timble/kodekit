@@ -20,6 +20,9 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-10-31 Mathias Verraes
+ + Added KFilterAlpha
+  
 2008-10-26 Johan Janssens
  ^ Smaller changes to the loader to allow loading auto-loading of application specific files.
 
