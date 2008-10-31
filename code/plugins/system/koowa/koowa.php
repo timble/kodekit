@@ -73,19 +73,19 @@ class Koowa
     	switch($type) 
     	{
     		case 'root' :
-    			$url = JURI::root();
+    			$url = JURI::root(true);
     			break;
     		case 'media' :
-    			$url = JURI::root().'media/plg_koowa/';
+    			$url = JURI::root(true).'/media/plg_koowa/';
     			break;
     		case 'css' :
-    			$url = JURI::root().'media/plg_koowa/css/';
+    			$url = JURI::root(true).'/media/plg_koowa/css/';
     			break;
     		case 'images' :
-    			$url = JURI::root().'media/plg_koowa/images/';
+    			$url = JURI::root(true).'/media/plg_koowa/images/';
     			break;
     		case 'js' :
-    			$url = JURI::root().'media/plg_koowa/js/';
+    			$url = JURI::root(true).'/media/plg_koowa/js/';
     			break;	
     		default:
     			throw new KException('No url of type: '.$type);	
