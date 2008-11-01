@@ -89,7 +89,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
 	 * Set the identifying key of the current element.
 	 *
 	 * @param 	int	Pointer
-	 * @return 	this
+	 * @return 	object KObjectArray
 	 */
 	public function setKey($pointer)
 	{
@@ -103,7 +103,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
      * Similar to the next() function for arrays in PHP.
      * Required by interface Iterator.
      *
-     * @return	this
+     * @return 	object KObjectArray
      */
     public function next()
     {
@@ -140,7 +140,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
      * Set the count of the array
      *
      * @param 	int	Count
-     * @return	this
+     * @return 	object KObjectArray
      */
     public function setCount($count)
     {
@@ -151,7 +151,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
 	/**
      * Reset the count of the array
      *
-     * @return	this
+     * @return 	object KObjectArray
      */
     public function resetCount()
     {
@@ -166,7 +166,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
      *
      * @param 	int $position The position to seek to
      * @throws 	KObjectException
-     * @return  this
+     * @return 	object KObjectArray
      */
     public function seek($position)
     {
@@ -211,7 +211,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
      *
      * @param 	int 	The offset of the item
      * @param 	mixed	The item's value
-     * @return  this
+     * @return 	object KObjectArray
      */
 	public function offsetSet($offset, $value) 
 	{
@@ -230,7 +230,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
      * Required by interface ArrayAccess
      *
      * @param 	int 	The offset of the item
-     * @return  this
+     * @return 	object KObjectArray
      */
 	public function offsetUnset($offset)
 	{
@@ -253,7 +253,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
 	 * Set the array
 	 *
 	 * @param 	array 	$array
-	 * @return	this
+	 * @return 	object KObjectArray
 	 */
 	public function setArray($array)
 	{
@@ -261,6 +261,4 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
 		$this->resetCount();
 		return $this;
 	}
-	
-
 }
