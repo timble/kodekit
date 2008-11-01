@@ -26,7 +26,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
 	 * 
 	 * @var 	array 
 	 */
-	protected $_orig_data = array();
+	protected $_data = array();
 	
 	/**
      * KDatabaseTableAbstract parent class or instance.
@@ -70,11 +70,13 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
 		$this->_tableClass  = 'com.'.$this->getClassName('prefix').'.table.'.$this->getClassName('suffix');
 		$this->_table       = isset($options['table']) ? $options['table'] : KFactory::get($this->_tableClass);
 
-		// Set data
+		// Set the data
 		if(isset($options['data']))  {
-			$this->_orig_data = $options['data'];
-			$this->setCount(count($this->_orig_data));
+			$this->_data = $options['data'];
 		}
+		
+		// Count the data
+		$this->resetCount();
 		
 		// Instantiate an empty row to use for cloning later
 		$this->_emptyRow = $this->_table->fetchRow();
@@ -121,30 +123,60 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
         if (!isset($this[$this->key()])) 
         {
         	// cloning is faster than instantiating
-            $this[$this->key()] = clone $this->_emptyRow;
-            $this[$this->key()]->setProperties($this->_orig_data[$this->key()]);
+        	$row = clone $this->_emptyRow;
+        	$row->setProperties($this->_data[$this->key()]);
+            parent::offsetSet($this->key(), $row);
         }
 
     	// return the row object
-        return $this[$this->key()];
+        return parent::offsetGet($this->key());
     }
     
     /**
-     * Overridden offsetSet() method that doesn't update the count automatically
+     * Overridden offsetSet() method
      *
      * @param 	int 	The offset of the item
      * @param 	mixed	The item's value
-     * @return  this
+     * @return  object KDatabaseTRowsetAbstract
      */
 	public function offsetSet($offset, $value) 
 	{
+		if($value instanceof KDatabaseRowAbstract) {
+			$value = $value->toArray();
+		}
+		
 		if(empty($offset)) {
-			$this->__data[] = $value;
+			$this->_data[] = $value;
 		} else {
-			$this->__data[$offset] = $value;
-		}	
+			$this->_data[$offset] = $value;
+		}
+
+		$this->resetCount();
 		return $this;
 	}
+	
+ 	/**
+     * Overridden offsetSet() method
+     *
+     * @param 	int 	The offset of the item
+     * @return 	object KDatabaseTRowsetAbstract
+     */
+	public function offsetUnset($offset)
+	{
+        unset($this->_data[$offset]);
+		return parent::offsetUnset($offset);
+	}
+	
+	/**
+     * Overridden resetCount() method
+     *
+     * @return 	object KDatabaseTRowsetAbstract
+     */
+    public function resetCount()
+    {
+    	$this->setCount(count($this->_data));
+    	return $this;
+    }
     
 	/**
      * Returns the table object, or null if this is disconnected row
