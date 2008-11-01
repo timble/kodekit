@@ -25,7 +25,7 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
      *
      * @var array
      */
-    protected $__data = array();
+    private $__data = array();
     
     /**
      * Array count
@@ -219,7 +219,8 @@ class KObjectArray extends KObject implements ArrayAccess, SeekableIterator, Cou
 			$this->__data[] = $value;
 		} else {
 			$this->__data[$offset] = $value;
-		}	
+		}
+			
 		$this->resetCount();
 		return $this;
 	}
