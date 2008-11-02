@@ -9,4 +9,17 @@
 	<authorUrl>www.joomlatools.org</authorUrl>
 	<version>0.6.0</version>
 	<description>Rapid Application Development framework</description>	
+	
+	<!--  Files -->
+	<files>
+		<filename plugin="koowa">koowa.php</filename>
+		<folder>koowa</folder>
+	</files>
+	
+	<!--  Media -->
+	<media destination="plg_koowa" folder="media">
+		<folder>swf</folder>
+		<folder>js</folder>
+	</media>
+	
 </install>
