@@ -317,30 +317,29 @@ abstract class KDatabaseTableAbstract extends KObject
      */
     public function find($id)
     {
-        $key   = $this->getPrimaryKey();
-        $query = $this->getDBO()->getQuery();
-        
-        if(!is_array($id)) 
-        {
-            $query->where($key, '=', $id);
-         	$result = $this->fetchRow($query);
+		$result = null;
+    	
+    	if(is_int($id)) {
+         	$result = $this->fetchRow($id);
         } 
-        else 
-        {
-			$query->where($key, 'IN', $id);         
-        	$result = $this->fetchAll($query);
+        
+     	if(is_array($id)) {
+        	$result = $this->fetchAll($id);
         }
         	
         return $result;
     }       
         
 	/**
-     * Fetch a set of rows
+     * Fetch a rowset
+     * 
+     * The name of the resulting class is based on the table class name
+     * eg <Mycomp>Table<Tablename> -> <Mycomp>Rowset<Tablename>
      *
-     * @param	object	KDatabaseQuery object or query string, or null for an empty row
+     * @param	mixed	KDatabaseQuery object or query string, array of row id's or null for an empty row
      * @param 	int		Offset
      * @param	int		Limit
-     * @param 	array	Config
+     * @param 	array	Options
      * @return	object	KDatabaseRowset object
      */
     public function fetchAll($query = null, $offset = 0, $limit = 0, $options = array())
@@ -356,6 +355,16 @@ abstract class KDatabaseTableAbstract extends KObject
         // Get the data
         if(isset($query))
         {
+         	if(is_array($query))
+            {
+             	$key    = $this->getPrimaryKey();
+             	$values = $query;
+             	
+             	//Create query object
+       	 		$query = $this->getDBO()->getQuery()
+        			->where($key, 'IN', $values);    
+            }
+        	
         	if($query instanceof KDatabaseQuery) 
             {
         		if(!count($query->columns)) {
@@ -366,7 +375,7 @@ abstract class KDatabaseTableAbstract extends KObject
         			$query->from($this->getTableName().' AS tbl');
         		}
             }
-
+            
         	$this->_db->select($query, $offset, $limit);
 			$result = (array) $this->_db->loadAssocList();
 			
@@ -379,13 +388,13 @@ abstract class KDatabaseTableAbstract extends KObject
     }
 
     /**
-     * Fetch a DatabaseRow object
+     * Fetch a row
      *
      * The name of the resulting class is based on the table class name
      * eg <Mycomp>Table<Tablename> -> <Mycomp>Row<Tablename>
      *
-     * @param	object	KDatabaseQuery object or query string, or null for an empty row
-     * @param	array	Config
+     * @param	mixed	KDatabaseQuery object or query string, a row id or null for an empty row
+     * @param	array	Options
      * @return	object 	KDatabaseRow object
      */
     public function fetchRow($query = null, array $options = array())
@@ -401,7 +410,17 @@ abstract class KDatabaseTableAbstract extends KObject
         //Get the data and push it in the row
 		if(isset($query))
         {
-            if($query instanceof KDatabaseQuery) 
+            if(is_int($query))
+            {
+             	$key   = $this->getPrimaryKey();
+             	$value = $query;
+             	
+             	//Create query object
+       	 		$query = $this->getDBO()->getQuery()
+        			->where($key, '=', $value);
+            }
+            
+        	if($query instanceof KDatabaseQuery) 
             {
             	if(!count($query->columns)) {
         			$query->select('*');
