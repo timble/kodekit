@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="system">
+
+	<!--  Files -->
+	<files>
+		<filename plugin="koowa">koowa.php</filename>
+		<folder>koowa</folder>
+	</files>
+	
+	<!--  Media -->
+	<media destination="plg_koowa" folder="media">
+		<folder>swf</folder>
+		<folder>js</folder>
+	</media>
+	
+</install>
