@@ -97,7 +97,7 @@ class KDatabase extends KPatternProxy
 					break;
 				}
 
-				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
+				$table = str_replace($this->getPrefix(), '', $query['table_names'][0]);
 
                 if(!isset($query['column_names'] ))
                 {
@@ -129,7 +129,7 @@ class KDatabase extends KPatternProxy
 				$sql = str_replace('where', 'WHERE', $sql);
 
 				$where = substr($sql, strpos($sql, 'WHERE'));
-				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
+				$table = str_replace($this->getPrefix(), '', $query['table_names'][0]);
 
 				$data  = array();
 				foreach($query['column_names'] as $key => $column_name) {
@@ -154,7 +154,7 @@ class KDatabase extends KPatternProxy
 				$sql = str_replace('where', 'WHERE', $sql);
 
 				$where = substr($sql, strpos($sql, 'WHERE'));
-				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
+				$table = str_replace($this->getPrefix(), '', $query['table_names'][0]);
 
 				$result = $this->delete($table, $where);
 			} break;
@@ -446,7 +446,7 @@ class KDatabase extends KPatternProxy
 			}
 
 			//Force affected rows to 1 in case query was successfull and no rows where returned
-			if(!$result = $this->_object->getAffectedRows()) {
+			if(!$result = $this->getAffectedRows()) {
 				$result = 1;
 			}
 		}
@@ -466,7 +466,7 @@ class KDatabase extends KPatternProxy
         if(!isset($result))
         {
             $this->select('SELECT NOW()');
-            $result = $this->_object->loadResult();
+            $result = $this->loadResult();
         }
 
         return $result;

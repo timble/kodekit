@@ -18,7 +18,7 @@
  * @category	Koowa
  * @package		Koowa_Template
  */
- abstract class KTemplateAbstract
+abstract class KTemplateAbstract
 {
     /**
      * Current stream position.
