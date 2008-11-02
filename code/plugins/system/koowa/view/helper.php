@@ -143,7 +143,7 @@ class KViewHelper
 			KViewHelper::_('behavior.mootools');
 		}
 
-		if(strpos($path, 'http') !== 0) {
+		if(strpos($path, 'http') !== 0 && $path[0] != '/') {
 			$path =  JURI::root(true).'/'.$path;
 		};
 
@@ -160,7 +160,7 @@ class KViewHelper
 	 */
 	public static function stylesheet($filename, $path = 'media/plg_koowa/css/', $attribs = array())
 	{
-		if(strpos($path, 'http') !== 0) {
+		if(strpos($path, 'http') !== 0 && $path[0] != '/') {
 			$path =  JURI::root(true).'/'.$path;
 		};
 
