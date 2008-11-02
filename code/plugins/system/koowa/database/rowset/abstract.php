@@ -137,7 +137,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
      *
      * @param 	int 	The offset of the item
      * @param 	mixed	The item's value
-     * @return  object KDatabaseTRowsetAbstract
+     * @return  object KDatabaseRowsetAbstract
      */
 	public function offsetSet($offset, $value) 
 	{
