@@ -8,8 +8,8 @@
  * @link     	http://www.koowa.org
  */
 
-// needed for Table Column ordering
-function KTableOrdering( order, dir, task ) 
+// needed for Table Column sorting
+function KTableSorting( order, dir, task ) 
 {
 	var form = document.adminForm;
 
