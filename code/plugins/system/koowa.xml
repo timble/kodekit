@@ -8,7 +8,7 @@
 	<authorEmail>support@joomlatools.org</authorEmail>
 	<authorUrl>www.joomlatools.org</authorUrl>
 	<version>0.6.0</version>
-	<description>Rapid Application Development framework</description>	
+	<description>Rapid Application Development framework. Please check if you have PHP 5.2+ before publishing this plugin.</description>	
 	
 	<!--  Files -->
 	<files>
