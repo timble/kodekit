@@ -133,15 +133,19 @@ abstract class KDatabaseRowAbstract extends KObject
     {
         $key = $this->_table->getPrimaryKey();
 
+        $properties = $this->getProperties();
+
+        if(array_key_exists('ordering', $properties) && $properties['ordering'] <= 0) {
+        	$properties['ordering'] = $this->getTable()->getMaxOrder();
+        }
+        	
         if($this->_data[$key])
         {
-            $where = $this->_table->getDBO()->getQuery()
-            			->where($key, '=', $this->_data[$key]);
-            $this->_table->update($this->getProperties(), $where);
+        	$this->_table->update($properties, $this->_data[$key]);
         }
         else 
         {
-        	if($this->_table->insert($this->getProperties())) {
+        	if($this->_table->insert($properties)) {
         		$this->id = $this->_table->getDBO()->insertid();
         	}
         }
@@ -179,7 +183,7 @@ abstract class KDatabaseRowAbstract extends KObject
 	public function hit()
 	{
 		if (!in_array('hits', $this->getTable()->getColumns())) {
-			return;
+			throw new KDatabaseRowException("The table ".$this->getTable()->getName()." doesn't have a 'hits' column.");
 		}
 
 		$this->hits++;
@@ -187,7 +191,49 @@ abstract class KDatabaseRowAbstract extends KObject
 		
 		return $this;
 	}
+	
+	/**
+	 * Move the row up or down in the ordering
+	 * 
+	 * Requires an ordering field to be present in the table
+	 *
+	 * @param	int	Amount to move up or down
+	 * @return 	KDatabaseRowAbstract
+	 */
+	public function order($change)
+	{
+		$table		= $this->getTable();
+		$db 		= $table->getDBO();
+		$tablename	= $table->getTableName();
+		settype($change, 'int');
+		
+		if (!in_array('ordering', $this->getTable()->getColumns())) {
+			throw new KDatabaseRowException("The table '$tablename' doesn't have a 'ordering' column.");
+		}
+			
+		if(!$change) {
+			return $this;
+		}
+		
+		$old = $this->ordering;
+		$new = $this->ordering + $change;
+		$new = $new <= 0 ? 1 : $new;
+		
+		$query =  "UPDATE `#__$tablename` ";
+		if($change < 0) {
+			$query .= "SET ordering = ordering+1 WHERE $new <= ordering AND ordering < $old ";
+		} else {
+			$query .= "SET ordering = ordering-1 WHERE $old < ordering AND ordering <= $new";
+		}
+		$db->execute($query);
 
+		$this->ordering = $new;
+		$this->save();
+		
+		$table->reorder();
+		return $this;
+	}
+	
 	/**
      * Returns the column/value data as an array.
      *

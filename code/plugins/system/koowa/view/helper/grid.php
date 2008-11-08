@@ -169,6 +169,24 @@ class KViewHelperGrid
 		$href = '<a href="javascript:saveorder('.(count( $rows )-1).', \''.$task.'\')" title="'.JText::_( 'Save Order' ).'">'.$image.'</a>';
 		return $href;
 	}
+	
+	public static function ordericons($row_id)
+	{
+		//Load koowa javascript
+		KViewHelper::_('script', 'koowa.js', Koowa::getURL('js'));
+		$up = Koowa::getURL('images').'/arrow_up.png';
+		$down = Koowa::getURL('images').'/arrow_down.png';
+
+		$result =
+			 '<a href="javascript:KGridOrder('.$row_id.', -1)" >'
+			.'<img src="'.$up.'" border="0" alt="'.JText::_('Move up').'" />'
+			.'</a>'
+			.'<a href="javascript:KGridOrder('.$row_id.', 1)" >'
+			.'<img src="'.$down.'" border="0" alt="'.JText::_('Move down').'" />'
+			.'</a>';
+			
+		return $result;
+	}
 
 	protected static function _checkedOut( &$row, $overlib = 1 )
 	{

@@ -319,11 +319,9 @@ abstract class KDatabaseTableAbstract extends KObject
     {
 		$result = null;
     	
-    	if(is_int($id)) {
-         	$result = $this->fetchRow($id);
-        } 
-        
-     	if(is_array($id)) {
+    	if(is_scalar($id)) {
+         	$result = $this->fetchRow((int) $id);
+        } elseif(is_array($id)) {
         	$result = $this->fetchAll($id);
         }
         	
@@ -641,4 +639,46 @@ abstract class KDatabaseTableAbstract extends KObject
 
  	  	return array($type, $size, $scope);
  	}
+ 	
+	/**
+	 * Get the highest ordering
+	 *
+	 * @return int
+	 */
+	public function getMaxOrder()
+	{
+		if (!in_array('ordering', $this->getColumns())) {
+			throw new KDatabaseTableException("The table '".$this->getName()."' doesn't have a 'ordering' column.");
+		}
+
+		$db 	= $this->getDBO();
+		$table 	= $this->getTableName();
+		
+		$query = "SELECT MAX(ordering) FROM `#__$table`";
+		$db->setQuery($query);
+		return $db->loadResult() + 1;
+	}
+
+	
+	/**
+	 * Resets the order of all rows
+	 *
+	 * @return	KDatabaseTableAbstract
+	 */
+	public function reorder()
+	{
+		$table = $this->getTableName();
+		
+		if (!in_array('ordering', $this->getColumns())) {
+			throw new KDatabaseTableException("The table '$table' doesn't have a 'ordering' column.");
+		}
+		
+		$this->_db->execute("SET @order = 0");
+		$this->_db->execute(
+			"UPDATE #__$table "
+			."SET ordering = (@order := @order + 1) "
+			."ORDER BY ordering ASC"
+		);
+		return $this;	
+	}
 }

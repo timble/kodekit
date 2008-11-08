@@ -18,6 +18,15 @@ function KTableSorting( order, dir, task )
 	submitform( task );
 }
 
+function KGridOrder(row_id, change) 
+{
+	var form = document.adminForm;
+	form.id.value= row_id;
+	form.order_change.value	= change;
+	form.task.value = 'order';
+	form.submit();
+}
+
 function $get(key, defaultValue) {
 	return location.search.get(key, defaultValue);
 }	

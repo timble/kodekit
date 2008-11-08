@@ -67,19 +67,15 @@ class KControllerPage extends KControllerAbstract
 
 		$app   = KFactory::get('lib.joomla.application')->getName();
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
-		
-		if (!empty($id)) {
-			$ret = $table->update($data, $id);
-		} else {
-			$ret = $table->insert($data);
-			$id  = $table->getDBO()->insertid();
-		}
+		$row = $table->fetchRow($id)
+			->setProperties($data)
+			->save();
 
 		$redirect = 'format='.KInput::get('format', 'get', 'cmd', null, 'html');
 		switch($this->getTask())
 		{
 			case 'apply' :
-				$redirect = '&view='.$view.'&layout=form&id='.$id;
+				$redirect = '&view='.$view.'&layout=form&id='.$row->id;
 				break;
 
 			case 'save' :
@@ -164,7 +160,7 @@ class KControllerPage extends KControllerAbstract
 	/**
 	 * Generic method to modify the access level of items
 	 */
-	public function access($access)
+	public function access()
 	{
 		KSecurityToken::check() or die('Invalid token or time-out, please try again');
 		
@@ -186,11 +182,36 @@ class KControllerPage extends KControllerAbstract
 			JText::_( 'Changed items access level')
 		);
 	}
+	
+	public function order()
+	{
+		KSecurityToken::check() or die('Invalid token or time-out, please try again');
+		
+		$id 	= KInput::get('id', 'post', 'int');
+		$change = KInput::get('order_change', 'post', 'int');
+		
+		// Get the table object attached to the model
+		$component = $this->getClassName('prefix');
+		$name      = KInflector::pluralize($this->getClassName('suffix'));
+		$view	   = $name;
+
+		$app   = KFactory::get('lib.joomla.application')->getName();
+		KFactory::get($app.'::com.'.$component.'.table.'.$name)
+			->fetchRow($id)
+			->order($change);
+		
+		$this->setRedirect(
+			'view='.$view
+			.'&format='.KInput::get('format', 'get', 'cmd', null, 'html')
+		);
+		
+	}
 
 	/**
 	 * Wrapper for JRequest::get(). Override this method to modify the GET/POST data before saving
 	 *
 	 * @see		JRequest::get()
+	 * @todo    Replace with a KInput solution
 	 * 
 	 * @param	string	$hash	to get (POST, GET, FILES, METHOD)
 	 * @param	int		$mask	Filter mask for the variable

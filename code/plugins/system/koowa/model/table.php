@@ -188,7 +188,7 @@ class KModelTable extends KModelAbstract
         $this->_buildQueryJoins($query);
         $this->_buildQueryWhere($query);
         $this->_buildQueryOrder($query);
-               
+
 		return $query;
     }
     
@@ -249,6 +249,10 @@ class KModelTable extends KModelAbstract
        	$direction  = strtoupper($this->getState('direction'));
     	if($order) {
     		$query->order($order, $direction);
+    	} 
+
+		if(in_array('ordering', $this->getTable()->getColumns())) {		
+    		$query->order('ordering', 'ASC');
     	}
     }
     
