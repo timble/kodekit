@@ -27,22 +27,25 @@ class KFactoryAdapterJoomla extends KFactoryAdapterAbstract
 	 */
 	public function createInstance($identifier, array $options)
 	{
+		$instance = false;
+		
 		$parts = explode('.', $identifier);
-		if($parts[0] != 'lib' || $parts[1] != 'joomla') {
-			return false;
+		if($parts[0] == 'lib' && $parts[1] == 'joomla') 
+		{
+			$name = ucfirst($parts[2]);
+	
+			//Handle exceptions
+			if($name == 'Database') {
+				$name = 'DBO';
+			}
+		
+			if($name == 'Authorization') {
+				$name = 'ACL';
+			}
+	
+			$instance = call_user_func_array(array('JFactory', 'get'.$name), $options);
 		}
 		
-		$name = ucfirst($parts[2]);
-	
-		//Handle exceptions
-		if($name == 'Database') {
-			$name = 'DBO';
-		}
-		
-		if($name == 'Authorization') {
-			$name = 'ACL';
-		}
-	
-		return call_user_func_array(array('JFactory', 'get'.$name), $options);
+		return $instance;
 	}
 }

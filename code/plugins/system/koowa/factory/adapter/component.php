@@ -38,32 +38,36 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	 */
 	public function createInstance($identifier, array $options)
 	{
+		$instance = false;
+		
 		$parts = explode('.', $identifier);
-		if(strpos($parts[0], 'com') === false) {
-			return false;
-		}
-		
-		//Set the application
-		$name = explode('::', $parts[0]);
-		$name[0] = ($name[0] == 'admin') ? 'administrator' : $name[0];
-		$result['application'] = $name[0];
-		
-		//Set the component
-		if(isset($parts[1])) {
-			$result['component'] = $parts[1];
-		} 
+		if(strpos($parts[0], 'com') !== false) 
+		{
 
-		//Set the object type
-		if(isset($parts[2])) {
-			$result['type'] = $parts[2];
-		}
+			//Set the application
+			$name = explode('::', $parts[0]);
+			$name[0] = ($name[0] == 'admin') ? 'administrator' : $name[0];
+			$result['application'] = $name[0];
+		
+			//Set the component
+			if(isset($parts[1])) {
+				$result['component'] = $parts[1];
+			} 
 
-		//Set the object name
-		if(isset($parts[3])) {
-			$result['name'] = $parts[3];
+			//Set the object type
+			if(isset($parts[2])) {
+				$result['type'] = $parts[2];
+			}
+
+			//Set the object name
+			if(isset($parts[3])) {
+				$result['name'] = $parts[3];
+			}
+		
+			$instance = self::_getInstanceByArray($result, $options);
 		}
 		
-		return self::_getInstanceByArray($result, $options);
+		return $instance;
 	}
 
 	/**
@@ -76,6 +80,8 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	 */
 	protected static function _getInstanceByArray($object, array $options = array())
 	{
+		$instance = false;
+		
 		if(array_key_exists('application', $object)) {
 			$client = $object['application'];
 		} else {
@@ -135,23 +141,20 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 			}
 			else 
 			{
-				if(class_exists( 'K'.ucfirst($base).ucfirst($name))) 
-				{
+				if(class_exists( 'K'.ucfirst($base).ucfirst($name))) {
 					$classname = 'K'.ucfirst($base).ucfirst($name);
-				} 
-				elseif(class_exists( 'K'.ucfirst($base).'Default')) 
-				{
+				} else {
 					$classname = 'K'.ucfirst($base).'Default';
 				} 
-				else return false;
 			}
 		}
+		
+		if(class_exists( $classname )) 
+		{
+			$options['name'] = array('prefix' => $component, 'base' => $base, 'suffix' => $name);
+			$instance = new $classname($options);
+		}
 
-		//Set the name in the options array
-		$options['name'] = array('prefix' => $component, 'base' => $base, 'suffix' => $name);
-			
-		// Create the object
-		$instance = new $classname($options);
 		return $instance;
 	}
 

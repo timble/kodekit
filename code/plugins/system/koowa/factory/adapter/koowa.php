@@ -28,29 +28,31 @@ class KFactoryAdapterKoowa extends KFactoryAdapterAbstract
 	 */
 	public function createInstance($identifier, array $options)
 	{
+		$instance = false;
+		
 		$parts = explode('.', $identifier);
-		if($parts[0] != 'lib' || $parts[1] != 'koowa') {
-			return false;
-		}
-		
-		unset($parts[0]);
-		unset($parts[1]);
-		
-		$classname = 'K'.KInflector::implode($parts);
-		
-		if (!class_exists($classname))
+		if($parts[0] == 'lib' && $parts[1] == 'koowa') 
 		{
-			$suffix = array_pop($parts);
-			$options['name'] = array(
-                        'prefix'    => 'k',
-						'base'      => KInflector::implode($parts),
-						'suffix'    => $suffix                       
-                        );
+			unset($parts[0]);
+			unset($parts[1]);
+		
+			$classname = 'K'.KInflector::implode($parts);
+		
+			if (!class_exists($classname))
+			{
+				$suffix = array_pop($parts);
+				$options['name'] = array(
+               		'prefix'    => 'k',
+					'base'      => KInflector::implode($parts),
+					'suffix'    => $suffix                       
+               	);
                         
-			$classname = 'K'.KInflector::implode($parts).'Default';
-		}
+				$classname = 'K'.KInflector::implode($parts).'Default';
+			}	
 				
-		$instance = new $classname($options);
+			$instance = new $classname($options);
+		}
+		
 		return $instance;
 	}
 }
