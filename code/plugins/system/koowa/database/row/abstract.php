@@ -182,8 +182,8 @@ abstract class KDatabaseRowAbstract extends KObject
      */
 	public function hit()
 	{
-		if (!in_array('hits', $this->getTable()->getColumns())) {
-			throw new KDatabaseRowException("The table ".$this->getTable()->getName()." doesn't have a 'hits' column.");
+		if (!in_array('hits', $this->_table->getColumns())) {
+			throw new KDatabaseRowException("The table ".$this->_table->getName()." doesn't have a 'hits' column.");
 		}
 
 		$this->hits++;
@@ -202,35 +202,35 @@ abstract class KDatabaseRowAbstract extends KObject
 	 */
 	public function order($change)
 	{
-		$table		= $this->getTable();
-		$db 		= $table->getDBO();
-		$tablename	= $table->getTableName();
+		if (!in_array('ordering', $this->_table->getColumns())) {
+			throw new KDatabaseRowException("The table ".$this->_table->getTableName()." doesn't have a 'ordering' column.");
+		}
+		
+		//force to integer
 		settype($change, 'int');
-		
-		if (!in_array('ordering', $this->getTable()->getColumns())) {
-			throw new KDatabaseRowException("The table '$tablename' doesn't have a 'ordering' column.");
-		}
 			
-		if(!$change) {
-			return $this;
-		}
+		if($change !== 0) 
+		{
+			$old = $this->ordering;
+			$new = $this->ordering + $change;
+			$new = $new <= 0 ? 1 : $new;
 		
-		$old = $this->ordering;
-		$new = $this->ordering + $change;
-		$new = $new <= 0 ? 1 : $new;
-		
-		$query =  "UPDATE `#__$tablename` ";
-		if($change < 0) {
-			$query .= "SET ordering = ordering+1 WHERE $new <= ordering AND ordering < $old ";
-		} else {
-			$query .= "SET ordering = ordering-1 WHERE $old < ordering AND ordering <= $new";
-		}
-		$db->execute($query);
+			$query =  'UPDATE `#__'.$this->_table->getTableName().'` ';
+			
+			if($change < 0) {
+				$query .= 'SET ordering = ordering+1 WHERE '.$new.' <= ordering AND ordering < '.$old;
+			} else {
+				$query .= 'SET ordering = ordering-1 WHERE '.$old.' < ordering AND ordering <= '.$new;
+			}
+			
+			$this->_table->getDBO()->execute($query);
 
-		$this->ordering = $new;
-		$this->save();
+			$this->ordering = $new;
+			$this->save();
 		
-		$table->reorder();
+			$this->_table->reorder();
+		}
+		
 		return $this;
 	}
 	
@@ -307,6 +307,7 @@ abstract class KDatabaseRowAbstract extends KObject
     {
     	$result = $this->_data;
     	$result['id'] = $this->id;
+    	
         return $result;
     }
 
