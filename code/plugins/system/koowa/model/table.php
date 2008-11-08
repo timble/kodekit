@@ -46,7 +46,8 @@ class KModelTable extends KModelAbstract
 		// set the table associated to the model
 		if(isset($options['table'])) {
 			$this->_table = $options['table'];
-		} else
+		} 
+		else
 		{
 			$table 			= KInflector::tableize($this->getClassName('suffix'));
 			$component		= $this->getClassName('prefix');
