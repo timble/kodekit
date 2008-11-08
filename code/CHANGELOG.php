@@ -20,6 +20,9 @@ Legend:
  - -> Removed
  ! -> Note
  
+2008-11-08 Mathias Verraes
+ + Added features to deal with ordered db tables
+ 
 2008-10-31 Mathias Verraes
  + Added KFilterAlpha
   
