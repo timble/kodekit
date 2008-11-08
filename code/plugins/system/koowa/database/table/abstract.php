@@ -211,6 +211,23 @@ abstract class KDatabaseTableAbstract extends KObject
 
 		return $this->_primary;
 	}
+	
+	/**
+	 * Get the highest ordering
+	 *
+	 * @return int
+	 */
+	public function getMaxOrder()
+	{
+		if (!in_array('ordering', $this->getColumns())) {
+			throw new KDatabaseTableException("The table '".$this->getTableName()."' doesn't have a 'ordering' column.");
+		}
+	
+		$query = 'SELECT MAX(ordering) FROM `#__'.$this->getTableName();
+		$this->_db->setQuery($query);
+		
+		return (int) $this->_db->loadResult() + 1;
+	}
 
 	/**
 	 * Gets the fields for the table
@@ -530,6 +547,27 @@ abstract class KDatabaseTableAbstract extends KObject
         
 		return $result;
 	}
+	
+	/**
+	 * Resets the order of all rows
+	 *
+	 * @return	KDatabaseTableAbstract
+	 */
+	public function reorder()
+	{
+		if (!in_array('ordering', $this->getColumns())) {
+			throw new KDatabaseTableException("The table ".$this->getTableName()." doesn't have a 'ordering' column.");
+		}
+		
+		$this->_db->execute("SET @order = 0");
+		$this->_db->execute(
+			 'UPDATE #__'.$this->getTableName().' '
+			.'SET ordering = (@order := @order + 1) '
+			.'ORDER BY ordering ASC'
+		);
+		
+		return $this;	
+	}
 
 	/**
 	 * Table filter method
@@ -639,46 +677,4 @@ abstract class KDatabaseTableAbstract extends KObject
 
  	  	return array($type, $size, $scope);
  	}
- 	
-	/**
-	 * Get the highest ordering
-	 *
-	 * @return int
-	 */
-	public function getMaxOrder()
-	{
-		if (!in_array('ordering', $this->getColumns())) {
-			throw new KDatabaseTableException("The table '".$this->getName()."' doesn't have a 'ordering' column.");
-		}
-
-		$db 	= $this->getDBO();
-		$table 	= $this->getTableName();
-		
-		$query = "SELECT MAX(ordering) FROM `#__$table`";
-		$db->setQuery($query);
-		return $db->loadResult() + 1;
-	}
-
-	
-	/**
-	 * Resets the order of all rows
-	 *
-	 * @return	KDatabaseTableAbstract
-	 */
-	public function reorder()
-	{
-		$table = $this->getTableName();
-		
-		if (!in_array('ordering', $this->getColumns())) {
-			throw new KDatabaseTableException("The table '$table' doesn't have a 'ordering' column.");
-		}
-		
-		$this->_db->execute("SET @order = 0");
-		$this->_db->execute(
-			"UPDATE #__$table "
-			."SET ordering = (@order := @order + 1) "
-			."ORDER BY ordering ASC"
-		);
-		return $this;	
-	}
 }
