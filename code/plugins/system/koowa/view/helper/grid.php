@@ -37,7 +37,7 @@ class KViewHelperGrid
 		$true_text 	= $true_text 	? $true_text 	: 'Yes';
 		$false_text = $false_text 	? $false_text 	: 'No';
 		
-		return '<img src="images/'. ($bool?$true_img:$false_img) .'" border="0" alt="'. JText::_($bool?$true_text:$false_text) .'" />';
+		return '<img src="images/'. ($bool ? $true_img : $false_img) .'" border="0" alt="'. JText::_($bool ? $true_text : $false_text) .'" />';
 	}
 	
 	/**
@@ -162,19 +162,12 @@ class KViewHelperGrid
 		return $href;
 	}
 
-
-	public static function order( $rows, $image='filesave.png', $task="saveorder" )
-	{
-		$image = KViewHelper::_('image.template',  $image, '/images/', NULL, NULL, JText::_( 'Save Order' ) );
-		$href = '<a href="javascript:saveorder('.(count( $rows )-1).', \''.$task.'\')" title="'.JText::_( 'Save Order' ).'">'.$image.'</a>';
-		return $href;
-	}
-	
-	public static function ordericons($row_id)
+	public static function order($row_id)
 	{
 		//Load koowa javascript
 		KViewHelper::_('script', 'koowa.js', Koowa::getURL('js'));
-		$up = Koowa::getURL('images').'/arrow_up.png';
+		
+		$up   = Koowa::getURL('images').'/arrow_up.png';
 		$down = Koowa::getURL('images').'/arrow_down.png';
 
 		$result =
