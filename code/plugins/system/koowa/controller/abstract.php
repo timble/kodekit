@@ -302,7 +302,7 @@ abstract class KControllerAbstract extends KObject
 		{
             $format = isset($options['format']) ? $options['format'] : 'html';
 			throw new KControllerException(
-					JText::_('View not found [application, componennt, name, format]:')
+					JText::_('View not found [application, component, name, format]:')
                     ." $application, $component, $view, $format"
 			);
 		}
