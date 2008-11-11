@@ -100,6 +100,13 @@ abstract class KDatabaseTableAbstract extends KObject
  	   	'longtext'          => 'blob',
  	 	'longblob'          => 'blob',
 	);
+	
+	/**
+	 * Default values for this table
+	 *
+	 * @var 	array
+	 */
+	protected $_defaults;
 
 	/**
 	 * Object constructor to set table and key field
@@ -287,21 +294,19 @@ abstract class KDatabaseTableAbstract extends KObject
      */
     public function getDefaults()
     {
-        static $defaults;
-
-        if(!isset($defaults))
+        if(!isset($this->_defaults))
         {
-            $defaults = array();
+            $this->_defaults = array();
         	foreach($this->getFields() as $name => $description) 
         	{
-        	    $defaults[$name] = $description->default;
+        	    $this->_defaults[$name] = $description->default;
         	    if($name == $this->getPrimaryKey()) {
-        	  		$defaults['id'] = $description->default;
+        	  		$this->_defaults['id'] = $description->default;
         	  	}
         	  	
             }
         }
-    	return $defaults;
+    	return $this->_defaults;
     }
 
     /**
