@@ -193,7 +193,7 @@ abstract class KControllerAbstract extends KObject
 		
 		//Create the arguments object
 		$args = new ArrayObject();
-		$args['class_name'] = $this->getClassName();
+		$args['notifier']   = $this;
 		$args['task']       = $task;
 		$args['result']     = false;
 		
