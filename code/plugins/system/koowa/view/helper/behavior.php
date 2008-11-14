@@ -84,7 +84,7 @@ class KViewHelperBehavior
 
 			// Load the javascript and css
 			KViewHelper::script('modal.js', 'media/system/js/');
-			KViewHelper::stylesheet('modal.css', 'media/system/css');
+			KViewHelper::stylesheet('modal.css', 'media/system/css/');
 
 			$included = true;
 		}
