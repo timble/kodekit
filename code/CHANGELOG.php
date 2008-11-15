@@ -19,6 +19,9 @@ Legend:
  ^ -> Change
  - -> Removed
  ! -> Note
+
+2008-11-16 Mathias Verraes
+ # Decoupled KDatabaseQuery from the db table prefix 
  
 2008-11-08 Mathias Verraes
  + Added features to deal with ordered db tables

@@ -102,14 +102,7 @@ class KDatabaseQuery extends KObject
 	 * @var		object
 	 */
 	protected $_db;
-	
-	/**
-	 * Table prefix
-	 *
-	 * @var		object
-	 */
-	protected $_prefix = '';
-	
+
 	/**
 	 * Object constructor
 	 *
@@ -126,11 +119,6 @@ class KDatabaseQuery extends KObject
 
 		//set the model dbo
 		$this->_db    = $options['dbo'] ? $options['dbo'] : KFactory::get('lib.joomla.database');
-		
-		//set the table prefix
-		if(isset($options['table_prefix'])) {
-			$this->_prefix = $options['table_prefix'];
-		}
 	}
 
 
@@ -405,7 +393,7 @@ class KDatabaseQuery extends KObject
 	protected function _prefix(&$data)
 	{	
 		// Prepend the table modifier
-		$data = $this->_prefix.$data;
+		$data = '#__'.$data;
 	}
 
 	/**

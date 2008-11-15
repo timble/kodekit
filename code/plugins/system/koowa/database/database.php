@@ -268,13 +268,11 @@ class KDatabase extends KPatternProxy
 	 */
 	public function getQuery(array $options = array())
 	{
-		if(isset($options['table_prefix'])) {
-			$prefix = $options['table_prefix'];
-		} else {
-			$prefix = $this->getPrefix();
-		}
+		if(!isset($options['dbo'])) {
+			$options['dbo'] = $this;
+		} 
 		
-		$query = new KDatabaseQuery(array('table_prefix' => $prefix));
+		$query = new KDatabaseQuery($options);
 		return $query;
 	}
 
