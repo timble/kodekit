@@ -10,7 +10,7 @@
  */
 
 /**
- * Koowa Date Exception class
+ * Koowa Factory Adapter Exception class
  *
  * @author      Johan Janssens <johan@joomlatools.org>
  * @category	Koowa
