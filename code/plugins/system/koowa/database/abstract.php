@@ -87,7 +87,7 @@ class KDatabaseAbstract extends KPatternProxy
 					break;
 				}
 
-				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
+				$table = str_replace($this->getPrefix(), '', $query['table_names'][0]);
 
                 if(!isset($query['column_names'] ))
                 {
@@ -119,7 +119,7 @@ class KDatabaseAbstract extends KPatternProxy
 				$sql = str_replace('where', 'WHERE', $sql);
 
 				$where = substr($sql, strpos($sql, 'WHERE'));
-				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
+				$table = str_replace($this->getPrefix(), '', $query['table_names'][0]);
 
 				$data  = array();
 				foreach($query['column_names'] as $key => $column_name) {
@@ -144,7 +144,7 @@ class KDatabaseAbstract extends KPatternProxy
 				$sql = str_replace('where', 'WHERE', $sql);
 
 				$where = substr($sql, strpos($sql, 'WHERE'));
-				$table = str_replace($this->_object->getPrefix(), '', $query['table_names'][0]);
+				$table = str_replace($this->getPrefix(), '', $query['table_names'][0]);
 
 				$result = $this->delete($table, $where);
 			} break;
@@ -293,11 +293,11 @@ class KDatabaseAbstract extends KPatternProxy
 	{
 		foreach($data as $key => $val)
 		{
-			$vals[] = $this->_object->Quote($val);
+			$vals[] = $this->Quote($val);
 			$keys[] = '`'.$key.'`';
 		}
 
-		$sql = 'INSERT INTO '.$this->_object->nameQuote('#__'.$table)
+		$sql = 'INSERT INTO '.$this->nameQuote('#__'.$table)
 			 . '('.implode(', ', $keys).') VALUES ('.implode(', ', $vals).')';
 
 		
@@ -333,11 +333,11 @@ class KDatabaseAbstract extends KPatternProxy
 	public function update($table, $data, $where = null)
 	{
 		foreach($data as $key => $val) {
-			$vals[] = '`'.$key.'` = '.$this->_object->Quote($val);
+			$vals[] = '`'.$key.'` = '.$this->Quote($val);
 		}
 
 		//Create query statement
-		$sql = 'UPDATE '.$this->_object->nameQuote('#__'.$table)
+		$sql = 'UPDATE '.$this->nameQuote('#__'.$table)
 			  .' SET '.implode(', ', $vals)
 			  .' '.$where
 		;
@@ -370,7 +370,7 @@ class KDatabaseAbstract extends KPatternProxy
 	public function delete($table, $where)
 	{
 		//Create query statement
-		$sql = 'DELETE FROM '.$this->_object->nameQuote('#__'.$table)
+		$sql = 'DELETE FROM '.$this->nameQuote('#__'.$table)
 			  .' '.$where
 		;
 
@@ -414,12 +414,12 @@ class KDatabaseAbstract extends KPatternProxy
 		{
 			if (!($result = $this->query()))
             {
-				$this->setError($this->_object->getErrorMsg());
+				$this->setError($this->getErrorMsg());
 				return false;
 			}
 
 			//Force affected rows to 1 in case query was successfull and no rows where returned
-			if(!$result = $this->_object->getAffectedRows()) {
+			if(!$result = $this->getAffectedRows()) {
 				$result = 1;
 			}
 		}
@@ -441,7 +441,7 @@ class KDatabaseAbstract extends KPatternProxy
         if(!isset($result))
         {
             $this->select('SELECT NOW()');
-            $result = $this->_object->loadResult();
+            $result = $this->loadResult();
         }
 
         return $result;
@@ -608,4 +608,18 @@ class KDatabaseAbstract extends KPatternProxy
     {
     	return $this->getObject()->getErrorMsg();
     }
+    
+    /**
+	 * Get a quoted database escaped string
+	 * 
+	 * NULL will not be quoted
+	 *
+	 * @param	string	A string
+	 * @param	boolean	Default true to escape string, false to leave the string unchanged
+	 * @return	string
+	 */
+	public function quote( $text, $escaped = true )
+	{
+		return strtoupper(trim($text)) == 'NULL' ? $text : $this->_object->Quote($text, $escaped);
+	}
 }

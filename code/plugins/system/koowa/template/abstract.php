@@ -100,13 +100,13 @@ abstract class KTemplateAbstract
         if (! ini_get('short_open_tag')) 
 		{
 			// convert "<?=" to "<?php echo"
-	        $find = '/\<\?\=\s?(.*?)\?>/';
-	        $replace = "<?php echo \$1 ?>";
+	        $find = '/\<\?\=\s?(.*?)/';
+	        $replace = "<?php echo \$1";
 	        $this->_data = preg_replace($find, $replace, $this->_data);
 	        
 	        // convert "<?" to "<?php"
-	        $find = '/\<\?\s(.*?)\?>/';
-	        $replace = "<?php \$1 ?>";
+	        $find = '/\<\?\s(.*?)/';
+	        $replace = "<?php \$1";
 	        $this->_data = preg_replace($find, $replace, $this->_data);
         }
 		
@@ -213,4 +213,21 @@ abstract class KTemplateAbstract
                 return false;
         }
     }
+    
+    /**
+     * Url_stat implementation
+     * 
+     * Prevents "url_stat is not implemented" messages on some systems 
+     * @see	http://be.php.net/manual/en/function.stream-wrapper-register.php
+     * @see http://www.mail-archive.com/internals@lists.php.net/msg03887.html
+     *
+     * @param 	string	Path
+     * @param	int		Flags
+     * @return 	array
+     */
+    public function url_stat($path, $flags = 0)
+    {
+        return $this->stream_stat();
+    }
+    
 }
