@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<!-- $Id$ -->
+<project name="Koowa - Rapid Application Development Framework"
+	basedir="."
+	default="main">
+
+	<property name="koowa_scm" override="true"
+		value="https://joomlatools.unfuddle.com/svn/joomlatools_koowa/releases/0.6/code" />
+	<property name="targetdir" value="packages" override="true" />
+	<property name="targetfile" override="true" value="koowa_v0.6.0.tar.gz" />
+	
+	<!-- MAIN -->
+	<target name="main" description="Build Installable Packages">
+
+		<mkdir dir="${targetdir}" />
+		<delete file="${targetdir}/${targetfile}" />
+
+		<phingcall target="clean" />
+
+		<!-- Export the code -->
+		<phingcall target="export">
+			<property name="scm"		value="${koowa_scm}" />
+			<property name="targetdir"	value="${targetdir}/tmp" />
+			<property name="extname"	value="Koowa" />
+			<property name="extpath"	value="" />
+		</phingcall>
+
+		<!-- Build the package -->
+		<copy todir="${targetdir}/pkg/" >
+			<fileset dir="${targetdir}/tmp/plugins/system/">
+				<include name="**" />
+				<exclude name="CHANGELOG.php" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${targetdir}/pkg/koowa" >
+			<fileset dir="${targetdir}/tmp/">
+				<include name="CHANGELOG.php" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${targetdir}/pkg/media/" >
+			<fileset dir="${targetdir}/tmp/media/plg_koowa">
+				<include name="**" />
+			</fileset>
+		</copy>
+		
+		
+		<tar destfile="${targetdir}/${targetfile}" basedir="${targetdir}/pkg" compression="gzip"/>
+
+		<delete dir="${targetdir}/pkg/" includeemptydirs="true" />
+		<delete dir="${targetdir}/tmp/" includeemptydirs="true" />
+	</target>
+
+	<target name="clean" description="...">
+		<delete includeemptydirs="true">
+			<fileset dir="${targetdir}">
+				<include name="*" />
+				<include name="pkg/**" />
+				<include name="tmp/**" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="export" description="Checks out the extension">
+		<if>
+			<not><isset property="scmusr"/></not>
+			<then>
+				<input propertyname="scmusr"
+					defaultValue="" promptChar="?">${extname} SCM Username</input>
+			</then>
+		</if>
+		<if>
+			<not><isset property="scmpwd"/></not>
+			<then>
+				<input propertyname="scmpwd"
+					defaultValue="" promptChar="?">${extname} SCM Password</input>
+			</then>
+		</if>
+
+
+		<svnexport
+			username="${scmusr}"
+			password="${scmpwd}"
+			repositoryurl="${scm}/${extpath}"
+			todir="${targetdir}/${extpath}"
+			nocache="true"
+			force="true" />
+	</target>
+</project>
