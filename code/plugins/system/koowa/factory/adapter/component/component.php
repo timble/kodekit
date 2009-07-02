@@ -76,7 +76,10 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 			//Create the name suffix.
 			$suffix = !empty($identifier->path) ? strtolower($identifier->path).'_'.$identifier->name : $identifier->name;
 
+			// @todo, we shouldnt need this option anymore
 			$options['name'] = array('prefix' => $identifier->component, 'base' => $identifier->type, 'suffix' => $suffix);
+			$option['identifier'] = $identifier;
+
 			$instance = new $classname($options);
 		}
 
