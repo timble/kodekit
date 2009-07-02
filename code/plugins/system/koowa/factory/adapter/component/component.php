@@ -19,17 +19,6 @@
 class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 {
 	/**
-	 * The alias object map
-	 *
-	 * @var	array
-	 */
-	protected static $_objectAliasMap = array(
-      	'table'     => 'DatabaseTable',
-        'row'       => 'DatabaseRow',
-      	'rowset'    => 'DatabaseRowset'
-	);
-
-	/**
 	 * Create an instance of a class based on a class identifier
 	 *
 	 * @param mixed  The class identifier
@@ -59,9 +48,6 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	{
 		$instance = false;
 
-		$client    = $identifier->application;
-		$component = $identifier->component;
-
         $classname = $identifier->getClassName();
 
       	if (!class_exists( $classname ))
@@ -80,18 +66,8 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 					throw new KFactoryAdapterException("Class [$classname] not found in file [$file]" );
 				}
 			}
-			else
-			{
-				$alias = $identifier->type;
-				if(array_key_exists($identifier->type, self::$_objectAliasMap)) {
-					$alias = self::$_objectAliasMap[$identifier->type];
-				}
-
-				if(class_exists( 'K'.ucfirst($alias).$path.ucfirst($identifier->name))) {
-					$classname = 'K'.ucfirst($alias).$path.ucfirst($identifier->name);
-				} else {
-					$classname = 'K'.ucfirst($alias).$path.'Default';
-				}
+			else {
+				$classname = $identifier->getDefaultClass();
 			}
 		}
 

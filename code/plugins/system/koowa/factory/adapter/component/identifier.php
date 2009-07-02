@@ -4,6 +4,18 @@
 class KFactoryAdapterComponentIdentifier extends KObject
 {
 	/**
+	 * The alias object map
+	 *
+	 * @var	array
+	 */
+	protected $_objectAliasMap = array(
+      	'table'     => 'DatabaseTable',
+        'row'       => 'DatabaseRow',
+      	'rowset'    => 'DatabaseRowset'
+	);
+
+
+	/**
 	 * Application
 	 *
 	 * @var	string
@@ -158,5 +170,29 @@ class KFactoryAdapterComponentIdentifier extends KObject
 		}
 
 		return $filename;
+	}
+
+
+	/**
+	 * Get the classname for the KFooBar or KFooDefault class
+	 *
+	 * @return string
+	 */
+	public function getDefaultClass()
+	{
+		// convert 'table' to 'DatabaseTable' etc
+		$alias = $this->type;
+		if(array_key_exists($this->type, $this->_objectAliasMap)) {
+			$alias = $this->_objectAliasMap[$this->type];
+		}
+
+		$path =  KInflector::camelize(implode('_', $this->path));
+
+		if(class_exists( 'K'.ucfirst($alias).$path.ucfirst($this->name))) {
+			$classname = 'K'.ucfirst($alias).$path.ucfirst($this->name);
+		} else {
+			$classname = 'K'.ucfirst($alias).$path.'Default';
+		}
+		return $classname;
 	}
 }
