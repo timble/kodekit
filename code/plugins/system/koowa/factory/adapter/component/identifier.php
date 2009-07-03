@@ -78,6 +78,8 @@ class KFactoryAdapterComponentIdentifier extends KObject
 	/**
 	 * Constructor
 	 *
+	 * @todo refactor to application::type.component.class[[.path].name]
+	 *
 	 * @param	string	Identifier application::extension.component.type[[.path].name]
 	 * @return 	void
 	 */
