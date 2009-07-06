@@ -126,7 +126,7 @@ class KFactoryIdentifierComponent extends KObject implements KFactoryIdentifierI
 
 	public function __toString()
 	{
-		$string = $application.'::'.$this->extension.'.'.$this->component.'.'.$this->type;
+		$string = $this->application.'::'.$this->extension.'.'.$this->component.'.'.$this->type;
 
 		if(count($this->path)) {
 			$string .= '.'.implode('.',$this->path);
