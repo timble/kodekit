@@ -28,7 +28,7 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	public function instantiate($identifier, array $options)
 	{
 		$instance = false;
-		$identifier = new KFactoryAdapterComponentIdentifier($identifier);
+		$identifier = new KFactoryIdentifierComponent($identifier);
 		if($identifier->extension == 'com') {
 			$instance = self::_createInstance($identifier, $options);
 		}
@@ -39,12 +39,12 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	/**
 	 * Get an instance of an instanciatable class
 	 *
-	 * @param 	KFactoryAdapterComponentIdentifier	Identifier
+	 * @param 	KFactoryIdentifierComponent	Identifier
 	 * @param 	array	Object options
 	 * @throws	KFactoryAdapterException
 	 * @return object
 	 */
-	protected static function _createInstance(KFactoryAdapterComponentIdentifier $identifier, array $options = array())
+	protected static function _createInstance(KFactoryIdentifierInterface $identifier, array $options = array())
 	{
 		$instance = false;
 

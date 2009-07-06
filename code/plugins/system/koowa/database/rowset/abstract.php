@@ -22,11 +22,11 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
 {
 	/**
 	 * Original data passed to the object
-	 * 
-	 * @var 	array 
+	 *
+	 * @var 	array
 	 */
 	protected $_data = array();
-	
+
 	/**
      * KDatabaseTableAbstract parent class or instance.
      *
@@ -47,7 +47,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
      * @var object	KDatabaseRowAbstract
      */
     protected $_empty_row;
-    
+
 	 /**
      * Constructor
      *
@@ -58,24 +58,20 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        // Mixin the KMixinClass
-        $this->mixin(new KMixinClass(array('mixer' => $this, 'name_base' => 'Rowset')));
-
-        // Assign the classname with values from the config
-        $this->setClassName($options['name']);
+        $this->identifier = $options['identifier'];
 
 		// Set table object and class name
-		$this->_table_class  = 'com.'.$this->getClassName('prefix').'.table.'.$this->getClassName('suffix');
+		$this->_table_class  = $this->identifier->application.'::com.'.$this->identifier->component.'.table.'.$this->identifier->name;
 		$this->_table       = isset($options['table']) ? $options['table'] : KFactory::get($this->_table_class);
 
 		// Set the data
 		if(isset($options['data']))  {
 			$this->_data = $options['data'];
 		}
-		
+
 		// Count the data
 		$this->resetCount();
-		
+
 		// Instantiate an empty row to use for cloning later
 		$this->_empty_row = $this->_table->fetchRow();
     }
@@ -102,10 +98,10 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
         return array_merge($defaults, $options);
     }
 
-    
+
 	/**
      * Overridden current() method
-     * 
+     *
      * Used to delay de creation of KDatabaseRow objects, for performance reasons
      *
      * @return KDatabaseRowAbstract Current element from the collection
@@ -117,7 +113,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
         }
 
 		// do we already have a row object for this position?
-        if (!isset($this[$this->key()])) 
+        if (!isset($this[$this->key()]))
         {
         	// cloning is faster than instantiating
         	$row = clone $this->_empty_row;
@@ -128,7 +124,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
     	// return the row object
         return parent::offsetGet($this->key());
     }
-    
+
     /**
      * Overridden offsetSet() method
      *
@@ -136,12 +132,12 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
      * @param 	mixed	The item's value
      * @return  this
      */
-	public function offsetSet($offset, $value) 
+	public function offsetSet($offset, $value)
 	{
 		if($value instanceof KDatabaseRowAbstract) {
 			$value = $value->toArray();
 		}
-		
+
 		if(empty($offset)) {
 			$this->_data[] = $value;
 		} else {
@@ -151,13 +147,13 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
 		$this->resetCount();
 		return $this;
 	}
-	
+
  	/**
      * Overridden offsetSet() method
-     * 
-     * All numerical array keys will be modified to start counting from zero 
+     *
+     * All numerical array keys will be modified to start counting from zero
      * while literal keys won't be touched.
-     * 
+     *
      * @param 	int 	The offset of the item
      * @return 	this
      */
@@ -167,7 +163,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
 		array_splice($this->_data, $offset, 1);
         return parent::offsetUnset($offset);
 	}
-	
+
 	/**
      * Overridden resetCount() method
      *
@@ -178,7 +174,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
     	$this->setCount(count($this->_data));
     	return $this;
     }
-    
+
 	/**
      * Returns the table object, or null if this is disconnected row
      *
@@ -190,7 +186,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
     }
 
 	/**
-     * Query the class name of the Table object for which this row was 
+     * Query the class name of the Table object for which this row was
      * created.
      *
      * @return string
@@ -211,11 +207,11 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
     public function getRow($position, $seek = false)
     {
         $key = $this->key();
-        try 
+        try
         {
             $this->seek($position);
             $row = $this->current();
-        } 
+        }
         catch (KDatabaseRowsetException $e) {
             throw new KDatabaseRowsetException('No row could be found at position ' . (int) $position);
         }
@@ -225,7 +221,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
         }
         return $row;
     }
-    
+
 	/**
      * Returns a row from a known position
      *
@@ -236,10 +232,10 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
     public function findRow($key, $value)
     {
    		$result = $this->_empty_row;
-    	
+
     	$this->rewind();
-    	
-    	while($this->valid()) 
+
+    	while($this->valid())
 		{
 			$row = $this->current();
 			if($row->$key == $value) {
@@ -248,14 +244,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
 			}
     		$this->next();
 		}
-		
+
 		return $result;
     }
 
 	/**
      * Returns all data as an array.
      *
-     * This works only if we have iterated through the result set once to 
+     * This works only if we have iterated through the result set once to
      * instantiate the rows.
      *
      * @return array

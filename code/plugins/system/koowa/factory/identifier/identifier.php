@@ -3,7 +3,7 @@
  * @version 	$Id$
  * @category	Koowa
  * @package		Koowa_Factory
- * @subpackage 	Adapter
+ * @subpackage 	Identifier
  * @copyright	Copyright (C) 2007 - 2009 Johan Janssens and Mathias Verraes. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  */
@@ -17,9 +17,9 @@
  * @author		Mathias Verraes <mathias@koowa.org>
  * @category	Koowa
  * @package     Koowa_Factory
- * @subpackage 	Adapter
+ * @subpackage 	Identifier
  */
-class KFactoryAdapterComponentIdentifier extends KObject
+class KFactoryIdentifierComponent extends KObject implements KFactoryIdentifierInterface
 {
 	/**
 	 * The alias object map

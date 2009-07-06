@@ -19,35 +19,35 @@ class KControllerBread extends KControllerAbstract
 {
 	/**
 	 * Browse a list of items
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function _actionBrowse()
 	{
 		$layout	= KRequest::get('get.layout', 'cmd', 'default' );
-		
+
 		$this->getView()
 			->setLayout($layout)
 			->display();
 	}
-	
+
 	/**
 	 * Display a single item
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function _actionRead()
 	{
 		$layout	= KRequest::get('get.layout', 'cmd', 'default' );
-		
+
 		$this->getView()
 			->setLayout($layout)
 			->display();
 	}
-	
+
 	/*
 	 * Generic edit action, saves over an existing item
-	 * 
+	 *
 	 * @return KDatabaseRow 	A row object containing the updated data
 	 */
 	protected function _actionEdit()
@@ -57,24 +57,24 @@ class KControllerBread extends KControllerAbstract
 
 		// Get the id
 		$id	 = KRequest::get('get.id', 'int');
-		
+
 		// Get the table object attached to the model
-		$component 	= $this->getClassName('prefix');
-		$suffix    	= $this->getClassName('suffix');
+		$component 	= $this->identifier->component;
+		$suffix    	= $this->identifier->name;
 		$model		= KInflector::pluralize($suffix);
 
-		$app   		= KFactory::get('lib.joomla.application')->getName();
+		$app   		= $this->identifier->application;
 		$table 		= KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
 		$row 		= $table->fetchRow($id)
 					->setProperties($data)
 					->save();
-					
+
 		return $row;
 	}
-	
+
 	/*
 	 * Generic add action, saves a new item
-	 * 
+	 *
 	 * @return KDatabaseRow 	A row object containing the new data
 	 */
 	protected function _actionAdd()
@@ -83,23 +83,23 @@ class KControllerBread extends KControllerAbstract
 		$data = KRequest::get('post', 'string');
 
 		// Get the table object attached to the model
-		$component = $this->getClassName('prefix');
-		$suffix    	= $this->getClassName('suffix');
+		$component 	= $this->identifier->component;
+		$suffix    	= $this->identifier->name;
 		$model		= $suffix;
 		$view	   	= $suffix;
-		
-		$app   		= KFactory::get('lib.joomla.application')->getName();
+
+		$app   		= $this->identifier->application;
 		$table 		= KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
 		$row 		= $table->fetchRow()
 					->setProperties($data)
 					->save();
-					
+
 		return $row;
-	}	
-	
+	}
+
 	/*
 	 * Generic delete function
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function _actionDelete()
@@ -107,10 +107,10 @@ class KControllerBread extends KControllerAbstract
 		$id = (array) KRequest::get('post.id', 'int');
 
 		// Get the table object attached to the model
-		$component = $this->getClassName('prefix');
-		$model    	= $this->getClassName('suffix');
+		$component 	= $this->identifier->component;
+		$model    	= $this->identifier->name;
 
-		$app   = KFactory::get('lib.joomla.application')->getName();
+		$app   = $this->identifier->application;
 		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable()
 				->delete($id);
 	}

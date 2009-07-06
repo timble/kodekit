@@ -12,6 +12,8 @@
 /**
  * Class utitlity
  *
+ * @todo remove
+ *
  * Can be used as a mixin in classes that rely on their name, such as KView
  *
  * @author      Mathias Verraes <mathias@koowa.org>
@@ -41,27 +43,27 @@ class KMixinClass extends KMixinAbstract
 	 *
 	 *
 	 * @param	array 	An optional associative array of configuration settings.
-	 * Recognized key values include 'mixer', 'base_name' 
+	 * Recognized key values include 'mixer', 'base_name'
 	 * (this list is not meant to be comprehensive).
 	 */
 	public function __construct(array $options = array())
     {
     	// Initialize the options
         $options  = $this->_initialize($options);
-    	
+
     	parent::__construct($options);
-    	
+
     	if(empty($options['name_base'])) {
 			throw new KMixinException('name_base [string] option is required');
 		}
-    	
+
         $this->_name_base    = $options['name_base'];
         $this->_name_parts   = $this->_splitClassName($options['name_base'], get_class($this->_mixer));
     }
-    
+
 	/**
      * Initializes the options for the object
-     * 
+     *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
      * @param   array   Options
@@ -70,7 +72,7 @@ class KMixinClass extends KMixinAbstract
     protected function _initialize(array $options)
     {
         parent::_initialize($options);
-    	
+
     	$defaults = array(
             'name_base' =>  '',
         );
@@ -87,16 +89,16 @@ class KMixinClass extends KMixinAbstract
     public function getClassName($part = null)
     {
         $parts = $this->_name_parts;
-        
+
     	switch($part)
         {
         	case 'all':
                 $name = $parts['prefix'].'_'.$parts['base'].'_'.$parts['suffix'];
         		return KInflector::classify($name);
-					
+
             case null:
                 return $parts;
-				
+
             default:
                 return $parts[$part];
         }
@@ -118,10 +120,10 @@ class KMixinClass extends KMixinAbstract
             	$this->_name_parts[$part] = $array[$part];
             }
         }
-      	        
+
         return $this->_mixer;
     }
-    
+
  	/**
      * Splits a string using a separator
      *
@@ -138,12 +140,12 @@ class KMixinClass extends KMixinAbstract
                 'suffix'=> '',
         );
 
-        if ( preg_match( "/(.*?)$separator(.*)/i", $string, $matches ) ) 
+        if ( preg_match( "/(.*?)$separator(.*)/i", $string, $matches ) )
         {
             $result['prefix'] = KInflector::underscore($matches[1]);
             $result['suffix'] = KInflector::underscore($matches[2]);
         }
-        
+
         return $result;
     }
 }
