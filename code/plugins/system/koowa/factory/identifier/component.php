@@ -92,10 +92,6 @@ class KFactoryIdentifierComponent extends KObject implements KFactoryIdentifierI
 
 		list($this->application, $parts) = explode('::', $identifier);
 
-		// Admin is an alias for administrator
-		$this->application = ($this->application == 'admin') ? 'administrator' : $this->application;
-
-
 		$parts 			= explode('.', $parts);
 
 		// set the extension
@@ -149,8 +145,10 @@ class KFactoryIdentifierComponent extends KObject implements KFactoryIdentifierI
 
 	public function getBasePath()
 	{
+		// Admin is an alias for administrator
+		$app = ($this->application == 'admin') ? 'administrator' : $this->application;
 
-		$base_path  = JApplicationHelper::getClientInfo($this->application, true)->path
+		$base_path  = JApplicationHelper::getClientInfo($app, true)->path
 						.DS.'components'.DS.'com_'.$this->component;
 
 		if(!empty($this->name))
