@@ -19,8 +19,6 @@
  */
 abstract class KToolbarAbstract extends KObject implements KToolbarInterface
 {
-	protected $options = array();
-
 	/**
 	 * Buttons in the toolbar
 	 *
@@ -38,11 +36,11 @@ abstract class KToolbarAbstract extends KObject implements KToolbarInterface
 		$this->identifier = $options['identifier'];
 
         // Initialize the options
-        $this->_options  = $this->_initialize($options);
+        $options  = $this->_initialize($options);
 
 
         // Set the title
-        $title = empty($this->_options['title']) ? KInflector::humanize($this->getName()) : $this->_options['title'];
+        $title = empty($options['title']) ? KInflector::humanize($this->getName()) : $options['title'];
         $this->setTitle($title);
 	}
 
@@ -105,6 +103,7 @@ abstract class KToolbarAbstract extends KObject implements KToolbarInterface
 	 */
 	public function render()
 	{
+
 		$id		= 'toolbar-'.$this->getName();
 		$html = array ();
 
@@ -117,11 +116,9 @@ abstract class KToolbarAbstract extends KObject implements KToolbarInterface
 		{
 			if(!($button instanceof KToolbarButtonInterface))
 			{
-				try {
-					$button = KFactory::tmp('lib.koowa.toolbar.button.'.$button);
-				} catch(KFactoryAdapterException $e) {
-					throw new KToolbarException('Invalid button: '.$name);
-				}
+				$app		= $this->identifier->application;
+				$component	= $this->identifier->component;
+				$button = KFactory::tmp($app.'::com.'.$component.'.toolbar.button.'.$button);
 			}
 
 			$button->setParent($this);

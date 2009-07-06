@@ -55,13 +55,13 @@ abstract class KToolbarButtonAbstract extends KObject implements KToolbarButtonI
      */
     protected function _initialize(array $options)
     {
-    	$tmpname = isset($options['name']['suffix']) ? $options['name']['suffix'] : KInflector::getPart(get_class($this), -1);
+    	$name = $this->identifier->name;
 
         $defaults = array(
             'parent'	=> null,
-            'icon'		=> 'icon-32-'.$tmpname,
-            'id'		=> $tmpname,
-			'text'		=> ucfirst($tmpname),
+            'icon'		=> 'icon-32-'.$name,
+            'id'		=> $name,
+			'text'		=> ucfirst($name),
             'method'	=> 'get'
         );
 
