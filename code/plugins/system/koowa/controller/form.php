@@ -129,11 +129,9 @@ class KControllerForm extends KControllerBread
 	{
 		$result = parent::_actionDelete();
 
-		// Get the table object attached to the model
-		$component = $this->identifier->component;
+		// Redirect
 		$view	   = KInflector::pluralize($this->identifier->name);
 		$format	   = KRequest::get('get.format', 'cmd', 'html');
-
 		$this->setRedirect('view='.$view.'&format='.$format);
 
 		return $result;
@@ -142,31 +140,31 @@ class KControllerForm extends KControllerBread
 	/*
 	 * Generic enable action
 	 *
-	 * @return void
+	 * @return KDatabaseTableAbstract
 	 */
 	protected function _actionEnable()
 	{
 		$id = (array) KRequest::get('post.id', 'int');
-
 		$enable  = $this->getAction() == 'enable' ? 1 : 0;
 
 		if (count( $id ) < 1) {
 			throw new KControllerException(JText::sprintf( 'Select a item to %s', JText::_($this->getAction()), true ));
 		}
 
-		// Get the table object attached to the model
-		$component = $this->identifier->component;
-		$model     = $this->identifier->name;
-		$view	   = $model;
+		// Get the table object
+		$app   		= $this->identifier->application;
+		$component 	= $this->identifier->component;
+		$name    	= KInflector::pluralize($this->identifier->name);
 
-		$app   = $this->identifier->application;
-		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
-		$table->update(array('enabled' => $enable), $id);
+		$table = KFactory::get($app.'::com.'.$component.'.table.'.$name)
+				->update(array('enabled' => $enable), $id);
 
 		$this->setRedirect(
 			'view='.KInflector::pluralize($view)
 			.'&format='.KRequest::get('get.format', 'cmd', 'html')
 		);
+
+		return $this->table;
 	}
 
 	/**
@@ -179,17 +177,16 @@ class KControllerForm extends KControllerBread
 		$id 	= (array) KRequest::get('post.id', 'int');
 		$access = KRequest::get('post.access', 'int');
 
-		// Get the table object attached to the model
-		$component = $this->identifier->component;
-		$model     = $this->identifier->name;
-		$view	   = $model;
+		// Get the table object
+		$app   		= $this->identifier->application;
+		$component 	= $this->identifier->component;
+		$name     	= KInflector::pluralize($this->identifier->name);
 
-		$app   = $this->identifier->application;
-		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
-		$table->update(array('access' => $access), $id);
+		$table = KFactory::get($app.'::com.'.$component.'.table.'.$name)
+				->update(array('access' => $access), $id);
 
 		$this->setRedirect(
-			'view='.KInflector::pluralize($view)
+			'view='.$name
 			.'&format='.KRequest::get('get.format', 'cmd', 'html'),
 			JText::_( 'Changed items access level')
 		);
@@ -205,17 +202,17 @@ class KControllerForm extends KControllerBread
 		$id 	= KRequest::get('post.id', 'int');
 		$change = KRequest::get('post.order_change', 'int');
 
-		// Get the table object attached to the model
+		// Get the table object
+		$app   = $this->identifier->application;
 		$component = $this->identifier->component;
 		$name      = KInflector::pluralize($this->identifier->name);
-		$view	   = $name;
 
-		$app   = $this->identifier->application;
-		$table = KFactory::get($app.'::com.'.$component.'.table.'.$name);
-		$row   = $table->fetchRow($id)->order($change);
+		$row = KFactory::get($app.'::com.'.$component.'.table.'.$name)
+				->fetchRow($id)
+				->order($change);
 
 		$this->setRedirect(
-			'view='.$view
+			'view='.$name
 			.'&format='.KRequest::get('get.format', 'cmd', 'html')
 		);
 
@@ -223,7 +220,7 @@ class KControllerForm extends KControllerBread
 	}
 
 	/**
-	 * Filter the token to prevent CSRF exploirs
+	 * Filter the token to prevent CSRF exploits
 	 *
 	 * @return boolean	If successfull return TRUE, otherwise return false;
 	 * @throws KControllerException

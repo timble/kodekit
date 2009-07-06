@@ -58,14 +58,13 @@ class KControllerBread extends KControllerAbstract
 		// Get the id
 		$id	 = KRequest::get('get.id', 'int');
 
-		// Get the table object attached to the model
-		$component 	= $this->identifier->component;
-		$suffix    	= $this->identifier->name;
-		$model		= KInflector::pluralize($suffix);
-
+		// Get the table object
 		$app   		= $this->identifier->application;
-		$table 		= KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
-		$row 		= $table->fetchRow($id)
+		$component 	= $this->identifier->component;
+		$name    	= KInflector::pluralize($this->identifier->name);
+		
+		$row		= KFactory::get($app.'::com.'.$component.'.table.'.$name)
+					->fetchRow($id)
 					->setProperties($data)
 					->save();
 
@@ -82,15 +81,13 @@ class KControllerBread extends KControllerAbstract
 		// Get the post data from the request
 		$data = KRequest::get('post', 'string');
 
-		// Get the table object attached to the model
-		$component 	= $this->identifier->component;
-		$suffix    	= $this->identifier->name;
-		$model		= $suffix;
-		$view	   	= $suffix;
-
+		// Get the table object
 		$app   		= $this->identifier->application;
-		$table 		= KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable();
-		$row 		= $table->fetchRow()
+		$component 	= $this->identifier->component;
+		$name    	= KInflector::pluralize($this->identifier->name);
+
+		$row 		= KFactory::get($app.'::com.'.$component.'.table.'.$name)
+					->fetchRow()
 					->setProperties($data)
 					->save();
 
@@ -100,18 +97,20 @@ class KControllerBread extends KControllerAbstract
 	/*
 	 * Generic delete function
 	 *
-	 * @return void
+	 * @return KDatabaseTableAbstract
 	 */
 	protected function _actionDelete()
 	{
 		$id = (array) KRequest::get('post.id', 'int');
 
-		// Get the table object attached to the model
+		// Get the table object
+		$app   		= $this->identifier->application;
 		$component 	= $this->identifier->component;
-		$model    	= $this->identifier->name;
+		$name    	= $this->identifier->name;
 
-		$app   = $this->identifier->application;
-		$table = KFactory::get($app.'::com.'.$component.'.model.'.$model)->getTable()
+		
+		$table = KFactory::get($app.'::com.'.$component.'.table.'.$name)
 				->delete($id);
+		return $table;
 	}
 }
