@@ -72,7 +72,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	public function __construct( array $options = array() )
 	{
 		$this->identifier = $options['identifier'];
-	
+
         // Initialize the options
         $options  = $this->_initialize($options);
 
@@ -82,10 +82,10 @@ abstract class KDatabaseTableAbstract extends KObject
 		}
 		else
 		{
-            $prefix         = $this->identifier->component;
-            $suffix         = $this->identifier->name;
+            $component      = $this->identifier->component;
+            $name         = $this->identifier->name;
 
-			$this->_table_name = empty($prefix) ? $suffix : $prefix.'_'.$suffix;
+			$this->_table_name = empty($component) ? $name : $component.'_'.$name;
 		}
 
 		// Set a primary key

@@ -84,12 +84,12 @@ abstract class KViewAbstract extends KObject
 		// @todo use identifier?
 		$template	= KFactory::get('lib.joomla.application')->getTemplate();
 
-		$prefix 	= str_replace('_', DS, $this->identifier->component);
-		$suffix 	= str_replace('_', DS, $this->identifier->name);
+		$component 	= str_replace('_', DS, $this->identifier->component);
+		$name 	= str_replace('_', DS, $this->identifier->name);
 
 		// @todo use identifier?
-		$path 		= JPATH_BASE.DS.'components'.DS.'com_'.$prefix.DS.'views'.DS.$suffix.DS.'tmpl';
-		$override 	= JPATH_BASE.DS.'templates'.DS.$template.DS.'html'.DS.'com_'.$prefix.DS.$suffix;
+		$path 		= JPATH_BASE.DS.'components'.DS.'com_'.$component.DS.'views'.DS.$name.DS.'tmpl';
+		$override 	= JPATH_BASE.DS.'templates'.DS.$template.DS.'html'.DS.'com_'.$component.DS.$name;
 
 		$this->addTemplatePath($path);
 		$this->addTemplatePath($override);

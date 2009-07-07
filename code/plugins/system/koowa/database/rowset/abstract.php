@@ -55,10 +55,11 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
      */
     public function __construct(array $options = array())
     {
+    	$this->identifier = $options['identifier'];
+
         // Initialize the options
         $options  = $this->_initialize($options);
 
-        $this->identifier = $options['identifier'];
 
 		// Set table object and class name
 		$this->_table_class  = $this->identifier->application.'::com.'.$this->identifier->component.'.table.'.$this->identifier->name;
@@ -87,11 +88,6 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray
     protected function _initialize(array $options)
     {
         $defaults = array(
-            'name'      => array(
-                        'prefix'    => 'k',
-                        'base'      => 'rowset',
-                        'suffix'    => 'default'
-                        ),
             'table'     => null
         );
 
