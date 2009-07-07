@@ -62,7 +62,7 @@ class KControllerBread extends KControllerAbstract
 		$app   		= $this->identifier->application;
 		$component 	= $this->identifier->component;
 		$name    	= KInflector::pluralize($this->identifier->name);
-		
+
 		$row		= KFactory::get($app.'::com.'.$component.'.table.'.$name)
 					->fetchRow($id)
 					->setProperties($data)
@@ -106,9 +106,9 @@ class KControllerBread extends KControllerAbstract
 		// Get the table object
 		$app   		= $this->identifier->application;
 		$component 	= $this->identifier->component;
-		$name    	= $this->identifier->name;
+		$name    	= KInflector::pluralize($this->identifier->name);
 
-		
+
 		$table = KFactory::get($app.'::com.'.$component.'.table.'.$name)
 				->delete($id);
 		return $table;
