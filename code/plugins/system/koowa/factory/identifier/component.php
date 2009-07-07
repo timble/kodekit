@@ -184,7 +184,7 @@ class KFactoryIdentifierComponent extends KObject implements KFactoryIdentifierI
 				$filename = strtolower($this->name).DS.$type.'.php';
 			} break;
 
-			default : $filename = strtolower($this->type).'.php';
+			default : $filename = strtolower($this->name).'.php';
 		}
 
 		return $filename;
