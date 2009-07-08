@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 	$Id:factory.php 46 2008-03-01 18:39:32Z mjaz $
+ * @version 	$Id$
  * @category	Koowa
  * @package		Koowa_Factory
  * @subpackage 	Adapter
@@ -30,7 +30,11 @@ class KFactoryAdapterKoowa extends KFactoryAdapterAbstract
 	{
 		$instance = false;
 
-		$identifier = new KFactoryIdentifierKoowa($identifier);
+		// we accept either a string or an identifier object.
+		if(!($identifier instanceof KFactoryIdentifierInterface)) {
+			$identifier = new KFactoryIdentifierKoowa($identifier);
+		}
+
 		if($identifier->extension == 'lib' && $identifier->library == 'koowa')
 		{
 			$classname = $identifier->getClassName();

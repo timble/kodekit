@@ -21,14 +21,19 @@ class KFactoryAdapterComponent extends KFactoryAdapterAbstract
 	/**
 	 * Create an instance of a class based on a class identifier
 	 *
-	 * @param mixed  The class identifier
+	 * @param mixed  Identifier or Identifier object - application::extension.component.type[[.path].name]
 	 * @param array  An optional associative array of configuration settings.
 	 * @return object|false  Return object on success, returns FALSE on failure
 	 */
 	public function instantiate($identifier, array $options)
 	{
 		$instance = false;
-		$identifier = new KFactoryIdentifierComponent($identifier);
+
+		// we accept either a string or an identifier object.
+		if(!($identifier instanceof KFactoryIdentifierInterface)) {
+			$identifier = new KFactoryIdentifierComponent($identifier);
+		}
+
 		if($identifier->extension == 'com') {
 			$instance = self::_createInstance($identifier, $options);
 		}

@@ -54,6 +54,9 @@ class KFactoryIdentifierKoowa extends KObject implements KFactoryIdentifierInter
 	 */
 	public function __construct($identifier)
 	{
+		// we also accept objects
+		$identifier = (string) $identifier;
+
 		// we only deal with lib.koowa
 		$parts = explode('.', $identifier);
 		$this->extension 	= array_shift($parts);

@@ -78,11 +78,14 @@ class KFactoryIdentifierComponent extends KObject implements KFactoryIdentifierI
 	/**
 	 * Constructor
 	 *
-	 * @param	string	Identifier application::extension.component.type[[.path].name]
+	 * @param	string	Identifier or Identifier object - application::extension.component.type[[.path].name]
 	 * @return 	void
 	 */
 	public function __construct($identifier)
 	{
+		// we also accept objects
+		$identifier = (string) $identifier;
+
 		// we only deal with foo::bar
 		if(strpos($identifier, '::') === false) {
 			return;
