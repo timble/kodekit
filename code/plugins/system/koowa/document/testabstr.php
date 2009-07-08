@@ -1,4 +1,5 @@
 <?php
+<?php
 /**
  * @version     $Id: abstract.php 858 2009-05-17 22:01:02Z johan $
  * @category	Koowa
