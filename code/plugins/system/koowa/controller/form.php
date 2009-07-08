@@ -160,7 +160,7 @@ class KControllerForm extends KControllerBread
 				->update(array('enabled' => $enable), $id);
 
 		$this->setRedirect(
-			'view='.KInflector::pluralize($view)
+			'view='.KInflector::pluralize($name)
 			.'&format='.KRequest::get('get.format', 'cmd', 'html')
 		);
 

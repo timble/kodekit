@@ -69,13 +69,13 @@ abstract class KControllerAbstract extends KObject
 	public function __construct( array $options = array() )
 	{
 		$this->identifier = $options['identifier'];
-	
+
         // Initialize the options
         $options  = $this->_initialize($options);
 
         // Mixin a command chain
         $this->mixin(new KMixinCommand(array('mixer' => $this, 'command_chain' => $options['command_chain'])));
-        
+
         //Mixin a filter
         $this->mixin(new KMixinFilter(array('mixer' => $this, 'command_chain' => $this->getCommandChain())));
 	}
