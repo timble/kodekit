@@ -22,4 +22,73 @@
 class KFactoryIdentifierKoowa extends KObject implements KFactoryIdentifierInterface
 {
 
+	/**
+	 * Extension [lib]
+	 * @var string
+	 */
+	public $extension;
+
+	/**
+	 * Library name
+	 * @var string
+	 */
+	public $library;
+
+	/**
+	 * Path array
+	 * @var array
+	 */
+	public $path = array();
+
+	/**
+	 * Name
+	 * @var string
+	 */
+	public $name;
+
+	/**
+	 * Constructor
+	 *
+	 * @param	string	Identifier lib.koowa[.path].name
+	 * @return 	void
+	 */
+	public function __construct($identifier)
+	{
+		// we only deal with lib.koowa
+		$parts = explode('.', $identifier);
+		$this->extension 	= array_shift($parts);
+		$this->library 		= array_shift($parts);
+
+		if($this->extension == 'lib' && $this->library == 'koowa')
+		{
+			$this->name = array_pop($parts);
+			$this->path	= $parts;
+		}
+
+	}
+
+	public function __toString()
+	{
+		$string = $this->extension.'.'.$this->library;
+
+		if(count($this->path)) {
+			$string .= '.'.implode('.',$this->path);
+		}
+
+		$string .= '.'.$this->name;
+		return $string;
+	}
+
+	public function getClassName()
+	{
+        $classname = 'K'.KInflector::implode($this->path).ucfirst($this->name);
+		return $classname;
+	}
+
+	public function getDefaultClass()
+	{
+	    $classname = 'K'.KInflector::implode($this->path).'Default';
+		return $classname;
+	}
+
 }

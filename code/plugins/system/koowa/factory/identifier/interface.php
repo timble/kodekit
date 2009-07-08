@@ -21,5 +21,17 @@
  */
 interface KFactoryIdentifierInterface
 {
+	/**
+	 * Converts the identifer back to a string
+	 *
+	 * @return string
+	 */
 	public function __toString();
+
+	/**
+	 * Returns the classname for the identifier
+	 *
+	 * @return string
+	 */
+	public function getClassName();
 }
