@@ -410,7 +410,7 @@ abstract class KViewAbstract extends KObject implements KFactoryIdentifiable
 		$route = trim($route);
 
 		// special cases
-		if($route == 'index.php' || $route == 'index.php?' || empty($route)) {
+		if($route == 'index.php' || $route == 'index.php?') {
 			return JRoute::_($route);
 		}
 
@@ -439,7 +439,10 @@ abstract class KViewAbstract extends KObject implements KFactoryIdentifiable
 		}
 
 		// Reconstruct the route
-		$result[] = $route;
+		if(!empty($route)) {
+			$result[] = $route;
+		}
+		
 		$result = implode('&', $result);
 		return JRoute::_('index.php?'.$result);
 	}
