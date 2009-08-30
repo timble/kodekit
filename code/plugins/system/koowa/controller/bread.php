@@ -138,12 +138,12 @@ class KControllerBread extends KControllerAbstract
 
 		$this->getModel()
 			->setState('id',		KRequest::get('get.id', 'int'))
-			->setState('limit',		KRequest::get('get.f.limit', 'int', $default))
-			->setState('offset',	KRequest::get('get.f.offset', 'int', 0))
-			->setState('order', 	KRequest::get('get.f.order', 'cmd'))
-			->setState('direction',	KRequest::get('get.f.direction', 'word', 'asc'))
-			->setState('search', 	KRequest::get('get.f.search', 'string'));
-
+			->setState('limit',		KRequest::get('get.limit', 'int', $default))
+			->setState('offset',	KRequest::get('get.offset', 'int', 0))
+			->setState('order', 	KRequest::get('get.order', 'cmd'))
+			->setState('direction',	KRequest::get('get.direction', 'word', 'asc'))
+			->setState('search', 	KRequest::get('get.search', 'string'));
+			
         return $this;
 	}
 }

@@ -27,19 +27,15 @@ class KTemplateHelperPagination extends KObject
 	 */
 	public function limit($limit)
 	{
-		KTemplate::loadHelper('script', JURI::root(true).'/media/plg_koowa/js/pagination.js');
+		KTemplate::loadHelper('script', KRequest::root().'/media/plg_koowa/js/pagination.js');
 
 		// modify url
 		$url = clone KRequest::url();
-		$query = $url->getquery(1);
-		if(!isset($query['f'])) {
-			$query['f'] = array();
-		}
-
+		$query = $url->getQuery(1);
 		$selected = '';
-		foreach(array(10=>10, 20=>20, 50=>50, 100=>100, 0=>'all') as $value=>$text)
+		foreach(array(10 => 10, 20 => 20, 50 => 50, 100 => 100, 0 =>'all' ) as $value => $text)
 		{
-			$query['f']['limit'] = $value;
+			$query['limit'] = $value;
 			$redirect = (string) $url->setQuery($query);
 			if($value==$limit) {
 				$selected = $redirect;
@@ -76,11 +72,9 @@ class KTemplateHelperPagination extends KObject
 
 		// modify url
 		$url = clone KRequest::url();
-		$query = $url->getquery(1);
-		if(!isset($query['f'])) {
-			$query['f'] = array();
-		}
-		$query['f']['limit'] = $p->getState('items.limit');
+		$query = $url->getQuery(1);
+		
+		$query['limit'] = $p->getState('items.limit');
 
 		// Html
 		$html = '<ul class="pagination"><li>«</li>';
@@ -89,7 +83,7 @@ class KTemplateHelperPagination extends KObject
 		{
 			if($elem->active && !$elem->current)
 			{
-				$query['f']['offset']	= $elem->offset;
+				$query['offset']	= $elem->offset;
 				$link = (string) $url->setQuery($query);
 				$link = '<a href="'.$link.'">'.JText::_($elem->text).'</a>';
 			} else {
@@ -100,10 +94,6 @@ class KTemplateHelperPagination extends KObject
 
 
 		$html .= '<li>»</li></ul>';
-
 		return $html;
 	}
-
-
-
 }

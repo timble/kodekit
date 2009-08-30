@@ -252,6 +252,4 @@ class KModelTable extends KModelAbstract
     {
 		$query->limit($this->getState('limit'), $this->getState('offset'));
     }
-
-
 }
