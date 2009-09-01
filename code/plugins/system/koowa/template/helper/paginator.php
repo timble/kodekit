@@ -17,7 +17,7 @@
  * @package		Koowa_Template
  * @subpackage	Helper
  */
-class KTemplateHelperPagination extends KObject
+class KTemplateHelperPaginator extends KObject
 {
 	/**
 	 * Render a select box with limit values for a grid
@@ -30,8 +30,9 @@ class KTemplateHelperPagination extends KObject
 		KTemplate::loadHelper('script', KRequest::root().'/media/plg_koowa/js/pagination.js');
 
 		// modify url
-		$url = clone KRequest::url();
+		$url   = clone KRequest::url();
 		$query = $url->getQuery(1);
+		
 		$selected = '';
 		foreach(array(10 => 10, 20 => 20, 50 => 50, 100 => 100, 0 =>'all' ) as $value => $text)
 		{
@@ -60,15 +61,16 @@ class KTemplateHelperPagination extends KObject
 	 */
 	public function pages($total, $offset, $limit, $display = 4)
 	{
-		KFactory::get('lib.joomla.document')->addStylesheet(JURI::root(1).'/media/plg_koowa/css/pagination.css');
+		KFactory::get('lib.joomla.document')->addStylesheet(KRequest::root().'/media/plg_koowa/css/pagination.css');
 
 		// Paginator object
-		$p = KFactory::tmp('lib.koowa.model.pagination')
-			->setState('items.total', $total)
-			->setState('items.offset', $offset)
-			->setState('items.limit', $limit)
-			->setState('pages.display', $display)
-			->prepare();
+		$p = KFactory::tmp('lib.koowa.model.paginator')
+			->setState(array(
+					'items.total'  => $total,
+					'items.offset' => $offset,
+					'items.limit'  => $limit,
+					'pages.display' => $display
+			));
 
 		// modify url
 		$url = clone KRequest::url();
@@ -91,7 +93,6 @@ class KTemplateHelperPagination extends KObject
 			}
 			$html .= '<li><span>'.$link.'</span></li>';
 		}
-
 
 		$html .= '<li>»</li></ul>';
 		return $html;

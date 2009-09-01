@@ -3,7 +3,7 @@
  * @version		$Id$
  * @category	Koowa
  * @package		Koowa_Model
- * @copyright	Copyright (C) 2007 - 2008 Joomlatools. All rights reserved.
+ * @copyright	Copyright (C) 2007 - 2009 Johan Janssens and Mathias Verraes. All rights reserved.
  * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
  * @link     	http://www.koowa.org
  */
@@ -14,17 +14,14 @@
  * @author		Johan Janssens <johan@koowa.org>
  * @category	Koowa
  * @package     Koowa_Model
- * @uses		KMixinClass
- * @uses		KInflector
  * @uses		KObject
- * @uses		KFactory
  */
 abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 {
 	/**
 	 * A state object
 	 *
-	 * @var KRegistry object
+	 * @var object
 	 */
 	protected $_state;
 
@@ -34,13 +31,6 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 	 * @var integer
 	 */
 	protected $_total;
-
-	/**
-	 * Pagination object
-	 *
-	 * @var object
-	 */
-	protected $_pagination;
 
 	/**
 	 * Model list data
@@ -94,7 +84,7 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 		$defaults = array(
             'state'      => array(),
 			'identifier' => null
-                        );
+       	);
 
         return array_merge($defaults, $options);
     }
@@ -119,8 +109,9 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
     {
     	unset($this->_list);
     	unset($this->_item);
-    	unset($this->_pagination);
     	unset($this->_total);
+    	
+    	//$this->_state = new KObject();
 
     	return $this;
     }
@@ -128,14 +119,18 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 	/**
 	 * Method to set model state variables
 	 *
-	 * @param	string	The name of the property
-	 * @param	mixed	The value of the property to set
-	 * @return	this
+	 * @param	string|array	The name of the property or an associative array of properties
+	 * @param	mixed			The value of the property to set
+	 * @return	KModelAbstract
 	 */
 	public function setState( $property, $value = null )
 	{
-		$this->_state->set($property, $value);
-
+		if(is_array($property)) {
+			$this->_state->setProperties($property);	
+		} else {
+			$this->_state->set($property, $value);
+		}
+		
 		// changing state empties the model's cache because the data is now different
 		$this->reset();
 
@@ -155,9 +150,9 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 	}
 
 	/**
-	 * Method to get a item object which represents a table row
+	 * Method to get a ite
 	 *
-	 * @return  object KDatabaseRow
+	 * @return  object
 	 */
 	public function getItem()
 	{
@@ -165,9 +160,9 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 	}
 
 	/**
-	 * Get a list of items which represnts a  table rowset
+	 * Get a list of items
 	 *
-	 * @return  object KDatabaseRowset
+	 * @return  object
 	 */
 	public function getList()
 	{

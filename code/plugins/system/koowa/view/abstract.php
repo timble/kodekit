@@ -396,10 +396,12 @@ abstract class KViewAbstract extends KObject implements KFactoryIdentifiable
 
 	/**
 	 * Create a route. Index.php, option, view and layout can be ommitted. The
-	 * following variations will all result in the same route
-	 * foo=bar
-	 * option=com_mycomp&view=myview&foo=bar
-	 * index.php?option=com_mycomp&view=myview&foo=bar
+	 * following variations will all result in the same route 
+	 * 
+	 * - foo=bar
+	 * - option=com_mycomp&view=myview&foo=bar
+	 * - index.php?option=com_mycomp&view=myview&foo=bar
+	 * 
 	 * In templates, use @route()
 	 *
 	 * @param	string	The data to use to create the route

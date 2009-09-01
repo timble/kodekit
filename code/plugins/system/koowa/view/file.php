@@ -44,9 +44,11 @@ class KViewFile extends KViewAbstract
 		} else {
 			header('Content-type: application/force-download');
 		}
+		
 		if($this->filename) {
 			header('Content-Disposition: attachment; filename="'.$this->filename.'"');
 		}
+		
 		header('Content-Transfer-Encoding: binary');
 		header('Accept-Ranges: bytes');
 

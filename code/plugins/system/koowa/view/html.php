@@ -38,13 +38,15 @@ class KViewHtml extends KViewAbstract
 		$app 		= $this->_identifier->application;
 		$package 	= $this->_identifier->package;
 		$name 		= $this->_identifier->name;
+		
+		$toolbar = KFactory::get($app.'::com.'.$package.'.toolbar.'.$name);
 
-		//Push the toolbar output into the document buffer
-		$this->_document->setBuffer(
-			KFactory::get($app.'::com.'.$package.'.toolbar.'.$name)->render(),
-			'modules',
-			'toolbar'
-		);
+		//Render the toolbar title
+		KFactory::get('lib.koowa.application')
+			->set('JComponentTitle', $toolbar->renderTitle());
+		
+		//Render the toolbar and push it into the document buffer
+		$this->_document->setBuffer($toolbar->render(), 'modules', 'toolbar');
 
 		parent::display();
 	}

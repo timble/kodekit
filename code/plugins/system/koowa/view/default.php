@@ -22,15 +22,17 @@ class KViewDefault extends KViewHtml
 		$app 		= $this->_identifier->application;
 		$package 	= $this->_identifier->package;
 		$name 		= $this->_identifier->name;
-
+		
 		if(KInflector::isPlural($name))
 		{
+			//Assign the data of the model to the view
 			$model = KFactory::get($app.'::com.'.$package.'.model.'.$name);
 			$this->assign($name, 	$model->getList())
 				 ->assign('total',	$model->getTotal());
 		}
 		else
 		{
+			//Assign the data of the model to the view
 			$model = KFactory::get($app.'::com.'.$package.'.model.'.KInflector::pluralize($name));
 			$this->assign($name, $model->getItem());
 		}
