@@ -38,7 +38,7 @@ class KObject
      * Set the object properties
      *
      * @param   string|array|object	The name of the property, an associative array or an object
-     * @param   mixed  				The value of the property to set
+     * @param   mixed  				The value of the property
      * @throws	KObjectException
      * @return  KObject
      */

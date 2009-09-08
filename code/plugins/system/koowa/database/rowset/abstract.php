@@ -200,7 +200,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectArray implements KFactoryI
     {
     	$result = array();
     	foreach ($this as $i => $row) {
-            $result[$i] = is_array($row) ? $row :  $row->get();
+            $result[$i] = is_array($row) ? $row :  $row->getData();
         }
         return $result;
     }

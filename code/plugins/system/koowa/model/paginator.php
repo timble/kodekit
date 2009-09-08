@@ -25,6 +25,26 @@
  */
 class KModelPaginator extends KModelAbstract
 {
+
+	/**
+	 * Constructor
+     *
+     * @param	array An optional associative array of configuration settings.
+	 */
+	public function __construct(array $options = array())
+	{
+		parent::__construct($options);
+		
+		// Set the state
+		$this->_state
+			->insert('total'    , 'int')
+			->insert('limit'    , 'int', 20)
+			->insert('offset'   , 'int', 0)
+			->insert('count'    , 'int')
+			->insert('current'  , 'int')
+			->insert('display'  , 'int', 4);
+	}
+	
 	/**
 	 * Paginate based on total, limit and offset
 	 * 
@@ -46,20 +66,20 @@ class KModelPaginator extends KModelAbstract
 			$limit  =  $total;
 		}
 
-		$pages_count	= (int) ceil($total / $limit);
+		$count	= (int) ceil($total / $limit);
 
     	if($offset > $total) {
-			$offset = ($pages_count-1) * $limit;
+			$offset = ($count-1) * $limit;
 		}
 
-		$pages_current = (int) floor($offset / $limit) +1;
+		$current = (int) floor($offset / $limit) +1;
 
-		$this->_state->set(array(
+		$this->_state->setData(array(
 				'total'   => $total,
 				'limit'   => $limit,
 				'offset'  => $offset,
-				'count'   => $pages_count,
-				'current' => $pages_current
+				'count'   => $count,
+				'current' => $current
 		));
 		
 		return $this;

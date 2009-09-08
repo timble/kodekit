@@ -38,6 +38,7 @@ class KTemplateHelperPaginator extends KObject
 		{
 			$query['limit'] = $value;
 			$redirect = (string) $url->setQuery($query);
+			
 			if($value==$limit) {
 				$selected = $redirect;
 			}
@@ -62,10 +63,10 @@ class KTemplateHelperPaginator extends KObject
 	public function pages($total, $offset, $limit, $display = 4)
 	{
 		KFactory::get('lib.joomla.document')->addStylesheet(KRequest::root().'/media/plg_koowa/css/pagination.css');
-
+		
 		// Paginator object
 		$p = KFactory::tmp('lib.koowa.model.paginator');
-		$p->getState()->set(array(
+		$p->getState()->setData(array(
 					'total'  => $total,
 					'offset' => $offset,
 					'limit'  => $limit,
@@ -76,7 +77,7 @@ class KTemplateHelperPaginator extends KObject
 		$url = clone KRequest::url();
 		$query = $url->getQuery(1);
 		
-		$query['limit'] = $p->getState()->get('items.limit');
+		$query['limit'] = $p->getState()->limit;
 
 		// Html
 		$html = '<ul class="pagination"><li>«</li>';

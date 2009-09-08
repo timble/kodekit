@@ -36,30 +36,36 @@ class KModelState extends KModelAbstract
     }
     
 	/**
-     * Retrieve state value
+     * Get a state value
      *
      * @param  	string 	The user-specified state name.
-     * @return 	string 	The corresponding state value.
+     * @return 	string 	The corresponding state value or NULL if the state doesn't exist
      */
     public function __get($name)
     {
-    	return $this->_state[$name];
+    	if(isset($this->_state[$name])) {
+    		return $this->_state[$name]->value;
+    	}
+    	
+    	return null;
     }
 
     /**
      * Set state value
      *
-     * @param  	string 	The state name.
-     * @param  	mixed  	The state value.
+     * @param  	string 	The user-specified state name.
+     * @param  	mixed  	The user-specified state value.
      * @return 	void
      */
     public function __set($name, $value)
     {
-        $this->_data[$name] = $value;
+    	if(isset($this->_state[$name])) {
+    		$this->_data[$name]->value = $value;
+    	}
    }
 
 	/**
-     * Test existence of a state 
+     * Test existence of a state
      *
      * @param  string  The column key.
      * @return boolean
@@ -70,68 +76,86 @@ class KModelState extends KModelAbstract
     }
 
     /**
-     * Unset a state
+     * Unset a state value
      *
      * @param	string  The column key.
      * @return	void
      */
     public function __unset($name)
     {
-        unset($this->_state[$name]);
+    	if(isset($this->_state[$name])) {
+    		$this->_state[$name]->value = null;
+    	}
     }
     
 	/**
-     * Set the object properties
+     * Insert a new state
      *
-     * @param   string|array|object	The name of the property, an associative array of properties or an object
-     * @param   mixed  				The value of the property to set
-     * @throws	KObjectException
-     * @return  KObject
+     * @param   string		The name of the state
+     * @param   string  	The type of the state
+     * @param   mixed  		The default value of the state
+     * @return  KModelState
      */
-    public function set( $property, $value = null )
+    public function insert($name, $type, $default = null)
     {
-   	 	if(is_object($property)) {
-    		$property = (array) $property;
+    	if(!isset($this->_state[$name])) 
+    	{
+    		$state = new stdClass();
+    		$state->name  = $name;
+    		$state->type  = $type;
+    		$state->value = $default; 
+    		$this->_state[$name] = $state;
     	}
-    	
-    	if(is_array($property)) 
-        {
-        	foreach ($property as $k => $v) {
-            	$this->set($k, $v);
-        	}
-        }
-        else $this->_state[$property] = $value;
-    	
+    
+        return $this;
+    }
+    
+	/**
+     * Remove an excisting state
+     *
+     * @param   string		The name of the state
+     * @return  KModelState
+     */
+    public function remove( $name )
+    {
+    	unset($this->_state[$name]);
+        return $this;
+    }
+    
+	/**
+     * Set the state data
+     *
+     * @param   array|object	An associative array of state data by name
+     * @return  KModelState
+     */
+    public function setData(array $data)
+    {
+		// Filter data based on column type
+		foreach($data as $key => $value)
+		{
+			if(isset($this->_state[$key])) 
+    		{
+    			$type = $this->_state[$key]->type;
+				$this->_state[$key]->value = KFactory::tmp('lib.koowa.filter.'.$type)->sanitize($value);
+    		}
+		}
+   
         return $this;
     }
 
     /**
-     * Get the object properties
-     * 
-     * If no property name is given then the function will return an associative
-     * array of all properties.
-     * 
-     * If the property does not exist and a  default value is specified this is
-     * returned, otherwise the function return NULL.
+     * Get the state data
      *
-     * @param   string	The name of the property
-     * @param   mixed  	The default value
-     * @return  mixed 	The value of the property or an associative array of properties or NULL
+     * @return  array 	An associative array of state data by name
      */
-    public function get($property = null, $default = null)
+    public function getData()
     {
-        $result = $default;
+        $result = array();
     	
-    	if(is_null($property)) {
-        	$result  = $this->_state;
-        } 
- 		else
-        {
-    		if(isset($this->_state[$property])) {
-            	$result = $this->_state[$property];
-        	}
+   		foreach ($this->_state as $k => $v) {
+            $result[$k] = $v->value;
         }
-        
+       
         return $result;
     }
 }
