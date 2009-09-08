@@ -10,6 +10,7 @@
 
 /**
  * Table Model Class
+ * 
  * Provides interaction with a database table
  *
  * @author		Johan Janssens <johan@koowa.org>
@@ -233,8 +234,8 @@ class KModelTable extends KModelAbstract
      */
     protected function _buildQueryOrder(KDatabaseQuery $query)
     {
-    	$order      = $this->getState('order');
-       	$direction  = strtoupper($this->getState('direction', 'ASC'));
+    	$order      = $this->_state->order;
+       	$direction  = strtoupper($this->_state->direction);
 
     	if($order) {
     		$query->order($order, $direction);
@@ -250,6 +251,6 @@ class KModelTable extends KModelAbstract
      */
     protected function _buildQueryLimit(KDatabaseQuery $query)
     {
-		$query->limit($this->getState('limit'), $this->getState('offset'));
+		$query->limit($this->_state->limit, $this->_state->offset);
     }
 }

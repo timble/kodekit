@@ -71,7 +71,7 @@ abstract class KDatabaseRowAbstract extends KObject implements KFactoryIdentifia
 
 		// Set the row data
 		if(isset($options['data']))  {
-			$this->setProperties($options['data']);
+			$this->set($options['data']);
 		}
     }
 
@@ -139,7 +139,7 @@ abstract class KDatabaseRowAbstract extends KObject implements KFactoryIdentifia
     {
         $key = $this->_table->getPrimaryKey();
 
-        $properties = $this->getProperties();
+        $properties = $this->get();
 
         if(array_key_exists('ordering', $properties) && $properties['ordering'] <= 0) {
         	$properties['ordering'] = $this->getTable()->getMaxOrder();
@@ -292,19 +292,6 @@ abstract class KDatabaseRowAbstract extends KObject implements KFactoryIdentifia
 	}
 
 	/**
-     * Returns the column/value data as an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $array = $this->_data;
-        $array['id'] = $this->id;
-
-        return $array;
-    }
-
-	/**
      * Retrieve row field value
      *
      * @param  	string 	The user-specified column name.
@@ -363,40 +350,67 @@ abstract class KDatabaseRowAbstract extends KObject implements KFactoryIdentifia
 
         unset($this->_data[$columnName]);
     }
-
-    /**
-     * Returns an associative array of object properties
+ 
+	/**
+     * Set the object properties
      *
-     * @return  array
-     */
-    public function getProperties()
-    {
-    	$result = $this->_data;
-    	$result['id'] = $this->id;
-
-        return $result;
-    }
-
-    /**
-     * Set the object properties based on a named array/hash
-     *
-     * @param   mixed Either and associative array or another object
+     * @param   string|array|object	The name of the property, an associative array of properties or an object
+     * @param   mixed  				The value of the property to set
      * @return 	KDatabaseRowAbstract
      */
-    public function setProperties( $properties )
+    public function set( $property, $value = null )
     {
-    	$properties = (array) $properties;
-        $pk = $this->_table->getPrimaryKey();
-
-        foreach ($properties as $k => $v)
+    	if(is_object($property)) {
+    		$property = (array) $property;
+    	}
+    	
+    	if(is_array($property)) 
         {
-         	if('id' == $k) {
-         		$this->_data[$pk] = $v;
-         	} else {
-         		$this->_data[$k] = $v;
-         	}
-        }
+        	$pk = $this->_table->getPrimaryKey();
 
+        	foreach ($property as $k => $v)
+        	{
+         		if('id' == $k) {
+         			$this->_data[$pk] = $v;
+         		} else {
+         			$this->_data[$k] = $v;
+         		}
+        	}
+        }
+        else $this->$property = $value;
+    	
         return $this;
+    }
+    
+ 	/**
+     * Get the object properties
+     * 
+     * If no property name is given then the function will return an associative
+     * array of all properties.
+     * 
+     * If the property does not exist and a  default value is specified this is
+     * returned, otherwise the function return NULL.
+     *
+     * @param   string	The name of the property
+     * @param   mixed  	The default value
+     * @return  mixed 	The value of the property, an associative array of properties or NULL
+     */
+    public function get($property = null, $default = null)
+    {
+        $result = $default;
+    	
+    	if(is_null($property)) 
+        {
+        	$result = $this->_data;
+    		$result['id'] = $this->id;
+        } 
+        else
+        {
+        	if(isset($this->_data[$property])) {
+            	$result = $this->_data[$property];
+        	}
+        }
+        
+        return $result;
     }
 }

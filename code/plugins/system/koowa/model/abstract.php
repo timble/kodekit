@@ -65,10 +65,9 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 		
 		// Initialize the options
 		$options  = $this->_initialize($options);
-
-		//Use KObject to store the model state
-		$this->_state = new KObject();
-		$this->_state->setProperties($options['state']);
+		
+		// Set the state
+		$this->_state = $options['state'];
 	}
 
 	/**
@@ -82,7 +81,7 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
 	protected function _initialize(array $options)
 	{
 		$defaults = array(
-            'state'      => array(),
+            'state'      => KFactory::tmp('lib.koowa.model.state', array($options['state'])),
 			'identifier' => null
        	);
 
@@ -117,36 +116,13 @@ abstract class KModelAbstract extends KObject implements KFactoryIdentifiable
     }
 
 	/**
-	 * Method to set model state variables
+	 * Method to get state object
 	 *
-	 * @param	string|array	The name of the property or an associative array of properties
-	 * @param	mixed			The value of the property to set
-	 * @return	KModelAbstract
+	 * @return	object	The state object
 	 */
-	public function setState( $property, $value = null )
+	public function getState()
 	{
-		if(is_array($property)) {
-			$this->_state->setProperties($property);	
-		} else {
-			$this->_state->set($property, $value);
-		}
-		
-		// changing state empties the model's cache because the data is now different
-		$this->reset();
-
-		return $this;
-	}
-
-	/**
-	 * Method to get model state variables
-	 *
-	 * @param	string	Optional parameter name
-	 * @param   mixed	Optional default value
-	 * @return	object	The property where specified, the state object where omitted
-	 */
-	public function getState($property = null, $default = null)
-	{
-		return $property === null ? $this->_state : $this->_state->get($property, $default);
+		return $this->_state;
 	}
 
 	/**

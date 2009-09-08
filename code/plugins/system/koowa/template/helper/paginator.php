@@ -64,19 +64,19 @@ class KTemplateHelperPaginator extends KObject
 		KFactory::get('lib.joomla.document')->addStylesheet(KRequest::root().'/media/plg_koowa/css/pagination.css');
 
 		// Paginator object
-		$p = KFactory::tmp('lib.koowa.model.paginator')
-			->setState(array(
-					'items.total'  => $total,
-					'items.offset' => $offset,
-					'items.limit'  => $limit,
-					'pages.display' => $display
-			));
+		$p = KFactory::tmp('lib.koowa.model.paginator');
+		$p->getState()->set(array(
+					'total'  => $total,
+					'offset' => $offset,
+					'limit'  => $limit,
+					'display' => $display));
+		$p->paginate();
 
 		// modify url
 		$url = clone KRequest::url();
 		$query = $url->getQuery(1);
 		
-		$query['limit'] = $p->getState('items.limit');
+		$query['limit'] = $p->getState()->get('items.limit');
 
 		// Html
 		$html = '<ul class="pagination"><li>«</li>';

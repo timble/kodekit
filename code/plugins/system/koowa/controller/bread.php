@@ -67,7 +67,7 @@ class KControllerBread extends KControllerAbstract
 		// Get the row and save
 		$row		= $this->_getTable()
 						->fetchRow($id)
-						->setProperties($data)
+						->set($data)
 						->save();
 
 		return $row;
@@ -86,7 +86,7 @@ class KControllerBread extends KControllerAbstract
 		// Get the row and save
 		$row 		= $this->_getTable()
 						->fetchRow()
-						->setProperties($data)
+						->set($data)
 						->save();
 
 		return $row;
@@ -136,13 +136,13 @@ class KControllerBread extends KControllerAbstract
 	{
 		$default = KFactory::get('lib.joomla.application')->getCfg('list_limit', 20);
 
-		$this->getModel()
-			->setState('id',		KRequest::get('get.id', 'int'))
-			->setState('limit',		KRequest::get('get.limit', 'int', $default))
-			->setState('offset',	KRequest::get('get.offset', 'int', 0))
-			->setState('order', 	KRequest::get('get.order', 'cmd'))
-			->setState('direction',	KRequest::get('get.direction', 'word', 'asc'))
-			->setState('search', 	KRequest::get('get.search', 'string'));
+		$this->getModel()->getState()
+			->set('id',			KRequest::get('get.id', 'int'))
+			->set('limit',		KRequest::get('get.limit', 'int', $default))
+			->set('offset',		KRequest::get('get.offset', 'int', 0))
+			->set('order', 		KRequest::get('get.order', 'cmd'))
+			->set('direction',	KRequest::get('get.direction', 'word', 'asc'))
+			->set('search', 	KRequest::get('get.search', 'string'));
 			
         return $this;
 	}

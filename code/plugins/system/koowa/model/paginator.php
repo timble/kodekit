@@ -10,14 +10,14 @@
 
 /**
  * Pagination Model
- *
- * To use, set the following states:
  * 
- * items.total:  		Total number of items
- * items.limit:  		Number of items per page
- * items.offset: 		The starting item for the current page
- * pages.display: 		Number of links to generate before and after the current offset,
- * 						or 0 for all (Optional)
+ * To use, set the following states
+ * 
+ * total:  		Total number of items
+ * limit:  		Number of items per page
+ * offset: 		The starting item for the current page
+ * display: 	Number of links to generate before and after the current offset,
+ * 				or 0 for all (Optional)
  *
  * @author		Mathias Verraes <mathias@koowa.org>
  * @category	Koowa
@@ -26,116 +26,15 @@
 class KModelPaginator extends KModelAbstract
 {
 	/**
-	 * Method to set model state variables
-	 *
-	 * @param	string	The name of the property
-	 * @param	mixed	The value of the property to set
-	 * @return	KModelPaginator
-	 */
-	public function setState( $property, $value = null )
-	{
-		parent::setState($property, $value);
-		
-		//Preform pagination.
-		$this->_paginate();
-		
-		return $this;
-	}
-    
-    /**
-	 * Get a list of pages
-	 *
-	 * @return  array 	Returns and array of pages information
-	 */
-    public function getList()
-    {
-    	$elements = array();
-    	$prototype = new KObject();
-    	$current = ($this->getState('pages.current') - 1) * $this->getState('items.limit');
-
-    	// First
-    	$page = 1;
-    	$offset = 0;
-    	$active = $offset != $this->getState('items.offset');
-    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'First');
-    	$element 	= clone $prototype;
-    	$elements[] = $element->setProperties($props);
-
-    	// Previous
-    	$page = $this->getState('pages.current') - 1;
-    	$offset = max(
-    				0,
-    				($page - 1) * $this->getState('items.limit'));
-		$active = $offset != $this->getState('items.offset');
-    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Previous');
-    	$element 	= clone $prototype;
-    	$elements[] = $element->setProperties($props);
-
-		// Pages
-		foreach($this->_getOffsets() as $page => $offset)
-		{
-			$current = $offset == $this->getState('items.offset');
-			$props = array('page' => $page, 'offset' => $offset, 'current' => $current, 'active' => !$current, 'text' => $page);
-    		$element 	= clone $prototype;
-    		$elements[] = $element->setProperties($props);
-		}
-
-		// Next
-    	$page = $this->getState('pages.current') + 1;
-    	$offset = min(
-    				($this->getState('pages.count')-1) * $this->getState('items.limit'),
-    				($page - 1) * $this->getState('items.limit'));
- 		$active = $offset != $this->getState('items.offset');
-    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Next');
-    	$element 	= clone $prototype;
-    	$elements[] = $element->setProperties($props);
-
-    	// Last
-    	$page = $this->getState('pages.count');
-    	$offset = ($page - 1) * $this->getState('items.limit');
-    	$active = $offset != $this->getState('items.offset');
-    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Last');
-    	$element 	= clone $prototype;
-    	$elements[] = $element->setProperties($props);
-
-    	return $elements;
-    }
-    
- 	/**
-     * Get the offset for each page, optionally with a range
-     *
-     * @return 	array	Page number => offset
-     */
-	protected function _getOffsets()
-    {
-   	 	if($display = $this->getState('pages.display'))
-    	{
-    		$start	= (int) max($this->getState('pages.current') - $display, 1);
-    		$start	= min($this->getState('pages.count'), $start);
-    		$stop	= (int) min($this->getState('pages.current') + $display, $this->getState('pages.count'));
-    	}
-    	else // show all pages
-    	{
-    		$start = 1;
-    		$stop = $this->getState('pages.count');
-    	}
-
-    	$result = array();
-    	foreach(range($start, $stop) as $pagenumber) {
-    		$result[$pagenumber] = 	($pagenumber-1) * $this->getState('items.limit');
-    	}
-
-    	return $result;
-    }
-    
-	/**
 	 * Paginate based on total, limit and offset
+	 * 
+	 * @return  KModelPaginator
 	 */
-    protected function _paginate()
+    public function paginate()
     {
-    	$total	= (int) $this->getState('items.total');
-		$limit	= (int) max($this->getState('items.limit', 20), 1);
-		$offset	= (int) max($this->getState('items.offset'), 0);
+    	$total	= (int) $this->_state->total;
+		$limit	= (int) max($this->_state->limit, 1);
+		$offset	= (int) max($this->_state->offset, 0);
 
 		if($limit > $total) {
 			$offset = 0;
@@ -155,13 +54,98 @@ class KModelPaginator extends KModelAbstract
 
 		$pages_current = (int) floor($offset / $limit) +1;
 
-		
-		parent::setState(array(
-				'items.total'   => $total,
-				'items.limit'   => $limit,
-				'items.offset'  => $offset,
-				'pages.count'   => $pages_count,
-				'pages.current' => $pages_current
+		$this->_state->set(array(
+				'total'   => $total,
+				'limit'   => $limit,
+				'offset'  => $offset,
+				'count'   => $pages_count,
+				'current' => $pages_current
 		));
+		
+		return $this;
+    }
+    
+    /**
+	 * Get a list of pages
+	 *
+	 * @return  array 	Returns and array of pages information
+	 */
+    public function getList()
+    {
+    	$elements = array();
+    	$prototype = new KObject();
+    	$current = ($this->_state->current - 1) * $this->_state->limit;
+
+    	// First
+    	$page = 1;
+    	$offset = 0;
+    	$active = $offset != $this->_state->offset;
+    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'First');
+    	$element 	= clone $prototype;
+    	$elements[] = $element->set($props);
+
+    	// Previous
+    	$page = $this->_state->current - 1;
+    	$offset = max(0, ($page - 1) * $this->_state->limit);
+		$active = $offset != $this->_state->offset;
+    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Previous');
+    	$element 	= clone $prototype;
+    	$elements[] = $element->set($props);
+
+		// Pages
+		foreach($this->_getOffsets() as $page => $offset)
+		{
+			$current = $offset == $this->_state->offset;
+			$props = array('page' => $page, 'offset' => $offset, 'current' => $current, 'active' => !$current, 'text' => $page);
+    		$element 	= clone $prototype;
+    		$elements[] = $element->set($props);
+		}
+
+		// Next
+    	$page = $this->_state->current + 1;
+    	$offset = min(
+    				($this->_state->count-1) * $this->_state->limit,
+    				($page - 1) * $this->_state->limit);
+ 		$active = $offset != $this->_state->offset;
+    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Next');
+    	$element 	= clone $prototype;
+    	$elements[] = $element->set($props);
+
+    	// Last
+    	$page = $this->_state->count;
+    	$offset = ($page - 1) * $this->_state-limit;
+    	$active = $offset != $this->_state->offset;
+    	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Last');
+    	$element 	= clone $prototype;
+    	$elements[] = $element->set($props);
+
+    	return $elements;
+    }
+    
+ 	/**
+     * Get the offset for each page, optionally with a range
+     *
+     * @return 	array	Page number => offset
+     */
+	protected function _getOffsets()
+    {
+   	 	if($display = $this->_state->display)
+    	{
+    		$start	= (int) max($this->_state->current - $display, 1);
+    		$start	= min($this->_state->count, $start);
+    		$stop	= (int) min($this->_state->current + $display, $this->_state->count);
+    	}
+    	else // show all pages
+    	{
+    		$start = 1;
+    		$stop = $this->_state->count;
+    	}
+
+    	$result = array();
+    	foreach(range($start, $stop) as $pagenumber) {
+    		$result[$pagenumber] = 	($pagenumber-1) * $this->_state->limit;
+    	}
+
+    	return $result;
     }
 }
