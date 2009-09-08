@@ -31,7 +31,7 @@ class KTemplateHelperPaginator extends KObject
 
 		// modify url
 		$url   = clone KRequest::url();
-		$query = $url->getQuery(1);
+		$query = $url->getQuery(true);
 		
 		$selected = '';
 		foreach(array(10 => 10, 20 => 20, 50 => 50, 100 => 100, 0 =>'all' ) as $value => $text)
@@ -65,19 +65,17 @@ class KTemplateHelperPaginator extends KObject
 		KFactory::get('lib.joomla.document')->addStylesheet(KRequest::root().'/media/plg_koowa/css/pagination.css');
 		
 		// Paginator object
-		$p = KFactory::tmp('lib.koowa.model.paginator');
-		$p->getState()->setData(array(
-					'total'  => $total,
-					'offset' => $offset,
-					'limit'  => $limit,
-					'display' => $display));
-		$p->paginate();
+		$p = KFactory::tmp('lib.koowa.model.paginator')->setData(
+				array('total'  => $total,
+					  'offset' => $offset,
+					  'limit'  => $limit,
+					  'display' => $display));
 
 		// modify url
 		$url = clone KRequest::url();
-		$query = $url->getQuery(1);
+		$query = $url->getQuery(true);
 		
-		$query['limit'] = $p->getState()->limit;
+		$query['limit'] = $p->limit;
 
 		// Html
 		$html = '<ul class="pagination"><li>«</li>';

@@ -23,7 +23,7 @@
  * @category	Koowa
  * @package     Koowa_Model
  */
-class KModelPaginator extends KModelAbstract
+class KModelPaginator extends KModelState
 {
 
 	/**
@@ -36,25 +36,27 @@ class KModelPaginator extends KModelAbstract
 		parent::__construct($options);
 		
 		// Set the state
-		$this->_state
-			->insert('total'    , 'int')
-			->insert('limit'    , 'int', 20)
-			->insert('offset'   , 'int', 0)
-			->insert('count'    , 'int')
-			->insert('current'  , 'int')
-			->insert('display'  , 'int', 4);
+		$this->insert('total'    , 'int')
+			 ->insert('limit'    , 'int', 20)
+			 ->insert('offset'   , 'int', 0)
+			 ->insert('count'    , 'int')
+			 ->insert('current'  , 'int')
+			 ->insert('display'  , 'int', 4);
 	}
 	
 	/**
-	 * Paginate based on total, limit and offset
-	 * 
-	 * @return  KModelPaginator
-	 */
-    public function paginate()
+     * Set the state data
+     *
+     * @param   array|object	An associative array of state data by name
+     * @return  KModelState
+     */
+    public function setData(array $data)
     {
-    	$total	= (int) $this->_state->total;
-		$limit	= (int) max($this->_state->limit, 1);
-		$offset	= (int) max($this->_state->offset, 0);
+		parent::setData($data);
+		
+		$total	= (int) $this->total;
+		$limit	= (int) max($this->limit, 1);
+		$offset	= (int) max($this->offset, 0);
 
 		if($limit > $total) {
 			$offset = 0;
@@ -74,17 +76,15 @@ class KModelPaginator extends KModelAbstract
 
 		$current = (int) floor($offset / $limit) +1;
 
-		$this->_state->setData(array(
-				'total'   => $total,
-				'limit'   => $limit,
-				'offset'  => $offset,
-				'count'   => $count,
-				'current' => $current
-		));
+		$this->_state['total']->value = $total;
+		$this->_state['limit']->value = $limit;
+		$this->_state['offset']->value = $offset;
+		$this->_state['count']->value = $count;
+		$this->_state['current']->value = $current;
 		
 		return $this;
     }
-    
+	
     /**
 	 * Get a list of pages
 	 *
@@ -94,20 +94,20 @@ class KModelPaginator extends KModelAbstract
     {
     	$elements = array();
     	$prototype = new KObject();
-    	$current = ($this->_state->current - 1) * $this->_state->limit;
+    	$current = ($this->current - 1) * $this->limit;
 
     	// First
     	$page = 1;
     	$offset = 0;
-    	$active = $offset != $this->_state->offset;
+    	$active = $offset != $this->offset;
     	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'First');
     	$element 	= clone $prototype;
     	$elements[] = $element->set($props);
 
     	// Previous
-    	$page = $this->_state->current - 1;
-    	$offset = max(0, ($page - 1) * $this->_state->limit);
-		$active = $offset != $this->_state->offset;
+    	$page = $this->current - 1;
+    	$offset = max(0, ($page - 1) * $this->limit);
+		$active = $offset != $this->offset;
     	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Previous');
     	$element 	= clone $prototype;
     	$elements[] = $element->set($props);
@@ -115,26 +115,26 @@ class KModelPaginator extends KModelAbstract
 		// Pages
 		foreach($this->_getOffsets() as $page => $offset)
 		{
-			$current = $offset == $this->_state->offset;
+			$current = $offset == $this->offset;
 			$props = array('page' => $page, 'offset' => $offset, 'current' => $current, 'active' => !$current, 'text' => $page);
     		$element 	= clone $prototype;
     		$elements[] = $element->set($props);
 		}
 
 		// Next
-    	$page = $this->_state->current + 1;
+    	$page = $this->current + 1;
     	$offset = min(
-    				($this->_state->count-1) * $this->_state->limit,
-    				($page - 1) * $this->_state->limit);
- 		$active = $offset != $this->_state->offset;
+    				($this->count-1) * $this->limit,
+    				($page - 1) * $this->limit);
+ 		$active = $offset != $this->offset;
     	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Next');
     	$element 	= clone $prototype;
     	$elements[] = $element->set($props);
 
     	// Last
-    	$page = $this->_state->count;
-    	$offset = ($page - 1) * $this->_state-limit;
-    	$active = $offset != $this->_state->offset;
+    	$page = $this->count;
+    	$offset = ($page - 1) * $this->limit;
+    	$active = $offset != $this->offset;
     	$props = array('page' => $page, 'offset' => $offset, 'current' => false, 'active' => $active, 'text' => 'Last');
     	$element 	= clone $prototype;
     	$elements[] = $element->set($props);
@@ -149,21 +149,21 @@ class KModelPaginator extends KModelAbstract
      */
 	protected function _getOffsets()
     {
-   	 	if($display = $this->_state->display)
+   	 	if($display = $this->display)
     	{
-    		$start	= (int) max($this->_state->current - $display, 1);
-    		$start	= min($this->_state->count, $start);
-    		$stop	= (int) min($this->_state->current + $display, $this->_state->count);
+    		$start	= (int) max($this->current - $display, 1);
+    		$start	= min($this->count, $start);
+    		$stop	= (int) min($this->current + $display, $this->count);
     	}
     	else // show all pages
     	{
     		$start = 1;
-    		$stop = $this->_state->count;
+    		$stop = $this->count;
     	}
 
     	$result = array();
     	foreach(range($start, $stop) as $pagenumber) {
-    		$result[$pagenumber] = 	($pagenumber-1) * $this->_state->limit;
+    		$result[$pagenumber] = 	($pagenumber-1) * $this->limit;
     	}
 
     	return $result;
