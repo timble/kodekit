@@ -97,15 +97,16 @@ class KControllerBread extends KControllerAbstract
 	{
 		// Get the post data from the request
 		$data = KRequest::get('post', 'string');
-
+		
 		// Get the id
 		$id	 = KRequest::get('get.id', 'int');
 
 		// Get the row and save
-		$row		= $this->_getTable()
-						->fetchRow($id)
-						->setData($data)
-						->save();
+		$row= $this->getModel()
+					->getTable()
+					->fetchRow($id)
+					->setData($data)
+					->save();
 
 		return $row;
 	}
@@ -121,10 +122,11 @@ class KControllerBread extends KControllerAbstract
 		$data = KRequest::get('post', 'string');
 
 		// Get the row and save
-		$row 		= $this->_getTable()
-						->fetchRow()
-						->setData($data)
-						->save();
+		$row = $this->getModel()
+					->getTable()
+					->fetchRow()
+					->setData($data)
+					->save();
 
 		return $row;
 	}
@@ -138,28 +140,10 @@ class KControllerBread extends KControllerAbstract
 	{
 		$ids = (array) KRequest::get('post.id', 'int');
 
-		$table = $this->_getTable()
-				->delete($ids);
+		$table = $this->getModel()
+					  ->getTable()
+					  ->delete($ids);
 
-		return $table;
-	}
-
-	/**
-	 * Method to get a table object
-	 *
-	 * @param	array An optional associative array of configuration settings.
-	 * @return	object	The table.
-	 */
-	protected function _getTable(array $options = array())
-	{
-		// Get the table object
-		$app   	 = $this->_identifier->application;
-		$package = $this->_identifier->package;
-
-		// Table names are always plural
-		$name    = KInflector::pluralize($this->_identifier->name);
-
-		$table = KFactory::get($app.'::com.'.$package.'.table.'.$name, $options);
 		return $table;
 	}
 }

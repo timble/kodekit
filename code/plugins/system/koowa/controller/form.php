@@ -94,7 +94,7 @@ class KControllerForm extends KControllerBread
 	 */
 	protected function _actionSave()
 	{
-		$row = KRequest::get('post.id', 'int') ? $this->execute('edit') : $this->execute('add');
+		$row = KRequest::get('get.id', 'boolean') ? $this->execute('edit') : $this->execute('add');
 
 		$view 	= KInflector::pluralize( $this->_identifier->name);
 		$format = KRequest::get('get.format', 'cmd', 'html');
@@ -112,8 +112,8 @@ class KControllerForm extends KControllerBread
 	 */
 	protected function _actionApply()
 	{
-		$row = KRequest::get('post.id', 'boolean') ? $this->execute('edit') : $this->execute('add');
-
+		$row = KRequest::get('get.id', 'boolean') ? $this->execute('edit') : $this->execute('add');
+		
 		$view 	= $this->_identifier->name;
 		$format = KRequest::get('get.format', 'cmd', 'html');
 
@@ -169,8 +169,9 @@ class KControllerForm extends KControllerBread
 		}
 
 		//Update the table
-		$table = $this->_getTable()
-					->update(array('enabled' => $enable), $id);
+		$table = $this->getModel()
+					  ->getTable()
+					  ->update(array('enabled' => $enable), $id);
 
 		$this->setRedirect(
 			'view='.KInflector::pluralize($this->_identifier->name)
@@ -191,8 +192,9 @@ class KControllerForm extends KControllerBread
 		$access = KRequest::get('post.access', 'int');
 
 		//Update the table
-		$table = $this->_getTable()
-					->update(array('access' => $access), $id);
+		$table = $this->getModel()
+					  ->getTable()
+					  ->update(array('access' => $access), $id);
 
 		$this->setRedirect(
 			'view='.KInflector::pluralize($this->_identifier->name)
@@ -212,9 +214,10 @@ class KControllerForm extends KControllerBread
 		$change = KRequest::get('post.order_change', 'int');
 
 		//Change the order
-		$row = $this->_getTable()
-				->fetchRow($id)
-				->order($change);
+		$row = $this->getModel()
+					->getTable()
+					->fetchRow($id)
+					->order($change);
 
 		$this->setRedirect(
 			'view='.KInflector::pluralize($this->_identifier->name)
