@@ -21,13 +21,47 @@ class KControllerBread extends KControllerAbstract
 	{
 		parent::__construct($options);
 		
-		$data = KRequest::get('get', 'string');
-		
-		$this->getModel()
-			 ->getState()
-			 ->setData($data);
+		// Register filter functions
+		$this->registerFilterBefore('browse' , 'filterloadState')
+			 ->registerFilterBefore('read'   , 'filterloadState')
+			 ->registerFilterAfter('browse'  , 'filterSaveState')
+			 ->registerFilterAfter('read'    , 'filterSaveState');
 	}
-
+	
+	/**
+	 * Filter that handles loading of the model state from the session
+	 *
+	 * @return boolean	If successfull return TRUE, otherwise return false;
+	 */
+	public function filterLoadState(ArrayObject $args)
+	{
+		$model   = $this->getModel();
+		$state   = KRequest::get('session.'.$model->getIdentifier(), 'raw', array());
+		$request = KRequest::get('get', 'string');
+		
+		//Set the state in the model
+		$model->getState()
+			  ->setData( KHelperArray::merge($state, $request));
+			  
+		return true;	
+	}
+	
+	/**
+	 * Filter that handles saving of the model state in the session
+	 *
+	 * @return boolean	If successfull return TRUE, otherwise return false;
+	 */
+	public function filterSaveState(ArrayObject $args)
+	{
+		$model  = $this->getModel();
+		$state  = $model->getState()->getData();
+					
+		//Set the state in the session
+		KRequest::set('session.'.$model->getIdentifier(), $state);
+		
+		return true;
+	}
+	
 	/**
 	 * Browse a list of items
 	 *

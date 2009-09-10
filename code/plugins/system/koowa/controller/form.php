@@ -69,6 +69,23 @@ class KControllerForm extends KControllerBread
 
 		return $this->_action;
 	}
+	
+	/**
+	 * Filter the token to prevent CSRF exploits
+	 *
+	 * @return boolean	If successfull return TRUE, otherwise return false;
+	 * @throws KControllerException
+	 */
+	public function filterToken(ArrayObject $args)
+	{
+		$req		= KRequest::get('post._token', 'md5');
+        $token		= JUtility::getToken();
+
+        if($req !== $token) {
+        	throw new KControllerException('Invalid token or session time-out.', KHttp::STATUS_UNAUTHORIZED);
+        }
+        return true;
+	}
 
 	/*
 	 * Generic save action
@@ -205,22 +222,5 @@ class KControllerForm extends KControllerBread
 		);
 
 		return $row;
-	}
-
-	/**
-	 * Filter the token to prevent CSRF exploits
-	 *
-	 * @return boolean	If successfull return TRUE, otherwise return false;
-	 * @throws KControllerException
-	 */
-	public function filterToken($args)
-	{
-		$req		= KRequest::get('post._token', 'md5');
-        $token		= JUtility::getToken();
-
-        if($req !== $token) {
-        	throw new KControllerException('Invalid token or session time-out.', KHttp::STATUS_UNAUTHORIZED);
-        }
-        return true;
 	}
 }
