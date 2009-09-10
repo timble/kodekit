@@ -34,6 +34,13 @@ class KObject
      */
     protected $_mixinMethods = array();
     
+	/**
+	 * Constructor.
+	 *
+	 * @param	array An optional associative array of configuration settings.
+	 */
+	public function __construct( array $options = array() ) { }
+	    
  	/**
      * Set the object properties
      *
