@@ -139,18 +139,18 @@ abstract class KDatabaseRowAbstract extends KObject implements KFactoryIdentifia
     {
         $key = $this->_table->getPrimaryKey();
 
-        $properties = $this->get();
+        $data = $this->getData();
 
-        if(array_key_exists('ordering', $properties) && $properties['ordering'] <= 0) {
-        	$properties['ordering'] = $this->getTable()->getMaxOrder();
+        if(array_key_exists('ordering', $data) && $data['ordering'] <= 0) {
+        	$data['ordering'] = $this->getTable()->getMaxOrder();
         }
 
         if($this->_data[$key]) {
-        	$this->_table->update($properties, $this->_data[$key]);
+        	$this->_table->update($data, $this->_data[$key]);
         }
         else
         {
-        	if($this->_table->insert($properties)) {
+        	if($this->_table->insert($data)) {
         		$this->id = $this->_table->getDatabase()->getInsertId();
         	}
         }
