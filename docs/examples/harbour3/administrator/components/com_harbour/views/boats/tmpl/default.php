@@ -1,15 +1,27 @@
+<? defined('KOOWA') or die; ?>
+<form action="<?= @route(); ?>" method="get">
+	<input type="hidden" name="option" value="com_harbour" />
+	<input type="hidden" name="view" value="boats" />
+	<fieldset>
+	<legend><?= @text('Filters'); ?></legend> 
+    	<table>
+        	<tr>
+            	<td align="left" width="100%">
+                	<?= @text('SEARCH'); ?>
+                	<input id="search" name="search" value="<?= @$state->search; ?>" />
+                	<button onclick="this.form.submit();"><?= @text('SEARCH'); ?></button>
+                	<button onclick="document.getElementById('search').value='';this.form.submit();"><?= @text('RESET'); ?></button>
+            	</td>
+        	</tr>
+    	</table>
+ 	</fieldset>
+ </form>
 
 <form action="<?= @route()?>" method="post" name="adminForm">
-	<input type="hidden" name="order_change" value="0" />
 	<input type="hidden" name="id" value="" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="filter_order" value="<?= @$filter['order']; ?>" />
-	<input type="hidden" name="filter_direction" value="<?= @$filter['direction']; ?>" />
- 
-
-	<table class="adminlist">
-	
+	<table class="adminlist"  style="clear: both;">
 		<thead>
 			<tr>
 				<th width="5">
@@ -19,10 +31,10 @@
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(<?= count(@$boats); ?>);" />
 				</th>
 				<th>
-					<?= @helper('grid.sort', 'Name', 'name', @$filter['direction'], @$filter['order']); ?>
+					<?= @helper('grid.sort', 'Name', 'name', @$state->direction, @$state->order); ?>
 				</th>
 				<th width="30">
-					<?= @helper('grid.sort', 'Enabled', 'enabled', @$filter['direction'], @$filter['order']); ?>
+					<?= @helper('grid.sort', 'Enabled', 'enabled', @$state->direction, @$state->order); ?>
 				</th>
 			</tr>
 		</thead>
@@ -58,12 +70,13 @@
 		</tbody>
 		
 		<tfoot>
-			<tr>
-				<td colspan="20">
-					<?= @$pagination->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+            <tr>
+                <td colspan="20">
+                     <?= @helper('paginator.limit', @$state->limit) ?>
+					 <?= @helper('paginator.pages', @$total, @$state->offset, @$state->limit) ?>
+                </td>
+            </tr>
+        </tfoot>
 	</table>
 
 	
