@@ -32,22 +32,4 @@ class KViewHtml extends KViewAbstract
 
 		parent::__construct($options);
 	}
-
-	public function display()
-	{
-		$app 		= $this->_identifier->application;
-		$package 	= $this->_identifier->package;
-		$name 		= $this->_identifier->name;
-		
-		$toolbar = KFactory::get($app.'::com.'.$package.'.toolbar.'.$name);
-
-		//Render the toolbar title
-		KFactory::get('lib.koowa.application')
-			->set('JComponentTitle', $toolbar->renderTitle());
-		
-		//Render the toolbar and push it into the document buffer
-		$this->_document->setBuffer($toolbar->render(), 'modules', 'toolbar');
-
-		parent::display();
-	}
 }

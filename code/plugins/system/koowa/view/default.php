@@ -36,9 +36,21 @@ class KViewDefault extends KViewHtml
 			$model = KFactory::get($app.'::com.'.$package.'.model.'.KInflector::pluralize($name));
 			$this->assign($name, $model->getItem());
 		}
-
+		
+		//Auto-assign the state to the view
 		$this->assign('state', $model->getState());
-
+		
+		// Create the toolbar
+		$toolbar = KFactory::get($app.'::com.'.$package.'.toolbar.'.$name);
+		
+		// Render the toolbar
+		if($this->_layout == 'form') {
+			$this->_document->setBuffer($toolbar->render(), 'modules', 'toolbar');
+		}
+		
+		// Render the title
+		$this->_document->setBuffer($toolbar->renderTitle(), 'modules', 'title');
+		
 		// Display the layout
 		parent::display();
 	}
