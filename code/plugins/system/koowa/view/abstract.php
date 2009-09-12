@@ -154,6 +154,7 @@ abstract class KViewAbstract extends KObject implements KFactoryIdentifiable
 	 */
 	public function display()
 	{
+		//Render the template
 		echo $this->loadTemplate();
 		return $this;
 	}
