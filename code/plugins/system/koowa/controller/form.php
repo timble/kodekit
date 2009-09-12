@@ -85,6 +85,34 @@ class KControllerForm extends KControllerBread
         }
         return true;
 	}
+	
+	/**
+	 * Browse a list of items
+	 *
+	 * @return void
+	 */
+	protected function _actionBrowse()
+	{
+		$layout	= KRequest::get('get.layout', 'cmd', 'form' );
+
+		$this->getView()
+			->setLayout($layout)
+			->display();
+	}
+
+	/**
+	 * Display a single item
+	 *
+	 * @return void
+	 */
+	protected function _actionRead()
+	{
+		$layout	= KRequest::get('get.layout', 'cmd', 'form' );
+
+		$this->getView()
+			->setLayout($layout)
+			->display();
+	}
 
 	/*
 	 * Generic save action
