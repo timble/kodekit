@@ -23,9 +23,16 @@ abstract class KDispatcherAbstract extends KObject implements KFactoryIdentifiab
 	/**
 	 * The default view
 	 *
-	 * @var array
+	 * @var string
 	 */
 	protected $_default_view;
+	
+	/**
+	 * The default layout
+	 *
+	 * @var string
+	 */
+	protected $_default_layout;
 
 	/**
 	 * The object identifier
@@ -48,8 +55,11 @@ abstract class KDispatcherAbstract extends KObject implements KFactoryIdentifiab
 		// Initialize the options
         $options  = $this->_initialize($options);
 
-        // Figure out defaulview if none is set
-        $this->_default_view = empty($options['default_view']) ? $this->_identifier->name : $options['default_view'];
+        // Set the default view
+        $this->_default_view = $options['default_view'];
+        
+        // Set the default layout
+        $this->_default_layout = $options['default_layout'];
 	}
 
     /**
@@ -63,8 +73,9 @@ abstract class KDispatcherAbstract extends KObject implements KFactoryIdentifiab
     protected function _initialize(array $options)
     {
         $defaults = array(
-        	'default_view'  => 'default',
-        	'identifier'	=> null
+        	'default_view'   => $this->_identifier->name,
+        	'default_layout' => 'default',
+        	'identifier'	 => null
         );
 
         return array_merge($defaults, $options);
@@ -88,14 +99,20 @@ abstract class KDispatcherAbstract extends KObject implements KFactoryIdentifiab
 	 */
 	public function dispatch()
 	{
-		// Require specific controller if requested
-		$view = KRequest::get('get.view', 'cmd', $this->_default_view);
+		// Get the view, and use the default view if it doesn't exist
+		$view  = KRequest::get('get.view', 'cmd', $this->_default_view);
+		
+		// Get the layout, and use the default layout if it doesn't exist
+		$layout = KRequest::get('get.layout', 'cmd', $this->_default_layout);
 
-        // Push the view back in the request in case a default view is used
+        // Push the view back in the request
         KRequest::set('get.view', $view);
+        
+        // Push the layout back in the request
+        KRequest::set('get.layout', $layout);
 
         //Get/Create the controller
-        $controller = $this->_getController();
+        $controller = $this->getController();
 
         // Perform the Request action
         $action  = KRequest::get('request.action', 'cmd', null);
@@ -135,10 +152,11 @@ abstract class KDispatcherAbstract extends KObject implements KFactoryIdentifiab
 	 *
 	 * @return	object	The controller.
 	 */
-	protected function _getController(array $options = array())
+	protected function getController(array $options = array())
 	{
 		$application 	= $this->_identifier->application;
 		$package 		= $this->_identifier->package;
+		
 		$view 			= KRequest::get('get.view', 'cmd');
 		$controller 	= KRequest::get('get.controller', 'cmd', $view);
 
