@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.5" type="plugin" group="system">
-    <name>System - Koowa</name>
-    <author>Johan Janssens</author>
-    <creationDate>February 2008</creationDate>
-    <copyright>(C) 2007 - 2012 Johan Janssens. All rights reserved.</copyright>
+<install version="1.5" type="plugin" group="system" method="upgrade" overwrite="true">
+    <name>System - EXTman</name>
+    <author>Joomlatools</author>
+    <creationDate>August 2012</creationDate>
+    <copyright>Copyright (C) 2012 Timble CVBA</copyright>
     <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
-    <authorEmail>info@nooku.org</authorEmail>
-    <authorUrl>www.nooku.org</authorUrl>
-    <version>12.1</version>
-    <description>Rapid Extension Development framework. Please check if you have PHP 5.2+ before publishing this plugin.</description>
+    <authorEmail>info@joomlatools.eu</authorEmail>
+    <authorUrl>www.joomlatools.com</authorUrl>
+    <version>1.0.0</version>
+    <description></description>
 
     <!--  Files -->
     <files folder="plugins/system">
         <filename plugin="koowa">koowa.php</filename>
+        <filename>index.html</filename>
     </files>
 
     <!--  Media -->
-    <media destination="lib_koowa" folder="media/lib_koowa">
-        <folder>images</folder>
-        <folder>js</folder>
-        <folder>css</folder>
-    </media>
-
-    <media destination="com_default" folder="media/com_default">
-        <folder>images</folder>
-        <folder>js</folder>
-        <folder>css</folder>
+    <media folder="media">
+        <folder>com_default</folder>
+        <folder>lib_koowa</folder>
     </media>
 
     <params>
