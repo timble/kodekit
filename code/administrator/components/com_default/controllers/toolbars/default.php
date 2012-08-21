@@ -17,6 +17,25 @@
  */
 class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
 {
+    /**
+     * A list of Joomla standard toolbar buttons to correctly translate labels
+     * @var array
+     */
+    protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back', 'options');
+    
+    /**
+     * If the method is called with one of the standard Joomla toolbar buttons
+     * translate the label correctly
+     */
+    public function addCommand($name, $config = array())
+    {
+        if (version_compare(JVERSION, '1.6', '>=') && !isset($config['label']) && in_array($name, self::$_default_buttons)) {
+            $config['label'] = 'JTOOLBAR_'.$name;
+        }
+
+        return parent::addCommand($name, $config);
+    }
+    
     protected function _commandPublish(KControllerToolbarCommand $command)
     {
         return $this->_commandEnable($command);
