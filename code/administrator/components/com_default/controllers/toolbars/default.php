@@ -26,6 +26,10 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
     protected function _commandEnable(KControllerToolbarCommand $command)
     {
         $command->icon = 'icon-32-publish';
+        
+        if (version_compare(JVERSION, '1.6', '>=')) {
+            $command->label = 'JTOOLBAR_PUBLISH';
+        }
 
         $command->append(array(
             'attribs' => array(
@@ -44,6 +48,10 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
     protected function _commandDisable(KControllerToolbarCommand $command)
     {
         $command->icon = 'icon-32-unpublish';
+        
+        if (version_compare(JVERSION, '1.6', '>=')) {
+            $command->label = 'JTOOLBAR_UNPUBLISH';
+        }
 
         $command->append(array(
             'attribs' => array(
