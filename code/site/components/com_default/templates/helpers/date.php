@@ -29,9 +29,15 @@ class ComDefaultTemplateHelperDate extends KTemplateHelperDate
     {
         $config = new KConfig($config);
         $config->append(array(
-            'format' => JText::_('DATE_FORMAT_LC1'),
             'gmt_offset' => JFactory::getConfig()->getValue('config.offset') * 3600
         ));
+        
+        // Joomla 1.6+ uses different date formats so DATE_FORMAT_LC1 is no longer usable
+        if (version_compare(JVERSION, '1.6', '<')) {
+            $config->append(array(
+                'format' => JText::_('DATE_FORMAT_LC1')
+            ));
+        }
 
         return parent::format($config);
     }
