@@ -57,28 +57,36 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         ));
 
         if (version_compare(JVERSION,'1.6.0','ge')) {
-		  $html	= '<div class="toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
+		    $html	= '<div class="toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
+		    $html .= '<ul>';
+		    $html .= '%s';
+		    $html .= '</ul>';
+		    $html .= '<div class="clr"></div>';
+		    $html .= '</div>';
         } else {
-          $html = '<div class="toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+            $html = '<div class="toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+            $html .= '<table class="toolbar">';
+            $html .= '<tr>';
+            $html .= '%s';
+    		$html .= '</tr>';
+    		$html .= '</table>';
+		    $html .= '</div>';
         }
 
-        $html .= '<table class="toolbar">';
-	    $html .= '<tr>';
+        $buttons = '';
 	    foreach ($config->toolbar->getCommands() as $command)
 	    {
             $name = $command->getName();
 
 	        if(method_exists($this, $name)) {
-                $html .= $this->$name(array('command' => $command));
+                $buttons .= $this->$name(array('command' => $command));
             } else {
-                $html .= $this->command(array('command' => $command));
+                $buttons .= $this->command(array('command' => $command));
             }
        	}
-		$html .= '</tr>';
-		$html .= '</table>';
 
-		$html .= '</div>';
-
+       	$html = sprintf($html, $buttons);
+       	 
 		return $html;
     }
 
@@ -99,18 +107,29 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
 
          //Add a toolbar class
         $command->attribs->class->append(array('toolbar'));
+        $command->attribs->append(array('href' => '#'));
 
         //Create the id
         $id = 'toolbar-'.$command->id;
 
 		$command->attribs->class = implode(" ", KConfig::unbox($command->attribs->class));
 
-        $html  = '<td class="button" id="'.$id.'">';
+		if (version_compare(JVERSION,'1.6.0','ge')) {
+		    $html = '<li class="button" id="'.$id.'">';
+		} else {
+		    $html = '<td class="button" id="'.$id.'">';
+		}
+        
         $html .= '	<a '.KHelperArray::toString($command->attribs).'>';
         $html .= '		<span class="'.$command->icon.'" title="'.JText::_($command->title).'"></span>';
        	$html .= JText::_($command->label);
        	$html .= '   </a>';
-        $html .= '</td>';
+       	
+        if (version_compare(JVERSION,'1.6.0','ge')) {
+		    $html .= '</li>';
+		} else {
+		    $html = '</td>';
+		}
 
     	return $html;
     }
@@ -127,10 +146,12 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         $config->append(array(
         	'command' => NULL
         ));
-
-        $command = $config->command;
-
-       	$html = '<td class="divider"></td>';
+        
+        if (version_compare(JVERSION,'1.6.0','ge')) {
+            $html = '<li class="divider"></li>';
+        } else {
+            $html = '<td class="divider"></td>';
+        }
 
     	return $html;
     }
