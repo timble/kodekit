@@ -127,6 +127,12 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 		$html .= JText::_($config->title);
 		$html .= '</a>';
 
+		// Mark the current column
+        if ($config->column == $config->sort) {
+            $icon = 'sort_'.(strtolower($config->direction) === 'asc' ? 'asc' : 'desc');
+            $html .= ' <img src="media://system/images/'.$icon.'.png">';
+        }
+
 		return $html;
 	}
 
