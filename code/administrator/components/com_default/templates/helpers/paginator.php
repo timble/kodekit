@@ -39,18 +39,32 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
         ));
 
         $this->_initialize($config);
+        
+        $j15 = version_compare(JVERSION, '1.6', '<');
+        
+        $html = '';
 
-        $html   = '<div class="container">';
+        if ($j15) {
+            $html .= '<div class="container">';
+        }
+        
         $html  .= '<div class="pagination">';
         if($config->show_limit) {
-            $html .= '<div class="limit">'.JText::_('Display NUM').' '.$this->limit($config).'</div>';
+            $html .= '<div class="limit">'.JText::_($j15 ? 'Display NUM' : 'JGLOBAL_DISPLAY_NUM').' '.$this->limit($config).'</div>';
         }
         $html .=  $this->_pages($this->_items($config));
         if($config->show_count) {
-            $html .= '<div class="limit"> '.JText::_('Page').' '.$config->current.' '.JText::_('of').' '.$config->count.'</div>';
+            if ($j15) {
+                $html .= '<div class="limit"> '.JText::_('Page').' '.$config->current.' '.JText::_('of').' '.$config->count.'</div>';
+            } else {
+                $html .= JText::sprintf('JLIB_HTML_PAGE_CURRENT_OF_TOTAL', $config->current, $config->count);
+            }
         }
         $html .= '</div>';
-        $html .= '</div>';
+        
+        if ($j15) {
+            $html .= '</div>';
+        }
 
         return $html;
     }
@@ -66,11 +80,13 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
      */
     protected function _pages($pages)
     {
+        $j15 = version_compare(JVERSION, '1.6', '<');
+        
         $class = $pages['first']->active ? '' : 'off';
-        $html  = '<div class="button2-right '.$class.'"><div class="start">'.$this->_link($pages['first'], 'First').'</div></div>';
+        $html  = '<div class="button2-right '.$class.'"><div class="start">'.$this->_link($pages['first'], $j15 ? 'First' : 'JLIB_HTML_START').'</div></div>';
 
         $class = $pages['previous']->active ? '' : 'off';
-        $html  .= '<div class="button2-right '.$class.'"><div class="prev">'.$this->_link($pages['previous'], 'Prev').'</div></div>';
+        $html  .= '<div class="button2-right '.$class.'"><div class="prev">'.$this->_link($pages['previous'], $j15 ? 'Prev' : 'JPREV').'</div></div>';
 
         $html  .= '<div class="button2-left"><div class="page">';
         foreach($pages['pages'] as $page) {
@@ -79,10 +95,10 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
         $html .= '</div></div>';
 
         $class = $pages['next']->active ? '' : 'off';
-        $html  .= '<div class="button2-left '.$class.'"><div class="next">'.$this->_link($pages['next'], 'Next').'</div></div>';
+        $html  .= '<div class="button2-left '.$class.'"><div class="next">'.$this->_link($pages['next'], $j15 ? 'Next' : 'JNEXT').'</div></div>';
 
         $class = $pages['last']->active ? '' : 'off';
-        $html  .= '<div class="button2-left '.$class.'"><div class="end">'.$this->_link($pages['last'], 'Last').'</div></div>';
+        $html  .= '<div class="button2-left '.$class.'"><div class="end">'.$this->_link($pages['last'], $j15 ? 'Last' : 'JLIB_HTML_END').'</div></div>';
 
         return $html;
     }
