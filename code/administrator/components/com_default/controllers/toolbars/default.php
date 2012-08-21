@@ -17,6 +17,16 @@
  */
 class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
 {
+    protected function _commandPublish(KControllerToolbarCommand $command)
+    {
+        return $this->_commandEnable($command);
+    }
+    
+    protected function _commandUnpublish(KControllerToolbarCommand $command)
+    {
+        return $this->_commandDisable($command);
+    }
+    
     /**
      * Enable toolbar command
      *
@@ -26,10 +36,6 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
     protected function _commandEnable(KControllerToolbarCommand $command)
     {
         $command->icon = 'icon-32-publish';
-        
-        if (version_compare(JVERSION, '1.6', '>=')) {
-            $command->label = 'JTOOLBAR_PUBLISH';
-        }
 
         $command->append(array(
             'attribs' => array(
@@ -48,16 +54,24 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
     protected function _commandDisable(KControllerToolbarCommand $command)
     {
         $command->icon = 'icon-32-unpublish';
-        
-        if (version_compare(JVERSION, '1.6', '>=')) {
-            $command->label = 'JTOOLBAR_UNPUBLISH';
-        }
 
         $command->append(array(
             'attribs' => array(
                 'data-action' => 'edit',
                 'data-data'   => '{enabled:0}'
             )
+        ));
+    }
+    
+    protected function _commandSave2new(KControllerToolbarCommand $command)
+    {
+        $command->label = 'JTOOLBAR_SAVE_AND_NEW';
+        $command->icon = 'icon-32-save-new';
+    
+        $command->append(array(
+        'attribs' => array(
+        'data-action' => 'save2new'
+        )
         ));
     }
 
@@ -85,6 +99,18 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
         $command->append(array(
             'attribs' => array(
                 'href' =>  JRoute::_('index.php?option=com_'.$option.'&view='.$view.'&'.$query)
+            )
+        ));
+    }
+    
+    protected function _commandOptions(KControllerToolbarCommand $command)
+    {
+        $option = $this->getIdentifier()->package;
+    
+        $command->append(array(
+            'icon' => 'icon-32-options',
+            'attribs' => array(
+                'href' => JRoute::_(sprintf('index.php?option=com_config&view=component&component=com_%s&path=&tmpl=component', $option))
             )
         ));
     }
