@@ -217,7 +217,10 @@ Koowa.Controller = new Class({
                 data[token_name] = token_value;
             }
             
-            button.addEvent('click', function(){
+            button.addEvent('click', function(event){
+            	if (event) {
+            		event.preventDefault();
+            	}
                 if(!button.hasClass('disabled')) {
                     this.setOptions(options);
                     this.fireEvent('execute', [action, data, button.get('data-novalidate') === 'novalidate']);
