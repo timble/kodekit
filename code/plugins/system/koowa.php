@@ -105,6 +105,24 @@ class plgSystemKoowa extends JPlugin
 		        JFactory::getConfig()->setValue('config.offset', $offset);
 		   }
 		}
+		
+		// Initialize translator
+		try {
+		    $text = KService::get('com://admin/extman.translator', array(
+		        'translator' => JFactory::getLanguage()
+		    ));
+		    
+		    if ($text) {
+		        KService::get('koowa:text', array(
+		            'translator' => $text
+		        ));
+		    }
+		} catch (KServiceException $e) {
+		    /* 
+		     * Extman is apparently missing. Our own components will notice it and display a warning.
+		     * So there is nothing we need to do here.
+		     */
+		}
 
 		parent::__construct($subject, $config);
 	}
