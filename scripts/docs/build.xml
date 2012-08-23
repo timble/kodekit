@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
-<project name="Koowa_Documentation" basedir="." default="build" description="Phing build script for Koowa documentation.">
+<project name="Koowa_Documentation" basedir="." default="build">
 
 	<target name="config" description="Load configuration file">
 		<property file="build.properties"  override="false" />
