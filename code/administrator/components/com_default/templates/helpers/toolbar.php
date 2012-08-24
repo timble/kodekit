@@ -64,7 +64,7 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
 		    $html .= '<div class="clr"></div>';
 		    $html .= '</div>';
         } else {
-            $html  = '<div class="toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+            $html  = '<div class="toolbar toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
             $html .= '<table class="toolbar">';
             $html .= '<tr>';
             $html .= '%s';
