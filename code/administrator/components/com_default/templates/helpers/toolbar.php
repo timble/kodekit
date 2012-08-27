@@ -174,4 +174,9 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
 
     	return $html;
     }
+    
+    public function options($config = array())
+    {
+        return $this->modal($config);
+    }
 }
