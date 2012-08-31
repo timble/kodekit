@@ -30,12 +30,12 @@ window.addEvent('domready', function() {
     $$('.-koowa-grid').each(function(grid){
         new Koowa.Grid(grid);
         
-        var toolbar = grid.get('data-toolbar') || '.toolbar';
+        var toolbar = grid.get('data-toolbar') || '.toolbar-list';
         new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
     });
 
     $$('.-koowa-form').each(function(form){
-        var toolbar = form.get('data-toolbar') || '.toolbar';
+        var toolbar = form.get('data-toolbar') || '.toolbar-list';
         new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
     });
 });
@@ -405,7 +405,13 @@ Koowa.Controller.Grid = new Class({
             tr.addEvents({
                 click: function(event){
                 	if(event.target.hasClass('toggle-state') || event.target.match('[type=checkbox]')) return;
-                	var checkbox = this.getElement('input[type=checkbox]'), checked = checkbox.getProperty('checked');
+                	var checkbox = this.getElement('input[type=checkbox]');
+                	if (!checkbox) {
+                		return;
+                	}
+                	
+                	var checked = checkbox.getProperty('checked');
+                	
                 	if(checked) {
                 		this.removeClass('selected');
                 		checkbox.setProperty('checked', false);

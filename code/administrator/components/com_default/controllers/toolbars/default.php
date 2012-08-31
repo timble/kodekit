@@ -132,6 +132,8 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
                 'href' => JRoute::_(sprintf('index.php?option=com_config&view=component&component=com_%s&path=&tmpl=component', $option))
             )
         ));
+        
+        $this->_commandModal($command);
     }
 
     /**

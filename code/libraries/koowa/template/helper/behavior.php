@@ -319,7 +319,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$html .= "
 		<script>
 			window.addEvent('domready', function(){				
-				new Koowa.Autocomplete($('".$config->element."'), ".json_encode($config->url).", ".json_encode(KConfig::unbox($config->options)).");
+				new Koowa.Autocomplete(document.id('".$config->element."'), ".json_encode($config->url).", ".json_encode(KConfig::unbox($config->options)).");
 			});
 		</script>";
 		
