@@ -89,9 +89,9 @@ class ComDefaultTemplateHelperImage extends KTemplateHelperListbox
 		$html = "
 		<script>
 		window.addEvent('domready', function(){
-			$('".$config->name."').addEvent('change', function(){
+			document.id('".$config->name."').addEvent('change', function(){
 				var value = this.value ? ('".$root."/' + this.value) : 'media://system/images/blank.png';
-				$('".$config->name."-preview').src = value;
+				document.id('".$config->name."-preview').src = value;
 			});
 		});
 		</script>";
