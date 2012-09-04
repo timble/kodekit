@@ -46,6 +46,9 @@ class ComDefaultTemplateHelperEditor extends KTemplateHelperAbstract
         } else {
             $result = $editor->display($config->name, $config->{$config->name}, $config->width, $config->height, $config->cols, $config->rows, KConfig::unbox($config->buttons), $options);
         }
+        
+        // Some editors like CKEditor return inline JS. 
+        $result = str_replace('<script', '<script inline', $result);
 
         return $result;
     }
