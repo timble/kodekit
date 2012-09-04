@@ -55,11 +55,17 @@ class plgSystemKoowa extends JPlugin
 		}
 
 	    //Safety Extender compatibility
-		if(extension_loaded('safeex') && strpos('tmpl', ini_get('safeex.url_include_proto_whitelist')) === false)
+		if(extension_loaded('safeex') && strpos('tmpl', @ini_get('safeex.url_include_proto_whitelist')) === false)
 		{
-		    $whitelist = ini_get('safeex.url_include_proto_whitelist');
+		    $whitelist = @ini_get('safeex.url_include_proto_whitelist');
 		    $whitelist = (strlen($whitelist) ? $whitelist . ',' : '') . 'tmpl';
-		    ini_set('safeex.url_include_proto_whitelist', $whitelist);
+		    @ini_set('safeex.url_include_proto_whitelist', $whitelist);
+ 		}
+ 		
+ 		// Set pcre.backtrack_limit to a larger value
+ 		// See: https://bugs.php.net/bug.php?id=40846
+ 		if (version_compare(PHP_VERSION, '5.3.6', '<=') && @ini_get('pcre.backtrack_limit') < 1000000) {
+ 		    @ini_set('pcre.backtrack_limit', 1000000);
  		}
 
 		//Set constants

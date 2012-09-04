@@ -131,7 +131,7 @@ abstract class KControllerResource extends KControllerAbstract
         	}
 
 			//Make sure the view exists
-		    if(!file_exists(dirname($this->_view->getIdentifier()->filepath))) {
+		    if($this->isDispatched() && !file_exists(dirname($this->_view->getIdentifier()->filepath))) {
 		        throw new KControllerException('View : '.$this->_view->getName().' not found', KHttpResponse::NOT_FOUND);
 		    }
 		}
