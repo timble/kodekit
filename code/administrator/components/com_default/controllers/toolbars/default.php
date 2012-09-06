@@ -125,11 +125,20 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
     protected function _commandOptions(KControllerToolbarCommand $command)
     {
         $option = $this->getIdentifier()->package;
-    
+        
+        if (version_compare(JVERSION, '1.6', '<')) {
+            $link = 'index.php?option=com_config&controller=component&component=com_%s&path=';
+            $icon = 'config';
+        } else {
+            $link = 'index.php?option=com_config&view=component&component=com_%s&path=&tmpl=component';
+            $icon = 'options';
+        }
+        
+        $command->icon = sprintf('icon-32-%s', $icon);
+
         $command->append(array(
-            'icon' => 'icon-32-options',
             'attribs' => array(
-                'href' => JRoute::_(sprintf('index.php?option=com_config&view=component&component=com_%s&path=&tmpl=component', $option))
+                'href' => JRoute::_(sprintf($link, $option))
             )
         ));
         
