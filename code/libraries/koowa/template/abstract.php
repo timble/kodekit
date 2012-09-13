@@ -488,6 +488,21 @@ abstract class KTemplateAbstract extends KObject
 
 		return $helper;
 	}
+	
+	public function getTranslation($string, $parameters = array())
+	{
+	    static $translator;
+	    
+	    if (!$translator instanceof KTranslator) {
+	        $identifier = clone $this->getIdentifier();
+	        $identifier->path = array();
+	        $identifier->name = 'translator';
+	         
+	        $translator = $this->getService($identifier);
+	    }
+
+	    return $translator->translate($string, $parameters);
+	}
 
 	/**
      * Handle template errors
