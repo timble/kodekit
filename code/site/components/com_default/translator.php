@@ -87,7 +87,7 @@ class ComDefaultTranslator extends KTranslator
      *
      * @return string Translated strign
      */    
-    public function translate($string, $parameters = array())
+    public function translate($string, array $parameters = array())
     {
         $result = strtolower($string);
 
@@ -96,10 +96,8 @@ class ComDefaultTranslator extends KTranslator
         } 
         else {
             $key = $this->getKey($string);
-    
-            if ($this->_translator->hasKey($key)) {
-                $result = $this->_translator->_($key);
-            }
+            
+            $result = $this->_translator->_($this->_translator->hasKey($key) ? $key : $string);
         }
     
         return parent::translate($result, $parameters);
