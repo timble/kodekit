@@ -51,7 +51,7 @@ class ComDefaultTranslatorCatalogueAliases extends KTranslatorCatalogue
             'no' => 'JNO',
         );
         
-        if (version_compare(JVERSION, '1.6', '<')) {
+        if (version_compare(JVERSION, '1.6', '>=')) {
             $config->append(array(
             'data'  => $defaults
             ));
