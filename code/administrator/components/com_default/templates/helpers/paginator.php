@@ -50,14 +50,14 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
         
         $html  .= '<div class="pagination">';
         if($config->show_limit) {
-            $html .= '<div class="limit">'.JText::_($j15 ? 'Display NUM' : 'JGLOBAL_DISPLAY_NUM').' '.$this->limit($config).'</div>';
+            $html .= '<div class="limit">'.($j15 ? $this->translate('Display NUM') : $this->translate('JGLOBAL_DISPLAY_NUM')).' '.$this->limit($config).'</div>';
         }
         $html .=  $this->_pages($this->_items($config));
         if($config->show_count) {
             if ($j15) {
-                $html .= '<div class="limit"> '.JText::_('Page').' '.$config->current.' '.JText::_('of').' '.$config->count.'</div>';
+                $html .= '<div class="limit"> '.$this->translate('Page').' '.$config->current.' '.$this->translate('of').' '.$config->count.'</div>';
             } else {
-                $html .= JText::sprintf('JLIB_HTML_PAGE_CURRENT_OF_TOTAL', $config->current, $config->count);
+                $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
             }
         }
         $html .= '</div>';

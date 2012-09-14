@@ -96,7 +96,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 		//Compose the options array
         $options   = array();
  		if($config->deselect) {
-         	$options[] = $this->option(array('text' => JText::_($config->prompt)));
+         	$options[] = $this->option(array('text' => $this->translate($config->prompt)));
         }
 
  		foreach($items as $key => $value)

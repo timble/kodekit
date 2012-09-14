@@ -68,7 +68,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 		foreach($config->options as $option)
 		{
 			$value  = $option->value;
-			$text   = $config->translate ? JText::_( $option->text ) : $option->text;
+			$text   = $config->translate ? $this->translate( $option->text ) : $option->text;
 
 			$extra = '';
 			if(isset($option->disable) && $option->disable) {
@@ -130,7 +130,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 		foreach($config->list as $row)
 		{
 			$key  = $row->{$config->key};
-			$text = $config->translate ? JText::_( $row->{$config->text} ) : $row->{$config->text};
+			$text = $config->translate ? $this->translate( $row->{$config->text} ) : $row->{$config->text};
 			$id	  = isset($row->id) ? $row->id : null;
 
 			$extra = '';
@@ -183,7 +183,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 		foreach($config->list as $row)
 		{
 			$key  = $row->{$config->key};
-			$text = $config->translate ? JText::_( $row->{$config->text} ) : $row->{$config->text};
+			$text = $config->translate ? $this->translate( $row->{$config->text} ) : $row->{$config->text};
 			$id	  = isset($row->id) ? $row->id : null;
 
 			$extra = '';
@@ -233,13 +233,13 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 		$html  = array();
 
 		$extra = !$config->selected ? 'checked="checked"' : '';
-		$text  = $config->translate ? JText::_( $config->false ) : $config->false;
+		$text  = $config->translate ? $this->translate( $config->false ) : $config->false;
 
 		$html[] = '<label for="'.$name.'0">'.$text.'</label>';
 		$html[] = '<input type="radio" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
 
 		$extra = $config->selected ? 'checked="checked"' : '';
-		$text  = $config->translate ? JText::_( $config->true ) : $config->true;
+		$text  = $config->translate ? $this->translate( $config->true ) : $config->true;
 
 		$html[] = '<label for="'.$name.'1">'.$text.'</label>';
 		$html[] = '<input type="radio" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
