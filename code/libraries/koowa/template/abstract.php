@@ -489,7 +489,7 @@ abstract class KTemplateAbstract extends KObject
 		return $helper;
 	}
 	
-	public function getTranslation($string, $parameters = array())
+	public function translate($string, array $parameters = array())
 	{
 	    static $translator;
 	    
