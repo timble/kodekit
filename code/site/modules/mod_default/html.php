@@ -59,8 +59,6 @@ class ModDefaultHtml extends KViewHtml
 		{
 		    $identifier = clone $this->getIdentifier();
 		    $identifier->package = substr($this->module->module, 4);
-		    $identifier->path = array('translator');
-		    $identifier->name = '';
 		    
 		    $this->getService('translator')->getTranslator($identifier)->loadLanguageFiles();
 		}

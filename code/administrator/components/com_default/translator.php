@@ -297,18 +297,26 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
     public function getTranslator($identifier, $config = array()) {
         if (is_string($identifier)) {
             $translator = new KServiceIdentifier($identifier);
-		} 
-		elseif ($identifier instanceof KServiceIdentifierInterface) {
-		    $translator = clone $identifier;
-		} 
-		else {
-		    throw new KTranslatorException('Invalid identifier');
-		}
-		
-		$translator->path = array();
-		$translator->name = 'translator';
-		
-		return $this->getService($translator);
+        }
+        elseif ($identifier instanceof KServiceIdentifierInterface) {
+            $translator = clone $identifier;
+        }
+        else {
+            throw new KTranslatorException('Invalid identifier');
+        }
+    
+        // If you omit the path in modules KServiceLocatorModule assumes it's a view. Hence:
+        if ($translator->type === 'mod') {
+            $translator->path = array('translator');
+            $translator->name = '';
+        } else {
+            $translator->path = array();
+            $translator->name = 'translator';
+        }
+        
+        
+    
+        return $this->getService($translator);
     }
     
     /**

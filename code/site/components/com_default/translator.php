@@ -13,13 +13,13 @@
  * @author		Ercan Ozkaya <ercan@timble.net>
  * @package		Koowa_Translator
  */
-class ComDefaultTranslator extends KTranslator
-{
+class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
+{   
     /**
      * A reference to Joomla translator
      * @var object
      */
-    protected $_translator;
+    protected $_translation_helper;
     
     /**
      * A prefix attached to every generated key
@@ -38,6 +38,12 @@ class ComDefaultTranslator extends KTranslator
      * @var KTranslatorCatalogueInterface
      */
     protected $_catalogue;
+    
+    /**
+     * Fallback locale to always load the language files from
+     * @var string
+     */
+    protected $_fallback_locale;
     
     /**
      * Maps identifier types to words
@@ -59,7 +65,11 @@ class ComDefaultTranslator extends KTranslator
     {
         parent::__construct($config);
         
-        $this->setTranslator($config->translator);
+        if ($config->fallback_locale) {
+            $this->_fallback_locale = $config->fallback_locale;
+        }
+        
+        $this->setTranslationHelper($config->translation_helper);
         $this->setPrefix($config->prefix);
         
         $this->setDefaultCatalogue($this->createCatalogue($config->catalogue));
@@ -69,11 +79,12 @@ class ComDefaultTranslator extends KTranslator
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'locale'     => JFactory::getConfig()->get('language'),
-            'translator' => JFactory::getLanguage(),
-            'prefix'     => 'JT_',
+            'prefix'     => 'KLS_',
             'catalogue'  => null,
-            'alias_catalogue' => 'aliases'
+            'alias_catalogue'    => 'aliases',
+            'fallback_locale'    => 'en-GB',
+            'locale'             => JFactory::getConfig()->get('language'),
+            'translation_helper' => JFactory::getLanguage()
         ));
         
         parent::_initialize($config);
@@ -92,10 +103,10 @@ class ComDefaultTranslator extends KTranslator
         $result = strtolower($string);
 
         if (isset($this->_alias_catalogue[$result])) {
-            $result = $this->_translator->_($this->_alias_catalogue[$result]);
+            $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
         } else {
             $key = $this->getKey($string);
-            $result = $this->_translator->_($this->_translator->hasKey($key) ? $key : $string);
+            $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
         }
     
         return parent::translate($result, $parameters);
@@ -153,12 +164,12 @@ class ComDefaultTranslator extends KTranslator
         $ext_base = sprintf('%s/%ss/%s', $base, $type, $extension);
         
         $results = array();
-        $results[] = $this->_loadLanguageFile($extension, $this->getFallbackLocale(), array($ext_base, $base));
+        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, array($ext_base, $base));
 
-        if ($this->getLocale() !== $this->getFallbackLocale()) {
+        if ($this->getLocale() !== $this->_fallback_locale) {
             $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), array($ext_base, $base));
         }
-        
+
         return in_array(true, $results);
     }
     
@@ -175,9 +186,9 @@ class ComDefaultTranslator extends KTranslator
         
         foreach ($base as $path) {
             $signature = md5($extension.$path.$locale);
-            
+
             $result = in_array($signature, self::$_loaded_files) 
-                          || $this->_translator->load($extension, $path, $locale);
+                          || $this->_translation_helper->load($extension, $path, $locale);
             
             if ($result) {
                 if (!in_array($signature, self::$_loaded_files)) {
@@ -249,15 +260,15 @@ class ComDefaultTranslator extends KTranslator
         return $this;
     }
     
-    public function getTranslator()
+    public function getTranslationHelper()
     {
-        return $this->_translator;
+        return $this->_translation_helper;
     }
     
-    public function setTranslator($translator)
+    public function setTranslationHelper($translator)
     {
         if (is_object($translator)) {
-            $this->_translator = $translator;
+            $this->_translation_helper = $translator;
         } else {
             throw new KTranslatorException('Invalid translator');
         }
@@ -275,5 +286,55 @@ class ComDefaultTranslator extends KTranslator
         $this->_prefix = $prefix;
     
         return $this;
+    }
+    
+    /**
+     * Returns a translator object for a specific identifier
+     * 
+     * @param KServiceIdentifier|string $identifier
+     * @param KConfig|array $config 
+     */
+    public function getTranslator($identifier, $config = array()) {
+        if (is_string($identifier)) {
+            $translator = new KServiceIdentifier($identifier);
+        }
+        elseif ($identifier instanceof KServiceIdentifierInterface) {
+            $translator = clone $identifier;
+        }
+        else {
+            throw new KTranslatorException('Invalid identifier');
+        }
+    
+        // If you omit the path in modules KServiceLocatorModule assumes it's a view. Hence:
+        if ($translator->type === 'mod') {
+            $translator->path = array('translator');
+            $translator->name = '';
+        } else {
+            $translator->path = array();
+            $translator->name = 'translator';
+        }
+        
+        
+    
+        return $this->getService($translator);
+    }
+    
+    /**
+     * Force creation of a singleton
+     *
+     * @param 	object 	An optional KConfig object with configuration options
+     * @param 	object	A KServiceInterface object
+     * @return  KTranslator
+     */    
+    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    {
+        if (!$container->has($config->service_identifier))
+        {
+            $classname = $config->service_identifier->classname;
+            $instance  = new $classname($config);
+            $container->set($config->service_identifier, $instance);
+        }
+
+        return $container->get($config->service_identifier);
     }
 }
