@@ -63,10 +63,7 @@ class ComDefaultControllerDefault extends KControllerService
      */
     protected function _actionGet(KCommandContext $context)
     {
-        $identifier = clone $this->getIdentifier();
-        $identifier->path = array();
-        $identifier->name = 'translator';
-        $this->getService($identifier)->loadLanguageFiles();
+        $this->getService('translator')->getTranslator($this->getIdentifier())->loadLanguageFiles();
 
         return parent::_actionGet($context);
     }

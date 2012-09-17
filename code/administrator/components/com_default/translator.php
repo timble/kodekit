@@ -169,7 +169,7 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         if ($this->getLocale() !== $this->_fallback_locale) {
             $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), array($ext_base, $base));
         }
-        
+
         return in_array(true, $results);
     }
     
@@ -298,7 +298,7 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         if (is_string($identifier)) {
             $translator = new KServiceIdentifier($identifier);
 		} 
-		elseif ($translator instanceof KServiceIdentifierInterface) {
+		elseif ($identifier instanceof KServiceIdentifierInterface) {
 		    $translator = clone $identifier;
 		} 
 		else {
