@@ -97,6 +97,7 @@ class plgSystemKoowa extends JPlugin
         KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
 
         KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
+		KService::setAlias('translator', 'com:default.translator');
 
 	    //Setup the request
         KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
