@@ -39,11 +39,11 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
         $options = array();
 
         if($config->deselect) {
-            $options[] = $this->option(array('text' => JText::_($config->prompt), 'value' => ''));
+            $options[] = $this->option(array('text' => $this->translate($config->prompt), 'value' => ''));
         }
 
-        $options[] = $this->option(array('text' => JText::_( 'Enabled' ) , 'value' => 1 ));
-        $options[] = $this->option(array('text' => JText::_( 'Disabled' ), 'value' => 0 ));
+        $options[] = $this->option(array('text' => $this->translate( 'Enabled' ) , 'value' => 1 ));
+        $options[] = $this->option(array('text' => $this->translate( 'Disabled' ), 'value' => 0 ));
 
         //Add the options to the config object
         $config->options = $options;
@@ -66,7 +66,7 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
             'name'      => 'enabled',
             'attribs'   => array(),
             'deselect'  => true,
-            'prompt'    => '- '.JText::_($j15 ? 'Select' : 'JSELECT').' -'
+            'prompt'    => '- '.$this->translate('Select').' -'
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));
@@ -77,8 +77,8 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
             $options[] = $this->option(array('text' => $config->prompt, 'value' => ''));
         }
     
-        $options[] = $this->option(array('text' => JText::_($j15 ? 'Published' : 'JPUBLISHED'), 'value' => 1 ));
-        $options[] = $this->option(array('text' => JText::_($j15 ? 'Unpublished' : 'JUNPUBLISHED') , 'value' => 0 ));
+        $options[] = $this->option(array('text' => $this->translate('Published'), 'value' => 1 ));
+        $options[] = $this->option(array('text' => $this->translate('Unpublished') , 'value' => 0 ));
     
         //Add the options to the config object
         $config->options = $options;
@@ -101,7 +101,7 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
             'name'      => 'access',
             'attribs'   => array(),
             'deselect'  => true,
-            'prompt'    => '- '.JText::_($j15 ? 'Select' : 'JSELECT').' -'
+            'prompt'    => '- '.$this->translate('Select').' -'
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));

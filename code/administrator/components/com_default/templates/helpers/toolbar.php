@@ -33,9 +33,9 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
 
         if (version_compare(JVERSION,'1.6.0','ge')) {
-			$html .= '<h2>'.JText::_($config->toolbar->getTitle()).'</h2>';
+			$html .= '<h2>'.$this->translate($config->toolbar->getTitle()).'</h2>';
         } else {
-            $html .= JText::_($config->toolbar->getTitle());
+            $html .= $this->translate($config->toolbar->getTitle());
         }
 
 		$html .= '</div>';
@@ -121,8 +121,8 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
 		}
         
         $html .= '	<a '.KHelperArray::toString($command->attribs).'>';
-        $html .= '		<span class="'.$command->icon.'" title="'.JText::_($command->title).'"></span>';
-       	$html .= JText::_($command->label);
+        $html .= '		<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
+       	$html .= $this->translate($command->label);
        	$html .= '   </a>';
        	
         if (version_compare(JVERSION,'1.6.0','ge')) {

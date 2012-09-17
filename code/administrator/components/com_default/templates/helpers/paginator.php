@@ -117,9 +117,9 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
         $class = $page->current ? 'class="active"' : '';
 
         if($page->active && !$page->current) {
-            $html = '<a href="'.$url.'" '.$class.'>'.JText::_($title).'</a>';
+            $html = '<a href="'.$url.'" '.$class.'>'.$this->translate($title).'</a>';
         } else {
-            $html = '<span '.$class.'>'.JText::_($title).'</span>';
+            $html = '<span '.$class.'>'.$this->translate($title).'</span>';
         }
 
         return $html;
