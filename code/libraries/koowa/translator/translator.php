@@ -17,24 +17,17 @@ class KTranslator extends KObject
 {
     protected $_locale;
     
-    protected $_fallback_locale;
-    
     public function __construct(KConfig $config)
     {
         parent::__construct($config);
         
         $this->setLocale($config->locale);
-        
-        if ($config->fallback_locale) {
-            $this->setFallbackLocale($config->fallback_locale);
-        }
     }
     
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'locale' => 'en-GB',
-            'fallback_locale' => 'en-GB'
+            'locale' => 'en-GB'
         ));
         
         parent::_initialize($config);
@@ -63,17 +56,5 @@ class KTranslator extends KObject
     public function getLocale()
     {
         return $this->_locale;
-    }
-    
-    public function setFallbackLocale($locale)
-    {
-        $this->_fallback_locale = $locale;
-    
-        return $this;
-    }
-    
-    public function getFallbackLocale()
-    {
-        return $this->_fallback_locale;
     }
 }

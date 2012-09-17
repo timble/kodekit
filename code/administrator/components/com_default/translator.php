@@ -40,6 +40,12 @@ class ComDefaultTranslator extends KTranslator
     protected $_catalogue;
     
     /**
+     * Fallback locale to always load the language files from
+     * @var string
+     */
+    protected $_fallback_locale;
+    
+    /**
      * Maps identifier types to words
      * @var array
      */
@@ -59,6 +65,10 @@ class ComDefaultTranslator extends KTranslator
     {
         parent::__construct($config);
         
+        if ($config->fallback_locale) {
+            $this->_fallback_locale = $config->fallback_locale;
+        }
+        
         $this->setTranslator($config->translator);
         $this->setPrefix($config->prefix);
         
@@ -73,7 +83,8 @@ class ComDefaultTranslator extends KTranslator
             'translator' => JFactory::getLanguage(),
             'prefix'     => 'JT_',
             'catalogue'  => null,
-            'alias_catalogue' => 'aliases'
+            'alias_catalogue' => 'aliases',
+            'fallback_locale' => 'en-GB'
         ));
         
         parent::_initialize($config);
@@ -153,9 +164,9 @@ class ComDefaultTranslator extends KTranslator
         $ext_base = sprintf('%s/%ss/%s', $base, $type, $extension);
         
         $results = array();
-        $results[] = $this->_loadLanguageFile($extension, $this->getFallbackLocale(), array($ext_base, $base));
+        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, array($ext_base, $base));
 
-        if ($this->getLocale() !== $this->getFallbackLocale()) {
+        if ($this->getLocale() !== $this->_fallback_locale) {
             $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), array($ext_base, $base));
         }
         
