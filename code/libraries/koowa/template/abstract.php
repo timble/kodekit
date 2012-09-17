@@ -189,7 +189,7 @@ abstract class KTemplateAbstract extends KObject
 		        $this->setView($this->_view);
             }
 
-		    $this->_view = $this->getService($this->_view, $config);
+		    $this->_view = $this->getService($this->_view);
 		}
 
 		return $this->_view;
