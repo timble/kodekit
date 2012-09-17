@@ -51,6 +51,6 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     
     public function translate($string, array $parameters = array())
     {
-        return $this->getTemplate()->translate($string, $parameters);
+        return $this->getTemplate()->getHelper('translator')->translate($string, $parameters);
     }
 }

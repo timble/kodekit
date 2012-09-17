@@ -93,10 +93,8 @@ class ComDefaultTranslator extends KTranslator
 
         if (isset($this->_alias_catalogue[$result])) {
             $result = $this->_translator->_($this->_alias_catalogue[$result]);
-        } 
-        else {
+        } else {
             $key = $this->getKey($string);
-            
             $result = $this->_translator->_($this->_translator->hasKey($key) ? $key : $string);
         }
     
