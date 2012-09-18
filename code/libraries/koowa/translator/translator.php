@@ -43,7 +43,7 @@ class KTranslator extends KObject
      */
     public function translate($string, array $parameters = array())
     {
-        return strtr('*'.$string.'*', $parameters);
+        return strtr($string, $parameters);
     }
     
     public function setLocale($locale)
