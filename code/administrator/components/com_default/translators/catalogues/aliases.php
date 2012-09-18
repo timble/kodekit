@@ -56,7 +56,7 @@ class ComDefaultTranslatorCatalogueAliases extends KTranslatorCatalogue
         
         if (version_compare(JVERSION, '1.6', '>=')) {
             $config->append(array(
-            'data'  => $defaults
+                'data'  => $defaults
             ));
         }
     

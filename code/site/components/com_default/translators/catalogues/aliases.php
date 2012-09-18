@@ -8,7 +8,10 @@
  */
 
 /**
- * Translator Class
+ * Alias catalogue
+ * 
+ * Joomla 1.6+ uses some common keys like JALL, JYES.
+ * This class is used to map plain words to them.
  *
  * @author		Ercan Ozkaya <ercan@timble.net>
  * @package		Koowa_Translator
@@ -53,7 +56,7 @@ class ComDefaultTranslatorCatalogueAliases extends KTranslatorCatalogue
         
         if (version_compare(JVERSION, '1.6', '>=')) {
             $config->append(array(
-            'data'  => $defaults
+                'data'  => $defaults
             ));
         }
     
