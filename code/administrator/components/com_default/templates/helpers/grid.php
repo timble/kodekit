@@ -31,8 +31,8 @@ class ComDefaultTemplateHelperGrid extends KTemplateHelperGrid
 
         if (version_compare(JVERSION, '1.6', '>=')) {
             $class  = $config->row->{$config->field} ? 'publish' : 'unpublish';
-            $alt 	= $config->row->{$config->field} ? JText::_('JPUBLISHED') : JText::_('JUNPUBLISHED');
-            $text 	= $config->row->{$config->field} ? JText::_('JLIB_HTML_UNPUBLISH_ITEM') : JText::_('JLIB_HTML_PUBLISH_ITEM');
+            $alt 	= $config->row->{$config->field} ? $this->translate('Published') : $this->translate('Unpublished');
+            $text 	= $config->row->{$config->field} ? $this->translate('Unpublish Item') : $this->translate('Publish Item');
     
             $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
             $data = str_replace('"', '&quot;', $config->data);
@@ -41,8 +41,8 @@ class ComDefaultTemplateHelperGrid extends KTemplateHelperGrid
             $html .= '<span class="state '.$class.'"><span class="text">'.$alt.'</span></span></a>';
         } else {
             $img    = $config->row->{$config->field} ? 'enabled.png' : 'disabled.png';
-            $alt 	= $config->row->{$config->field} ? JText::_( 'Published' ) : JText::_( 'Unpublished' );
-            $text 	= $config->row->{$config->field} ? JText::_( 'Unpublish Item' ) : JText::_( 'Publish Item' );
+            $alt 	= $config->row->{$config->field} ? $this->translate( 'Published' ) : $this->translate( 'Unpublished' );
+            $text 	= $config->row->{$config->field} ? $this->translate( 'Unpublish Item' ) : $this->translate( 'Publish Item' );
             
             $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
             $data = str_replace('"', '&quot;', $config->data);
@@ -82,13 +82,13 @@ class ComDefaultTemplateHelperGrid extends KTemplateHelperGrid
             ';
     
             if ($config->row->{$config->field} > 1) {
-                $html .= sprintf($tmpl, JText::_('JLIB_HTML_MOVE_UP'), $updata, 'uparrow');
+                $html .= sprintf($tmpl, $this->translate('Move up'), $updata, 'uparrow');
             }
     
             $html .= $config->row->{$config->field};
     
             if ($config->row->{$config->field} != $config->total) {
-                $html .= sprintf($tmpl, JText::_('JLIB_HTML_MOVE_DOWN'), $downdata, 'downarrow');
+                $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow');
             }
         } else {
             $html = parent::order($config);

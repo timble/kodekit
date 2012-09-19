@@ -99,11 +99,11 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
                     switch($difference)
                     {
                         case 1:
-                            return 'Today';
+                            return $this->translate('Today');
                             break;
 
                         case 2:
-                            return $tense == 'ago' ? 'Yesterday' : 'Tomorrow';
+                            return $tense == 'ago' ? $this->translate('Yesterday') : $this->translate('Tomorrow');
                             break;
                     }
                 }
@@ -112,11 +112,11 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
                     $periods[$i].= 's';
                 }
 
-                $result = sprintf(JText::_('%s '.$periods[$i].' '.$tense), $difference);
+                $result = sprintf($this->translate('%s '.$periods[$i].' '.$tense), $difference);
             }
-            else $result = JText::_('Now');
+            else $result = $this->translate('Now');
         }
-        else $result = JText::_('Never');
+        else $result = $this->translate('Never');
 
         return $result;
     }

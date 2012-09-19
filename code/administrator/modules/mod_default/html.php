@@ -55,9 +55,12 @@ class ModDefaultHtml extends KViewHtml
     public function display()
     {
 		//Load the language files.
-		//Type only exists if the module is loaded through ComExtensionsModelsModules
-		if(isset($this->module->type)) {
-            JFactory::getLanguage()->load($this->module->type);
+		if(isset($this->module->module)) 
+		{
+		    $identifier = clone $this->getIdentifier();
+		    $identifier->package = substr($this->module->module, 4);
+		    
+		    $this->getService('translator')->getTranslator($identifier)->loadLanguageFiles();
 		}
 
 		if(empty($this->module->content))

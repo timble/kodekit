@@ -36,7 +36,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 		parent::__construct($config);
 
 		// Set the view indentifier
-    	$this->_template = $config->template;
+		$this->setTemplate($config->template);
 	}
 
     /**
@@ -47,5 +47,29 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     public function getTemplate()
     {
         return $this->_template;
+    }
+    
+    public function setTemplate($template)
+    {
+        if(!$template instanceof KTemplateAbstract)
+        {
+            if(empty($template) || (is_string($template) && strpos($template, '.') === false) )
+            {
+                $identifier			= clone $this->getIdentifier();
+                $identifier->path	= array('template');
+                $identifier->name	= $template ? $template : 'default';
+            } else $identifier = $this->getIdentifier($template);
+	
+            $template = $this->getService($identifier);
+        }
+    
+        $this->_template = $template;
+    
+        return $this;
+    }
+    
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTemplate()->getHelper('translator')->translate($string, $parameters);
     }
 }

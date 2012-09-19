@@ -189,7 +189,7 @@ abstract class KTemplateAbstract extends KObject
 		        $this->setView($this->_view);
             }
 
-		    $this->_view = $this->getService($this->_view, $config);
+		    $this->_view = $this->getService($this->_view);
 		}
 
 		return $this->_view;
@@ -207,10 +207,13 @@ abstract class KTemplateAbstract extends KObject
 	{
 		if(!($view instanceof KViewAbstract))
 		{
-			if(is_string($view) && strpos($view, '.') === false )
+			if(empty($view) || (is_string($view) && strpos($view, '.') === false))
 		    {
 			    $identifier			= clone $this->getIdentifier();
-			    $identifier->path	= array('view', $view);
+			    $identifier->path	= array('view');
+			    if ($view) {
+			        $identifier->path[] = $view;
+			    }
 			    $identifier->name	= KRequest::format() ? KRequest::format() : 'html';
 			}
 			else $identifier = $this->getIdentifier($view);
