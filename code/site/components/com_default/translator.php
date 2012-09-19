@@ -14,7 +14,7 @@
  * @package		Koowa_Translator
  */
 class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
-{   
+{
     /**
      * A reference to Joomla translator
      * @var object
@@ -102,13 +102,17 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
     {
         $result = strtolower($string);
 
-        if (isset($this->_alias_catalogue[$result])) {
+        if (empty($result)) {
+            $result = '';
+        }
+        elseif (isset($this->_alias_catalogue[$result])) {
             $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
-        } else {
+        }
+        else {
             $key = $this->getKey($string);
             $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
         }
-    
+
         return parent::translate($result, $parameters);
     }
     
