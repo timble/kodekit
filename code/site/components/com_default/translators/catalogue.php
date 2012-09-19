@@ -35,6 +35,7 @@ class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
             $key .= '_'.substr(md5($string), 0, 5);
         } else {
             $key = strip_tags($string);
+            $key = preg_replace('#%([A-Za-z0-9_\-\.]+)%#', ' $1 ', $key);
             $key = preg_replace('#(%[^%|\s|\b]+)#', 'X', $key);
             $key = preg_replace('#&.*?;#', '', $key);
             $key = preg_replace('#[\s-]+#', '_', $key);
