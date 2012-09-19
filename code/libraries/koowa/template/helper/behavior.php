@@ -468,7 +468,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 			'Calendar._TT["NEXT_YEAR"] = "'.$this->translate('Next year (hold for menu)').'";',
 			'Calendar._TT["SEL_DATE"] = "'.$this->translate('Select date').'";',
 			'Calendar._TT["DRAG_TO_MOVE"] = "'.$this->translate('Drag to move').'";',
-			'Calendar._TT["PART_TODAY"] = "'.$this->translate('(Today)').'";',
+			'Calendar._TT["PART_TODAY"] = "('.$this->translate('Today').')";',
 			'Calendar._TT["DAY_FIRST"] = "'.$this->translate('Display %s first').'";',
 			'Calendar._TT["WEEKEND"] = "0,6";',
 			'Calendar._TT["CLOSE"] = "'.$this->translate('Close').'";',

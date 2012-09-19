@@ -31,7 +31,7 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
             'name'      => 'enabled',
             'attribs'   => array(),
             'deselect'  => true,
-            'prompt'    => '- Select -',
+            'prompt'    => '- '.$this->translate('Select').' -',
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));
@@ -39,7 +39,7 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
         $options = array();
 
         if($config->deselect) {
-            $options[] = $this->option(array('text' => $this->translate($config->prompt), 'value' => ''));
+            $options[] = $this->option(array('text' => $config->prompt, 'value' => ''));
         }
 
         $options[] = $this->option(array('text' => $this->translate( 'Enabled' ) , 'value' => 1 ));
@@ -59,8 +59,6 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
      */
     public function published($config = array())
     {
-        $j15 = version_compare(JVERSION, '1.6', '<');
-        
         $config = new KConfig($config);
         $config->append(array(
             'name'      => 'enabled',
@@ -94,8 +92,6 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
      */
     public function access($config = array())
     {
-        $j15 = version_compare(JVERSION, '1.6', '<');
-        
         $config = new KConfig($config);
         $config->append(array(
             'name'      => 'access',
@@ -106,7 +102,7 @@ class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
             'selected'  => $config->{$config->name}
         ));
         
-        if ($j15) {
+        if (version_compare(JVERSION, '1.6', '<')) {
             $html = parent::access();
         } else {
             $prompt = false;

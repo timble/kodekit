@@ -25,8 +25,6 @@ class ComDefaultTemplateHelperSelect extends KTemplateHelperSelect
 	 */
     public function booleanlist($config = array())
     {
-        $j15 = version_compare(JVERSION, '1.6', '<');
-        
         $config = new KConfig($config);
         $config->append(array(
             'name'   	=> '',
