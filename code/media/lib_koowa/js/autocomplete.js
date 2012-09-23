@@ -380,7 +380,7 @@ provides: [Meio.Autocomplete]
 			syncName: 'id', // if falsy it wont sync at start
 			valueField: null,
 			valueFilter: function(data){
-				return data[this.options.syncName];
+				return data.id;
 			}
 		},
 		
