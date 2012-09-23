@@ -296,7 +296,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		
 		if($config->validate) 
 		{
-		    $config->attribs['data-value']  = $config->value_element;
+		    $config->attribs['data-value']  = $config->element.'-value';
 		    $config->attribs['data-value'] .= ' ma-required';
 		}
 		
@@ -326,8 +326,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$html .= '<input '.KHelperArray::toString($config->attribs).' />';
 	    $html .= '<input '.KHelperArray::toString(array(
             'type'  => 'hidden',
-            'name'  => $config->value_element,
-            'id'    => $config->value_element,
+            'name'  => $config->value,
+            'id'    => $config->element.'-value',
             'value' => $config->selected
 	       )).' />';
 
