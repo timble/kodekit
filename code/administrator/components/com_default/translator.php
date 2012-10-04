@@ -109,7 +109,12 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
             $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
         }
         else {
-            $key = $this->getKey($string);
+            if (substr($string, 0, strlen($this->_prefix)) === $this->_prefix) {
+                $key = $string;
+            } else {
+                $key = $this->getKey($string);
+            }
+            
             $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
         }
         
@@ -120,6 +125,42 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         }
 
         return parent::translate($result, $parameters);
+    }
+    
+    /**
+     * Translates a string based on the number parameter passed
+     *
+     * @param string  $strings Strings to choose from
+     * @param integer $number The umber of items
+     * @param array   $parameters An array of parameters
+     *
+     * @return string Translated strign
+     */
+    public function choose(array $strings, $number, array $parameters = array())
+    {
+        if (count($strings) < 2) {
+            throw new InvalidArgumentException('Choose method requires at least 2 strings to choose from');
+        }
+        
+        $choice = KTranslatorPluralizationrules::get($number, $this->_locale);
+
+        if ($choice === 0) {
+            return $this->translate($strings[0], $parameters);
+        }
+        
+        $key = $this->getKey($strings[1]);
+        $found = null;
+        while ($choice > 0) {
+            $looking_for = $key.($choice === 1 ? '' : '_'.$choice);
+            if ($this->_translation_helper->hasKey($looking_for)) {
+                $found = $looking_for;
+                break;
+            }
+            
+            $choice--;
+        }
+        
+        return $this->translate($found ? $found : $strings[1], $parameters);
     }
     
     /**
