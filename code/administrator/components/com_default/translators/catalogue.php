@@ -32,7 +32,7 @@ class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
         
         if (strlen($string) > 40) {
             $key = $this->generateKey(substr($string, 0, 40));
-            $key .= '_'.substr(md5($string), 0, 5);
+            $key .= '_'.strtoupper(substr(md5($string), 0, 5));
         } else {
             $key = strip_tags($string);
             $key = preg_replace('#%([A-Za-z0-9_\-\.]+)%#', ' $1 ', $key);

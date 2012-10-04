@@ -7,13 +7,12 @@
     <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
     <authorEmail>info@joomlatools.eu</authorEmail>
     <authorUrl>www.joomlatools.com</authorUrl>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <description></description>
 
     <!--  Files -->
     <files folder="plugins/system">
         <filename plugin="koowa">koowa.php</filename>
-        <filename>index.html</filename>
     </files>
 
     <!--  Media -->

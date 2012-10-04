@@ -14,7 +14,7 @@
  * @package		Koowa_Translator
  */
 class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
-{
+{  
     /**
      * A reference to Joomla translator
      * @var object
@@ -96,7 +96,7 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
      * @param string $string String to translate
      * @param array  $parameters An array of parameters
      *
-     * @return string Translated strign
+     * @return string Translated string
      */    
     public function translate($string, array $parameters = array())
     {
@@ -111,6 +111,12 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         else {
             $key = $this->getKey($string);
             $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
+        }
+        
+        // Joomla uses _QQ_ instead of " in language files
+        // and 1.5 does not handle the conversion itself
+        if (version_compare(JVERSION, '1.6', '<')) {
+            $result = str_replace('"_QQ_"', '"', $result);
         }
 
         return parent::translate($result, $parameters);
