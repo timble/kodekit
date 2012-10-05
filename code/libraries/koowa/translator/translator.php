@@ -52,8 +52,10 @@ class KTranslator extends KObject
      * @param string  $strings Strings to choose from
      * @param integer $number The umber of items
      * @param array   $parameters An array of parameters
+     * 
+     * @throws InvalidArgumentException
      *
-     * @return string Translated strign
+     * @return string Translated string
      */
     public function choose(array $strings, $number, array $parameters = array())
     {
