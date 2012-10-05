@@ -3,15 +3,17 @@
  * @version     $Id$
  * @package     Koowa_Translator
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @copyright   Copyright (c) Fabien Potencier <fabien@symfony.com>
- * @license     MIT license
- * @link        http://www.nooku.org
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        http://www.joomlatools.com
  */
 
 /**
  * Returns the plural rules for a given locale.
+ * 
+ * This class is based on Symfony 2 class Symfony\Component\Translation\PluralizationRules
+ * and subject to MIT license
+ * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
- * @author Fabien Potencier <fabien@symfony.com>
  */
 class KTranslatorPluralizationrules
 {
