@@ -73,7 +73,7 @@ class plgSystemKoowa extends JPlugin
 
 		//Set path definitions
 		define('JPATH_FILES' , JPATH_ROOT);
-		define('JPATH_IMAGES', JPATH_ROOT.DS.'images');
+		define('JPATH_IMAGES', JPATH_ROOT.'/images');
 
 		//Set exception handler
 		set_exception_handler(array($this, 'exceptionHandler'));
@@ -103,7 +103,7 @@ class plgSystemKoowa extends JPlugin
         KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
 
 		//Load the koowa plugins
-		JPluginHelper::importPlugin('koowa', null, true, KService::get('com://admin/default.event.dispatcher'));
+		JPluginHelper::importPlugin('koowa', null, true);
 
 	    //Bugfix : Set offset accoording to user's timezone
 		if(!JFactory::getUser()->guest)
@@ -144,7 +144,8 @@ class plgSystemKoowa extends JPlugin
 	     * One plugin that could cause that, are the Remember Me plugin
 	     */
 	     if(!JFactory::getUser()->guest) {
-	         KRequest::set('request._token', JUtility::getToken());
+             $token = version_compare(JVERSION, '3.0', 'ge') ? JSession::getFormToken() : JUtility::getToken();
+	         KRequest::set('request._token', $token);
 	     }
 
 	     /*
@@ -294,7 +295,8 @@ class plgSystemKoowa extends JPlugin
 	        }
 
 	        //Force the token
-	        KRequest::set('request._token', JUtility::getToken());
+            $token = version_compare(JVERSION, '3.0', 'ge') ? JSession::getFormToken() : JUtility::getToken();
+	        KRequest::set('request._token', $token);
 
 	        return true;
 	    }
