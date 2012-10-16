@@ -64,7 +64,9 @@ class ComDefaultTemplateHelperDate extends KTemplateHelperDate
      */
     protected function _getOffset()
     {
-        $offset = JFactory::getConfig()->getValue('config.offset');
+        $offset = version_compare(JVERSION, '3.0', 'ge')
+            ? JFactory::getConfig()->get('offset') 
+            : JFactory::getConfig()->getValue('config.offset');
         $seconds = 0;
         
         if (version_compare(JVERSION, '1.6', '<')) {
