@@ -19,6 +19,9 @@
 if(!Koowa) var Koowa = {};
 Koowa.version = 0.7;
 
+//Legacy
+if(!window.$each) window.$each = Object.each;
+
 
 /* Section: onDomReady */
 window.addEvent('domready', function() {
@@ -259,7 +262,7 @@ Koowa.Controller = new Class({
             return this;
         }
         result = events[type].keys.map(function(fn){
-            return fn.create({'bind': this, 'delay': delay, 'arguments': args})() !== false;
+            return fn.call(this, args) !== false;
         }, this).every(function(v){ return v;});
         return result;
     },
