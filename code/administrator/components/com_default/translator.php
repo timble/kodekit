@@ -200,12 +200,19 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
             $identifier = $this->getIdentifier();
             $type       = $identifier->type;
             $extension  = $type.'_'.$identifier->package;
+            $app        = $identifier->application === 'admin' ? 'administrator' : $identifier->application;
         } else {
             $type = substr($extension, 0, 3);
+            $app  = null;
         }
-        
-        if ($base === null) {
-            $base = JPATH_BASE;
+
+        if ($base === null) 
+        {
+        	if ($app && defined('JPATH_'.strtoupper($app))) {
+        		$base = constant('JPATH_'.strtoupper($app));
+        	} else {
+        		$base = JPATH_BASE;
+        	}
         }
         
         if (isset(self::$_type_map[$type])) {
