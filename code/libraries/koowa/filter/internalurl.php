@@ -28,20 +28,11 @@ class KFilterInternalurl extends KFilterAbstract
      */
     protected function _validate($value)
     {
-        if(!is_string($value) && !($value instanceof KHttpUrl)) {
+        if(!is_string($value)) {
             return false;
         }
-
-        if (!$value instanceof KHttpUrl) {
-        	$value = KService::get('koowa:http.url', array('url' => $value));
-        }
-
-        $base = $value->get(KHttpUrl::SCHEME | KHttpUrl::HOST | KHttpUrl::PORT | KHttpUrl::PATH);
-        $host = KRequest::url()->get(KHttpUrl::SCHEME | KHttpUrl::HOST | KHttpUrl::PORT);
-
-        $check_against = $host.rtrim(KRequest::base(), '/\\').'/';
-
-        if (stripos($base, $check_against) !== 0 && !empty($host)) {
+        
+        if(stripos($value, (string) KRequest::url()->get(KHttpUrl::AUTHORITY)) !== 0) {
         	return false;
         }
 
