@@ -78,7 +78,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
                     $difference = $time - $now;
                     $tense      = 'from now';
                 }
-
+                
                 for($i = 0; $difference >= $lengths[$i] && $i < 6; $i++) {
                     $difference /= $lengths[$i];
                 }
@@ -94,27 +94,23 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
                     $i          = $period_index;
                 }
 
-                if($periods[$i] == 'day')
+                if($periods[$i] == 'day' && $difference == 1) 
                 {
-                    switch($difference)
-                    {
-                        case 1:
-                            return $this->translate('Today');
-                            break;
-
-                        case 2:
-                            return $tense == 'ago' ? $this->translate('Yesterday') : $this->translate('Tomorrow');
-                            break;
-                    }
+                    // Since we got 1 by rounding it down and if it's less than 24 hours it would say x hours ago, this is yesterday
+                    return $tense == 'ago' ? $this->translate('Yesterday') : $this->translate('Tomorrow');
                 }
 
-                if($difference != 1) {
-                    $periods[$i].= 's';
-                }
-
-                $result = sprintf($this->translate('%s '.$periods[$i].' '.$tense), $difference);
+                $period = $periods[$i];
+                $period_plural = $period.'s';
+                
+                // We do not pass $period or $tense as parameters to replace because 
+                // some languages use different words for them based on the time difference.
+                $translator = $this->getTemplate()->getHelper('translator')->getTranslator();
+                $result = $translator->choose(array("%number% $period $tense", "%number% $period_plural $tense"), $difference, array(
+                    '%number%' => $difference,
+                ));
             }
-            else $result = $this->translate('Now');
+            else $result = $this->translate('Just now');
         }
         else $result = $this->translate('Never');
 
