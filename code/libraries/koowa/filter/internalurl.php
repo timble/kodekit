@@ -31,9 +31,9 @@ class KFilterInternalurl extends KFilterAbstract
         if(!is_string($value)) {
             return false;
         }
-
-        if(stripos($value, (string)  dirname(KRequest::url()->get(KHttpUrl::BASE))) !== 0) {
-            return false;
+        
+        if(stripos($value, (string) KRequest::url()->get(KHttpUrl::AUTHORITY)) !== 0) {
+        	return false;
         }
 
         return true;

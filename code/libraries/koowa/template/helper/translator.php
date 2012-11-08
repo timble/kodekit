@@ -21,14 +21,19 @@ class KTemplateHelperTranslator extends KTemplateHelperAbstract
     
     public function translate($string, $parameters = array())
     {
+	    return $this->getTranslator()->translate($string, $parameters);
+    }
+    
+    public function getTranslator()
+    {
 	    if (!self::$_translator instanceof KTranslator) {
 	        $identifier = clone $this->getTemplate()->getIdentifier();
 	        $identifier->path = array();
 	        $identifier->name = 'translator';
-	         
+	        
 	        self::$_translator = $this->getService($identifier);
 	    }
-
-	    return self::$_translator->translate($string, $parameters);
+        
+	    return self::$_translator;
     }
 }
