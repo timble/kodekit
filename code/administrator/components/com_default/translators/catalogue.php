@@ -17,13 +17,11 @@ class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
 { 
     public function __get($key)
     {
-        if(isset($this->_data[$key])) {
-            $result = $this->_data[$key];
-        } else {
-            $result = $this->generateKey($key);
+        if (!isset($this->_data[$key])) {
+            $this->_data[$key] = $this->generateKey($key);
         }
-    
-        return $result;
+        
+        return $this->_data[$key];
     }
 
     public function generateKey($string)
@@ -35,6 +33,7 @@ class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
             $key .= '_'.strtoupper(substr(md5($string), 0, 5));
         } else {
             $key = strip_tags($string);
+            $key = preg_replace('#\s+#m', ' ', $key);
             $key = preg_replace('#%([A-Za-z0-9_\-\.]+)%#', ' $1 ', $key);
             $key = preg_replace('#(%[^%|^\s|^\b]+)#', 'X', $key);
             $key = preg_replace('#&.*?;#', '', $key);
@@ -44,8 +43,6 @@ class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
             $key = trim($key, '_');
             $key = trim(strtoupper($key));
         }
-
-        $this->_data[$string] = $key;
 
         return $key;
     }
