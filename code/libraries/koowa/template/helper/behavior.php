@@ -293,10 +293,10 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		        )
 		    )
 		));
-		
+
 		if($config->validate) 
 		{
-		    $config->attribs['data-value']  = $config->element.'-value';
+		    $config->attribs['data-value']  = $config->value_element;
 		    $config->attribs['data-value'] .= ' ma-required';
 		}
 		
@@ -315,7 +315,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		    $html .= '<script src="media://lib_koowa/js/patch.autocomplete.js" />';
 		    $html .= '<style src="media://lib_koowa/css/autocomplete.css" />';
 		}
-		
+
 		$html .= "
 		<script>
 			window.addEvent('domready', function(){				
@@ -326,7 +326,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$html .= '<input '.KHelperArray::toString($config->attribs).' />';
 	    $html .= '<input '.KHelperArray::toString(array(
             'type'  => 'hidden',
-            'name'  => $config->value,
+            'name'  => $config->name,
             'id'    => $config->element.'-value',
             'value' => $config->selected
 	       )).' />';
