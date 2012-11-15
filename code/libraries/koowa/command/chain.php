@@ -92,7 +92,7 @@ class KCommandChain extends KObjectQueue
      */
     public function enqueue(KObjectHandlable $cmd, $priority = null)
     {
-        if (!$command instanceof KCommandInterface) {
+        if (!$cmd instanceof KCommandInterface) {
             throw new InvalidArgumentException('Command needs to implement KCommandInterface');
         }
         
@@ -155,7 +155,7 @@ class KCommandChain extends KObjectQueue
      */
     public function setPriority(KObjectHandlable $cmd, $priority)
     {
-        if (!$command instanceof KCommandInterface) {
+        if (!$cmd instanceof KCommandInterface) {
         	throw new InvalidArgumentException('Command needs to implement KCommandInterface');
         }
         
@@ -171,7 +171,7 @@ class KCommandChain extends KObjectQueue
      */
     public function getPriority(KObjectHandlable $cmd)
     {
-        if (!$command instanceof KCommandInterface) {
+        if (!$cmd instanceof KCommandInterface) {
             throw new InvalidArgumentException('Command needs to implement KCommandInterface');
         }
         
