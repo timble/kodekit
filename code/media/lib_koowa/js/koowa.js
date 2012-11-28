@@ -103,7 +103,7 @@ Koowa.Grid = new Class({
             console.log(checkbox, 'test');
             return !checkbox.is(':disabled');
         });
-console.log(this.checkboxes.length);
+
         if(!this.checkboxes.length) {
             this.toggles.prop('disabled', true);
         }
@@ -215,12 +215,12 @@ Koowa.Controller = new Class({
             var self = this, token_name = this.form.data('token-name'), token_value = this.form.data('token-value');
             this.buttons.each(function(){
                 var button = $(this), data = button.data('data'), options = self.getOptions(button), action = button.data('action');
-                console.log(data, jQuery.parseJSON(data));
+console.log(button.attr('data-data'), button.data('test'), data);
                 data = data ? JSON.decode(data) : {};
-console.log(data);
+console.warn(data, JSON.decode(button.attr('data-data')), button[0], $.type(data), $.isPlainObject(data));
                 //Set token data
                 if(token_name) {
-                    data[token_name] = token_value;
+                    //data[token_name] = token_value;
                 }
 
                 button.on('click', function(event){
@@ -229,7 +229,6 @@ console.log(data);
                     }
                     if(!button.hasClass('disabled')) {
                         self.setOptions(options);
-                        console.log(action, data, button);
                         self.fireEvent('execute', [action, data, button.get('data-novalidate') === 'novalidate']);
                     }
                 });
@@ -253,7 +252,9 @@ console.log(data);
         return this;
     },
 
+    /* @TODO refactor to use jQuery.fn.on, but keep addEvent for legacy */
     addEvent: function(type, fn, internal){
+
 
         return this.form.addEvent.apply(this.form, [type, fn, internal]);
 
