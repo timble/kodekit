@@ -215,9 +215,8 @@ Koowa.Controller = new Class({
             var self = this, token_name = this.form.data('token-name'), token_value = this.form.data('token-value');
             this.buttons.each(function(){
                 var button = $(this), data = button.data('data'), options = self.getOptions(button), action = button.data('action');
-console.log(button.attr('data-data'), button.data('test'), data);
-                data = data ? JSON.decode(data) : {};
-console.warn(data, JSON.decode(button.attr('data-data')), button[0], $.type(data), $.isPlainObject(data));
+                data = (data && $.type(data) === 'string') ? eval('(' + data + ')') : {};
+
                 //Set token data
                 if(token_name) {
                     //data[token_name] = token_value;
@@ -446,7 +445,7 @@ Koowa.Controller.Grid = new Class({
                     eventType = action.get('data-event-type'),
                     onchange;
 
-                data = data ? JSON.decode(data) : {};
+                data = (data && $.type(data) === 'string') ? eval('(' + data + ')') : {};
 
                 //Set token data
                 if(token_name) {
