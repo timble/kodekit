@@ -18,8 +18,9 @@
 if(!Koowa) var Koowa = {};
 Koowa.version = 0.7;
 
+(function($){
 
-jQuery(function($){
+$(function(){
     //@TODO needs testing
     $('.submitable').bind('click', function(event){
         event = new Event(event);
@@ -206,30 +207,33 @@ Koowa.Controller = new Class({
 
         //Attach toolbar buttons actions
         if(this.toolbar) {
-            this.buttons = this.toolbar.getElements('.toolbar').filter(function(button){
-                return button.get('data-action');
+            this.buttons = this.toolbar.find('.toolbar').filter(function(){
+                var button = $(this);
+                return button.data('action');
             });
-            var token_name = this.form.get('data-token-name'), token_value = this.form.get('data-token-value');
-            this.buttons.each(function(button){
-                var data = button.get('data-data'), options = this.getOptions(button), action = button.get('data-action');
-                data = data ? JSON.decode(data) : {};
 
+            var self = this, token_name = this.form.data('token-name'), token_value = this.form.data('token-value');
+            this.buttons.each(function(){
+                var button = $(this), data = button.data('data'), options = self.getOptions(button), action = button.data('action');
+                console.log(data, jQuery.parseJSON(data));
+                data = data ? JSON.decode(data) : {};
+console.log(data);
                 //Set token data
                 if(token_name) {
                     data[token_name] = token_value;
                 }
 
-                button.addEvent('click', function(event){
+                button.on('click', function(event){
                     if (event) {
                         event.preventDefault();
                     }
                     if(!button.hasClass('disabled')) {
-                        this.setOptions(options);
-                        this.fireEvent('execute', [action, data, button.get('data-novalidate') === 'novalidate']);
+                        self.setOptions(options);
+                        console.log(action, data, button);
+                        self.fireEvent('execute', [action, data, button.get('data-novalidate') === 'novalidate']);
                     }
-                }.bind(this));
-
-            }, this);
+                });
+            });
         }
     },
 
@@ -668,3 +672,5 @@ Koowa.Overlay = new Class({
         return this.parent(text);
     }
 });
+
+})(jQuery);
