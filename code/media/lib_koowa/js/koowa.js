@@ -160,9 +160,7 @@ if (!Function.prototype.bind) {
             });
 
             this.checkboxes.prop('checked', value);
-
             changed.trigger('change', true);
-
         },
 
         uncheckAll: function(){
@@ -325,7 +323,7 @@ if (!Function.prototype.bind) {
         Extends: Koowa.Controller,
 
         options: {
-            inputs: '.-koowa-grid-checkbox'
+            inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall'
         },
 
         initialize: function(options){
@@ -343,7 +341,7 @@ if (!Function.prototype.bind) {
                 this.buttons.removeClass.delay(1, this.buttons, ['beforeload']);
                 //@TODO rewrite to use .delegate like functionality
                 this.form.find(this.options.inputs).on('change', function(event, ignore){
-                    if(!ignore) this.checkValidity.bind(this);
+                    if(!ignore) this.checkValidity();
                 }.bind(this));
             }
 
@@ -432,7 +430,7 @@ if (!Function.prototype.bind) {
                         $(this).addClass('selected');
                         checkbox.prop('checked', true);
                     }
-                    checkbox.trigger('change', event);
+                    checkbox.trigger('change');
                 }).on('dblclick', function(event){
                     if($(event.target).is('a') || $(event.target).is('td') || event.target == this) {
                         window.location.href = $(this).find('a').prop('href');
