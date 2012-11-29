@@ -282,12 +282,10 @@ if (!Function.prototype.bind) {
         },
 
         /* @TODO refactor to use jQuery.fn.on, but keep addEvent for legacy */
-        addEvent: function(type, fn, internal){
+        addEvent: function(type, fn){
 
-
-            return this.form.addEvent.apply(this.form, [type, fn, internal]);
-
-            return this;
+            // @TODO test if this.form.on(type, fn) works just as good as this code
+            return this.form.on.apply(this.form, [type, fn]);
 
         },
 
