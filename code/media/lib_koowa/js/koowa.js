@@ -18,11 +18,38 @@
 if(!Koowa) var Koowa = {};
 Koowa.version = 0.7;
 
+/* Shims, making newer javascript features work in older browsers */
+
+/* https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind */
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+        if (typeof this !== "function") {
+            // closest thing possible to the ECMAScript 5 internal IsCallable function
+            throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+        }
+
+        var aArgs = Array.prototype.slice.call(arguments, 1),
+            fToBind = this,
+            fNOP = function () {},
+            fBound = function () {
+                return fToBind.apply(this instanceof fNOP && oThis
+                    ? this
+                    : oThis,
+                    aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+
+        return fBound;
+    };
+}
+
 (function($){
 
     $(function(){
         //@TODO needs testing
-        $('.submitable').bind('click', function(event){
+        $('.submitable').on('click', function(event){
             event = new Event(event);
             new Koowa.Form(JSON.decode(event.target.getProperty('rel'))).submit();
         });
@@ -40,6 +67,9 @@ Koowa.version = 0.7;
             new Koowa.Controller.Form({form: form, toolbar: $(toolbar)});
         });
     });
+
+    /* Section: Base utilities */
+
 
     /* Section: Classes */
 
@@ -109,13 +139,13 @@ Koowa.version = 0.7;
             }
 
             var self = this;
-            this.toggles.bind('change', function(event){
+            this.toggles.on('change', function(event){
                 if(event) {
                     self.checkAll(this.get('checked'));
                 }
             });
 
-            this.checkboxes.bind('change', function(event){
+            this.checkboxes.on('change', function(event){
                 if(event) {
                     self.uncheckAll();
                 }
@@ -203,7 +233,7 @@ Koowa.version = 0.7;
             this.form.data('controller', this);
 
             //Allows executing actions on the form element itself using fireEvent
-            this.form.bind('execute', this.execute.bind(this));
+            this.form.on('execute', this.execute.bind(this));
 
             //Attach toolbar buttons actions
             if(this.toolbar) {
@@ -256,6 +286,8 @@ Koowa.version = 0.7;
 
 
             return this.form.addEvent.apply(this.form, [type, fn, internal]);
+
+            return this;
 
         },
 
