@@ -58,13 +58,13 @@ if (!Function.prototype.bind) {
             var grid = $(this);
             new Koowa.Grid(grid);
 
-            var toolbar = grid.attr('data-toolbar') || '.toolbar';
-            new Koowa.Controller.Grid({form: grid, toolbar: $(toolbar)});
+            var toolbar = grid.data('toolbar') || '.toolbar';
+            new Koowa.Controller.Grid({form: grid, toolbar: grid.data('no-toolbar') ? false : $(toolbar)});
         });
 
         $('.-koowa-form').each(function(){
-            var form = $(this), toolbar = form.attr('data-toolbar') || '.toolbar';
-            new Koowa.Controller.Form({form: form, toolbar: $(toolbar)});
+            var form = $(this), toolbar = form.data('toolbar') || '.toolbar';
+            new Koowa.Controller.Form({form: form, toolbar: grid.data('no-toolbar') ? false : $(toolbar)});
         });
     });
 
@@ -139,14 +139,14 @@ if (!Function.prototype.bind) {
             }
 
             var self = this;
-            this.toggles.on('change', function(event){
-                if(event) {
-                    self.checkAll(this.get('checked'));
+            this.toggles.on('change', function(event, ignore){
+                if(!ignore) {
+                    self.checkAll($(this).prop('checked'));
                 }
             });
 
-            this.checkboxes.on('change', function(event){
-                if(event) {
+            this.checkboxes.on('change', function(event, ignore){
+                if(!ignore) {
                     self.uncheckAll();
                 }
             });
@@ -154,24 +154,26 @@ if (!Function.prototype.bind) {
 
         checkAll: function(value){
 
-            var changed = this.checkboxes.filter(function(checkbox){
-                return checkbox.get('checked') !== value;
+            var changed = this.checkboxes.filter(function(i, checkbox){
+                var $checkbox = $(checkbox);
+                return $checkbox.prop('checked') !== value;
             });
 
-            this.checkboxes.set('checked', value);
+            this.checkboxes.prop('checked', value);
 
-            changed.fireEvent('change');
+            changed.trigger('change', true);
 
         },
 
         uncheckAll: function(){
 
-            var total = this.checkboxes.filter(function(checkbox){
-                return checkbox.get('checked') !== false ;
+            var total = this.checkboxes.filter(function(i, checkbox){
+                var $checkbox = $(checkbox);
+                return $checkbox.prop('checked') !== false;
             }).length;
 
-            this.toggles.set('checked', this.checkboxes.length === total);
-            this.toggles.fireEvent('change');
+            this.toggles.prop('checked', this.checkboxes.length === total);
+            this.toggles.trigger('change', true);
 
         }
     });
@@ -232,8 +234,7 @@ if (!Function.prototype.bind) {
 
             this.form.data('controller', this);
 
-            //Allows executing actions on the form element itself using fireEvent
-            this.form.on('execute', this.execute.bind(this));
+            this.addEvent('execute', this.execute.bind(this));
 
             //Attach toolbar buttons actions
             if(this.toolbar) {
@@ -249,13 +250,11 @@ if (!Function.prototype.bind) {
 
                     //Set token data
                     if(token_name) {
-                        //data[token_name] = token_value;
+                        data[token_name] = token_value;
                     }
 
                     button.on('click', function(event){
-                        if (event) {
-                            event.preventDefault();
-                        }
+                        event.preventDefault();
                         if(!button.hasClass('disabled')) {
                             self.setOptions(options);
                             self.fireEvent('execute', [action, data, button.get('data-novalidate') === 'novalidate']);
@@ -265,7 +264,7 @@ if (!Function.prototype.bind) {
             }
         },
 
-        execute: function(action, data, novalidate){
+        execute: function(event, action, data, novalidate){
             var method = '_action'+action.capitalize();
 
             this.options.action = action;
@@ -283,14 +282,14 @@ if (!Function.prototype.bind) {
 
         /* @TODO refactor to use jQuery.fn.on, but keep addEvent for legacy */
         addEvent: function(type, fn){
-
             // @TODO test if this.form.on(type, fn) works just as good as this code
             return this.form.on.apply(this.form, [type, fn]);
-
         },
 
         fireEvent: function(type, args){
-            return this.form.trigger(type, args);
+            var event = jQuery.Event(type);
+            this.form.trigger(event, args);
+            return !event.isDefaultPrevented();
         },
 
         checkValidity: function(){
@@ -343,7 +342,9 @@ if (!Function.prototype.bind) {
                 //Remove the class 1ms afterwards, which is enough for bypassing css transitions onload
                 this.buttons.removeClass.delay(1, this.buttons, ['beforeload']);
                 //@TODO rewrite to use .delegate like functionality
-                this.form.find(this.options.inputs).on('change', this.checkValidity.bind(this));
+                this.form.find(this.options.inputs).on('change', function(event, ignore){
+                    if(!ignore) this.checkValidity.bind(this);
+                }.bind(this));
             }
 
             //Make the table headers "clickable"
@@ -356,7 +357,7 @@ if (!Function.prototype.bind) {
                         if(link.length) {
                             element.on('click', function(event){
                                 //Don't do anything if the event target is the same as the element
-                                if(event.target != element) return;
+                                if(event.target != el) return;
 
                                 //Run this check on click, so that progressive enhancements isn't bulldozed
                                 if(link.prop('href')) {
@@ -377,10 +378,10 @@ if (!Function.prototype.bind) {
                         if(checkall.length) {
                             element.on('click', function(event){
                                 //Don't do anything if the event target is the same as the element
-                                if(event.target != element) return;
+                                if(event.target != el) return true;
 
                                 //Checkall uses change for other purposes
-                                checkall.prop('checked', checkall.is(':checked') ? false : true).trigger('change', event);
+                                checkall.prop('checked', checkall.is(':checked') ? false : true).trigger('change');
                             });
 
                             return;
@@ -422,7 +423,7 @@ if (!Function.prototype.bind) {
                 }
 
                 tr.on('click', function(event){
-                    if(event.target.hasClass('toggle-state') || event.target.is('[type=checkbox]')) return;
+                    if($(event.target).hasClass('toggle-state') || $(event.target).is('[type=checkbox]')) return;
                     var checkbox = $(this).find('input[type=checkbox]'), checked = checkbox.prop('checked');
                     if(checked) {
                         $(this).removeClass('selected');
@@ -433,7 +434,7 @@ if (!Function.prototype.bind) {
                     }
                     checkbox.trigger('change', event);
                 }).on('dblclick', function(event){
-                    if(event.target.is('a') || event.target.is('td') || event.target == this) {
+                    if($(event.target).is('a') || $(event.target).is('td') || event.target == this) {
                         window.location.href = $(this).find('a').prop('href');
                     }
                 }).on('contextmenu', function(event){
@@ -445,28 +446,30 @@ if (!Function.prototype.bind) {
                 });
 
 
-                checkbox.addEvent('change', function(tr){
-                    this.getProperty('checked') ? tr.addClass('selected') : tr.removeClass('selected');
-                    var selected = tr.hasClass('selected') + tr.getSiblings('.selected').length, parent = tr.getParent();
+                checkbox.on('change', function(){
+                    this.prop('checked') ? tr.addClass('selected') : tr.removeClass('selected');
+                    var selected = tr.hasClass('selected') + tr.siblings('.selected').length, parent = tr.parent();
                     if(selected > 1) {
                         parent.addClass('selected-multiple').removeClass('selected-single')
                     } else {
                         parent.removeClass('selected-multiple').addClass('selected-single');
                     }
-                }.pass(tr, checkbox)).fireEvent('change');
+                }.bind(checkbox)).trigger('change', true);
 
 
-                id = {name: checkbox.get('name'), value: checkbox.get('value')};
+                id = {name: checkbox.prop('name'), value: checkbox.prop('value')};
                 //Attributes with hyphens don't work with the MT 1.2 selector engine, it's fixed in 1.3 so this is a workaround
-                actions = tr.getElements('*').filter(function(action){
-                    return action.get('data-action');
+                actions = tr.find('*').filter(function(i, action){
+                    var $action = $(action);
+                    return $action.data('action');
                 });
 
-                actions.each(function(action){
-                    var data = action.get('data-data'),
+                actions.each(function(i, el){
+                    var action = $(el),
+                        data = action.data('data'),
                         options = this.getOptions(action),
-                        actionName = action.get('data-action'),
-                        eventType = action.get('data-event-type'),
+                        actionName = action.data('action'),
+                        eventType = action.data('eventType'),
                         onchange;
 
                     data = (data && $.type(data) === 'string') ? eval('(' + data + ')') : {};
@@ -477,18 +480,13 @@ if (!Function.prototype.bind) {
                     }
 
                     if(!eventType) {
-                        onchange = ['[type="radio"]', '[type="checkbox"]', 'select'].filter(function(test){
-                            return action.match(test);
-                        });
-
-                        eventType = onchange.length ? 'change' : 'click';
+                        eventType = action.is('[type="radio"],[type="checkbox"],select') ? 'change' : 'click';
                     }
 
-
-                    action.addEvent(eventType, function(){
-                        checkboxes.set('checked', '');
-                        checkbox.set('checked', 'checked');
-                        checkboxes.fireEvent('change');
+                    action.on(eventType, function(){
+                        checkboxes.prop('checked', '');
+                        checkbox.prop('checked', 'checked');
+                        checkboxes.trigger('change', true);
 
                         this.setOptions(options);
                         this.fireEvent('execute', [actionName, data, true]);
