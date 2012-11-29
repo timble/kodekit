@@ -129,9 +129,9 @@ if (!Function.prototype.bind) {
             this.form       = this.element.is('form') ? this.element : this.element.closest('form');
             this.toggles    = this.element.find('.-koowa-grid-checkall');
             //@TODO rewrite to use a getter instead, or .live
-            this.checkboxes = this.element.find('.-koowa-grid-checkbox').filter(function(checkbox) {
-                console.log(checkbox, 'test');
-                return !checkbox.is(':disabled');
+            this.checkboxes = this.element.find('.-koowa-grid-checkbox').filter(function(i, checkbox) {
+                var $checkbox = $(checkbox);
+                return !$checkbox.is(':disabled');
             });
 
             if(!this.checkboxes.length) {
@@ -289,22 +289,16 @@ if (!Function.prototype.bind) {
 
         },
 
-        fireEvent: function(type, args, delay){
-            var events = this.form.retrieve('events'), result;
-            if (!events || !events[type]) {
-                return this;
-            }
-            result = events[type].keys.map(function(fn){
-                return fn.create({'bind': this, 'delay': delay, 'arguments': args})() !== false;
-            }, this).every(function(v){ return v;});
-            return result;
+        fireEvent: function(type, args){
+            return this.form.trigger(type, args);
         },
 
         checkValidity: function(){
             if(this.buttons) {
-                var buttons = this.buttons.filter(function(button){
-                    return button.get('data-novalidate') !== 'novalidate';
-                }, this);
+                var buttons = this.buttons.filter(function(){
+                    var button = $(this);
+                    return button.data('novalidate') !== 'novalidate';
+                });
 
                 /* We use a class for this state instead of a data attribute because not all browsers supports attribute selectors */
                 if(this.fireEvent('validate')) {
@@ -348,29 +342,30 @@ if (!Function.prototype.bind) {
                 this.checkValidity();
                 //Remove the class 1ms afterwards, which is enough for bypassing css transitions onload
                 this.buttons.removeClass.delay(1, this.buttons, ['beforeload']);
-                this.form.getElements(this.options.inputs).addEvent('change', this.checkValidity.bind(this));
+                //@TODO rewrite to use .delegate like functionality
+                this.form.find(this.options.inputs).on('change', this.checkValidity.bind(this));
             }
 
             //Make the table headers "clickable"
-            var thead = this.form.getElements('thead').filter(function(thead){
-                return thead.getSiblings().length;
-            }).each(function(thead){
-                    var elements = thead.getElements('tr > *').each(function(element){
-
-                        var link = element.getElement('a');
-                        if(link) {
-                            element.addEvent('click', function(event){
+            var thead = this.form.find('thead').filter(function(i, thead){
+                var $thead = $(thead);
+                return $thead.siblings().length;
+            }).each(function(i, thead){
+                    var $thead = $(thead), elements = $thead.find('tr > *').each(function(i, el){
+                        var element = $(el), link = element.find('a');
+                        if(link.length) {
+                            element.on('click', function(event){
                                 //Don't do anything if the event target is the same as the element
                                 if(event.target != element) return;
 
                                 //Run this check on click, so that progressive enhancements isn't bulldozed
-                                if(link.get('href')) {
-                                    window.location.href = link.get('href');
+                                if(link.prop('href')) {
+                                    window.location.href = link.prop('href');
                                 } else {
-                                    link.fireEvent('click', event);
+                                    link.trigger('click', event);
                                 }
                             });
-                            element.adopt(new Element('span', {'class':'-koowa-grid-arrow'}));
+                            element.append($('<span/>', {'class':'-koowa-grid-arrow'}));
                             if(link.hasClass('-koowa-asc'))  element.addClass('-koowa-asc');
                             if(link.hasClass('-koowa-desc')) element.addClass('-koowa-desc');
 
@@ -378,14 +373,14 @@ if (!Function.prototype.bind) {
                         }
 
                         //Making the <td> or <th> element that's the parent of a checkall checkbox toggle the checkbox when clicked
-                        var checkall = element.getElement('.-koowa-grid-checkall');
-                        if(checkall) {
-                            element.addEvent('click', function(event){
+                        var checkall = element.find('.-koowa-grid-checkall');
+                        if(checkall.length) {
+                            element.on('click', function(event){
                                 //Don't do anything if the event target is the same as the element
                                 if(event.target != element) return;
 
                                 //Checkall uses change for other purposes
-                                checkall.set('checked', checkall.match('[checked]') ? false : true).fireEvent('change', event);
+                                checkall.prop('checked', checkall.is(':checked') ? false : true).trigger('change', event);
                             });
 
                             return;
@@ -396,60 +391,59 @@ if (!Function.prototype.bind) {
                 });
 
             //<select> elements in headers and footers are for filters, so they need to submit the form on change
-            var selects = this.form.getElements('thead select, tfoot select');
+            var selects = this.form.find('thead select, tfoot select');
             if(this.options.ajaxify) {
-                selects.addEvent('change', function(event){
-                    event.stop();
-                    this.options.transport(this.form.action, this.form.toQueryString(), 'get');
+                selects.on('change', function(event){
+                    event.preventDefault();
+                    //@TODO still mootools depending
+                    this.options.transport(this.form[0].action, this.form[0].toQueryString(), 'get');
                 }.bind(this));
             } else if(selects.length) {
-                selects.addEvent('change', function(){
-                    this.form.submit();
+                selects.on('change', function(){
+                    //@TODO make jquery
+                    this.form[0].submit();
                 }.bind(this));
             }
 
             //Pick up actions that are in the grid itself
-            var token_name = this.form.get('data-token-name'),
-                token_value = this.form.get('data-token-value'),
-                checkboxes = this.form.getElements('tbody tr .-koowa-grid-checkbox');
-            this.form.getElements('tbody tr').each(function(tr){
-
+            var token_name = this.form.data('tokenName'),
+                token_value = this.form.data('tokenValue'),
+                checkboxes = this.form.find('tbody tr .-koowa-grid-checkbox');
+            this.form.find('tbody tr').each(function(i, el){
+                var tr = $(el);
                 //skip rows that are readonly
-                if(tr.get('data-readonly') == true) {
+                if(tr.data('readonly') == true) {
                     return;
                 }
 
-                var checkbox = tr.getElement('.-koowa-grid-checkbox'), id, actions;
-                if(!checkbox) {
+                var checkbox = tr.find('.-koowa-grid-checkbox'), id, actions;
+                if(!checkbox.length) {
                     return;
                 }
 
-                tr.addEvents({
-                    click: function(event){
-                        if(event.target.hasClass('toggle-state') || event.target.match('[type=checkbox]')) return;
-                        var checkbox = this.getElement('input[type=checkbox]'), checked = checkbox.getProperty('checked');
-                        if(checked) {
-                            this.removeClass('selected');
-                            checkbox.setProperty('checked', false);
-                        } else {
-                            this.addClass('selected');
-                            checkbox.setProperty('checked', true);
-                        }
-                        checkbox.fireEvent('change', event);
-                    },
-                    dblclick: function(event){
-                        if(event.target.match('a') || event.target.match('td') || event.target == this) {
-                            window.location.href = this.getElement('a').get('href');
-                        }
-                    },
-                    contextmenu: function(event){
-                        var modal = this.getElement('a.modal');
-                        if(modal) {
-                            event.preventDefault();
-                            modal.fireEvent('click');
-                        }
+                tr.on('click', function(event){
+                    if(event.target.hasClass('toggle-state') || event.target.is('[type=checkbox]')) return;
+                    var checkbox = $(this).find('input[type=checkbox]'), checked = checkbox.prop('checked');
+                    if(checked) {
+                        $(this).removeClass('selected');
+                        checkbox.prop('checked', false);
+                    } else {
+                        $(this).addClass('selected');
+                        checkbox.prop('checked', true);
+                    }
+                    checkbox.trigger('change', event);
+                }).on('dblclick', function(event){
+                    if(event.target.is('a') || event.target.is('td') || event.target == this) {
+                        window.location.href = $(this).find('a').prop('href');
+                    }
+                }).on('contextmenu', function(event){
+                    var modal = $(this).find('a.modal');
+                    if(modal) {
+                        event.preventDefault();
+                        modal.trigger('click');
                     }
                 });
+
 
                 checkbox.addEvent('change', function(tr){
                     this.getProperty('checked') ? tr.addClass('selected') : tr.removeClass('selected');
@@ -501,9 +495,9 @@ if (!Function.prototype.bind) {
                     }.bind(this));
 
 
-                }, this);
+                }.bind(this));
 
-            }, this);
+            }.bind(this));
         },
 
         validate: function(){
