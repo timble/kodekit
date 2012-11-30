@@ -289,6 +289,7 @@ if (!Function.prototype.bind) {
 
         checkValidity: function(){
             if(this.buttons) {
+                this.fireEvent('before.validate');
                 var buttons = this.buttons.filter(function(){
                     var button = $(this);
                     return button.data('novalidate') !== 'novalidate';
@@ -300,6 +301,7 @@ if (!Function.prototype.bind) {
                 } else {
                     buttons.addClass('disabled');
                 }
+                this.fireEvent('after.validate');
             }
         },
 
