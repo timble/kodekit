@@ -88,9 +88,14 @@ class KCommandChain extends KObjectQueue
      *                      default is 3. If no priority is set, the command priority will be used
      *                      instead.
      * @return   KCommandChain
+     * @throws InvalidArgumentException if the object doesn't implement KCommandInterface
      */
-    public function enqueue( KCommandInterface $cmd, $priority = null)
+    public function enqueue(KObjectHandlable $cmd, $priority = null)
     {
+        if (!$cmd instanceof KCommandInterface) {
+            throw new InvalidArgumentException('Command needs to implement KCommandInterface');
+        }
+        
         $priority =  is_int($priority) ? $priority : $cmd->getPriority();
         return parent::enqueue($cmd, $priority);
     }
@@ -148,9 +153,13 @@ class KCommandChain extends KObjectQueue
      * @param integer   The command priority
      * @return KCommandChain
      */
-    public function setPriority(KCommandInterface $cmd, $priority)
+    public function setPriority(KObjectHandlable $cmd, $priority)
     {
-       return parent::setPriority($cmd, $priority);
+        if (!$cmd instanceof KCommandInterface) {
+        	throw new InvalidArgumentException('Command needs to implement KCommandInterface');
+        }
+        
+        return parent::setPriority($cmd, $priority);
     }
 
     /**
@@ -160,8 +169,12 @@ class KCommandChain extends KObjectQueue
      * @param integer   The command priority
      * @return  integer The command priority
      */
-    public function getPriority(KCommandInterface $cmd)
+    public function getPriority(KObjectHandlable $cmd)
     {
+        if (!$cmd instanceof KCommandInterface) {
+            throw new InvalidArgumentException('Command needs to implement KCommandInterface');
+        }
+        
         return parent::getPriority($cmd);
     }
 
