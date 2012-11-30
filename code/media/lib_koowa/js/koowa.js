@@ -74,22 +74,6 @@ if (!Function.prototype.bind) {
             };
         };
 
-        Function.prototype.overloadGetter = function(usePlural){
-            var self = this;
-            return function(a){
-                var args, result;
-                if (usePlural || typeof a != 'string') args = a;
-                else if (arguments.length > 1) args = arguments;
-                if (args){
-                    result = {};
-                    for (var i = 0; i < args.length; i++) result[args[i]] = self.call(this, args[i]);
-                } else {
-                    result = self.call(this, a);
-                }
-                return result;
-            };
-        };
-
         Function.prototype.extend = function(key, value){
             this[key] = value;
         }.overloadSetter();
@@ -97,10 +81,6 @@ if (!Function.prototype.bind) {
         Function.prototype.implement = function(key, value){
             this.prototype[key] = value;
         }.overloadSetter();
-
-// From
-
-        var slice = Array.prototype.slice;
 
 // Type
 
@@ -156,7 +136,7 @@ if (!Function.prototype.bind) {
             if (previous == null || !previous.$protected) this.prototype[name] = method;
 
             if (this[name] == null && $.type(method) == 'function') extend.call(this, name, function(item){
-                return method.apply(item, slice.call(arguments, 1));
+                return method.apply(item, Array.prototype.slice.call(arguments, 1));
             });
         };
 
