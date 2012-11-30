@@ -186,11 +186,8 @@ if (!Function.prototype.bind) {
         return $.makeArray($('.-koowa-grid-checkbox:checked', scope));
     };
     Koowa.Grid.getIdQuery = function(scope) {
-        var result = [];
-        $.each(this.getAllSelected(scope), function(){
-            result.include(this.name+'='+this.value);
-        });
-        return result.join('&');
+        // We could do $.param(this.getAllSelected(scope)) but this way is faster since we iterate once not twice
+        return $('.-koowa-grid-checkbox:checked', scope).serialize();
     };
 
 
