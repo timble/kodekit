@@ -24,6 +24,25 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 	 */
 	protected static $_loaded = array();
 
+    /**
+     * Method to load the jquery framework into the document head
+     *
+     * This version of jQuery is altered to include jQuery.noConflict(); at the end of the file to avoid conflicts
+     */
+    public function jquery($config = array())
+    {
+        $config = new KConfig($config);
+        $html ='';
+
+        // Only load once
+        if (!isset(self::$_loaded['jquery'])) {
+            $html .= '<script src="media://lib_koowa/js/jquery-1.8.3.min.js" />';
+            self::$_loaded['jquery'] = true;
+        }
+
+        return $html;
+    }
+
 	/**
 	 * Method to load the mootools framework into the document head
 	 *
