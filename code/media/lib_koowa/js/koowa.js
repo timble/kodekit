@@ -126,31 +126,6 @@ if (!Function.prototype.bind) {
             return (Type.isEnumerable(item) && typeof item != 'string') ? ($.type(item) == 'array') ? item : slice.call(item) : [item];
         };
 
-        Number.from = function(item){
-            var number = parseFloat(item);
-            return isFinite(number) ? number : null;
-        };
-
-        String.from = function(item){
-            return item + '';
-        };
-
-// hide, protect
-
-        Function.implement({
-
-            hide: function(){
-                this.$hidden = true;
-                return this;
-            },
-
-            protect: function(){
-                this.$protected = true;
-                return this;
-            }
-
-        });
-
 // Type
 
         var Type = this.Type = function(name, object){
@@ -375,61 +350,6 @@ if (!Function.prototype.bind) {
             }
 
         });
-
-// Object-less types
-
-        ['Object', 'WhiteSpace', 'TextNode', 'Collection', 'Arguments'].each(function(name){
-            new Type(name);
-        });
-
-//<1.2compat>
-
-        Object.type = Type.isObject;
-
-        var Native = this.Native = function(properties){
-            return new Type(properties.name, properties.initialize);
-        };
-
-        Native.type = Type.type;
-
-        Native.implement = function(objects, methods){
-            for (var i = 0; i < objects.length; i++) objects[i].implement(methods);
-            return Native;
-        };
-
-        var arrayType = Array.type;
-        Array.type = function(item){
-            return instanceOf(item, Array) || arrayType(item);
-        };
-
-        this.$chk = function(obj){
-            return !!(obj || obj === 0);
-        };
-
-        this.$each = function(iterable, fn, bind){
-            var type = typeOf(iterable);
-            ((type == 'arguments' || type == 'collection' || type == 'array' || type == 'elements') ? Array : Object).each(iterable, fn, bind);
-        };
-
-        this.$extend = function(original, extended){
-            return Object.append(original, extended);
-        };
-
-        this.$merge = function(){
-            var args = Array.slice(arguments);
-            args.unshift({});
-            return Object.merge.apply(null, args);
-        };
-
-        this.$time = Date.now;
-
-        this.$type = function(object){
-            var type = typeOf(object);
-            if (type == 'elements') return 'array';
-            return (type == 'null') ? false : type;
-        };
-
-//</1.2compat>
 
     })();
 
