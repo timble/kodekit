@@ -49,7 +49,7 @@ if (!Function.prototype.bind) {
 (function($){
 
     (function(){
-// Function overloading
+        // Function overloading
 
         var Function = this.Function;
 
@@ -87,11 +87,6 @@ if (!Function.prototype.bind) {
         var Type = this.Type = function(name, object){
             if (name){
                 var lower = name.toLowerCase();
-                var typeCheck = function(item){
-                    return (typeOf(item) == lower);
-                };
-
-                Type['is' + name] = typeCheck;
                 if (object != null){
                     object.prototype.$family = function(){
                         return lower;
@@ -108,12 +103,6 @@ if (!Function.prototype.bind) {
             return object;
         };
 
-        var toString = Object.prototype.toString;
-
-        Type.isEnumerable = function(item){
-            return (item != null && typeof item.length == 'number' && toString.call(item) != '[object Function]' );
-        };
-
         var hooks = {};
 
         var hooksOf = function(object){
@@ -122,8 +111,6 @@ if (!Function.prototype.bind) {
         };
 
         var implement = function(name, method){
-            if (method && method.$hidden) return;
-
             var hooks = hooksOf(this);
 
             for (var i = 0; i < hooks.length; i++){
@@ -132,8 +119,7 @@ if (!Function.prototype.bind) {
                 else hook.call(this, name, method);
             }
 
-            var previous = this.prototype[name];
-            if (previous == null || !previous.$protected) this.prototype[name] = method;
+            this.prototype[name] = method;
 
             if (this[name] == null && $.type(method) == 'function') extend.call(this, name, function(item){
                 return method.apply(item, Array.prototype.slice.call(arguments, 1));
@@ -141,133 +127,18 @@ if (!Function.prototype.bind) {
         };
 
         var extend = function(name, method){
-            if (method && method.$hidden) return;
-            var previous = this[name];
-            if (previous == null || !previous.$protected) this[name] = method;
+            this[name] = method;
         };
 
         Type.implement({
 
             implement: implement.overloadSetter(),
 
-            extend: extend.overloadSetter(),
-
-            alias: function(name, existing){
-                implement.call(this, name, this.prototype[existing]);
-            }.overloadSetter(),
-
-            mirror: function(hook){
-                hooksOf(this).push(hook);
-                return this;
-            }
+            extend: extend.overloadSetter()
 
         });
 
         new Type('Type', Type);
-
-// Default Types
-
-        var force = function(name, object, methods){
-            var isType = (object != Object),
-                prototype = object.prototype;
-
-            if (isType) object = new Type(name, object);
-
-            for (var i = 0, l = methods.length; i < l; i++){
-                var key = methods[i],
-                    proto = prototype[key];
-
-                if (isType && proto){
-                    delete prototype[key];
-                    prototype[key] = proto;
-                }
-            }
-
-            if (isType) object.implement(prototype);
-
-            return force;
-        };
-
-        force('Array', Array, [
-            'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice',
-            'indexOf', 'lastIndexOf', 'filter', 'forEach', 'every', 'map', 'some', 'reduce', 'reduceRight'
-        ])('Function', Function, [
-            'apply', 'call', 'bind'
-        ])('RegExp', RegExp, [
-            'exec', 'test'
-        ])('Object', Object, [
-            'create', 'defineProperty', 'defineProperties', 'keys',
-            'getPrototypeOf', 'getOwnPropertyDescriptor', 'getOwnPropertyNames',
-            'preventExtensions', 'isExtensible', 'seal', 'isSealed', 'freeze', 'isFrozen'
-        ]);
-
-        Object.extend = extend.overloadSetter();
-
-// forEach, each
-
-        var hasOwnProperty = Object.prototype.hasOwnProperty;
-        Object.extend('forEach', function(object, fn, bind){
-            for (var key in object){
-                if (hasOwnProperty.call(object, key)) fn.call(bind, object[key], key, object);
-            }
-        });
-
-        Object.each = Object.forEach;
-
-// Array & Object cloning, Object merging and appending
-
-        var cloneOf = function(item){
-            switch ($.type(item)){
-                case 'array': return item.clone();
-                case 'object': return Object.clone(item);
-                default: return item;
-            }
-        };
-
-        Array.implement('clone', function(){
-            var i = this.length, clone = new Array(i);
-            while (i--) clone[i] = cloneOf(this[i]);
-            return clone;
-        });
-
-        var mergeOne = function(source, key, current){
-            switch ($.type(current)){
-                case 'object':
-                    if ($.type(source[key]) == 'object') Object.merge(source[key], current);
-                    else source[key] = Object.clone(current);
-                    break;
-                case 'array': source[key] = current.clone(); break;
-                default: source[key] = current;
-            }
-            return source;
-        };
-
-        Object.extend({
-
-            merge: function(source, k, v){
-                if ($.type(k) == 'string') return mergeOne(source, k, v);
-                for (var i = 1, l = arguments.length; i < l; i++){
-                    var object = arguments[i];
-                    for (var key in object) mergeOne(source, key, object[key]);
-                }
-                return source;
-            },
-
-            clone: function(object){
-                var clone = {};
-                for (var key in object) clone[key] = cloneOf(object[key]);
-                return clone;
-            },
-
-            append: function(original){
-                for (var i = 1, l = arguments.length; i < l; i++){
-                    var extended = arguments[i] || {};
-                    for (var key in extended) original[key] = extended[key];
-                }
-                return original;
-            }
-
-        });
 
     })();
 
@@ -306,7 +177,7 @@ if (!Function.prototype.bind) {
                     F.prototype = value;
                     object[key] = reset(new F);
                     break;
-                case 'array': object[key] = value.clone(); break;
+                case 'array': object[key] = $.merge([], value); break;
             }
         }
         return object;
@@ -332,10 +203,11 @@ if (!Function.prototype.bind) {
         }
 
         if ($.type(value) == 'function'){
-            if (value.$hidden) return this;
             this.prototype[key] = (retain) ? value : wrap(this, key, value);
         } else {
-            Object.merge(this.prototype, key, value);
+            var clone = {};
+            clone[key] = value;
+            $.extend(true, this.prototype, clone);
         }
 
         return this;
@@ -394,8 +266,8 @@ if (!Function.prototype.bind) {
 
     /* Section: Base utilities */
     Koowa.Options = new Koowa.Class({
-        setOptions: function(){
-            var options = this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
+        setOptions: function(options){
+            var options = this.options = $.extend.apply(null, [true, {}, this.options, options]);
             if (this.addEvent) for (var option in options){
                 if ($.type(options[option]) != 'function' || !(/^on[A-Z]/).test(option)) continue;
                 this.addEvent(option, options[option]);
