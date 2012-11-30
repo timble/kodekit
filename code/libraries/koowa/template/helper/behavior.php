@@ -65,6 +65,35 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		return $html;
 	}
 
+    /**
+     * Method to load the koowa javascript framework into the document head
+     *
+     * This framework is designed to work with jQuery, or a jQuery compatible fw like zepto.js (zepto is untested atm)
+     *
+     * @param	boolean	jquery	Defaults to true, set to false if jQuery is already loaded, or zepto.js [optional]
+     */
+    public function koowa($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'jquery' => true
+        ));
+        $html ='';
+
+        if (!isset(self::$_loaded['jquery']) && $config->jquery) {
+            $html .= $this->jquery();
+        }
+
+        if (!isset(self::$_loaded['koowa'])) {
+
+            $html .= '<script src="media://lib_koowa/js/koowa.js" />';
+
+            self::$_loaded['koowa'] = true;
+        }
+
+        return $html;
+    }
+
 	/**
 	 * Render a modal box
 	 *
