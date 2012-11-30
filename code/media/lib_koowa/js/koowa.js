@@ -64,7 +64,7 @@ if (!Function.prototype.bind) {
 
         $('.-koowa-form').each(function(){
             var form = $(this), toolbar = form.data('toolbar') || '.toolbar';
-            new Koowa.Controller.Form({form: form, toolbar: grid.data('no-toolbar') ? false : $(toolbar)});
+            new Koowa.Controller.Form({form: form, toolbar: form.data('no-toolbar') ? false : $(toolbar)});
         });
     });
 
