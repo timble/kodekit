@@ -180,14 +180,18 @@ if (!Function.prototype.bind) {
      * @LEGACY  methods calling expects an js array to be returned,
      *          without legacy we should just return the jQuery object
      *
+     * @param   mixed   A DOM Element, Document, or jQuery to use as context
      * @return  array   The items' ids
      */
-    Koowa.Grid.getAllSelected = function(scope) {
-        return $.makeArray($('.-koowa-grid-checkbox:checked', scope));
+    Koowa.Grid.getAllSelected = function(context) {
+        return $.makeArray(this.getAllSelectedElements(context));
     };
-    Koowa.Grid.getIdQuery = function(scope) {
+    Koowa.Grid.getAllSelectedElements = function(context) {
+        return $('.-koowa-grid-checkbox:checked', context);
+    };
+    Koowa.Grid.getIdQuery = function(context) {
         // We could do $.param(this.getAllSelected(scope)) but this way is faster since we iterate once not twice
-        return $('.-koowa-grid-checkbox:checked', scope).serialize();
+        return this.getAllSelectedElements(context).serialize();
     };
 
 
