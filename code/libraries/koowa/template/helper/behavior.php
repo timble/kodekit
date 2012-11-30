@@ -182,13 +182,14 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 			'url'  		=> '',
 			'options'  	=> array(),
 			'attribs'	=> array(),
+            'jquery'    => true
 		));
 
 		$html = '';
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['overlay']))
 		{
-			$html .= '<script src="media://lib_koowa/js/koowa.js" />';
+			$html .= $this->koowa(array('jquery' => $config->jquery));
 			$html .= '<style src="media://lib_koowa/css/koowa.css" />';
 
 			self::$_loaded['overlay'] = true;
