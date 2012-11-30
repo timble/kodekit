@@ -84,30 +84,29 @@ if (!Function.prototype.bind) {
         initialize: function(config) {
             this.config = config;
             if(this.config.element) {
-                this.form = document.id(document[this.config.element]);
+                this.form = $(document[this.config.element]);
             }
             else {
-                this.form = new Element('form', {
-                    name: 'dynamicform',
+                this.form = $('<form/>', {
                     method: this.config.method,
                     action: this.config.url
                 });
-                this.form.injectInside(document.id(document.body));
+                $(document.body).append(this.form);
             }
         },
 
         addField: function(name, value) {
-            var elem = new Element('input', {
+            var elem = $('<input/>', {
                 name: name,
                 value: value,
                 type: 'hidden'
             });
-            elem.injectInside(this.form);
+            elem.appendTo(this.form);
             return this;
         },
 
         submit: function() {
-            $each(this.config.params, function(value, name){
+            $.each(this.config.params, function(name, value){
                 this.addField(name, value);
             }.bind(this));
             this.form.submit();
@@ -178,21 +177,18 @@ if (!Function.prototype.bind) {
     /**
      * Find all selected checkboxes' ids in the grid
      *
+     * @LEGACY  methods calling expects an js array to be returned,
+     *          without legacy we should just return the jQuery object
+     *
      * @return  array   The items' ids
      */
-    Koowa.Grid.getAllSelected = function() {
-        var result = [], inputs = $$('input[class^=-koowa-grid-checkbox]'), i;
-        for (i=0; i < inputs.length; i++) {
-            if (inputs[i].checked) {
-                result.include(inputs[i]);
-            }
-        }
-        return result;
+    Koowa.Grid.getAllSelected = function(scope) {
+        return $.makeArray($('.-koowa-grid-checkbox:checked', scope));
     };
-    Koowa.Grid.getIdQuery = function() {
+    Koowa.Grid.getIdQuery = function(scope) {
         var result = [];
-        $each(this.getAllSelected(), function(selected){
-            result.include(selected.name+'='+selected.value);
+        $.each(this.getAllSelected(scope), function(){
+            result.include(this.name+'='+this.value);
         });
         return result.join('&');
     };
