@@ -49,19 +49,6 @@ if (!Function.prototype.bind) {
 (function($){
 
     (function(){
-
-// instanceOf
-
-        var instanceOf = this.instanceOf = function(item, object){
-            if (item == null) return false;
-            var constructor = item.$constructor || item.constructor;
-            while (constructor){
-                if (constructor === object) return true;
-                constructor = constructor.parent;
-            }
-            return item instanceof object;
-        };
-
 // Function overloading
 
         var Function = this.Function;
@@ -115,17 +102,6 @@ if (!Function.prototype.bind) {
 
         var slice = Array.prototype.slice;
 
-        Function.from = function(item){
-            return (typeOf(item) == 'function') ? item : function(){
-                return item;
-            };
-        };
-
-        Array.from = function(item){
-            if (item == null) return [];
-            return (Type.isEnumerable(item) && typeof item != 'string') ? ($.type(item) == 'array') ? item : slice.call(item) : [item];
-        };
-
 // Type
 
         var Type = this.Type = function(name, object){
@@ -137,12 +113,9 @@ if (!Function.prototype.bind) {
 
                 Type['is' + name] = typeCheck;
                 if (object != null){
-                    object.prototype.$family = (function(){
+                    object.prototype.$family = function(){
                         return lower;
-                    }).hide();
-                    //<1.2compat>
-                    object.type = typeCheck;
-                    //</1.2compat>
+                    };
                 }
             }
 
@@ -222,14 +195,11 @@ if (!Function.prototype.bind) {
 
             for (var i = 0, l = methods.length; i < l; i++){
                 var key = methods[i],
-                    generic = object[key],
                     proto = prototype[key];
-
-                if (generic) generic.protect();
 
                 if (isType && proto){
                     delete prototype[key];
-                    prototype[key] = proto.protect();
+                    prototype[key] = proto;
                 }
             }
 
@@ -238,14 +208,9 @@ if (!Function.prototype.bind) {
             return force;
         };
 
-        force('String', String, [
-            'charAt', 'charCodeAt', 'concat', 'indexOf', 'lastIndexOf', 'match', 'quote', 'replace', 'search',
-            'slice', 'split', 'substr', 'substring', 'toLowerCase', 'toUpperCase'
-        ])('Array', Array, [
+        force('Array', Array, [
             'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice',
             'indexOf', 'lastIndexOf', 'filter', 'forEach', 'every', 'map', 'some', 'reduce', 'reduceRight'
-        ])('Number', Number, [
-            'toExponential', 'toFixed', 'toLocaleString', 'toPrecision'
         ])('Function', Function, [
             'apply', 'call', 'bind'
         ])('RegExp', RegExp, [
@@ -254,21 +219,9 @@ if (!Function.prototype.bind) {
             'create', 'defineProperty', 'defineProperties', 'keys',
             'getPrototypeOf', 'getOwnPropertyDescriptor', 'getOwnPropertyNames',
             'preventExtensions', 'isExtensible', 'seal', 'isSealed', 'freeze', 'isFrozen'
-        ])('Date', Date, ['now']);
+        ]);
 
         Object.extend = extend.overloadSetter();
-
-// fixes NaN returning as Number
-
-        Number.prototype.$family = function(){
-            return isFinite(this) ? 'number' : 'null';
-        }.hide();
-
-// Number.random
-
-        Number.extend('random', function(min, max){
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        });
 
 // forEach, each
 
@@ -280,21 +233,6 @@ if (!Function.prototype.bind) {
         });
 
         Object.each = Object.forEach;
-
-        Array.implement({
-
-            forEach: function(fn, bind){
-                for (var i = 0, l = this.length; i < l; i++){
-                    if (i in this) fn.call(bind, this[i], i, this);
-                }
-            },
-
-            each: function(fn, bind){
-                Array.forEach(this, fn, bind);
-                return this;
-            }
-
-        });
 
 // Array & Object cloning, Object merging and appending
 
@@ -354,8 +292,6 @@ if (!Function.prototype.bind) {
     })();
 
     var Class = this.Class = new Type('Class', function(params){
-        if (instanceOf(params, Function)) params = {initialize: params};
-
         var newClass = function(){
             reset(this);
             if (newClass.$prototyping) return this;
@@ -442,14 +378,12 @@ if (!Function.prototype.bind) {
         },
 
         Implements: function(items){
-            Array.from(items).each(function(item){
+            $.each($.makeArray(items), function(i, item){
                 var instance = new item;
                 for (var key in instance) implement.call(this, key, instance[key], true);
-            }, this);
+            }.bind(this));
         }
     };
-
-    Koowa.Class = Class;
 
     this.Class = Class;
 
