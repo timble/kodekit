@@ -45,6 +45,110 @@ if (!Function.prototype.bind) {
     };
 }
 
+/* Class.js ported from MooTools */
+(function($){
+
+    var Class = function(properties){
+        var klass = function(){
+            return (arguments[0] !== null && this.initialize && $type(this.initialize) == 'function') ? this.initialize.apply(this, arguments) : this;
+        };
+        $.extend(klass, this);
+        klass.prototype = properties;
+        klass.constructor = Class;
+        return klass;
+    };
+    Class.prototype = {
+
+        /*
+         Property: extend
+         Returns the copy of the Class extended with the passed in properties.
+
+         Arguments:
+         properties - the properties to add to the base class in this new Class.
+
+         Example:
+         (start code)
+         var Animal = new Class({
+         initialize: function(age){
+         this.age = age;
+         }
+         });
+         var Cat = Animal.extend({
+         initialize: function(name, age){
+         this.parent(age); //will call the previous initialize;
+         this.name = name;
+         }
+         });
+         var myCat = new Cat('Micia', 20);
+         alert(myCat.name); //alerts 'Micia'
+         alert(myCat.age); //alerts 20
+         (end)
+         */
+
+        extend: function(properties){
+            var proto = new this(null);
+            for (var property in properties){
+                var pp = proto[property];
+                proto[property] = Class.Merge(pp, properties[property]);
+            }
+            return new Class(proto);
+        },
+
+        /*
+         Property: implement
+         Implements the passed in properties to the base Class prototypes, altering the base class, unlike <Class.extend>.
+
+         Arguments:
+         properties - the properties to add to the base class.
+
+         Example:
+         (start code)
+         var Animal = new Class({
+         initialize: function(age){
+         this.age = age;
+         }
+         });
+         Animal.implement({
+         setName: function(name){
+         this.name = name
+         }
+         });
+         var myAnimal = new Animal(20);
+         myAnimal.setName('Micia');
+         alert(myAnimal.name); //alerts 'Micia'
+         (end)
+         */
+
+        implement: function(){
+            for (var i = 0, l = arguments.length; i < l; i++) $extend(this.prototype, arguments[i]);
+        }
+
+    };
+
+//internal
+
+    Class.Merge = function(previous, current){
+        if (previous && previous != current){
+            var type = $type(current);
+            if (type != $type(previous)) return current;
+            switch(type){
+                case 'function':
+                    var merged = function(){
+                        this.parent = arguments.callee.parent;
+                        return current.apply(this, arguments);
+                    };
+                    merged.parent = previous;
+                    return merged;
+                case 'object': return $merge(previous, current);
+            }
+        }
+        return current;
+    };
+
+    this.Class = Class;
+
+}.bind(Koowa))(jQuery);
+
 (function($){
 
     $(function(){
@@ -69,7 +173,17 @@ if (!Function.prototype.bind) {
     });
 
     /* Section: Base utilities */
-
+    Koowa.Options = new Koowa.Class({
+        setOptions: function(){
+            var options = this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
+            if (this.addEvent) for (var option in options){
+                if (typeOf(options[option]) != 'function' || !(/^on[A-Z]/).test(option)) continue;
+                this.addEvent(option, options[option]);
+                delete options[option];
+            }
+            return this;
+        }
+    });
 
     /* Section: Classes */
 
@@ -79,7 +193,7 @@ if (!Function.prototype.bind) {
      * @param   json    Configuration:  method, url, params, formelem
      * @example new KForm({method:'post', url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
      */
-    Koowa.Form = new Class({
+    Koowa.Form = new Koowa.Class({
 
         initialize: function(config) {
             this.config = config;
@@ -120,7 +234,7 @@ if (!Function.prototype.bind) {
      * @package     Koowa_Media
      * @subpackage  Javascript
      */
-    Koowa.Grid = new Class({
+    Koowa.Grid = new Koowa.Class({
 
         initialize: function(element){
 
@@ -202,9 +316,9 @@ if (!Function.prototype.bind) {
      * @package     Koowa_Media
      * @subpackage  Javascript
      */
-    Koowa.Controller = new Class({
+    Koowa.Controller = new Koowa.Class({
 
-        Implements: [Options, Events],
+        Implements: [Koowa.Options],
 
         form: null,
         toolbar: null,
@@ -281,6 +395,12 @@ if (!Function.prototype.bind) {
             return this.form.on.apply(this.form, [type, fn]);
         },
 
+        /* @TODO refactor to use jQuery.fn.on, but keep addEvent for legacy */
+        removeEvent: function(type, fn){
+            // @TODO test if this.form.on(type, fn) works just as good as this code
+            return this.form.off.apply(this.form, [type, fn]);
+        },
+
         fireEvent: function(type, args){
             var event = jQuery.Event(type);
             this.form.trigger(event, args);
@@ -317,7 +437,7 @@ if (!Function.prototype.bind) {
      * @package     Koowa_Media
      * @subpackage  Javascript
      */
-    Koowa.Controller.Grid = new Class({
+    Koowa.Controller.Grid = new Koowa.Class({
 
         Extends: Koowa.Controller,
 
@@ -517,7 +637,7 @@ if (!Function.prototype.bind) {
      * @package     Koowa_Media
      * @subpackage  Javascript
      */
-    Koowa.Controller.Form = new Class({
+    Koowa.Controller.Form = new Koowa.Class({
 
         Extends: Koowa.Controller,
 
