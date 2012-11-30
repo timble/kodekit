@@ -333,11 +333,7 @@ if (!Function.prototype.bind) {
 
             //Perform grid validation and set the right classes on toolbar buttons
             if(this.options.inputs && this.buttons) {
-                //This is to allow CSS3 transitions without those animating onload without user interaction
-                this.buttons.addClass('beforeload');
                 this.checkValidity();
-                //Remove the class 1ms afterwards, which is enough for bypassing css transitions onload
-                this.buttons.removeClass.delay(1, this.buttons, ['beforeload']);
                 //@TODO rewrite to use .delegate like functionality
                 this.form.find(this.options.inputs).on('change', function(event, ignore){
                     if(!ignore) this.checkValidity();
@@ -349,44 +345,43 @@ if (!Function.prototype.bind) {
                 var $thead = $(thead);
                 return $thead.siblings().length;
             }).each(function(i, thead){
-                    var $thead = $(thead), elements = $thead.find('tr > *').each(function(i, el){
-                        var element = $(el), link = element.find('a');
-                        if(link.length) {
-                            element.on('click', function(event){
-                                //Don't do anything if the event target is the same as the element
-                                if(event.target != el) return;
+                $(thead).find('tr > *').each(function(i, el){
+                    var element = $(el), link = element.find('a');
+                    if(link.length) {
+                        element.on('click', function(event){
+                            //Don't do anything if the event target is the same as the element
+                            if(event.target != el) return;
 
-                                //Run this check on click, so that progressive enhancements isn't bulldozed
-                                if(link.prop('href')) {
-                                    window.location.href = link.prop('href');
-                                } else {
-                                    link.trigger('click', event);
-                                }
-                            });
-                            element.append($('<span/>', {'class':'-koowa-grid-arrow'}));
-                            if(link.hasClass('-koowa-asc'))  element.addClass('-koowa-asc');
-                            if(link.hasClass('-koowa-desc')) element.addClass('-koowa-desc');
+                            //Run this check on click, so that progressive enhancements isn't bulldozed
+                            if(link.prop('href')) {
+                                window.location.href = link.prop('href');
+                            } else {
+                                link.trigger('click', event);
+                            }
+                        });
+                        if(link.hasClass('-koowa-asc'))  element.addClass('-koowa-asc');
+                        if(link.hasClass('-koowa-desc')) element.addClass('-koowa-desc');
 
-                            return;
-                        }
+                        return this;
+                    }
 
-                        //Making the <td> or <th> element that's the parent of a checkall checkbox toggle the checkbox when clicked
-                        var checkall = element.find('.-koowa-grid-checkall');
-                        if(checkall.length) {
-                            element.on('click', function(event){
-                                //Don't do anything if the event target is the same as the element
-                                if(event.target != el) return true;
+                    //Making the <td> or <th> element that's the parent of a checkall checkbox toggle the checkbox when clicked
+                    var checkall = element.find('.-koowa-grid-checkall');
+                    if(checkall.length) {
+                        element.on('click', function(event){
+                            //Don't do anything if the event target is the same as the element
+                            if(event.target != el) return true;
 
-                                //Checkall uses change for other purposes
-                                checkall.prop('checked', checkall.is(':checked') ? false : true).trigger('change');
-                            });
+                            //Checkall uses change for other purposes
+                            checkall.prop('checked', checkall.is(':checked') ? false : true).trigger('change');
+                        });
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        element.addClass('void');
-                    });
+                    element.addClass('void');
                 });
+            });
 
             //<select> elements in headers and footers are for filters, so they need to submit the form on change
             var selects = this.form.find('thead select, tfoot select');
@@ -394,12 +389,12 @@ if (!Function.prototype.bind) {
                 selects.on('change', function(event){
                     event.preventDefault();
                     //@TODO still mootools depending
-                    this.options.transport(this.form[0].action, this.form[0].toQueryString(), 'get');
+                    this.options.transport(this.form.prop('action'), this.form.serialize(), 'get');
                 }.bind(this));
             } else if(selects.length) {
                 selects.on('change', function(){
                     //@TODO make jquery
-                    this.form[0].submit();
+                    this.form.submit();
                 }.bind(this));
             }
 
@@ -509,9 +504,7 @@ if (!Function.prototype.bind) {
                 options = {
                     method:'post',
                     url: this.options.url+(idQuery ? append+idQuery : ''),
-                    params: $merge({
-                        action: action
-                    }, data)
+                    params: $.extend({}, {action: action}, data)
                 };
             new Koowa.Form(options).submit();
         }
@@ -533,41 +526,11 @@ if (!Function.prototype.bind) {
                 return false;
             }
 
-            this.form.adopt(new Element('input', {name: 'action', type: 'hidden', value: action}));
+            this.form.append($('<input/>', {name: 'action', type: 'hidden', value: action}));
             this.form.submit();
         }
 
     });
-
-    /**
-     * Query class
-     *
-     * @package     Koowa_Media
-     * @subpackage  Javascript
-     */
-    Koowa.Query = new Class({
-
-        toString: function() {
-            var result = [], key, subkey;
-
-            for (key in this) {
-                // make sure it's not a function
-                if (!(this[key] instanceof Function)) {
-                    // we only go one level deep for now
-                    if(this[key] instanceof Object) {
-                        for (subkey in this[key]) {
-                            result.push(key + '[' + subkey + ']' + '=' + this[key][subkey]);
-                        }
-                    } else {
-                        result.push(key + '=' + this[key]);
-                    }
-                }
-            }
-
-            return result.join('&');
-        }
-    });
-
 
     /**
      * Overlay class
@@ -575,6 +538,8 @@ if (!Function.prototype.bind) {
      * @package     Koowa_Media
      * @subpackage  Javascript
      */
+    //@TODO this bit still requires MooTools
+    if(this.MooTools) {
     Koowa.Overlay = new Class({
         Extends: Request,
         element : null,
@@ -691,5 +656,10 @@ if (!Function.prototype.bind) {
             return this.parent(text);
         }
     });
+    } else {
+        if(this.console) {
+            console.log('You cannot use Koowa.Overlay yet without loading MooTools');
+        }
+    }
 
 })(jQuery);

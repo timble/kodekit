@@ -189,6 +189,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['overlay']))
 		{
+            // @TODO until Koowa.Overlay is rewritten to jQuery, and the MooTools Request class is replacced, we need moo
+            $html .= $this->mootools();
 			$html .= $this->koowa(array('jquery' => $config->jquery));
 			$html .= '<style src="media://lib_koowa/css/koowa.css" />';
 
