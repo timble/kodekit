@@ -382,14 +382,6 @@ if (!Function.prototype.bind) {
             new Type(name);
         });
 
-// Unique ID
-
-        var UID = Date.now();
-
-        String.extend('uniqueID', function(){
-            return (UID++).toString(36);
-        });
-
 //<1.2compat>
 
         Object.type = Type.isObject;
@@ -410,28 +402,8 @@ if (!Function.prototype.bind) {
             return instanceOf(item, Array) || arrayType(item);
         };
 
-        this.$A = function(item){
-            return Array.from(item).slice();
-        };
-
-        this.$arguments = function(i){
-            return function(){
-                return arguments[i];
-            };
-        };
-
         this.$chk = function(obj){
             return !!(obj || obj === 0);
-        };
-
-        this.$clear = function(timer){
-            clearTimeout(timer);
-            clearInterval(timer);
-            return null;
-        };
-
-        this.$defined = function(obj){
-            return (obj != null);
         };
 
         this.$each = function(iterable, fn, bind){
@@ -439,14 +411,8 @@ if (!Function.prototype.bind) {
             ((type == 'arguments' || type == 'collection' || type == 'array' || type == 'elements') ? Array : Object).each(iterable, fn, bind);
         };
 
-        this.$empty = function(){};
-
         this.$extend = function(original, extended){
             return Object.append(original, extended);
-        };
-
-        this.$H = function(object){
-            return new Hash(object);
         };
 
         this.$merge = function(){
@@ -455,25 +421,12 @@ if (!Function.prototype.bind) {
             return Object.merge.apply(null, args);
         };
 
-        this.$lambda = Function.from;
-        this.$mixin = Object.merge;
-        this.$random = Number.random;
-        this.$splat = Array.from;
         this.$time = Date.now;
 
         this.$type = function(object){
             var type = typeOf(object);
             if (type == 'elements') return 'array';
             return (type == 'null') ? false : type;
-        };
-
-        this.$unlink = function(object){
-            switch (typeOf(object)){
-                case 'object': return Object.clone(object);
-                case 'array': return Array.clone(object);
-                case 'hash': return new Hash(object);
-                default: return object;
-            }
         };
 
 //</1.2compat>
