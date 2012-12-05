@@ -64,6 +64,10 @@ Koowa.Form = new Class({
                 method: this.config.method,
                 action: this.config.url
             });
+
+            //Legacy
+            if (!this.form.injectInside) this.form.injectInside = this.form.inject;
+
             this.form.injectInside(document.id(document.body));
         }
     },
@@ -74,6 +78,10 @@ Koowa.Form = new Class({
             value: value,
             type: 'hidden'
         });
+
+        //Legacy
+        if (!elem.injectInside) elem.injectInside = elem.inject;
+        
         elem.injectInside(this.form);
         return this;
     },
@@ -235,6 +243,14 @@ Koowa.Controller = new Class({
     },
     
     execute: function(action, data, novalidate){
+        //fix for Mootools 1.4, all arguments are added to action as an object
+        if (typeof action !== 'string') {
+            argumentsObject = action;
+            action = argumentsObject[0];
+            data = argumentsObject[1];
+            novalidate = argumentsObject[2];
+        }
+
         var method = '_action'+action.capitalize();
         
         this.options.action = action;
@@ -502,6 +518,9 @@ Koowa.Controller.Grid = new Class({
             return false;
         }
     
+        //Legacy
+        if (!$merge) var $merge = Object.merge;
+        
         var idQuery = Koowa.Grid.getIdQuery(),
             append = this.options.url.match(/\?/) ? '&' : '?',
             options = {
