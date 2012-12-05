@@ -280,7 +280,7 @@ class KDatabaseQuery
             $where['condition']  = count($this->where) ? $condition : '';
 
             //Make sure we don't store the same where clauses twice
-            $signature = md5($property.$constraint.$value);
+            $signature = md5($property.$constraint.serialize($value));
             if(!isset($this->where[$signature])) {
                 $this->where[$signature] = $where;
             }

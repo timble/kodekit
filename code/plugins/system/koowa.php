@@ -21,6 +21,9 @@ class plgSystemKoowa extends JPlugin
 {
 	public function __construct($subject, $config = array())
 	{
+		// Turn off E_STRICT errors for now
+		error_reporting(error_reporting() & ~E_STRICT);
+		
 	    // Command line fixes for Joomla
 		if (PHP_SAPI === 'cli')
 		{

@@ -154,24 +154,24 @@ class KViewFile extends KViewAbstract
         }
     
         $this->start_point = 0;
-        $this->end_point = $this->filesize - 1;
+        $this->end_point = $this->filesize-1;
     
         $this->_setHeaders();
-    
-        if (KRequest::get('server.HTTP_RANGE', 'cmd'))
+
+        $range = KRequest::get('server.HTTP_RANGE', 'string');
+        if ($range && preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $range))
         {
             // Partial download
-            $range = KRequest::get('server.HTTP_RANGE', 'cmd');
             $parts = explode('-', substr($range, strlen('bytes=')));
             $this->start_point = $parts[0];
-            if (isset($parts[0])) {
+            if (!empty($parts[0])) {
                 $this->start_point = $parts[0];
             }
     
-            if (isset($parts[1]) && $parts[1] <= $this->filesize-1) {
+            if (!empty($parts[1]) && $parts[1] <= $this->end_point) {
                 $this->end_point = $parts[1];
             }
-    
+                
             if ($this->start_point > $this->filesize) {
                 throw new KViewException('Invalid start point given in range header');
             }
@@ -179,7 +179,7 @@ class KViewFile extends KViewAbstract
             header('HTTP/1.0 206 Partial Content');
             header('Status: 206 Partial Content');
             header('Accept-Ranges: bytes');
-            header('Content-Range: bytes '.$range.'/'.$this->filesize);
+            header('Content-Range: bytes '.$this->start_point.'-'.$this->end_point.'/'.$this->filesize);
             header('Content-Length: '.($this->end_point - $this->start_point + 1), true);
         }
     
