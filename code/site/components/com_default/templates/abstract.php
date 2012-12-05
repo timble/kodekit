@@ -35,7 +35,11 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 	{
 		parent::__construct($config);
 
-		if(JFactory::getConfig()->getValue('config.caching')) {
+		$caching = version_compare(JVERSION, '3.0', 'ge')
+            ? JFactory::getConfig()->get('caching')
+            : JFactory::getConfig()->getValue('config.caching');
+
+	    if($caching) {
 	        $this->_cache = JFactory::getCache('template', 'output');
 		}
 	}

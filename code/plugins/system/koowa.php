@@ -258,7 +258,11 @@ class plgSystemKoowa extends JPlugin
 			'line'		=> $this->_exception->getLine()
 		));
 
-	    if(JFactory::getConfig()->getValue('config.debug')) {
+		$debug = version_compare(JVERSION, '3.0', 'ge')
+			? JFactory::getConfig()->get('debug')
+			: JFactory::getConfig()->getValue('config.debug');
+
+	    if($debug) {
 			$error->set('message', (string) $this->_exception);
 		} else {
 			$error->set('message', KHttpResponse::getMessage($error->get('code')));
