@@ -29,6 +29,11 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         $config->append(array(
         	'toolbar' => null
         ));
+        
+        if (version_compare(JVERSION, '3.0', 'ge')) {
+        	JToolbarHelper::title($this->translate($config->toolbar->getTitle()), $config->toolbar->getIcon());
+        	return '';
+        }
 
         $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
 
