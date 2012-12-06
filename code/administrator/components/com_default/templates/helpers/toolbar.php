@@ -61,8 +61,8 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         	'toolbar' => null
         ));
 
-        if (version_compare(JVERSION, '3.0.0', 'ge')) {
-        	$html = '<div class="btn-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+        if (version_compare(JVERSION, '3.0', 'ge')) {
+        	$html = '<div class="btn-toolbar toolbar-list" id="toolbar">';
         	$html .= '%s';
 		    $html .= '</div>';
         }
@@ -136,7 +136,11 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
 
         	$command->attribs->class = implode(" ", KConfig::unbox($command->attribs->class));
         	
+<<<<<<< HEAD
         	$html = '<div class="btn-group" id="toolbar">';
+=======
+        	$html = '<div class="btn-group" id="'.$id.'">';
+>>>>>>> 336ac74... re #20: Initial rendering of the toolbars
         	$html .= '<a '.KHelperArray::toString($command->attribs).'>';
         	$html .= '<i class="icon-'.$icon.'"></i> ';
         	$html .= $this->translate($command->label);
