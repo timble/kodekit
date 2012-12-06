@@ -750,10 +750,10 @@ if (!Function.prototype.bind) {
      * @package     Koowa_Media
      * @subpackage  Javascript
      */
-    //@TODO this bit still requires MooTools
-    if(this.MooTools) {
-    Koowa.Overlay = new Class({
-        Extends: Request,
+    Koowa.Overlay = new Koowa.Class({
+
+        Implements: Options,
+
         element : null,
 
         options: {
@@ -849,12 +849,13 @@ if (!Function.prototype.bind) {
                 options = JSON.evaluate(options);
             }
 
-            this.element = document.id(element);
+            this.element = $(element);
 
             this.options.url = this.element.getAttribute('data-url');
-            this.parent(options);
+            this.setOptions(options);
 
             this.send();
+
         },
 
         processScripts: function(text){
@@ -868,10 +869,5 @@ if (!Function.prototype.bind) {
             return this.parent(text);
         }
     });
-    } else {
-        if(this.console) {
-            console.log('You cannot use Koowa.Overlay yet without loading MooTools');
-        }
-    }
 
 })(jQuery);

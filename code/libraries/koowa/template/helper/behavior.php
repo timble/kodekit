@@ -189,7 +189,6 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['overlay']))
 		{
-            // @TODO until Koowa.Overlay is rewritten to jQuery, and the MooTools Request class is replacced, we need moo
             $html .= $this->mootools();
 			$html .= $this->koowa(array('jquery' => $config->jquery));
 			$html .= '<style src="media://lib_koowa/css/koowa.css" />';
@@ -217,7 +216,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		
 		//Don't pass an empty array as options
 		$options = $config->options->toArray() ? ', '.$config->options : '';
-		$html .= "<script>window.addEvent('domready', function(){new Koowa.Overlay('$id'".$options.");});</script>";
+		$html .= "<script>jQuery(function($){new Koowa.Overlay('#$id'".$options.");});</script>";
 
 		$html .= '<div data-url="'.$url.'" class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
 		return $html;
