@@ -760,11 +760,13 @@ if (!Function.prototype.bind) {
             selector: 'body',
             ajaxify: true,
             method: 'get',
+            cache: false,
+            dataType: 'html',
             evalScripts: true,
             evalStyles: true,
 
-            onComplete: function() {
-                var element = new Element('div', {html: this.response.text}),
+            complete: function(html) {
+                var element = $('<div/>', {html: html}),
                     body = element.getElement(this.options.selector) || element,
                     self = this,
                     scripts,
@@ -845,17 +847,18 @@ if (!Function.prototype.bind) {
         },
 
         initialize: function(element, options) {
+            //@TODO Legacy
             if(typeof options === 'string') {
-                options = JSON.evaluate(options);
+                options = $.parseJSON(options);
             }
 
             this.element = $(element);
 
-            this.options.url = this.element.getAttribute('data-url');
+            this.options.url = this.element.data('url');
             this.setOptions(options);
 
-            this.send();
 
+            $.ajax(this.options);
         },
 
         processScripts: function(text){
