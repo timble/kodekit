@@ -761,19 +761,28 @@ if (!Function.prototype.bind) {
             ajaxify: true,
             method: 'get',
             cache: false,
-            dataType: 'html',
-            evalScripts: true,
-            evalStyles: true,
+            dataType: 'text',
+            evalScripts: false,
+            evalStyles: false
+        },
 
-            complete: function(html) {
-                var element = $('<div/>', {html: html}),
-                    body = element.getElement(this.options.selector) || element,
+        initialize: function(element, options) {
+            //@TODO Legacy
+            if(typeof options === 'string') {
+                options = $.parseJSON(options);
+            }
+
+            this.options.complete = function(jqXHR) {
+                window.steve = jqXHR.responseText;
+                var element = $(jqXHR.responseText),
+                    body = element.find(this.options.selector).length ? element.find(this.options.selector) : element,
                     self = this,
                     scripts,
                     styles;
 
-                this.element.empty().grab(body);
+                this.element.empty().append(body);
 
+                //@TODO port to jquery
                 if (this.options.evalScripts) {
                     scripts = element.getElements('script[type=text/javascript]');
                     scripts = scripts.filter(function(script) {
@@ -803,20 +812,23 @@ if (!Function.prototype.bind) {
                     };
                 }
 
+                //@TODO port to jquery
                 if (this.options.evalStyles) {
-                    styles = element.getElements('link[type=text/css]');
+                    styles = element.find('link[type=text/css]');
                     styles.each(function(style) {
                         new Asset.css(style.href, {id: style.id });
                     }.bind(this));
                 }
 
                 if (this.options.ajaxify) {
-                    this.element.getElements('a[href]').each(function(link){
+                    this.element.find('a[href]').each(function(i, el){
+                        var link = $(el);
                         //Avoid links with data-noasync attributes
-                        if(link.getAttribute('data-noasync') !== null) return;
-                        link.addEvent('click', function(event){
-                            event.stop();
-                            self.get(this.href, {tmpl:''});
+                        if(link.data('noasync') != null) return;
+                        link.on('click', function(event){
+                            event.preventDefault();
+                            event.stopPropagation();
+                            self.send({url: this.href, data: {tmpl:''}});
                         });
                     });
 
@@ -827,30 +839,25 @@ if (!Function.prototype.bind) {
                      });
                      */
 
-                    this.element.getElements('.-koowa-grid').each(function(grid){
+                    this.element.find('.-koowa-grid').each(function(i, el){
+                        var grid = $(el);
                         new Koowa.Grid(grid);
 
                         new Koowa.Controller.Grid({form: grid, ajaxify: true, transport: function(url, data, method){
                             data += '&tmpl=';
                             this.send({url: url, data: data, method: method});
                         }.bind(this)});
-                    }, this);
+                    }.bind(this));
 
-                    this.element.getElements('.-koowa-form').each(function(form){
+                    this.element.find('.-koowa-form').each(function(i, el){
+                        var form = $(el);
                         new Koowa.Controller.Form({form: form, ajaxify: true, transport: function(url, data, method){
                             data += '&tmpl=';
                             this.send({url: url, data: data, method: method});
                         }.bind(this)});
-                    }, this);
+                    }.bind(this));
                 }
-            }
-        },
-
-        initialize: function(element, options) {
-            //@TODO Legacy
-            if(typeof options === 'string') {
-                options = $.parseJSON(options);
-            }
+            }.bind(this);
 
             this.element = $(element);
 
@@ -861,6 +868,13 @@ if (!Function.prototype.bind) {
             $.ajax(this.options);
         },
 
+        send: function(options){
+            var options = $.extend({}, this.options, options);
+
+            $.ajax(options);
+        },
+
+        //@TODO port to jquery
         processScripts: function(text){
             if(this.options.evalScripts) {
                 var scripts, text = text.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(){
