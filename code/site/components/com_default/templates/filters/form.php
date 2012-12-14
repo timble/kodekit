@@ -27,11 +27,7 @@ class ComDefaultTemplateFilterForm extends KTemplateFilterForm
      */
     protected function _initialize(KConfig $config)
     {
-        if (JVersion::isCompatible('3.0')) {
-            $token = JSession::getFormToken();
-        } else {
-            $token = JUtility::getToken();
-        }
+    	$token = version_compare(JVERSION, '3.0', 'ge') ? JSession::getFormToken() : JUtility::getToken();
 
         $config->append(array(
             'token_value'   => $token,
