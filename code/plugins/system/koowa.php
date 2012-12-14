@@ -194,6 +194,10 @@ class plgSystemKoowa extends JPlugin
 	 */
 	public function onAfterRoute()
 	{
+		// TODO: this should be temporary. Find a way to properly fix the issue
+		// Push request information back to KRequest after routing
+		KRequest::set('get', $_REQUEST);
+		 
 	    /*
 	     * Special handling for AJAX requests
 	     *
