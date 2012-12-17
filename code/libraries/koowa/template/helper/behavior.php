@@ -299,11 +299,22 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$options = $config->options->toArray() ? ', '.$config->options : '';
 		$html .= "<script>
 		jQuery(function($){
-		    $('$config->selector').each(function(form){
-		        $(form).on('validate', function(){
-		        console.log(this);
-		        });
-		    });
+		    var options = {
+                errorClass:'error',
+                validClass:'success',
+                errorElement:'span',
+                ignoreTitle: true,
+                onsubmit: false,
+                highlight: function (element, errorClass, validClass) {
+                    $(element).parents(\"div[class='clearfix']\").addClass(errorClass).removeClass(validClass);
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).parents(\".error\").removeClass(errorClass).addClass(validClass);
+                }
+            };
+		    $('$config->selector').on('validate', function(e){
+                    if(!$(this).validate(options).valid()) e.preventDefault();
+		    }).validate(options);
 		});
 		</script>";
 
