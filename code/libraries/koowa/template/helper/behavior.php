@@ -273,6 +273,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 	{
 	    $config = new KConfig($config);
 		$config->append(array(
+            'jquery'   => true,
 			'selector' => '.-koowa-form',
 		    'options'  => array(
 		        'scrollToErrorsOnChange' => true,
@@ -281,15 +282,15 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		));
 
 		$html = '';
+
+        if (!isset(self::$_loaded['jquery']) && $config->jquery) {
+            $html .= $this->jquery();
+        }
+
 		// Load the necessary files if they haven't yet been loaded
 		if(!isset(self::$_loaded['validator']))
 		{
-		    if(version_compare(JVERSION,'1.6.0','ge')) {
-		        $html .= '<script src="media://lib_koowa/js/validator-1.3.js" />';
-		    } else {
-		        $html .= '<script src="media://lib_koowa/js/validator-1.2.js" />';
-		    }
-		    $html .= '<script src="media://lib_koowa/js/patch.validator.js" />';
+		    $html .= '<script src="media://lib_koowa/js/jquery.validate.min.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -297,10 +298,11 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		//Don't pass an empty array as options
 		$options = $config->options->toArray() ? ', '.$config->options : '';
 		$html .= "<script>
-		window.addEvent('domready', function(){
-		    $$('$config->selector').each(function(form){
-		        new Koowa.Validator(form".$options.");
-		        form.addEvent('validate', form.validate.bind(form));
+		jQuery(function($){
+		    $('$config->selector').each(function(form){
+		        $(form).on('validate', function(){
+		        console.log(this);
+		        });
 		    });
 		});
 		</script>";

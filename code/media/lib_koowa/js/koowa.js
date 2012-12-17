@@ -51,14 +51,13 @@ if (!Function.prototype.bind) {
     (function(){
         // Function overloading
 
-        var Function = this.Function;
+        var Function = window.Function;
 
         var enumerables = true;
         for (var i in {toString: 1}) enumerables = null;
         if (enumerables) enumerables = ['hasOwnProperty', 'valueOf', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'constructor'];
 
-        Function.prototype.overloadSetter = function(usePlural){
-            var self = this;
+        var overloadSetter = function(self, usePlural){
             return function(a, b){
                 if (a == null) return this;
                 if (usePlural || typeof a != 'string'){
@@ -73,14 +72,15 @@ if (!Function.prototype.bind) {
                 return this;
             };
         };
+        this.overloadSetter = overloadSetter;
 
-        Function.prototype.extend = function(key, value){
+        Function.prototype.extend = overloadSetter(function(key, value){
             this[key] = value;
-        }.overloadSetter();
+        });
 
-        Function.prototype.implement = function(key, value){
+        Function.prototype.implement = overloadSetter(function(key, value){
             this.prototype[key] = value;
-        }.overloadSetter();
+        });
 
 // Type
 
@@ -132,17 +132,17 @@ if (!Function.prototype.bind) {
 
         Type.implement({
 
-            implement: implement.overloadSetter(),
+            implement: overloadSetter(implement),
 
-            extend: extend.overloadSetter()
+            extend: overloadSetter(extend)
 
         });
 
         new Type('Type', Type);
 
-    })();
+    }.bind(this))();
 
-    var Class = this.Class = new Type('Class', function(params){
+    var Class = this.Class = new Koowa.Type('Class', function(params){
         var newClass = function(){
             reset(this);
             if (newClass.$prototyping) return this;
@@ -220,7 +220,7 @@ if (!Function.prototype.bind) {
         return proto;
     };
 
-    Class.implement('implement', implement.overloadSetter());
+    Class.implement('implement', this.overloadSetter(implement));
 
     Class.Mutators = {
 
@@ -752,7 +752,7 @@ if (!Function.prototype.bind) {
      */
     Koowa.Overlay = new Koowa.Class({
 
-        Implements: Options,
+        Implements: Koowa.Options,
 
         element : null,
 
