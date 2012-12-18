@@ -291,6 +291,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		if(!isset(self::$_loaded['validator']))
 		{
 		    $html .= '<script src="media://lib_koowa/js/jquery.validate.min.js" />';
+            $html .= '<script src="media://lib_koowa/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -300,17 +301,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$html .= "<script>
 		jQuery(function($){
 		    var options = {
-                errorClass:'error',
-                validClass:'success',
-                errorElement:'span',
                 ignoreTitle: true,
-                onsubmit: false,
-                highlight: function (element, errorClass, validClass) {
-                    $(element).parents(\"div[class='clearfix']\").addClass(errorClass).removeClass(validClass);
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).parents(\".error\").removeClass(errorClass).addClass(validClass);
-                }
+                onsubmit: false
             };
 		    $('$config->selector').on('validate', function(e){
                     if(!$(this).validate(options).valid()) e.preventDefault();
