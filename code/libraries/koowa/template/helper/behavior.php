@@ -24,6 +24,25 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 	 */
 	protected static $_loaded = array();
 
+    /**
+     * Method to load the jquery framework into the document head
+     *
+     * This version of jQuery is altered to include jQuery.noConflict(); at the end of the file to avoid conflicts
+     */
+    public function jquery($config = array())
+    {
+        $config = new KConfig($config);
+        $html ='';
+
+        // Only load once
+        if (!isset(self::$_loaded['jquery'])) {
+            $html .= '<script src="media://lib_koowa/js/jquery-1.8.3.min.js" />';
+            self::$_loaded['jquery'] = true;
+        }
+
+        return $html;
+    }
+
 	/**
 	 * Method to load the mootools framework into the document head
 	 *
@@ -45,6 +64,35 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 
 		return $html;
 	}
+
+    /**
+     * Method to load the koowa javascript framework into the document head
+     *
+     * This framework is designed to work with jQuery, or a jQuery compatible fw like zepto.js (zepto is untested atm)
+     *
+     * @param	boolean	jquery	Defaults to true, set to false if jQuery is already loaded, or zepto.js [optional]
+     */
+    public function koowa($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'jquery' => true
+        ));
+        $html ='';
+
+        if (!isset(self::$_loaded['jquery']) && $config->jquery) {
+            $html .= $this->jquery();
+        }
+
+        if (!isset(self::$_loaded['koowa'])) {
+
+            $html .= '<script src="media://lib_koowa/js/koowa.js" />';
+
+            self::$_loaded['koowa'] = true;
+        }
+
+        return $html;
+    }
 
 	/**
 	 * Render a modal box
@@ -134,13 +182,15 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 			'url'  		=> '',
 			'options'  	=> array(),
 			'attribs'	=> array(),
+            'jquery'    => true
 		));
 
 		$html = '';
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['overlay']))
 		{
-			$html .= '<script src="media://lib_koowa/js/koowa.js" />';
+            $html .= $this->mootools();
+			$html .= $this->koowa(array('jquery' => $config->jquery));
 			$html .= '<style src="media://lib_koowa/css/koowa.css" />';
 
 			self::$_loaded['overlay'] = true;
@@ -166,7 +216,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		
 		//Don't pass an empty array as options
 		$options = $config->options->toArray() ? ', '.$config->options : '';
-		$html .= "<script>window.addEvent('domready', function(){new Koowa.Overlay('$id'".$options.");});</script>";
+		$html .= "<script>jQuery(function($){new Koowa.Overlay('#$id'".$options.");});</script>";
 
 		$html .= '<div data-url="'.$url.'" class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
 		return $html;
@@ -223,6 +273,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 	{
 	    $config = new KConfig($config);
 		$config->append(array(
+            'jquery'   => true,
 			'selector' => '.-koowa-form',
 		    'options'  => array(
 		        'scrollToErrorsOnChange' => true,
@@ -231,15 +282,16 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		));
 
 		$html = '';
+
+        if (!isset(self::$_loaded['jquery']) && $config->jquery) {
+            $html .= $this->jquery();
+        }
+
 		// Load the necessary files if they haven't yet been loaded
 		if(!isset(self::$_loaded['validator']))
 		{
-		    if(version_compare(JVERSION,'1.6.0','ge')) {
-		        $html .= '<script src="media://lib_koowa/js/validator-1.3.js" />';
-		    } else {
-		        $html .= '<script src="media://lib_koowa/js/validator-1.2.js" />';
-		    }
-		    $html .= '<script src="media://lib_koowa/js/patch.validator.js" />';
+		    $html .= '<script src="media://lib_koowa/js/jquery.validate.min.js" />';
+            $html .= '<script src="media://lib_koowa/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -247,11 +299,14 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		//Don't pass an empty array as options
 		$options = $config->options->toArray() ? ', '.$config->options : '';
 		$html .= "<script>
-		window.addEvent('domready', function(){
-		    $$('$config->selector').each(function(form){
-		        new Koowa.Validator(form".$options.");
-		        form.addEvent('validate', form.validate.bind(form));
-		    });
+		jQuery(function($){
+		    var options = {
+                ignoreTitle: true,
+                onsubmit: false
+            };
+		    $('$config->selector').on('validate', function(e){
+                    if(!$(this).validate(options).valid()) e.preventDefault();
+		    }).validate(options);
 		});
 		</script>";
 
