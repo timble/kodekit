@@ -225,6 +225,31 @@ class plgSystemKoowa extends JPlugin
             KRequest::set('request.format', KRequest::format());
         }
 	}
+	
+	/**
+	 * Set the disposition to inline for JSON requests
+	 */
+	public function onAfterRender()
+	{
+		if (JFactory::getDocument()->getType() !== 'json') {
+			return;
+		}
+		
+		$headers = JResponse::getHeaders();
+		foreach ($headers as $key => $header)
+		{
+			if ($header['name'] === 'Content-disposition')
+			{
+				$string = $header['value'];
+				if (strpos($string, 'attachment; ') !== false) 
+				{
+					$string = str_replace($string, 'attachment; ', 'inline; ');
+					JResponse::setHeader('Content-disposition', $string, true);
+					break;
+				}
+			}
+		}
+	}
 
  	/**
 	 * Catch all exception handler
