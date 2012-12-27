@@ -129,7 +129,7 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         	$command->attribs->class->append(array('btn', 'btn-small'));
 			
         	$icon = str_replace('icon-32-', '', $command->icon);
-        	if ($command->id === 'new') {
+        	if ($command->id === 'new' || $command->id === 'apply') {
         		$command->attribs->class->append(array('btn-success'));
         		$icon .= ' icon-white';
         	}
