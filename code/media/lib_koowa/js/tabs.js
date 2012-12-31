@@ -49,7 +49,7 @@ Koowa.Tabs = new Class({
         this.setOptions(this.getOptions(), options);
         this.titles = this.dlist.getChildren('dt');
         this.descriptions = this.dlist.getChildren('dd');
-        this.content = new Element('div').injectAfter(this.dlist).addClass('current');
+        this.content = new Element('div').inject(this.dlist, 'after').addClass('current');
           
         if(this.options.height) {
             this.content.setStyle('height', this.options.height);
@@ -61,14 +61,14 @@ Koowa.Tabs = new Class({
             var description = this.descriptions[i];
             title.setStyle('cursor', 'pointer');
             title.addEvent('click', this.display.bind(this, i));
-            description.injectInside(this.content);
+            description.inject(this.content);
         }
         
         if(Cookie.read('ktabs.' + dlist)) {
         	this.options.display = Cookie.read('ktabs.' + dlist);
         }
     
-        if ($chk(this.options.display)) {
+        if (this.options.display) {
             this.display(this.options.display);
         }
 
