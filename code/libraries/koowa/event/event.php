@@ -49,8 +49,14 @@ class KEvent extends KConfig
      */
     public function __construct( $name, $config = array() )
     {
-        parent::__construct($config);
-
+    	$this->_data = array();
+        if (is_array($config) || $config instanceof Traversable)
+        {
+            foreach ($config as $key => $value) {
+                $this->__set($key, $value);
+            }
+        }
+        
         //Set the command name
         $this->_name = $name;
     }

@@ -267,6 +267,8 @@ abstract class KControllerAbstract extends KObject
         {
             if (!($behavior instanceof KControllerBehaviorInterface)) {
                 $behavior = $this->getBehavior($behavior);
+            } else {
+            	$behavior->setMixer($this);
             }
 
             //Add the behaviors
