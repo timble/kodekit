@@ -21,6 +21,9 @@ class plgSystemKoowa extends JPlugin
 {
 	public function __construct($subject, $config = array())
 	{
+		// Turn off E_STRICT errors for now
+		error_reporting(error_reporting() & ~E_STRICT);
+		
 	    // Command line fixes for Joomla
 		if (PHP_SAPI === 'cli')
 		{
@@ -49,7 +52,7 @@ class plgSystemKoowa extends JPlugin
 			//Checking if the whitelist is ok
 			if(!@ini_get('suhosin.executor.include.whitelist') || strpos(@ini_get('suhosin.executor.include.whitelist'), 'tmpl://') === false)
 			{
-				JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'https://nooku.assembla.com/wiki/show/nooku-framework/Known_Issues'));
+				JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'http://www.joomlatools.com/framework-known-issues'));
 				return;
 			}
 		}
@@ -97,6 +100,7 @@ class plgSystemKoowa extends JPlugin
         KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
 
         KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
+		KService::setAlias('translator', 'com:default.translator');
 
 	    //Setup the request
         KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
@@ -111,6 +115,9 @@ class plgSystemKoowa extends JPlugin
 		        JFactory::getConfig()->setValue('config.offset', $offset);
 		   }
 		}
+		
+		// Load language files for the framework
+		KService::get('com:default.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
 	}
@@ -212,6 +219,31 @@ class plgSystemKoowa extends JPlugin
         if(!KRequest::has('request.format')) {
             KRequest::set('request.format', KRequest::format());
         }
+	}
+	
+	/**
+	 * Set the disposition to inline for JSON requests
+	 */
+	public function onAfterRender()
+	{
+		if (JFactory::getDocument()->getType() !== 'json') {
+			return;
+		}
+		
+		$headers = JResponse::getHeaders();
+		foreach ($headers as $key => $header)
+		{
+			if ($header['name'] === 'Content-disposition')
+			{
+				$string = $header['value'];
+				if (strpos($string, 'attachment; ') !== false) 
+				{
+					$string = str_replace($string, 'attachment; ', 'inline; ');
+					JResponse::setHeader('Content-disposition', $string, true);
+					break;
+				}
+			}
+		}
 	}
 
  	/**

@@ -38,12 +38,12 @@ class ComDefaultTemplateHelperImage extends KTemplateHelperListbox
 		$options  = array();
 
      	if($config->deselect) {
-         	$options[] =  $this->option(array('text' => '- '.JText::_( 'Select' ).' -'));
+         	$options[] =  $this->option(array('text' => '- '.$this->translate( 'Select' ).' -'));
        	}
 
-      	$options[] = $this->option(array('text' => JText::_( 'Left' ), 'value' => 'left' ));
-      	$options[] = $this->option(array('text' => JText::_( 'Center' ), 'value' => 'center' ));
-       	$options[] = $this->option(array('text' => JText::_( 'Right' ), 'value' => 'right' ));
+      	$options[] = $this->option(array('text' => $this->translate( 'Left' ), 'value' => 'left' ));
+      	$options[] = $this->option(array('text' => $this->translate( 'Center' ), 'value' => 'center' ));
+       	$options[] = $this->option(array('text' => $this->translate( 'Right' ), 'value' => 'right' ));
 
        	//Add the options to the config object
        	$config->options = $options;
@@ -97,7 +97,7 @@ class ComDefaultTemplateHelperImage extends KTemplateHelperListbox
 		</script>";
 
 		if($config->deselect) {
-			$options[] = $this->option(array('text' => '- '.JText::_( 'Select' ).' -', 'value' => ''));
+			$options[] = $this->option(array('text' => '- '.$this->translate( 'Select' ).' -', 'value' => ''));
   		}
 
 		$files = array();
@@ -164,7 +164,7 @@ class ComDefaultTemplateHelperImage extends KTemplateHelperListbox
   			'width'		=> $config->width,
   			'height'	=> $config->height,
   			'border'	=> $config->border,
-  			'alt'		=> JText::_('Preview'),
+  			'alt'		=> $this->translate('Preview'),
   			'style'		=> $config->style
   		)).' />';
 

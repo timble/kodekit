@@ -35,7 +35,7 @@ class ComDefaultTemplateHelperDate extends KTemplateHelperDate
         // Joomla 1.6+ uses different date formats so DATE_FORMAT_LC1 is no longer usable
         if (version_compare(JVERSION, '1.6', '<')) {
             $config->append(array(
-                'format' => JText::_('DATE_FORMAT_LC1')
+                'format' => $this->translate('DATE_FORMAT_LC1')
             ));
         }
 

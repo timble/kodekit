@@ -89,8 +89,12 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @param  object   A KDatabaseRow object to be inserted
      * @return boolean	TRUE on success FALSE on failure
      */
-    public function insert(KDatabaseRowInterface $row)
+    public function insert(KObjectHandlable $row)
     {
+        if (!$row instanceof KDatabaseRowInterface) {
+            throw new InvalidArgumentException('Row needs to implement KDatabaseRowInterface');
+        }
+    	
         if(isset($this->_identity_column)) {
             $handle = $row->{$this->_identity_column};
         } else {
@@ -113,8 +117,12 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @param  object   A KDatabaseRow object to be removed
      * @return KDatabaseRowsetAbstract
      */
-    public function extract(KDatabaseRowInterface $row)
+	public function extract(KObjectHandlable $row)
     {
+        if (!$row instanceof KDatabaseRowInterface) {
+            throw new InvalidArgumentException('Row needs to implement KDatabaseRowInterface');
+        }
+        
         if(isset($this->_identity_column)) {
            $handle = $row->{$this->_identity_column};
         } else {
@@ -383,7 +391,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @throws BadMethodCallException   If method could not be found
      * @return mixed The result of the function
      */
-    public function __call($method, array $arguments)
+    public function __call($method, $arguments)
     {
         //If the method is of the formet is[Bahavior] handle it
         $parts = KInflector::explode($method);

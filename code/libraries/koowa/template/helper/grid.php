@@ -62,8 +62,8 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 		));
 
 	    $html = '<input name="search" id="search" value="'.$this->getTemplate()->getView()->escape($config->search).'" />';
-        $html .= '<button>'.JText::_('Go').'</button>';
-		$html .= '<button onclick="document.getElementById(\'search\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button>';
+        $html .= '<button>'.$this->translate('Go').'</button>';
+		$html .= '<button onclick="document.getElementById(\'search\').value=\'\';this.form.submit();">'.$this->translate('Reset').'</button>';
 
 	    return $html;
 	}
@@ -123,8 +123,8 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 		$query['direction'] = $direction;
 		$url->setQuery($query);
 
-		$html  = '<a href="'.$url.'" title="'.JText::_('Click to sort by this column').'"  '.$class.'>';
-		$html .= JText::_($config->title);
+		$html  = '<a href="'.$url.'" title="'.$this->translate('Click to sort by this column').'"  '.$class.'>';
+		$html .= $this->translate($config->title);
 		$html .= '</a>';
 
 		// Mark the current column
@@ -153,8 +153,8 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 		));
 
 		$img    = $config->row->{$config->field} ? 'enabled.png' : 'disabled.png';
-		$alt 	= $config->row->{$config->field} ? JText::_( 'Enabled' ) : JText::_( 'Disabled' );
-		$text 	= $config->row->{$config->field} ? JText::_( 'Disable Item' ) : JText::_( 'Enable Item' );
+		$alt 	= $config->row->{$config->field} ? $this->translate( 'Enabled' ) : $this->translate( 'Disabled' );
+		$text 	= $config->row->{$config->field} ? $this->translate( 'Disable Item' ) : $this->translate( 'Enable Item' );
 
 	    $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
 	    $data = str_replace('"', '&quot;', $config->data);
@@ -192,13 +192,13 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 		$html = '';
 
 		if ($config->row->{$config->field} > 1) {
-            $html .= '<img src="'.$up.'" border="0" alt="'.JText::_('Move up').'" data-action="edit" data-data="'.$updata.'" />';
+            $html .= '<img src="'.$up.'" border="0" alt="'.$this->translate('Move up').'" data-action="edit" data-data="'.$updata.'" />';
         }
 
         $html .= $config->row->{$config->field};
 
         if($config->row->{$config->field} != $config->total) {
-            $html .= '<img src="'.$down.'" border="0" alt="'.JText::_('Move down').'" data-action="edit" data-data="'.$downdata.'"/>';
+            $html .= '<img src="'.$down.'" border="0" alt="'.$this->translate('Move down').'" data-action="edit" data-data="'.$downdata.'"/>';
 	    }
 
 		return $html;
@@ -225,21 +225,21 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 			case 0 :
 			{
 				$color   = 'green';
-				$group   = JText::_('Public');
+				$group   = $this->translate('Public');
 				$access  = 1;
 			} break;
 
 			case 1 :
 			{
 				$color   = 'red';
-				$group   = JText::_('Registered');
+				$group   = $this->translate('Registered');
 				$access  = 2;
 			} break;
 
 			case 2 :
 			{
 				$color   = 'black';
-				$group   = JText::_('Special');
+				$group   = $this->translate('Special');
 				$access  = 0;
 			} break;
 

@@ -88,11 +88,11 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
 
 		$html .= '<div class="-koowa-pagination">';
 		if($config->show_limit) {
-		    $html .= '<div class="limit">'.JText::_('Display NUM').' '.$this->limit($config).'</div>';
+		    $html .= '<div class="limit">'.$this->translate('Display NUM').' '.$this->limit($config).'</div>';
 		}
 		$html .=  $this->_pages($this->_items($config));
 		if($config->show_count) {
-		    $html .= '<div class="count"> '.JText::_('Page').' '.$config->current.' '.JText::_('of').' '.$config->count.'</div>';
+		    $html .= '<div class="count"> '.$this->translate('Page').' '.$config->current.' '.$this->translate('of').' '.$config->count.'</div>';
 		}
 		$html .= '</div>';
 
@@ -173,9 +173,9 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
 		$class = $page->current ? 'class="active"' : '';
 
 		if($page->active && !$page->current) {
-			$html = '<a href="'.$url.'" '.$class.'>'.JText::_($title).'</a>';
+			$html = '<a href="'.$url.'" '.$class.'>'.$this->translate($title).'</a>';
 		} else {
-			$html = '<span '.$class.'>'.JText::_($title).'</span>';
+			$html = '<span '.$class.'>'.$this->translate($title).'</span>';
 		}
 
 		return $html;

@@ -25,14 +25,12 @@ class ComDefaultTemplateHelperSelect extends KTemplateHelperSelect
 	 */
     public function booleanlist($config = array())
     {
-        $j15 = version_compare(JVERSION, '1.6', '<');
-        
         $config = new KConfig($config);
         $config->append(array(
             'name'   	=> '',
             'attribs'	=> array(),
-            'true'		=> $j15 ? 'Yes' : 'JYES',
-            'false'		=> $j15 ? 'No' : 'JNO',
+            'true'		=> 'Yes',
+            'false'		=> 'No',
             'selected'	=> null,
             'translate'	=> true,
             'wrap'		=> false
@@ -48,14 +46,14 @@ class ComDefaultTemplateHelperSelect extends KTemplateHelperSelect
         }
 
         $extra = $config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? JText::_( $config->true ) : $config->true;
+        $text  = $config->translate ? $this->translate( $config->true ) : $config->true;
 
         $html[] = '<label for="'.$name.'1" class="radio inline">';
         $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
 
         $extra = !$config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? JText::_( $config->false ) : $config->false;
+        $text  = $config->translate ? $this->translate( $config->false ) : $config->false;
 
         $html[] = '<label for="'.$name.'0" class="radio inline">';
         $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
@@ -93,7 +91,7 @@ class ComDefaultTemplateHelperSelect extends KTemplateHelperSelect
         $html = array();
         foreach ($config->list as $row) {
             $key  = $row->{$config->key};
-            $text = $config->translate ? JText::_( $row->{$config->text} ) : $row->{$config->text};
+            $text = $config->translate ? $this->translate( $row->{$config->text} ) : $row->{$config->text};
             $id	  = isset($row->id) ? $row->id : null;
 
             $extra = '';

@@ -63,10 +63,7 @@ class ComDefaultControllerDefault extends KControllerService
      */
     protected function _actionGet(KCommandContext $context)
     {
-        //Load the language file for HMVC requests who are not routed through the dispatcher
-        if(!$this->isDispatched()) {
-            JFactory::getLanguage()->load('com_'.$this->getIdentifier()->package);
-        }
+        $this->getService('translator')->getTranslator($this->getIdentifier())->loadLanguageFiles();
 
         return parent::_actionGet($context);
     }

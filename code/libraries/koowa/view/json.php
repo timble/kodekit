@@ -116,7 +116,7 @@ class KViewJson extends KViewAbstract
 
 		$data = array(
 			'version'  => '1.0',
-			'href'     => (string) $url->setQuery($state->toArray()),
+			'href'     => (string) $url->setQuery(array_merge($url->getQuery(true), $state->toArray())),
 			'url'      => array(
 				'type'     => 'application/json',
 				'template' => (string) $url->get(KHttpUrl::BASE).'?{&'.implode(',', $vars).'}',
