@@ -235,7 +235,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 	    $config = new KConfig($config);
 		$config->append(array(
 			'refresh'  => 15 * 60000, //15min
-		    'url'	   => KRequest::url()
+		    'url'	   => KRequest::url(),
+            'jquery'   => true
 		));
 
 		$refresh = (int) $config->refresh;
@@ -245,14 +246,21 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 			$refresh = 3600000;
 		}
 
-		// Build the keepalive script.
-		$html =
-		"<script>
-			Koowa.keepalive =  function() {
-				var request = new Request({method: 'get', url: '".$config->url."'}).send();
-			}
+        $html = '';
+        // Load the necessary files if they haven't yet been loaded
+        if (!isset(self::$_loaded['keepalive']) && $config->jquery)
+        {
+            $html .= $this->koowa(array('jquery' => true));
 
-			window.addEvent('domready', function() { Koowa.keepalive.periodical('".$refresh."'); });
+            self::$_loaded['keepalive'] = true;
+        }
+
+		// Build the keepalive script.
+		$html .=
+		"<script>
+			jQuery(function($){setInterval(function(){
+			    $.get(".json_encode((string)$config->url).");
+			}, ".(int)($refresh).");});
 		</script>";
 
 		return $html;
