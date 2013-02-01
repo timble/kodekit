@@ -305,7 +305,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 onsubmit: false
             };
 		    $('$config->selector').on('validate', function(e){
-                    if(!$(this).validate(options).valid()) e.preventDefault();
+                    if(!$(this).valid()) e.preventDefault();
 		    }).validate(options);
 		});
 		</script>";

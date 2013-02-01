@@ -458,7 +458,7 @@ if (!Function.prototype.bind) {
                         event.preventDefault();
                         if(!button.hasClass('disabled')) {
                             self.setOptions(options);
-                            self.fireEvent('execute', [action, data, button.get('data-novalidate') === 'novalidate']);
+                            self.fireEvent('execute', [action, data, button.data('novalidate') === 'novalidate']);
                         }
                     });
                 });
