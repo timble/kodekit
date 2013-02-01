@@ -89,25 +89,37 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
 	 * @param  object  	An identifier object - com:[//application/]component.view.[.path].name
 	 * @return string	Returns the path
 	 */
-	public function findPath(KServiceIdentifier $identifier)
-	{
+    /**
+     * Get the path
+     *
+     * @param  object      An identifier object - com:[//application/]component.[path].name
+     * @return string    Returns the path
+     */
+    public function findPath(KServiceIdentifier $identifier)
+    {
         $path  = '';
-	    $parts = $identifier->path;
+        $parts = $identifier->path;
 
-		$component = 'com_'.strtolower($identifier->package);
+        $component = 'com_'.strtolower($identifier->package);
 
-		if(!empty($identifier->name))
-		{
-			if(count($parts))
-			{
-				$path    = KInflector::pluralize(array_shift($parts));
-				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
-				$path   .= '/'.strtolower($identifier->name);
-			}
-			else $path  = strtolower($identifier->name);
-		}
+        if(!empty($identifier->name))
+        {
+            if(count($parts))
+            {
+                if(!in_array($parts[0], array('view', 'module')))
+                {
+                    foreach($parts as $key => $value) {
+                        $parts[$key] = KInflector::pluralize($value);
+                    }
+                }
+                else $parts[0] = KInflector::pluralize($parts[0]);
 
-		$path = $identifier->basepath.'/components/'.$component.'/'.$path.'.php';
-		return $path;
-	}
+                $path = implode('/', $parts).'/'.strtolower($identifier->name);
+            }
+            else $path  = strtolower($identifier->name);
+        }
+
+        $path = $identifier->basepath.'/components/'.$component.'/'.$path.'.php';
+        return $path;
+    }
 }

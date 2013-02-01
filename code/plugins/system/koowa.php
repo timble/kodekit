@@ -52,7 +52,7 @@ class plgSystemKoowa extends JPlugin
 			//Checking if the whitelist is ok
 			if(!@ini_get('suhosin.executor.include.whitelist') || strpos(@ini_get('suhosin.executor.include.whitelist'), 'tmpl://') === false)
 			{
-				JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'https://nooku.assembla.com/wiki/show/nooku-framework/Known_Issues'));
+				JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'http://www.joomlatools.com/framework-known-issues'));
 				return;
 			}
 		}
@@ -219,6 +219,31 @@ class plgSystemKoowa extends JPlugin
         if(!KRequest::has('request.format')) {
             KRequest::set('request.format', KRequest::format());
         }
+	}
+	
+	/**
+	 * Set the disposition to inline for JSON requests
+	 */
+	public function onAfterRender()
+	{
+		if (JFactory::getDocument()->getType() !== 'json') {
+			return;
+		}
+		
+		$headers = JResponse::getHeaders();
+		foreach ($headers as $key => $header)
+		{
+			if ($header['name'] === 'Content-disposition')
+			{
+				$string = $header['value'];
+				if (strpos($string, 'attachment; ') !== false) 
+				{
+					$string = str_replace($string, 'attachment; ', 'inline; ');
+					JResponse::setHeader('Content-disposition', $string, true);
+					break;
+				}
+			}
+		}
 	}
 
  	/**
