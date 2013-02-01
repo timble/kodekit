@@ -428,7 +428,7 @@ if (!Function.prototype.bind) {
 
             this.form = this.options.form;
             this.toolbar = this.options.toolbar;
-            if(this.form.action) this.options.url = this.form.action;
+            if(this.form.attr('action')) this.options.url = this.form.attr('action');
 
             //Set options that is coming from data attributes on the form element
             this.setOptions(this.getOptions(this.form));
