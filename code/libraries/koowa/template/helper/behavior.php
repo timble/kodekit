@@ -225,8 +225,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$config->append(array(
 			'selector' => '.-koowa-form',
 		    'options'  => array(
-		        'scrollToErrorsOnChange' => true,
-		        'scrollToErrorsOnBlur'   => true
+		        'scrollToErrorsOnChange' => false,
+		        'scrollToErrorsOnBlur'   => false
 		    )
 		));
 
