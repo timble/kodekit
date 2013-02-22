@@ -193,28 +193,6 @@ class plgSystemKoowa extends JPlugin
 	 */
 	public function onAfterRoute()
 	{
-	    /*
-	     * Special handling for AJAX requests
-	     *
-	     * If the format is AJAX and the format is 'html' or the tmpl is empty we re-create
-	     * a 'raw' document rendered and force it's type to the active format
-	     */
-        if(KRequest::type() == 'AJAX')
-        {
-        	if(KRequest::get('get.format', 'cmd', 'html') != 'html' || KRequest::get('get.tmpl', 'cmd') === '')
-        	{
-        		$format = JRequest::getWord('format', 'html');
-
-        		JRequest::setVar('format', 'raw');   //force format to raw
-
-        		@$document =& JFactory::getDocument();
-        		$document = null;
-        		JFactory::getDocument()->setType($format);
-
-        		JRequest::setVar('format', $format); //revert format to original
-        	}
-        }
-
         //Set the request format
         if(!KRequest::has('request.format')) {
             KRequest::set('request.format', KRequest::format());
