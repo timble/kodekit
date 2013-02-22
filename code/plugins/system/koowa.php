@@ -43,20 +43,6 @@ class plgSystemKoowa extends JPlugin
     		return;
 		}
 
-		// Check for suhosin
-		if(in_array('suhosin', get_loaded_extensions()))
-		{
-			//Attempt setting the whitelist value
-			@ini_set('suhosin.executor.include.whitelist', 'tmpl://, file://');
-
-			//Checking if the whitelist is ok
-			if(!@ini_get('suhosin.executor.include.whitelist') || strpos(@ini_get('suhosin.executor.include.whitelist'), 'tmpl://') === false)
-			{
-				JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'http://www.joomlatools.com/framework-known-issues'));
-				return;
-			}
-		}
-
 	    //Safety Extender compatibility
 		if(extension_loaded('safeex') && strpos('tmpl', @ini_get('safeex.url_include_proto_whitelist')) === false)
 		{
