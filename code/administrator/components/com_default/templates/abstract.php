@@ -102,32 +102,31 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 	    return $result;
 	}
 
-	/**
-	 * Parse the template
-	 *
-	 * This function implements a caching mechanism when reading the template. If
-	 * the tempplate cannot be found in the cache it will be filtered and stored in
-	 * the cache. Otherwise it will be loaded from the cache and returned directly.
-	 *
-	 * @return string	The filtered data
-	 */
-	public function parse()
-	{
-	    if(isset($this->_cache))
-	    {
-	        $identifier = md5($this->_path);
+    /**
+     * Parse the template
+     *
+     * This function implements a caching mechanism when reading the template. If the template cannot be found in the
+     * cache it will be filtered and stored in the cache. Otherwise it will be loaded from the cache and returned
+     * directly.
+     *
+     * @param string The template content to parse
+     * @return void
+     */
+    protected function _parse(&$content)
+    {
+        if(isset($this->_cache))
+        {
+            $identifier = md5($this->getPath());
 
-	        if (!$template = $this->_cache->get($identifier))
-	        {
-	            $template = parent::parse();
+            if (!$this->_cache->get($identifier))
+            {
+                parent::_parse($content);
 
-	            //Store the object in the cache
-		   	    $this->_cache->store($template, $identifier);
-	        }
-
-	        return $template;
-	    }
-
-	    return parent::parse();
-	}
+                //Store the object in the cache
+                $this->_cache->store($content, $identifier);
+            }
+            else $content = $this->_cache->get($identifier);
+        }
+        else parent::_parse($content);
+    }
 }
