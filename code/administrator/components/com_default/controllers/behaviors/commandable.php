@@ -125,7 +125,7 @@ class ComDefaultControllerBehaviorCommandable  extends KControllerBehaviorComman
 	 * .
 	 * @param	KCommandContext	A command context object
 	 */
-    public function _afterGet(KCommandContext $context)
+    protected function _afterGet(KCommandContext $context)
     {
         if($this->isDispatched() && ($this->getView() instanceof KViewHtml))
         {
