@@ -43,20 +43,6 @@ class plgSystemKoowa extends JPlugin
     		return;
 		}
 
-		// Check for suhosin
-		if(in_array('suhosin', get_loaded_extensions()))
-		{
-			//Attempt setting the whitelist value
-			@ini_set('suhosin.executor.include.whitelist', 'tmpl://, file://');
-
-			//Checking if the whitelist is ok
-			if(!@ini_get('suhosin.executor.include.whitelist') || strpos(@ini_get('suhosin.executor.include.whitelist'), 'tmpl://') === false)
-			{
-				JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'http://www.joomlatools.com/framework-known-issues'));
-				return;
-			}
-		}
-
 	    //Safety Extender compatibility
 		if(extension_loaded('safeex') && strpos('tmpl', @ini_get('safeex.url_include_proto_whitelist')) === false)
 		{
@@ -193,28 +179,6 @@ class plgSystemKoowa extends JPlugin
 	 */
 	public function onAfterRoute()
 	{
-	    /*
-	     * Special handling for AJAX requests
-	     *
-	     * If the format is AJAX and the format is 'html' or the tmpl is empty we re-create
-	     * a 'raw' document rendered and force it's type to the active format
-	     */
-        if(KRequest::type() == 'AJAX')
-        {
-        	if(KRequest::get('get.format', 'cmd', 'html') != 'html' || KRequest::get('get.tmpl', 'cmd') === '')
-        	{
-        		$format = JRequest::getWord('format', 'html');
-
-        		JRequest::setVar('format', 'raw');   //force format to raw
-
-        		@$document =& JFactory::getDocument();
-        		$document = null;
-        		JFactory::getDocument()->setType($format);
-
-        		JRequest::setVar('format', $format); //revert format to original
-        	}
-        }
-
         //Set the request format
         if(!KRequest::has('request.format')) {
             KRequest::set('request.format', KRequest::format());
@@ -258,6 +222,7 @@ class plgSystemKoowa extends JPlugin
 	{
 		$this->_exception = $exception; //store the exception for later use
 
+		$this->errorHandler($exception);
 		//Change the Joomla error handler to our own local handler and call it
 		JError::setErrorHandling( E_ERROR, 'callback', array($this,'errorHandler'));
 
