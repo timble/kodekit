@@ -72,7 +72,9 @@ class plgSystemKoowa extends JPlugin
 		KService::setAlias('translator', 'com:default.translator');
 
 	    //Setup the request
-        KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
+	    if (JFactory::getApplication()->getName() !== 'site') {
+	    	KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
+	    }
 
 		//Load the koowa plugins
 		JPluginHelper::importPlugin('koowa', null, true, KService::get('com://admin/default.event.dispatcher'));
