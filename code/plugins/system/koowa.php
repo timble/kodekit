@@ -151,6 +151,7 @@ class plgSystemKoowa extends JPlugin
 	     }
 
 	     /*
+	      * TODO: use a --koowa flag here
 	     * Dispatch the default dispatcher
 	     *
 	     * If we are running in CLI mode bypass the default Joomla executition chain and dispatch the default
@@ -185,40 +186,21 @@ class plgSystemKoowa extends JPlugin
 	    	}
 	    }
 	}
-
+	
 	/**
-	 * On after route event handler
-	 *
-	 * @return void
+	 * Reset the JDocument object to the proper format if it comes from the HTTP accept header
 	 */
 	public function onAfterRoute()
 	{
-	    /*
-	     * Special handling for AJAX requests
-	     *
-	     * If the format is AJAX and the format is 'html' or the tmpl is empty we re-create
-	     * a 'raw' document rendered and force it's type to the active format
-	     */
-        if(KRequest::type() == 'AJAX')
-        {
-        	if(KRequest::get('get.format', 'cmd', 'html') != 'html' || KRequest::get('get.tmpl', 'cmd') === '')
-        	{
-        		$format = JRequest::getWord('format', 'html');
+    	if(!KRequest::has('request.format'))
+    	{
+    		$format = KRequest::format();
 
-        		JRequest::setVar('format', 'raw');   //force format to raw
-
-        		@$document =& JFactory::getDocument();
-        		$document = null;
-        		JFactory::getDocument()->setType($format);
-
-        		JRequest::setVar('format', $format); //revert format to original
-        	}
-        }
-
-        //Set the request format
-        if(!KRequest::has('request.format')) {
-            KRequest::set('request.format', KRequest::format());
-        }
+    		// Reset the document per the Koowa format
+    		if ($format) {
+    			$this->_resetDocument($format);
+    		}
+    	}
 	}
 	
 	/**
@@ -328,5 +310,19 @@ class plgSystemKoowa extends JPlugin
 	    }
 
 	    return false;
+	}
+
+	protected function _resetDocument($format)
+	{
+		$format_joomla = JRequest::getWord('format');
+	
+		JRequest::setVar('format', $format);
+
+		JFactory::$document = null;
+		JFactory::getDocument();
+	
+		if ($format_joomla) {
+			JRequest::setVar('format', $format_joomla);
+		}
 	}
 }
