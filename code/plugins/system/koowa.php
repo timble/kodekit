@@ -137,6 +137,7 @@ class plgSystemKoowa extends JPlugin
 	     }
 
 	     /*
+	      * TODO: use a --koowa flag here
 	     * Dispatch the default dispatcher
 	     *
 	     * If we are running in CLI mode bypass the default Joomla executition chain and dispatch the default
@@ -171,18 +172,21 @@ class plgSystemKoowa extends JPlugin
 	    	}
 	    }
 	}
-
+	
 	/**
-	 * On after route event handler
-	 *
-	 * @return void
+	 * Reset the JDocument object to the proper format if it comes from the HTTP accept header
 	 */
 	public function onAfterRoute()
 	{
-        //Set the request format
-        if(!KRequest::has('request.format')) {
-            KRequest::set('request.format', KRequest::format());
-        }
+    	if(!KRequest::has('request.format'))
+    	{
+    		$format = KRequest::format();
+
+    		// Reset the document per the Koowa format
+    		if ($format) {
+    			$this->_resetDocument($format);
+    		}
+    	}
 	}
 	
 	/**
@@ -293,5 +297,19 @@ class plgSystemKoowa extends JPlugin
 	    }
 
 	    return false;
+	}
+
+	protected function _resetDocument($format)
+	{
+		$format_joomla = JRequest::getWord('format');
+	
+		JRequest::setVar('format', $format);
+
+		JFactory::$document = null;
+		JFactory::getDocument();
+	
+		if ($format_joomla) {
+			JRequest::setVar('format', $format_joomla);
+		}
 	}
 }
