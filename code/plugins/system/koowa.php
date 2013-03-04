@@ -24,11 +24,18 @@ class plgSystemKoowa extends JPlugin
 		// Turn off E_STRICT errors for now
 		error_reporting(error_reporting() & ~E_STRICT);
 		
-	    // Check if Koowa is active
+		// Check if database type is MySQLi
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
 		{
-    		JError::raiseWarning(0, JText::_("Koowa plugin requires MySQLi Database Driver. Please change your database configuration settings to 'mysqli'"));
-    		return;
+			if (JFactory::getApplication()->getName() === 'administrator') 
+			{
+				$string = version_compare(JVERSION, '1.6', '<') ? 'mysqli' : 'MySQLi';
+				$link   = JRoute::_('index.php?option=com_config');
+				$error  = 'In order to use Joomlatools framework, your database type in Global Configuration should be set to <strong>%1$s</strong>. Please go to <a href="%2$s">Global Configuration</a> and in the \'Server\' tab change your Database Type to <strong>%1$s</strong>.';
+				JError::raiseWarning(0, sprintf(JText::_($error), $string, $link));
+			}
+			
+			return;
 		}
  		
  		// Set pcre.backtrack_limit to a larger value
@@ -38,11 +45,7 @@ class plgSystemKoowa extends JPlugin
  		}
 
 		//Set constants
-		define('KDEBUG'      , JDEBUG);
-
-		//Set path definitions
-		define('JPATH_FILES' , JPATH_ROOT);
-		define('JPATH_IMAGES', JPATH_ROOT.DS.'images');
+		define('KDEBUG', JDEBUG);
 
 		//Set exception handler
 		set_exception_handler(array($this, 'exceptionHandler'));
