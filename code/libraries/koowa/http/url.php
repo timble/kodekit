@@ -372,6 +372,12 @@ class KHttpUrl extends KObject
     public function getQuery($toArray = false)
     {
 		$result = $toArray ? $this->_query : http_build_query($this->_query, '', '&');
+		
+		if (!$toArray) {
+			// We replace the + used for spaces by http_build_query with the more standard %20.
+			$result = str_replace('+', '%20', $result);
+		}
+		
 		return $result;
     }
 
