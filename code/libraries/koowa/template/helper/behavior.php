@@ -174,8 +174,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		}
 
 		$url = $this->getService('koowa:http.url', array('url' => $config->url));
-		if(!isset($url->query['tmpl'])) {
-		    $url->query['tmpl'] = '';
+		if(!isset($url->query['format'])) {
+		    $url->query['format'] = 'overlay';
 		}
 
 		$attribs = KHelperArray::toString($config->attribs);
