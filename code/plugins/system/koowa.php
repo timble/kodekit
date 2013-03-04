@@ -42,14 +42,6 @@ class plgSystemKoowa extends JPlugin
     		JError::raiseWarning(0, JText::_("Koowa plugin requires MySQLi Database Driver. Please change your database configuration settings to 'mysqli'"));
     		return;
 		}
-
-	    //Safety Extender compatibility
-		if(extension_loaded('safeex') && strpos('tmpl', @ini_get('safeex.url_include_proto_whitelist')) === false)
-		{
-		    $whitelist = @ini_get('safeex.url_include_proto_whitelist');
-		    $whitelist = (strlen($whitelist) ? $whitelist . ',' : '') . 'tmpl';
-		    @ini_set('safeex.url_include_proto_whitelist', $whitelist);
- 		}
  		
  		// Set pcre.backtrack_limit to a larger value
  		// See: https://bugs.php.net/bug.php?id=40846
@@ -174,22 +166,6 @@ class plgSystemKoowa extends JPlugin
 	}
 	
 	/**
-	 * Reset the JDocument object to the proper format if it comes from the HTTP accept header
-	 */
-	public function onAfterRoute()
-	{
-    	if(!KRequest::has('request.format'))
-    	{
-    		$format = KRequest::format();
-
-    		// Reset the document per the Koowa format
-    		if ($format) {
-    			$this->_resetDocument($format);
-    		}
-    	}
-	}
-	
-	/**
 	 * Set the disposition to inline for JSON requests
 	 */
 	public function onAfterRender()
@@ -297,19 +273,5 @@ class plgSystemKoowa extends JPlugin
 	    }
 
 	    return false;
-	}
-
-	protected function _resetDocument($format)
-	{
-		$format_joomla = JRequest::getWord('format');
-	
-		JRequest::setVar('format', $format);
-
-		JFactory::$document = null;
-		JFactory::getDocument();
-	
-		if ($format_joomla) {
-			JRequest::setVar('format', $format_joomla);
-		}
 	}
 }
