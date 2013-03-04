@@ -130,7 +130,6 @@ class plgSystemKoowa extends JPlugin
 	{
 		$this->_exception = $exception; //store the exception for later use
 
-		$this->errorHandler($exception);
 		//Change the Joomla error handler to our own local handler and call it
 		JError::setErrorHandling( E_ERROR, 'callback', array($this,'errorHandler'));
 
@@ -159,10 +158,6 @@ class plgSystemKoowa extends JPlugin
 			$error->set('message', (string) $this->_exception);
 		} else {
 			$error->set('message', KHttpResponse::getMessage($error->get('code')));
-		}
-
-	    if($this->_exception->getCode() == KHttpResponse::UNAUTHORIZED) {
-		   header('WWW-Authenticate: Basic Realm="'.KRequest::base().'"');
 		}
 
 		//Make sure the buffers are cleared
