@@ -24,18 +24,6 @@ class plgSystemKoowa extends JPlugin
 		// Turn off E_STRICT errors for now
 		error_reporting(error_reporting() & ~E_STRICT);
 		
-	    // Command line fixes for Joomla
-		if (PHP_SAPI === 'cli')
-		{
-			if (!isset($_SERVER['HTTP_HOST'])) {
-				$_SERVER['HTTP_HOST'] = '';
-			}
-
-			if (!isset($_SERVER['REQUEST_METHOD'])) {
-				$_SERVER['REQUEST_METHOD'] = '';
-			}
-		}
-
 	    // Check if Koowa is active
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
 		{
@@ -98,71 +86,6 @@ class plgSystemKoowa extends JPlugin
 		KService::get('com:default.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
-	}
-
-	/**
-	 * On after intitialse event handler
-	 *
-	 * This functions implements HTTP Basic authentication support
-	 *
-	 * @return void
-	 */
-	public function onAfterInitialise()
-	{
-	    /*
-	     * Try to log the user in
-	     *
-	     * If the request contains authorization information we try to log the user in
-	     */
-	    if($this->params->get('auth_basic', 0) && JFactory::getUser()->guest) {
-	        $this->_authenticateUser();
-	    }
-
-	    /*
-	     * Reset the user and token
-	     *
-	     * In case another plugin have logged in after we initialized we need to reset the token and user object
-	     * One plugin that could cause that, are the Remember Me plugin
-	     */
-	     if(!JFactory::getUser()->guest) {
-	         KRequest::set('request._token', JUtility::getToken());
-	     }
-
-	     /*
-	      * TODO: use a --koowa flag here
-	     * Dispatch the default dispatcher
-	     *
-	     * If we are running in CLI mode bypass the default Joomla executition chain and dispatch the default
-	     * dispatcher.
-	     */
-	    if (PHP_SAPI === 'cli')
-	    {
-	    	$url = null;
-	    	foreach ($_SERVER['argv'] as $arg)
-	    	{
-	    		if (strpos($arg, '--url') === 0)
-	    		{
-	    			$url = str_replace('--url=', '', $arg);
-	    			if (strpos($url, '?') === false) {
-	    				$url = '?'.$url;
-	    			}
-	    			break;
-	    		}
-	    	}
-
-	    	if (!empty($url))
-	    	{
-	    		$component = 'default';
-	    		$url = KService::get('koowa:http.url', array('url' => $url));
-    			if (!empty($url->query['option'])) {
-    				$component = substr($url->query['option'], 4);
-    			}
-
-	    		// Thanks Joomla. We will take it from here.
-	    		echo KService::get('com:'.$component.'.dispatcher.cli')->dispatch();
-	    		exit(0);
-	    	}
-	    }
 	}
 	
 	/**
@@ -241,37 +164,5 @@ class plgSystemKoowa extends JPlugin
 		while(@ob_get_clean());
 
 		JError::customErrorPage($error);
-	}
-
-	/**
-	 * Basic authentication support
-	 *
-	 * This functions tries to log the user in if authentication credentials are
-	 * present in the request.
-	 *
-	 * @return boolean	Returns TRUE is basic authentication was successful
-	 */
-	protected function _authenticateUser()
-	{
-	    if(KRequest::has('server.PHP_AUTH_USER') && KRequest::has('server.PHP_AUTH_PW'))
-	    {
-	        $credentials = array(
-	            'username' => KRequest::get('server.PHP_AUTH_USER', 'url'),
-	            'password' => KRequest::get('server.PHP_AUTH_PW'  , 'url'),
-	        );
-
-	        if(JFactory::getApplication()->login($credentials) !== true)
-	        {
-	            throw new KException('Login failed', KHttpResponse::UNAUTHORIZED);
-        	    return false;
-	        }
-
-	        //Force the token
-	        KRequest::set('request._token', JUtility::getToken());
-
-	        return true;
-	    }
-
-	    return false;
 	}
 }
