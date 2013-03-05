@@ -72,7 +72,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	 *
 	 * @var string
 	 */
-	protected $_name_quote = '`';
+	protected $_identifier_quote = '`';
 
 	/**
 	 * The connection options
@@ -80,6 +80,13 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	 * @var KConfig
 	 */
 	protected $_options = null;
+    
+    /**
+     * Character set used for connection
+     * 
+     * @var string
+     */
+    protected $_charset;
 
 	/**
 	 * Constructor.
@@ -88,11 +95,8 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	 * Recognized key values include 'command_chain', 'charset', 'table_prefix',
 	 * (this list is not meant to be comprehensive).
 	 */
-	public function __construct( KConfig $config = null )
+	public function __construct(KConfig $config = null)
 	{
-		//If no config is passed create it
-		if(!isset($config)) $config = new KConfig();
-
 		// Initialize the options
         parent::__construct($config);
 
@@ -101,7 +105,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 
 		// Set the default charset. http://dev.mysql.com/doc/refman/5.1/en/charset-connection.html
 		if (!empty($config->charset)) {
-			//$this->setCharset($config->charset);
+			$this->setCharset($config->charset);
 		}
 
 		// Set the table prefix
@@ -230,6 +234,29 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	    $this->_connection = $resource;
 		return $this;
 	}
+    
+    /**
+     * Get character set
+     * 
+     * @return string
+     */
+    public function getCharset()
+    {
+        return $this->_charset;
+    }
+    
+    /**
+     * Set character set
+     * 
+     * @param string $charset The character set.
+     * @return KDatabaseAdapterAbstract
+     */
+    public function setCharset($charset)
+    {
+        $this->_charset = $charset;
+        
+        return $this;
+    }
 
 	/**
 	 * Get the insert id of the last insert operation
@@ -391,7 +418,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 					$keys[] = '`'.$key.'`';
 				}
 
-				$context->query = 'INSERT INTO '.$this->quoteName($this->getTableNeedle().$context->table )
+				$context->query = 'INSERT INTO '.$this->quoteIdentifier($this->getTableNeedle().$context->table )
 					 . '('.implode(', ', $keys).') VALUES ('.implode(', ', $vals).')';
 
 				//Execute the query
@@ -437,7 +464,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 				}
 
 				//Create query statement
-				$context->query = 'UPDATE '.$this->quoteName($this->getTableNeedle().$context->table)
+				$context->query = 'UPDATE '.$this->quoteIdentifier($this->getTableNeedle().$context->table)
 			  		.' SET '.implode(', ', $vals)
 			  		.' '.$context->where
 				;
@@ -473,7 +500,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 		if($this->getCommandChain()->run('before.delete', $context) !== false)
 		{
 			//Create query statement
-			$context->query = 'DELETE FROM '.$this->quoteName($this->getTableNeedle().$context->table)
+			$context->query = 'DELETE FROM '.$this->quoteIdentifier($this->getTableNeedle().$context->table)
 				  .' '.$context->where
 			;
 
@@ -600,7 +627,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 
         return $value;
     }
-
+    
     /**
      * Quotes a single identifier name (table, table alias, table column,
      * index, sequence).  Ignores empty values.
@@ -612,26 +639,26 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *                      each element in the array as an identifier name.
      * @return string|array The quoted identifier name (or array of names).
      *
-     * @see _quoteName()
+     * @see _quoteIdentifier()
      */
-    public function quoteName($spec)
+    public function quoteIdentifier($spec)
     {
-        if (is_array($spec))
-        {
-            foreach ($spec as $key => $val) {
-                $spec[$key] = $this->quoteName($val);
-            }
-
-            return $spec;
-        }
-
-        // String spaces around the identifier
-        $spec = trim($spec);
-
-        // Quote all the lower case parts
-        $spec = preg_replace_callback('#(?:\b|\#)+(?<!`)([a-z0-9\.\#\-_]+)(?!`)\b#', array($this, '_quoteName') , $spec);
-
-        return $spec;
+    	if (is_array($spec))
+    	{
+    		foreach ($spec as $key => $val) {
+    			$spec[$key] = $this->quoteIdentifier($val);
+    		}
+    
+    		return $spec;
+    	}
+    
+    	// String spaces around the identifier
+    	$spec = trim($spec);
+    
+    	// Quote all the lower case parts
+    	$spec = preg_replace_callback('/(?:\b|#)+(?<![`:@])([-a-zA-Z0-9.#_]*[a-z][-a-zA-Z0-9.#_]*)(?!`)\b/', array($this, '_quoteIdentifier'), $spec);
+    
+    	return $spec;
     }
 
    /**
@@ -734,32 +761,32 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *
      * @param string    The identifier name to quote.
      * @return string   The quoted identifier name.
-     * @see quoteName()
+     * @see quoteIdentifier()
      */
-    protected function _quoteName($name)
+    protected function _quoteIdentifier($name)
     {
-        $result =  '';
-
-        if(is_array($name)) {
-            $name = $name[0];
-        }
-
-        $name   = trim($name);
-
-        //Special cases
-        if ($name == '*' || is_numeric($name)) {
-            return $name;
-        }
-
-        if ($pos = strrpos($name, '.'))
-        {
-            $table  = $this->_quoteName(substr($name, 0, $pos));
-            $column = $this->_quoteName(substr($name, $pos + 1));
-
-            $result =  "$table.$column";
-        }
-        else $result = $this->_name_quote. $name.$this->_name_quote;
-
-        return $result;
+    	$result = '';
+    
+    	if (is_array($name)) {
+    		$name = $name[0];
+    	}
+    
+    	$name = trim($name);
+    
+    	//Special cases
+    	if ($name == '*' || is_numeric($name)) {
+    		return $name;
+    	}
+    
+    	if ($pos = strrpos($name, '.'))
+    	{
+    		$table = $this->_quoteIdentifier(substr($name, 0, $pos));
+    		$column = $this->_quoteIdentifier(substr($name, $pos + 1));
+    
+    		$result = "$table.$column";
+    	}
+    	else $result = $this->_identifier_quote . $name . $this->_identifier_quote;
+    
+    	return $result;
     }
 }

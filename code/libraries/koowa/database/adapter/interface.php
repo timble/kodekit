@@ -231,5 +231,5 @@ interface KDatabaseAdapterInterface
      *                      each element in the array as an identifier name.
      * @return string|array The quoted identifier name (or array of names).
      */
-    public function quoteName($spec);
+    public function quoteIdentifier($spec);
 }
