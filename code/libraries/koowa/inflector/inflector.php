@@ -151,16 +151,16 @@ class KInflector
 	public static function pluralize($word)
 	{
 		//Make sure we have the singular
-	    $word = self::singularize($word); 
-	    
+		$word = self::singularize($word);
+
 	    //Get the cached noun of it exists
  	   	if(isset(self::$_cache['pluralized'][$word])) {
 			return self::$_cache['pluralized'][$word];
  	   	}
-
+ 	   	
 		//Create the plural noun
 		if (in_array($word, self::$_rules['countable'])) {
-			$_cache['pluralized'][$word] = $word;
+			self::$_cache['pluralized'][$word] = $word;
 			return $word;
 		}
 
@@ -169,7 +169,7 @@ class KInflector
 			$matches = null;
 			$plural = preg_replace($regexp, $replacement, $word, -1, $matches);
 			if ($matches > 0) {
-				$_cache['pluralized'][$word] = $plural;
+				self::$_cache['pluralized'][$word] = $plural;
 				return $plural;
 			}
 		}
@@ -192,7 +192,7 @@ class KInflector
 
 		//Create the singular noun
 		if (in_array($word, self::$_rules['countable'])) {
-			$_cache['singularized'][$word] = $word;
+			self::$_cache['singularized'][$word] = $word;
 			return $word;
 		}
 
@@ -202,7 +202,7 @@ class KInflector
 			$matches = null;
 			$singular = preg_replace($regexp, $replacement, $word, -1, $matches);
 			if ($matches > 0) {
-				$_cache['singularized'][$word] = $singular;
+				self::$_cache['singularized'][$word] = $singular;
 				return $singular;
 			}
 		}
