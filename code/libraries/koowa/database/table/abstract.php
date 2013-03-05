@@ -550,7 +550,7 @@ abstract class KDatabaseTableAbstract extends KObject
             }
         }
 
-        if($query instanceof KDatabaseQuery)
+        if($query instanceof KDatabaseQuerySelect)
         {
             if(!is_null($query->columns) && !count($query->columns)) {
                 $query->select('*');
@@ -643,7 +643,7 @@ abstract class KDatabaseTableAbstract extends KObject
             }
         }
 
-        if($query instanceof KDatabaseQuery)
+        if ($query instanceof KDatabaseQuerySelect)
         {
             if (!$query->columns) {
                 $query->columns('COUNT(*)');
