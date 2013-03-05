@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultModelDefault extends KModelDefault
+class ComKoowaModelDefault extends KModelDefault
 {
 
 }

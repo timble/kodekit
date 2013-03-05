@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateFilterForm extends KTemplateFilterForm
+class ComKoowaTemplateFilterForm extends KTemplateFilterForm
 {
 	/**
      * Initializes the options for the object

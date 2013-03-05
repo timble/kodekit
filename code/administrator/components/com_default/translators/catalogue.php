@@ -13,7 +13,7 @@
  * @author		Ercan Ozkaya <ercan@timble.net>
  * @package		Koowa_Translator
  */
-class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
+class ComKoowaTranslatorCatalogue extends KTranslatorCatalogue
 { 
     public function __get($key)
     {

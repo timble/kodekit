@@ -16,7 +16,7 @@
  * @subpackage  Default
  * @uses        KConfig
  */
-class ComDefaultTemplateHelperListbox extends KTemplateHelperListbox
+class ComKoowaTemplateHelperListbox extends KTemplateHelperListbox
 {    
     /**
      * Generates an HTML enabled listbox

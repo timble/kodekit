@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultControllerDefault extends KControllerService
+class ComKoowaControllerDefault extends KControllerService
 {
 	/**
 	 * The limit information

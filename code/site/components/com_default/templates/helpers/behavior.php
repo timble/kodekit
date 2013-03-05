@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateHelperBehavior extends KTemplateHelperBehavior
+class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
 {
 	/**
 	 * Method to load the mootools framework into the document head

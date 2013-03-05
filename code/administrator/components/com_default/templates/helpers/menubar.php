@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateHelperMenubar extends KTemplateHelperAbstract
+class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
 {
 	/**
      * Initializes the options for the object

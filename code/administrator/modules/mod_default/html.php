@@ -15,7 +15,7 @@
  * @package     Nooku_Modules
  * @subpackage  Default
  */
-class ModDefaultHtml extends KViewHtml
+class ModKoowaHtml extends KViewHtml
 {
 	/**
      * Initializes the default configuration for the object
@@ -50,7 +50,7 @@ class ModDefaultHtml extends KViewHtml
 	/**
      * Renders and echo's the views output
      *
-     * @return ModDefaultHtml
+     * @return ModKoowaHtml
      */
     public function display()
     {

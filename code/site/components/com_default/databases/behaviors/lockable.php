@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
+class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
 {
     /**
      * Initializes the options for the object

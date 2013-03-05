@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultControllerToolbarMenubar extends KControllerToolbarDefault
+class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
 {
  	/**
      * Add a command

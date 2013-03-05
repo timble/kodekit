@@ -16,7 +16,7 @@
  * @subpackage  Default
  * @uses        KConfig
  */
-class ComDefaultTemplateHelperImage extends KTemplateHelperListbox
+class ComKoowaTemplateHelperImage extends KTemplateHelperListbox
 {
  	/**
      * Generates an HTML image position listbox

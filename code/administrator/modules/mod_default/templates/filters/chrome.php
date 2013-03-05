@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ModDefaultTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
   	/**
      * Constructor.
@@ -56,7 +56,7 @@ class ModDefaultTemplateFilterChrome extends KTemplateFilterAbstract implements 
 	 * Render the module chrome
 	 *
 	 * @param string Block of text to parse
-	 * @return ModDefaultFilterChrome
+	 * @return ModKoowaFilterChrome
 	 */
 	public function write(&$text)
 	{

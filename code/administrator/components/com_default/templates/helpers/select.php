@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateHelperSelect extends KTemplateHelperSelect
+class ComKoowaTemplateHelperSelect extends KTemplateHelperSelect
 {
 	/**
 	 * Generates an HTML boolean radio list
