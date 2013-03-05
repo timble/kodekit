@@ -43,6 +43,10 @@ class plgSystemKoowa extends JPlugin
  		if (version_compare(PHP_VERSION, '5.3.6', '<=') && @ini_get('pcre.backtrack_limit') < 1000000) {
  		    @ini_set('pcre.backtrack_limit', 1000000);
  		}
+ 		
+ 		// 2.5.7+ bug - you always need to supply a toolbar title to avoid notices
+ 		// This happens when the component does not supply an output at all
+ 		JToolbarHelper::title(''); 
 
 		//Set constants
 		define('KDEBUG', JDEBUG);
