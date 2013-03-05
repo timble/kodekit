@@ -226,7 +226,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         if($this->_unique && $table->count(array('slug' => $this->slug)))
         {
             $db    = $table->getDatabase();
-            $query = $db->getQuery()
+            $query = $this->getService('koowa:database.query.select')
                         ->select('slug')
                         ->where('slug', 'LIKE', $this->slug.'-%');
 

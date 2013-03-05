@@ -156,20 +156,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     }
 
 	/**
-	 * Get a database query object
-	 *
-	 * @return KDatabaseQuery
-	 */
-	public function getQuery(KConfig $config = null)
-	{
-		if(!isset($config)) {
-			$config = new KConfig(array('adapter' => $this));
-		}
-
-		return new KDatabaseQuery($config);
-	}
-
-	/**
 	 * Reconnect to the db
 	 *
 	 * @return  KDatabaseAdapterAbstract

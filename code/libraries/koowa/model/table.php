@@ -183,7 +183,7 @@ class KModelTable extends KModelAbstract
 
                 if($this->_state->isUnique())
                 {
-                    $query = $this->getTable()->getDatabase()->getQuery();
+                	$query = $this->getService('koowa:database.query.select');
 
                     $this->_buildQueryColumns($query);
                     $this->_buildQueryFrom($query);
@@ -216,7 +216,7 @@ class KModelTable extends KModelAbstract
 
                 if(!$this->_state->isEmpty())
                 {
-                    $query = $this->getTable()->getDatabase()->getQuery();
+                	$query = $this->getService('koowa:database.query.select');
 
                     $this->_buildQueryColumns($query);
                     $this->_buildQueryFrom($query);
@@ -247,9 +247,8 @@ class KModelTable extends KModelAbstract
         {
             if($this->isConnected())
             {
-                //Excplicitly get a count query, build functions can then test if the
-                //query is a count query and decided how to build the query.
-                $query = $this->getTable()->getDatabase()->getQuery()->count();
+	            $query = $this->getService('koowa:database.query.select');
+	            $query->columns('COUNT(*)');
 
                 $this->_buildQueryFrom($query);
                 $this->_buildQueryJoins($query);

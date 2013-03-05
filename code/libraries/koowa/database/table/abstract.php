@@ -536,14 +536,14 @@ abstract class KDatabaseTableAbstract extends KObject
             $key    = $this->getIdentityColumn();
             $values = (array) $query;
 
-            $query = $this->_database->getQuery()
+            $query = $this->getService('koowa:database.query.select')
                         ->where($key, 'IN', $values);
         }
 
         if(is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query   = $this->_database->getQuery();
+            $query   = $this->getService('koowa:database.query.select');
 
             foreach($columns as $column => $value) {
                 $query->where($column, 'IN', $value);
@@ -636,8 +636,8 @@ abstract class KDatabaseTableAbstract extends KObject
         if(is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-
-            $query   = $this->_database->getQuery();
+            $query   = $this->getService('koowa:database.query.select');
+            
             foreach($columns as $column => $value) {
                 $query->where($column, '=', $value);
             }
@@ -645,7 +645,9 @@ abstract class KDatabaseTableAbstract extends KObject
 
         if($query instanceof KDatabaseQuery)
         {
-            $query->count();
+            if (!$query->columns) {
+                $query->columns('COUNT(*)');
+            }
 
             if(!count($query->from)) {
                 $query->from($this->getName().' AS tbl');
@@ -712,22 +714,23 @@ abstract class KDatabaseTableAbstract extends KObject
      */
     public function update( KDatabaseRowInterface $row)
     {
+        // Create query object.
+        $query = $this->getService('koowa:database.query.update')
+                      ->table($this->getBase());
+        
         //Create commandchain context
         $context = $this->getCommandContext();
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->data      = $row;
         $context->table     = $this->getBase();
-        $context->query     = null;
+        $context->query     = $query;
         $context->affected  = false;
 
         if($this->getCommandChain()->run('before.update', $context) !== false)
         {
-            //Create where statement
-            $query = $this->_database->getQuery();
-
             //@TODO : Gracefully handle error if not all primary keys are set in the row
             foreach($this->getPrimaryKey() as $key => $column) {
-                $query->where($column->name, '=', $this->filter(array($key => $context->data->$key), true));
+                $context->query->where($column->name, '=', $this->filter(array($key => $context->data->$key), true));
             }
 
             //Filter the data and remove unwanted columns
@@ -767,21 +770,23 @@ abstract class KDatabaseTableAbstract extends KObject
      */
     public function delete( KDatabaseRowInterface $row )
     {
+        // Create query object.
+        $query = $this->getService('koowa:database.query.delete')
+                      ->table($this->getBase());
+    	
         //Create commandchain context
         $context = $this->getCommandContext();
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->table     = $this->getBase();
         $context->data      = $row;
-        $context->query     = null;
+        $context->query     = $query;
         $context->affected  = false;
 
         if($this->getCommandChain()->run('before.delete', $context) !== false)
         {
-            $query = $this->_database->getQuery();
-
             //Create where statement
             foreach($this->getPrimaryKey() as $key => $column) {
-                $query->where($column->name, '=', $context->data->$key);
+                $context->query->where($column->name, '=', $context->data->$key);
             }
 
             //Execute the delete query

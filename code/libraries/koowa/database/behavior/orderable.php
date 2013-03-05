@@ -8,6 +8,7 @@
  */
 
 /**
+ * FIXME: Fix queries
  * Database Orderable Behavior
  *
  * @author		Johan Janssens <johan@nooku.org>
@@ -73,7 +74,8 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
 			$table = $this->getTable();
 			$db    = $table->getDatabase();
-			$query = $db->getQuery();
+			$query = $this->getService('koowa:database.query.update')
+			    ->table($table->getBase());
 
 			//Build the where query
 			$this->_buildQueryWhere($query);
@@ -119,7 +121,10 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
         $table  = $this->getTable();
         $db     = $table->getDatabase();
-        $query  = $db->getQuery();
+        $query = $this->getService('koowa:database.query.update')
+            ->table($table->getBase())
+            ->values('ordering = (@order := @order + 1)')
+            ->order('ordering', 'ASC');
 
         //Build the where query
         $this->_buildQueryWhere($query);
@@ -148,7 +153,10 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     {
         $table  = $this->getTable();
         $db     = $table->getDatabase();
-        $query  = $db->getQuery();
+        
+        $query = $this->getService('koowa:database.query.select')
+            ->columns('MAX(ordering)')
+            ->table($table->getName());
 
         $this->_buildQueryWhere($query);
 

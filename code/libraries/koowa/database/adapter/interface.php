@@ -18,13 +18,6 @@
 interface KDatabaseAdapterInterface
 {
 	/**
-	 * Get a database query object
-	 *
-	 * @return KDatabaseQuery
-	 */
-	public function getQuery(KConfig $config = null);
-
-	/**
 	 * Connect to the db
 	 *
 	 * @return  KDatabaseAdapterAbstract
