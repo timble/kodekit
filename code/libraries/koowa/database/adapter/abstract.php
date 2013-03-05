@@ -609,24 +609,31 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     public function quoteValue($value)
     {
-        if (is_array($value))
-        {
-            //Quote array values, not keys, then combine with commas.
-            foreach ($value as $k => $v) {
-                $value[$k] = $this->quoteValue($v);
-            }
-
-            $value = implode(', ', $value);
-        }
-        else
-        {
-            if(is_string($value) && !is_null($value)) {
-                $value = $this->_quoteValue($value);
-            }
-        }
-
-        return $value;
-    }
+    	if (is_array($value))
+    	{
+    		//Quote array values, not keys, then combine with commas.
+    		foreach ($value as &$v)
+    		{
+    			if (is_null($v)) {
+    				$v = 'NULL';
+    			} elseif (is_string($v)) {
+    				$v = $this->_quoteValue($v);
+    			}
+    		}
+    
+    		$value = implode(', ', $value);
+    	}
+    	else
+    	{
+    		if (is_null($value)) {
+    			$value = 'NULL';
+    		} elseif (is_string($value)) {
+    			$value = $this->_quoteValue($value);
+    		}
+    	}
+    
+    	return $value;
+    } 
     
     /**
      * Quotes a single identifier name (table, table alias, table column,
