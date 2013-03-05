@@ -67,14 +67,14 @@
  *     $url->path[] = 'another';
  *
  *     // and fetch it to a string.
- *     $new_url = $url->get();
+ *     $new_url = $url->toString();
  *
  *     // the $new_url string is as follows; notice how the format
  *     // is always applied to the last path-element.
  *     // /something/else/entirely/another.php?baz=zab&zim=gir#anchor
  *
  *     // Get the full URL to get the shceme and host
- *     $full_url = $url->get(true);
+ *     $full_url = $url->toString(true);
  *
  *     // the $full_url string is:
  *     // https://example.com/something/else/entirely/another.php?baz=zab&zim=gir#anchor
@@ -90,7 +90,7 @@ class KHttpUrl extends KObject
     /**
      * The url parts
      *
-     * @see get()
+     * @see toString()
      */
     const SCHEME   = 1;
     const USER     = 2;
@@ -203,7 +203,7 @@ class KHttpUrl extends KObject
 
         parent::__construct($config);
 
-        $this->set($config->url);
+        $this->fromString($config->url);
     }
 
     /**
@@ -260,7 +260,7 @@ class KHttpUrl extends KObject
      * @param integer A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @return  string
      */
-    public function get($parts = self::FULL)
+    public function toString($parts = self::FULL)
     {
         $url = '';
 
@@ -318,7 +318,7 @@ class KHttpUrl extends KObject
      * @param   string  url
      * @return  KHttpUrl
      */
-    public function set($url)
+    public function fromString($url)
     {
         if(!empty($url))
         {
@@ -425,12 +425,12 @@ class KHttpUrl extends KObject
     /**
      * Return a string representation of this url.
      *
-     * @see    get()
+     * @see    toString()
      * @return string
      */
     public function __toString()
     {
-        return $this->get(self::FULL);
+        return $this->toString(self::FULL);
     }
 
     /**
