@@ -71,8 +71,8 @@ class plgSystemKoowa extends JPlugin
         KServiceIdentifier::setApplication('site' , JPATH_SITE);
         KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
 
-        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
-		KService::setAlias('translator', 'com:default.translator');
+        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+		KService::setAlias('translator', 'com:koowa.translator');
 
 	    //Setup the request
 	    if (JFactory::getApplication()->getName() !== 'site') {
@@ -80,7 +80,7 @@ class plgSystemKoowa extends JPlugin
 	    }
 
 		//Load the koowa plugins
-		JPluginHelper::importPlugin('koowa', null, true, KService::get('com://admin/default.event.dispatcher'));
+		JPluginHelper::importPlugin('koowa', null, true, KService::get('com://admin/koowa.event.dispatcher'));
 
 	    //Bugfix : Set offset accoording to user's timezone
 		if(!JFactory::getUser()->guest)
@@ -91,7 +91,7 @@ class plgSystemKoowa extends JPlugin
 		}
 		
 		// Load language files for the framework
-		KService::get('com:default.translator')->loadLanguageFiles();
+		KService::get('com:koowa.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
 	}
