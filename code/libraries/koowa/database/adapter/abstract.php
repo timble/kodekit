@@ -318,63 +318,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	}
 
 	/**
-     * Preforms a show query
-     *
-     * @param	string|object  	A full SQL query to run. Data inside the query should be properly escaped.
-     * @param   integer			The fetch mode. Controls how the result will be returned to the caller. This
-     * 							value must be one of the KDatabase::FETCH_* constants.
-     * @return  mixed 			The return value of this function on success depends on the fetch type.
-     * 					    	In all cases, FALSE is returned on failure.
-     */
-	public function show($query, $mode = KDatabase::FETCH_ARRAY_LIST)
-	{
-		$context = $this->getCommandContext();
-		$context->query	 	= $query;
-		$context->operation = KDatabase::OPERATION_SHOW;
-		$context->mode		= $mode;
-
-		// Excute the insert operation
-		if($this->getCommandChain()->run('before.show', $context) !== false)
-		{
-			if($result = $this->execute( $context->query, KDatabase::RESULT_USE))
-			{
-				switch($context->mode)
-				{
-					case KDatabase::FETCH_ARRAY       :
-						$context->result = $this->_fetchArray($result);
-						break;
-
-					case KDatabase::FETCH_ARRAY_LIST  :
-						$context->result = $this->_fetchArrayList($result);
-						break;
-
-					case KDatabase::FETCH_FIELD       :
-						$context->result = $this->_fetchField($result);
-						break;
-
-					case KDatabase::FETCH_FIELD_LIST  :
-						$context->result = $this->_fetchFieldList($result);
-						break;
-
-					case KDatabase::FETCH_OBJECT      :
-						$context->result = $this->_fetchObject($result);
-						break;
-
-					case KDatabase::FETCH_OBJECT_LIST :
-						$context->result = $this->_fetchObjectList($result);
-						break;
-
-					default : $result->free();
-				}
-			}
-
-			$this->getCommandChain()->run('after.show', $context);
-		}
-
-		return KConfig::unbox($context->result);
-	}
-
-	/**
      * Inserts a row of data into a table.
      *
      * Automatically quotes the data values
