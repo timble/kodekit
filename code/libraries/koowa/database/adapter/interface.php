@@ -81,11 +81,10 @@ interface KDatabaseAdapterInterface
     /**
      * Lock a table.
      *
-     * @param  string  Base name of the table.
-     * @param  string  Real name of the table.
+     * @param  string  The name of the table
      * @return boolean True on success, false otherwise.
      */
-    public function lockTable($base, $name);
+    public function lockTable($table);
 
     /**
      * Unlock a table.

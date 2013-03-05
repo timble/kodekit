@@ -827,7 +827,7 @@ abstract class KDatabaseTableAbstract extends KObject
             if($this->isConnected())
             {
                 try {
-                    $context->result = $this->_database->lockTable($this->getBase(), $this->getName());
+                    $context->result = $this->_database->lockTable($context->table);
                 } catch(KDatabaseException $e) {
                     throw new KDatabaseTableException($e->getMessage());
                 }

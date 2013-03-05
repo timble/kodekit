@@ -247,57 +247,52 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		return $this->_table_schema[$table];
 	}
 
-    /**
-     * Lock a table.
-     *
-     * @param  string  Base name of the table.
-     * @param  string  Real name of the table.
-     * @return boolean True on success, false otherwise.
-     */
-    public function lockTable($base, $name)
-    {
-        $query = 'LOCK TABLES '.$this->quoteIdentifier($this->getTableNeedle().$base).' WRITE';
+	/**
+	 * Locks a table
+	 *
+	 * @param   string $table  The name of the table.
+	 * @return  boolean  TRUE on success, FALSE otherwise.
+	 */
+	public function lockTable($table)
+	{
+		$query = 'LOCK TABLES '.$this->quoteIdentifier($this->getTableNeedle().$table).' WRITE';
+	
+		// Create command chain context.
+		$context = $this->getCommandContext();
+		$context->table = $table;
+		$context->query = $query;
+	
+		if($this->getCommandChain()->run('before.lock', $context) !== false)
+		{
+			$context->result = $this->execute($context->query, KDatabase::RESULT_USE);
+			$this->getCommandChain()->run('after.lock', $context);
+		}
+	
+		return $context->result;
+	}
 
-        if($base != $name) {
-            $query .= ', '.$this->quoteIdentifier($this->getTableNeedle().$name).' READ';
-        }
-
-        // Create commandchain context.
-        $context = $this->getCommandContext();
-        $context->table = $base;
-        $context->query = $query;
-
-        if($this->getCommandChain()->run('before.locktable', $context) !== false)
-        {
-            $context->result = $this->execute($context->query, KDatabase::RESULT_USE);
-            $this->getCommandChain()->run('after.locktable', $context);
-        }
-
-        return $context->result;
-    }
-
-    /**
-     * Unlock a table.
-     *
-     * @return boolean True on success, false otherwise.
-     */
-    public function unlockTable()
-    {
-        $query = 'UNLOCK TABLES';
-
-        // Create commandchain context.
-        $context = $this->getCommandContext();
-        $context->table = $base;
-        $context->query = $query;
-
-        if($this->getCommandChain()->run('before.unlocktable', $context) !== false)
-        {
-            $context->result = $this->execute($context->query, KDatabase::RESULT_USE);
-            $this->getCommandChain()->run('after.unlocktable', $context);
-        }
-
-        return $context->result;
-    }
+	/**
+	 * Unlocks tables
+	 *
+	 * @return  boolean  TRUE on success, FALSE otherwise.
+	 */
+	public function unlockTable()
+	{
+		$query = 'UNLOCK TABLES';
+	
+		// Create command chain context.
+		$context = $this->getCommandContext();
+		$context->table = null;
+		$context->query = $query;
+	
+		if($this->getCommandChain()->run('before.unlock', $context) !== false)
+		{
+			$context->result = $this->execute($context->query, KDatabase::RESULT_USE);
+			$this->getCommandChain()->run('after.unlock', $context);
+		}
+	
+		return $context->result;
+	}
 
 	/**
 	 * Fetch the first field of the first row
