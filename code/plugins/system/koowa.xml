@@ -17,7 +17,7 @@
 
     <!--  Media -->
     <media folder="media">
-        <folder>com_default</folder>
+        <folder>com_koowa</folder>
         <folder>lib_koowa</folder>
     </media>
 
