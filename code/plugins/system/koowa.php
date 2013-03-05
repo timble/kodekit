@@ -21,9 +21,6 @@ class plgSystemKoowa extends JPlugin
 {
 	public function __construct($subject, $config = array())
 	{
-		// Turn off E_STRICT errors for now
-		error_reporting(error_reporting() & ~E_STRICT);
-		
 		// Check if database type is MySQLi
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
 		{
