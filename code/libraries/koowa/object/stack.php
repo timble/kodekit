@@ -55,8 +55,8 @@ class KObjectStack extends KObject implements Countable
      */
     public function push($object)
     {
-        if(!$object instanceof KObjectInterface) {
-            throw new \InvalidArgumentException('Object needs to extend from KObjectInterface');
+        if(!$object instanceof KObject) {
+            throw new InvalidArgumentException('Object needs to extend from KObject');
         }
 
         $this->_object_stack[] = $object;

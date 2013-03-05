@@ -52,8 +52,11 @@ class KCommandChain extends KObjectQueue
      * @param KConfig|null $config  An optional KConfig object with configuration options
      * @return KCommandChain
      */
-    public function __construct(KConfig $config)
+    public function __construct(KConfig $config = null)
     {
+		//If no config is passed create it
+        if(!isset($config)) $config = new KConfig();
+    	
         parent::__construct($config);
 
         $this->_break_condition = (boolean)$config->break_condition;
