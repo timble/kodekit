@@ -142,7 +142,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     		'charset'			=> 'UTF-8',
        	 	'table_prefix'  	=> 'jos_',
     	    'table_needle'		=> '#__',
-    		'command_chain' 	=>  new KCommandChain(),
+    		'command_chain' 	=> $this->getService('koowa:command.chain'),
     		'dispatch_events'   => true,
     		'enable_callbacks' 	=> false,
     		'connection'		=> null,
