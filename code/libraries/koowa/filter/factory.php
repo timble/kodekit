@@ -74,7 +74,7 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 		try
 		{
 			if(is_string($filter) && strpos($filter, '.') === false ) {
-				$filter = 'com:default.filter.'.trim($filter);
+				$filter = 'com:koowa.filter.'.trim($filter);
 			}
 
 			$filter = $this->getService($filter, $config);

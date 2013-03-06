@@ -632,7 +632,7 @@ Koowa.Overlay = new Class({
                     if(link.getAttribute('data-noasync') !== null) return;
                     link.addEvent('click', function(event){
                         event.stop();
-                        self.get(this.href, {tmpl:''});
+                        self.get(this.href, {format: 'overlay'});
                     });
                 });
                 
@@ -647,14 +647,14 @@ Koowa.Overlay = new Class({
                     new Koowa.Grid(grid);
                     
                     new Koowa.Controller.Grid({form: grid, ajaxify: true, transport: function(url, data, method){
-                        data += '&tmpl=';
+                        data += '&format=overlay';
                         this.send({url: url, data: data, method: method});
                     }.bind(this)});
                 }, this);
             
                 this.element.getElements('.-koowa-form').each(function(form){
                     new Koowa.Controller.Form({form: form, ajaxify: true, transport: function(url, data, method){
-                        data += '&tmpl=';
+                        data += '&format=overlay';
                         this.send({url: url, data: data, method: method});
                     }.bind(this)});
                 }, this);

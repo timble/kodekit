@@ -19,7 +19,7 @@ class KTemplateHelperTranslator extends KTemplateHelperAbstract
 {
     protected static $_translator;
     
-    public function translate($string, $parameters = array())
+    public function translate($string, array $parameters = array())
     {
 	    return $this->getTranslator()->translate($string, $parameters);
     }
