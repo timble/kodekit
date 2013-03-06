@@ -97,11 +97,12 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	 */
 	public function __construct(KConfig $config = null)
 	{
-		// Initialize the options
         parent::__construct($config);
 
         // Set the connection
-        $this->setConnection($config->connection);
+        if (isset($config->connection)) {
+            $this->setConnection($config->connection);
+        }
 
 		// Set the default charset. http://dev.mysql.com/doc/refman/5.1/en/charset-connection.html
 		if (!empty($config->charset)) {

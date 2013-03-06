@@ -17,12 +17,19 @@
  */
 class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 {
-	/**
-	 * Quote for named objects
-	 *
-	 * @var string
-	 */
-	protected $_identifier_quote = '`';
+    /**
+     * Quote for query identifiers
+     *
+     * @var string
+     */
+    protected $_identifier_quote = '`';
+
+    /**
+     * The database name of the active connection
+     *
+     * @var string
+     */
+    protected $_database;
 
 	/**
  	 * Map of native MySQL types to generic types used when reading
@@ -85,18 +92,11 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	);
 
 	/**
-	 * The database name of the active connection
-	 *
-	 * @var string
-	 */
-	protected $_database;
-
-	/**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param 	object 	An optional KConfig object with configuration options.
+     * @param   KConfig $config  An optional KConfig object with configuration options.
      * @return  void
      */
     protected function _initialize(KConfig $config)
