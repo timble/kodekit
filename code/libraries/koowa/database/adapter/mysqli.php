@@ -37,7 +37,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
  	 *
  	 * @var array
  	 */
- 	protected $_typemap = array(
+ 	protected $_type_map = array(
 
  	    // numeric
  	    'smallint'          => 'int',

@@ -171,6 +171,17 @@ abstract class KDatabaseTableAbstract extends KObject
     
     	return $this->_database;
     }    
+    
+    /**
+     * Gets the database adapter
+     *
+     * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
+     * @return KDatabaseAdapterInterface
+     */
+    public function getAdapter()
+    {
+    	return $this->getDatabase();
+    }
 
     /**
      * Set the database adapter
@@ -182,6 +193,17 @@ abstract class KDatabaseTableAbstract extends KObject
     {
         $this->_database = $database;
         return $this;
+    }
+    
+    /**
+     * Set the database adapter
+     *
+     * @param   KDatabaseAdapterInterface $adapter
+     * @return  KDatabaseTableAbstract
+     */
+    public function setAdapter(KDatabaseAdapterInterface $database)
+    {
+    	return $this->setDatabase();
     }
 
 	/**
