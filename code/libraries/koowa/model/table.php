@@ -290,7 +290,7 @@ class KModelTable extends KModelAbstract
     /**
      * Builds a WHERE clause for the query
      */
-    protected function _buildQueryWhere(KDatabaseQuery $query)
+    protected function _buildQueryWhere(KDatabaseQuerySelect $query)
     {
         //Get only the unique states
         $states = $this->_state->getData(true);
