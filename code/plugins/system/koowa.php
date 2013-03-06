@@ -45,7 +45,10 @@ class plgSystemKoowa extends JPlugin
 		// This happens when the component does not supply an output at all
 		if (class_exists('JToolbarHelper')) {
 			JToolbarHelper::title('');
-		}
+        // 3.0+ bug that sometimes don't have the JToolbarHelper available
+		} else {
+            JLoader::register('JToolBarHelper', JPATH_ADMINISTRATOR . '/includes/toolbar.php');
+        }
 
 		//Set constants
 		define('KDEBUG', JDEBUG);
