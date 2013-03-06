@@ -352,7 +352,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * @param KServiceIdentifier|string $identifier
      * @param KConfig|array $config 
      */
-    public function getTranslator($identifier, $config = array()) {
+    public function getTranslator($identifier, $config = array()) 
+    {
         if (is_string($identifier)) {
             $translator = new KServiceIdentifier($identifier);
         }
@@ -371,8 +372,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
             $translator->path = array();
             $translator->name = 'translator';
         }
-        
-        
     
         return $this->getService($translator);
     }
