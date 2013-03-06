@@ -36,21 +36,26 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
 		return $methods;
 	}
-
+	
 	/**
 	 * Override to add a custom WHERE clause
 	 *
 	 * <code>
-	 * 	   $query->where('category_id', '=', $this->id);
+	 * 	   $query->where('category_id = :category_id')->bind(array('category_id' => $this->id));
 	 * </code>
 	 *
-	 * @param 	KDatabaseQuery $query
+	 * @param 	KDatabaseQuerySelect $query
 	 * @return  void
 	 */
-	public function _buildQueryWhere(KDatabaseQuery $query)
+	public function _buildQueryWhere($query)
 	{
-
-	}
+		if(!$query instanceof KDatabaseQuerySelect && !$query instanceof KDatabaseQueryUpdate)
+		{
+			throw new InvalidArgumentException(
+				'Query must be an instance of KDatabaseQuerySelect or KDatabaseQueryUpdate'
+			);
+		}
+	}	
 
 	/**
 	 * Move the row up or down in the ordering
@@ -80,22 +85,22 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			//Build the where query
 			$this->_buildQueryWhere($query);
 
-			$update =  'UPDATE `'.$db->getTableNeedle().$table->getBase().'` ';
 			if($change < 0)
 			{
-				$update .= 'SET ordering = ordering+1 ';
-				$query->where('ordering', '>=', $new)
-					  ->where('ordering', '<', $old);
+				$query->values('ordering = ordering + 1')
+					->where('ordering >= :new')
+					->where('ordering <  :old')
+					->bind(array('new' => $new, 'old' => $old));
 			}
 			else
 			{
-				$update .= 'SET ordering = ordering-1 ';
-				$query->where('ordering', '>', $old)
-					  ->where('ordering', '<=', $new);
+				$query->values('ordering = ordering - 1')
+				->where('ordering >  :new')
+				->where('ordering <= :old')
+				->bind(array('new' => $new, 'old' => $old));
 			}
 
-			$update .= (string) $query;
-			$db->execute($update);
+			$table->getAdapter()->update($query);
 
 			$this->ordering = $new;
 			$this->save();
@@ -121,6 +126,8 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
         $table  = $this->getTable();
         $db     = $table->getDatabase();
+        $db->execute('SET @order = '.$base);
+        
         $query = $this->getService('koowa:database.query.update')
             ->table($table->getBase())
             ->values('ordering = (@order := @order + 1)')
@@ -129,17 +136,11 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         //Build the where query
         $this->_buildQueryWhere($query);
 
-        if ($base)  {
-            $query->where('ordering', '>=', (int) $base);
+        if ($base) {
+            $query->where('ordering >= :ordering')->bind(array(':ordering' => $base));
         }
-
-        $db->execute("SET @order = $base");
-        $db->execute(
-             'UPDATE '.$db->getTableNeedle().$table->getBase().' '
-            .'SET ordering = (@order := @order + 1) '
-            .(string) $query.' '
-            .'ORDER BY ordering ASC'
-        );
+        
+        $db->update($query);
 
         return $this;
     }
@@ -160,11 +161,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
         $this->_buildQueryWhere($query);
 
-        $select = 'SELECT MAX(ordering) FROM `'.$db->getTableNeedle().$table->getName().'`';
-        $select .= (string) $query;
-
-        return  (int) $db->select($select, KDatabase::FETCH_FIELD);
-
+        return (int) $db->select($query, KDatabase::FETCH_FIELD);
     }
 
  	/**
@@ -179,13 +176,11 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     {
         if(isset($this->ordering))
         {
-            $max = $this->getMaxOrdering();
-
-            if ($this->ordering <= 0) {
-                $this->ordering = $max + 1;
+            if($this->ordering <= 0) {
+                $this->ordering = $this->getMaxOrdering() + 1;
             } else {
                 $this->reorder($this->ordering);
-            }
+            } 
         }
     }
 
