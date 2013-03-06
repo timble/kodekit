@@ -152,7 +152,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Create a sluggable filter
      *
-     * @return KFilterInterface
+     * @return void
      */
     protected function _createFilter()
     {
