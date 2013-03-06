@@ -75,7 +75,7 @@ abstract class KDatabaseTableAbstract extends KObject
         $this->_name        = $config->name;
         $this->_base        = $config->base;
         $this->_database    = $config->database;
-
+        
         //Check if the table exists
         if(!$info = $this->getSchema()) {
             throw new KDatabaseTableException('Table '.$this->_name.' does not exist');
@@ -152,25 +152,12 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Gets the database adapter
      *
-     * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
      * @return KDatabaseAdapterInterface
      */
     public function getDatabase()
     {
-    	if(!$this->_database instanceof KDatabaseAdapterInterface)
-    	{
-    		$this->_database = $this->getService($this->_database);
-    
-    		if(!$this->_database instanceof KDatabaseAdapterInterface)
-    		{
-    			throw new UnexpectedValueException(
-    					'Adapter: '.get_class($this->_database).' does not implement KDatabaseAdapterInterface'
-    			);
-    		}
-    	}
-    
-    	return $this->_database;
-    }    
+        return $this->_database;
+    }
     
     /**
      * Gets the database adapter
