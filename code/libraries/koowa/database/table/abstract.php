@@ -653,26 +653,19 @@ abstract class KDatabaseTableAbstract extends KObject
             {
                 case KDatabase::FETCH_ROW    :
                 {
-                    if (isset($data) && !empty($data))
-                    {
-                        $options['data'] = $data;
-                        $options['new'] = false;
-                        $options['status'] = KDatabase::STATUS_LOADED;
+                    $context->data = $this->getRow();
+                    if(isset($data) && !empty($data)) {
+                       $context->data->setData($data, false)->setStatus(KDatabase::STATUS_LOADED);
                     }
-
-                    $context->data = $this->getRow($options);
                     break;
                 }
 
                 case KDatabase::FETCH_ROWSET :
                 {
-                    if (isset($data) && !empty($data))
-                    {
-                        $options['data'] = $data;
-                        $options['new'] = false;
+                    $context->data = $this->getRowset();
+                    if(isset($data) && !empty($data)) {
+                        $context->data->addData($data, false);
                     }
-
-                    $context->data = $this->getRowset($options);
                     break;
                 }
 
