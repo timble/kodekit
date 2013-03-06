@@ -94,18 +94,17 @@ interface KDatabaseAdapterInterface
     public function unlockTable();
 
 	/**
-     * Preforms a select query
-     *
-     * Use for SELECT and anything that returns rows.
-     *
-     * @param	string  	A full SQL query to run. Data inside the query should be properly escaped.
-     * @param	integer 	The result maode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
-     * 						depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
-     * 						use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
+     * Perform a select query.
+     * 
+     * @param	string  	A full SQL query to run. Data inside the query should be properly escaped. 
+     * @param	integer 	The result maode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE 
+     * 						depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you 
+     * 						use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync 
      * 						unless you free the result first.
+     * @param 	string 		The column name of the index to use.
      * @return  mixed 		If successfull returns a result object otherwise FALSE
      */
-	public function select($sql, $mode = KDatabase::RESULT_STORE);
+	public function select(KDatabaseQueryInterface $query, $mode = KDatabase::RESULT_STORE, $key = '');
 
 	/**
      * Inserts a row of data into a table.
