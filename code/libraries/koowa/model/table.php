@@ -265,24 +265,24 @@ class KModelTable extends KModelAbstract
     /**
      * Builds SELECT columns list for the query
      */
-    protected function _buildQueryColumns(KDatabaseQuery $query)
+    protected function _buildQueryColumns(KDatabaseQuerySelect $query)
     {
-        $query->select(array('tbl.*'));
+        $query->columns('tbl.*');
     }
-
+    
     /**
      * Builds FROM tables list for the query
      */
-    protected function _buildQueryFrom(KDatabaseQuery $query)
+    protected function _buildQueryTable(KDatabaseQuerySelect $query)
     {
         $name = $this->getTable()->getName();
-        $query->from($name.' AS tbl');
+        $query->table(array('tbl' => $name));
     }
 
     /**
      * Builds LEFT JOINS clauses for the query
      */
-    protected function _buildQueryJoins(KDatabaseQuery $query)
+    protected function _buildQueryJoins(KDatabaseQuerySelect $query)
     {
 
     }
@@ -300,8 +300,10 @@ class KModelTable extends KModelAbstract
             $states = $this->getTable()->mapColumns($states);
             foreach($states as $key => $value)
             {
-                if(isset($value)) {
-                    $query->where('tbl.'.$key, 'IN', $value);
+                if(isset($value)) 
+                {
+                    $query->where('tbl.'.$key.' '.(is_array($value) ? 'IN' : '=').' :'.$key)
+                           ->bind(array($key => $value));
                 }
             }
         }
@@ -310,7 +312,7 @@ class KModelTable extends KModelAbstract
     /**
      * Builds a GROUP BY clause for the query
      */
-    protected function _buildQueryGroup(KDatabaseQuery $query)
+    protected function _buildQueryGroup(KDatabaseQuerySelect $query)
     {
 
     }
@@ -318,15 +320,15 @@ class KModelTable extends KModelAbstract
     /**
      * Builds a HAVING clause for the query
      */
-    protected function _buildQueryHaving(KDatabaseQuery $query)
+    protected function _buildQueryHaving(KDatabaseQuerySelect $query)
     {
 
     }
 
     /**
-     * Builds a generic ORDER BY clasue based on the model's state
+     * Builds a generic ORDER BY clause based on the model's state
      */
-    protected function _buildQueryOrder(KDatabaseQuery $query)
+    protected function _buildQueryOrder(KDatabaseQuerySelect $query)
     {
         $sort       = $this->_state->sort;
         $direction  = strtoupper($this->_state->direction);
@@ -343,7 +345,7 @@ class KModelTable extends KModelAbstract
     /**
      * Builds LIMIT clause for the query
      */
-    protected function _buildQueryLimit(KDatabaseQuery $query)
+    protected function _buildQueryLimit(KDatabaseQuerySelect $query)
     {
         $limit = $this->_state->limit;
 
