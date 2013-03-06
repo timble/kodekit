@@ -185,12 +185,12 @@ class KModelTable extends KModelAbstract
                 {
                 	$query = $this->getService('koowa:database.query.select');
 
-                    $this->_buildQueryColumns($query);
-                    $this->_buildQueryFrom($query);
-                    $this->_buildQueryJoins($query);
-                    $this->_buildQueryWhere($query);
-                    $this->_buildQueryGroup($query);
-                    $this->_buildQueryHaving($query);
+                	$this->_buildQueryColumns($query);
+                	$this->_buildQueryTable($query);
+                	$this->_buildQueryJoins($query);
+                	$this->_buildQueryWhere($query);
+                	$this->_buildQueryGroup($query);
+                	$this->_buildQueryHaving($query);
                 }
 
                 $this->_item = $this->getTable()->select($query, KDatabase::FETCH_ROW);
@@ -218,14 +218,14 @@ class KModelTable extends KModelAbstract
                 {
                 	$query = $this->getService('koowa:database.query.select');
 
-                    $this->_buildQueryColumns($query);
-                    $this->_buildQueryFrom($query);
-                    $this->_buildQueryJoins($query);
-                    $this->_buildQueryWhere($query);
-                    $this->_buildQueryGroup($query);
-                    $this->_buildQueryHaving($query);
-                    $this->_buildQueryOrder($query);
-                    $this->_buildQueryLimit($query);
+                	$this->_buildQueryColumns($query);
+                	$this->_buildQueryTable($query);
+                	$this->_buildQueryJoins($query);
+                	$this->_buildQueryWhere($query);
+                	$this->_buildQueryGroup($query);
+                	$this->_buildQueryHaving($query);
+                	$this->_buildQueryOrder($query);
+                	$this->_buildQueryLimit($query);
                 }
 
                 $this->_list = $this->getTable()->select($query, KDatabase::FETCH_ROWSET);
@@ -250,9 +250,9 @@ class KModelTable extends KModelAbstract
 	            $query = $this->getService('koowa:database.query.select');
 	            $query->columns('COUNT(*)');
 
-                $this->_buildQueryFrom($query);
-                $this->_buildQueryJoins($query);
-                $this->_buildQueryWhere($query);
+	            $this->_buildQueryTable($query);
+	            $this->_buildQueryJoins($query);
+	            $this->_buildQueryWhere($query);
 
                 $total = $this->getTable()->count($query);
                 $this->_total = $total;
