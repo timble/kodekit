@@ -35,7 +35,11 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 	{
 		parent::__construct($config);
 
-		if(JFactory::getConfig()->getValue('config.caching')) {
+		$caching = version_compare(JVERSION, '3.0', 'ge')
+            ? JFactory::getConfig()->get('caching')
+            : JFactory::getConfig()->getValue('config.caching');
+
+	    if($caching) {
 	        $this->_cache = JFactory::getCache('template', 'output');
 		}
 	}
@@ -101,31 +105,32 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 	    return $result;
 	}
 
-    /**
-     * Parse the template
-     *
-     * This function implements a caching mechanism when reading the template. If the template cannot be found in the
-     * cache it will be filtered and stored in the cache. Otherwise it will be loaded from the cache and returned
-     * directly.
-     *
-     * @param string The template content to parse
-     * @return void
-     */
-    protected function _parse(&$content)
-    {
-        if(isset($this->_cache))
-        {
-            $identifier = md5($this->getPath());
+	/**
+	 * Parse the template
+	 *
+	 * This function implements a caching mechanism when reading the template. If
+	 * the tempplate cannot be found in the cache it will be filtered and stored in
+	 * the cache. Otherwise it will be loaded from the cache and returned directly.
+	 *
+	 * @return string	The filtered data
+	 */
+	public function parse()
+	{
+	    if(isset($this->_cache))
+	    {
+	        $identifier = md5($this->_path);
 
-            if (!$this->_cache->get($identifier))
-            {
-                parent::_parse($content);
+	        if (!$template = $this->_cache->get($identifier))
+	        {
+	            $template = parent::parse();
 
-                //Store the object in the cache
-                $this->_cache->store($content, $identifier);
-            }
-            else $content = $this->_cache->get($identifier);
-        }
-        else parent::_parse($content);
-    }
+	            //Store the object in the cache
+		   	    $this->_cache->store($template, $identifier);
+	        }
+
+	        return $template;
+	    }
+
+	    return parent::parse();
+	}
 }

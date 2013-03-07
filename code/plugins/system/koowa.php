@@ -21,48 +21,37 @@ class plgSystemKoowa extends JPlugin
 {
 	public function __construct($subject, $config = array())
 	{
-		// Turn off E_STRICT errors for now
-		error_reporting(error_reporting() & ~E_STRICT);
-		
-	    // Command line fixes for Joomla
-		if (PHP_SAPI === 'cli')
-		{
-			if (!isset($_SERVER['HTTP_HOST'])) {
-				$_SERVER['HTTP_HOST'] = '';
-			}
-
-			if (!isset($_SERVER['REQUEST_METHOD'])) {
-				$_SERVER['REQUEST_METHOD'] = '';
-			}
-		}
-
-	    // Check if Koowa is active
+		// Check if database type is MySQLi
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
 		{
-    		JError::raiseWarning(0, JText::_("Koowa plugin requires MySQLi Database Driver. Please change your database configuration settings to 'mysqli'"));
-    		return;
+			if (JFactory::getApplication()->getName() === 'administrator') 
+			{
+				$string = version_compare(JVERSION, '1.6', '<') ? 'mysqli' : 'MySQLi';
+				$link   = JRoute::_('index.php?option=com_config');
+				$error  = 'In order to use Joomlatools framework, your database type in Global Configuration should be set to <strong>%1$s</strong>. Please go to <a href="%2$s">Global Configuration</a> and in the \'Server\' tab change your Database Type to <strong>%1$s</strong>.';
+				JError::raiseWarning(0, sprintf(JText::_($error), $string, $link));
+			}
+			
+			return;
 		}
-
-	    //Safety Extender compatibility
-		if(extension_loaded('safeex') && strpos('tmpl', @ini_get('safeex.url_include_proto_whitelist')) === false)
-		{
-		    $whitelist = @ini_get('safeex.url_include_proto_whitelist');
-		    $whitelist = (strlen($whitelist) ? $whitelist . ',' : '') . 'tmpl';
-		    @ini_set('safeex.url_include_proto_whitelist', $whitelist);
- 		}
  		
  		// Set pcre.backtrack_limit to a larger value
  		// See: https://bugs.php.net/bug.php?id=40846
  		if (version_compare(PHP_VERSION, '5.3.6', '<=') && @ini_get('pcre.backtrack_limit') < 1000000) {
  		    @ini_set('pcre.backtrack_limit', 1000000);
  		}
+ 		
+		// 2.5.7+ bug - you always need to supply a toolbar title to avoid notices
+		// This happens when the component does not supply an output at all
+		if (class_exists('JToolbarHelper')) {
+			JToolbarHelper::title('');
+        // 3.0+ bug that sometimes don't have the JToolbarHelper available
+		} else {
+            JLoader::register('JToolBarHelper', JPATH_ADMINISTRATOR . '/includes/toolbar.php');
+        }
 
 		//Set constants
-		define('KDEBUG'      , JDEBUG);
-
-		//Set path definitions
-		define('JPATH_FILES' , JPATH_ROOT);
-		define('JPATH_IMAGES', JPATH_ROOT.DS.'images');
+		define('KDEBUG', JDEBUG);
 
 		//Set exception handler
 		set_exception_handler(array($this, 'exceptionHandler'));
@@ -85,8 +74,8 @@ class plgSystemKoowa extends JPlugin
         KServiceIdentifier::setApplication('site' , JPATH_SITE);
         KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
 
-        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
-		KService::setAlias('translator', 'com:default.translator');
+        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+		KService::setAlias('translator', 'com:koowa.translator');
 
 	    //Setup the request
 	    if (JFactory::getApplication()->getName() !== 'site') {
@@ -94,7 +83,7 @@ class plgSystemKoowa extends JPlugin
 	    }
 
 		//Load the koowa plugins
-		JPluginHelper::importPlugin('koowa', null, true, KService::get('com://admin/default.event.dispatcher'));
+		JPluginHelper::importPlugin('koowa', null, true);
 
 	    //Bugfix : Set offset accoording to user's timezone
 		if(!JFactory::getUser()->guest)
@@ -105,90 +94,13 @@ class plgSystemKoowa extends JPlugin
 		}
 		
 		// Load language files for the framework
-		KService::get('com:default.translator')->loadLanguageFiles();
+		KService::get('com:koowa.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
 	}
-
-	/**
-	 * On after intitialse event handler
-	 *
-	 * This functions implements HTTP Basic authentication support
-	 *
-	 * @return void
-	 */
-	public function onAfterInitialise()
-	{
-	    /*
-	     * Try to log the user in
-	     *
-	     * If the request contains authorization information we try to log the user in
-	     */
-	    if($this->params->get('auth_basic', 0) && JFactory::getUser()->guest) {
-	        $this->_authenticateUser();
-	    }
-
-	    /*
-	     * Reset the user and token
-	     *
-	     * In case another plugin have logged in after we initialized we need to reset the token and user object
-	     * One plugin that could cause that, are the Remember Me plugin
-	     */
-	     if(!JFactory::getUser()->guest) {
-	         KRequest::set('request._token', JUtility::getToken());
-	     }
-
-	     /*
-	      * TODO: use a --koowa flag here
-	     * Dispatch the default dispatcher
-	     *
-	     * If we are running in CLI mode bypass the default Joomla executition chain and dispatch the default
-	     * dispatcher.
-	     */
-	    if (PHP_SAPI === 'cli')
-	    {
-	    	$url = null;
-	    	foreach ($_SERVER['argv'] as $arg)
-	    	{
-	    		if (strpos($arg, '--url') === 0)
-	    		{
-	    			$url = str_replace('--url=', '', $arg);
-	    			if (strpos($url, '?') === false) {
-	    				$url = '?'.$url;
-	    			}
-	    			break;
-	    		}
-	    	}
-
-	    	if (!empty($url))
-	    	{
-	    		$component = 'default';
-	    		$url = KService::get('koowa:http.url', array('url' => $url));
-    			if (!empty($url->query['option'])) {
-    				$component = substr($url->query['option'], 4);
-    			}
-
-	    		// Thanks Joomla. We will take it from here.
-	    		echo KService::get('com:'.$component.'.dispatcher.cli')->dispatch();
-	    		exit(0);
-	    	}
-	    }
-	}
 	
-	/**
-	 * Reset the JDocument object to the proper format if it comes from the HTTP accept header
-	 */
 	public function onAfterRoute()
 	{
-    	if(!KRequest::has('request.format'))
-    	{
-    		$format = KRequest::format();
-
-    		// Reset the document per the Koowa format
-    		if ($format) {
-    			$this->_resetDocument($format);
-    		}
-    	}
 	}
 	
 	/**
@@ -227,8 +139,7 @@ class plgSystemKoowa extends JPlugin
 	public function exceptionHandler($exception)
 	{
 		$this->_exception = $exception; //store the exception for later use
-
-		$this->errorHandler($exception);
+//$this->errorHandler($exception);
 		//Change the Joomla error handler to our own local handler and call it
 		JError::setErrorHandling( E_ERROR, 'callback', array($this,'errorHandler'));
 
@@ -253,65 +164,19 @@ class plgSystemKoowa extends JPlugin
 			'line'		=> $this->_exception->getLine()
 		));
 
-	    if(JFactory::getConfig()->getValue('config.debug')) {
+		$debug = version_compare(JVERSION, '3.0', 'ge')
+			? JFactory::getConfig()->get('debug')
+			: JFactory::getConfig()->getValue('config.debug');
+
+	    if($debug) {
 			$error->set('message', (string) $this->_exception);
 		} else {
 			$error->set('message', KHttpResponse::getMessage($error->get('code')));
-		}
-
-	    if($this->_exception->getCode() == KHttpResponse::UNAUTHORIZED) {
-		   header('WWW-Authenticate: Basic Realm="'.KRequest::base().'"');
 		}
 
 		//Make sure the buffers are cleared
 		while(@ob_get_clean());
 
 		JError::customErrorPage($error);
-	}
-
-	/**
-	 * Basic authentication support
-	 *
-	 * This functions tries to log the user in if authentication credentials are
-	 * present in the request.
-	 *
-	 * @return boolean	Returns TRUE is basic authentication was successful
-	 */
-	protected function _authenticateUser()
-	{
-	    if(KRequest::has('server.PHP_AUTH_USER') && KRequest::has('server.PHP_AUTH_PW'))
-	    {
-	        $credentials = array(
-	            'username' => KRequest::get('server.PHP_AUTH_USER', 'url'),
-	            'password' => KRequest::get('server.PHP_AUTH_PW'  , 'url'),
-	        );
-
-	        if(JFactory::getApplication()->login($credentials) !== true)
-	        {
-	            throw new KException('Login failed', KHttpResponse::UNAUTHORIZED);
-        	    return false;
-	        }
-
-	        //Force the token
-	        KRequest::set('request._token', JUtility::getToken());
-
-	        return true;
-	    }
-
-	    return false;
-	}
-
-	protected function _resetDocument($format)
-	{
-		$format_joomla = JRequest::getWord('format');
-	
-		JRequest::setVar('format', $format);
-
-		JFactory::$document = null;
-		JFactory::getDocument();
-	
-		if ($format_joomla) {
-			JRequest::setVar('format', $format_joomla);
-		}
 	}
 }

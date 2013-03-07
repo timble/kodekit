@@ -51,7 +51,7 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
 			{
 			    if(is_string($match) && strpos($match, '.') === false )
 		        {
-		            $path =  dirname($this->getTemplate()->getPath()).DS.$match.'.php';
+		            $path =  dirname($this->getTemplate()->getPath()).DIRECTORY_SEPARATOR.$match.'.php';
 		            $text = str_replace($matches[0][$key], '$this->loadFile('."'".$path."'", $text);
 		        }
 			}

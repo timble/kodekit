@@ -116,14 +116,14 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
 		$html = '';
 
 		$selected = '';
-		foreach(array(5, 10, 15, 20, 25, 30, 50, 100) as $value)
-    	{
-    		if($value == $config->limit) {
-    			$selected = $value;
-    		}
-    
-    		$options[] = $this->option(array('text' => $value, 'value' => $value));
-    	}
+		foreach(array(10 => 10, 20 => 20, 50 => 50, 100 => 100) as $value => $text)
+		{
+			if($value == $config->limit) {
+				$selected = $value;
+			}
+
+			$options[] = $this->option(array('text' => $text, 'value' => $value));
+		}
 
 		$html .= $this->optionlist(array('options' => $options, 'name' => 'limit', 'attribs' => $config->attribs, 'selected' => $selected));
 		return $html;

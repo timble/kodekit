@@ -125,24 +125,33 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
     protected function _commandOptions(KControllerToolbarCommand $command)
     {
         $option = $this->getIdentifier()->package;
+        $type   = 'modal';
+        $icon   = 'options';
         
-        if (version_compare(JVERSION, '1.6', '<')) {
-            $link = 'index.php?option=com_config&controller=component&component=com_%s&path=';
+        if (version_compare(JVERSION, '3.0', '>='))
+        {
+        	$type   = 'link';
+        	$return = urlencode(base64_encode(JUri::getInstance()));
+        	$link   = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
+        }
+        elseif (version_compare(JVERSION, '1.6', '<')) {
+            $link = 'index.php?option=com_config&controller=component&component=com_'.$option.'&path=';
             $icon = 'config';
         } else {
-            $link = 'index.php?option=com_config&view=component&component=com_%s&path=&tmpl=component';
-            $icon = 'options';
+            $link = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
         }
         
         $command->icon = sprintf('icon-32-%s', $icon);
 
         $command->append(array(
             'attribs' => array(
-                'href' => JRoute::_(sprintf($link, $option))
+                'href' => JRoute::_($link)
             )
         ));
-        
-        $this->_commandModal($command);
+
+        if ($type === 'modal') {
+        	$this->_commandModal($command);
+        }
     }
 
     /**

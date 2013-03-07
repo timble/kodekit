@@ -30,7 +30,7 @@ class ComDefaultTemplateHelperDate extends KTemplateHelperDate
     {
         $config = new KConfig($config);
         $config->append(array(
-            'gmt_offset' => $this->_getOffset()
+            'gmt_offset' => self::getOffset()
         ));
         
         // Joomla 1.6+ uses different date formats so DATE_FORMAT_LC1 is no longer usable
@@ -62,9 +62,11 @@ class ComDefaultTemplateHelperDate extends KTemplateHelperDate
     /**
      * Returns the offset as seconds based on the current timezone
      */
-    protected function _getOffset()
+    public static function getOffset()
     {
-        $offset = JFactory::getConfig()->getValue('config.offset');
+        $offset = version_compare(JVERSION, '3.0', 'ge')
+            ? JFactory::getConfig()->get('offset') 
+            : JFactory::getConfig()->getValue('config.offset');
         $seconds = 0;
         
         if (version_compare(JVERSION, '1.6', '<')) {

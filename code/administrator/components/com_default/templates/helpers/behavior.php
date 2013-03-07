@@ -30,7 +30,11 @@ class ComDefaultTemplateHelperBehavior extends KTemplateHelperBehavior
 		// Only load once
 		if (!isset(self::$_loaded['mootools']))
 		{
-		    JHTML::_('behavior.mootools', false);
+            if(version_compare(JVERSION, '3.0', 'ge')) {
+                JHTML::_('behavior.framework', true);
+            } else {
+                JHTML::_('behavior.mootools', false);
+            }
 			self::$_loaded['mootools'] = true;
 		}
 
