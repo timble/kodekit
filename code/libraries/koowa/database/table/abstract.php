@@ -718,7 +718,7 @@ abstract class KDatabaseTableAbstract extends KObject
     public function insert(KDatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getService('koowa:database.query.insert')
+        $query = $this->getService('lib://nooku/database.query.insert')
                       ->table($this->getBase());
 
         //Create commandchain context
@@ -821,7 +821,7 @@ abstract class KDatabaseTableAbstract extends KObject
     public function delete(KDatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getService('koowa:database.query.delete')
+        $query = $this->getService('lib://nooku/database.query.delete')
                       ->table($this->getBase());
 
         //Create commandchain context
