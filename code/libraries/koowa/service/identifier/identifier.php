@@ -252,7 +252,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
             if($property == 'application')
             {
                if(!isset(self::$_applications[$value])) {
-                    throw new KServiceIdentifierException('Unknown application: '.$value);
+                    throw new KServiceIdentifierException('Unknow application : '.$value);
                }
 
                $this->_basepath = self::$_applications[$value];
@@ -263,7 +263,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
             {
                 //Check the type
                 if(!isset(self::$_locators[$value]))  {
-                    throw new KServiceIdentifierException('Unknown type: '.$value);
+                    throw new KServiceIdentifierException('Unknow type : '.$value);
                 }
             }
 

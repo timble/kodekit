@@ -17,19 +17,12 @@
  */
 class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 {
-    /**
-     * Quote for query identifiers
-     *
-     * @var string
-     */
-    protected $_identifier_quote = '`';
-
-    /**
-     * The database name of the active connection
-     *
-     * @var string
-     */
-    protected $_database;
+	/**
+	 * Quote for named objects
+	 *
+	 * @var string
+	 */
+	protected $_name_quote = '`';
 
 	/**
  	 * Map of native MySQL types to generic types used when reading
@@ -37,7 +30,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
  	 *
  	 * @var array
  	 */
- 	protected $_type_map = array(
+ 	protected $_typemap = array(
 
  	    // numeric
  	    'smallint'          => 'int',
@@ -92,11 +85,18 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	);
 
 	/**
+	 * The database name of the active connection
+	 *
+	 * @var string
+	 */
+	protected $_database;
+
+	/**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config  An optional KConfig object with configuration options.
+     * @param 	object 	An optional KConfig object with configuration options.
      * @return  void
      */
     protected function _initialize(KConfig $config)
@@ -203,10 +203,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	public function getDatabase()
 	{
 	    if(!isset($this->_database)) {
-	        $query = $this->getService('koowa:database.query.select')
-	        	->columns('DATABASE');
-	        
-	        $this->_database = $this->select($query, KDatabase::FETCH_FIELD);
+	        $this->_database = $this->select("SELECT DATABASE()", KDatabase::FETCH_FIELD);
 	    }
 
 	    return $this->_database;
@@ -247,52 +244,57 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		return $this->_table_schema[$table];
 	}
 
-	/**
-	 * Locks a table
-	 *
-	 * @param   string $table  The name of the table.
-	 * @return  boolean  TRUE on success, FALSE otherwise.
-	 */
-	public function lockTable($table)
-	{
-		$query = 'LOCK TABLES '.$this->quoteIdentifier($this->getTableNeedle().$table).' WRITE';
-	
-		// Create command chain context.
-		$context = $this->getCommandContext();
-		$context->table = $table;
-		$context->query = $query;
-	
-		if($this->getCommandChain()->run('before.lock', $context) !== false)
-		{
-			$context->result = $this->execute($context->query, KDatabase::RESULT_USE);
-			$this->getCommandChain()->run('after.lock', $context);
-		}
-	
-		return $context->result;
-	}
+    /**
+     * Lock a table.
+     *
+     * @param  string  Base name of the table.
+     * @param  string  Real name of the table.
+     * @return boolean True on success, false otherwise.
+     */
+    public function lockTable($base, $name)
+    {
+        $query = 'LOCK TABLES '.$this->quoteName($this->getTableNeedle().$base).' WRITE';
 
-	/**
-	 * Unlocks tables
-	 *
-	 * @return  boolean  TRUE on success, FALSE otherwise.
-	 */
-	public function unlockTable()
-	{
-		$query = 'UNLOCK TABLES';
-	
-		// Create command chain context.
-		$context = $this->getCommandContext();
-		$context->table = null;
-		$context->query = $query;
-	
-		if($this->getCommandChain()->run('before.unlock', $context) !== false)
-		{
-			$context->result = $this->execute($context->query, KDatabase::RESULT_USE);
-			$this->getCommandChain()->run('after.unlock', $context);
-		}
-	
-		return $context->result;
-	}
+        if($base != $name) {
+            $query .= ', '.$this->quoteName($this->getTableNeedle().$name).' READ';
+        }
+
+        // Create commandchain context.
+        $context = $this->getCommandContext();
+        $context->table = $base;
+        $context->query = $query;
+
+        if($this->getCommandChain()->run('before.locktable', $context) !== false)
+        {
+            $context->result = $this->execute($context->query, KDatabase::RESULT_USE);
+            $this->getCommandChain()->run('after.locktable', $context);
+        }
+
+        return $context->result;
+    }
+
+    /**
+     * Unlock a table.
+     *
+     * @return boolean True on success, false otherwise.
+     */
+    public function unlockTable()
+    {
+        $query = 'UNLOCK TABLES';
+
+        // Create commandchain context.
+        $context = $this->getCommandContext();
+        $context->table = $base;
+        $context->query = $query;
+
+        if($this->getCommandChain()->run('before.unlocktable', $context) !== false)
+        {
+            $context->result = $this->execute($context->query, KDatabase::RESULT_USE);
+            $this->getCommandChain()->run('after.unlocktable', $context);
+        }
+
+        return $context->result;
+    }
 
 	/**
 	 * Fetch the first field of the first row
@@ -431,22 +433,21 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Retrieves the table schema information about the given tables
 	 *
-	 * @param   string $table  A table name.
-	 * @return  KDatabaseSchemaTable or null if the table doesn't exist.
+	 * @param 	array|string 	A table name or a list of table names
+	 * @return	DatabaseSchemaTable or NULL if the table doesn't exist
 	 */
 	protected function _fetchTableInfo($table)
 	{
-		$return = null;
-		$query  = $this->getService('koowa:database.query.show')
-			->show('TABLE STATUS')
-			->like(':like')
-			->bind(array('like' => $table));
-	
-		if($info = $this->select($query, KDatabase::FETCH_OBJECT)) {
-			$return = $this->_parseTableInfo($info);
+		$result = null;
+	    $sql    = $this->quoteValue($this->getTableNeedle().$table);
+
+		if($info  = $this->show( 'SHOW TABLE STATUS LIKE '.$sql, KDatabase::FETCH_OBJECT ))
+		{
+			//Parse the table raw schema data
+            $result = $this->_parseTableInfo($info);
 		}
-	
-		return $return;
+
+		return $result;
 	}
 
 	/**
@@ -457,25 +458,25 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 */
 	protected function _fetchTableColumns($table)
 	{
-		$return = array();
-		$query  = $this->getService('koowa:database.query.show')
-			->show('FULL COLUMNS')
-			->from($table);
-	
-		if($columns = $this->select($query, KDatabase::FETCH_OBJECT_LIST))
+	    $result = array();
+	    $sql    = $this->quoteName($this->getTableNeedle().$table);
+
+	    if($columns = $this->show( 'SHOW FULL COLUMNS FROM '.$sql, KDatabase::FETCH_OBJECT_LIST))
 		{
-			foreach($columns as $column)
+		    foreach($columns as $column)
 			{
-				// Set the table name in the raw info (MySQL doesn't add this).
+				//Set the table name in the raw info (MySQL doesn't add this)
 				$column->Table = $table;
-	
-				$column = $this->_parseColumnInfo($column, $table);
-				$return[$column->name] = $column;
+
+				//Parse the column raw schema data
+        		$column = $this->_parseColumnInfo($column, $table);
+
+        		$result[$column->name] = $column;
 			}
 		}
-	
-		return $return;
-	}	
+
+		return $result;
+	}
 
 	/**
 	 * Retrieves the index information about the given table
@@ -483,43 +484,41 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 * @param 	string 	A table name
 	 * @return	array 	An associative array of indexes by index name
 	 */
-    protected function _fetchTableIndexes($table)
-    {
-        $return = array();
-        $query  = $this->getService('koowa:database.query.show')
-            ->show('INDEX')
-            ->from($table);
+	protected function _fetchTableIndexes($table)
+	{
+	    $result = array();
+	    $sql    = $this->quoteName($this->getTableNeedle().$table);
 
-        if($indexes = $this->select($query, KDatabase::FETCH_OBJECT_LIST))
-        {
-            foreach($indexes as $index) {
-                $return[$index->Key_name][$index->Seq_in_index] = $index;
-            }
-        }
+	    if($indexes = $this->show('SHOW INDEX FROM '.$sql , KDatabase::FETCH_OBJECT_LIST))
+		{
+			foreach ($indexes as $index) {
+				$result[$index->Key_name][$index->Seq_in_index] = $index;
+			}
+		}
 
-        return $return;
-    }
+		return $result;
+	}
 
 	/**
-	 * Parses the raw table schema information
+	 * Parse the raw table schema information
 	 *
-	 * @param   object  $info  The raw table schema information.
-	 * @return  KDatabaseSchemaTable
+	 * @param  	object 	The raw table schema information
+	 * @return KDatabaseSchemaTable
 	 */
 	protected function _parseTableInfo($info)
 	{
-		$table              = $this->getService('koowa:database.schema.table');
-		$table->name        = $info->Name;
-		$table->engine      = $info->Engine;
-		$table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
-		$table->length      = $info->Data_length;
-		$table->autoinc     = $info->Auto_increment;
-		$table->collation   = $info->Collation;
-		$table->behaviors   = array();
-		$table->description = $info->Comment != 'VIEW' ? $info->Comment : '';
-	
-		return $table;
-	}	
+		$table = new KDatabaseSchemaTable;
+ 	   	$table->name        = $info->Name;
+ 	   	$table->engine      = $info->Engine;
+ 	   	$table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
+ 	    $table->length      = $info->Data_length;
+ 	    $table->autoinc     = $info->Auto_increment;
+ 	    $table->collation   = $info->Collation;
+ 	    $table->behaviors   = array();
+ 	    $table->description = $info->Comment != 'VIEW' ? $info->Comment : '';
+
+ 	    return $table;
+	}
 
 	/**
 	 * Parse the raw column schema information
@@ -527,53 +526,58 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 * @param  	object 	The raw column schema information
 	 * @return KDatabaseSchemaColumn
 	 */
-    protected function _parseColumnInfo($info)
-    {
-        list($type, $length, $scope) = $this->_parseColumnType($info->Type);
+	protected function _parseColumnInfo($info)
+	{
+		//Parse the filter information from the comment
+		$filter = array();
+		preg_match('#@Filter\("(.*)"\)#Ui', $info->Comment, $filter);
 
-        $column = $this->getService('koowa:database.schema.column');
-        $column->name     = $info->Field;
-        $column->type     = $type;
-        $column->length   = $length ? $length : null;
-        $column->scope    = $scope ? (int) $scope : null;
-        $column->default  = $info->Default;
-        $column->required = $info->Null != 'YES';
-        $column->primary  = $info->Key == 'PRI';
-        $column->unique   = ($info->Key == 'UNI' || $info->Key == 'PRI');
-        $column->autoinc  = strpos($info->Extra, 'auto_increment') !== false;
-        $column->filter   = $this->_type_map[$type];
+		list($type, $length, $scope) = $this->_parseColumnType($info->Type);
 
-        // Don't keep "size" for integers.
-        if(substr($type, -3) == 'int') {
-            $column->length = null;
-        }
+ 	   	$column = $this->getService('koowa:database.schema.column');
+ 	   	$column->name     = $info->Field;
+ 	   	$column->type     = $type;
+ 	   	$column->length   = ($length  ? $length  : null);
+ 	   	$column->scope    = ($scope ? (int) $scope : null);
+ 	   	$column->default  = $info->Default;
+ 	   	$column->required = (bool) ($info->Null != 'YES');
+ 	    $column->primary  = (bool) ($info->Key == 'PRI');
+ 	    $column->unique   = (bool) ($info->Key == 'UNI' || $info->Key == 'PRI');
+ 	    $column->autoinc  = (bool) (strpos($info->Extra, 'auto_increment') !== false);
+ 	    $column->filter   =  isset($filter[1]) ? explode(',', $filter[1]) : $this->_typemap[$type];
 
-        // Get the related fields if the column is primary key or part of a unique multi column index.
+ 	 	// Don't keep "size" for integers
+ 	    if (substr($type, -3) == 'int') {
+ 	       	$column->length = null;
+ 	   	}
+
+	    // Get the related fields if the column is primary key or part of a unqiue multi column index
         if($indexes = $this->_table_schema[$info->Table]->indexes)
         {
             foreach($indexes as $index)
             {
-                // We only deal with composite-unique indexes.
+                //We only deal with composite-unique indexes
                 if(count($index) > 1 && !$index[1]->Non_unique)
                 {
                     $fields = array();
-                    foreach($index as $field) {
-                        $fields[$field->Column_name] = $field->Column_name;
-                    }
+	                foreach($index as $field) {
+	                    $fields[$field->Column_name] = $field->Column_name;
+	                }
 
                     if(array_key_exists($column->name, $fields))
                     {
-                        unset($fields[$column->name]);
+	                    unset($fields[$column->name]);
                         $column->related = array_values($fields);
+
                         $column->unique = true;
-                        break;
-                    }
-                }
-            }
+		                break;
+	                }
+                 }
+             }
         }
 
-        return $column;
-    }
+ 	    return $column;
+	}
 
 	/**
 	 * Given a raw column specification, parse into datatype, length, and decimal scope.

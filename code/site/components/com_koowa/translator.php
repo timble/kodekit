@@ -102,22 +102,24 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     {
         $result = strtolower($string);
 
-        if (!empty($result)) 
-        {
-        	if (empty($this->_alias_catalogue[$result])) 
-        	{
-        		if (substr($string, 0, strlen($this->_prefix)) === $this->_prefix) {
-        			$key = $string;
-        		} else {
-        			$key = $this->getKey($string);
-        		}
-        		 
-        		$result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
-        	}
-        	else $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
+        if (empty($result)) {
+            $result = '';
+        }
+        elseif (isset($this->_alias_catalogue[$result])) {
+            $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
+        }
+        else {
+            if (substr($string, 0, strlen($this->_prefix)) === $this->_prefix) {
+                $key = $string;
+            } else {
+                $key = $this->getKey($string);
+            }
+            
+            $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
         }
         
-        // Joomla uses _QQ_ instead of " in language files and 1.5 does not handle the conversion itself
+        // Joomla uses _QQ_ instead of " in language files
+        // and 1.5 does not handle the conversion itself
         if (version_compare(JVERSION, '1.6', '<')) {
             $result = str_replace('"_QQ_"', '"', $result);
         }
@@ -352,8 +354,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * @param KServiceIdentifier|string $identifier
      * @param KConfig|array $config 
      */
-    public function getTranslator($identifier, $config = array()) 
-    {
+    public function getTranslator($identifier, $config = array()) {
         if (is_string($identifier)) {
             $translator = new KServiceIdentifier($identifier);
         }
@@ -372,6 +373,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
             $translator->path = array();
             $translator->name = 'translator';
         }
+        
+        
     
         return $this->getService($translator);
     }

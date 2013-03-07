@@ -18,6 +18,13 @@
 interface KDatabaseAdapterInterface
 {
 	/**
+	 * Get a database query object
+	 *
+	 * @return KDatabaseQuery
+	 */
+	public function getQuery(KConfig $config = null);
+
+	/**
 	 * Connect to the db
 	 *
 	 * @return  KDatabaseAdapterAbstract
@@ -81,10 +88,11 @@ interface KDatabaseAdapterInterface
     /**
      * Lock a table.
      *
-     * @param  string  The name of the table
+     * @param  string  Base name of the table.
+     * @param  string  Real name of the table.
      * @return boolean True on success, false otherwise.
      */
-    public function lockTable($table);
+    public function lockTable($base, $name);
 
     /**
      * Unlock a table.
@@ -94,58 +102,78 @@ interface KDatabaseAdapterInterface
     public function unlockTable();
 
 	/**
-     * Perform a select query.
-     * 
-     * @param	string  	A full SQL query to run. Data inside the query should be properly escaped. 
-     * @param	integer 	The result maode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE 
-     * 						depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you 
-     * 						use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync 
+     * Preforms a select query
+     *
+     * Use for SELECT and anything that returns rows.
+     *
+     * @param	string  	A full SQL query to run. Data inside the query should be properly escaped.
+     * @param	integer 	The result maode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
+     * 						depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
+     * 						use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
      * 						unless you free the result first.
-     * @param 	string 		The column name of the index to use.
      * @return  mixed 		If successfull returns a result object otherwise FALSE
      */
-	public function select(KDatabaseQueryInterface $query, $mode = KDatabase::RESULT_STORE, $key = '');
+	public function select($sql, $mode = KDatabase::RESULT_STORE);
 
 	/**
-	 * Insert a row of data into a table.
-	 *
-	 * @param KDatabaseQueryInsert The query object.
-	 * @return bool|integer  If the insert query was executed returns the number of rows updated, or 0 if
-	 * 					     no rows where updated, or -1 if an error occurred. Otherwise FALSE.
-	 */
-	public function insert(KDatabaseQueryInsert $query);
-	
+     * Preforms a show query
+     *
+     * @param	string|object  	A full SQL query to run. Data inside the query should be properly escaped.
+     * @param   integer			The fetch mode. Controls how the result will be returned to the caller. This
+     * 							value must be one of the KDatabase::FETCH_* constants.
+     * @return  mixed 			The return value of this function on success depends on the fetch type.
+     * 					    	In all cases, FALSE is returned on failure.
+     */
+	public function show($query, $mode = KDatabase::FETCH_ARRAY_LIST);
+
 	/**
-	 * Update a table with specified data.
-	 *
-	 * @param  KDatabaseQueryUpdate The query object.
-	 * @return integer  If the update query was executed returns the number of rows updated, or 0 if
-	 * 					no rows where updated, or -1 if an error occurred. Otherwise FALSE.
-	*/
-	public function update(KDatabaseQueryUpdate $query);
-	
+     * Inserts a row of data into a table.
+     *
+     * Automatically quotes the data values
+     *
+     * @param string  	The table to insert data into.
+     * @param array 	An associative array where the key is the colum name and
+     * 					the value is the value to insert for that column.
+     * @return integer  If successfull the new rows primary key value, false is no row was inserted.
+     */
+	public function insert($table, array $data);
+
 	/**
-	 * Delete rows from the table.
-	 *
-	 * @param  KDatabaseQueryDelete The query object.
-	 * @return integer 	Number of rows affected, or -1 if an error occured.
-	*/
-	public function delete(KDatabaseQueryDelete $query);
-	
+     * Updates a table with specified data based on a WHERE clause
+     *
+     * Automatically quotes the data values
+     *
+     * @param string 	The table to update
+     * @param array  	An associative array where the key is the column name and
+     * 				 	the value is the value to use ofr that column.
+     * @param mixed 	A sql string or KDatabaseQuery object to limit which rows are updated.
+     * @return integer  If successfull the Number of rows affected, otherwise false
+     */
+	public function update($table, array $data, $where = null);
+
+	/**
+     * Deletes rows from the table based on a WHERE clause.
+     *
+     * @param string The table to update
+     * @param mixed  A query string or a KDatabaseQuery object to limit which rows are updated.
+     * @return integer Number of rows affected
+     */
+	public function delete($table, $where);
+
 	/**
 	 * Use and other queries that don't return rows
 	 *
 	 * @param  string 	The query to run. Data inside the query should be properly escaped.
-	 * @param  integer 	The result made, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
-	 * 					depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
-	 * 					use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
-	 * 					unless you free the result first.
-	 * @throws \RuntimeException If the query could not be executed
+	 * @param  integer 	The result maode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
+     * 					depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
+     * 					use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
+     * 					unless you free the result first.
+	 * @throws KDatabaseException
 	 * @return boolean 	For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
 	 * 					For other successful queries  return TRUE.
-	*/
+	 */
 	public function execute($sql, $mode = KDatabase::RESULT_STORE );
-	
+
 	/**
 	 * Set the table prefix
 	 *
@@ -203,5 +231,5 @@ interface KDatabaseAdapterInterface
      *                      each element in the array as an identifier name.
      * @return string|array The quoted identifier name (or array of names).
      */
-    public function quoteIdentifier($spec);
+    public function quoteName($spec);
 }
