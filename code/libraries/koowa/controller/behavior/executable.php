@@ -94,7 +94,7 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
 		            if($context->action != 'options')
 		            {
 		                $context->setError(new KControllerException(
-		        			'Action '.ucfirst($action).' Not Allowed', KHttpResponse::METHOD_NOT_ALLOWED
+		        			'Action '.ucfirst($action).' Not Allowed', KHttpResponse::FORBIDDEN
 		                ));
 
 		                $context->header = array('Allow' =>  $context->caller->execute('options', $context));
