@@ -24,6 +24,33 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 	 */
 	protected static $_loaded = array();
 
+    /**
+     * Loads jQuery
+     *
+     * If debug config property is set, an uncompressed version will be included.
+     *
+     * @param array|KConfig $config
+     * @return string
+     */
+    public function jquery($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'debug' => false
+        ));
+        $html   = '';
+
+        if (!isset(self::$_loaded['jquery']))
+        {
+            $file  = 'jquery'.($config->debug ? '' : '.min').'.js';
+            $html .= '<script src="media://lib_koowa/js/'.$file.'" />';
+
+            self::$_loaded['jquery'] = true;
+        }
+
+        return $html;
+    }
+
 	/**
 	 * Method to load the mootools framework into the document head
 	 *
