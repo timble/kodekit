@@ -21,7 +21,10 @@ class plgSystemKoowa extends JPlugin
 {
 	public function __construct($subject, $config = array())
 	{
-		// Check if database type is MySQLi
+        // Turn off E_STRICT errors for now
+        error_reporting(error_reporting() & ~E_STRICT);
+
+        // Check if database type is MySQLi
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
 		{
 			if (JFactory::getApplication()->getName() === 'administrator') 
@@ -40,20 +43,15 @@ class plgSystemKoowa extends JPlugin
  		if (version_compare(PHP_VERSION, '5.3.6', '<=') && @ini_get('pcre.backtrack_limit') < 1000000) {
  		    @ini_set('pcre.backtrack_limit', 1000000);
  		}
- 		
-		// 2.5.7+ bug - you always need to supply a toolbar title to avoid notices
-		// This happens when the component does not supply an output at all
-		if (class_exists('JToolbarHelper')) {
-			JToolbarHelper::title('');
-        // 3.0+ bug that sometimes don't have the JToolbarHelper available
-		} else {
-            JLoader::register('JToolBarHelper', JPATH_ADMINISTRATOR . '/includes/toolbar.php');
-        }
 
 		//Set constants
 		define('KDEBUG', JDEBUG);
 
-		//Set exception handler
+        //Set path definitions
+        define('JPATH_FILES' , JPATH_ROOT);
+        define('JPATH_IMAGES', JPATH_ROOT.DS.'images');
+
+        //Set exception handler
 		set_exception_handler(array($this, 'exceptionHandler'));
 
 		// Koowa : setup
@@ -88,8 +86,13 @@ class plgSystemKoowa extends JPlugin
 	    //Bugfix : Set offset accoording to user's timezone
 		if(!JFactory::getUser()->guest)
 		{
-		   if($offset = JFactory::getUser()->getParam('timezone')) {
-		        JFactory::getConfig()->setValue('config.offset', $offset);
+		   if($offset = JFactory::getUser()->getParam('timezone'))
+           {
+               if (version_compare(JVERSION, '3.0', '>=')) {
+                   JFactory::getConfig()->set('offset', $offset);
+               } else {
+                   JFactory::getConfig()->setValue('config.offset', $offset);
+               }
 		   }
 		}
 		
@@ -97,10 +100,6 @@ class plgSystemKoowa extends JPlugin
 		KService::get('com:koowa.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
-	}
-	
-	public function onAfterRoute()
-	{
 	}
 	
 	/**
@@ -139,7 +138,7 @@ class plgSystemKoowa extends JPlugin
 	public function exceptionHandler($exception)
 	{
 		$this->_exception = $exception; //store the exception for later use
-//$this->errorHandler($exception);
+
 		//Change the Joomla error handler to our own local handler and call it
 		JError::setErrorHandling( E_ERROR, 'callback', array($this,'errorHandler'));
 
