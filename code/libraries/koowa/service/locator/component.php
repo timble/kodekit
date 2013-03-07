@@ -67,10 +67,10 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
 				$classname = 'Com'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
 			} elseif(class_exists('Com'.ucfirst($identifier->package).$path.'Default')) {
 				$classname = 'Com'.ucfirst($identifier->package).$path.'Default';
-			} elseif(class_exists('ComKoowa'.$path.ucfirst($identifier->name))) {
-				$classname = 'ComKoowa'.$path.ucfirst($identifier->name);
-			} elseif(class_exists('ComKoowa'.$path.'Default')) {
-				$classname = 'ComKoowa'.$path.'Default';
+			} elseif(class_exists('ComDefault'.$path.ucfirst($identifier->name))) {
+				$classname = 'ComDefault'.$path.ucfirst($identifier->name);
+			} elseif(class_exists('ComDefault'.$path.'Default')) {
+				$classname = 'ComDefault'.$path.'Default';
 			} elseif(class_exists( 'K'.$path.ucfirst($identifier->name))) {
 				$classname = 'K'.$path.ucfirst($identifier->name);
 			} elseif(class_exists('K'.$path.'Default')) {

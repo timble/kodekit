@@ -39,7 +39,7 @@ class KTemplateHelperTabs extends KTemplateHelperBehavior
         if (!isset(self::$_loaded['tabs']))
         {
             $html .= '<script src="media://lib_koowa/js/tabs.js" />';
-            self::$_loaded['tabs'] = true;
+            $this->_loaded['tabs'] = true;
         }
 
         $id      = strtolower($config->id);

@@ -67,7 +67,7 @@ class KMixinCommandchain extends KMixinAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'command_chain'     => KService::get('koowa:command.chain'),
+            'command_chain'     => new KCommandChain(),
             'event'				=> KService::get('koowa:command.event'),
             'dispatch_events'   => true,
             'event_priority'    => KCommand::PRIORITY_LOWEST,

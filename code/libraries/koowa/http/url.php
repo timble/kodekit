@@ -67,14 +67,14 @@
  *     $url->path[] = 'another';
  *
  *     // and fetch it to a string.
- *     $new_url = $url->toString();
+ *     $new_url = $url->get();
  *
  *     // the $new_url string is as follows; notice how the format
  *     // is always applied to the last path-element.
  *     // /something/else/entirely/another.php?baz=zab&zim=gir#anchor
  *
  *     // Get the full URL to get the shceme and host
- *     $full_url = $url->toString(true);
+ *     $full_url = $url->get(true);
  *
  *     // the $full_url string is:
  *     // https://example.com/something/else/entirely/another.php?baz=zab&zim=gir#anchor
@@ -90,7 +90,7 @@ class KHttpUrl extends KObject
     /**
      * The url parts
      *
-     * @see toString()
+     * @see get()
      */
     const SCHEME   = 1;
     const USER     = 2;
@@ -203,7 +203,7 @@ class KHttpUrl extends KObject
 
         parent::__construct($config);
 
-        $this->fromString($config->url);
+        $this->set($config->url);
     }
 
     /**
@@ -260,7 +260,7 @@ class KHttpUrl extends KObject
      * @param integer A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @return  string
      */
-    public function toString($parts = self::FULL)
+    public function get($parts = self::FULL)
     {
         $url = '';
 
@@ -318,7 +318,7 @@ class KHttpUrl extends KObject
      * @param   string  url
      * @return  KHttpUrl
      */
-    public function fromString($url)
+    public function set($url)
     {
         if(!empty($url))
         {
@@ -372,12 +372,6 @@ class KHttpUrl extends KObject
     public function getQuery($toArray = false)
     {
 		$result = $toArray ? $this->_query : http_build_query($this->_query, '', '&');
-		
-		if (!$toArray) {
-			// We replace the + used for spaces by http_build_query with the more standard %20.
-			$result = str_replace('+', '%20', $result);
-		}
-		
 		return $result;
     }
 
@@ -425,12 +419,12 @@ class KHttpUrl extends KObject
     /**
      * Return a string representation of this url.
      *
-     * @see    toString()
+     * @see    get()
      * @return string
      */
     public function __toString()
     {
-        return $this->toString(self::FULL);
+        return $this->get(self::FULL);
     }
 
     /**

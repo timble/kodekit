@@ -95,7 +95,7 @@ abstract class KControllerAbstract extends KObject
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'command_chain'     => $this->getService('koowa:command.chain'),
+            'command_chain'     =>  new KCommandChain(),
             'dispatch_events'   => true,
             'enable_callbacks'  => true,
             'dispatched'		=> false,

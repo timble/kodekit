@@ -39,7 +39,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	{
 		parent::__construct($config);
 
-		$this->_chain = $this->getService('koowa:filter.chain');
+	    $this->_chain = new KFilterChain();
 		$this->addFilter($this);
 	}
 

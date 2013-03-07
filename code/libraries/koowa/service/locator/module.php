@@ -70,14 +70,14 @@ class KServiceLocatorModule extends KServiceLocatorAbstract
 				$classname = 'Mod'.ucfirst($identifier->package).$mod_path.ucfirst($identifier->name);
 			} elseif(class_exists('Mod'.ucfirst($identifier->package).$mod_path.'Default')) {
 				$classname = 'Mod'.ucfirst($identifier->package).$mod_path.'Default';
-			} elseif(class_exists('ModKoowa'.$mod_path.ucfirst($identifier->name))) {
-				$classname = 'ModKoowa'.$mod_path.ucfirst($identifier->name);
-			} elseif(class_exists('ModKoowa'.$mod_path.'Default')) {
-				$classname = 'ModKoowa'.$mod_path.'Default';
-			} elseif(class_exists('ComKoowa'.$com_path.ucfirst($identifier->name))) {
-				$classname = 'ComKoowa'.$com_path.ucfirst($identifier->name);
-			} elseif(class_exists('ComKoowa'.$com_path.'Default')) {
-				$classname = 'ComKoowa'.$com_path.'Default';
+			} elseif(class_exists('ModDefault'.$mod_path.ucfirst($identifier->name))) {
+				$classname = 'ModDefault'.$mod_path.ucfirst($identifier->name);
+			} elseif(class_exists('ModDefault'.$mod_path.'Default')) {
+				$classname = 'ModDefault'.$mod_path.'Default';
+			} elseif(class_exists('ComDefault'.$com_path.ucfirst($identifier->name))) {
+				$classname = 'ComDefault'.$com_path.ucfirst($identifier->name);
+			} elseif(class_exists('ComDefault'.$com_path.'Default')) {
+				$classname = 'ComDefault'.$com_path.'Default';
 			} elseif(class_exists( 'K'.$com_path.ucfirst($identifier->name))) {
 				$classname = 'K'.$com_path.ucfirst($identifier->name);
 			} elseif(class_exists('K'.$com_path.'Default')) {

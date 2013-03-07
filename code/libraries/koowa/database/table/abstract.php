@@ -140,7 +140,7 @@ abstract class KDatabaseTableAbstract extends KObject
             'filters'           => array(),
             'behaviors'         => array(),
             'identity_column'   => null,
-            'command_chain'     => $this->getService('koowa:command.chain'),
+            'command_chain'     => new KCommandChain(),
             'dispatch_events'   => false,
             'enable_callbacks'  => false,
         ))->append(
