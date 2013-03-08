@@ -49,7 +49,7 @@ class plgSystemKoowa extends JPlugin
 
         //Set path definitions
         define('JPATH_FILES' , JPATH_ROOT);
-        define('JPATH_IMAGES', JPATH_ROOT.DS.'images');
+        define('JPATH_IMAGES', JPATH_ROOT.DIRECTORY_SEPARATOR.'images');
 
         //Set exception handler
 		set_exception_handler(array($this, 'exceptionHandler'));
