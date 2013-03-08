@@ -311,7 +311,11 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if(!isset(self::$_loaded['autocomplete']))
 		{
-		    $html .= '<script src="media://lib_koowa/js/autocomplete.js" />';
+            if(version_compare(JVERSION, '3.0', 'ge')) {
+                $html .= '<script src="media://lib_koowa/js/autocomplete-2.0.js" />';
+            } else {
+                $html .= '<script src="media://lib_koowa/js/autocomplete-1.0.js" />';
+            }
 		    $html .= '<script src="media://lib_koowa/js/patch.autocomplete.js" />';
 		    $html .= '<style src="media://lib_koowa/css/autocomplete.css" />';
 		}
