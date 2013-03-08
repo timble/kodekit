@@ -72,8 +72,8 @@ class plgSystemKoowa extends JPlugin
         KServiceIdentifier::setApplication('site' , JPATH_SITE);
         KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
 
-        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-		KService::setAlias('translator', 'com:koowa.translator');
+        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
+		KService::setAlias('translator', 'com:default.translator');
 
 	    //Setup the request
 	    if (JFactory::getApplication()->getName() !== 'site') {
@@ -97,7 +97,7 @@ class plgSystemKoowa extends JPlugin
 		}
 		
 		// Load language files for the framework
-		KService::get('com:koowa.translator')->loadLanguageFiles();
+		KService::get('com:default.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
 	}
