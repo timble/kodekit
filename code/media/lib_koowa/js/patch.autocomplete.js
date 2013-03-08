@@ -48,12 +48,16 @@ if(!this.Koowa) this.Koowa = {};
         	}
         });
     }
+
     
     Koowa.Autocomplete = new Class({
     
         Extends: Meio.Autocomplete.Select,
         
         options: {
+            valueFilter: function(data){
+                return data[this.options.syncName];
+            },
             requestOptions: {
                 formatResponse: function(response){
                     return response.items || response;
