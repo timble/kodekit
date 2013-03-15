@@ -257,6 +257,7 @@ abstract class KViewAbstract extends KObject
 			if(!isset($parts['view']))
 			{
 				$result[] = 'view='.$this->getName();
+                // TODO: layout_default does not exist anymore. take it out
 				if(!isset($parts['layout']) && $this->_layout != $this->_layout_default) {
 					$result[] = 'layout='.$this->getLayout();
 				}
