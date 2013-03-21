@@ -350,8 +350,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 			'date'	  => gmdate("M d Y H:i:s"),
 		    'name'    => '',
 		    'format'  => '%Y-%m-%d %H:%M:%S',
-		    'attribs' => array('size' => 25, 'maxlenght' => 19),
-		    'gmt_offset' => ComKoowaTemplateHelperDate::getOffset()
+		    'attribs' => array('size' => 25, 'maxlength' => 19)
  		));
  
         if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') { 

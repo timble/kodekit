@@ -56,14 +56,43 @@ class KViewFile extends KViewAbstract
     
     /**
      * Transport method
+     *
      * @var string
      */
 	public $transport;
 
     /**
+     * File path
+     *
+     * @var string
+     */
+    public $file;
+
+    /**
+     * File size in bytes
+     *
+     * @var int
+     */
+    public $filesize;
+
+    /**
+     * Start point when serving a file in chunks as bytes
+     *
+     * @var int
+     */
+    public $start_point;
+
+    /**
+     * End point when serving a file in chunks as bytes
+     *
+     * @var int
+     */
+    public $end_point;
+
+    /**
      * Constructor
      *
-     * @param   object  An optional KConfig object with configuration options
+     * @param KConfig $config An optional KConfig object with configuration options
      */
     public function __construct(KConfig $config)
     {
@@ -77,7 +106,7 @@ class KViewFile extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   object  An optional KConfig object with configuration options
+     * @param   KConfig $config An optional KConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KConfig $config)
@@ -97,6 +126,7 @@ class KViewFile extends KViewAbstract
     /**
      * Return the views output
      *
+     * @throws KViewException
      * @return void
      */
     public function display()
@@ -140,21 +170,25 @@ class KViewFile extends KViewAbstract
     	    throw new KViewException('Transport method is missing');
     	}
     	
-    	return $this->$transport();
-
-    	die;
+    	$this->$transport();
     }
-    
+
+    /**
+     * Reads the file by chunks and serves it
+     *
+     * Supports HTTP_RANGE headers
+     *
+     * @return int Number of bytes served
+     * @throws KViewException
+     */
     protected function _transportPhp()
     {
-        $this->filesize = $this->path ? filesize($this->path) : strlen($this->output);
-    
-        if (!$this->filesize) {
-            throw new KViewException('Cannot read file');
+        if (empty($this->filesize)) {
+            $this->filesize = $this->path ? filesize($this->path) : strlen($this->output);
         }
     
         $this->start_point = 0;
-        $this->end_point = $this->filesize-1;
+        $this->end_point = max($this->filesize-1, 0);
     
         $this->_setHeaders();
 
@@ -194,26 +228,24 @@ class KViewFile extends KViewAbstract
         else {
             $this->file = fopen($this->path, 'rb');
         }
-    
+
         if ($this->file === false) {
             throw new KViewException('Cannot open file');
         }
-    
-        $buffer     = '';
-        $cnt        = 0;
-    
+
         if ($this->start_point > 0) {
             fseek($this->file, $this->start_point);
         }
     
         //serve data chunk and update download progress log
-        $count = $this->start_point;
-        while (!feof($this->file) && $count <= $this->end_point)
+        $count = 0;
+        $start = $this->start_point;
+        while (!feof($this->file) && $start <= $this->end_point)
         {
             //calculate next chunk size
             $chunk_size = 1*(1024*1024);
-            if ($count + $chunk_size > $this->end_point + 1) {
-                $chunk_size = $this->end_point - $count + 1;
+            if ($start + $chunk_size > $this->end_point + 1) {
+                $chunk_size = $this->end_point - $start + 1;
             }
     
             //get data chunk
@@ -225,20 +257,27 @@ class KViewFile extends KViewAbstract
             echo $buffer;
             @ob_flush();
             flush();
-            $cnt += strlen($buffer);
+            $count += strlen($buffer);
         }
     
         if (!empty($this->file) && is_resource($this->file)) {
             fclose($this->file);
         }
     
-        return $cnt;
+        return $count;
     }
-    
+
+    /**
+     * Transports file using Apache Sendfile module
+     *
+     * @return void
+     * @throws KViewException
+     */
     protected function _transportApache()
     {
         if (!empty($this->output)) {
-            return $this->_transportPhp();
+            $this->_transportPhp();
+            return;
         }
         elseif (empty($this->path)) {
             throw new KViewException('File path is missing');
@@ -247,11 +286,18 @@ class KViewFile extends KViewAbstract
         $this->_setHeaders();
         header('X-Sendfile: '.$this->path);
     }
-    
+
+    /**
+     * Transports file using Nginx
+     *
+     * @return void
+     * @throws KViewException
+     */
     protected function _transportNginx()
     {
         if (!empty($this->output)) {
-            return $this->_transportPhp();
+            $this->_transportPhp();
+            return;
         }
         elseif (empty($this->path)) {
             throw new KViewException('File path is missing');
@@ -261,11 +307,18 @@ class KViewFile extends KViewAbstract
         $path = preg_replace('/'.preg_quote(JPATH_ROOT, '/').'/', '', $this->path, 1);
         header('X-Accel-Redirect: '.$path);
     }
-    
+
+    /**
+     * Transports file using Lighttpd
+     *
+     * @return void
+     * @throws KViewException
+     */
     protected function _transportLighttpd()
     {
         if (!empty($this->output)) {
-            return $this->_transportPhp();
+            $this->_transportPhp();
+            return;
         }
         elseif (empty($this->path)) {
             throw new KViewException('File path is missing');
@@ -275,7 +328,12 @@ class KViewFile extends KViewAbstract
         header('X-LIGHTTPD-send-file: '.$this->path); // For v1.4
         header('X-Sendfile: '.$this->path); // For v1.5
     }
-    
+
+    /**
+     * Set the appropriate headers for serving the file
+     *
+     * @return void
+     */
     protected function _setHeaders()
     {
         if ($this->mimetype) {
@@ -301,9 +359,9 @@ class KViewFile extends KViewAbstract
     }    
 
     /**
-     * Set the header disposition headers
+     * Set the disposition headers
      *
-     * @return KViewFile
+     * @return void
      */
     protected function _setDisposition()
     {
@@ -315,6 +373,5 @@ class KViewFile extends KViewAbstract
             header('Content-type: application/force-download');
             header('Content-Disposition: attachment; filename="'.$this->filename.'"');
         }
-        return $this;
     }
 }
