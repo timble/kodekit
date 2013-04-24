@@ -346,11 +346,12 @@ class KViewFile extends KViewAbstract
         header('Accept-Ranges: bytes');
     
         // Prevent caching
-        header("Pragma: no-store,no-cache");
-        header("Cache-Control: no-cache, no-store, must-revalidate, max-age=-1");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Expires: Mon, 14 Jul 1789 12:30:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        // Pragma and cache-control needs to be empty for IE on SSL.
+        // See: http://support.microsoft.com/default.aspx?scid=KB;EN-US;q316431
+        header('Pragma: ');
+        header('Cache-Control: ');
+        header('Expires: Mon, 14 Jul 1789 12:30:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
     
         if (!empty($this->filesize)) {
             header('Content-Length: '.$this->filesize);
