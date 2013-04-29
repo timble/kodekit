@@ -138,7 +138,7 @@ class plgSystemKoowa extends JPlugin
 	public function exceptionHandler($exception)
 	{
 		$this->_exception = $exception; //store the exception for later use
-var_dump($exception);die;
+
 		//$this->errorHandler($exception);
 		//Change the Joomla error handler to our own local handler and call it
 		JError::setErrorHandling( E_ERROR, 'callback', array($this,'errorHandler'));
