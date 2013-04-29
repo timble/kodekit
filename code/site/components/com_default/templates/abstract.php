@@ -17,7 +17,12 @@
  */
 abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 {
-	/**
+    /**
+     * Temporary directory
+     */
+    protected static $_temporary_directory;
+
+    /**
 	 * The cache object
 	 *
 	 * @var	JCache
@@ -131,5 +136,46 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
             else $content = $this->_cache->get($identifier);
         }
         else parent::_parse($content);
+    }
+
+    /**
+     * Returns a directory path for temporary files
+     *
+     * Additionally checks for Joomla tmp folder if the system directory is not writable
+     *
+     * @throws KTemplateException
+     * @return string Folder path
+     */
+    protected function _getTemporaryDirectory()
+    {
+        if (!self::$_temporary_directory)
+        {
+            $result     = false;
+            $candidates = array(
+                //ini_get('upload_tmp_dir'),
+                JPATH_ROOT.'/tmp'
+            );
+
+            if (function_exists('sys_get_temp_dir')) {
+                //array_unshift($candidates, sys_get_temp_dir());
+            }
+
+            foreach ($candidates as $folder)
+            {
+                if ($folder && @is_dir($folder) && is_writable($folder))
+                {
+                    $result = rtrim($folder, '\\/');
+                    break;
+                }
+            }
+
+            if ($result === false) {
+                throw new KTemplateException('Cannot found a writable temporary directory');
+            }
+
+            self::$_temporary_directory = $result;
+        }
+
+        return self::$_temporary_directory;
     }
 }
