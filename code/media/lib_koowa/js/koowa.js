@@ -20,7 +20,7 @@ if(!Koowa) var Koowa = {};
 Koowa.version = 0.7;
 
 //Legacy
-if(!window.$each) window.$each = Object.each;
+if(typeof window.$each === 'undefined') window.$each = Object.each;
 
 
 /* Section: onDomReady */
@@ -66,7 +66,7 @@ Koowa.Form = new Class({
             });
 
             //Legacy
-            if (!this.form.injectInside) this.form.injectInside = this.form.inject;
+            if (typeof this.form.injectInside === 'undefined') this.form.injectInside = this.form.inject;
 
             this.form.injectInside(document.id(document.body));
         }
@@ -80,7 +80,7 @@ Koowa.Form = new Class({
         });
 
         //Legacy
-        if (!elem.injectInside) elem.injectInside = elem.inject;
+        if (typeof elem.injectInside === 'undefined') elem.injectInside = elem.inject;
         
         elem.injectInside(this.form);
         return this;
@@ -519,7 +519,7 @@ Koowa.Controller.Grid = new Class({
         }
     
         //Legacy
-        if (!$merge) var $merge = Object.merge;
+        if (typeof window.$merge === 'undefined') window.$merge = Object.merge;
         
         var idQuery = Koowa.Grid.getIdQuery(),
             append = this.options.url.match(/\?/) ? '&' : '?',
