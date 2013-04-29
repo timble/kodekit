@@ -152,12 +152,12 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
         {
             $result     = false;
             $candidates = array(
-                //ini_get('upload_tmp_dir'),
+                ini_get('upload_tmp_dir'),
                 JPATH_ROOT.'/tmp'
             );
 
             if (function_exists('sys_get_temp_dir')) {
-                //array_unshift($candidates, sys_get_temp_dir());
+                array_unshift($candidates, sys_get_temp_dir());
             }
 
             foreach ($candidates as $folder)
@@ -170,7 +170,7 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
             }
 
             if ($result === false) {
-                throw new KTemplateException('Cannot found a writable temporary directory');
+                throw new KTemplateException('Cannot find a writable temporary directory');
             }
 
             self::$_temporary_directory = $result;
