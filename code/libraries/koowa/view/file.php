@@ -346,11 +346,24 @@ class KViewFile extends KViewAbstract
         header('Accept-Ranges: bytes');
     
         // Prevent caching
-        header("Pragma: no-store,no-cache");
-        header("Cache-Control: no-cache, no-store, must-revalidate, max-age=-1");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Expires: Mon, 14 Jul 1789 12:30:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        // Pragma and cache-control needs to be empty for IE on SSL.
+        // See: http://support.microsoft.com/default.aspx?scid=KB;EN-US;q316431
+        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? trim($_SERVER['HTTP_USER_AGENT']) : null;
+        if ($agent && preg_match('#(?:MSIE |Internet Explorer/)(?:[0-9.]+)#', $agent)
+                   && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        ) {
+            header('Pragma: ');
+            header('Cache-Control: ');
+        }
+        else
+        {
+            header('Pragma: no-store,no-cache');
+            header('Cache-Control: no-cache, no-store, must-revalidate, max-age=-1');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+
+        }
+        header('Expires: Mon, 14 Jul 1789 12:30:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
     
         if (!empty($this->filesize)) {
             header('Content-Length: '.$this->filesize);
