@@ -139,7 +139,9 @@ class plgSystemKoowa extends JPlugin
 	{
 		$this->_exception = $exception; //store the exception for later use
 
-		//$this->errorHandler($exception);
+		if ($exception instanceof KException || $exception instanceof JException) {
+            $this->errorHandler($exception);
+        }
 		//Change the Joomla error handler to our own local handler and call it
 		JError::setErrorHandling( E_ERROR, 'callback', array($this,'errorHandler'));
 
