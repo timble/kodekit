@@ -81,7 +81,11 @@ abstract class PlgKoowaDefault extends KEventListener
 				$this->_params = $config['params'];
 			} else {
 				$this->_params = new JRegistry;
-				$this->_params->loadString($config['params'], 'INI');
+                if (version_compare(JVERSION, '1.6', '<')) {
+                    $this->_params->loadINI($config['params']);
+                } else {
+                    $this->_params->loadString($config['params'], 'INI');
+                }
 			}
 		}
 
