@@ -19,8 +19,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class plgSystemKoowa extends JPlugin
 {
-    protected $_request_before_route = array();
-
 	public function __construct($subject, $config = array())
 	{
         // Turn off E_STRICT errors for now
@@ -105,17 +103,7 @@ class plgSystemKoowa extends JPlugin
 	}
 
     /**
-     * Save the initial request keys before routing to set them in $_GET afterwards
-     */
-    public function onAfterInitialise()
-    {
-        if (version_compare(JVERSION, '3.0', '>=') && JFactory::getApplication()->isSite()) {
-            $this->_request_before_route = array_keys(JFactory::getApplication()->input->getArray($_REQUEST));
-        }
-    }
-
-    /**
-     * Find the new request keys and set them in $_GET
+     * Re-run the routing and add returned keys to the $_GET request
      *
      * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
      */
@@ -123,13 +111,12 @@ class plgSystemKoowa extends JPlugin
     {
         if (version_compare(JVERSION, '3.0', '>=') && JFactory::getApplication()->isSite())
         {
-            $input = JFactory::getApplication()->input;
-            $request_after_route = array_keys($input->getArray($_REQUEST));
+            $uri = clone JURI::getInstance();
 
-            $new_keys = array_diff($request_after_route, $this->_request_before_route);
-            $values   = $input->getArray(array_fill_keys($new_keys, ''));
+            $router = JFactory::getApplication()->getRouter();
+            $result = $router->parse($uri);
 
-            foreach ($values as $key => $value) {
+            foreach ($result as $key => $value) {
                 KRequest::set('get.'.$key, $value);
             }
         }
