@@ -116,8 +116,11 @@ class plgSystemKoowa extends JPlugin
             $router = JFactory::getApplication()->getRouter();
             $result = $router->parse($uri);
 
-            foreach ($result as $key => $value) {
-                KRequest::set('get.'.$key, $value);
+            foreach ($result as $key => $value)
+            {
+                if (!KRequest::get('get.'.$key, 'raw')) {
+                    KRequest::set('get.'.$key, $value);
+                }
             }
         }
     }
