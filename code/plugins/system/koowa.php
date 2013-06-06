@@ -101,29 +101,6 @@ class plgSystemKoowa extends JPlugin
 
 		parent::__construct($subject, $config);
 	}
-
-    /**
-     * Re-run the routing and add returned keys to the $_GET request
-     *
-     * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
-     */
-    public function onAfterRoute()
-    {
-        if (version_compare(JVERSION, '3.0', '>=') && JFactory::getApplication()->isSite())
-        {
-            $uri = clone JURI::getInstance();
-
-            $router = JFactory::getApplication()->getRouter();
-            $result = $router->parse($uri);
-
-            foreach ($result as $key => $value)
-            {
-                if (!KRequest::get('get.'.$key, 'raw')) {
-                    KRequest::set('get.'.$key, $value);
-                }
-            }
-        }
-    }
 	
 	/**
 	 * Set the disposition to inline for JSON requests

@@ -27,6 +27,25 @@ class ComDefaultDispatcher extends KDispatcherDefault implements KServiceInstant
      */
     protected function _initialize(KConfig $config)
     {
+        /*
+         * Re-run the routing and add returned keys to the $_GET request
+         * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
+         */
+        if (version_compare(JVERSION, '3.0', '>=') && JFactory::getApplication()->isSite())
+        {
+            $uri = clone JURI::getInstance();
+
+            $router = JFactory::getApplication()->getRouter();
+            $result = $router->parse($uri);
+
+            foreach ($result as $key => $value)
+            {
+                if (!KRequest::get('get.'.$key, 'raw')) {
+                    KRequest::set('get.'.$key, $value);
+                }
+            }
+        }
+
         parent::_initialize($config);
 
         //Force the controller to the information found in the request
