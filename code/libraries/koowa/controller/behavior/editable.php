@@ -26,7 +26,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         parent::__construct($config);
 
-        if ($this->isDispatched() && KRequest::type() == 'HTTP')
+        if ($this->isDispatched() && KRequest::type() == 'HTTP' && KRequest::format() === 'html')
         {
             $this->registerCallback('before.read' , array($this, 'setReferrer'));
             $this->registerCallback('after.apply' , array($this, 'lockReferrer'));
