@@ -250,12 +250,11 @@ class KViewFile extends KViewAbstract
     
             //get data chunk
             $buffer = fread($this->file, $chunk_size);
-            if (!$buffer) {
+            if ($buffer === false) {
                 throw new KViewException('Could not read file');
             }
     
             echo $buffer;
-            @ob_flush();
             flush();
             $count += strlen($buffer);
         }
