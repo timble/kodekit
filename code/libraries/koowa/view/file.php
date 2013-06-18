@@ -90,6 +90,13 @@ class KViewFile extends KViewAbstract
     public $end_point;
 
     /**
+     * End the request by exiting in the display method if true
+     *
+     * @var boolean
+     */
+    public $end_request;
+
+    /**
      * Constructor
      *
      * @param KConfig $config An optional KConfig object with configuration options
@@ -117,7 +124,8 @@ class KViewFile extends KViewAbstract
             'path'        => '',
             'filename'    => $this->getIdentifier()->path[$count-1].'.'.$this->getIdentifier()->name,
             'disposition' => 'attachment',
-            'transport'   => 'php'
+            'transport'   => 'php',
+            'end_request' => true
         ));
 
         parent::_initialize($config);
@@ -171,6 +179,10 @@ class KViewFile extends KViewAbstract
     	}
     	
     	$this->$transport();
+
+        if ($this->end_request) {
+            exit;
+        }
     }
 
     /**
@@ -250,12 +262,11 @@ class KViewFile extends KViewAbstract
     
             //get data chunk
             $buffer = fread($this->file, $chunk_size);
-            if (!$buffer) {
+            if ($buffer === false) {
                 throw new KViewException('Could not read file');
             }
     
             echo $buffer;
-            @ob_flush();
             flush();
             $count += strlen($buffer);
         }
