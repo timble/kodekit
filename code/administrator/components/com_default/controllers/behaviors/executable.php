@@ -123,7 +123,9 @@ class ComDefaultControllerBehaviorExecutable extends KControllerBehaviorExecutab
             //Only check the token for PUT, DELETE and POST requests
             if(($method != KHttpRequest::GET) && ($method != KHttpRequest::OPTIONS))
             {
-                if( KRequest::token() !== JUtility::getToken()) {
+                $token = version_compare(JVERSION, '3.0', 'ge') ? JSession::getFormToken() : JUtility::getToken();
+
+                if( KRequest::token() !== $token) {
                     return false;
                 }
             }

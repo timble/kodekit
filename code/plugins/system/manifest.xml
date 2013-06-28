@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="system" method="upgrade" overwrite="true">
+    <name>System - EXTman</name>
+    <author>Joomlatools</author>
+    <creationDate>August 2012</creationDate>
+    <copyright>Copyright (C) 2012 Timble CVBA</copyright>
+    <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
+    <authorEmail>info@joomlatools.eu</authorEmail>
+    <authorUrl>www.joomlatools.com</authorUrl>
+    <version>1.0.2</version>
+    <description></description>
+
+    <!--  Files -->
+    <files folder="plugins/system">
+        <filename plugin="koowa">koowa.php</filename>
+    </files>
+
+    <!--  Media -->
+    <media folder="media">
+        <folder>com_default</folder>
+        <folder>lib_koowa</folder>
+    </media>
+
+    <params>
+		<param name="auth_basic" type="radio" default="0" label="Basic Authentication" description="If yes, basic authentication support will be enabled">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+
+	<config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="auth_basic" type="radio" default="0" label="Basic Authentication" description="If yes, basic authentication support will be enabled">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

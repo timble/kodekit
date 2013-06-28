@@ -37,9 +37,13 @@ class ComDefaultDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements 
 	{
 		parent::__construct($config);
 
-		if(JFactory::getConfig()->getValue('config.caching')) {
-	        $this->_cache = JFactory::getCache('database', 'output');
-		}
+        $cache = version_compare(JVERSION, '3.0', 'ge')
+            ? JFactory::getConfig()->get('caching')
+            : JFactory::getConfig()->getValue('config.caching');
+
+        if($cache) {
+            $this->_cache = JFactory::getCache('database', 'output');
+        }
 	}
 
 	/**

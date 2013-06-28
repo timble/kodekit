@@ -284,8 +284,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             'jquery'   => true,
 			'selector' => '.-koowa-form',
 		    'options'  => array(
-		        'scrollToErrorsOnChange' => true,
-		        'scrollToErrorsOnBlur'   => true
+		        'scrollToErrorsOnChange' => false,
+		        'scrollToErrorsOnBlur'   => false
 		    )
 		));
 
@@ -410,7 +410,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		    'name'    => '',
 		    'format'  => '%Y-%m-%d %H:%M:%S',
 		    'attribs' => array('size' => 25, 'maxlenght' => 19),
-		    'gmt_offset' => JFactory::getConfig()->getValue('config.offset') * 3600
+		    'gmt_offset' => ComKoowaTemplateHelperDate::getOffset()
  		));
  
         if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') { 

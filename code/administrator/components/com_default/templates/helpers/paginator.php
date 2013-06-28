@@ -41,23 +41,35 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
         $this->_initialize($config);
         
         $j15 = version_compare(JVERSION, '1.6', '<');
+        $j30 = version_compare(JVERSION, '3.0', '>=');
         
         $html = '';
 
         if ($j15) {
             $html .= '<div class="container">';
         }
-        
-        $html  .= '<div class="pagination">';
+
+
+        if ($j30) {
+            $html .= '<div class="pagination pagination-toolbar">';
+        } else {
+            $html .= '<div class="pagination pagination-legacy">';
+        }
         if($config->show_limit) {
             $html .= '<div class="limit">'.$this->translate('Display NUM').' '.$this->limit($config).'</div>';
         }
-        $html .=  $this->_pages($this->_items($config));
-        if($config->show_count) {
-            if ($j15) {
-                $html .= '<div class="limit"> '.$this->translate('Page').' '.$config->current.' '.$this->translate('of').' '.$config->count.'</div>';
-            } else {
-                $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
+        if($j30) {
+            $html .= '<ul class="pagination-list">';
+            $html .=  $this->_bootstrap_pages($this->_items($config));
+            $html .= '</ul>';
+        } else {
+            $html .=  $this->_pages($this->_items($config));
+            if($config->show_count) {
+                if ($j15) {
+                    $html .= '<div class="limit"> '.$this->translate('Page').' '.$config->current.' '.$this->translate('of').' '.$config->count.'</div>';
+                } else {
+                    $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
+                }
             }
         }
         $html .= '</div>';
@@ -118,6 +130,66 @@ class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
             $html = '<a href="'.$url.'" '.$class.'>'.$this->translate($title).'</a>';
         } else {
             $html = '<span '.$class.'>'.$this->translate($title).'</span>';
+        }
+
+        return $html;
+    }
+
+    protected function _bootstrap_pages($pages)
+    {
+        $html  = $pages['previous']->active ? '<li>'.$this->_bootstrap_link($pages['previous'], '&larr;').'</li>' : '';
+
+        /* @TODO should be a better way to do this than iterating the array to find the current page */
+        $current = 0;
+        foreach ($pages['pages'] as $i => $page) {
+            if($page->current) $current = $i;
+        }
+
+        /* @TODO move this into the $config initialize */
+        $padding = 2;
+
+        $total = count($pages['pages']);
+        $hellip = false;
+        foreach ($pages['pages'] as $i => $page) {
+            $in_range = $i > ($current - $padding) && $i < ($current + $padding);
+
+            if ($i < $padding || $in_range || $i >= ($total - $padding)) {
+                $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
+                $html .= $this->_bootstrap_link($page, $page->page);
+
+                $hellip = false;
+            } else {
+                if($hellip == true) continue;
+
+                $html .= '<li class="disabled">';
+                $html .= '<a href="#">&hellip;</a>';
+
+                $hellip = true;
+            }
+
+            $html .= '</li>';
+        }
+
+        $html  .= $pages['next']->active ? '<li>'.$this->_bootstrap_link($pages['next'], '&rarr;').'</li>' : '';
+
+        return $html;
+    }
+
+    protected function _bootstrap_link($page, $title)
+    {
+        $url   = clone KRequest::url();
+        $query = $url->getQuery(true);
+
+        //For compatibility with Joomla use limitstart instead of offset
+        $query['limit']      = $page->limit;
+        $query['limitstart'] = $page->offset;
+
+        $url->setQuery($query);
+
+        if ($page->active && !$page->current) {
+            $html = '<a href="'.$url.'">'.$this->translate($title).'</a>';
+        } else {
+            $html = '<a href="#">'.$this->translate($title).'</a>';
         }
 
         return $html;

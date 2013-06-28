@@ -22,7 +22,7 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
      * @var array
      */
     protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back', 'options');
-    
+
     /**
      * If the method is called with one of the standard Joomla toolbar buttons
      * translate the label correctly
@@ -35,17 +35,17 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
 
         return parent::addCommand($name, $config);
     }
-    
+
     protected function _commandPublish(KControllerToolbarCommand $command)
     {
         return $this->_commandEnable($command);
     }
-    
+
     protected function _commandUnpublish(KControllerToolbarCommand $command)
     {
         return $this->_commandDisable($command);
     }
-    
+
     /**
      * Enable toolbar command
      *
@@ -81,16 +81,16 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
             )
         ));
     }
-    
+
     protected function _commandSave2new(KControllerToolbarCommand $command)
     {
         $command->label = 'JTOOLBAR_SAVE_AND_NEW';
         $command->icon = 'icon-32-save-new';
-    
+
         $command->append(array(
-        'attribs' => array(
-        'data-action' => 'save2new'
-        )
+            'attribs' => array(
+                'data-action' => 'save2new'
+            )
         ));
     }
 
@@ -121,28 +121,37 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
             )
         ));
     }
-    
+
     protected function _commandOptions(KControllerToolbarCommand $command)
     {
         $option = $this->getIdentifier()->package;
-        
-        if (version_compare(JVERSION, '1.6', '<')) {
-            $link = 'index.php?option=com_config&controller=component&component=com_%s&path=';
+        $type   = 'modal';
+        $icon   = 'options';
+
+        if (version_compare(JVERSION, '3.0', '>='))
+        {
+            $type   = 'link';
+            $return = urlencode(base64_encode(JUri::getInstance()));
+            $link   = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
+        }
+        elseif (version_compare(JVERSION, '1.6', '<')) {
+            $link = 'index.php?option=com_config&controller=component&component=com_'.$option.'&path=';
             $icon = 'config';
         } else {
-            $link = 'index.php?option=com_config&view=component&component=com_%s&path=&tmpl=component';
-            $icon = 'options';
+            $link = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
         }
-        
+
         $command->icon = sprintf('icon-32-%s', $icon);
 
         $command->append(array(
             'attribs' => array(
-                'href' => JRoute::_(sprintf($link, $option))
+                'href' => JRoute::_($link)
             )
         ));
-        
-        $this->_commandModal($command);
+
+        if ($type === 'modal') {
+            $this->_commandModal($command);
+        }
     }
 
     /**
@@ -160,11 +169,11 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
             'height'  => '480',
             'href'	  => ''
         ))->append(array(
-            'attribs' => array(
-                'class' => array('modal'),
-                'href'  => $command->href,
-                'rel'   => '{handler: \'iframe\', size: {x: '.$command->width.', y: '.$command->height.'}}'
-            )
-        ));
+                'attribs' => array(
+                    'class' => array('modal'),
+                    'href'  => $command->href,
+                    'rel'   => '{handler: \'iframe\', size: {x: '.$command->width.', y: '.$command->height.'}}'
+                )
+            ));
     }
 }
