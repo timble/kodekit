@@ -35,8 +35,14 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         $html ='';
 
         // Only load once
-        if (!isset(self::$_loaded['jquery'])) {
-            $html .= '<script src="media://lib_koowa/js/jquery-1.8.3.min.js" />';
+        if (!isset(self::$_loaded['jquery']))
+        {
+            if (version_compare(JVERSION, '3.0', 'ge')) {
+                JHtml::_('jquery.framework');
+            } else {
+                $html .= '<script src="media://lib_koowa/js/jquery-1.8.3.min.js" />';
+            }
+
             self::$_loaded['jquery'] = true;
         }
 
