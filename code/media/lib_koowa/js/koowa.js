@@ -26,7 +26,7 @@ if(!window.$each) window.$each = Object.each;
 /* Section: onDomReady */
 window.addEvent('domready', function() {
     $$('.submitable').addEvent('click', function(event){
-        event = new Event(event);
+        event = new Event(event); //@TODO investigate if j3.0 requires using DOMEvent instead
         new Koowa.Form(JSON.decode(event.target.getProperty('rel'))).submit();
     });
 
@@ -660,7 +660,7 @@ Koowa.Overlay = new Class({
                 
                 /* @TODO
                 this.element.getElements('.submitable').addEvent('click', function(event){
-                    event = new Event(event);
+                    event = new Event(event); //@TODO investigate if j3.0 requires using DOMEvent instead
                     new Koowa.Form(JSON.decode(event.target.getProperty('rel'))).submit();
                 });
                 */
