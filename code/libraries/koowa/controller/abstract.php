@@ -75,13 +75,13 @@ abstract class KControllerAbstract extends KObject
         // Mixin the command chain
         $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
 
+        //Set the request
+        $this->setRequest((array) KConfig::unbox($config->request));
+
         // Set the table behaviors
         if(!empty($config->behaviors)) {
             $this->addBehavior($config->behaviors);
         }
-
-        //Set the request
-		$this->setRequest((array) KConfig::unbox($config->request));
     }
 
     /**

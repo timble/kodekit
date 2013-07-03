@@ -76,19 +76,21 @@ class ComDefaultTemplateHelperGrid extends KTemplateHelperGrid
             $tmpl = '
             <span>
                 <a class="jgrid" href="#" title="%s" data-action="edit" data-data="%s">
-                    <span class="state %s" style="background-repeat: no-repeat"><span class="text">%1$s</span></span>
+                    <span class="state %s" style="background-repeat: no-repeat"><span class="text">%s</span></span>
                 </a>
             </span>
             ';
     
             if ($config->row->{$config->field} > 1) {
-                $html .= sprintf($tmpl, $this->translate('Move up'), $updata, 'uparrow');
+                $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $this->translate('Move up');
+                $html .= sprintf($tmpl, $this->translate('Move up'), $updata, 'uparrow', $icon);
             }
     
             $html .= $config->row->{$config->field};
     
             if ($config->row->{$config->field} != $config->total) {
-                $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow');
+                $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $this->translate('Move down');
+                $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow', $icon);
             }
         } else {
             $html = parent::order($config);

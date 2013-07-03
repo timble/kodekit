@@ -17,7 +17,12 @@
  */
 abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 {
-	/**
+    /**
+     * Temporary directory
+     */
+    protected static $_temporary_directory;
+
+    /**
 	 * The cache object
 	 *
 	 * @var	JCache
@@ -105,32 +110,72 @@ abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
 	    return $result;
 	}
 
-	/**
-	 * Parse the template
-	 *
-	 * This function implements a caching mechanism when reading the template. If
-	 * the tempplate cannot be found in the cache it will be filtered and stored in
-	 * the cache. Otherwise it will be loaded from the cache and returned directly.
-	 *
-	 * @return string	The filtered data
-	 */
-	public function parse()
-	{
-	    if(isset($this->_cache))
-	    {
-	        $identifier = md5($this->_path);
+    /**
+     * Parse the template
+     *
+     * This function implements a caching mechanism when reading the template. If the template cannot be found in the
+     * cache it will be filtered and stored in the cache. Otherwise it will be loaded from the cache and returned
+     * directly.
+     *
+     * @param string The template content to parse
+     * @return void
+     */
+    protected function _parse(&$content)
+    {
+        if(isset($this->_cache))
+        {
+            $identifier = md5($this->getPath());
 
-	        if (!$template = $this->_cache->get($identifier))
-	        {
-	            $template = parent::parse();
+            if (!$this->_cache->get($identifier))
+            {
+                parent::_parse($content);
 
-	            //Store the object in the cache
-		   	    $this->_cache->store($template, $identifier);
-	        }
+                //Store the object in the cache
+                $this->_cache->store($content, $identifier);
+            }
+            else $content = $this->_cache->get($identifier);
+        }
+        else parent::_parse($content);
+    }
 
-	        return $template;
-	    }
+    /**
+     * Returns a directory path for temporary files
+     *
+     * Additionally checks for Joomla tmp folder if the system directory is not writable
+     *
+     * @throws KTemplateException
+     * @return string Folder path
+     */
+    protected function _getTemporaryDirectory()
+    {
+        if (!self::$_temporary_directory)
+        {
+            $result     = false;
+            $candidates = array(
+                ini_get('upload_tmp_dir'),
+                JPATH_ROOT.'/tmp'
+            );
 
-	    return parent::parse();
-	}
+            if (function_exists('sys_get_temp_dir')) {
+                array_unshift($candidates, sys_get_temp_dir());
+            }
+
+            foreach ($candidates as $folder)
+            {
+                if ($folder && @is_dir($folder) && is_writable($folder))
+                {
+                    $result = rtrim($folder, '\\/');
+                    break;
+                }
+            }
+
+            if ($result === false) {
+                throw new KTemplateException('Cannot find a writable temporary directory');
+            }
+
+            self::$_temporary_directory = $result;
+        }
+
+        return self::$_temporary_directory;
+    }
 }
