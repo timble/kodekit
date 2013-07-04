@@ -111,7 +111,7 @@ class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
         $states['format'] = 'csv';
 
         //Get the query options
-        $query  = http_build_query($states, '', '&');
+        $query  = http_build_query($states);
         $option = $this->getIdentifier()->package;
         $view   = $this->getIdentifier()->name;
 
