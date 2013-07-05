@@ -62,7 +62,7 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 			{
 				$path    = array_shift($parts).
 				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
-				$path   .= DS.strtolower($identifier->name);
+				$path   .= DIRECTORY_SEPARATOR.strtolower($identifier->name);
 			}
 			else $path  = strtolower($identifier->name);
 		}

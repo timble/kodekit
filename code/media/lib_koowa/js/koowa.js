@@ -19,6 +19,9 @@
 if(!Koowa) var Koowa = {};
 Koowa.version = 0.7;
 
+//Legacy
+if(typeof window.$each === 'undefined') window.$each = Object.each;
+
 
 /* Section: onDomReady */
 window.addEvent('domready', function() {
@@ -61,6 +64,10 @@ Koowa.Form = new Class({
                 method: this.config.method,
                 action: this.config.url
             });
+
+            //Legacy
+            if (typeof this.form.injectInside === 'undefined') this.form.injectInside = this.form.inject;
+
             this.form.injectInside(document.id(document.body));
         }
     },
@@ -71,6 +78,10 @@ Koowa.Form = new Class({
             value: value,
             type: 'hidden'
         });
+
+        //Legacy
+        if (typeof elem.injectInside === 'undefined') elem.injectInside = elem.inject;
+        
         elem.injectInside(this.form);
         return this;
     },
@@ -232,6 +243,14 @@ Koowa.Controller = new Class({
     },
     
     execute: function(action, data, novalidate){
+        //fix for Mootools 1.4, all arguments are added to action as an object
+        if (typeof action !== 'string') {
+            argumentsObject = action;
+            action = argumentsObject[0];
+            data = argumentsObject[1];
+            novalidate = argumentsObject[2];
+        }
+
         var method = '_action'+action.capitalize();
         
         this.options.action = action;
@@ -259,7 +278,7 @@ Koowa.Controller = new Class({
             return this;
         }
         result = events[type].keys.map(function(fn){
-            return fn.create({'bind': this, 'delay': delay, 'arguments': args})() !== false;
+            return fn.call(this, args) !== false;
         }, this).every(function(v){ return v;});
         return result;
     },
@@ -499,6 +518,9 @@ Koowa.Controller.Grid = new Class({
             return false;
         }
     
+        //Legacy
+        if (typeof window.$merge === 'undefined') window.$merge = Object.merge;
+        
         var idQuery = Koowa.Grid.getIdQuery(),
             append = this.options.url.match(/\?/) ? '&' : '?',
             options = {

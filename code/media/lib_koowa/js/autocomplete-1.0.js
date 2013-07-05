@@ -379,9 +379,9 @@ provides: [Meio.Autocomplete]
 		options: {
 			syncName: 'id', // if falsy it wont sync at start
 			valueField: null,
-			valueFilter: function(data){
-				return data[this.options.syncName];
-			}
+            valueFilter: function(data) {
+                return data.id;
+            }
 		},
 		
 		// overwritten

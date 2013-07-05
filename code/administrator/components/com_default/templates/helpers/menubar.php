@@ -46,6 +46,14 @@ class ComDefaultTemplateHelperMenubar extends KTemplateHelperAbstract
         $config->append(array(
         	'menubar' => null
         ));
+        
+        if (version_compare(JVERSION, '3.0', 'ge') && class_exists('JSubmenuHelper'))
+        {
+        	foreach ($config->menubar->getCommands() as $command) {
+        		JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
+        	}
+        	return;
+        }
 
 		$html = '';
 

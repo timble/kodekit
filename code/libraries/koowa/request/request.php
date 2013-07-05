@@ -64,12 +64,6 @@ class KRequest
      */
     protected static $_accept = null;
 
-    /**
-     * The request format information
-     *
-     * @var string
-     */
-    protected static $_format = null;
 
     /**
      * Constructor
@@ -590,39 +584,30 @@ class KRequest
      *
      * @return  string  The request format or NULL if no format could be found
      */
-    public static function format($format = null)
+    public static function format()
     {
-    	if ($format !== null) {
-    		self::$_format = $format;
-    	}
-    	
-    	if (!self::$_format) 
-    	{
-    		$format = null;
-    		
-    		if(count(self::accept('format')) == 1)
-    		{
-    			$mime   = explode('/', key(self::accept('format')));
-    			$format = $mime[1];
-    		
-    			if($pos = strpos($format, '+')) {
-    				$format = substr($format, 0, $pos);
-    			}
-    		
-    			//Format cannot be *
-    			if($format == '*') {
-    				$format = null;
-    			}
-    		}
-    		
-    		if(self::has('request.format')) {
-    			$format = self::get('request.format', 'word');
-    		}
+        $format = null;
 
-    		self::$_format = $format;
-    	}
+        if(count(self::accept('format')) == 1)
+        {
+            $mime   = explode('/', key(self::accept('format')));
+            $format = $mime[1];
 
-        return self::$_format;
+            if($pos = strpos($format, '+')) {
+                $format = substr($format, 0, $pos);
+            }
+
+            //Format cannot be *
+            if($format == '*') {
+                $format = null;
+            }
+        }
+
+        if(self::has('request.format')) {
+            $format = self::get('request.format', 'word');
+        }
+
+        return $format;
     }
 
     /**

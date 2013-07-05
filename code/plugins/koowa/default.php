@@ -81,7 +81,11 @@ abstract class PlgKoowaDefault extends KEventListener
 				$this->_params = $config['params'];
 			} else {
 				$this->_params = new JRegistry;
-				$this->_params->loadINI($config['params']);
+                if (version_compare(JVERSION, '1.6', '<')) {
+                    $this->_params->loadINI($config['params']);
+                } else {
+                    $this->_params->loadString($config['params'], 'INI');
+                }
 			}
 		}
 
@@ -100,7 +104,7 @@ abstract class PlgKoowaDefault extends KEventListener
 		$config['service_container'] = KService::getInstance();
 
 		//Inject the dispatcher
-		$config['dispatcher'] = $dispatcher;
+		$config['dispatcher'] = KService::get('com://admin/default.event.dispatcher');
 
 		parent::__construct(new KConfig($config));
 	}
