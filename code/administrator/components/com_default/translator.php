@@ -60,7 +60,10 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
      * @var array
      */
     protected static $_loaded_files = array();
-    
+
+    /**
+     * @param KConfig $config
+     */
     public function __construct(KConfig $config)
     {
         parent::__construct($config);
@@ -75,7 +78,10 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         $this->setDefaultCatalogue($this->createCatalogue($config->catalogue));
         $this->setAliasCatalogue($this->createCatalogue($config->alias_catalogue));
     }
-    
+
+    /**
+     * @param KConfig $config
+     */
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
@@ -126,16 +132,15 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
 
         return parent::translate($result, $parameters);
     }
-    
+
     /**
      * Translates a string based on the number parameter passed
      *
-     * @param string  $strings Strings to choose from
-     * @param integer $number The umber of items
+     * @param array   $strings    Strings to choose from
+     * @param integer $number     The umber of items
      * @param array   $parameters An array of parameters
-     * 
-     * @throws InvalidArgumentException
      *
+     * @throws InvalidArgumentException
      * @return string Translated string
      */
     public function choose(array $strings, $number, array $parameters = array())
@@ -222,7 +227,7 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         }
         
         $ext_base = sprintf('%s/%ss/%s', $base, $type, $extension);
-        
+
         $results = array();
         $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, array($ext_base, $base));
 
@@ -232,13 +237,15 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
 
         return in_array(true, $results);
     }
-    
+
     /**
      * Loads a Joomla language file
-     * 
-     * @param string $component Component name
+     *
+     * @param string $extension
      * @param string $locale Locale name
-     * @param array  $base Base path list
+     * @param array  $base   Base path list
+     *
+     * @return bool
      */
     protected function _loadLanguageFile($extension, $locale, array $base)
     {
@@ -247,9 +254,8 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         foreach ($base as $path) {
             $signature = md5($extension.$path.$locale);
 
-            $result = in_array($signature, self::$_loaded_files) 
-                          || $this->_translation_helper->load($extension, $path, $locale);
-            
+            $result = $this->_translation_helper->load($extension, $path, $locale, true, false);
+           // var_dump($extension, $locale, $path, $result);
             if ($result) {
                 if (!in_array($signature, self::$_loaded_files)) {
                     self::$_loaded_files[] = $signature;
@@ -287,44 +293,73 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
 
         return $this->getService($identifier);
     }
-    
+
+    /**
+     * Return the alias catalogue
+     *
+     * @return KTranslatorCatalogueInterface
+     */
     public function getAliasCatalogue()
     {
         return $this->_alias_catalogue;
     }
-    
-    public function setAliasCatalogue($catalogue)
+
+    /**
+     * Set the alias catalogue
+     *
+     * @param $catalogue
+     *
+     * @return $this
+     */
+    public function setAliasCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
-        if ($catalogue instanceof KTranslatorCatalogueInterface) {
-            $this->_alias_catalogue = $catalogue;
-        } else {
-            throw new KTranslatorException('Catalogues must implement KTranslatorCatalogueInterface');
-        }
+        $this->_alias_catalogue = $catalogue;
         
         return $this;
     }
-    
+
+    /**
+     * Return the default catalogue
+     *
+     * @return KTranslatorCatalogueInterface
+     */
     public function getDefaultCatalogue()
     {
         return $this->_catalogue;
     }
-    
-    public function setDefaultCatalogue($catalogue)
+
+    /**
+     * Set the default catalogue
+     *
+     * @param KTranslatorCatalogueInterface $catalogue
+     *
+     * @return $this
+     */
+    public function setDefaultCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
-        if ($catalogue instanceof KTranslatorCatalogueInterface) {
-            $this->_catalogue = $catalogue;
-        } else {
-            throw new KTranslatorException('Catalogues must implement KTranslatorCatalogueInterface');
-        }
+        $this->_catalogue = $catalogue;
     
         return $this;
     }
-    
+
+    /**
+     * Return translation helper
+     *
+     * @return object
+     */
     public function getTranslationHelper()
     {
         return $this->_translation_helper;
     }
-    
+
+    /**
+     * Set the translation helper
+     *
+     * @param object $translator
+     *
+     * @return $this
+     * @throws KTranslatorException
+     */
     public function setTranslationHelper($translator)
     {
         if (is_object($translator)) {
@@ -335,24 +370,39 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
         
         return $this;
     }
-    
+
+    /**
+     * Return the language key prefix
+     *
+     * @return string
+     */
     public function getPrefix()
     {
         return $this->_prefix;
     }
-    
+
+    /**
+     * Set the language key prefix
+     *
+     * @param string $prefix
+     *
+     * @return $this
+     */
     public function setPrefix($prefix)
     {
         $this->_prefix = $prefix;
     
         return $this;
     }
-    
+
     /**
      * Returns a translator object for a specific identifier
-     * 
+     *
      * @param KServiceIdentifier|string $identifier
-     * @param KConfig|array $config 
+     * @param KConfig|array             $config
+     *
+     * @throws KTranslatorException
+     * @return KTranslator
      */
     public function getTranslator($identifier, $config = array()) {
         if (is_string($identifier)) {
@@ -373,19 +423,18 @@ class ComDefaultTranslator extends KTranslator implements KServiceInstantiatable
             $translator->path = array();
             $translator->name = 'translator';
         }
-        
-        
     
-        return $this->getService($translator);
+        return $this->getService($translator, $config);
     }
-    
+
     /**
      * Force creation of a singleton
      *
-     * @param 	object 	An optional KConfig object with configuration options
-     * @param 	object	A KServiceInterface object
+     * @param KConfigInterface  $config optional KConfig object with configuration options
+     * @param KServiceInterface $container
+     *
      * @return  KTranslator
-     */    
+     */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
     {
         if (!$container->has($config->service_identifier))

@@ -254,12 +254,8 @@ abstract class KViewAbstract extends KObject
 			}
 
 			// Add the layout information to the route only if it's not 'default'
-			if(!isset($parts['view']))
-			{
+			if(!isset($parts['view'])) {
 				$result[] = 'view='.$this->getName();
-				if(!isset($parts['layout']) && $this->_layout != $this->_layout_default) {
-					$result[] = 'layout='.$this->getLayout();
-				}
 			}
 
 			// Add the format information to the URL only if it's not 'html'

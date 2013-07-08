@@ -380,7 +380,11 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if(!isset(self::$_loaded['autocomplete']))
 		{
-		    $html .= '<script src="media://lib_koowa/js/autocomplete.js" />';
+            if(version_compare(JVERSION, '3.0', 'ge')) {
+                $html .= '<script src="media://lib_koowa/js/autocomplete-2.0.js" />';
+            } else {
+                $html .= '<script src="media://lib_koowa/js/autocomplete-1.0.js" />';
+            }
 		    $html .= '<script src="media://lib_koowa/js/patch.autocomplete.js" />';
 		    $html .= '<style src="media://lib_koowa/css/autocomplete.css" />';
 		}
@@ -415,8 +419,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 			'date'	  => gmdate("M d Y H:i:s"),
 		    'name'    => '',
 		    'format'  => '%Y-%m-%d %H:%M:%S',
-		    'attribs' => array('size' => 25, 'maxlenght' => 19),
-		    'gmt_offset' => ComKoowaTemplateHelperDate::getOffset()
+		    'attribs' => array('size' => 25, 'maxlength' => 19)
  		));
  
         if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') { 

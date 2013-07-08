@@ -29,18 +29,33 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         $config->append(array(
         	'toolbar' => null
         ));
+
+        $title = $this->translate($config->toolbar->getTitle());
         
-        if (version_compare(JVERSION, '3.0', 'ge')) {
-        	JToolbarHelper::title($this->translate($config->toolbar->getTitle()), $config->toolbar->getIcon());
+        if (version_compare(JVERSION, '3.0', 'ge'))
+        {
+            // Strip the extension.
+            $icons = explode(' ', $config->toolbar->getIcon());
+            foreach ($icons as &$icon)
+            {
+                $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
+            }
+
+            $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
+
+            $app = JFactory::getApplication();
+            $app->JComponentTitle = $html;
+            JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $title);
+
         	return '';
         }
 
         $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
 
         if (version_compare(JVERSION,'1.6.0','ge')) {
-			$html .= '<h2>'.$this->translate($config->toolbar->getTitle()).'</h2>';
+			$html .= '<h2>'.$title.'</h2>';
         } else {
-            $html .= $this->translate($config->toolbar->getTitle());
+            $html .= $title;
         }
 
 		$html .= '</div>';

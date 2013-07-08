@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="system" method="upgrade" overwrite="true">
-    <name>System - EXTman</name>
+    <name>System - Joomlatools Framework</name>
     <author>Joomlatools</author>
-    <creationDate>August 2012</creationDate>
-    <copyright>Copyright (C) 2012 Timble CVBA</copyright>
+    <creationDate>June 2013</creationDate>
+    <copyright>Copyright (C) 2011 - 2013 Timble CVBA (http://www.timble.net)</copyright>
     <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
-    <authorEmail>info@joomlatools.eu</authorEmail>
+    <authorEmail>support@joomlatools.com</authorEmail>
     <authorUrl>www.joomlatools.com</authorUrl>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <description></description>
 
     <!--  Files -->
