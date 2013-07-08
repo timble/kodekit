@@ -35,6 +35,9 @@ class KTranslator extends KObject
     
     /**
      * Translates a string and handles parameter replacements
+     *
+     * Parameters are wrapped in curly braces.
+     * So {foo} would be replaced with bar given that $parameters['foo'] = 'bar'
      * 
      * @param string $string String to translate
      * @param array  $parameters An array of parameters
@@ -43,7 +46,39 @@ class KTranslator extends KObject
      */
     public function translate($string, array $parameters = array())
     {
+        if (count($parameters)) {
+            $string = $this->replaceParameters($string, $parameters);
+        }
+
+        return $string;
+    }
+
+    /**
+     * Handles parameter replacements
+     *
+     * @param string $string String
+     * @param array  $parameters An array of parameters
+     *
+     * @return string String after replacing the parameters
+     */
+    public function replaceParameters($string, array $parameters = array())
+    {
+        $keys = array_map(array($this, '_replaceKeys'), array_keys($parameters));
+
+        $parameters = array_combine($keys, $parameters);
+
         return strtr($string, $parameters);
+    }
+
+    /**
+     * Adds curly braces around keys to make strtr work in replaceParameters method
+     *
+     * @param $key
+     * @return string
+     */
+    protected function _replaceKeys($key)
+    {
+        return '{'.$key.'}';
     }
     
     /**

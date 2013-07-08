@@ -68,25 +68,43 @@ class KCommandEvent extends KCommand
      * @param   object      The command context
      * @return  boolean     Always returns true
      */
-    public function execute( $name, KCommandContext $context)
+    public function execute($name, KCommandContext $context)
     {
         $type = '';
+        $package = '';
+        $subject = '';
 
-        if($context->caller)
+        if ($context->caller)
         {
             $identifier = clone $context->caller->getIdentifier();
+            $package = $identifier->package;
 
-            if($identifier->path) {
+            if ($identifier->path)
+            {
                 $type = array_shift($identifier->path);
-            } else {
+                $subject = $identifier->name;
+            }
+            else {
                 $type = $identifier->name;
             }
         }
 
-        $parts = explode('.', $name);
-        $event = 'on'.ucfirst(array_shift($parts)).ucfirst($type).KInflector::implode($parts);
+        $parts  = explode('.', $name);
+        $when   = array_shift($parts); // before or after
+        $name   = KInflector::implode($parts); // Read Dispatch Select etc.
 
-        $this->_dispatcher->dispatchEvent($event, $context);
+        // Compile specific & generic event names
+        $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;
+        $event_generic  = 'on'.ucfirst($when).ucfirst($type).$name;
+
+        // Create event object to check for propagation
+        $event = new KEvent($event_specific, $context);
+        $this->_dispatcher->dispatchEvent($event_specific, $event);
+
+        // Ensure event can be propagated and event name is different
+        if ($event->canPropagate() && $event_specific != $event_generic) {
+            $this->_dispatcher->dispatchEvent($event_generic, $event);
+        }
 
         return true;
     }
