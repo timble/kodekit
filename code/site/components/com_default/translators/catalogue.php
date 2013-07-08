@@ -14,27 +14,27 @@
  * @package		Koowa_Translator
  */
 class ComDefaultTranslatorCatalogue extends KTranslatorCatalogue
-{ 
+{
     public function __get($key)
     {
         if (!isset($this->_data[$key])) {
             $this->_data[$key] = $this->generateKey($key);
         }
-        
+
         return $this->_data[$key];
     }
 
     public function generateKey($string)
     {
         $string = strtolower($string);
-        
+
         if (strlen($string) > 40) {
             $key = $this->generateKey(substr($string, 0, 40));
             $key .= '_'.strtoupper(substr(md5($string), 0, 5));
         } else {
             $key = strip_tags($string);
             $key = preg_replace('#\s+#m', ' ', $key);
-            $key = preg_replace('#%([A-Za-z0-9_\-\.]+)%#', ' $1 ', $key);
+            $key = preg_replace('#\{([A-Za-z0-9_\-\.]+)\}#', ' $1 ', $key);
             $key = preg_replace('#(%[^%|^\s|^\b]+)#', 'X', $key);
             $key = preg_replace('#&.*?;#', '', $key);
             $key = preg_replace('#[\s-]+#', '_', $key);

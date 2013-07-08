@@ -106,8 +106,8 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
                 // We do not pass $period or $tense as parameters to replace because 
                 // some languages use different words for them based on the time difference.
                 $translator = $this->getTemplate()->getHelper('translator')->getTranslator();
-                $result = $translator->choose(array("%number% $period $tense", "%number% $period_plural $tense"), $difference, array(
-                    '%number%' => $difference,
+                $result = $translator->choose(array("{number} $period $tense", "{number} $period_plural $tense"), $difference, array(
+                    'number' => $difference,
                 ));
             }
             else $result = $this->translate('Just now');

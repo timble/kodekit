@@ -150,7 +150,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 			$date = $this->getService('com:default.template.helper.date')->humanize(array('date' => $this->locked_on));
 			
 			$message = $this->getService('translator')->getTranslator($this->getIdentifier())->translate(
-			    'Locked by %name% %date%', array('%name%' => $user->get('name'), '%date%' => $date)
+			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
 			);
 		}
 
