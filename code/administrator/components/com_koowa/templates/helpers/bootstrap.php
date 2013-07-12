@@ -89,7 +89,7 @@ class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
         {
             $filename = 'bootstrap'.($config->application ? '-'.$config->application : '');
             if (version_compare(JVERSION, '3.0', 'ge')) {
-                $filename .= 'j3';
+                $filename .= '.j3';
             }
 
             if (!isset(self::$_loaded[$config->package.'-'.$filename]))
