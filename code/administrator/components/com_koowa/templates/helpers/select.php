@@ -46,14 +46,14 @@ class ComDefaultTemplateHelperSelect extends KTemplateHelperSelect
         }
 
         $extra = $config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? $this->translate( $config->true ) : $config->true;
+        $text  = $config->translate ?  $this->translate($config->true) : $config->true;
 
         $html[] = '<label for="'.$name.'1" class="radio inline">';
         $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
 
         $extra = !$config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? $this->translate( $config->false ) : $config->false;
+        $text  = $config->translate ? $this->translate($config->false) : $config->false;
 
         $html[] = '<label for="'.$name.'0" class="radio inline">';
         $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
