@@ -42,6 +42,14 @@ class plgSystemKoowa extends JPlugin
  		    @ini_set('pcre.backtrack_limit', 1000000);
  		}
 
+        // 2.5.7+ bug - you always need to supply a toolbar title to avoid notices
+         // This happens when the component does not supply an output at all
+        // This happens when the component does not supply an output at all
+         JToolbarHelper::title('');
+        if (class_exists('JToolbarHelper')) {
+            JToolbarHelper::title('');
+        }
+
 		//Set constants
 		define('KDEBUG', JDEBUG);
 
