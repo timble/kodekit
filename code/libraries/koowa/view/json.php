@@ -119,7 +119,7 @@ class KViewJson extends KViewAbstract
 			'href'     => (string) $url->setQuery(array_merge($url->getQuery(true), $state->toArray())),
 			'url'      => array(
 				'type'     => 'application/json',
-				'template' => (string) $url->get(KHttpUrl::BASE).'?{&'.implode(',', $vars).'}',
+				'template' => (string) $url->toString(KHttpUrl::BASE).'?{&'.implode(',', $vars).'}',
 			),
 			'offset'   => (int) $model->offset,
 			'limit'    => (int) $model->limit,
@@ -165,7 +165,7 @@ class KViewJson extends KViewAbstract
 		    'href'    => (string) $url->setQuery($state->getData(true)),
 	        'url'     => array(
 				'type'     => 'application/json',
-				'template' => (string) $url->get(KHttpUrl::BASE).'?{&'.implode(',', $vars).'}',
+				'template' => (string) $url->toString(KHttpUrl::BASE).'?{&'.implode(',', $vars).'}',
 	        ),
 	        'item'	  => array()
 		);
