@@ -210,7 +210,7 @@ class KService implements KServiceInterface
      */
     public static function getMixins($identifier)
     {
-        $objIdentifier = self::getIdentfier($identifier);
+        $objIdentifier = self::getIdentifier($identifier);
         $strIdentifier = (string) $objIdentifier;
 
         $result = array();

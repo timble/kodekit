@@ -17,6 +17,38 @@
  */
 class ComDefaultTemplateHelperBehavior extends KTemplateHelperBehavior
 {
+    /**
+     * Loads jQuery
+     *
+     * If debug config property is set, an uncompressed version will be included.
+     *
+     * @param array|KConfig $config
+     * @return string
+     */
+    public function jquery($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug')
+        ));
+        $html   = '';
+
+        if (!isset(self::$_loaded['jquery']))
+        {
+            if (version_compare(JVERSION, '3.0', 'ge')) {
+                JHtml::_('jquery.framework');
+            }
+            else
+            {
+                $html = parent::jquery($config);
+            }
+
+            self::$_loaded['jquery'] = true;
+        }
+
+        return $html;
+    }
+
 	/**
 	 * Method to load the mootools framework into the document head
 	 *
