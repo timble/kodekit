@@ -44,10 +44,15 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
     {
         $config = new KConfig($config);
         $config->append(array(
-
+            'autocomplete'          => false,
+            'autocomplete_options'  => array(),
+            'searchinput'           => false, //@TODO re #78 this may change, the property name 'filter' is already used
+            'searchinput_options'   => array(),
+        ))->append(array(
+            'searchinput_options'   => array('element' => 'select[name='.$config->name.']')
         ));
 
-        $html = parent::optionlist();
+        $html = parent::optionlist($config);
 
         if($config->autocomplete) {
             $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
@@ -92,7 +97,8 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 		))->append(array(
 			'value'		 => $config->name,
 			'selected'   => $config->{$config->name},
-		    'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+		    'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model),
+            'searchinput_options'   => array('element' => 'select[name='.$config->name.']'),
 		))->append(array(
 			'text'		=> $config->value,
 		))->append(array(
