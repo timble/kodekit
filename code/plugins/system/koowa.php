@@ -95,7 +95,7 @@ class plgSystemKoowa extends JPlugin
                }
 		   }
 		}
-		
+
 		// Load language files for the framework
 		KService::get('com:koowa.translator')->loadLanguageFiles();
 
