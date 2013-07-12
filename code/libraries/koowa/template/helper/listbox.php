@@ -39,6 +39,26 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
  	    return $this->_listbox($config);
  	}
 
+    //@TODO re #78 this may not stay, used to easier test specialized listbox classes without modifying them with new code
+    public function optionlist($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+
+        ));
+
+        $html = parent::optionlist();
+
+        if($config->autocomplete) {
+            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
+        }
+        elseif($config->searchinput) {
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->searchinput_options);
+        }
+
+        return $html;
+    }
+
 	/**
 	 * Generates an HTML optionlist based on the distinct data from a model column.
 	 *
@@ -59,13 +79,16 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
  	{
 		$config = new KConfig($config);
 		$config->append(array(
-			'name'		  => '',
-			'attribs'	  => array(),
-			'model'		  => KInflector::pluralize($this->getIdentifier()->package),
-			'deselect'    => true,
-		    'prompt'      => '- Select -',
-		    'unique'	  => true,
-            'autocomplete'=> false,
+			'name'		            => '',
+			'attribs'	            => array(),
+			'model'		            => KInflector::pluralize($this->getIdentifier()->package),
+			'deselect'              => true,
+		    'prompt'                => '- Select -',
+		    'unique'	            => true,
+            'autocomplete'          => false,
+            'autocomplete_options'  => array(),
+            'searchinput'           => false, //@TODO re #78 this may change, the property name 'filter' is already used
+            'searchinput_options'   => array(),
 		))->append(array(
 			'value'		 => $config->name,
 			'selected'   => $config->{$config->name},
@@ -99,8 +122,22 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 		//Add the options to the config object
 		$config->options = $options;
 
-		return $this->optionlist($config);
+        $html = $this->optionlist($config);
+
+        /*
+        if($config->autocomplete) {
+            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
+        }
+        elseif($config->searchinput) {
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->searchinput_options);
+        }
+
+        //@TODO re #78 need to have a special case when both searchinput and autocomplete is enabled
+        //*/
+
+		return $html;
  	}
+
 
 	/**
 	 * Renders a listbox with autocomplete behavior
