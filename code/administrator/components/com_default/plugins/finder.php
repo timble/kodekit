@@ -145,10 +145,6 @@ abstract class ComDefaultPluginFinder extends FinderIndexerAdapter
         // We only want to handle articles here
         if ($context == $this->extension.'.'.$this->resource)
         {
-            if (!$isNew && $row->access_changed) {
-                $this->itemAccessChange($row);
-            }
-
             // Reindex the item
             $this->reindex($row->id);
         }
@@ -178,13 +174,10 @@ abstract class ComDefaultPluginFinder extends FinderIndexerAdapter
      */
     public function onFinderChangeState($context, $pks, $value)
     {
-        if ($context == $this->extension.'.'.$this->resource)
-        {
-            $this->itemStateChange($pks, $value);
-        }
         // Handle when the plugin is disabled
         if ($context == 'com_plugins.plugin' && $value === 0)
         {
+            // TODO: handle this case
             $this->pluginDisable($pks);
         }
     }
@@ -469,42 +462,6 @@ abstract class ComDefaultPluginFinder extends FinderIndexerAdapter
         }
 
         return $item;
-    }
-
-    /**
-     * Method to update index data on published state changes
-     *
-     * @param   array    $pks    A list of primary key ids of the content that has changed state.
-     * @param   integer  $value  The value of the state that the content has been changed to.
-     *
-     * @return  void
-     *
-     * @since   2.5
-     */
-    protected function itemStateChange($pks, $value)
-    {
-        foreach ($pks as $pk)
-        {
-            // Update the item.
-            $this->change($pk, 'state', $value);
-
-            // Reindex the item
-            $this->reindex($pk);
-        }
-    }
-
-    /**
-     * Method to update index data on access level changes
-     *
-     * @param   JTable  $row  A JTable object
-     *
-     * @return  void
-     *
-     * @since   2.5
-     */
-    protected function itemAccessChange($row)
-    {
-        $this->change((int) $row->id, 'access', $row->new_access);
     }
 
 
