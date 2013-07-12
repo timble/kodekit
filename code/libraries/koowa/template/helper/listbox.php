@@ -32,21 +32,11 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 	 * @param 	array 	An optional array with configuration options
 	 * @return	string	Html
 	 * @see __call()
+     * @TODO this is no longer needed re #78
 	 */
     protected function _render($config = array())
  	{
- 	    $config = new KConfig($config);
- 	    $config->append(array(
- 	        'autocomplete' => false
- 	    ));
-
- 	    if($config->autocomplete) {
- 	        $result = $this->_autocomplete($config);
- 	    } else {
- 	        $result = $this->_listbox($config);
- 	    }
-
- 	    return $result;
+ 	    return $this->_listbox($config);
  	}
 
 	/**
@@ -74,7 +64,8 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 			'model'		  => KInflector::pluralize($this->getIdentifier()->package),
 			'deselect'    => true,
 		    'prompt'      => '- Select -',
-		    'unique'	  => true
+		    'unique'	  => true,
+            'autocomplete'=> false,
 		))->append(array(
 			'value'		 => $config->name,
 			'selected'   => $config->{$config->name},
