@@ -210,7 +210,9 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 		            $url->query[$key] = $data->get($key);
 		        }
 		    }
-		    else $url->query[$data->getIdentityColumn()] = $data->get($data->getIdentityColumn());
+		    elseif ($data->getIdentityColumn()) {
+                $url->query[$data->getIdentityColumn()] = $data->get($data->getIdentityColumn());
+            }
         }
 
 		$this->setRedirect($url);
