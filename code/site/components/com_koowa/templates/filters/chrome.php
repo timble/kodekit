@@ -17,7 +17,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
 	/**
      * The module title
@@ -94,7 +94,7 @@ class ComDefaultTemplateFilterChrome extends KTemplateFilterAbstract implements 
 	 * Apply module chrome to the template output
 	 *
 	 * @param string Block of text to parse
-	 * @return ComDefaultTemplateFilterChrome
+	 * @return ComKoowaTemplateFilterChrome
 	 */
     public function write(&$text)
     {

@@ -17,14 +17,14 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultEventDispatcher extends KEventDispatcher implements KServiceInstantiatable
+class ComKoowaEventDispatcher extends KEventDispatcher implements KServiceInstantiatable
 {
  	/**
      * Force creation of a singleton
      *
      * @param 	object	An optional KConfig object with configuration options
      * @param 	object	A KServiceInterface object
-     * @return ComDefaultEventDispatcher
+     * @return ComKoowaEventDispatcher
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
     {

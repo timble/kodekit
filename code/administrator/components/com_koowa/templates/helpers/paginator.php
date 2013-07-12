@@ -17,7 +17,7 @@
  * @uses        KRequest
  * @uses        KConfig
  */
-class ComDefaultTemplateHelperPaginator extends KTemplateHelperPaginator
+class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
 {
     /**
      * Render item pagination

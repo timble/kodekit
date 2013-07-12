@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
+class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 {
 	/**
      * Render the toolbar title

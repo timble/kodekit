@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateHelperGrid extends KTemplateHelperGrid
+class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
 {
     public function publish($config = array())
     {

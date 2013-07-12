@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateFilterLink extends KTemplateFilterLink
+class ComKoowaTemplateFilterLink extends KTemplateFilterLink
 {
     /**
      * Render script information

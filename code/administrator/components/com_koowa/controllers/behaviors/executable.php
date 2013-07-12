@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultControllerBehaviorExecutable extends KControllerBehaviorExecutable
+class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
 {
 	/**
      * Command handler

@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultControllerToolbarDefault extends KControllerToolbarDefault
+class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
 {
     /**
      * A list of Joomla standard toolbar buttons to correctly translate labels

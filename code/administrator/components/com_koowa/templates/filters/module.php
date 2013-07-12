@@ -20,7 +20,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
     /**
      * Initializes the options for the object
@@ -43,7 +43,7 @@ class ComDefaultTemplateFilterModule extends KTemplateFilterAbstract implements 
 	 * Find any <module></module> elements and inject them into the JDocument object
 	 *
 	 * @param string Block of text to parse
-	 * @return ComDefaultTemplateFilterModule
+	 * @return ComKoowaTemplateFilterModule
 	 */
     public function write(&$text)
     {

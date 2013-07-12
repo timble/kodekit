@@ -24,7 +24,7 @@ jimport('joomla.registry.format.ini');
  * @subpackage  Default
  * @uses        JRegistryFormatINI
  */
-class ComDefaultFilterIni extends KFilterAbstract
+class ComKoowaFilterIni extends KFilterAbstract
 {
     /**
      * Constructor

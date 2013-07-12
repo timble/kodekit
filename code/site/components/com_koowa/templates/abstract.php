@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-abstract class ComDefaultTemplateAbstract extends KTemplateAbstract
+abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 {
     /**
      * Temporary directory

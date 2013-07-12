@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultDispatcher extends KDispatcherDefault implements KServiceInstantiatable
+class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantiatable
 {
  	/**
      * Initializes the options for the object

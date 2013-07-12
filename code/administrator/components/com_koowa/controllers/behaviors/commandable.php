@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultControllerBehaviorCommandable  extends KControllerBehaviorCommandable
+class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommandable
 {
 	/**
 	 * Menubar object or identifier (com://APP/COMPONENT.model.NAME)

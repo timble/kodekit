@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateFilterStyle extends KTemplateFilterStyle
+class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
 {
     /**
      * Render style information

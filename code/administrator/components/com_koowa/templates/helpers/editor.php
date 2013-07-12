@@ -16,7 +16,7 @@
  * @subpackage  Default
  * @uses        KConfig
  */
-class ComDefaultTemplateHelperEditor extends KTemplateHelperAbstract
+class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
 {
     /**
      * Generates an HTML editor

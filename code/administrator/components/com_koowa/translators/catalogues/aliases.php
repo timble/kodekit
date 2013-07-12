@@ -16,7 +16,7 @@
  * @author		Ercan Ozkaya <ercan@timble.net>
  * @package		Koowa_Translator
  */
-class ComDefaultTranslatorCatalogueAliases extends KTranslatorCatalogue
+class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
 {
     protected function _initialize(KConfig $config)
     {

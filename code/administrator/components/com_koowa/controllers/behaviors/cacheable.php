@@ -15,7 +15,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultControllerBehaviorCacheable extends KControllerBehaviorAbstract
+class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 {
 	/**
 	 * List of modules to cache

@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateDefault extends ComDefaultTemplateAbstract
+class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract
 {
     /**
      * Load a template helper

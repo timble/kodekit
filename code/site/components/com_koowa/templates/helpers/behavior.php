@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComDefaultTemplateHelperBehavior extends KTemplateHelperBehavior
+class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
 {
     /**
      * Loads jQuery
