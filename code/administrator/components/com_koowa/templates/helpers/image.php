@@ -72,8 +72,8 @@ class ComKoowaTemplateHelperImage extends KTemplateHelperListbox
   		$config = new KConfig($config);
   		$config->append(array(
    			'name'		=> 'image_name',
-   			'directory'	=> JPATH_IMAGES.'/stories',
-  			'filetypes'	=> array('swf', 'gif', 'jpg', 'png'),
+            'directory'	=> JPATH_ROOT.'/images/stories',
+            'filetypes'	=> array('swf', 'gif', 'jpg', 'png'),
    			'deselect'	=> true,
   		    'preview'   => true
   		))->append(array(
@@ -145,7 +145,7 @@ class ComKoowaTemplateHelperImage extends KTemplateHelperListbox
  	    $config = new KConfig($config);
  	    $config->append(array(
    			'name'		=> 'image_name',
-   			'directory'	=> JPATH_IMAGES.'/stories',
+            'directory'	=> JPATH_ROOT.'/images/stories',
  	    	'width'		=> 80,
    			'height'	=> 80,
    			'border'	=> 2,

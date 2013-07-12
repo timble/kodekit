@@ -53,10 +53,6 @@ class plgSystemKoowa extends JPlugin
 		//Set constants
 		define('KDEBUG', JDEBUG);
 
-        //Set path definitions
-        define('JPATH_FILES' , JPATH_ROOT);
-        define('JPATH_IMAGES', JPATH_ROOT.DIRECTORY_SEPARATOR.'images');
-
         //Set exception handler
 		set_exception_handler(array($this, 'exceptionHandler'));
 
