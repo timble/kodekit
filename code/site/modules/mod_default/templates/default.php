@@ -15,7 +15,7 @@
  * @package     Nooku_Modules
  * @subpackage  Default
  */
-class ModDefaultTemplateDefault extends ComKoowaTemplateAbstract
+class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
 {
 
 }

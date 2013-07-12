@@ -111,7 +111,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 		$module->title     = $this->_title;
 		$module->user      = 0;
 
-		$text = $this->getService('mod://admin/default.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->display();
+		$text = $this->getService('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->display();
 
         return $this;
     }
