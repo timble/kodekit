@@ -29,7 +29,7 @@ class ComKoowaViewHtml extends KViewDefault
 
         //Add alias filter for editor helper
         $this->getTemplate()->getFilter('alias')->append(array(
-            '@editor(' => '$this->renderHelper(\'com://admin/default.template.helper.editor.display\', ')
+            '@editor(' => '$this->renderHelper(\'com://admin/koowa.template.helper.editor.display\', ')
         );
     }
 

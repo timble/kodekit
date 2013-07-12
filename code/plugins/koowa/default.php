@@ -104,7 +104,7 @@ abstract class PlgKoowaDefault extends KEventListener
 		$config['service_container'] = KService::getInstance();
 
 		//Inject the dispatcher
-		$config['dispatcher'] = KService::get('com://admin/default.event.dispatcher');
+		$config['dispatcher'] = KService::get('com://admin/koowa.event.dispatcher');
 
 		parent::__construct(new KConfig($config));
 	}
