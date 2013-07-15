@@ -48,7 +48,7 @@ class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
         }
         
         // Some editors like CKEditor return inline JS. 
-        $result = str_replace('<script', '<script inline', $result);
+        $result = str_replace('<script', '<script data-inline', $result);
 
         return $result;
     }
