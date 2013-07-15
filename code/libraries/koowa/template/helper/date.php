@@ -20,24 +20,34 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
     /**
      * Returns formatted date according to current local and adds time offset.
      *
-     * @param  array   An optional array with configuration options.
-     * @return string  Formatted date.
-     * @see    strftime
+     * @param  array  $config An optional array with configuration options.
+     * @return string Formatted date.
      */
     public function format($config = array())
     {
         $config = new KConfig($config);
         $config->append(array(
-            'date'       => gmdate("M d Y H:i:s"),
-            'format'     => '%A, %d %B %Y',
-            'gmt_offset' => date_offset_get(new DateTime),
+            'date'     => 'now',
+            'timezone' => date_default_timezone_get(),
+            'format'   => 'c',
+            'default'  => ''
         ));
 
-        if(!is_numeric($config->date)) {
-            $config->date =  strtotime($config->date);
+        $return = $config->default;
+
+        if(!in_array($config->date, array('0000-00-00 00:00:00', '0000-00-00')))
+        {
+            try
+            {
+                $date = new Date(array('date' => $config->date, 'timezone' => 'UTC'));
+                $date->setTimezone(new DateTimeZone($config->timezone));
+
+                $return = $date->format($config->format);
+            }
+            catch(\Exception $e) {}
         }
 
-        return strftime($config->format, $config->date + $config->gmt_offset);
+        return $return;
     }
 
     /**
@@ -51,7 +61,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
         $config = new KConfig($config);
         $config->append(array(
             'date'              => null,
-            'gmt_offset'        => date_offset_get(new DateTime),
+            'gmt_offset'        => 0,
             'smallest_period'   => 'second'
         ));
 

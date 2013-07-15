@@ -30,28 +30,11 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperDate
     {
         $config = new KConfig($config);
         $config->append(array(
+            'date'     => 'now',
             'timezone'   => true,
-            'format'     => 'DATE_FORMAT_LC1'
+            'format'     => $this->translate('DATE_FORMAT_LC1')
         ));
-
-        $config->format = $this->translate($config->format);
 
         return JHtml::_('date', $config->date, $config->format, $config->timezone);
-    }
-
-    /**
-     * Returns human readable date.
-     *
-     * @param  array   An optional array with configuration options.
-     * @return string  Formatted date.
-     */
-    public function humanize($config = array())
-    {
-        $config = new KConfig($config);
-        $config->append(array(
-            'gmt_offset' => 0
-        ));
-
-        return parent::humanize($config);
     }
 }
