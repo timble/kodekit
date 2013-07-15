@@ -106,6 +106,17 @@ class KTranslator extends KObject
         
         return $this->translate($strings[$choice], $parameters);
     }
+
+    /**
+     * Checks if the translator can translate a string
+     *
+     * @param $string String to check
+     * @return bool
+     */
+    public function isTranslatable($string)
+    {
+        return false;
+    }
     
     public function setLocale($locale)
     {

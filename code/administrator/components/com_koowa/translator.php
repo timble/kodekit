@@ -121,7 +121,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
                 $key = $this->getKey($string);
             }
             
-            $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
+            $result = $this->_translation_helper->_($this->isTranslatable($key) ? $key : $string);
         }
 
         return parent::translate($result, $parameters);
@@ -153,7 +153,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         $found = null;
         while ($choice > 0) {
             $looking_for = $key.($choice === 1 ? '' : '_'.$choice);
-            if ($this->_translation_helper->hasKey($looking_for)) {
+            if ($this->isTranslatable($looking_for)) {
                 $found = $looking_for;
                 break;
             }
@@ -162,6 +162,17 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         }
         
         return $this->translate($found ? $found : $strings[1], $parameters);
+    }
+
+    /**
+     * Checks if the translation helper can translate a string
+     *
+     * @param $string String to check
+     * @return bool
+     */
+    public function isTranslatable($string)
+    {
+        return $this->_translation_helper->hasKey($string);
     }
     
     /**
