@@ -79,9 +79,8 @@ class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
         // Load the generic files
         if (empty($config->package))
         {
-            if (version_compare(JVERSION, '3.0', 'ge')) {
-                JHtml::_('bootstrap.loadCss');
-            } else {
+            // We assume that the template has either loaded Bootstrap or provided styles for it
+            if (!version_compare(JVERSION, '3.0', 'ge')) {
                 $html .= parent::load($config);
             }
         }
