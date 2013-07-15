@@ -57,10 +57,6 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
 
 		$html = '';
 
-		if (version_compare(JVERSION, '1.7', 'ge')) {
-			$html .= '<div id="submenu-box"><div class="m">';
-		}
-
         $html .= '<ul id="submenu">';
 	    foreach ($config->menubar->getCommands() as $command)
 	    {
@@ -70,10 +66,6 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         }
 
         $html .= '</ul>';
-
-		if (version_compare(JVERSION, '1.7', 'ge')) {
-			$html .= '<div class="clr"></div></div></div>';
-		}
 
 
 		return $html;
