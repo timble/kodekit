@@ -39,25 +39,21 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
         ));
 
         $this->_initialize($config);
-        
-        $j15 = version_compare(JVERSION, '1.6', '<');
+
         $j30 = version_compare(JVERSION, '3.0', '>=');
         
         $html = '';
-
-        if ($j15) {
-            $html .= '<div class="container">';
-        }
-
 
         if ($j30) {
             $html .= '<div class="pagination pagination-toolbar">';
         } else {
             $html .= '<div class="pagination pagination-legacy">';
         }
+
         if($config->show_limit) {
             $html .= '<div class="limit">'.$this->translate('Display NUM').' '.$this->limit($config).'</div>';
         }
+
         if($j30) {
             $html .= '<ul class="pagination-list">';
             $html .=  $this->_bootstrap_pages($this->_items($config));
@@ -65,18 +61,10 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
         } else {
             $html .=  $this->_pages($this->_items($config));
             if($config->show_count) {
-                if ($j15) {
-                    $html .= '<div class="limit"> '.$this->translate('Page').' '.$config->current.' '.$this->translate('of').' '.$config->count.'</div>';
-                } else {
-                    $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
-                }
+                $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
             }
         }
         $html .= '</div>';
-        
-        if ($j15) {
-            $html .= '</div>';
-        }
 
         return $html;
     }

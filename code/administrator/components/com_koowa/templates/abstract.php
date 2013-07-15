@@ -40,11 +40,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
     {
         parent::__construct($config);
 
-        $caching = version_compare(JVERSION, '3.0', 'ge')
-            ? JFactory::getConfig()->get('caching')
-            : JFactory::getConfig()->getValue('config.caching');
-
-        if($caching) {
+        if(JFactory::getApplication()->getCfg('caching')) {
             $this->_cache = JFactory::getCache('template', 'output');
         }
     }

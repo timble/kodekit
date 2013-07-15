@@ -27,10 +27,9 @@ class plgSystemKoowa extends JPlugin
 		{
 			if (JFactory::getApplication()->getName() === 'administrator') 
 			{
-				$string = version_compare(JVERSION, '1.6', '<') ? 'mysqli' : 'MySQLi';
 				$link   = JRoute::_('index.php?option=com_config');
-				$error  = 'In order to use Joomlatools framework, your database type in Global Configuration should be set to <strong>%1$s</strong>. Please go to <a href="%2$s">Global Configuration</a> and in the \'Server\' tab change your Database Type to <strong>%1$s</strong>.';
-				JError::raiseWarning(0, sprintf(JText::_($error), $string, $link));
+				$error  = 'In order to use Joomlatools framework, your database type in Global Configuration should be set to <strong>MySQLi</strong>. Please go to <a href="%2$s">Global Configuration</a> and in the \'Server\' tab change your Database Type to <strong>MySQLi</strong>.';
+				JError::raiseWarning(0, sprintf(JText::_($error), $link));
 			}
 			
 			return;
@@ -90,8 +89,6 @@ class plgSystemKoowa extends JPlugin
            {
                if (version_compare(JVERSION, '3.0', '>=')) {
                    JFactory::getConfig()->set('offset', $offset);
-               } else {
-                   JFactory::getConfig()->setValue('config.offset', $offset);
                }
 		   }
 		}
@@ -166,9 +163,7 @@ class plgSystemKoowa extends JPlugin
 			'line'		=> $this->_exception->getLine()
 		));
 
-		$debug = version_compare(JVERSION, '3.0', 'ge')
-			? JFactory::getConfig()->get('debug')
-			: JFactory::getConfig()->getValue('config.debug');
+		$debug = JFactory::getConfig()->get('debug');
 
 	    if($debug) {
 			$error->set('message', (string) $this->_exception);

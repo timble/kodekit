@@ -38,8 +38,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             if (version_compare(JVERSION, '3.0', 'ge')) {
                 JHtml::_('jquery.framework');
             }
-            else
-            {
+            else {
                 $html = parent::jquery($config);
             }
 

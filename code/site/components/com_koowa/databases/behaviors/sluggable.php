@@ -56,8 +56,7 @@ class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
         parent::_canonicalizeSlug();
 
         if (trim(str_replace($this->_separator, '', $this->slug)) == '') {
-            $format = version_compare(JVERSION, '1.6', '<') ? '%Y-%m-%d-%H-%M-%S' : 'Y-m-d-H-i-s';
-        	$this->slug = JFactory::getDate()->format($format);
+        	$this->slug = JFactory::getDate()->format('Y-m-d-H-i-s');
         }
     }
 }

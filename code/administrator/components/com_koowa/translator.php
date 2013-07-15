@@ -123,12 +123,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
             
             $result = $this->_translation_helper->_($this->_translation_helper->hasKey($key) ? $key : $string);
         }
-        
-        // Joomla uses _QQ_ instead of " in language files
-        // and 1.5 does not handle the conversion itself
-        if (version_compare(JVERSION, '1.6', '<')) {
-            $result = str_replace('"_QQ_"', '"', $result);
-        }
 
         return parent::translate($result, $parameters);
     }

@@ -105,24 +105,8 @@ class ModKoowaHtml extends KViewHtml
      */
     protected function _parseParams( $string )
     {
-        $params = array();
+        $params = new KConfig((array) json_decode($string));
 
-        if(!version_compare(JVERSION,'1.6.0','ge'))
-        {
-            $string = trim($string);
-
-            if(!empty($string))
-            {
-                foreach(explode("\n", $string) as $line)
-                {
-                    $param = explode("=", $line, 2);
-                    $params[$param[0]] = $param[1];
-                }
-            }
-        }
-        else $params = (array) json_decode($string);
-
-        $params = new KConfig($params);
         return $params;
     }
 }

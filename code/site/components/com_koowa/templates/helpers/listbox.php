@@ -101,17 +101,13 @@ class ComKoowaTemplateHelperListbox extends KTemplateHelperListbox
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));
-        
-        if (version_compare(JVERSION, '1.6', '<')) {
-            $html = parent::access();
-        } else {
-            $prompt = false;
-            if ($config->deselect) {
-                $prompt = array((object) array('value' => '', 'text'  => $config->prompt));
-            }
-            
-            $html = JHtml::_('access.level', $config->name, $config->selected, $config->attribs->toArray(), $prompt);
+
+        $prompt = false;
+        if ($config->deselect) {
+            $prompt = array((object) array('value' => '', 'text'  => $config->prompt));
         }
+
+        $html = JHtml::_('access.level', $config->name, $config->selected, $config->attribs->toArray(), $prompt);
     
         return $html;
     }

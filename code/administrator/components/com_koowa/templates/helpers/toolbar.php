@@ -52,11 +52,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 
         $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
 
-        if (version_compare(JVERSION,'1.6.0','ge')) {
-			$html .= '<h2>'.$title.'</h2>';
-        } else {
-            $html .= $title;
-        }
+        $html .= '<h2>'.$title.'</h2>';
 
 		$html .= '</div>';
 
@@ -81,23 +77,13 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         	$html .= '%s';
 		    $html .= '</div>';
         }
-        elseif (version_compare(JVERSION, '1.6.0', 'ge')) 
+        else
         {
 		    $html  = '<div class="toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
 		    $html .= '<ul>';
 		    $html .= '%s';
 		    $html .= '</ul>';
 		    $html .= '<div class="clr"></div>';
-		    $html .= '</div>';
-        } 
-        else 
-        {
-            $html  = '<div class="toolbar toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
-            $html .= '<table class="toolbar">';
-            $html .= '<tr>';
-            $html .= '%s';
-    		$html .= '</tr>';
-    		$html .= '</table>';
 		    $html .= '</div>';
         }
 
@@ -162,23 +148,15 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         }
 
 		$command->attribs->class = implode(" ", KConfig::unbox($command->attribs->class));
-		
-		if (version_compare(JVERSION,'1.6.0','ge')) {
-		    $html = '<li class="button" id="'.$id.'">';
-		} else {
-		    $html = '<td class="button" id="'.$id.'">';
-		}
+
+        $html = '<li class="button" id="'.$id.'">';
         
         $html .= '<a '.KHelperArray::toString($command->attribs).'>';
         $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
        	$html .= $this->translate($command->label);
        	$html .= '</a>';
-       	
-        if (version_compare(JVERSION, '1.6.0', 'ge')) {
-		    $html .= '</li>';
-		} else {
-		    $html .= '</td>';
-		}
+
+        $html .= '</li>';
 
     	return $html;
     }
@@ -198,10 +176,8 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         
     	if (version_compare(JVERSION,'3.0','ge')) {
             $html = '<div class="btn-group"></div>';
-        } elseif (version_compare(JVERSION,'1.6.0','ge')) {
-            $html = '<li class="divider"></li>';
         } else {
-            $html = '<td class="divider"></td>';
+            $html = '<li class="divider"></li>';
         }
 
     	return $html;

@@ -12,6 +12,7 @@
  * Date Helper
  *
  * @author      Johan Janssens <johan@nooku.org>
+ * @category    Nooku
  * @package     Nooku_Components
  * @subpackage  Default
  */
@@ -29,17 +30,13 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperDate
     {
         $config = new KConfig($config);
         $config->append(array(
-            'gmt_offset' => self::getOffset()
+            'timezone'   => true,
+            'format'     => 'DATE_FORMAT_LC1'
         ));
-        
-        // Joomla 1.6+ uses different date formats so DATE_FORMAT_LC1 is no longer usable
-        if (version_compare(JVERSION, '1.6', '<')) {
-            $config->append(array(
-                'format' => $this->translate('DATE_FORMAT_LC1')
-            ));
-        }
 
-        return parent::format($config);
+        $config->format = $this->translate($config->format);
+
+        return JHtml::_('date', $config->date, $config->format, $config->timezone);
     }
 
     /**
@@ -55,26 +52,6 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperDate
             'gmt_offset' => 0
         ));
 
-       return parent::humanize($config);
-    }
-    
-    /**
-     * Returns the offset as seconds based on the current timezone
-     */
-    public static function getOffset()
-    {
-        $offset = version_compare(JVERSION, '3.0', 'ge')
-            ? JFactory::getConfig()->get('offset') 
-            : JFactory::getConfig()->getValue('config.offset');
-        $seconds = 0;
-        
-        if (version_compare(JVERSION, '1.6', '<')) {
-            $seconds = $offset * 3600;
-        } else {
-            $timezone = new DateTimeZone($offset);
-            $seconds  = $timezone->getOffset(new DateTime);
-        }
-        
-        return $seconds;
+        return parent::humanize($config);
     }
 }

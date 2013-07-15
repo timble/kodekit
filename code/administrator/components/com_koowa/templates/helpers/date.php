@@ -30,19 +30,13 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperDate
     {
         $config = new KConfig($config);
         $config->append(array(
-            'gmt_offset' => JFactory::getApplication()->getCfg('offset')*3600, // Only used in Joomla 1.5
-            'timezone'   => true, // Used in 1.6+
+            'timezone'   => true,
             'format'     => 'DATE_FORMAT_LC1'
         ));
 
         $config->format = $this->translate($config->format);
 
-        // Joomla 1.6+ uses formats for date() while 1.5 uses strftime() format
-        if (version_compare(JVERSION, '1.6', '<')) {
-            return parent::format($config);
-        } else {
-            return JHtml::_('date', $config->date, $config->format, $config->timezone);
-        }
+        return JHtml::_('date', $config->date, $config->format, $config->timezone);
     }
 
     /**

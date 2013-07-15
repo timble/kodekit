@@ -29,7 +29,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
      */
     public function addCommand($name, $config = array())
     {
-        if (version_compare(JVERSION, '1.6', '>=') && !isset($config['label']) && in_array($name, self::$_default_buttons)) {
+        if (!isset($config['label']) && in_array($name, self::$_default_buttons)) {
             $config['label'] = 'JTOOLBAR_'.$name;
         }
 
@@ -134,10 +134,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
         	$return = urlencode(base64_encode(JUri::getInstance()));
         	$link   = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
         }
-        elseif (version_compare(JVERSION, '1.6', '<')) {
-            $link = 'index.php?option=com_config&controller=component&component=com_'.$option.'&path=';
-            $icon = 'config';
-        } else {
+        else {
             $link = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
         }
         

@@ -53,13 +53,8 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     {
         $result = false;
 
-        if(parent::canAdd())
-        {
-            if(version_compare(JVERSION,'1.6.0','ge')) {
-                $result = JFactory::getUser()->authorise('core.create') === true;
-            } else {
-                $result = JFactory::getUser()->get('gid') > 22;
-            }
+        if(parent::canAdd()) {
+            $result = JFactory::getUser()->authorise('core.create') === true;
         }
 
         return $result;
@@ -74,13 +69,8 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     {
         $result = false;
 
-        if(parent::canEdit())
-        {
-            if(version_compare(JVERSION,'1.6.0','ge')) {
-                $result = JFactory::getUser()->authorise('core.edit') === true;
-            } else {
-                $result = JFactory::getUser()->get('gid') > 22;
-            }
+        if(parent::canEdit()) {
+            $result = JFactory::getUser()->authorise('core.edit') === true;
         }
 
         return $result;
@@ -95,13 +85,8 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     {
         $result = false;
 
-        if(parent::canDelete())
-        {
-            if(version_compare(JVERSION,'1.6.0','ge')) {
-                $result = JFactory::getUser()->authorise('core.delete') === true;
-            } else {
-                $result = JFactory::getUser()->get('gid') > 22;
-            }
+        if(parent::canDelete()) {
+            $result = JFactory::getUser()->authorise('core.delete') === true;
         }
 
         return $result;
@@ -123,9 +108,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
             //Only check the token for PUT, DELETE and POST requests
             if(($method != KHttpRequest::GET) && ($method != KHttpRequest::OPTIONS))
             {
-                $token = version_compare(JVERSION, '3.0', 'ge') ? JSession::getFormToken() : JUtility::getToken();
-
-                if( KRequest::token() !== $token) {
+                if( KRequest::token() !== JSession::getFormToken()) {
                     return false;
                 }
             }

@@ -27,10 +27,8 @@ class ComKoowaTemplateFilterForm extends KTemplateFilterForm
      */
     protected function _initialize(KConfig $config)
     {
-    	$token = version_compare(JVERSION, '3.0', 'ge') ? JSession::getFormToken() : JUtility::getToken();
-
         $config->append(array(
-            'token_value'   => $token,
+            'token_value'   => JSession::getFormToken(),
         ));
 
         parent::_initialize($config);

@@ -76,12 +76,10 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
             'next' => 'JNEXT',
             'end' => 'JLIB_HTML_END'
         );
-        
-        if (version_compare(JVERSION, '1.6', '>=')) {
-            $config->append(array(
-                'data'  => $defaults
-            ));
-        }
+
+        $config->append(array(
+            'data'  => $defaults
+        ));
     
         parent::_initialize($config);
     }

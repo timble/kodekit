@@ -37,11 +37,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	{
 		parent::__construct($config);
 
-        $cache = version_compare(JVERSION, '3.0', 'ge')
-            ? JFactory::getConfig()->get('caching')
-            : JFactory::getConfig()->getValue('config.caching');
-
-        if($cache) {
+        if(JFactory::getApplication()->getCfg('caching')) {
             $this->_cache = JFactory::getCache('database', 'output');
         }
 	}
