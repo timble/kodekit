@@ -47,7 +47,7 @@
  * @package     Nooku_Plugins
  * @subpackage  Koowa
  */
-abstract class PlgKoowaDefault extends KEventListener
+abstract class ComKoowaPluginDefault extends KEventListener
 {
 	/**
 	 * A JRegistry object holding the parameters for the plugin

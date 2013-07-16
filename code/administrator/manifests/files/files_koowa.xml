@@ -21,8 +21,6 @@
 
             <folder target="media/lib_koowa">media/lib_koowa</folder>
 
-            <folder target="plugins/koowa/default">plugins/koowa/default</folder>
-
             <folder target="modules/mod_koowa">modules/mod_koowa</folder>
 		</files>
 	</fileset>
