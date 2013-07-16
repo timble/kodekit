@@ -13,9 +13,4 @@
     <files folder="plugins/system">
         <filename plugin="koowa">koowa.php</filename>
     </files>
-
-    <!--  Media -->
-    <media folder="media">
-        <folder>lib_koowa</folder>
-    </media>
 </extension>
