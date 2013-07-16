@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<project name="Koowa Framework" default="build">
+
+    <!-- Default settings -->
+    <property name="framework.location" value="local" />
+
+    <property name="file.compression" value="gzip" />
+    <property name="file.extension" value=".tar.gz" />
+
+	<!-- Load the build configuration -->
+	<property file="build.properties" override="true" />
+
+    <target name="clone">
+		<delete dir="tmp" includeemptydirs="true" />
+
+		<!-- Get the framework -->
+        <if>
+            <equals arg1="${framework.location}" arg2="local" />
+            <then>
+				<echo message="Using local checkout of Joomlatools framework" />
+				<copy todir="tmp/clone">
+					<fileset dir="../.." defaultexcludes="no" />
+				</copy>
+			</then>
+			<else>
+				<echo message="Cloning Joomlatools framework" />
+				<gitclone
+					gitPath="git"
+					repository="git@git.assembla.com:joomlatools-framework.git"
+					targetPath="tmp/clone" />
+			</else>
+		</if>
+
+        <if>
+            <isset property="framework.branch" />
+            <then>
+                <gitcheckout
+                    gitPath="git"
+                    repository="tmp/clone"
+                    branchname="${framework.branch}" />
+            </then>
+        </if>
+    </target>
+
+    <target name="prepare" depends="clone">
+        <mkdir dir="tmp/plg_system_koowa" />
+
+        <move file="tmp/clone/code/administrator/manifests/packages/pkg_koowa.xml"
+              tofile="tmp/pkg_koowa.xml" overwrite="true" />
+
+        <move file="tmp/clone/code/administrator/manifests/files/files_koowa.xml"
+              tofile="tmp/clone/code/files_koowa.xml" overwrite="true" />
+
+        <copy todir="tmp/clone/code">
+            <fileset dir="tmp/clone/code/site" />
+        </copy>
+
+        <copy file="tmp/clone/code/administrator/manifests/files/files_koowa/script.php"
+              tofile="tmp/clone/code/script.php" />
+
+        <copy todir="tmp/plg_system_koowa">
+            <fileset dir="tmp/clone/code/plugins/system/koowa" />
+        </copy>
+
+        <copy
+                file="tmp/clone/code/libraries/koowa/LICENSE"
+                tofile="tmp/LICENSE" overwrite="true" />
+
+        <delete dir="tmp/clone/code/administrator/manifests" />
+        <delete dir="tmp/clone/code/site" />
+        <delete dir="tmp/clone/code/plugins/system" />
+    </target>
+
+    <target name="build" depends="prepare">
+        <mkdir dir="tmp/packages" />
+
+        <tar destfile="tmp/packages/plg_system_koowa${file.extension}" basedir="tmp/plg_system_koowa" compression="${file.compression}" />
+        <tar destfile="tmp/packages/files_koowa${file.extension}" basedir="tmp/clone/code" compression="${file.compression}" />
+
+		<delete file="koowa${file.extension}" quiet="true" />
+
+        <tar destfile="koowa${file.extension}" compression="${file.compression}">
+            <fileset dir="tmp">
+                <include name="packages" />
+                <include name="LICENSE" />
+                <include name="pkg_koowa.xml" />
+            </fileset>
+        </tar>
+
+        <delete dir="tmp" includeemptydirs="true" />
+	</target>
+</project>
