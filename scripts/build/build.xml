@@ -62,7 +62,7 @@
               tofile="tmp/LICENSE" overwrite="true" />
 
         <delete dir="tmp/clone/code/administrator" />
-        <delete dir="tmp/clone/code/plugins/system" />
+        <delete dir="tmp/clone/code/plugins" />
     </target>
 
     <target name="build" depends="prepare">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension version="3.0" type="file" method="upgrade">
-	<name>files_koowa</name>
+    <name>files_koowa</name>
     <author>Joomlatools</author>
     <creationDate>June 2013</creationDate>
     <copyright>Copyright (C) 2011 - 2013 Timble CVBA (http://www.timble.net)</copyright>
