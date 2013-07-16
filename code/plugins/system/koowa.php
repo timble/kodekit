@@ -83,13 +83,10 @@ class plgSystemKoowa extends JPlugin
 		JPluginHelper::importPlugin('koowa', null, true);
 
 	    //Bugfix : Set offset accoording to user's timezone
-		if(!JFactory::getUser()->guest)
+		if (!JFactory::getUser()->guest)
 		{
-		   if($offset = JFactory::getUser()->getParam('timezone'))
-           {
-               if (version_compare(JVERSION, '3.0', '>=')) {
-                   JFactory::getConfig()->set('offset', $offset);
-               }
+		   if ($offset = JFactory::getUser()->getParam('timezone')) {
+               JFactory::getConfig()->set('offset', $offset);
 		   }
 		}
 

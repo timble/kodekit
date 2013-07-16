@@ -16,7 +16,6 @@
 
     <!--  Media -->
     <media folder="media">
-        <folder>com_default</folder>
         <folder>lib_koowa</folder>
     </media>
 </extension>
