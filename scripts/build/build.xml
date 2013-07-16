@@ -63,7 +63,7 @@
         </copy>
 
         <copy
-                file="tmp/clone/code/libraries/koowa/LICENSE"
+                file="tmp/clone/code/libraries/koowa/library/LICENSE"
                 tofile="tmp/LICENSE" overwrite="true" />
 
         <delete dir="tmp/clone/code/administrator/manifests" />

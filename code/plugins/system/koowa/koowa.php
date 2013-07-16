@@ -54,7 +54,7 @@ class plgSystemKoowa extends JPlugin
 		set_exception_handler(array($this, 'exceptionHandler'));
 
 		// Koowa : setup
-        require_once( JPATH_LIBRARIES.'/koowa/koowa.php');
+        require_once( JPATH_LIBRARIES.'/koowa/library/koowa.php');
         Koowa::getInstance(array(
 			'cache_prefix'  => md5(JFactory::getApplication()->getCfg('secret')).'-cache-koowa',
 			'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
