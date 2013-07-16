@@ -70,7 +70,7 @@ class KTemplateHelperAccordion extends KTemplateHelperBehavior
 		$html .= '
 			<script>
 				window.addEvent(\'domready\', function(){
-					new Accordion($$(\'.panel h3.jpane-toggler\'),$$(\'.panel div.jpane-slider\'),$merge('.$events.','.$config->options.'))'.$scroll.';
+					new Accordion($$(\'.panel h3.jpane-toggler\'),$$(\'.panel div.jpane-slider\'),Object.merge('.$events.','.$config->options.'))'.$scroll.';
 				});
 			</script>';
 
