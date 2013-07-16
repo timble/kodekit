@@ -43,7 +43,6 @@
     </target>
 
     <target name="prepare" depends="clone">
-        <mkdir dir="tmp/plg_system_koowa" />
 
         <move file="tmp/clone/code/administrator/manifests/packages/pkg_koowa.xml"
               tofile="tmp/pkg_koowa.xml" overwrite="true" />
@@ -51,23 +50,18 @@
         <move file="tmp/clone/code/administrator/manifests/files/files_koowa.xml"
               tofile="tmp/clone/code/files_koowa.xml" overwrite="true" />
 
-        <copy todir="tmp/clone/code">
-            <fileset dir="tmp/clone/code/site" />
-        </copy>
-
         <copy file="tmp/clone/code/administrator/manifests/files/files_koowa/script.php"
               tofile="tmp/clone/code/script.php" />
 
+        <mkdir dir="tmp/plg_system_koowa" />
         <copy todir="tmp/plg_system_koowa">
             <fileset dir="tmp/clone/code/plugins/system/koowa" />
         </copy>
 
-        <copy
-                file="tmp/clone/code/libraries/koowa/library/LICENSE"
-                tofile="tmp/LICENSE" overwrite="true" />
+        <copy file="tmp/clone/code/libraries/koowa/library/LICENSE"
+              tofile="tmp/LICENSE" overwrite="true" />
 
-        <delete dir="tmp/clone/code/administrator/manifests" />
-        <delete dir="tmp/clone/code/site" />
+        <delete dir="tmp/clone/code/administrator" />
         <delete dir="tmp/clone/code/plugins/system" />
     </target>
 

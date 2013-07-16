@@ -14,15 +14,11 @@
 
 	<fileset>
 		<files>
-            <folder target="administrator/modules/mod_koowa">administrator/modules/mod_koowa</folder>
-
             <folder target="libraries/koowa/library">libraries/koowa/library</folder>
             <folder target="libraries/koowa/component/com_koowa">libraries/koowa/component/com_koowa</folder>
             <folder target="libraries/koowa/module/mod_koowa">libraries/koowa/module/mod_koowa</folder>
 
             <folder target="media/lib_koowa">media/lib_koowa</folder>
-
-            <folder target="modules/mod_koowa">modules/mod_koowa</folder>
 		</files>
 	</fileset>
 </extension>
