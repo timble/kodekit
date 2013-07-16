@@ -1,8 +1,8 @@
 <?php
 /**
 * @version      $Id$
- * @package     Nooku_Modules
- * @subpackage  Default
+* @package      Nooku_Modules
+* @subpackage	Default
 * @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
 * @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
 * @link 		http://www.nooku.org
@@ -12,8 +12,8 @@
  * Module Chrome Filter
  *
  * @author		Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+* @package      Nooku_Module
+* @subpackage   Default
  */
 class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
@@ -26,8 +26,7 @@ class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
     {
         parent::__construct($config);
 
-        //Load the theme chrome functions
-        include_once JPATH_THEMES.'/system/html/modules.php';
+        include_once JPATH_THEMES . '/system/html/modules.php';
 
         if(file_exists(JPATH_THEMES.'/'.$config->template.'/html/modules.php')) {
 		    include_once JPATH_THEMES.'/'.$config->template.'/html/modules.php';
@@ -64,12 +63,12 @@ class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 
 	    foreach($data->styles as $style)
 		{
-		    $method = 'modChrome_'.$style;
+            $method = 'modChrome_'.$style;
 
 			// Apply chrome and render module
 		    if (function_exists($method))
 			{
-			    $data->module->style   = implode(' ', $data->styles);
+		        $data->module->style   = implode(' ', $data->styles);
 		        $data->module->content = $text;
 
 				ob_start();
