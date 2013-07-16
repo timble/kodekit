@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension version="3.0" type="file" method="upgrade">
+	<name>files_koowa</name>
+    <author>Joomlatools</author>
+    <creationDate>June 2013</creationDate>
+    <copyright>Copyright (C) 2011 - 2013 Timble CVBA (http://www.timble.net)</copyright>
+    <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
+    <authorEmail>support@joomlatools.com</authorEmail>
+    <authorUrl>www.joomlatools.com</authorUrl>
+    <version>1.0.4</version>
+    <description></description>
+
+    <scriptfile>script.php</scriptfile>
+
+	<fileset>
+		<files>
+			<folder target="administrator/components/com_koowa">administrator/components/com_koowa</folder>
+            <folder target="administrator/modules/mod_koowa">administrator/modules/mod_koowa</folder>
+
+            <folder target="libraries/koowa">libraries/koowa</folder>
+
+            <folder target="media/lib_koowa">media/lib_koowa</folder>
+
+            <folder target="plugins/koowa/default">plugins/koowa/default</folder>
+
+            <folder target="components/com_koowa">components/com_koowa</folder>
+            <folder target="modules/mod_koowa">modules/mod_koowa</folder>
+		</files>
+	</fileset>
+</extension>
