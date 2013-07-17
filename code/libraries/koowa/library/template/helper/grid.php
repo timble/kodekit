@@ -34,7 +34,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 		if($config->row->isLockable() && $config->row->locked())
 		{
 		    $html = '<span class="editlinktip hasTip" title="'.$config->row->lockMessage() .'">
-						<img src="media://lib_koowa/images/locked.png"/>
+						<img src="media://koowa/library/images/locked.png"/>
 					</span>';
 		}
 		else
@@ -159,7 +159,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 	    $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
 	    $data = str_replace('"', '&quot;', $config->data);
 
-		$html = '<img src="media://lib_koowa/images/'. $img .'" border="0" alt="'. $alt .'" data-action="edit" data-data="'.$data.'" title='.$text.' />';
+		$html = '<img src="media://koowa/library/images/'. $img .'" border="0" alt="'. $alt .'" data-action="edit" data-data="'.$data.'" title='.$text.' />';
 
 		return $html;
 	}

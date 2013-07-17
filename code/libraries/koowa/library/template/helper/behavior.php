@@ -43,7 +43,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['jquery']))
         {
             $file  = 'jquery'.($config->debug ? '' : '.min').'.js';
-            $html .= '<script src="media://lib_koowa/js/'.$file.'" />';
+            $html .= '<script src="media://koowa/library/js/'.$file.'" />';
 
             self::$_loaded['jquery'] = true;
         }
@@ -66,7 +66,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Only load once
 		if (!isset(self::$_loaded['mootools'])) 
 		{
-			$html .= '<script src="media://lib_koowa/js/mootools.js" />';
+			$html .= '<script src="media://koowa/library/js/mootools.js" />';
 			self::$_loaded['mootools'] = true;
 		}
 
@@ -91,8 +91,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['modal']))
 		{
-			$html .= '<script src="media://lib_koowa/js/modal.js" />';
-			$html .= '<style src="media://lib_koowa/css/modal.css" />';
+			$html .= '<script src="media://koowa/library/js/modal.js" />';
+			$html .= '<style src="media://koowa/library/css/modal.css" />';
 
 			self::$_loaded['modal'] = true;
 		}
@@ -167,8 +167,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['overlay']))
 		{
-			$html .= '<script src="media://lib_koowa/js/koowa.js" />';
-			$html .= '<style src="media://lib_koowa/css/koowa.css" />';
+			$html .= '<script src="media://koowa/library/js/koowa.js" />';
+			$html .= '<style src="media://koowa/library/css/koowa.css" />';
 
 			self::$_loaded['overlay'] = true;
 		}
@@ -261,8 +261,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if(!isset(self::$_loaded['validator']))
 		{
-            $html .= '<script src="media://lib_koowa/js/validator.js" />';
-		    $html .= '<script src="media://lib_koowa/js/patch.validator.js" />';
+            $html .= '<script src="media://koowa/library/js/validator.js" />';
+		    $html .= '<script src="media://koowa/library/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -335,12 +335,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		if(!isset(self::$_loaded['autocomplete']))
 		{
             if(version_compare(JVERSION, '3.0', 'ge')) {
-                $html .= '<script src="media://lib_koowa/js/autocomplete-2.0.js" />';
+                $html .= '<script src="media://koowa/library/js/autocomplete-2.0.js" />';
             } else {
-                $html .= '<script src="media://lib_koowa/js/autocomplete-1.0.js" />';
+                $html .= '<script src="media://koowa/library/js/autocomplete-1.0.js" />';
             }
-		    $html .= '<script src="media://lib_koowa/js/patch.autocomplete.js" />';
-		    $html .= '<style src="media://lib_koowa/css/autocomplete.css" />';
+		    $html .= '<script src="media://koowa/library/js/patch.autocomplete.js" />';
+		    $html .= '<style src="media://koowa/library/css/autocomplete.css" />';
 		}
 
 		$html .= "
@@ -385,9 +385,9 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		// Load the necessary files if they haven't yet been loaded
 		if (!isset(self::$_loaded['calendar']))
 		{
-			$html .= '<script src="media://lib_koowa/js/calendar.js" />';
-			$html .= '<script src="media://lib_koowa/js/calendar-setup.js" />';
-			$html .= '<style src="media://lib_koowa/css/calendar.css" />';
+			$html .= '<script src="media://koowa/library/js/calendar.js" />';
+			$html .= '<script src="media://koowa/library/js/calendar-setup.js" />';
+			$html .= '<style src="media://koowa/library/css/calendar.css" />';
 			
 			$html .= '<script>'.$this->_calendarTranslation().'</script>';
 
@@ -408,7 +408,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 		$attribs = KHelperArray::toString($config->attribs);
 
    		$html .= '<input type="text" name="'.$config->name.'" id="'.$config->name.'" value="'.$config->date.'" '.$attribs.' />';
-		$html .= '<img class="calendar" src="media://lib_koowa/images/calendar.png" alt="calendar" id="button-'.$config->name.'" />';
+		$html .= '<img class="calendar" src="media://koowa/library/images/calendar.png" alt="calendar" id="button-'.$config->name.'" />';
 		
 		return $html;
 	}

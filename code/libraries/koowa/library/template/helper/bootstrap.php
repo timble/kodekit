@@ -46,7 +46,7 @@ class KTemplateHelperBootstrap extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['bootstrap-css']))
         {
             $file  = 'bootstrap'.($config->debug ? '' : '.min').'.css';
-            $html .= '<script src="media://lib_koowa/css/'.$file.'" />';
+            $html .= '<script src="media://koowa/library/css/'.$file.'" />';
 
             self::$_loaded['bootstrap-css'] = true;
         }
@@ -75,7 +75,7 @@ class KTemplateHelperBootstrap extends KTemplateHelperAbstract
             }
 
             $file  = 'bootstrap'.($config->debug ? '' : '.min').'.js';
-            $html .= '<script src="media://lib_koowa/js/'.$file.'" />';
+            $html .= '<script src="media://koowa/library/js/'.$file.'" />';
 
             self::$_loaded['bootstrap-javascript'] = true;
         }
