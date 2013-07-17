@@ -24,29 +24,57 @@ abstract class KLoaderAdapterAbstract implements KLoaderAdapterInterface
 	protected $_type = '';
 
 	/**
-	 * The basepath
-	 *
-	 * @var string
-	 */
-	protected $_basepath = '';
-
-	/**
 	 * The class prefiex
 	 *
 	 * @var string
 	 */
 	protected $_prefix = '';
 
+    /**
+     * The active basepath
+     *
+     * @var string
+     */
+    protected $_basepath = '';
+
+    /**
+     * Package/basepath pairs to search
+     *
+     * @var array
+     */
+    protected $_basepaths = array();
+
 	/**
      * Constructor.
      *
-     * @param  array  An optional array with configuration options.
+     * @param  array  $config An optional array with configuration options.
      */
     public function __construct( $config = array())
     {
-        if(isset($config['basepath'])) {
-            $this->_basepath = $config['basepath'];
+        if(isset($config['basepaths']))
+        {
+            $packages = (array) $config['basepaths'];
+            foreach($packages as $package => $path) {
+                $this->registerBasepath($path, $package);
+            }
         }
+    }
+
+    /**
+     * Register a specific package basepath
+     *
+     * @param  string   $basepath The base path of the package
+     * @param  string   $package
+     * @return KLoaderAdapterInterface
+     */
+    public function registerBasepath($basepath, $package = '*')
+    {
+        if($package == '*') {
+            $this->_basepath = $basepath;
+        }
+
+        $this->_basepaths[$package] = $basepath;
+        return $this;
     }
 
 	/**
@@ -59,15 +87,15 @@ abstract class KLoaderAdapterAbstract implements KLoaderAdapterInterface
 		return $this->_type;
 	}
 
-	/**
-	 * Get the base path
-	 *
-	 * @return string	Returns the base path
-	 */
-	public function getBasepath()
-	{
-		return $this->_basepath;
-	}
+    /**
+     * Get the registered base paths
+     *
+     * @return array An array with package name as keys and base path as values
+     */
+    public function getBasepaths()
+    {
+        return $this->_basepaths;
+    }
 
 	/**
 	 * Get the class prefix

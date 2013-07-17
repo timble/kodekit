@@ -43,7 +43,7 @@ class KLoader
     /**
      * Constructor
      *
-     * Prevent creating instances of this class by making the contructor private
+     * Prevent creating instances of this class by making the constructor private
      */
     final private function __construct($config = array())
     {
@@ -77,7 +77,7 @@ class KLoader
     /**
      * Singleton instance
      *
-     * @param  array  An optional array with configuration options.
+     * @param  array  $config An optional array with configuration options.
      * @return KLoader
      */
     public static function getInstance($config = array())
@@ -119,7 +119,7 @@ class KLoader
  	/**
      * Add a loader adapter
      *
-     * @param object    A KLoaderAdapter
+     * @param KLoaderAdapterInterface $adapter  A KLoaderAdapter
      * @return void
      */
     public static function addAdapter(KLoaderAdapterInterface $adapter)
@@ -141,8 +141,8 @@ class KLoader
     /**
      * Load a class based on a class name
      *
-     * @param string    The class name
-     * @param string    The basepath
+     * @param string  $class    The class name
+     * @param string  $basepath The basepath
      * @return boolean  Returns TRUE on success throws exception on failure
      */
     public function loadClass($class, $basepath = null)
@@ -195,7 +195,7 @@ class KLoader
     /**
      * Load a class based on a path
      *
-     * @param string	The file path
+     * @param string	$path The file path
      * @return boolean  Returns TRUE on success throws exception on failure
      */
     public function loadFile($path)
@@ -217,8 +217,8 @@ class KLoader
     /**
      * Get the path based on a class name
      *
-     * @param string	The class name
-     * @param string    The basepath
+     * @param string	$class      The class name
+     * @param string    $basepath   The basepath
      * @return string   Returns canonicalized absolute pathname
      */
     public function findPath($class, $basepath = null)

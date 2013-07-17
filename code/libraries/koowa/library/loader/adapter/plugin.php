@@ -34,7 +34,8 @@ class KLoaderAdapterPlugin extends KLoaderAdapterAbstract
 	/**
 	 * Get the path based on a class name
 	 *
-	 * @param  string		  	The class name
+	 * @param  string $classname The class name
+     * @param  string $basepath  The base path
 	 * @return string|false		Returns the path on success FALSE on failure
 	 */
 	public function findPath($classname, $basepath = null)
@@ -44,27 +45,29 @@ class KLoaderAdapterPlugin extends KLoaderAdapterAbstract
 		$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
 		$parts = explode(' ', $word);
 
-		if (array_shift($parts) == 'plg')
+        $type    = array_shift($parts);
+        $package = array_shift($parts);
+
+		if ($type == 'plg')
 		{
-		    //Switch the basepath
-		    if(!empty($basepath)) {
-		        $this->_basepath = $basepath;
-		    }
-
-		    $type = array_shift($parts);
-
-			if(count($parts) > 1) {
-				$path = array_shift($parts).'/'.implode('/', $parts);
+			if(count($parts)) {
+				$path = $package.'/'.implode('/', $parts);
 			} else {
-				$path = array_shift($parts);
+				$path = $package;
 			}
 
-            //Plugins can have their own folder
-		    if (is_file($this->_basepath.'/plugins/'.$type.'/'.$path.'/'.$path.'.php')) {
-		        $path = $this->_basepath.'/plugins/'.$type.'/'.$path.'/'.$path.'.php';
-			} else {
-	            $path = $this->_basepath.'/plugins/'.$type.'/'.$path.'.php';
-			}
+            //Find the basepath
+            if(!empty($basepath)) {
+                $this->_basepath = $basepath;
+            }
+
+            if(isset($this->_basepaths[$package])) {
+                $basepath = $this->_basepaths[$package];
+            } else {
+                $basepath = $this->_basepath;
+            }
+
+		    $path = $basepath.'/plugins/'.$package.'/'.$path.'/'.$path.'.php';
 	    }
 
 		return $path;

@@ -16,7 +16,7 @@
  */
 interface KLoaderAdapterInterface
 {
-	/**
+    /**
 	 * Get the type
 	 *
 	 * @return string	Returns the type
@@ -30,12 +30,21 @@ interface KLoaderAdapterInterface
 	 */
 	public function getPrefix();
 
-	/**
-	 * Get the base path
-	 *
-	 * @return string	Returns the base path
-	 */
-	public function getBasepath();
+    /**
+     * Register a specific package basepath
+     *
+     * @param  string   $basepath The base path of the package
+     * @param  string   $package
+     * @return KLoaderAdapterInterface
+     */
+    public function registerBasepath($basepath, $package = null);
+
+    /**
+     * Get the registered base paths
+     *
+     * @return array An array with package name as keys and base path as values
+     */
+    public function getBasepaths();
 
     /**
      * Get the path based on a class name

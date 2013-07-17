@@ -22,7 +22,6 @@ class plgSystemKoowa extends JPlugin
 	public function __construct($subject, $config = array())
 	{
 		// Check if database type is MySQLi
-
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
 		{
 			if (JFactory::getApplication()->getName() === 'administrator') 
@@ -55,49 +54,56 @@ class plgSystemKoowa extends JPlugin
 
 		// Koowa: setup
         $path = JPATH_LIBRARIES.'/koowa/library/koowa.php';
-        if (!file_exists($path)) {
-            return;
+        if (file_exists($path))
+        {
+            require_once $path;
+
+            Koowa::getInstance(array(
+                'cache_prefix'  => md5(JFactory::getApplication()->getCfg('secret')).'-cache-koowa',
+                'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
+            ));
+
+            KLoader::addAdapter(new KLoaderAdapterModule(array(
+                'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
+            )));
+
+            KLoader::addAdapter(new KLoaderAdapterPlugin(array(
+                'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa/components/com_koowa')
+            )));
+
+            KLoader::addAdapter(new KLoaderAdapterComponent(array(
+                'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
+            )));
+
+            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.module'));
+            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
+            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.component'));
+
+            KServiceIdentifier::setApplication('site' , JPATH_SITE);
+            KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
+
+            KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+            KService::setAlias('translator', 'com:koowa.translator');
+
+            //Setup the request
+            if (JFactory::getApplication()->getName() !== 'site') {
+                KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
+            }
+
+            //Load the koowa plugins
+            JPluginHelper::importPlugin('koowa', null, true);
+
+            //Bugfix : Set offset accoording to user's timezone
+            if (!JFactory::getUser()->guest)
+            {
+                if ($offset = JFactory::getUser()->getParam('timezone')) {
+                    JFactory::getConfig()->set('offset', $offset);
+                }
+            }
+
+            // Load language files for the framework
+            KService::get('com:koowa.translator')->loadLanguageFiles();
         }
-
-        require_once $path;
-
-        Koowa::getInstance(array(
-			'cache_prefix'  => md5(JFactory::getApplication()->getCfg('secret')).'-cache-koowa',
-			'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
-        ));
-
-        KLoader::addAdapter(new KLoaderAdapterModule(array('basepath' => JPATH_BASE)));
-        KLoader::addAdapter(new KLoaderAdapterPlugin(array('basepath' => JPATH_ROOT)));
-        KLoader::addAdapter(new KLoaderAdapterComponent(array('basepath' => JPATH_BASE)));
-
-        KServiceIdentifier::addLocator(KService::get('koowa:service.locator.module'));
-        KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
-        KServiceIdentifier::addLocator(KService::get('koowa:service.locator.component'));
-
-        KServiceIdentifier::setApplication('site' , JPATH_SITE);
-        KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
-
-        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-		KService::setAlias('translator', 'com:koowa.translator');
-
-	    //Setup the request
-	    if (JFactory::getApplication()->getName() !== 'site') {
-	    	KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
-	    }
-
-		//Load the koowa plugins
-		JPluginHelper::importPlugin('koowa', null, true);
-
-	    //Bugfix : Set offset accoording to user's timezone
-		if (!JFactory::getUser()->guest)
-		{
-		   if ($offset = JFactory::getUser()->getParam('timezone')) {
-               JFactory::getConfig()->set('offset', $offset);
-		   }
-		}
-
-		// Load language files for the framework
-		KService::get('com:koowa.translator')->loadLanguageFiles();
 
 		parent::__construct($subject, $config);
 	}

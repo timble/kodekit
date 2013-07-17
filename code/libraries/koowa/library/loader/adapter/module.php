@@ -34,7 +34,8 @@ class KLoaderAdapterModule extends KLoaderAdapterAbstract
 	/**
 	 * Get the path based on a class name
 	 *
-	 * @param  string		  	The class name
+	 * @param  string $classname    The class name
+     * @param  string $basepath     The base path
 	 * @return string|false		Returns the path on success FALSE on failure
 	 */
 	public function findPath($classname, $basepath = null)
@@ -44,14 +45,12 @@ class KLoaderAdapterModule extends KLoaderAdapterAbstract
 		$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
 		$parts = explode(' ', $word);
 
-		if (array_shift($parts) == 'mod')
-		{
-		    //Switch the basepath
-		    if(!empty($basepath)) {
-		        $this->_basepath = $basepath;
-		    }
+        $type    = array_shift($parts);
+        $package = array_shift($parts);
 
-		    $module = 'mod_'.strtolower(array_shift($parts));
+		if ($type == 'mod')
+		{
+		    $module = 'mod_'.$package;
 			$file 	   = array_pop($parts);
 
 			if(count($parts))
@@ -68,6 +67,17 @@ class KLoaderAdapterModule extends KLoaderAdapterAbstract
 				$path = $path.'/'.$file;
 			}
 			else $path = $file;
+
+            //Find the basepath
+            if(!empty($basepath)) {
+                $this->_basepath = $basepath;
+            }
+
+            if(isset($this->_basepaths[$package])) {
+                $basepath = $this->_basepaths[$package];
+            } else {
+                $basepath = $this->_basepath;
+            }
 
 			$path = $this->_basepath.'/modules/'.$module.'/'.$path.'.php';
 		}

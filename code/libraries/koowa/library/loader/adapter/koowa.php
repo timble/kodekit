@@ -34,7 +34,8 @@ class KLoaderAdapterKoowa extends KLoaderAdapterAbstract
 	/**
 	 * Get the path based on a class name
 	 *
-	 * @param  string		  	The class name
+     * @param  string $classname    The class name
+     * @param  string $basepath     The base path
 	 * @return string|false		Returns the path on success FALSE on failure
 	 */
 	public function findPath($classname, $basepath = null)
