@@ -69,7 +69,12 @@ class KLoaderAdapterComponent extends KLoaderAdapterAbstract
 			}
 			else $path = $file;
 
-			$path = $this->_basepath.'/components/'.$component.'/'.$path.'.php';
+            if (in_array($component, array('com_koowa'))) {
+                $path = JPATH_LIBRARIES.'/koowa/components/'.$component.'/'.$path.'.php';
+            } else {
+                $path = $this->_basepath.'/components/'.$component.'/'.$path.'.php';
+            }
+
 		}
 
 		return $path;
