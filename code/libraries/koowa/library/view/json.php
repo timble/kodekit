@@ -52,7 +52,7 @@ class KViewJson extends KViewAbstract
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
 	 *
-	 * @param 	object 	An optional KConfig object with configuration options
+	 * @param   KConfig $config Configuration options
 	 * @return  void
 	 */
 	protected function _initialize(KConfig $config)

@@ -46,7 +46,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
     /**
      * Force creation of a singleton
      *
-     * @param 	object 	An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      * @param 	object	A KServiceInterface object
      * @return KFilterInterface
      */

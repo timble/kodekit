@@ -18,7 +18,7 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	/**
      * Force creation of a singleton
      *
-     * @param 	object 	An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      * @param 	object	A KServiceInterface object
      * @return KFilterFactory
      */
@@ -40,7 +40,7 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	 * Factory method for KFilterInterface classes.
 	 *
 	 * @param	string 	Filter indentifier
-	 * @param 	object 	An optional KConfig object with configuration options
+	 * @param   KConfig $config Configuration options
 	 * @return KFilterAbstract
 	 */
 	public function instantiate($identifier, $config = array())

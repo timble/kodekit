@@ -29,7 +29,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 	 *
 	 * Prevent creating instances of this class by making the contructor private
 	 *
-	 * @param 	object 	An optional KConfig object with configuration options
+	 * @param   KConfig $config Configuration options
 	 */
 	public function __construct(KConfig $config)
 	{

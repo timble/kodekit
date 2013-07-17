@@ -58,7 +58,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 	/**
      * Force creation of a singleton
      *
-     * @param 	object 	An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      * @param 	object	A KServiceInterface object
      * @return KDispatcherDefault
      */

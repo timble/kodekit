@@ -17,7 +17,7 @@ interface KServiceInstantiatable
     /**
      * Get the object identifier
      *
-     * @param 	object 	An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      * @param 	object	A KServiceInterface object
      * @return  object
      */

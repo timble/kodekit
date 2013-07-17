@@ -31,7 +31,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	 *
 	 * Prevent creating instances of this class by making the contructor private
 	 *
-	 * @param 	object 	An optional KConfig object with configuration options
+	 * @param   KConfig $config Configuration options
 	 */
 	public function __construct(KConfig $config)
 	{
@@ -45,7 +45,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
      * Force creation of a singleton
      *
-     * @param 	object 	An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      * @param 	object	A KServiceInterface object
      * @return KDatabaseTableInterface
      */
