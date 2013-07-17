@@ -15,8 +15,8 @@
 	<fileset>
 		<files>
             <folder target="libraries/koowa/library">libraries/koowa/library</folder>
-            <folder target="libraries/koowa/component/com_koowa">libraries/koowa/component/com_koowa</folder>
-            <folder target="libraries/koowa/module/mod_koowa">libraries/koowa/module/mod_koowa</folder>
+            <folder target="libraries/koowa/components/com_koowa">libraries/koowa/components/com_koowa</folder>
+            <folder target="libraries/koowa/modules/mod_koowa">libraries/koowa/modules/mod_koowa</folder>
 
             <folder target="media/lib_koowa">media/lib_koowa</folder>
 		</files>

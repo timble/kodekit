@@ -12,8 +12,8 @@
     <version>1.0.4</version>
     <description></description>
 
-    <files folder="packages">
-        <file type="file" id="files_koowa">files_koowa.tar.gz</file>
-        <file type="plugin" id="koowa" group="system">plg_system_koowa.tar.gz</file>
+    <files>
+        <file type="file" id="files_koowa">files_koowa</file>
+        <file type="plugin" id="koowa" group="system">plg_system_koowa</file>
     </files>
 </extension>

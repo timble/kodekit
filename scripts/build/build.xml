@@ -7,7 +7,7 @@
     <property name="file.compression" value="gzip" />
     <property name="file.extension" value=".tar.gz" />
 
-    <property name="compress" value="true" />
+    <property name="file.compress" value="true" />
 
 	<!-- Load the build configuration -->
 	<property file="build.properties" override="true" />
@@ -81,26 +81,32 @@
     <target name="build" depends="prepare">
         <mkdir dir="tmp/packages" />
 
-        <tar destfile="tmp/packages/plg_system_koowa${file.extension}" basedir="tmp/plg_system_koowa" compression="${file.compression}" />
-        <tar destfile="tmp/packages/files_koowa${file.extension}" basedir="tmp/clone/code" compression="${file.compression}" />
-
-		<delete file="koowa${file.extension}" quiet="true" />
+        <move todir="tmp/files_koowa">
+            <fileset dir="tmp/clone/code" />
+        </move>
 
         <if>
-            <equals arg1="${compress}" arg2="true" />
+            <equals arg1="${file.compression}" arg2="gzip" />
             <then>
+                <delete file="koowa${file.extension}" quiet="true" />
+
                 <tar destfile="koowa${file.extension}" compression="${file.compression}">
                     <fileset dir="tmp">
-                        <include name="packages" />
+                        <include name="plg_system_koowa/**" />
+                        <include name="files_koowa/**" />
                         <include name="LICENSE" />
                         <include name="pkg_koowa.xml" />
                     </fileset>
                 </tar>
             </then>
             <else>
+                <echo message="${file.compress}" />
+                <delete dir="koowa" />
+
                 <copy todir="koowa">
                     <fileset dir="tmp">
-                        <include name="packages/**" />
+                        <include name="plg_system_koowa/**" />
+                        <include name="files_koowa/**" />
                         <include name="LICENSE" />
                         <include name="pkg_koowa.xml" />
                     </fileset>
