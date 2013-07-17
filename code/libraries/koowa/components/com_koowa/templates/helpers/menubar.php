@@ -55,7 +55,11 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         	return;
         }
 
-		$html = '';
+        if (!count($config->menubar->getCommands())) {
+            return;
+        }
+
+		$html = '<div id="submenu-box"><div class="m">';
 
         $html .= '<ul id="submenu">';
 	    foreach ($config->menubar->getCommands() as $command)
@@ -66,7 +70,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         }
 
         $html .= '</ul>';
-
+        $html .= '<div class="clr"></div></div></div>';
 
 		return $html;
     }
