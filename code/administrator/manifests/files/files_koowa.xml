@@ -18,7 +18,7 @@
             <folder target="libraries/koowa/components/com_koowa">libraries/koowa/components/com_koowa</folder>
             <folder target="libraries/koowa/modules/mod_koowa">libraries/koowa/modules/mod_koowa</folder>
 
-            <folder target="media/lib_koowa">media/lib_koowa</folder>
+            <folder target="media/koowa/library">media/koowa/library</folder>
 		</files>
 	</fileset>
 </extension>
