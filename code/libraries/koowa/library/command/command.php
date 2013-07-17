@@ -38,7 +38,7 @@ class KCommand extends KObject implements KCommandInterface
     /**
      * Constructor.
      *
-     * @param   object  An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      */
     public function __construct( KConfig $config = null)
     {
@@ -55,8 +55,8 @@ class KCommand extends KObject implements KCommandInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   object  An optional KConfig object with configuration options
-     * @return void
+     * @param   KConfig $config Configuration options
+     * @return  void
      */
     protected function _initialize(KConfig $config)
     {

@@ -35,7 +35,7 @@ class KEventDispatcher extends KObject
 	/**
      * Constructor.
      *
-     * @param   object  An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      */
 	public function __construct(KConfig $config = null)
 	{

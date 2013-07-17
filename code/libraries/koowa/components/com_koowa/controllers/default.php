@@ -27,7 +27,7 @@ class ComKoowaControllerDefault extends KControllerService
 	/**
 	 * Constructor
 	 *
-	 * @param 	object 	An optional KConfig object with configuration options.
+	 * @param   KConfig $config Configuration options
 	 */
 	public function __construct(KConfig $config)
 	{
@@ -45,7 +45,7 @@ class ComKoowaControllerDefault extends KControllerService
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param 	object 	An optional KConfig object with configuration options.
+     * @param   KConfig $config Configuration options
      * @return void
      */
     protected function _initialize(KConfig $config)

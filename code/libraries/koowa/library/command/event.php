@@ -32,7 +32,7 @@ class KCommandEvent extends KCommand
     /**
      * Constructor.
      *
-     * @param   object  An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      */
     public function __construct( KConfig $config = null)
     {
@@ -49,8 +49,8 @@ class KCommandEvent extends KCommand
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   object  An optional KConfig object with configuration options
-     * @return void
+     * @param   KConfig $config Configuration options
+     * @return  void
      */
     protected function _initialize(KConfig $config)
     {

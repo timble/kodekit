@@ -91,7 +91,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	/**
 	 * Constructor.
 	 *
-	 * @param 	object 	An optional KConfig object with configuration options.
+	 * @param   KConfig $config Configuration options
 	 * Recognized key values include 'command_chain', 'charset', 'table_prefix',
 	 * (this list is not meant to be comprehensive).
 	 */
@@ -137,7 +137,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param 	object 	An optional KConfig object with configuration options.
+     * @param   KConfig $config Configuration options
      * @return  void
      */
     protected function _initialize(KConfig $config)

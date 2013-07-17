@@ -29,7 +29,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
     /**
      * Constructor.
      *
-     * @param   object  An optional KConfig object with configuration options
+     * @param   KConfig $config Configuration options
      */
     public function __construct(KConfig $config = null)
     {
