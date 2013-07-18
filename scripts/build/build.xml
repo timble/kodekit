@@ -71,7 +71,7 @@
             <fileset dir="tmp/clone/code/plugins/system/koowa" />
         </copy>
 
-        <copy file="tmp/clone/code/libraries/koowa/library/LICENSE"
+        <copy file="tmp/clone/code/libraries/koowa/libraries/LICENSE"
               tofile="tmp/LICENSE" overwrite="true" />
 
         <delete dir="tmp/clone/code/administrator" />
