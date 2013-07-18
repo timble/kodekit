@@ -16,15 +16,15 @@
  * @subpackage	Helper
  * @uses		KArrayHelper
  */
-class KTemplateHelperAccordion extends KTemplateHelperBehavior
+class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 {
 	/**
 	 * Creates a pane and creates the javascript object for it
 	 *
-	 * @param 	array 	An optional array with configuration options
+	 * @param 	array|KConfig $config An optional array with configuration options
 	 * @return 	string	Html
 	 */
-	public function startPane( $config = array() )
+	public function startPane($config = array())
 	{
 		$config = new KConfig($config);
 
@@ -41,11 +41,6 @@ class KTemplateHelperAccordion extends KTemplateHelperBehavior
 		));
 
 		$html  = '';
-
-		// Load the necessary files if they haven't yet been loaded
-		if (!isset($this->_loaded['accordion'])) {
-			$this->_loaded['accordion'] = true;
-		}
 
 		$id      = strtolower($config->id);
 		$attribs = KHelperArray::toString($config->attribs);
@@ -81,7 +76,8 @@ class KTemplateHelperAccordion extends KTemplateHelperBehavior
 	/**
 	 * Ends the pane
 	 *
-	 * @param 	array 	An optional array with configuration options
+     * @param 	array|KConfig $config An optional array with configuration options
+     *
 	 * @return 	string	Html
 	 */
 	public function endPane($config = array())
@@ -92,8 +88,9 @@ class KTemplateHelperAccordion extends KTemplateHelperBehavior
 	/**
 	 * Creates a tab panel with title and starts that panel
 	 *
-	 * @param	string	The title of the tab
-	 * @param	array	An associative array of pane attributes
+     * @param 	array|KConfig $config An optional array with configuration options
+     *
+     * @return 	string	Html
 	 */
 	public function startPanel($config = array())
 	{
@@ -115,7 +112,8 @@ class KTemplateHelperAccordion extends KTemplateHelperBehavior
 	/**
 	 * Ends a tab page
 	 *
-	 * @param 	array 	An optional array with configuration options
+     * @param 	array|KConfig $config An optional array with configuration options
+     *
 	 * @return 	string	Html
 	 */
 	public function endPanel($config = array())
