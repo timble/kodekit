@@ -37,8 +37,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['koowa']))
         {
-            $html .= '<script src="media://koowa/library/js/koowa.js" />';
-            $html .= '<style src="media://koowa/library/css/koowa.css" />';
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/koowa.css" />';
 
             self::$_loaded['koowa'] = true;
         }
@@ -70,7 +70,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             if (version_compare(JVERSION, '3.0', 'ge')) {
                 JHtml::_('jquery.framework');
             } else {
-                $html .= '<script src="media://koowa/library/js/jquery'.($config->debug ? '' : '.min').'.js" />';
+                $html .= '<script src="media://koowa/com_koowa/js/jquery'.($config->debug ? '' : '.min').'.js" />';
             }
 
             self::$_loaded['jquery'] = true;
@@ -276,8 +276,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->mootools();
             $html .= $this->koowa();
 
-            $html .= '<script src="media://koowa/library/js/validator.js" />';
-            $html .= '<script src="media://koowa/library/js/patch.validator.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/validator.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -352,12 +352,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded['autocomplete']))
         {
             if(version_compare(JVERSION, '3.0', 'ge')) {
-                $html .= '<script src="media://koowa/library/js/autocomplete-2.0.js" />';
+                $html .= '<script src="media://koowa/com_koowa/js/autocomplete-2.0.js" />';
             } else {
-                $html .= '<script src="media://koowa/library/js/autocomplete-1.0.js" />';
+                $html .= '<script src="media://koowa/com_koowa/js/autocomplete-1.0.js" />';
             }
-            $html .= '<script src="media://koowa/library/js/patch.autocomplete.js" />';
-            $html .= '<style src="media://koowa/library/css/autocomplete.css" />';
+            $html .= '<script src="media://koowa/com_koowa/js/patch.autocomplete.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/autocomplete.css" />';
         }
 
         $html .= "

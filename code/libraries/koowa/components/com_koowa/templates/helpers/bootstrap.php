@@ -43,7 +43,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
                 self::$_loaded['bootstrap-javascript'] = true;
             }
             else {
-                $html .= '<script src="media://koowa/library/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
+                $html .= '<script src="media://koowa/com_koowa/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
             }
         }
 
@@ -83,7 +83,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             if (!isset(self::$_loaded['bootstrap-css']))
             {
                 $file  = 'bootstrap'.($config->debug ? '' : '.min').'.css';
-                $html .= '<style src="media://koowa/library/css/'.$file.'" />';
+                $html .= '<style src="media://koowa/com_koowa/css/'.$file.'" />';
 
                 self::$_loaded['bootstrap-css'] = true;
             }
