@@ -72,7 +72,12 @@ class plgSystemKoowa extends JPlugin
             )));
 
             KLoader::addAdapter(new KLoaderAdapterComponent(array(
-                'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
+                'basepaths' => array(
+                    '*'          => JPATH_BASE,
+                    'koowa'      => JPATH_LIBRARIES.'/koowa',
+                    'files'      => JPATH_LIBRARIES.'/koowa',
+                    'activities' => JPATH_LIBRARIES.'/koowa'
+                )
             )));
 
             KServiceIdentifier::addLocator(KService::get('koowa:service.locator.module'));
