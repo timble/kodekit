@@ -19,9 +19,4 @@ class KoowaTest extends PHPUnit_Framework_TestCase
 	{
 		$this->assertTrue(class_exists('Koowa'));
 	}
-
-	public function testImportExists()
-	{
-		$this->assertTrue(method_exists('Koowa', 'import'));
-	}
 }
