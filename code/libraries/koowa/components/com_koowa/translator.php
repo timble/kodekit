@@ -199,6 +199,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     }
 
     /**
+     * TODO: koowa/components loading
      * Load the extension language files.
      *
      * First looking at extension folder and then the global language folder
@@ -261,12 +262,14 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     {
         $result = false;
 
-        foreach ($base as $path) {
-            $signature = md5($extension.$path.$locale);
-
+        foreach ($base as $path)
+        {
             $result = $this->_translation_helper->load($extension, $path, $locale, true, false);
-            // var_dump($extension, $locale, $path, $result);
-            if ($result) {
+
+            if ($result)
+            {
+                $signature = md5($extension.$path.$locale);
+
                 if (!in_array($signature, self::$_loaded_files)) {
                     self::$_loaded_files[] = $signature;
                 }
