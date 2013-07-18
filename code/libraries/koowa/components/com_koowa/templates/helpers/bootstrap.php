@@ -15,10 +15,10 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
+class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 {
     /**
-     * Load Bootstrap JavaScript files from Joomla if possible
+     * Load Bootstrap JavaScript files, from Joomla if possible
      *
      * @param array|KConfig $config
      * @return string
@@ -34,7 +34,7 @@ class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
         if (!isset(self::$_loaded['bootstrap-javascript']))
         {
             if (!isset(self::$_loaded['jquery'])) {
-                $html .= $this->getTemplate()->getHelper('behavior')->jquery($config);
+                $html .= $this->jquery($config);
             }
 
             if (version_compare(JVERSION, '3.0', '>='))
@@ -43,7 +43,7 @@ class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
                 self::$_loaded['bootstrap-javascript'] = true;
             }
             else {
-                $html .= parent::javascript($config);
+                $html .= '<script src="media://koowa/library/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
             }
         }
 
@@ -77,11 +77,15 @@ class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
         }
 
         // Load the generic files
-        if (empty($config->package))
+        // We assume that the template has either loaded Bootstrap or provided styles for it in 3.0+
+        if (empty($config->package) && version_compare(JVERSION, '3.0', '<'))
         {
-            // We assume that the template has either loaded Bootstrap or provided styles for it
-            if (!version_compare(JVERSION, '3.0', 'ge')) {
-                $html .= parent::load($config);
+            if (!isset(self::$_loaded['bootstrap-css']))
+            {
+                $file  = 'bootstrap'.($config->debug ? '' : '.min').'.css';
+                $html .= '<style src="media://koowa/library/css/'.$file.'" />';
+
+                self::$_loaded['bootstrap-css'] = true;
             }
         }
         else
@@ -109,5 +113,24 @@ class ComKoowaTemplateHelperBootstrap extends KTemplateHelperBootstrap
         }
 
         return $html;
+    }
+
+    /**
+     * Wrap the output of the template with a filter
+     *
+     * @param array $config
+     */
+    public function wrapper($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'wrapper' => null
+        ));
+
+        if ($config->wrapper)
+        {
+            $this->getTemplate()->addFilter('wrapper');
+            $this->getTemplate()->getFilter('wrapper')->setWrapper($config->wrapper);
+        }
     }
 }

@@ -15,8 +15,14 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
+class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 {
+    /**
+     * Array which holds a list of loaded Javascript libraries
+     *
+     * @type array
+     */
+    protected static $_loaded = array();
 
     /**
      * Loads Mootools from Joomla sources
@@ -39,13 +45,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
 
         return $html;
     }
-
-    /**
-     * Array which holds a list of loaded javascript libraries
-     *
-     * boolean
-     */
-    protected static $_loaded = array();
 
     /**
      * Loads jQuery
