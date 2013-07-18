@@ -59,8 +59,8 @@ class KLoader
         }
 
         //Add the koowa class loader
-        $this->addAdapter(new KLoaderAdapterKoowa(
-            array('basepath' => dirname(dirname(__FILE__)))
+        self::addAdapter(new KLoaderAdapterKoowa(
+            array('basepaths' => array('*' => dirname(dirname(__FILE__))))
         ));
 
         //Auto register the loader
