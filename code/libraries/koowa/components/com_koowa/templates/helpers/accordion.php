@@ -11,6 +11,8 @@
 /**
  * Template Accordion Behavior Helper
  *
+ * TODO: Use JHtmlSliders
+ *
  * @author		Stian Didriksen <stian@timble.net>
  * @package		Koowa_Template
  * @subpackage	Helper
