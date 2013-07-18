@@ -143,7 +143,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Get the view object attached to the template
      *
      * @throws	\UnexpectedValueException	If the views doesn't implement the KViewInterface
-     * @return  KViewInterface
+     * @return  KTemplateInterface
      */
     public function getView()
     {

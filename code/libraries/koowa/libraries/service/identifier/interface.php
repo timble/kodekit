@@ -20,7 +20,7 @@
 interface KServiceIdentifierInterface extends Serializable
 {
     /**
-     * Formats the indentifier as a [application::]type.component.[.path].name string
+     * Formats the identifier as a [application::]type.component.[.path].name string
      *
      * @return string
      */

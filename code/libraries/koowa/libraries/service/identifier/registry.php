@@ -33,7 +33,7 @@ class KServiceIdentifierRegistry extends ArrayObject
 	/**
      * Enable class caching
      *
-     * @param  boolean	Enable or disable the cache. Default is TRUE.
+     * @param  boolean	$enabled Enable or disable the cache. Default is TRUE.
      * @return boolean	TRUE if caching is enabled. FALSE otherwise.
      */
 	public function enableCache($enabled = true)
@@ -50,7 +50,7 @@ class KServiceIdentifierRegistry extends ArrayObject
 	/**
      * Set the cache prefix
      *
-     * @param string The cache prefix
+     * @param string $prefix The cache prefix
      * @return void
      */
 	public function setCachePrefix($prefix)
@@ -71,7 +71,7 @@ class KServiceIdentifierRegistry extends ArrayObject
  	/**
      * Get an item from the array by offset
      *
-     * @param   int     The offset
+     * @param   int     $offset   The offset
      * @return  mixed   The item from the array
      */
     public function offsetGet($offset)
@@ -92,8 +92,8 @@ class KServiceIdentifierRegistry extends ArrayObject
     /**
      * Set an item in the array
      *
-     * @param   int     The offset of the item
-     * @param   mixed   The item's value
+     * @param   int     $offset The offset of the item
+     * @param   mixed   $value  The item's value
      * @return  object  KObjectArray
      */
     public function offsetSet($offset, $value)
@@ -108,7 +108,7 @@ class KServiceIdentifierRegistry extends ArrayObject
 	/**
      * Check if the offset exists
      *
-     * @param   int     The offset
+     * @param   int    $offset The offset
      * @return  bool
      */
     public function offsetExists($offset)

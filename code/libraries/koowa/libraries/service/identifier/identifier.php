@@ -27,6 +27,13 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     protected static $_applications = array();
 
     /**
+     * An associative array of package paths
+     *
+     * @var array
+     */
+    protected static $_packages = array();
+
+    /**
      * Associative array of identifier adapters
      *
      * @var array
@@ -99,8 +106,8 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     /**
      * Constructor
      *
-     * @param   string   Identifier string or object in [application::]type.package.[.path].name format
-     * @throws  KServiceIdentifierException if the identfier is not valid
+     * @param   string  $dientifier Identifier string or object in [application::]type.package.[.path].name format
+     * @throws  KServiceIdentifierException if the identifier is not valid
      */
     public function __construct($identifier)
     {
@@ -177,11 +184,11 @@ class KServiceIdentifier implements KServiceIdentifierInterface
 	/**
 	 * Set an application path
 	 *
-	 * @param string	The name of the application
-	 * @param string	The path of the application
+	 * @param string $application The name of the application
+	 * @param string $path        The path of the application
 	 * @return void
      */
-    public static function setApplication($application, $path)
+    public static function registerApplication($application, $path)
     {
         self::$_applications[$application] = $path;
     }
@@ -189,7 +196,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
 	/**
 	 * Get an application path
 	 *
-	 * @param string	The name of the application
+	 * @param string    $application   The name of the application
 	 * @return string	The path of the application
      */
     public static function getApplication($application)
@@ -207,10 +214,43 @@ class KServiceIdentifier implements KServiceIdentifierInterface
         return self::$_applications;
     }
 
+    /**
+     * Set a package path
+     *
+     * @param string $package    The name of the package
+     * @param string $path       The path of the package
+     * @return void
+     */
+    public static function registerPackage($package, $path)
+    {
+        self::$_packages[$package] = $path;
+    }
+
+    /**
+     * Get a package path
+     *
+     * @param string    $application   The name of the application
+     * @return string	The path of the application
+     */
+    public static function getPackage($package)
+    {
+        return isset(self::$_packages[$package]) ? self::$_packages[$package] : null;
+    }
+
+    /**
+     * Get a list of packages
+     *
+     * @return array
+     */
+    public static function getPackages()
+    {
+        return self::$_packages;
+    }
+
 	/**
      * Add a identifier adapter
      *
-     * @param object    A KServiceLocator
+     * @param KServiceLocatorInterface $locator A KServiceLocator
      * @return void
      */
     public static function addLocator(KServiceLocatorInterface $locator)
@@ -233,8 +273,8 @@ class KServiceIdentifier implements KServiceIdentifierInterface
      *
      * This functions creates a string representation of the identifier.
      *
-     * @param   string  The virtual property to set.
-     * @param   string  Set the virtual property to this value.
+     * @param   string  $property The virtual property to set.
+     * @param   string  $value    Set the virtual property to this value.
      */
     public function __set($property, $value)
     {
@@ -256,6 +296,13 @@ class KServiceIdentifier implements KServiceIdentifierInterface
                }
 
                $this->_basepath = self::$_applications[$value];
+            }
+
+            if($property == 'package')
+            {
+                if(isset(self::$_packages[$value])) {
+                    $this->_basepath = self::$_packages[$value];
+                }
             }
 
             //Set the type
@@ -281,7 +328,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
      * Implements access to virtual properties by reference so that it appears to be
      * a public property.
      *
-     * @param   string  The virtual property to return.
+     * @param   string  $property The virtual property to return.
      * @return  array   The value of the virtual property.
      */
     public function &__get($property)
@@ -296,6 +343,13 @@ class KServiceIdentifier implements KServiceIdentifierInterface
                 $this->_classname = self::$_locators[$this->_type]->findClass($this);
             }
 
+            if($property == 'basepath')
+            {
+                if(isset(self::$_packages[$this->_package])) {
+                    $this->_basepath = self::$_packages[$this->_package];
+                }
+            }
+
             return $this->{'_'.$property};
         }
     }
@@ -303,7 +357,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     /**
      * This function checks if a virtual property is set.
      *
-     * @param   string  The virtual property to return.
+     * @param   string  $property The virtual property to return.
      * @return  boolean True if it exists otherwise false.
      */
     public function __isset($property)
@@ -312,7 +366,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     }
 
     /**
-     * Formats the indentifier as a [application::]type.package.[.path].name string
+     * Formats the identifier as a [application::]type.package.[.path].name string
      *
      * @return string
      */

@@ -84,8 +84,12 @@ class plgSystemKoowa extends JPlugin
             KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
             KServiceIdentifier::addLocator(KService::get('koowa:service.locator.component'));
 
-            KServiceIdentifier::setApplication('site' , JPATH_SITE);
-            KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
+            KServiceIdentifier::registerApplication('site' , JPATH_SITE);
+            KServiceIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
+
+            KServiceIdentifier::registerPackage('koowa'     , JPATH_LIBRARIES.'/koowa');
+            KServiceIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
+            KServiceIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
             KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
             KService::setAlias('translator', 'com:koowa.translator');
