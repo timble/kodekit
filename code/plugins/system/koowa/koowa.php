@@ -68,7 +68,7 @@ class plgSystemKoowa extends JPlugin
             )));
 
             KLoader::addAdapter(new KLoaderAdapterPlugin(array(
-                'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa/components/com_koowa')
+                'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
             KLoader::addAdapter(new KLoaderAdapterComponent(array(

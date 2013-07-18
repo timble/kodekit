@@ -20,7 +20,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  * @subpackage  Finder.Content
  * @since       2.5
  */
-abstract class ComKoowaPluginFinder extends FinderIndexerAdapter
+abstract class PlgKoowaFinder extends FinderIndexerAdapter
 {
     /**
      * Package name
