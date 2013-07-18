@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComKoowaTemplateHelperDate extends KTemplateHelperDate
+class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
 {
     /**
      * Returns formatted date according to current local

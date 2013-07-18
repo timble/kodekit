@@ -16,7 +16,7 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
+class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 {
     /**
      * Render a checkbox field
