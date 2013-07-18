@@ -79,7 +79,7 @@ class KLoaderAdapterModule extends KLoaderAdapterAbstract
                 $basepath = $this->_basepath;
             }
 
-			$path = $this->_basepath.'/modules/'.$module.'/'.$path.'.php';
+			$path = $basepath.'/modules/'.$module.'/'.$path.'.php';
 		}
 
 		return $path;

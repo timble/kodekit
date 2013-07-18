@@ -51,7 +51,7 @@ class KLoaderAdapterPlugin extends KLoaderAdapterAbstract
 		if ($type == 'plg')
 		{
 			if(count($parts)) {
-				$path = $package.'/'.implode('/', $parts);
+				$path = implode('/', $parts);
 			} else {
 				$path = $package;
 			}
@@ -67,7 +67,7 @@ class KLoaderAdapterPlugin extends KLoaderAdapterAbstract
                 $basepath = $this->_basepath;
             }
 
-		    $path = $basepath.'/plugins/'.$package.'/'.$path.'/'.$path.'.php';
+		    $path = $basepath.'/plugins/'.$package.'/'.$path.'.php';
 	    }
 
 		return $path;
