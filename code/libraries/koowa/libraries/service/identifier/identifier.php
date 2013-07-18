@@ -343,11 +343,8 @@ class KServiceIdentifier implements KServiceIdentifierInterface
                 $this->_classname = self::$_locators[$this->_type]->findClass($this);
             }
 
-            if($property == 'basepath')
-            {
-                if(isset(self::$_packages[$this->_package])) {
-                    $this->_basepath = self::$_packages[$this->_package];
-                }
+            if($property == 'basepath' && isset(self::$_packages[$this->_package])) {
+               $this->_basepath = self::$_packages[$this->_package];
             }
 
             return $this->{'_'.$property};
