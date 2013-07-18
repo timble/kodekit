@@ -53,7 +53,7 @@ class plgSystemKoowa extends JPlugin
 		set_exception_handler(array($this, 'exceptionHandler'));
 
 		// Koowa: setup
-        $path = JPATH_LIBRARIES.'/koowa/library/koowa.php';
+        $path = JPATH_LIBRARIES.'/koowa/libraries/koowa.php';
         if (file_exists($path))
         {
             require_once $path;
