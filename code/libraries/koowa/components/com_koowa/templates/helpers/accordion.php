@@ -11,8 +11,6 @@
 /**
  * Template Accordion Behavior Helper
  *
- * TODO: Use JHtmlSliders
- *
  * @author		Stian Didriksen <stian@timble.net>
  * @package		Koowa_Template
  * @subpackage	Helper
@@ -31,48 +29,16 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 		$config = new KConfig($config);
 
 		$config->append(array(
-			'id'	=> 'accordions',
+			'id'	=> 'sliders',
 			'options'	=> array(
 				'duration'		=> 300,
 				'opacity'		=> false,
 				'alwaysHide'	=> true,
 				'scroll'		=> false
-			),
-			'attribs'	=> array(),
-			'events'	=> array()
+			)
 		));
 
-		$html  = '';
-
-		$id      = strtolower($config->id);
-		$attribs = KHelperArray::toString($config->attribs);
-
-		$events			= '';
-		$onActive 		= 'function(e){e.addClass(\'jpane-toggler-down\');e.removeClass(\'jpane-toggler\');}';
-		$onBackground	= 'function(e){e.addClass(\'jpane-toggler\');e.removeClass(\'jpane-toggler-down\');}';
-
-		if($config->events) {
-			$events = '{onActive:'.$onActive.',onBackground:'.$onBackground.'}';
-		}
-
-		$scroll = $config->options->scroll ? ".addEvent('onActive', function(toggler){
-			new Fx.Scroll(window, {duration: this.options.duration, transition: this.transition}).toElement(toggler);
-		})" : '';
-
-		/*
-		 * Until we find a solution that let us pass a string into json_encode without it being quoted,
-		 * we have to use the mootools $merge method to merge events and regular settings back into one
-		 * options object.
-		*/
-		$html .= '
-			<script>
-				window.addEvent(\'domready\', function(){
-					new Accordion($$(\'.panel h3.jpane-toggler\'),$$(\'.panel div.jpane-slider\'),Object.merge('.$events.','.$config->options.'))'.$scroll.';
-				});
-			</script>';
-
-		$html .= '<div id="'.$id.'" class="pane-sliders" '.$attribs.'>';
-		return $html;
+        return JHtml::_('sliders.start', $config->id, KConfig::unbox($config->options));
 	}
 
 	/**
@@ -84,7 +50,7 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 */
 	public function endPane($config = array())
 	{
-		return '</div>';
+        return JHtml::_('sliders.end');
 	}
 
 	/**
@@ -100,15 +66,13 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 
 		$config->append(array(
 			'title'		=> 'Slide',
-			'attribs'	=> array(),
+			'id'     	=> '',
 			'translate'	=> true
 		));
 
-		$title   = $config->translate ? $this->translate($config->title) : $config->title;
-		$attribs = KHelperArray::toString($config->attribs);
+		$title = $config->translate ? $this->translate($config->title) : $config->title;
 
-		$html = '<div class="panel"><h3 class="jpane-toggler title" '.$attribs.'><span>'.$title.'</span></h3><div class="jpane-slider content">';
-		return $html;
+        return JHtml::_('sliders.panel', $title, KConfig::unbox($config->attribs));
 	}
 
 	/**
@@ -120,6 +84,6 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 */
 	public function endPanel($config = array())
 	{
-		return '</div></div>';
+		return '';
 	}
 }
