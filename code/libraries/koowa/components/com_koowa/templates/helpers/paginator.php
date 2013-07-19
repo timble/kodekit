@@ -17,7 +17,7 @@
  * @uses        KRequest
  * @uses        KConfig
  */
-class ComKoowaTemplateHelperPaginator extends KTemplateHelperAbstract
+class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 {
     /**
      * Initializes the options for the object

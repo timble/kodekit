@@ -27,7 +27,7 @@ class ComKoowaControllerResource extends KControllerResource
      */
     protected function _actionGet(KCommandContext $context)
     {
-        $this->getService('translator')->getTranslator($this->getIdentifier())->loadLanguageFiles();
+        $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
 
         return parent::_actionGet($context);
     }

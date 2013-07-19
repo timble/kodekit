@@ -77,6 +77,13 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
 
         $this->setDefaultCatalogue($this->createCatalogue($config->catalogue));
         $this->setAliasCatalogue($this->createCatalogue($config->alias_catalogue));
+
+        if (!in_array('koowa', self::$_loaded_files))
+        {
+            $this->loadLanguageFiles('com_koowa');
+
+            self::$_loaded_files[] = 'koowa';
+        }
     }
 
     /**
@@ -199,54 +206,70 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     }
 
     /**
-     * TODO: koowa/components loading
      * Load the extension language files.
      *
-     * First looking at extension folder and then the global language folder
-     * @param string $extension Extension. Leave blank to get from the identifier.
-     * @param string $base Base application. Leave blank to get from Joomla.
+     * @param string $extension Extension
+     * @param string $app       Application. Leave blank for current one.
+     *
+     * @return boolean
+     */
+    public function loadLanguageFiles($extension, $app = null)
+    {
+        if ($extension instanceof KServiceIdentifier) {
+            $extension = $extension->type.'_'.$extension->package;
+        }
+
+        $folder = $this->_getExtensionFolder($extension, $app);
+
+        $results = array();
+        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, $folder);
+
+        if ($this->getLocale() !== $this->_fallback_locale) {
+            $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), $folder);
+        }
+
+        return in_array(true, $results);
+    }
+
+    /**
+     * Gets the folder for an extension
      *
      * @throws KTranslatorException
      *
-     * @return boolean True if loading succeeds
+     * @param string $extension Extension
+     * @param string $app       Application. Leave blank for current one.
+     *
+     * @return string
      */
-    public function loadLanguageFiles($extension = null, $base = null)
+    protected function _getExtensionFolder($extension, $app = null)
     {
-        if ($extension === null) {
-            $identifier = $this->getIdentifier();
-            $type       = $identifier->type;
-            $extension  = $type.'_'.$identifier->package;
-            $app        = $identifier->application === 'admin' ? 'administrator' : $identifier->application;
-        } else {
-            $type = substr($extension, 0, 3);
-            $app  = null;
-        }
+        $type    = substr($extension, 0, 3);
+        $package = substr($extension, 4);
 
-        if ($base === null)
+        if ($override = KServiceIdentifier::getPackage($package)) {
+            $base = $override;
+        }
+        else
         {
-            if ($app && defined('JPATH_'.strtoupper($app))) {
-                $base = constant('JPATH_'.strtoupper($app));
-            } else {
-                $base = JPATH_BASE;
+            switch ($app) {
+                case 'admin':
+                    $base = JPATH_ADMIN;
+                    break;
+                case 'site':
+                    $base = JPATH_SITE;
+                    break;
+                default:
+                    $base = JPATH_BASE;
             }
         }
 
         if (isset(self::$_type_map[$type])) {
-            $type = self::$_type_map[$type];
+            $type_folder = self::$_type_map[$type];
         } else {
             throw new KTranslatorException(sprintf('Invalid extension type: %s', $type));
         }
 
-        $ext_base = sprintf('%s/%ss/%s', $base, $type, $extension);
-
-        $results = array();
-        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, $ext_base);
-
-        if ($this->getLocale() !== $this->_fallback_locale) {
-            $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), $ext_base);
-        }
-
-        return in_array(true, $results);
+        return sprintf('%s/%ss/%s', $base, $type_folder, $extension);
     }
 
     /**
@@ -400,38 +423,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         $this->_prefix = $prefix;
 
         return $this;
-    }
-
-    /**
-     * Returns a translator object for a specific identifier
-     *
-     * @param KServiceIdentifier|string $identifier
-     * @param KConfig|array             $config
-     *
-     * @throws KTranslatorException
-     * @return KTranslator
-     */
-    public function getTranslator($identifier, $config = array()) {
-        if (is_string($identifier)) {
-            $translator = new KServiceIdentifier($identifier);
-        }
-        elseif ($identifier instanceof KServiceIdentifierInterface) {
-            $translator = clone $identifier;
-        }
-        else {
-            throw new KTranslatorException('Invalid identifier');
-        }
-
-        // If you omit the path in modules KServiceLocatorModule assumes it's a view. Hence:
-        if ($translator->type === 'mod') {
-            $translator->path = array('translator');
-            $translator->name = '';
-        } else {
-            $translator->path = array();
-            $translator->name = 'translator';
-        }
-
-        return $this->getService($translator, $config);
     }
 
     /**
