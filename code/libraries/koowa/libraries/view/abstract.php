@@ -72,6 +72,7 @@ abstract class KViewAbstract extends KObject
 
 		// set the model
 		$this->setModel($config->model);
+        $this->setTranslator($config->translator);
 
 		// set the layout
         $this->setLayout($config->layout);
@@ -208,7 +209,7 @@ abstract class KViewAbstract extends KObject
         {
             if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
             {
-                $identifier = clone $this->getTemplate()->getIdentifier();
+                $identifier = clone $this->getIdentifier();
                 $identifier->path = array();
                 $identifier->name = 'translator';
             } else $identifier = $this->getIdentifier($translator);

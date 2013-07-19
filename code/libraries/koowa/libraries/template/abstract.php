@@ -235,7 +235,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         {
             if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
             {
-                $identifier = clone $this->getTemplate()->getIdentifier();
+                $identifier = clone $this->getIdentifier();
                 $identifier->path = array();
                 $identifier->name = 'translator';
             } else $identifier = $this->getIdentifier($translator);
@@ -246,6 +246,19 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_translator = $translator;
 
         return $this;
+    }
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTranslator()->translate($string, $parameters);
     }
 
 	/**
