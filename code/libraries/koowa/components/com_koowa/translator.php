@@ -240,10 +240,10 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         $ext_base = sprintf('%s/%ss/%s', $base, $type, $extension);
 
         $results = array();
-        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, array($ext_base, $base));
+        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, $ext_base);
 
         if ($this->getLocale() !== $this->_fallback_locale) {
-            $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), array($ext_base, $base));
+            $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), $ext_base);
         }
 
         return in_array(true, $results);
@@ -254,27 +254,21 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      *
      * @param string $extension
      * @param string $locale Locale name
-     * @param array  $base   Base path list
+     * @param string $base   Base path
      *
      * @return bool
      */
-    protected function _loadLanguageFile($extension, $locale, array $base)
+    protected function _loadLanguageFile($extension, $locale, $base)
     {
-        $result = false;
+        $result    = true;
+        $signature = md5($extension.$base.$locale);
 
-        foreach ($base as $path)
+        if (!in_array($signature, self::$_loaded_files))
         {
-            $result = $this->_translation_helper->load($extension, $path, $locale, true, false);
+            $result = $this->_translation_helper->load($extension, $base, $locale, true, false);
 
-            if ($result)
-            {
-                $signature = md5($extension.$path.$locale);
-
-                if (!in_array($signature, self::$_loaded_files)) {
-                    self::$_loaded_files[] = $signature;
-                }
-
-                break;
+            if ($result) {
+                self::$_loaded_files[] = $signature;
             }
         }
 
