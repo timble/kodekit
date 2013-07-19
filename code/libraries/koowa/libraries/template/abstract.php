@@ -16,6 +16,13 @@
 abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 {
     /**
+     * Translator object
+     *
+     * @var	KTranslator
+     */
+    protected $_translator;
+
+    /**
      * The template path
      *
      * @var string
@@ -83,6 +90,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         //Attach the filters
         $this->addFilter($config->filters);
 
+        $this->setTranslator($config->translator);
+
         //Reset the counter
         $this->__counter = 0;
 	}
@@ -98,6 +107,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected function _initialize(KConfig $config)
     {
     	$config->append(array(
+            'translator'       => null,
             'data'             => array(),
             'filters'          => array(),
             'view'             => null,
@@ -202,6 +212,54 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
 		return $this;
 	}
+
+    /**
+     * Gets the translator object
+     *
+     * @return  KTranslator
+     */
+    public function getTranslator()
+    {
+        return $this->_translator;
+    }
+
+    /**
+     * Sets the translator object
+     *
+     * @param string|KTranslator $translator A translator object or identifier
+     * @return $this
+     */
+    public function setTranslator($translator)
+    {
+        if (!$translator instanceof KTranslator)
+        {
+            if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
+            {
+                $identifier = clone $this->getIdentifier();
+                $identifier->path = array();
+                $identifier->name = 'translator';
+            } else $identifier = $this->getIdentifier($translator);
+
+            $translator = $this->getService($identifier);
+        }
+
+        $this->_translator = $translator;
+
+        return $this;
+    }
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTranslator()->translate($string, $parameters);
+    }
 
 	/**
 	 * Load a template by identifier

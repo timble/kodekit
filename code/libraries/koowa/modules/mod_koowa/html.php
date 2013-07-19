@@ -59,8 +59,8 @@ class ModKoowaHtml extends KViewHtml
 		{
 		    $identifier = clone $this->getIdentifier();
 		    $identifier->package = substr($this->module->module, 4);
-		    
-		    $this->getService('translator')->getTranslator($identifier)->loadLanguageFiles();
+
+            $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
 		}
 
         if(empty($this->module->content))

@@ -109,9 +109,6 @@ class plgSystemKoowa extends JPlugin
                     JFactory::getConfig()->set('offset', $offset);
                 }
             }
-
-            // Load language files for the framework
-            KService::get('com:koowa.translator')->loadLanguageFiles();
         }
 
 		parent::__construct($subject, $config);
