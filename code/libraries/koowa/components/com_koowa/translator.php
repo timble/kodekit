@@ -208,8 +208,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Load the extension language files.
      *
-     * @param string $extension Extension
-     * @param string $app       Application. Leave blank for current one.
+     * @param string|KServiceIdentifier $extension Extension identifier or name (e.g. com_docman)
+     * @param string $app Application. Leave blank for current one.
      *
      * @return boolean
      */
