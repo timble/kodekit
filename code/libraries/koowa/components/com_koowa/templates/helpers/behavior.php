@@ -37,8 +37,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['koowa']))
         {
+            $html .= $this->mootools();
+
             $html .= '<script src="media://koowa/com_koowa/js/koowa.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/koowa.css" />';
 
             self::$_loaded['koowa'] = true;
         }
@@ -216,6 +217,15 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['overlay']))
         {
             $html .= $this->koowa();
+
+            $html .= '
+            <style>
+            .-koowa-overlay-status {
+                float: right;
+                background-color:#FFFFDD;
+                padding: 5px;
+            }
+            ';
 
             self::$_loaded['overlay'] = true;
         }
