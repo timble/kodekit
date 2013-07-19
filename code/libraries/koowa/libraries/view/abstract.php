@@ -17,6 +17,13 @@
  */
 abstract class KViewAbstract extends KObject
 {
+    /**
+     * Translator object
+     *
+     * @var	KTranslator
+     */
+    protected $_translator;
+
 	/**
 	 * Model identifier (com://APP/COMPONENT.model.NAME)
 	 *
@@ -81,10 +88,11 @@ abstract class KViewAbstract extends KObject
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-			'model'   	=> $this->getName(),
-	    	'output'	=> '',
-    		'mimetype'	=> '',
-            'layout'    => 'default',
+			'model'   	 => $this->getName(),
+            'translator' => null,
+	    	'output'	 => '',
+    		'mimetype'	 => '',
+            'layout'     => 'default',
 	  	));
 
         parent::_initialize($config);
@@ -144,7 +152,7 @@ abstract class KViewAbstract extends KObject
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	KViewException	If the identifier is not a table identifier
 	 * @return	KViewAbstract
@@ -167,7 +175,7 @@ abstract class KViewAbstract extends KObject
 			else $identifier = $this->getIdentifier($model);
 
 			if($identifier->path[0] != 'model') {
-				throw new KControllerException('Identifier: '.$identifier.' is not a model identifier');
+				throw new KViewException('Identifier: '.$identifier.' is not a model identifier');
 			}
 
 			$model = $identifier;
@@ -177,6 +185,54 @@ abstract class KViewAbstract extends KObject
 
 		return $this;
 	}
+
+    /**
+     * Gets the translator object
+     *
+     * @return  KTranslator
+     */
+    public function getTranslator()
+    {
+        return $this->_translator;
+    }
+
+    /**
+     * Sets the translator object
+     *
+     * @param string|KTranslator $translator A translator object or identifier
+     * @return $this
+     */
+    public function setTranslator($translator)
+    {
+        if (!$translator instanceof KTranslator)
+        {
+            if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
+            {
+                $identifier = clone $this->getTemplate()->getIdentifier();
+                $identifier->path = array();
+                $identifier->name = 'translator';
+            } else $identifier = $this->getIdentifier($translator);
+
+            $translator = $this->getService($identifier);
+        }
+
+        $this->_translator = $translator;
+
+        return $this;
+    }
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTranslator()->translate($string, $parameters);
+    }
 
  	/**
      * Get the layout.
@@ -191,7 +247,7 @@ abstract class KViewAbstract extends KObject
    /**
      * Sets the layout name to use
      *
-     * @param    string  The template name.
+     * @param    string  $layout The template name.
      * @return   KViewAbstract
      */
     public function setLayout($layout)
@@ -214,7 +270,7 @@ abstract class KViewAbstract extends KObject
 	 *
 	 * In templates, use @route()
 	 *
-	 * @param	string	The query string used to create the route
+	 * @param	string	$route The query string used to create the route
 	 * @return 	string 	The route
 	 */
 	public function createRoute( $route = '')
