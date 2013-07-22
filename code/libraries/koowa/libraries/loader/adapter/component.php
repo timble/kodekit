@@ -36,7 +36,7 @@ class KLoaderAdapterComponent extends KLoaderAdapterAbstract
 	 *
 	 * @param  string $classname The class name
      * @param  string $basepath  The base path
-	 * @return string|false		Returns the path on success FALSE on failure
+	 * @return string|bool  	 Returns the path on success FALSE on failure
 	 */
 	public function findPath($classname, $basepath = null)
 	{

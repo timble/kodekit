@@ -96,7 +96,7 @@ class KModelTable extends KModelAbstract
     /**
      * Method to get a table object
      *
-     * Function catches KDatabaseTableExceptions that are thrown for tables that
+     * Function catches RuntimeException that are thrown for tables that
      * don't exist. If no table object can be created the function will return FALSE.
      *
      * @return KDatabaseTableAbstract
@@ -114,7 +114,7 @@ class KModelTable extends KModelAbstract
 
 		        try {
 		            $this->_table = $this->getService($this->_table);
-                } catch (KDatabaseTableException $e) {
+                } catch (RuntimeException $e) {
                     $this->_table = false;
                 }
             }

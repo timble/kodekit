@@ -23,7 +23,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
      * @param   string      The command name
      * @param   object      The command context
      * @return  boolean     Can return both true or false.
-     * @throws  KControllerException
+     * @throws  KControllerExceptionForbidden
      */
     public function execute( $name, KCommandContext $context)
     {
@@ -33,7 +33,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
         {
             if(!$this->_checkToken($context))
             {
-                $context->setError(new KControllerException(
+                $context->setError(new KControllerExceptionForbidden(
                 	'Invalid token or session time-out', KHttpResponse::FORBIDDEN
                 ));
 

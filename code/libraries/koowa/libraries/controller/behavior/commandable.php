@@ -56,7 +56,6 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Get the view object attached to the controller
 	 *
-	 * @throws  KControllerException if the view cannot be found.
 	 * @return	KControllerToolbarAbstract
 	 */
     public function getToolbar()

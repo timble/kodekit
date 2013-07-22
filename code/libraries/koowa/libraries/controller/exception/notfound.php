@@ -1,18 +1,17 @@
 <?php
 /**
- * @version     $Id$
- * @package     Koowa_Database
- * @subpackage	Row
+ * @package     Koowa_Controller
+ * @subpackage  Exception
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link        http://www.nooku.org
  */
 
 /**
- * Database Row Exception class
+ * Controller Exception Not Found Class
  *
  * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Row
+ * @package     Koowa_Controller
+ * @subpackage  Exception
  */
-class KDatabaseRowException extends KDatabaseException {}
+class KControllerExceptionNotFound extends Exception implements KControllerException {}

@@ -66,7 +66,6 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 	/**
 	 * Get the menubar object
 	 *
-	 * @throws  KControllerException if the menubar cannot be found.
 	 * @return	KControllerToolbarAbstract
 	 */
     public function getMenubar()
@@ -93,7 +92,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerBehaviorException	If the identifier is not a view identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract
 	 */
     public function setMenubar($menubar)
@@ -109,7 +108,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 			else $identifier = $this->getIdentifier($menubar);
 
 			if($identifier->path[1] != 'toolbar') {
-				throw new KControllerBehaviorException('Identifier: '.$identifier.' is not a toolbar identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a toolbar identifier');
 			}
 
 			$menubar = $identifier;

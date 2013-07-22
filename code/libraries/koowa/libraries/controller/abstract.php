@@ -122,7 +122,7 @@ abstract class KControllerAbstract extends KObject
      * @param   string      The action to execute
      * @param   object		A command context object
      * @return  mixed|false The value returned by the called method, false in error case.
-     * @throws  KControllerException
+     * @throws  BadMethodCallException
      */
     public function execute($action, KCommandContext $context)
     {
@@ -157,7 +157,7 @@ abstract class KControllerAbstract extends KObject
                 if(isset($this->_mixed_methods[$command])) {
                     $context->result = $this->_mixed_methods[$command]->execute('action.'.$command, $context);
                 } else {
-                    throw new KControllerException("Can't execute '$command', method: '$method' does not exist");
+                    throw new BadMethodCallException("Can't execute '$command', method: '$method' does not exist");
                 }
             }
             else  $context->result = $this->$method($context);
@@ -286,6 +286,8 @@ abstract class KControllerAbstract extends KObject
      * Get a behavior by identifier
      *
      * @return KControllerBehaviorAbstract
+     *
+     * @throws UnexpectedValueException
      */
     public function getBehavior($behavior, $config = array())
     {
@@ -307,7 +309,7 @@ abstract class KControllerAbstract extends KObject
 
            //Check the behavior interface
 		   if(!($behavior instanceof KControllerBehaviorInterface)) {
-			   throw new KControllerBehaviorException("Controller behavior $identifier does not implement KControllerBehaviorInterface");
+			   throw new UnexpectedValueException("Controller behavior $identifier does not implement KControllerBehaviorInterface");
 		   }
        }
        else $behavior = $this->_behaviors[$identifier->name];

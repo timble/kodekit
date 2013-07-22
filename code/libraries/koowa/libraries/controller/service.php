@@ -38,7 +38,6 @@ abstract class KControllerService extends KControllerResource
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerException	If the identifier is not a view identifier
 	 * @return	KControllerAbstract
 	 */
     public function setView($view)
@@ -82,7 +81,7 @@ abstract class KControllerService extends KControllerResource
 	    $name = ucfirst($this->getView()->getName());
 
 		if($this->getModel()->getState()->isUnique() && $data->isNew()) {
-		    $context->setError(new KControllerException($name.' Not Found', KHttpResponse::NOT_FOUND));
+		    $context->setError(new KControllerExceptionNotFound($name.' Not Found', KHttpResponse::NOT_FOUND));
 		}
 
 		return $data;
@@ -109,7 +108,7 @@ abstract class KControllerService extends KControllerResource
 		        $context->status = KHttpResponse::NO_CONTENT;
 		    }
 		}
-		else $context->setError(new KControllerException('Resource Not Found', KHttpResponse::NOT_FOUND));
+		else $context->setError(new KControllerExceptionNotFound('Resource Not Found', KHttpResponse::NOT_FOUND));
 
 		return $data;
 	}
@@ -132,14 +131,14 @@ abstract class KControllerService extends KControllerResource
 		    if($data->save() === false)
 		    {
 			    $error = $data->getStatusMessage();
-		        $context->setError(new KControllerException(
+		        $context->setError(new KControllerExceptionActionFailed(
 		           $error ? $error : 'Add Action Failed', KHttpResponse::INTERNAL_SERVER_ERROR
 		        ));
 
 		    }
 		    else $context->status = KHttpResponse::CREATED;
 		}
-		else $context->setError(new KControllerException('Resource Already Exists', KHttpResponse::BAD_REQUEST));
+		else $context->setError(new KControllerExceptionBadRequest('Resource Already Exists', KHttpResponse::BAD_REQUEST));
 
 		return $data;
 	}
@@ -148,7 +147,7 @@ abstract class KControllerService extends KControllerResource
 	 * Generic delete function
 	 *
 	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRowset	A rowset object containing the deleted rows
+	 * @return 	KDatabaseRowsetInterface	A rowset object containing the deleted rows
 	 */
 	protected function _actionDelete(KCommandContext $context)
 	{
@@ -162,13 +161,13 @@ abstract class KControllerService extends KControllerResource
 	        if($data->delete() === false)
 	        {
 			    $error = $data->getStatusMessage();
-                $context->setError(new KControllerException(
+                $context->setError(new KControllerExceptionActionFailed(
 		            $error ? $error : 'Delete Action Failed', KHttpResponse::INTERNAL_SERVER_ERROR
 		        ));
 		    }
 		    else $context->status = KHttpResponse::NO_CONTENT;
 		}
-		else  $context->setError(new KControllerException('Resource Not Found', KHttpResponse::NOT_FOUND));
+		else  $context->setError(new KControllerExceptionNotFound('Resource Not Found', KHttpResponse::NOT_FOUND));
 
 		return $data;
 	}
@@ -229,7 +228,7 @@ abstract class KControllerService extends KControllerResource
 	 *
 	 * @param	KCommandContext			A command context object
 	 * @return 	KDatabaseRow(set)		A row(set) object containing the modified data
-	 * @throws  KControllerException 	If the model state is not unique
+	 * @throws  KControllerExceptionNotFound 	If the model state is not unique
 	 */
 	protected function _actionPut(KCommandContext $context)
 	{
@@ -251,7 +250,7 @@ abstract class KControllerService extends KControllerResource
 
             $data = parent::execute($action, $context);
 	    }
-	    else $context->setError(new KControllerException(ucfirst('Resource not found', KHttpResponse::BAD_REQUEST)));
+	    else $context->setError(new KControllerExceptionNotFound(ucfirst('Resource not found', KHttpResponse::BAD_REQUEST)));
 
 	    return $data;
 	}

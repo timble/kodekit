@@ -93,7 +93,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KDispatcherException	If the identifier is not a controller identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
 	 * @return	KDispatcherAbstract
 	 */
 	public function setController($controller)
@@ -114,7 +114,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 		    else $identifier = $this->getIdentifier($controller);
 
 			if($identifier->path[0] != 'controller') {
-				throw new KDispatcherException('Identifier: '.$identifier.' is not a controller identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a controller identifier');
 			}
 
 			$controller = $identifier;

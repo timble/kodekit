@@ -87,7 +87,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
      *
      * @param   string|array|object The name of the property, an associative array or an object
      * @param   mixed               The value of the property
-     * @throws  KObjectException
+     * @throws  InvalidArgumentException
      * @return  KObject
      */
     public function set( $property, $value = null )
@@ -105,7 +105,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
         else
         {
             if('_' == substr($property, 0, 1)) {
-                throw new KObjectException("Protected or private properties can't be set outside of object scope in ".get_class($this));
+                throw new InvalidArgumentException("Protected or private properties can't be set outside of object scope in ".get_class($this));
             }
 
             $this->$property = $value;
@@ -242,14 +242,14 @@ class KObject implements KObjectHandlable, KObjectServiceable
 	 *
 	 * @param	string|object	The class identifier or identifier object
 	 * @param	array  			An optional associative array of configuration settings.
-	 * @throws	KObjectException if the service container has not been defined.
+	 * @throws	RuntimeException if the service container has not been defined.
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectServiceable
 	 */
 	final public function getService($identifier, array $config = array())
 	{
 	    if(!isset($this->__service_container)) {
-	        throw new KObjectException("Failed to call ".get_class($this)."::getService(). No service_container object defined.");
+	        throw new RuntimeException("Failed to call ".get_class($this)."::getService(). No service_container object defined.");
 	    }
 
 	    return $this->__service_container->get($identifier, $config);
@@ -258,7 +258,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
 	/**
 	 * Gets the service identifier.
 	 *
-	 * @throws	KObjectException if the service container has not been defined.
+	 * @throws	RuntimeException if the service container has not been defined.
 	 * @return	KServiceIdentifier
 	 * @see 	KObjectServiceable
 	 */
@@ -267,7 +267,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
 		if(isset($identifier))
 		{
 		    if(!isset($this->__service_container)) {
-	            throw new KObjectException("Failed to call ".get_class($this)."::getIdentifier(). No service_container object defined.");
+	            throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No service_container object defined.");
 	        }
 
 		    $result = $this->__service_container->getIdentifier($identifier);

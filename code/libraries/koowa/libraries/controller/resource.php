@@ -104,7 +104,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 * an exception. This is a security measure to make sure we can only explicitly
 	 * get data from views the have been physically defined.
 	 *
-	 * @throws  KControllerException if the view cannot be found.
+	 * @throws  KControllerExceptionNotFound if the view cannot be found.
 	 * @return	KViewAbstract
 	 *
 	 */
@@ -132,7 +132,7 @@ abstract class KControllerResource extends KControllerAbstract
 
 			//Make sure the view exists
 		    if($this->isDispatched() && !file_exists(dirname($this->_view->getIdentifier()->filepath))) {
-		        throw new KControllerException('View : '.$this->_view->getName().' not found', KHttpResponse::NOT_FOUND);
+		        throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found', KHttpResponse::NOT_FOUND);
 		    }
 		}
 
@@ -144,7 +144,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerException	If the identifier is not a view identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	object	A KViewAbstract object or a KServiceIdentifier object
 	 */
 	public function setView($view)
@@ -160,7 +160,7 @@ abstract class KControllerResource extends KControllerAbstract
 			else $identifier = $this->getIdentifier($view);
 
 			if($identifier->path[0] != 'view') {
-				throw new KControllerException('Identifier: '.$identifier.' is not a view identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a view identifier');
 			}
 
 			$view = $identifier;
@@ -201,7 +201,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerException	If the identifier is not a model identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
 	 * @return	object	A KModelAbstract object or a KServiceIdentifier object
 	 */
 	public function setModel($model)
@@ -223,7 +223,7 @@ abstract class KControllerResource extends KControllerAbstract
 
 			if($identifier->path[0] != 'model') {
 
-				throw new KControllerException('Identifier: '.$identifier.' is not a model identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a model identifier');
 			}
 
 			$model = $identifier;
