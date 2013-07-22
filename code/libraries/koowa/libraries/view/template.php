@@ -307,7 +307,7 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * @param   mixed   An object that implements KObjectServiceable, an object that
      *                  implements KServiceIdentifierInterface or valid identifier string
-     * @throws  KDatabaseRowsetException    If the identifier is not a table identifier
+     * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KViewAbstract
      */
     public function setTemplate($template)
@@ -323,7 +323,7 @@ abstract class KViewTemplate extends KViewAbstract
 			else $identifier = $this->getIdentifier($template);
 
             if($identifier->path[0] != 'template') {
-                throw new KViewException('Identifier: '.$identifier.' is not a template identifier');
+                throw new UnexpectedValueException('Identifier: '.$identifier.' is not a template identifier');
             }
 
             $template = $identifier;

@@ -234,7 +234,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Gets the folder for an extension
      *
-     * @throws KTranslatorException
+     * @throws BadMethodCallException
      *
      * @param string $extension Extension
      * @param string $app       Application. Leave blank for current one.
@@ -266,7 +266,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         if (isset(self::$_type_map[$type])) {
             $type_folder = self::$_type_map[$type];
         } else {
-            throw new KTranslatorException(sprintf('Invalid extension type: %s', $type));
+            throw new BadMethodCallException(sprintf('Invalid extension type: %s', $type));
         }
 
         return sprintf('%s/%ss/%s', $base, $type_folder, $extension);
@@ -388,15 +388,15 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * @param object $translator
      *
      * @return $this
-     * @throws KTranslatorException
+     * @throws InvalidArgumentException
      */
     public function setTranslationHelper($translator)
     {
-        if (is_object($translator)) {
-            $this->_translation_helper = $translator;
-        } else {
-            throw new KTranslatorException('Invalid translator');
+        if (!is_object($translator)) {
+            throw new InvalidArgumentException('Invalid translator');
         }
+
+        $this->_translation_helper = $translator;
 
         return $this;
     }

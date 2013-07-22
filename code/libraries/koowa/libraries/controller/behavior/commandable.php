@@ -83,7 +83,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerBehaviorException	If the identifier is not a view identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract
 	 */
     public function setToolbar($toolbar)
@@ -99,7 +99,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 			else $identifier = $this->getIdentifier($toolbar);
 
 			if($identifier->path[1] != 'toolbar') {
-				throw new KControllerBehaviorException('Identifier: '.$identifier.' is not a toolbar identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a toolbar identifier');
 			}
 
 			$toolbar = $identifier;

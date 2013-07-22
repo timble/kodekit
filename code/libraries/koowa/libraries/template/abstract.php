@@ -183,7 +183,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 *
 	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KTemplateException	If the identifier is not a view identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KTemplateAbstract
 	 */
 	public function setView($view)
@@ -202,7 +202,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 			else $identifier = $this->getIdentifier($view);
 
 			if($identifier->path[0] != 'view') {
-				throw new KTemplateException('Identifier: '.$identifier.' is not a view identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a view identifier');
 			}
 
 			$view = $identifier;
@@ -422,7 +422,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             $filter = KService::get($identifier);
 
             if(!($filter instanceof KTemplateFilterInterface)) {
-			    throw new KTemplateException("Template filter $identifier does not implement KTemplateFilterInterface");
+			    throw new UnexpectedValueException("Template filter $identifier does not implement KTemplateFilterInterface");
 		    }
         }
         else $filter = $this->_filters[$identifier->name];
@@ -452,7 +452,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
 	    //Check the helper interface
         if(!($helper instanceof KTemplateHelperInterface)) {
-            throw new KTemplateHelperException("Template helper $identifier does not implement KTemplateHelperInterface");
+            throw new UnexpectedValueException("Template helper $identifier does not implement KTemplateHelperInterface");
         }
 
 		return $helper;
@@ -466,6 +466,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 *
 	 * @param	string	Name of the helper, dot separated including the helper function to call
 	 * @param	mixed	Parameters to be passed to the helper
+     * @throws BadMethodCallException
 	 * @return 	string	Helper output
 	 */
 	public function renderHelper($identifier, $params = array())
@@ -478,7 +479,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
 		//Call the helper function
 		if (!is_callable( array( $helper, $function ) )) {
-			throw new KTemplateHelperException( get_class($helper).'::'.$function.' not supported.' );
+			throw new BadMethodCallException( get_class($helper).'::'.$function.' not supported.' );
 		}
 
 		return $helper->$function($params);

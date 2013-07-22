@@ -139,7 +139,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
      *
      * Additionally checks for Joomla tmp folder if the system directory is not writable
      *
-     * @throws KTemplateException
+     * @throws RuntimeException
      * @return string Folder path
      */
     protected function _getTemporaryDirectory()
@@ -166,7 +166,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
             }
 
             if ($result === false) {
-                throw new KTemplateException('Cannot find a writable temporary directory');
+                throw new RuntimeException('Cannot find a writable temporary directory');
             }
 
             self::$_temporary_directory = $result;

@@ -29,7 +29,7 @@ class KObjectException extends KException
         //Get the call stack
         $traces = $this->getTrace();
 
-        //Traverse up the trace stack to find the actuall function that was not found
+        //Traverse up the trace stack to find the actual function that was not found
         if($traces[0]['function'] == '__call')
         {
             foreach($traces as $trace)

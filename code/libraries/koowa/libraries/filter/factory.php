@@ -66,7 +66,8 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	 * instead of going through the KService identification process.
 	 *
 	 * @param 	string	Filter identifier
-	 * @throws	KFilterException	When the filter could not be found
+     * @throws	\InvalidArgumentException	When the filter could not be found
+     * @throws	\UnexpectedValueException	When the filter does not implement FilterInterface
 	 * @return  KFilterInterface
 	 */
 	protected function _createFilter($filter, $config)
@@ -79,15 +80,15 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 
 			$filter = $this->getService($filter, $config);
 
-		} catch(KServiceServiceException $e) {
-			throw new KFilterException('Invalid filter: '.$filter);
+		} catch(UnexpectedValueException $e) {
+			throw new InvalidArgumentException('Invalid filter: '.$filter);
 		}
 
 	    //Check the filter interface
 		if(!($filter instanceof KFilterInterface))
 		{
 			$identifier = $filter->getIdentifier();
-			throw new KFilterException("Filter $identifier does not implement KFilterInterface");
+			throw new UnexpectedValueException("Filter $identifier does not implement KFilterInterface");
 		}
 
 		return $filter;

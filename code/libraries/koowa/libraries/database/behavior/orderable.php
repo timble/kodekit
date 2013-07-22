@@ -64,7 +64,6 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 *
 	 * @param	integer	Amount to move up or down
 	 * @return 	KDatabaseRowAbstract
-	 * @throws 	KDatabaseBehaviorException
 	 */
 	public function order($change)
 	{

@@ -128,7 +128,7 @@ class KModelTable extends KModelAbstract
      *
      * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-     * @throws  KDatabaseRowsetException    If the identifier is not a table identifier
+     * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KModelTable
      */
     public function setTable($table)
@@ -144,7 +144,7 @@ class KModelTable extends KModelAbstract
 		    else  $identifier = $this->getIdentifier($table);
 
 			if($identifier->path[1] != 'table') {
-				throw new KDatabaseRowsetException('Identifier: '.$identifier.' is not a table identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a table identifier');
 			}
 
 			$table = $identifier;
