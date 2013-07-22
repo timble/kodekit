@@ -96,15 +96,15 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	/**
 	 * Command handler
 	 *
-	 * This function transmlated the command name to a command handler function of
+	 * This function translates the command name to a command handler function of
 	 * the format '_before[Command]' or '_after[Command]. Command handler
 	 * functions should be declared protected.
 	 *
-	 * @param 	string  	The command name
-	 * @param 	object   	The command context
-	 * @return 	boolean		Can return both true or false.
+	 * @param 	string           $name	    The command name
+	 * @param 	KCommandContext  $context 	The command context
+	 * @return 	boolean
 	 */
-	public function execute( $name, KCommandContext $context)
+	public function execute($name, KCommandContext $context)
 	{
 		$identifier = clone $context->caller->getIdentifier();
 		$type       = array_pop($identifier->path);
@@ -152,7 +152,7 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
      * This function also dynamically adds a function of format is[Behavior]
      * to allow client code to check if the behavior is callable.
      *
-     * @param object The mixer requesting the mixable methods.
+     * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array An array of methods
      */
     public function getMixableMethods(KObject $mixer = null)
@@ -174,9 +174,8 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	 * Get an instance of a class based on a class identifier only creating it
 	 * if it doesn't exist yet.
 	 *
-	 * @param	string|object	The class identifier or identifier object
-	 * @param	array  			An optional associative array of configuration settings.
-	 * @throws	KServiceServiceException
+	 * @param	string|object	$identifier The class identifier or identifier object
+	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectServiceable
 	 */
@@ -185,12 +184,14 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	    return $this->__service_container->get($identifier, $config);
 	}
 
-	/**
-	 * Gets the service identifier.
-	 *
-	 * @return	KServiceIdentifier
-	 * @see 	KObjectServiceable
-	 */
+    /**
+     * Gets the service identifier.
+     *
+     * @param mixed $identifier
+     *
+     * @return    KServiceIdentifier
+     * @see    KObjectServiceable
+     */
 	final public function getIdentifier($identifier = null)
 	{
 		if(isset($identifier)) {

@@ -142,7 +142,7 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	object	A KViewAbstract object or a KServiceIdentifier object
@@ -172,7 +172,7 @@ abstract class KControllerResource extends KControllerAbstract
 	}
 
 	/**
-	 * Get the model object attached to the contoller
+	 * Get the model object attached to the controller
 	 *
 	 * @return	KModelAbstract
 	 */
@@ -185,10 +185,10 @@ abstract class KControllerResource extends KControllerAbstract
 		        $this->setModel($this->_model);
 			}
 
-		    //@TODO : Pass the state to the model using the options
+		    /* @TODO : Pass the state to the model using the options
 		    $options = array(
 				'state' => $this->getRequest()
-            );
+            );*/
 
 		    $this->_model = $this->getService($this->_model)->set($this->getRequest());
 		}
@@ -199,7 +199,7 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a model object attached to the controller
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
 	 * @return	object	A KModelAbstract object or a KServiceIdentifier object
@@ -237,10 +237,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Set a URL for browser redirection.
 	 *
-	 * @param	string URL to redirect to.
-	 * @param	string	Message to display on redirect. Optional, defaults to
+	 * @param	string  $url URL to redirect to.
+	 * @param	string	$msg Message to display on redirect. Optional, defaults to
 	 * 			value set internally by controller, if any.
-	 * @param	string	Message type. Optional, defaults to 'message'.
+	 * @param	string	$type Message type. Optional, defaults to 'message'.
 	 * @return	KControllerAbstract
 	 */
 	public function setRedirect( $url, $msg = null, $type = 'message' )
@@ -276,8 +276,8 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Specialised display function.
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	string|false 	The rendered output of the view or false if something went wrong
+	 * @param	KCommandContext	$context A command context object
+	 * @return 	string|bool 	The rendered output of the view or false if something went wrong
 	 */
 	protected function _actionGet(KCommandContext $context)
 	{
@@ -290,8 +290,8 @@ abstract class KControllerResource extends KControllerAbstract
      *
      * This function also pushes any request changes into the model
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {
@@ -309,9 +309,10 @@ abstract class KControllerResource extends KControllerAbstract
 	 *
 	 * For example : $controller->view('name')->limit(10)->browse();
 	 *
-	 * @param	string	Method name
-	 * @param	array	Array containing all the arguments for the original call
-	 * @return	KControllerBread
+	 * @param	string	$method Method name
+	 * @param	array	$args   Array containing all the arguments for the original call
+     *
+	 * @return	mixed
 	 *
 	 * @see http://martinfowler.com/bliki/FluentInterface.html
 	 */

@@ -119,10 +119,12 @@ abstract class KControllerAbstract extends KObject
     /**
      * Execute an action by triggering a method in the derived class.
      *
-     * @param   string      The action to execute
-     * @param   object		A command context object
-     * @return  mixed|false The value returned by the called method, false in error case.
-     * @throws  BadMethodCallException
+     * @param   string          $action  The action to execute
+     * @param   KCommandContext $context A command context object
+     * @throws KException
+     * @throws BadMethodCallException
+     * @return  mixed|bool      The value returned by the called method, false in error case.
+     *
      */
     public function execute($action, KCommandContext $context)
     {
@@ -168,7 +170,6 @@ abstract class KControllerAbstract extends KObject
         //Handle exceptions
         if($context->getError() instanceof KException)
         {
-            //@TODO : Move header handling into a response object
             if($context->headers)
 	        {
 	            foreach($context->headers as $name => $value) {
@@ -229,8 +230,8 @@ abstract class KControllerAbstract extends KObject
 	/**
 	 * Set the request information
 	 *
-	 * @param array	An associative array of request information
-	 * @return KControllerBread
+	 * @param array	$request An associative array of request information
+	 * @return KControllerAbstract
 	 */
 	public function setRequest(array $request)
 	{
@@ -245,7 +246,7 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Check if a behavior exists
      *
-     * @param 	string	The name of the behavior
+     * @param 	string	$behavior The name of the behavior
      * @return  boolean	TRUE if the behavior exists, FALSE otherwise
      */
 	public function hasBehavior($behavior)
@@ -256,7 +257,7 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Add one or more behaviors to the controller
      *
-     * @param   array   Array of one or more behaviors to add.
+     * @param   array   $behaviors Array of one or more behaviors to add.
      * @return  KControllerAbstract
      */
     public function addBehavior($behaviors)
@@ -285,6 +286,8 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Get a behavior by identifier
      *
+     * @param  string        $behavior The name of the behavior
+     * @param  KConfig|array $config Configuration of the behavior
      * @return KControllerBehaviorAbstract
      *
      * @throws UnexpectedValueException
@@ -330,9 +333,9 @@ abstract class KControllerAbstract extends KObject
     /**
      * Register (map) an action to a method in the class.
      *
-     * @param   string  The action.
-     * @param   string  The name of the method in the derived class to perform
-     *                  for this action.
+     * @param   string  $alias  The action.
+     * @param   string  $action The name of the method in the derived class to perform for this action.
+     *
      * @return  KControllerAbstract
      */
     public function registerActionAlias( $alias, $action )
@@ -383,8 +386,11 @@ abstract class KControllerAbstract extends KObject
 	 * using is[Behavior] function. If the behavior exists the function will return
 	 * TRUE, otherwise FALSE.
      *
-     * @param   string  Method name
-     * @param   array   Array containing all the arguments for the original call
+     * @param  string  $method Method name
+     * @param  array   $args   Array containing all the arguments for the original call
+     *
+     * @return mixed
+     *
      * @see execute()
      */
     public function __call($method, $args)

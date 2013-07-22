@@ -89,7 +89,7 @@ abstract class KControllerToolbarAbstract extends KObject
 	/**
      * Get the controller object
      *
-     * @return  KController
+     * @return  KControllerAbstract
      */
     public function getController()
     {
@@ -109,8 +109,8 @@ abstract class KControllerToolbarAbstract extends KObject
     /**
      * Set the toolbar's title
      *
-     * @param   string  Title
-     * @return  KToolbarInterface
+     * @param   string  $title Title
+     * @return  KControllerToolbarAbstract
      */
     public function setTitle($title)
     {
@@ -131,8 +131,8 @@ abstract class KControllerToolbarAbstract extends KObject
     /**
      * Set the toolbar's icon
      *
-     * @param   string  Icon
-     * @return  KControllerToolbarInterface
+     * @param   string  $icon Icon
+     * @return  KControllerToolbarAbstract
      */
     public function setIcon($icon)
     {
@@ -153,7 +153,7 @@ abstract class KControllerToolbarAbstract extends KObject
     /**
      * Add a separator
      *
-     * @return  KControllerToolbarInterface
+     * @return  KControllerToolbarAbstract
      */
     public function addSeparator()
     {
@@ -164,9 +164,9 @@ abstract class KControllerToolbarAbstract extends KObject
     /**
      * Add a command
      *
-     * @param   string	The command name
-     * @param	mixed	Parameters to be passed to the command
-     * @return  KControllerToolbarInterface
+     * @param   string	$name   The command name
+     * @param	mixed	$config Parameters to be passed to the command
+     * @return  KControllerToolbarAbstract
      */
     public function addCommand($name, $config = array())
     {
@@ -209,7 +209,7 @@ abstract class KControllerToolbarAbstract extends KObject
     /**
      * Reset the commands array
      *
-     * @return  KConttrollerToolbarInterface
+     * @return  KControllerToolbarAbstract
      */
     public function reset()
     {
@@ -220,8 +220,10 @@ abstract class KControllerToolbarAbstract extends KObject
  	/**
      * Add a command by it's name
 	 *
-     * @param   string  Method name
-     * @param   array   Array containing all the arguments for the original call
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
+     * @return mixed The result of the function
+     *
      * @see addCommand()
      */
     public function __call($method, $args)

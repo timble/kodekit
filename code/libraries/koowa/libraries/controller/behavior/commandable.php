@@ -80,7 +80,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Method to set a toolbar object attached to the controller
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$toolbar An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract
@@ -112,7 +112,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
     /**
 	 * Add default toolbar commands
 	 * .
-	 * @param	KCommandContext	A command context object
+	 * @param	KCommandContext	$context A command context object
 	 */
     protected function _beforeGet(KCommandContext $context)
     {
@@ -124,7 +124,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Add default toolbar commands and set the toolbar title
 	 * .
-	 * @param	KCommandContext	A command context object
+	 * @param	KCommandContext	$context A command context object
 	 */
     protected function _afterRead(KCommandContext $context)
     {
@@ -158,7 +158,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
     /**
 	 * Add default toolbar commands
 	 * .
-	 * @param	KCommandContext	A command context object
+	 * @param	KCommandContext	$context A command context object
 	 */
     protected function _afterBrowse(KCommandContext $context)
     {

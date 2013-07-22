@@ -60,9 +60,11 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      *
      * Only handles before.action commands to check ACL rules.
      *
-     * @param   string      The command name
-     * @param   object      The command context
-     * @return  boolean     Can return both true or false.
+     * @param   string          $name       The command name
+     * @param   KCommandContext $context    The command context
+     *
+     * @return  boolean
+     *
      * @throws  KControllerExceptionForbidden
      * @throws  KControllerExceptionNotImplemented
      */

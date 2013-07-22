@@ -27,8 +27,8 @@ class KControllerToolbarCommand extends KConfig
     /**
      * Constructor.
      *
-     * @param	string 			The command name
-     * @param   array|KConfig 	An associative array of configuration settings or a KConfig instance.
+     * @param	string 			$name The command name
+     * @param   array|KConfig 	$config An associative array of configuration settings or a KConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
