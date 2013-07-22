@@ -60,10 +60,11 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * Get a value by key
      *
      * @param   string  $key The key name.
+     * @param   mixed   $default The default value
      * @throws  \InvalidArgumentException If the key cannot be found in the array
      * @return  string  The corresponding value.
      */
-    public function get($key = null)
+    public function get($key = null, $default = null)
     {
     	if ($key === null) {
     		throw new InvalidArgumentException('Empty key passed');
