@@ -37,9 +37,9 @@ class Koowa
  	/**
      * Constructor
      *
-     * Prevent creating instances of this class by making the contructor private
+     * Prevent creating instances of this class by making the constructor private
      *
-     * @param  array  An optional array with configuration options.
+     * @param  array  $config An optional array with configuration options.
      */
     final private function __construct($config = array())
     {
@@ -68,7 +68,7 @@ class Koowa
 	/**
      * Singleton instance
      *
-     * @param  array  An optional array with configuration options.
+     * @param  array  $config An optional array with configuration options.
      * @return Koowa
      */
     final public static function getInstance($config = array())

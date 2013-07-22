@@ -32,7 +32,7 @@ if(extension_loaded('apc') && !function_exists('apc_exists'))
     /**
      * Check if an APC key exists
      *
-     * @param  mixed  A string, or an array of strings, that contain keys.
+     * @param  mixed  $keys A string, or an array of strings, that contain keys.
      * @return boolean Returns TRUE if the key exists, otherwise FALSE
      */
     function apc_exists($keys)
