@@ -29,9 +29,9 @@ interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
     /**
      * Append values
      *
-     * This funciton only adds keys that don't exist and it filters out any duplicate values
+     * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  mixed    A value of an or array of values to be appended
+     * @param  mixed    $config A value of an or array of values to be appended
      * @return KConfig
      */
     public function append($config);
@@ -42,7 +42,8 @@ interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
      * If the data being passed is an instance of KConfig the data will be transformed
      * to an associative array.
      *
-     * @return array|scalar
+     * @param mixed|KConfig $data
+     * @return mixed|array
      */
     public static function unbox($data);
 

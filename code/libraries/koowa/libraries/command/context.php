@@ -25,6 +25,8 @@ class KCommandContext extends KConfig
     /**
      * Set the error
      *
+     * @param string $error
+     *
      * @return  KCommandContext
      */
     function setError($error)

@@ -90,12 +90,12 @@ class KCommandChain extends KObjectQueue
      *
      * The priority parameter can be used to override the command priority while enqueueing the command.
      *
-     * @param   KCommandInterface   $command
-     * @param   integer             $priority The command priority, usually between 1 (high priority) and 5 (lowest),
+     * @param   KObjectHandlable   $command
+     * @param   integer            $priority The command priority, usually between 1 (high priority) and 5 (lowest),
      *                                        default is 3. If no priority is set, the command priority will be used
      *                                        instead.
      * @return KCommandChain
-     * @throws \InvalidArgumentException if the object doesn't implement KCommandInterface
+     * @throws \InvalidArgumentException if the object does not implement KCommandInterface
      */
     public function enqueue(KObjectHandlable $command, $priority = null)
     {
@@ -110,9 +110,9 @@ class KCommandChain extends KObjectQueue
     /**
      * Removes a command from the queue
      *
-     * @param   KCommandInterface $command
+     * @param   KObjectHandlable $command
      * @return  boolean    TRUE on success FALSE on failure
-     * @throws  \InvalidArgumentException if the object implement KCommandInterface
+     * @throws  \InvalidArgumentException if the object does not implement KCommandInterface
      */
     public function dequeue(KObjectHandlable $command)
     {
@@ -126,9 +126,9 @@ class KCommandChain extends KObjectQueue
     /**
      * Check if the queue does contain a given object
      *
-     * @param  KCommandInterface $object
+     * @param  KObjectHandlable $command
      * @return bool
-     * @throws  \InvalidArgumentException if the object implement KCommandInterface
+     * @throws  \InvalidArgumentException if the object does not implement KCommandInterface
      */
     public function contains(KObjectHandlable $command)
     {
@@ -170,11 +170,12 @@ class KCommandChain extends KObjectQueue
     /**
      * Enable the chain
      *
-     * @return  void
+     * @return  KCommandChain
      */
     public function enable()
     {
         $this->_enabled = true;
+
         return $this;
     }
 
@@ -183,18 +184,19 @@ class KCommandChain extends KObjectQueue
      *
      * If the chain is disabled running the chain will always return TRUE
      *
-     * @return  void
+     * @return  KCommandChain
      */
     public function disable()
     {
         $this->_enabled = false;
+
         return $this;
     }
 
     /**
      * Set the priority of a command
      *
-     * @param KCommandInterface $command
+     * @param KObjectHandlable  $command
      * @param integer           $priority
      * @return KCommandChain
      * @throws \InvalidArgumentException if the object doesn't implement KCommandInterface
@@ -211,7 +213,7 @@ class KCommandChain extends KObjectQueue
     /**
      * Get the priority of a command
      *
-     * @param  KCommandInterface $object
+     * @param  KObjectHandlable $command
      * @return integer The command priority
      * @throws \InvalidArgumentException if the object doesn't implement KCommandInterface
      */

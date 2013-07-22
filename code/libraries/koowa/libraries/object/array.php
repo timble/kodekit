@@ -44,7 +44,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $object An optional KConfig object with configuration options
+     * @param   KConfig $config An optional KConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KConfig $config)
@@ -63,7 +63,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * @throws  \InvalidArgumentException If the key cannot be found in the array
      * @return  string  The corresponding value.
      */
-    public function get($key = null, $default = null)
+    public function get($key = null)
     {
     	if ($key === null) {
     		throw new InvalidArgumentException('Empty key passed');
@@ -225,7 +225,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     /**
      * Set the data from an array
      *
-     * @param array An associative array of data
+     * @param array $data An associative array of data
      * @return KObjectArray
      */
     public function fromArray(array $data)

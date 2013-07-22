@@ -64,9 +64,9 @@ class KCommandEvent extends KCommand
     /**
      * Command handler
      *
-     * @param   string      The command name
-     * @param   object      The command context
-     * @return  boolean     Always returns true
+     * @param   string          $name     The command name
+     * @param   KCommandContext $context  The command context
+     * @return  boolean         Always returns true
      */
     public function execute($name, KCommandContext $context)
     {

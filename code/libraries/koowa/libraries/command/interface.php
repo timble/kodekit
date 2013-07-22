@@ -15,13 +15,13 @@
  */
 interface KCommandInterface extends KObjectHandlable
 {
-	/**
-	 * Generic Command handler
-	 *
-	 * @param 	string 	The command name
-	 * @param 	object  The command context
-	 * @return	boolean
-	 */
+    /**
+     * Command handler
+     *
+     * @param   string          $name     The command name
+     * @param   KCommandContext $context  The command context
+     * @return  boolean
+     */
 	public function execute( $name, KCommandContext $context);
 
 	/**
