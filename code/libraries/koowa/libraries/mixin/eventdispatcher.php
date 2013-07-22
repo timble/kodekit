@@ -88,7 +88,7 @@ class KMixinEventdispatcher extends KMixinAbstract
      *                 instead.
      * @return  KObject The mixer objects
      */
-    public function addEventListener($event, KObjectHandable $listener, $priority = KEvent::PRIORITY_NORMAL)
+    public function addEventListener($event, KObjectHandlable $listener, $priority = KEvent::PRIORITY_NORMAL)
     {
         $this->_event_dispatcher->addEventListener($event, $listener, $priority);
         return $this->_mixer;
@@ -101,9 +101,9 @@ class KMixinEventdispatcher extends KMixinAbstract
      * @param   object  An object implementing the KObjectHandlable interface
      * @return  KObject  The mixer object
      */
-    public function removeEventListener($event, KObjectHandable $listener)
+    public function removeEventListener($event, KObjectHandlable $listener)
     {
-        $this->_event_dispatcher->removeEventListener($event, $listener, $priority);
+        $this->_event_dispatcher->removeEventListener($event, $listener);
         return $this->_mixer;
     }
 }
