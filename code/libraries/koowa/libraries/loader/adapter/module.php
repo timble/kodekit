@@ -42,14 +42,24 @@ class KLoaderAdapterModule extends KLoaderAdapterAbstract
 	{
 		$path = false;
 
-		$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
-		$parts = explode(' ', $word);
+        if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
+        {
+            /*
+             * Exception rule for Exception classes
+             *
+             * Transform class to lower case to always load the exception class from the /exception/ folder.
+             */
+            if ($pos = strpos($classname, 'Exception')) {
+                $filename  = substr($classname, $pos + strlen('Exception'));
+                $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
+            }
 
-        $type    = array_shift($parts);
-        $package = array_shift($parts);
+            $word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
+            $parts = explode(' ', $word);
 
-		if ($type == 'mod')
-		{
+            $type    = array_shift($parts);
+            $package = array_shift($parts);
+
 		    $module = 'mod_'.$package;
 			$file 	   = array_pop($parts);
 
