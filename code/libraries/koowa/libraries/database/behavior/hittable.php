@@ -21,7 +21,7 @@ class KDatabaseBehaviorHittable extends KDatabaseBehaviorAbstract
     /**
      * Get the methods that are available for mixin based
      *
-     * This function conditionaly mixies the behavior. Only if the mixer
+     * This function conditionally mixes the behavior. Only if the mixer
      * has a 'hits' property the behavior will be mixed in.
      *
      * @param KObject $mixer The mixer requesting the mixable methods.
