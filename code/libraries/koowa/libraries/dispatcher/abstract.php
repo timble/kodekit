@@ -91,7 +91,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	/**
 	 * Method to set a controller object attached to the dispatcher
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$controller An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
 	 * @return	KDispatcherAbstract
@@ -128,7 +128,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	/**
 	 * Dispatch the controller
 	 *
-	 * @param   object		A command context object
+	 * @param   KCommandContext $context A command context object
 	 * @return	mixed
 	 */
 	protected function _actionDispatch(KCommandContext $context)
@@ -150,6 +150,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	 * Either do a redirect or a execute a browse or read action in the controller
 	 * depending on the request method and type
 	 *
+     * @param   KCommandContext $context A command context object
 	 * @return mixed
 	 */
 	protected function _actionForward(KCommandContext $context)
@@ -173,9 +174,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	/**
 	 * Push the controller data into the document
 	 *
-	 * This function divert the standard behavior and will push specific controller data
+	 * This function diverts the standard behavior and will push specific controller data
 	 * into the document
 	 *
+     * @param   KCommandContext $context A command context object
 	 * @return	mixed
 	 */
 	protected function _actionRender(KCommandContext $context)
