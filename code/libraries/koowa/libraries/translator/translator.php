@@ -115,7 +115,7 @@ class KTranslator extends KObject
             throw new InvalidArgumentException('Choose method requires at least 2 strings to choose from');
         }
         
-        $choice = KTranslatorPluralizationrules::get($number, $this->_locale);
+        $choice = KTranslatorInflector::getPluralPosition($number, $this->_locale);
         
         if ($choice > count($strings)-1) {
             $choice = count($strings)-1;

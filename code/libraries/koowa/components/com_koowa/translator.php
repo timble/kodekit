@@ -155,7 +155,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
             throw new InvalidArgumentException('Choose method requires at least 2 strings to choose from');
         }
 
-        $choice = KTranslatorPluralizationrules::get($number, $this->_locale);
+        $choice = KTranslatorInflector::getPluralPosition($number, $this->_locale);
 
         if ($choice === 0) {
             return $this->translate($strings[0], $parameters);
