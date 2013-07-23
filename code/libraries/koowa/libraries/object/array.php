@@ -276,7 +276,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function __isset($key)
     {
-        return $this->has($key) && !is_null($this->_data[$key]);
+        return $this->has($key);
     }
 
     /**
