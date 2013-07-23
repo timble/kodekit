@@ -183,16 +183,16 @@ abstract class KDatabaseTableAbstract extends KObject
         $this->_database = $database;
         return $this;
     }
-    
+
     /**
      * Set the database adapter
      *
-     * @param   KDatabaseAdapterInterface $adapter
-     * @return  KDatabaseTableAbstract
+     * @param KDatabaseAdapterInterface $database
+     * @return  $this
      */
     public function setAdapter(KDatabaseAdapterInterface $database)
     {
-    	return $this->setDatabase();
+    	return $this->setDatabase($database);
     }
 
 	/**
