@@ -41,7 +41,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 
             foreach ($result as $key => $value)
             {
-                if (!KRequest::get('get.'.$key, 'raw')) {
+                if (!KRequest::has('get.'.$key)) {
                     KRequest::set('get.'.$key, $value);
                 }
             }
