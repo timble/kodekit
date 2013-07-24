@@ -19,7 +19,13 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class plgSystemKoowa extends JPlugin
 {
-	public function __construct($subject, $config = array())
+    /**
+     * Boots Koowa framework and applies some bug fixes for certain environments
+     *
+     * @param object $subject
+     * @param array  $config
+     */
+    public function __construct($subject, $config = array())
 	{
 		// Check if database type is MySQLi
 		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
@@ -104,7 +110,7 @@ class plgSystemKoowa extends JPlugin
             //Load the koowa plugins
             JPluginHelper::importPlugin('koowa', null, true);
 
-            //Bugfix : Set offset accoording to user's timezone
+            //Bugfix: Set offset according to user's timezone
             if (!JFactory::getUser()->guest)
             {
                 if ($offset = JFactory::getUser()->getParam('timezone')) {
@@ -183,4 +189,30 @@ class plgSystemKoowa extends JPlugin
             }
         }
 	}
+
+    /**
+     * Adds application response time and memory usage to Chrome Inspector with ChromeLogger extension
+     *
+     * See: https://chrome.google.com/webstore/detail/chrome-logger/noaneddfkdjfnfdakjjmocngnfkfehhd
+     */
+    public function __destruct()
+    {
+        if (JDEBUG && !headers_sent())
+        {
+            $buffer = JProfiler::getInstance('Application')->getBuffer();
+            if ($buffer)
+            {
+                $data = strip_tags(end($buffer));
+                $row = array(array($data), null, 'info');
+
+                $header = array(
+                    'version' => '4.1.0',
+                    'columns' => array('log', 'backtrace', 'type'),
+                    'rows' => array($row)
+                );
+
+                header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));
+            }
+        }
+    }
 }
