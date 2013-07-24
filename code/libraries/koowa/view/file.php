@@ -394,7 +394,7 @@ class KViewFile extends KViewAbstract
             header('Content-Disposition: inline; filename="'.$this->filename.'"');
         } else {
             header('Content-Description: File Transfer');
-            header('Content-type: application/force-download');
+            //header('Content-type: application/force-download');
             header('Content-Disposition: attachment; filename="'.$this->filename.'"');
         }
     }
