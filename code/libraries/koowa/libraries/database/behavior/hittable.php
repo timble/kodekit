@@ -1,6 +1,5 @@
 <?php
 /**
- * @version 	$Id$
  * @category	Koowa
  * @package		Koowa_Database
  * @subpackage 	Behavior

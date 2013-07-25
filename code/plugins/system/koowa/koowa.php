@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: koowa.php 4478 2012-02-10 01:50:39Z johanjanssens
  * @package     Nooku_Plugins
  * @subpackage  System
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
