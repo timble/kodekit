@@ -19,8 +19,8 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
  	/**
      * Command handler
      *
-     * @param   string      The command name
-     * @param   object      The command context
+     * @param   string          $name    The command name
+     * @param   KCommandContext	$context A command context object
      * @return  boolean     Can return both true or false.
      * @throws  KControllerExceptionForbidden
      */
@@ -94,7 +94,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
 	/**
 	 * Check the token to prevent CSRF exploits
 	 *
-	 * @param   object  The command context
+     * @param   KCommandContext	$context A command context object
 	 * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
 	 */
     protected function _checkToken(KCommandContext $context)
