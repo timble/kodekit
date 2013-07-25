@@ -53,8 +53,8 @@ class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 	/**
 	 * Render the module chrome
 	 *
-	 * @param string Block of text to parse
-	 * @return ModKoowaFilterChrome
+	 * @param string $text Block of text to parse
+	 * @return $this
 	 */
 	public function write(&$text)
 	{

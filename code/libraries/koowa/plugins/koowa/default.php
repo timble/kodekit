@@ -51,7 +51,7 @@ abstract class PlgKoowaDefault extends KEventListener
 	/**
 	 * A JRegistry object holding the parameters for the plugin
 	 *
-	 * @var	A JRegistry object
+	 * @var	JRegistry
 	 */
 	protected $_params	= null;
 
@@ -69,9 +69,12 @@ abstract class PlgKoowaDefault extends KEventListener
 	 */
 	protected $_type = null;
 
-	/**
-	 * Constructor
-	 */
+    /**
+     * Constructor.
+     *
+     * @param   object          $dispatcher Event dispatcher
+     * @param   array|KConfig   $config     Configuration options
+     */
 	function __construct($dispatcher, $config = array())
 	{
 		if (isset($config['params']))

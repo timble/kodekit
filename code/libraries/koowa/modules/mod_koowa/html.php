@@ -81,8 +81,8 @@ class ModKoowaHtml extends KViewHtml
     /**
      * Set a view properties
      *
-     * @param   string  The property name.
-     * @param   mixed   The property value.
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
      */
     public function __set($property, $value)
     {
