@@ -84,8 +84,8 @@ class KObject implements KObjectHandlable, KObjectServiceable
     /**
      * Set the object properties
      *
-     * @param   string|array|object The name of the property, an associative array or an object
-     * @param   mixed               The value of the property
+     * @param   string|array|object $property The name of the property, an associative array or an object
+     * @param   mixed               $value    The value of the property
      * @throws  InvalidArgumentException
      * @return  KObject
      */
@@ -122,8 +122,8 @@ class KObject implements KObjectHandlable, KObjectServiceable
      * If the property does not exist and a  default value is specified this is
      * returned, otherwise the function return NULL.
      *
-     * @param   string  The name of the property
-     * @param   mixed   The default value
+     * @param   string  $property The name of the property
+     * @param   mixed   $default  The default value
      * @return  mixed   The value of the property, an associative array or NULL
      */
     public function get($property = null, $default = null)
@@ -157,7 +157,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
      * When using mixin(), the calling object inherits the methods of the mixed
      * in objects, in a LIFO order.
      *
-     * @param   object  An object that implements KMinxInterface
+     * @param   KMixinInterface $object  An object that implements KMinxInterface
      * @return  KObject
      */
     public function mixin(KMixinInterface $object)
@@ -239,8 +239,8 @@ class KObject implements KObjectHandlable, KObjectServiceable
 	 * Get an instance of a class based on a class identifier only creating it
 	 * if it doesn't exist yet.
 	 *
-	 * @param	string|object	The class identifier or identifier object
-	 * @param	array  			An optional associative array of configuration settings.
+	 * @param	string|object	$identifier The class identifier or identifier object
+	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @throws	RuntimeException if the service container has not been defined.
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectServiceable
@@ -257,9 +257,11 @@ class KObject implements KObjectHandlable, KObjectServiceable
 	/**
 	 * Gets the service identifier.
 	 *
-	 * @throws	RuntimeException if the service container has not been defined.
+     * @param   null|KServiceIdentifier|string $identifier Identifier
 	 * @return	KServiceIdentifier
+     *
 	 * @see 	KObjectServiceable
+     * @throws	RuntimeException if the service container has not been defined.
 	 */
 	final public function getIdentifier($identifier = null)
 	{
@@ -291,8 +293,8 @@ class KObject implements KObjectHandlable, KObjectServiceable
     /**
      * Search the mixin method map and call the method or trigger an error
      *
-     * @param  string   The function name
-     * @param  array    The function arguments
+     * @param  string   $method    The function name
+     * @param  array    $arguments The function arguments
      * @throws BadMethodCallException   If method could not be found
      * @return mixed The result of the function
      */
