@@ -74,7 +74,7 @@ class KHelperString
      * @return mixed Number of characters before the last match or FALSE on failure
      * @see http://www.php.net/strrpos
      */
-    public static function strrpos($str, $search)
+    public static function strrpos($str, $search, $offset = FALSE)
     {
         if ( $offset === FALSE )
         {
@@ -266,7 +266,7 @@ class KHelperString
      * @return int < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      * @see http://www.php.net/strcasecmp
     */
-    public static function strcasecmp($str1, $str2)
+    public static function strcasecmp($strX, $strY)
     {
          $strX = KHelperString::strtolower($strX);
          $strY = KHelperString::strtolower($strY);

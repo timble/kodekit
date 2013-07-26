@@ -225,8 +225,8 @@ class KHttpUrl extends KObject
     /**
      * Implements the virtual $query property.
      *
-     * @param   string  The virtual property to set.
-     * @param   string  Set the virtual property to this value.
+     * @param   string  $key The virtual property to set.
+     * @param   string  $val Set the virtual property to this value.
      */
     public function __set($key, $val)
     {
@@ -243,7 +243,7 @@ class KHttpUrl extends KObject
      * Implements access to $_query by reference so that it appears to be
      * a public $query property.
      *
-     * @param   string  The virtual property to return.
+     * @param   string  $key The virtual property to return.
      * @return  array   The value of the virtual property.
      */
     public function &__get($key)
@@ -256,7 +256,7 @@ class KHttpUrl extends KObject
     /**
      * Get the full url, of the format scheme://user:pass@host/path?query#fragment';
      *
-     * @param integer A bitmask of binary or'ed HTTP_URL constants; FULL is the default
+     * @param integer $parts A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @return  string
      */
     public function toString($parts = self::FULL)
@@ -314,7 +314,7 @@ class KHttpUrl extends KObject
     /**
      * Set the url
      *
-     * @param   string  url
+     * @param   string  $url url
      * @return  KHttpUrl
      */
     public function fromString($url)
@@ -365,7 +365,7 @@ class KHttpUrl extends KObject
     /**
      * Returns the query portion as a string or array
      *
-     * @param 	boolean			If TRUE return an array. Default FALSE
+     * @param 	boolean			$toArray If TRUE return an array. Default FALSE
      * @return  string|array    The query string; e.g., `foo=bar&baz=dib`.
      */
     public function getQuery($toArray = false)
@@ -386,7 +386,7 @@ class KHttpUrl extends KObject
      * This will overwrite any previous values. Also, resets the format based
      * on the final path value.
      *
-     * @param   string  The path string to use; for example,"/foo/bar/baz/dib".
+     * @param   string  $path The path string to use; for example,"/foo/bar/baz/dib".
      * A leading slash will *not* create an empty first element; if the string
      * has a leading slash, it is ignored.
      * @return  KHttpUrl
@@ -438,7 +438,7 @@ class KHttpUrl extends KObject
      * Does not use urlencode(); instead, only converts characters found in
      * KHttpUrl::$_encode_path.
      *
-     * @param   array The path elements.
+     * @param   array $spec The path elements.
      * @return string A url path string.
      */
     protected function _pathEncode($spec)

@@ -129,8 +129,8 @@ class KInflector
 	 * Add a word to the cache, useful to make exceptions or to add words in
 	 * other languages
 	 *
-	 * @param	string	Singular word
-	 * @param 	string	Plural word
+	 * @param	string	$singular Singular word
+	 * @param 	string	$plural   Plural word
 	 */
 	public static function addWord($singular, $plural)
 	{
@@ -144,7 +144,7 @@ class KInflector
    	/**
 	 * Singular English word to plural.
 	 *
-	 * @param 	string Word to pluralize
+	 * @param 	string $word Word to pluralize
 	 * @return 	string Plural noun
 	 */
 	public static function pluralize($word)
@@ -179,7 +179,7 @@ class KInflector
    	/**
 	 * Plural English word to singular.
 	 *
-	 * @param 	string Word to singularize.
+	 * @param 	string $word Word to singularize.
 	 * @return 	string Singular noun
 	 */
 	public static function singularize($word)
@@ -247,7 +247,7 @@ class KInflector
 	 * Returns an array of strings each of which is a substring of string formed
 	 * by splitting it at the camelcased letters.
 	 *
-	 * @param	string  Word to explode
+	 * @param	string  $word Word to explode
 	 * @return 	array	Array of strings
 	 */
 	public static function explode($word)
@@ -305,25 +305,24 @@ class KInflector
 	}
 
    	/**
-	 * Converts a table name to its class name according to Koowa
-	 * naming conventions.
+	 * Converts a table name to its class name according to Koowa naming conventions.
 	 *
 	 * Converts "people" to "Person"
 	 *
-	 * @see tableize
+	 * @see tableize()
 	 * @param    string    $table_name    Table name for getting related ClassName.
-	 * @return string SingularClassName
+	 * @return   string
 	 */
-	public static function classify($tableName)
+	public static function classify($table_name)
 	{
-		$result = self::camelize(self::singularize($tableName));
+		$result = self::camelize(self::singularize($table_name));
 		return $result;
 	}
 
 	/**
 	 * Returns camelBacked version of a string.
 	 *
-	 * Same as camelize but first char is lowercased
+	 * Same as camelize but first char is lowercased.
 	 *
 	 * @param string $string
 	 * @return string
@@ -383,9 +382,11 @@ class KInflector
      * Use a negative index to start at the last part of the word (-1 is the
      * last part)
      *
-     * @param   string  Word
-     * @param   integer Index of the part
-     * @param   string  Default value
+     * @param   string  $string  Word
+     * @param   integer $index   Index of the part
+     * @param   string  $default Default value
+     *
+     * @return  string
      */
     public static function getPart($string, $index, $default = null)
     {
