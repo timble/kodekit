@@ -14,4 +14,4 @@
  * @package     Koowa_Service
  * @subpackage  Identifier
  */
-class KServiceIdentifierException extends KException {}
+class KServiceIdentifierException extends Exception {}

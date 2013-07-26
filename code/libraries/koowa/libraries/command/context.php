@@ -37,7 +37,7 @@ class KCommandContext extends KConfig
     /**
      * Get the error
      *
-     * @return  string|KException  The error
+     * @return  string|Exception  The error
      */
     function getError()
     {

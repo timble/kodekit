@@ -120,9 +120,10 @@ abstract class KControllerAbstract extends KObject
      *
      * @param   string          $action  The action to execute
      * @param   KCommandContext $context A command context object
-     * @throws KException
-     * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
+     *
+     * @throws  Exception
+     * @throws  BadMethodCallException
      *
      */
     public function execute($action, KCommandContext $context)
@@ -167,7 +168,7 @@ abstract class KControllerAbstract extends KObject
         }
 
         //Handle exceptions
-        if($context->getError() instanceof KException)
+        if($context->getError() instanceof Exception)
         {
             if($context->headers)
 	        {
