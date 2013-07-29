@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -41,7 +40,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 
             foreach ($result as $key => $value)
             {
-                if (!KRequest::get('get.'.$key, 'raw')) {
+                if (!KRequest::has('get.'.$key)) {
                     KRequest::set('get.'.$key, $value);
                 }
             }

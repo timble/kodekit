@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: abstract.php 1815 2010-03-27 21:42:55Z johan $
  * @package     Koowa_View
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -280,11 +279,11 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Get the identifier for the template with the same name
      *
-     * @return  KTemplate
+     * @return  KTemplateInterface
      */
     public function getTemplate()
     {
-        if(!$this->_template instanceof KTemplateAbstract)
+        if(!$this->_template instanceof KTemplateInterface)
         {
             //Make sure we have a template identifier
             if(!($this->_template instanceof KServiceIdentifier)) {
@@ -307,7 +306,7 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * @param   mixed   An object that implements KObjectServiceable, an object that
      *                  implements KServiceIdentifierInterface or valid identifier string
-     * @throws  KDatabaseRowsetException    If the identifier is not a table identifier
+     * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KViewAbstract
      */
     public function setTemplate($template)
@@ -323,7 +322,7 @@ abstract class KViewTemplate extends KViewAbstract
 			else $identifier = $this->getIdentifier($template);
 
             if($identifier->path[0] != 'template') {
-                throw new KViewException('Identifier: '.$identifier.' is not a template identifier');
+                throw new UnexpectedValueException('Identifier: '.$identifier.' is not a template identifier');
             }
 
             $template = $identifier;

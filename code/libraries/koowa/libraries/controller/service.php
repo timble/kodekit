@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Controller
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -36,9 +35,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerException	If the identifier is not a view identifier
 	 * @return	KControllerAbstract
 	 */
     public function setView($view)
@@ -61,8 +59,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Generic browse action, fetches a list
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRowset	A rowset object containing the selected rows
+	 * @param	KCommandContext	   $context A command context object
+	 * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
 	 */
 	protected function _actionBrowse(KCommandContext $context)
 	{
@@ -73,8 +71,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Generic read action, fetches an item
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRow	A row object containing the selected row
+	 * @param	KCommandContext	$context A command context object
+	 * @return 	KDatabaseRowInterface	 A row object containing the selected row
 	 */
 	protected function _actionRead(KCommandContext $context)
 	{
@@ -82,7 +80,7 @@ abstract class KControllerService extends KControllerResource
 	    $name = ucfirst($this->getView()->getName());
 
 		if($this->getModel()->getState()->isUnique() && $data->isNew()) {
-		    $context->setError(new KControllerException($name.' Not Found', KHttpResponse::NOT_FOUND));
+		    $context->setError(new KControllerExceptionNotFound($name.' Not Found', KHttpResponse::NOT_FOUND));
 		}
 
 		return $data;
@@ -91,8 +89,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Generic edit action, saves over an existing item
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRowset A rowset object containing the updated rows
+	 * @param	KCommandContext	$context A command context object
+	 * @return 	KDatabaseRowsetInterface A rowset object containing the updated rows
 	 */
 	protected function _actionEdit(KCommandContext $context)
 	{
@@ -109,7 +107,7 @@ abstract class KControllerService extends KControllerResource
 		        $context->status = KHttpResponse::NO_CONTENT;
 		    }
 		}
-		else $context->setError(new KControllerException('Resource Not Found', KHttpResponse::NOT_FOUND));
+		else $context->setError(new KControllerExceptionNotFound('Resource Not Found', KHttpResponse::NOT_FOUND));
 
 		return $data;
 	}
@@ -117,8 +115,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Generic add action, saves a new item
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRow 	A row object containing the new data
+	 * @param	KCommandContext	$context A command context object
+	 * @return 	KDatabaseRowInterface 	 A row object containing the new data
 	 */
 	protected function _actionAdd(KCommandContext $context)
 	{
@@ -132,14 +130,14 @@ abstract class KControllerService extends KControllerResource
 		    if($data->save() === false)
 		    {
 			    $error = $data->getStatusMessage();
-		        $context->setError(new KControllerException(
+		        $context->setError(new KControllerExceptionActionFailed(
 		           $error ? $error : 'Add Action Failed', KHttpResponse::INTERNAL_SERVER_ERROR
 		        ));
 
 		    }
 		    else $context->status = KHttpResponse::CREATED;
 		}
-		else $context->setError(new KControllerException('Resource Already Exists', KHttpResponse::BAD_REQUEST));
+		else $context->setError(new KControllerExceptionBadRequest('Resource Already Exists', KHttpResponse::BAD_REQUEST));
 
 		return $data;
 	}
@@ -147,8 +145,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Generic delete function
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRowset	A rowset object containing the deleted rows
+	 * @param	KCommandContext	$context  A command context object
+	 * @return 	KDatabaseRowsetInterface  A rowset object containing the deleted rows
 	 */
 	protected function _actionDelete(KCommandContext $context)
 	{
@@ -162,13 +160,13 @@ abstract class KControllerService extends KControllerResource
 	        if($data->delete() === false)
 	        {
 			    $error = $data->getStatusMessage();
-                $context->setError(new KControllerException(
+                $context->setError(new KControllerExceptionActionFailed(
 		            $error ? $error : 'Delete Action Failed', KHttpResponse::INTERNAL_SERVER_ERROR
 		        ));
 		    }
 		    else $context->status = KHttpResponse::NO_CONTENT;
 		}
-		else  $context->setError(new KControllerException('Resource Not Found', KHttpResponse::NOT_FOUND));
+		else  $context->setError(new KControllerExceptionNotFound('Resource Not Found', KHttpResponse::NOT_FOUND));
 
 		return $data;
 	}
@@ -179,11 +177,11 @@ abstract class KControllerService extends KControllerResource
 	 * This function translates a GET request into a read or browse action. If the view name is
 	 * singular a read action will be executed, if plural a browse action will be executed.
 	 *
-	 * If the result of the read or browse action is not a row or rowset object the fucntion will
-	 * passthrough the result, request the attached view to render itself.
+	 * If the result of the read or browse action is not a row or rowset object the function will
+	 * pass through the result, request the attached view to render itself.
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	string|false 	The rendered output of the view or FALSE if something went wrong
+	 * @param	KCommandContext	$context A command context object
+	 * @return 	string|bool 	The rendered output of the view or FALSE if something went wrong
 	 */
 	protected function _actionGet(KCommandContext $context)
 	{
@@ -208,8 +206,8 @@ abstract class KControllerService extends KControllerResource
 	 * state is unique a edit action will be executed, if not unique an add action will
 	 * be executed.
 	 *
-	 * @param	KCommandContext		A command context object
-	 * @return 	KDatabaseRow(set)	A row(set) object containing the modified data
+	 * @param	KCommandContext	 $context	A command context object
+	 * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
 	 */
 	protected function _actionPost(KCommandContext $context)
 	{
@@ -227,9 +225,10 @@ abstract class KControllerService extends KControllerResource
 	 * If the resource already exists it will be completely replaced based on the data
 	 * available in the request.
 	 *
-	 * @param	KCommandContext			A command context object
-	 * @return 	KDatabaseRow(set)		A row(set) object containing the modified data
-	 * @throws  KControllerException 	If the model state is not unique
+     * @param	KCommandContext	 $context	A command context object
+     * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
+     *
+	 * @throws  KControllerExceptionNotFound 	If the model state is not unique
 	 */
 	protected function _actionPut(KCommandContext $context)
 	{
@@ -251,7 +250,7 @@ abstract class KControllerService extends KControllerResource
 
             $data = parent::execute($action, $context);
 	    }
-	    else $context->setError(new KControllerException(ucfirst('Resource not found', KHttpResponse::BAD_REQUEST)));
+	    else $context->setError(new KControllerExceptionNotFound(ucfirst('Resource not found', KHttpResponse::BAD_REQUEST)));
 
 	    return $data;
 	}

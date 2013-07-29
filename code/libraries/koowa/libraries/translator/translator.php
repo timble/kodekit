@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Translator
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -15,15 +14,32 @@
  */
 class KTranslator extends KObject
 {
+    /**
+     * Locale
+     * @var string
+     */
     protected $_locale;
-    
+
+    /**
+     * Constructor.
+     *
+     * @param   KConfig $config Configuration options
+     */
     public function __construct(KConfig $config)
     {
         parent::__construct($config);
         
         $this->setLocale($config->locale);
     }
-    
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KConfig $config Configuration options.
+     * @return  void
+     */
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
@@ -80,14 +96,14 @@ class KTranslator extends KObject
     {
         return '{'.$key.'}';
     }
-    
+
     /**
      * Translates a string based on the number parameter passed
      *
-     * @param string  $strings Strings to choose from
+     * @param array   $strings Strings to choose from
      * @param integer $number The umber of items
      * @param array   $parameters An array of parameters
-     * 
+     *
      * @throws InvalidArgumentException
      *
      * @return string Translated string
@@ -98,7 +114,7 @@ class KTranslator extends KObject
             throw new InvalidArgumentException('Choose method requires at least 2 strings to choose from');
         }
         
-        $choice = KTranslatorPluralizationrules::get($number, $this->_locale);
+        $choice = KTranslatorInflector::getPluralPosition($number, $this->_locale);
         
         if ($choice > count($strings)-1) {
             $choice = count($strings)-1;
@@ -117,14 +133,25 @@ class KTranslator extends KObject
     {
         return false;
     }
-    
+
+    /**
+     * Sets the locale
+     *
+     * @param $locale
+     * @return $this
+     */
     public function setLocale($locale)
     {
         $this->_locale = $locale;
         
         return $this;
     }
-    
+
+    /**
+     * Gets the locale
+     *
+     * @return string|null
+     */
     public function getLocale()
     {
         return $this->_locale;

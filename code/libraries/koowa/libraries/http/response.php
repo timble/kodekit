@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Koowa_Http
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -110,7 +109,7 @@ class KHttpResponse
     /**
      * Get the http header based on a status code
      *
-     * @param  integer  An http status code
+     * @param  integer  $code An http status code
      * @return string   The http header
      */
     public static function getHeader($code)
@@ -121,7 +120,7 @@ class KHttpResponse
     /**
      * Get the message based on a status code
      *
-     * @param  integer  An http status code
+     * @param  integer  $code An http status code
      * @return string   The message
      */
     public static function getMessage($code)
@@ -132,7 +131,7 @@ class KHttpResponse
     /**
      * Check if an http status code is an error
      *
-     * @param  integer  An http status code
+     * @param  integer  $code An http status code
      * @return boolean  TRUE if the status code is an error code
      */
     public static function isError($code)

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version    	$Id$
  * @package    	Koowa_Request
  * @copyright  	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license    	GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -68,7 +67,7 @@ class KRequest
     /**
      * Constructor
      *
-     * Prevent creating instances of this class by making the contructor private
+     * Prevent creating instances of this class by making the constructor private
      */
     final private function __construct(KConfig $config)
     {
@@ -126,7 +125,8 @@ class KRequest
     /**
      * Force creation of a singleton
      *
-     * @return void
+     * @param  array|KConfig $config
+     * @return $this
      */
     public static function getInstance($config = array())
     {
@@ -148,11 +148,10 @@ class KRequest
     /**
      * Get sanitized data from the request.
      *
-     * @param   string              Variable identifier, prefixed by hash name eg post.foo.bar
-     * @param   mixed               Filter(s), can be a KFilter object, a filter name, an array of filter names or a filter identifier
-     * @param   mixed               Default value when the variable doesn't exist
-     * @throws  KRequestException   When an invalid filter was passed
-     * @return  mixed               The sanitized data
+     * @param   string   $identifier Variable identifier, prefixed by hash name eg post.foo.bar
+     * @param   mixed    $filter     Filter(s), can be a KFilter object, a filter name, an array of filter names or a filter identifier
+     * @param   mixed    $default    Default value when the variable doesn't exist
+     * @return  mixed                The sanitized data
      */
     public static function get($identifier, $filter, $default = null)
     {
@@ -194,8 +193,10 @@ class KRequest
     /**
      * Set a variable in the request. Cookies and session data are stored persistently.
      *
-     * @param   mixed   Variable identifier, prefixed by hash name eg post.foo.bar
-     * @param   mixed   Variable value
+     * @param   mixed   $identifier Variable identifier, prefixed by hash name eg post.foo.bar
+     * @param   mixed   $value      Variable value
+     *
+     * @throws RuntimeException
      */
     public static function set($identifier, $value)
     {
@@ -217,7 +218,7 @@ class KRequest
             }
  
             if(!setcookie($name, $value)) {
-                throw new KRequestException("Couldn't set cookie, headers already sent.");
+                throw new RuntimeException("Couldn't set cookie, headers already sent.");
             }
         }
 
@@ -237,7 +238,7 @@ class KRequest
     /**
      * Check if a variable exists based on an identifier
      *
-     * @param   string  Variable identifier, prefixed by hash name eg post.foo.bar
+     * @param   string  $identifier Variable identifier, prefixed by hash name eg post.foo.bar
      * @return  boolean
      */
     public static function has($identifier)
@@ -259,7 +260,7 @@ class KRequest
      *
      * The raw post data is not available with enctype="multipart/form-data".
      *
-     * @param   string  The content data to return. Can be 'type' or 'data'.
+     * @param   string  $key The content data to return. Can be 'type' or 'data'.
      *                  If not set, all the data will be returned.
      * @return  array   An associative array with the content data. Valid keys are
      *                  'type' and 'data'
@@ -303,7 +304,7 @@ class KRequest
     /**
      * Get the accept request information
      *
-     * @param   string  The accept data to return. Can be 'format', 'encoding' or 'language'.
+     * @param   string  $type The accept data to return. Can be 'format', 'encoding' or 'language'.
      *                  If not set, all the accept data will be returned.
      * @return  array   An associative array with the content data. Valid keys are
      *                  'format', 'encoding' and 'language'
@@ -347,7 +348,7 @@ class KRequest
      * 'referer' a commonly used misspelling word for 'referrer'
      * @see     http://en.wikipedia.org/wiki/HTTP_referrer
      *
-     * @param   boolean     Only allow internal url's
+     * @param   boolean     $isInternal Only allow internal url's
      * @return  KHttpUrl    A KHttpUrl object
      */
     public static function referrer($isInternal = true)
@@ -461,13 +462,14 @@ class KRequest
      * In most case this value will be the same as KRequest::base however it can be
      * changed by pushing in a different value
      *
-     * @return  object  A KHttpUrl object
+     * @param   null|KHttpUrl Used to change the stored root path
+     * @return  KHttpUrl  A KHttpUrl object
      */
     public static function root($path = null)
     {
         if(!is_null($path))
         {
-            if(!$path instanceof KhttpUrl) {
+            if(!$path instanceof KHttpUrl) {
                 $path = KService::get('koowa:http.url', array('url' => $path));
             }
 
@@ -613,7 +615,7 @@ class KRequest
     /**
      * Parse the variable identifier
      *
-     * @param   string  Variable identifier
+     * @param   string  $identifier Variable identifier
      * @return  array   0 => hash, 1 => parts
      */
     protected static function _parseIdentifier($identifier)
@@ -640,8 +642,8 @@ class KRequest
      * Parses an accept header and returns an array (type => quality) of the
      * accepted types, ordered by quality.
      *
-     * @param string    header to parse
-     * @param array     default values
+     * @param string    $accept   header to parse
+     * @param array     $defaults default values
      * @return array
      */
     protected static function _parseAccept( $accept, array $defaults = NULL)

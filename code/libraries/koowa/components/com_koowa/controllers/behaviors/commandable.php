@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -66,7 +65,6 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 	/**
 	 * Get the menubar object
 	 *
-	 * @throws  KControllerException if the menubar cannot be found.
 	 * @return	KControllerToolbarAbstract
 	 */
     public function getMenubar()
@@ -91,9 +89,9 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 	/**
 	 * Method to set a menubar object attached to the controller
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$menubar An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerBehaviorException	If the identifier is not a view identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract
 	 */
     public function setMenubar($menubar)
@@ -109,7 +107,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 			else $identifier = $this->getIdentifier($menubar);
 
 			if($identifier->path[1] != 'toolbar') {
-				throw new KControllerBehaviorException('Identifier: '.$identifier.' is not a toolbar identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a toolbar identifier');
 			}
 
 			$menubar = $identifier;
@@ -123,7 +121,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
     /**
 	 * Add default toolbar commands
 	 * .
-	 * @param	KCommandContext	A command context object
+     * @param   KCommandContext	$context A command context object
 	 */
     protected function _afterGet(KCommandContext $context)
     {

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: default.php 3655 2011-06-27 20:35:22Z johanjanssens $
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -139,7 +138,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
      *
      * Additionally checks for Joomla tmp folder if the system directory is not writable
      *
-     * @throws KTemplateException
+     * @throws RuntimeException
      * @return string Folder path
      */
     protected function _getTemporaryDirectory()
@@ -166,7 +165,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
             }
 
             if ($result === false) {
-                throw new KTemplateException('Cannot find a writable temporary directory');
+                throw new RuntimeException('Cannot find a writable temporary directory');
             }
 
             self::$_temporary_directory = $result;

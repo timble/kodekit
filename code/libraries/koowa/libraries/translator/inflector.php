@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Koowa_Translator
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -15,10 +14,10 @@
  * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
  */
-class KTranslatorPluralizationrules
+class KTranslatorInflector extends KInflector
 {
     // @codeCoverageIgnoreStart
-    private static $rules = array();
+    private static $position_rules = array();
 
     /**
      * Returns the plural position to use for the given locale and number.
@@ -28,7 +27,7 @@ class KTranslatorPluralizationrules
      *
      * @return integer The plural position
      */
-    public static function get($number, $locale)
+    public static function getPluralPosition($number, $locale)
     {
         if ("pt-BR" == $locale) {
             // temporary set a locale for brazilian
@@ -39,8 +38,8 @@ class KTranslatorPluralizationrules
             $locale = substr($locale, 0, -strlen(strrchr($locale, '-')));
         }
 
-        if (isset(self::$rules[$locale])) {
-            $return = call_user_func(self::$rules[$locale], $number);
+        if (isset(self::$position_rules[$locale])) {
+            $return = call_user_func(self::$position_rules[$locale], $number);
 
             if (!is_int($return) || $return < 0) {
                 return 0;
@@ -192,9 +191,10 @@ class KTranslatorPluralizationrules
      * @param string $rule   A PHP callable
      * @param string $locale The locale
      *
+     * @throws LogicException
      * @return null
      */
-    public static function set($rule, $locale)
+    public static function setPluralRule($rule, $locale)
     {
         if ("pt_BR" == $locale) {
             // temporary set a locale for brazilian
@@ -209,7 +209,7 @@ class KTranslatorPluralizationrules
             throw new LogicException('The given rule can not be called');
         }
 
-        self::$rules[$locale] = $rule;
+        self::$position_rules[$locale] = $rule;
     }
 
     // @codeCoverageIgnoreEnd

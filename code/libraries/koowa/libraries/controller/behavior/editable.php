@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Controller
  * @subpackage	Command
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -124,7 +123,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * Only lock if the context contains a row object and the view layout is 'form'.
 	 *
-	 * @param 	KCommandContext		The active command context
+	 * @param  KCommandContext $context The active command context
 	 * @return void
 	 */
 	public function lockResource(KCommandContext $context)
@@ -145,7 +144,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	/**
 	 * Unlock callback
 	 *
-	 * @param 	KCommandContext		The active command context
+	 * @param 	KCommandContext	$context The active command context
 	 * @return void
 	 */
 	public function unlockResource(KCommandContext $context)
@@ -164,8 +163,8 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function also sets the redirect to the referrer.
 	 *
-	 * @param   KCommandContext	A command context object
-	 * @return 	KDatabaseRow 	A row object containing the saved data
+	 * @param   KCommandContext	$context  A command context object
+	 * @return 	KDatabaseRowsetInterface  A row object containing the saved data
 	 */
 	protected function _actionSave(KCommandContext $context)
 	{
@@ -187,8 +186,8 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function also sets the redirect to the current url
 	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRow 	A row object containing the saved data
+	 * @param	KCommandContext	         $context A command context object
+	 * @return 	KDatabaseRowsetInterface 	      A row object containing the saved data
 	 */
 	protected function _actionApply(KCommandContext $context)
 	{
@@ -224,9 +223,9 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 * Cancel action
 	 *
 	 * This function will unlock the row(s) and set the redirect to the referrer
-	 *
-	 * @param	KCommandContext	A command context object
-	 * @return 	KDatabaseRow	A row object containing the data of the cancelled object
+     *
+     * @param	KCommandContext	         $context A command context object
+     * @return 	KDatabaseRowInterface 	      A row object containing the saved data
 	 */
 	protected function _actionCancel(KCommandContext $context)
 	{

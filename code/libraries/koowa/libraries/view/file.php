@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: file.php 4738 2012-08-01 21:58:29Z johanjanssens $
  * @package     Koowa_View
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -134,13 +133,13 @@ class KViewFile extends KViewAbstract
     /**
      * Return the views output
      *
-     * @throws KViewException
+     * @throws RuntimeException
      * @return void
      */
     public function display()
     {
         if (empty($this->path) && empty($this->output)) {
-        	throw new KViewException('No output or path supplied');
+        	throw new RuntimeException('No output or path supplied');
         }
 
     	// For a certain unmentionable browser
@@ -165,7 +164,7 @@ class KViewFile extends KViewAbstract
 
     	if (!empty($this->output)) { // File body is passed as string
     		if (empty($this->filename)) {
-    			throw new KViewException('No filename supplied');
+    			throw new RuntimeException('No filename supplied');
     		}
     	} elseif (!empty($this->path)) { // File is read from disk
     		if (empty($this->filename)) {
@@ -175,7 +174,7 @@ class KViewFile extends KViewAbstract
 
         $transport = '_transport'.ucfirst(strtolower($this->transport));
     	if (!method_exists($this, $transport)) {
-    	    throw new KViewException('Transport method is missing');
+    	    throw new RuntimeException('Transport method is missing');
     	}
     	
     	$this->$transport();
@@ -190,8 +189,9 @@ class KViewFile extends KViewAbstract
      *
      * Supports HTTP_RANGE headers
      *
+     * @throws RuntimeException
+     * @throws OutOfRangeException
      * @return int Number of bytes served
-     * @throws KViewException
      */
     protected function _transportPhp()
     {
@@ -219,7 +219,7 @@ class KViewFile extends KViewAbstract
             }
                 
             if ($this->start_point > $this->filesize) {
-                throw new KViewException('Invalid start point given in range header');
+                throw new OutOfRangeException('Invalid start point given in range header');
             }
     
             header('HTTP/1.0 206 Partial Content');
@@ -242,7 +242,7 @@ class KViewFile extends KViewAbstract
         }
 
         if ($this->file === false) {
-            throw new KViewException('Cannot open file');
+            throw new RuntimeException('Cannot open file');
         }
 
         if ($this->start_point > 0) {
@@ -263,7 +263,7 @@ class KViewFile extends KViewAbstract
             //get data chunk
             $buffer = fread($this->file, $chunk_size);
             if ($buffer === false) {
-                throw new KViewException('Could not read file');
+                throw new RuntimeException('Could not read file');
             }
     
             echo $buffer;
@@ -282,7 +282,7 @@ class KViewFile extends KViewAbstract
      * Transports file using Apache Sendfile module
      *
      * @return void
-     * @throws KViewException
+     * @throws RuntimeException
      */
     protected function _transportApache()
     {
@@ -291,7 +291,7 @@ class KViewFile extends KViewAbstract
             return;
         }
         elseif (empty($this->path)) {
-            throw new KViewException('File path is missing');
+            throw new RuntimeException('File path is missing');
         }
     
         $this->_setHeaders();
@@ -302,7 +302,7 @@ class KViewFile extends KViewAbstract
      * Transports file using Nginx
      *
      * @return void
-     * @throws KViewException
+     * @throws RuntimeException
      */
     protected function _transportNginx()
     {
@@ -311,7 +311,7 @@ class KViewFile extends KViewAbstract
             return;
         }
         elseif (empty($this->path)) {
-            throw new KViewException('File path is missing');
+            throw new RuntimeException('File path is missing');
         }
     
         $this->_setHeaders();
@@ -323,7 +323,7 @@ class KViewFile extends KViewAbstract
      * Transports file using Lighttpd
      *
      * @return void
-     * @throws KViewException
+     * @throws RuntimeException
      */
     protected function _transportLighttpd()
     {
@@ -332,7 +332,7 @@ class KViewFile extends KViewAbstract
             return;
         }
         elseif (empty($this->path)) {
-            throw new KViewException('File path is missing');
+            throw new RuntimeException('File path is missing');
         }
     
         $this->_setHeaders();
@@ -394,7 +394,7 @@ class KViewFile extends KViewAbstract
             header('Content-Disposition: inline; filename="'.$this->filename.'"');
         } else {
             header('Content-Description: File Transfer');
-            header('Content-type: application/force-download');
+            //header('Content-type: application/force-download');
             header('Content-Disposition: attachment; filename="'.$this->filename.'"');
         }
     }

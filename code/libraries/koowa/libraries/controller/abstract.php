@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Controller
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -119,10 +118,13 @@ abstract class KControllerAbstract extends KObject
     /**
      * Execute an action by triggering a method in the derived class.
      *
-     * @param   string      The action to execute
-     * @param   object		A command context object
-     * @return  mixed|false The value returned by the called method, false in error case.
-     * @throws  KControllerException
+     * @param   string          $action  The action to execute
+     * @param   KCommandContext $context A command context object
+     * @return  mixed|bool      The value returned by the called method, false in error case.
+     *
+     * @throws  Exception
+     * @throws  BadMethodCallException
+     *
      */
     public function execute($action, KCommandContext $context)
     {
@@ -157,7 +159,7 @@ abstract class KControllerAbstract extends KObject
                 if(isset($this->_mixed_methods[$command])) {
                     $context->result = $this->_mixed_methods[$command]->execute('action.'.$command, $context);
                 } else {
-                    throw new KControllerException("Can't execute '$command', method: '$method' does not exist");
+                    throw new BadMethodCallException("Can't execute '$command', method: '$method' does not exist");
                 }
             }
             else  $context->result = $this->$method($context);
@@ -166,9 +168,8 @@ abstract class KControllerAbstract extends KObject
         }
 
         //Handle exceptions
-        if($context->getError() instanceof KException)
+        if($context->getError() instanceof Exception)
         {
-            //@TODO : Move header handling into a response object
             if($context->headers)
 	        {
 	            foreach($context->headers as $name => $value) {
@@ -229,8 +230,8 @@ abstract class KControllerAbstract extends KObject
 	/**
 	 * Set the request information
 	 *
-	 * @param array	An associative array of request information
-	 * @return KControllerBread
+	 * @param array	$request An associative array of request information
+	 * @return KControllerAbstract
 	 */
 	public function setRequest(array $request)
 	{
@@ -245,7 +246,7 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Check if a behavior exists
      *
-     * @param 	string	The name of the behavior
+     * @param 	string	$behavior The name of the behavior
      * @return  boolean	TRUE if the behavior exists, FALSE otherwise
      */
 	public function hasBehavior($behavior)
@@ -256,7 +257,7 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Add one or more behaviors to the controller
      *
-     * @param   array   Array of one or more behaviors to add.
+     * @param   array   $behaviors Array of one or more behaviors to add.
      * @return  KControllerAbstract
      */
     public function addBehavior($behaviors)
@@ -285,7 +286,11 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Get a behavior by identifier
      *
+     * @param  string        $behavior The name of the behavior
+     * @param  KConfig|array $config Configuration of the behavior
      * @return KControllerBehaviorAbstract
+     *
+     * @throws UnexpectedValueException
      */
     public function getBehavior($behavior, $config = array())
     {
@@ -307,7 +312,7 @@ abstract class KControllerAbstract extends KObject
 
            //Check the behavior interface
 		   if(!($behavior instanceof KControllerBehaviorInterface)) {
-			   throw new KControllerBehaviorException("Controller behavior $identifier does not implement KControllerBehaviorInterface");
+			   throw new UnexpectedValueException("Controller behavior $identifier does not implement KControllerBehaviorInterface");
 		   }
        }
        else $behavior = $this->_behaviors[$identifier->name];
@@ -328,9 +333,9 @@ abstract class KControllerAbstract extends KObject
     /**
      * Register (map) an action to a method in the class.
      *
-     * @param   string  The action.
-     * @param   string  The name of the method in the derived class to perform
-     *                  for this action.
+     * @param   string  $alias  The action.
+     * @param   string  $action The name of the method in the derived class to perform for this action.
+     *
      * @return  KControllerAbstract
      */
     public function registerActionAlias( $alias, $action )
@@ -381,8 +386,11 @@ abstract class KControllerAbstract extends KObject
 	 * using is[Behavior] function. If the behavior exists the function will return
 	 * TRUE, otherwise FALSE.
      *
-     * @param   string  Method name
-     * @param   array   Array containing all the arguments for the original call
+     * @param  string  $method Method name
+     * @param  array   $args   Array containing all the arguments for the original call
+     *
+     * @return mixed
+     *
      * @see execute()
      */
     public function __call($method, $args)

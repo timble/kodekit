@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package     Koowa_Database
  * @subpackage  Adapter
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -40,7 +39,6 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
  	protected $_type_map = array(
 
  	    // numeric
- 	    'smallint'          => 'int',
  	    'int'               => 'int',
  	    'integer'           => 'int',
  	    'bigint'            => 'int',
@@ -83,7 +81,6 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
  	   	'blob'				=> 'raw',
  		'tinyblob'			=> 'raw',
  		'mediumblob'		=> 'raw',
- 	   	'longtext'          => 'raw',
  	 	'longblob'          => 'raw',
 
  		//other
@@ -115,11 +112,12 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
         parent::_initialize($config);
     }
 
-	/**
-	 * Connect to the db
-	 *
-	 * @return KDatabaseAdapterMysqli
-	 */
+    /**
+     * Connect to the db
+     *
+     * @throws RuntimeException
+     * @return KDatabaseAdapterMysqli
+     */
 	 public function connect()
 	 {
 		$oldErrorReporting = error_reporting(0);
@@ -136,7 +134,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		error_reporting($oldErrorReporting);
 
 		if (mysqli_connect_errno()) {
-			throw new KDatabaseAdapterException('Connect failed: (' . mysqli_connect_errno() . ') ' . mysqli_connect_error(), mysqli_connect_errno());
+			throw new RuntimeException('Connect failed: (' . mysqli_connect_errno() . ') ' . mysqli_connect_error(), mysqli_connect_errno());
 		}
 
 		// If supported, request real datatypes from MySQL instead of returning everything as a string.
@@ -181,14 +179,14 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Set the connection
 	 *
-	 * @param 	resource 	The connection resource
+	 * @param 	resource 	$resource The connection resource
 	 * @return  KDatabaseAdapterAbstract
-	 * @throws  KDatabaseAdapterException If the resource is not an MySQLi instance
+	 * @throws  InvalidArgumentException If the resource is not an MySQLi instance
 	 */
 	public function setConnection($resource)
 	{
 	    if(!($resource instanceof MySQLi)) {
-	        throw new KDatabaseAdapterException('Not a MySQLi connection');
+	        throw new InvalidArgumentException('Not a MySQLi connection');
 	    }
 
 	    $this->_connection = $resource;
@@ -215,13 +213,15 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Set the database name
 	 *
-	 * @param 	string 	The database name
+	 * @param 	string 	$database The database name
 	 * @return  KDatabaseAdapterAbstract
+     *
+     * @throws RuntimeException
 	 */
 	public function setDatabase($database)
 	{
 	    if(!$this->_connection->select_db($database)) {
-			throw new KDatabaseException('Could not connect with database : '.$database);
+			throw new RuntimeException('Could not connect with database : '.$database);
 	    }
 
 	    $this->_database = $database;
@@ -231,7 +231,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Retrieves the table schema information about the given table
 	 *
-	 * @param 	string 	A table name or a list of table names
+	 * @param 	string 	$table A table name or a list of table names
 	 * @return	KDatabaseSchemaTable
 	 */
 	public function getTableSchema($table)
@@ -297,9 +297,9 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Fetch the first field of the first row
 	 *
-	 * @param	mysqli_result  	The result object. A result set identifier returned by the select() function
-	 * @param   integer         The index to use
-	 * @return The value returned in the query or null if the query failed.
+	 * @param	mysqli_result  	$result The result object. A result set identifier returned by the select() function
+	 * @param   integer         $key    The index to use
+	 * @return  mixed           The value returned in the query or null if the query failed.
 	 */
 	protected function _fetchField($result, $key = 0)
 	{
@@ -317,8 +317,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 * Fetch an array of single field results
 	 *
 	 *
-	 * @param	mysqli_result  	The result object. A result set identifier returned by the select() function
-	 * @param   integer         The index to use
+	 * @param	mysqli_result  	$result The result object. A result set identifier returned by the select() function
+	 * @param   integer         $key    The index to use
 	 * @return 	array 			A sequential array of returned rows.
 	 */
 	protected function _fetchFieldList($result, $key = 0)
@@ -337,7 +337,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
      * Fetch the first row of a result set as an associative array
      *
-     * @param 	mysqli_result 	The result object. A result set identifier returned by the select() function
+     * @param 	mysqli_result 	$result The result object. A result set identifier returned by the select() function
      * @return array
      */
 	protected function _fetchArray($result)
@@ -354,8 +354,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 * If <var>key</var> is not empty then the returned array is indexed by the value
 	 * of the database key.  Returns <var>null</var> if the query fails.
 	 *
-	 * @param 	mysqli_result  	The result object. A result set identifier returned by the select() function
-	 * @param 	string 			The column name of the index to use
+	 * @param 	mysqli_result  	$result The result object. A result set identifier returned by the select() function
+	 * @param 	string 			$key    The column name of the index to use
 	 * @return 	array 	If key is empty as sequential list of returned records.
 	 */
 	protected function _fetchArrayList($result, $key = '')
@@ -378,8 +378,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Fetch the first row of a result set as an object
 	 *
-	 * @param	mysqli_result  The result object. A result set identifier returned by the select() function
-	 * @param object
+	 * @param	mysqli_result  $result The result object. A result set identifier returned by the select() function
+	 * @return  object
 	 */
 	protected function _fetchObject($result)
 	{
@@ -395,8 +395,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 * If <var>key</var> is not empty then the returned array is indexed by the value
 	 * of the database key.  Returns <var>null</var> if the query fails.
 	 *
-	 * @param	mysqli_result  The result object. A result set identifier returned by the select() function
-	 * @param 	string 		   The column name of the index to use
+	 * @param	mysqli_result  $result The result object. A result set identifier returned by the select() function
+	 * @param 	string 		   $key    The column name of the index to use
 	 * @return 	array 	If <var>key</var> is empty as sequential array of returned rows.
 	 */
 	protected function _fetchObjectList($result, $key='')
@@ -419,7 +419,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
      * Safely quotes a value for an SQL statement.
      *
-     * @param 	mixed 	The value to quote
+     * @param 	mixed 	$value The value to quote
      * @return string An SQL-safe quoted value
      */
     protected function _quoteValue($value)
@@ -452,7 +452,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Retrieves the column schema information about the given table
 	 *
-	 * @param 	string 	A table name
+	 * @param 	string 	$table A table name
 	 * @return	array	An array of columns
 	 */
 	protected function _fetchTableColumns($table)
@@ -480,7 +480,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Retrieves the index information about the given table
 	 *
-	 * @param 	string 	A table name
+	 * @param 	string 	$table A table name
 	 * @return	array 	An associative array of indexes by index name
 	 */
     protected function _fetchTableIndexes($table)
@@ -524,7 +524,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Parse the raw column schema information
 	 *
-	 * @param  	object 	The raw column schema information
+	 * @param  	object 	$info The raw column schema information
 	 * @return KDatabaseSchemaColumn
 	 */
     protected function _parseColumnInfo($info)
@@ -578,7 +578,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Given a raw column specification, parse into datatype, length, and decimal scope.
 	 *
-	 * @param string The column specification; for example,
+	 * @param string $spec The column specification; for example,
  	 * "VARCHAR(255)" or "NUMERIC(10,2)" or "float(6,2) UNSIGNED" or ENUM('yes','no','maybe')
  	 *
  	 * @return array A sequential array of the column type, size, and scope.

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version 	$Id$
  * @package		Koowa_Loader
  * @subpackage 	Adapter
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -40,14 +39,27 @@ class KLoaderAdapterKoowa extends KLoaderAdapterAbstract
 	 */
 	public function findPath($classname, $basepath = null)
 	{
-		$path     = false;
-
-		$word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1',  $classname);
-		$parts = explode(' ', $word);
+		$path = false;
 
 		// If class start with a 'K' it is a Koowa framework class and we handle it
-		if(array_shift($parts) == $this->_prefix)
-		{
+        if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
+        {
+            /*
+             * Exception rule for Exception classes
+             *
+             * Transform class to lower case to always load the exception class from the /exception/ folder.
+             */
+            if ($pos = strpos($classname, 'Exception')) {
+                $filename  = substr($classname, $pos + strlen('Exception'));
+                $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
+            }
+
+            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1',  $classname);
+            $parts = explode(' ', $word);
+
+            // Remove the K prefix
+            array_shift($parts);
+
 		    $path = strtolower(implode('/', $parts));
 
 			if(count($parts) == 1) {

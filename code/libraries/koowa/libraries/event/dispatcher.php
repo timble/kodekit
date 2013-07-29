@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Koowa_Event
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -108,7 +107,7 @@ class KEventDispatcher extends KObject
      * @param   object  An object implementing the KObjectHandlable interface
      * @return  KEventDispatcher
      */
-    public function removeEventListener($name, KObjectHandable $listener)
+    public function removeEventListener($name, KObjectHandlable $listener)
     {
         if(is_object($listener))
         {
@@ -160,7 +159,7 @@ class KEventDispatcher extends KObject
      * @param  integer   The event priority
      * @return KCommandChain
      */
-    public function setEventPriority($name, KObjectHandable $listener, $priority)
+    public function setEventPriority($name, KObjectHandlable $listener, $priority)
     {
         if(isset($this->_listeners[$name])) {
             $this->_listeners[$name]->setPriority($listener, $priority);
@@ -176,7 +175,7 @@ class KEventDispatcher extends KObject
      * @param   object  An object implementing the KObjectHandlable interface
      * @return  integer|false The event priority or FALSE if the event isn't listened for.
      */
-    public function getEventPriority($name, KObjectHandable $listener)
+    public function getEventPriority($name, KObjectHandlable $listener)
     {
         $result = false;
 

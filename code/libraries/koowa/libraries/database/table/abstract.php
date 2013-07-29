@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package     Koowa_Database
  * @subpackage  Table
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -67,6 +66,8 @@ abstract class KDatabaseTableAbstract extends KObject
      * Object constructor
      *
      * @param   KConfig $config Configuration options.
+     *
+     * @throws RuntimeException
      */
     public function __construct(KConfig $config)
     {
@@ -78,7 +79,7 @@ abstract class KDatabaseTableAbstract extends KObject
         
         //Check if the table exists
         if(!$info = $this->getSchema()) {
-            throw new KDatabaseTableException('Table '.$this->_name.' does not exist');
+            throw new RuntimeException('Table '.$this->_name.' does not exist');
         }
 
         // Set the identity column
@@ -181,16 +182,16 @@ abstract class KDatabaseTableAbstract extends KObject
         $this->_database = $database;
         return $this;
     }
-    
+
     /**
      * Set the database adapter
      *
-     * @param   KDatabaseAdapterInterface $adapter
-     * @return  KDatabaseTableAbstract
+     * @param KDatabaseAdapterInterface $database
+     * @return  $this
      */
     public function setAdapter(KDatabaseAdapterInterface $database)
     {
-    	return $this->setDatabase();
+    	return $this->setDatabase($database);
     }
 
 	/**
@@ -308,7 +309,7 @@ abstract class KDatabaseTableAbstract extends KObject
 
            //Check the behavior interface
 		   if(!($behavior instanceof KDatabaseBehaviorInterface)) {
-			   throw new KDatabaseTableException("Database behavior $identifier does not implement KDatabaseBehaviorInterface");
+			   throw new UnexpectedValueException("Database behavior $identifier does not implement KDatabaseBehaviorInterface");
 		   }
        }
        else $behavior = $this->getSchema()->behaviors[$identifier->name];
@@ -330,7 +331,6 @@ abstract class KDatabaseTableAbstract extends KObject
      * Gets the schema of the table
      *
      * @return  object|null Returns a KDatabaseSchemaTable object or NULL if the table doesn't exists
-     * @throws  KDatabaseTableException
      */
     public function getSchema()
     {
@@ -361,7 +361,6 @@ abstract class KDatabaseTableAbstract extends KObject
      *
      * @param   boolean  If TRUE, get the column information from the base table. Default is FALSE.
      * @return  array    Associative array of KDatabaseSchemaColumn objects
-     * @throws  KDatabaseTableException
      */
     public function getColumns($base = false)
     {

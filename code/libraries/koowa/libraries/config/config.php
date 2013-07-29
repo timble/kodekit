@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Config
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -69,7 +68,8 @@ class KConfig implements KConfigInterface
      * If the data being passed is an instance of KConfig the data will be transformed
      * to an associative array.
      *
-     * @return array|scalar
+     * @param mixed|KConfig $data
+     * @return mixed|array
      */
     public static function unbox($data)
     {
@@ -79,9 +79,9 @@ class KConfig implements KConfigInterface
     /**
      * Append values
      *
-     * This funciton only adds keys that don't exist and it filters out any duplicate values
+     * This method only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  mixed    A value of an or array of values to be appended
+     * @param  mixed    $config A value of an or array of values to be appended
      * @return KConfig
      */
     public function append($config)
@@ -193,7 +193,7 @@ class KConfig implements KConfigInterface
      *
      * Required by interface ArrayAccess
      *
-     * @param   int     The offset
+     * @param   int  $offset   The offset
      * @return  bool
      */
     public function offsetExists($offset)
@@ -206,7 +206,7 @@ class KConfig implements KConfigInterface
      *
      * Required by interface ArrayAccess
      *
-     * @param   int     The offset
+     * @param   int  $offset   The offset
      * @return  mixed   The item from the array
      */
     public function offsetGet($offset)
@@ -228,9 +228,10 @@ class KConfig implements KConfigInterface
      *
      * Required by interface ArrayAccess
      *
-     * @param   int     The offset of the item
-     * @param   mixed   The item's value
-     * @return  object  KConfig
+     * @param   int    $offset   The offset
+     * @param   mixed  $value    The item's value
+     *
+     * @return  KConfig
      */
     public function offsetSet($offset, $value)
     {
@@ -246,12 +247,13 @@ class KConfig implements KConfigInterface
      *
      * Required by interface ArrayAccess
      *
-     * @param   int     The offset of the item
-     * @return  object  KConfig
+     * @param   int     $offset The offset of the item
+     * @return  KConfig
      */
     public function offsetUnset($offset)
     {
         unset($this->_data[$offset]);
+
         return $this;
     }
 

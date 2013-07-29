@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Command
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -70,9 +69,9 @@ class KCommand extends KObject implements KCommandInterface
     /**
      * Command handler
      *
-     * @param   string      The command name
-     * @param   object      The command context
-     * @return  boolean     Can return both true or false.
+     * @param   string          $name     The command name
+     * @param   KCommandContext $context  The command context
+     * @return  boolean         Can return both true or false.
      */
     public function execute( $name, KCommandContext $context)
     {

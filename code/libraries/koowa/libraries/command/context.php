@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: interface.php 1366 2009-11-28 01:34:00Z johan $
  * @package     Koowa_Command
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -25,6 +24,8 @@ class KCommandContext extends KConfig
     /**
      * Set the error
      *
+     * @param string $error
+     *
      * @return  KCommandContext
      */
     function setError($error)
@@ -36,7 +37,7 @@ class KCommandContext extends KConfig
     /**
      * Get the error
      *
-     * @return  string|KException  The error
+     * @return  string|Exception  The error
      */
     function getError()
     {
