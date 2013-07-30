@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Koowa_Helper
  * @subpackage	Array
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -21,9 +20,9 @@ class KHelperArray
     /**
      * Typecast each element of the array. Recursive (optional)
      *
-     * @param   array   Array to typecast
-     * @param   string  Type (boolean|int|float|string|array|object|null)
-     * @param   boolean Recursive
+     * @param   array   $array Array to typecast
+     * @param   string  $type  Type (boolean|int|float|string|array|object|null)
+     * @param   boolean $recursive Recursive
      * @return  array
      */
     public static function settype(array $array, $type, $recursive = true)
@@ -69,10 +68,10 @@ class KHelperArray
      *     => array('key' => array('new value'));
      *
      * Parameters are passed by reference, though only for performance reasons. They're not
-     * altered by this function and the datatypes of the values in the arrays are unchanged.
+     * altered by this function and the data types of the values in the arrays are unchanged.
      *
-     * @param array
-     * @param array
+     * @param array $array1
+     * @param array $array2
      * @return array    An array of values resulted from merging the arguments together.
      */
     public static function merge( array &$array1, array &$array2 )
@@ -98,8 +97,8 @@ class KHelperArray
     /**
      * Extracts a column from an array of arrays or objects
      *
-     * @param   array   List of arrays or objects
-     * @param   string  The index of the column or name of object property
+     * @param   array   $array List of arrays or objects
+     * @param   string  $index The index of the column or name of object property
      * @return  array   Column of values from the source array
      */
     public static function getColumn(array $array, $index)
@@ -122,10 +121,10 @@ class KHelperArray
      * Utility function to map an array to a string
      *
      * @static
-     * @param   array|object    The array or object to transform into a string
-     * @param   string          The inner glue to use, default '='
-     * @param   string          The outer glue to use, default ' '
-     * @param   boolean
+     * @param   array|object   $array      The array or object to transform into a string
+     * @param   string         $inner_glue The outer glue to use, default ' '
+     * @param   string         $outer_glue
+     * @param   boolean        $keepOuterKey
      * @return  string  The string mapped from the given array
      */
     public static function toString($array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)

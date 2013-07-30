@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Koowa_Service
  * @subpackage  Identifier
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -15,4 +14,4 @@
  * @package     Koowa_Service
  * @subpackage  Identifier
  */
-class KServiceIdentifierException extends KServiceException {}
+class KServiceIdentifierException extends Exception {}

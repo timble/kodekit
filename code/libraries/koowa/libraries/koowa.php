@@ -1,6 +1,5 @@
 <?php
 /**
-* @version		$Id$
 * @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
 * @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
 * @link         http://www.nooku.org
@@ -37,9 +36,9 @@ class Koowa
  	/**
      * Constructor
      *
-     * Prevent creating instances of this class by making the contructor private
+     * Prevent creating instances of this class by making the constructor private
      *
-     * @param  array  An optional array with configuration options.
+     * @param  array  $config An optional array with configuration options.
      */
     final private function __construct($config = array())
     {
@@ -68,7 +67,7 @@ class Koowa
 	/**
      * Singleton instance
      *
-     * @param  array  An optional array with configuration options.
+     * @param  array  $config An optional array with configuration options.
      * @return Koowa
      */
     final public static function getInstance($config = array())

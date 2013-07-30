@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Template
  * @subpackage	Helper
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -35,20 +34,25 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 	{
 		parent::__construct($config);
 
-		// Set the view indentifier
 		$this->setTemplate($config->template);
 	}
 
     /**
-     * Get the template object
+     * Gets the template object
      *
-     * @return  object	The template object
+     * @return  KTemplateInterface	The template object
      */
     public function getTemplate()
     {
         return $this->_template;
     }
-    
+
+    /**
+     * Sets the template object
+     *
+     * @param string|KTemplateInterface $template A template object or identifier
+     * @return $this
+     */
     public function setTemplate($template)
     {
         if(!$template instanceof KTemplateAbstract)
@@ -67,9 +71,17 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     
         return $this;
     }
-    
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
     public function translate($string, array $parameters = array())
     {
-        return $this->getTemplate()->getHelper('translator')->translate($string, $parameters);
+        return $this->getTemplate()->translate($string, $parameters);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: default.php 2721 2010-10-27 00:58:51Z johanjanssens $
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -27,7 +26,7 @@ class ComKoowaControllerResource extends KControllerResource
      */
     protected function _actionGet(KCommandContext $context)
     {
-        $this->getService('translator')->getTranslator($this->getIdentifier())->loadLanguageFiles();
+        $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
 
         return parent::_actionGet($context);
     }

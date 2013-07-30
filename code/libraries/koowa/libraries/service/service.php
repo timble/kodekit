@@ -1,6 +1,5 @@
 <?php
 /**
- * @version 	$Id$
  * @package		Koowa_Service
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -365,7 +364,7 @@ class KService implements KServiceInterface
      * @param   object	A KServiceIdentifier object
      * @param   array   An optional associative array of configuration settings.
      * @return  object  Return object on success, throws exception on failure
-     * @throws  KServiceException
+     * @throws  UnexpectedValueException
      */
     protected static function _instantiate(KServiceIdentifier $identifier, array $config = array())
     {
@@ -395,7 +394,7 @@ class KService implements KServiceInterface
 
         //Thrown an error if no object was instantiated
         if(!is_object($result)) {
-            throw new KServiceException('Cannot instantiate object from identifier : '.$identifier);
+            throw new UnexpectedValueException('Cannot instantiate object from identifier : '.$identifier);
         }
 
         return $result;

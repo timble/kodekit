@@ -1,6 +1,5 @@
 <?php
 /**
- * @version 	$Id$
  * @package		Koowa_Database
  * @subpackage 	Behavior
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -149,7 +148,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	        $user = JFactory::getUser($this->locked_by);
 			$date = $this->getService('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
 			
-			$message = $this->getService('translator')->getTranslator($this->getIdentifier())->translate(
+			$message = $this->getService('translator')->translate(
 			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
 			);
 		}

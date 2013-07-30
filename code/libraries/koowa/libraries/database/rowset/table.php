@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package     Koowa_Database
  * @subpackage  Rowset
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -65,7 +64,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	/**
      * Method to get a table object
      *
-     * Function catches KDatabaseTableExceptions that are thrown for tables that
+     * Function catches RuntimeException that are thrown for tables that
      * don't exist. If no table object can be created the function will return FALSE.
      *
      * @return KDatabaseTableAbstract
@@ -83,7 +82,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 
 		        try {
 		            $this->_table = $this->getService($this->_table);
-                } catch (KDatabaseTableException $e) {
+                } catch (RuntimeException $e) {
                     $this->_table = false;
                 }
             }
@@ -97,7 +96,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	 *
 	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KDatabaseRowsetException	If the identifier is not a table identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KDatabaseRowsetAbstract
 	 */
 	public function setTable($table)
@@ -113,7 +112,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 		    else  $identifier = $this->getIdentifier($table);
 
 			if($identifier->path[1] != 'table') {
-				throw new KDatabaseRowsetException('Identifier: '.$identifier.' is not a table identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a table identifier');
 			}
 
 			$table = $identifier;

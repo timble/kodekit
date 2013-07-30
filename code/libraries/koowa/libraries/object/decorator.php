@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Object
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -56,7 +55,7 @@ class KObjectDecorator extends KObject
 	 * Set the decorated object
 	 *
 	 * @param 	object
-	 * @return 	KPatternDecorator
+	 * @return 	$this
 	 */
 	public function setObject($object)
 	{
@@ -117,8 +116,8 @@ class KObjectDecorator extends KObject
 	/**
 	 * Overloaded set function
 	 *
-	 * @param  string	The variable name
-	 * @param  mixed 	The variable value.
+	 * @param  string  $key 	The variable name
+	 * @param  mixed   $value 	The variable value.
 	 * @return mixed
 	 */
 	public function __set($key, $value)
@@ -129,7 +128,7 @@ class KObjectDecorator extends KObject
 	/**
 	 * Overloaded get function
 	 *
-	 * @param  string 	The variable name.
+	 * @param  string 	$key The variable name.
 	 * @return mixed
 	 */
 	public function __get($key)
@@ -142,7 +141,7 @@ class KObjectDecorator extends KObject
 	 *
 	 * Allows testing with empty() and isset() functions
 	 *
-	 * @param  string 	The variable name
+	 * @param  string 	$key The variable name
 	 * @return boolean
 	 */
 	public function __isset($key)
@@ -155,7 +154,7 @@ class KObjectDecorator extends KObject
 	 *
 	 * Allows unset() on object properties to work
 	 *
-	 * @param string 	The variable name.
+	 * @param string 	$key The variable name.
 	 * @return void
 	 */
 	public function __unset($key)
@@ -168,8 +167,8 @@ class KObjectDecorator extends KObject
    	/**
 	 * Overloaded call function
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method    The function name
+	 * @param  array  	$arguments The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */

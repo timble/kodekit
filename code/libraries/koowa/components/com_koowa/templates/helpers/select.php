@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -15,12 +14,99 @@
  * @package     Nooku_Components
  * @subpackage  Default
  */
-class ComKoowaTemplateHelperSelect extends KTemplateHelperSelect
+class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 {
+    /**
+     * Generates an HTML select option
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function option($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'value' 	=> null,
+            'text'   	=> '',
+            'disable'	=> false,
+            'attribs'	=> array(),
+        ));
+
+        $option = new stdClass;
+        $option->value 	  = $config->value;
+        $option->text  	  = trim($config->text) ? $config->text : $config->value;
+        $option->disable  = $config->disable;
+        $option->attribs  = $config->attribs;
+
+        return $option;
+    }
+
+    /**
+     * Generates an HTML select list
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function optionlist($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'options' 	=> array(),
+            'name'   	=> 'id',
+            'attribs'	=> array('size' => 1),
+            'selected'	=> null,
+            'translate'	=> false
+        ));
+
+        $name    = $config->name;
+        $attribs = KHelperArray::toString($config->attribs);
+
+        $html = array();
+        $html[] = '<select name="'. $name .'" '. $attribs .'>';
+
+        foreach($config->options as $option)
+        {
+            $value  = $option->value;
+            $text   = $config->translate ? $this->translate( $option->text ) : $option->text;
+
+            $extra = '';
+            if(isset($option->disable) && $option->disable) {
+                $extra .= 'disabled="disabled"';
+            }
+
+            if(isset($option->attribs)) {
+                $extra .= ' '.KHelperArray::toString($option->attribs);;
+            }
+
+            if(!is_null($config->selected))
+            {
+                if ($config->selected instanceof KConfig)
+                {
+                    foreach ($config->selected as $selected)
+                    {
+                        $sel = is_object( $selected ) ? $selected->value : $selected;
+                        if ((string) $value == (string) $sel)
+                        {
+                            $extra .= 'selected="selected"';
+                            break;
+                        }
+                    }
+                }
+                else $extra .= ((string) $value == (string) $config->selected ? ' selected="selected"' : '');
+            }
+
+            $html[] = '<option value="'. $value .'" '. $extra .'>' . $text . '</option>';
+        }
+
+        $html[] = '</select>';
+
+        return implode(PHP_EOL, $html);
+    }
+
 	/**
 	 * Generates an HTML boolean radio list
 	 *
-	 * @param 	array 	An optional array with configuration options
+	 * @param 	array 	$config An optional array with configuration options
 	 * @return	string	Html
 	 */
     public function booleanlist($config = array())
@@ -32,18 +118,13 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperSelect
             'true'		=> 'Yes',
             'false'		=> 'No',
             'selected'	=> null,
-            'translate'	=> true,
-            'wrap'		=> false
+            'translate'	=> true
         ));
 
         $name    = $config->name;
         $attribs = KHelperArray::toString($config->attribs);
 
         $html  = array();
-
-        if ($config->wrap) {
-            $html[] = '<div class="controls">';
-        }
 
         $extra = $config->selected ? 'checked="checked"' : '';
         $text  = $config->translate ? $this->translate( $config->true ) : $config->true;
@@ -59,17 +140,13 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperSelect
         $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
 
-        if ($config->wrap) {
-            $html[] = '</div>';
-        }
-
         return implode(PHP_EOL, $html);
     }
     
     /**
      * Generates an HTML check list
      *
-     * @param 	array 	An optional array with configuration options
+     * @param 	array 	$config An optional array with configuration options
      * @return	string	Html
      */    
     public function checklist( $config = array())
@@ -89,15 +166,17 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperSelect
         $attribs = KHelperArray::toString($config->attribs);
 
         $html = array();
-        foreach ($config->list as $row) {
+        foreach ($config->list as $row)
+        {
             $key  = $row->{$config->key};
-            $text = $config->translate ? $this->translate( $row->{$config->text} ) : $row->{$config->text};
-            $id	  = isset($row->id) ? $row->id : null;
+            $text = $config->translate ? $this->translate($row->{$config->text}) : $row->{$config->text};
 
             $extra = '';
 
-            if ($config->selected instanceof KConfig) {
-                foreach ($config->selected as $value) {
+            if ($config->selected instanceof KConfig)
+            {
+                foreach ($config->selected as $value)
+                {
                     $sel = is_object( $value ) ? $value->{$config->key} : $value;
                     if ($key == $sel) {
                         $extra .= 'checked="checked"';
@@ -110,6 +189,59 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperSelect
             $html[] = '<input type="checkbox" name="'.$name.'[]" id="'.$name.$key.'" value="'.$key.'" '.$extra.' '.$attribs.' />';
             $html[] = $text;
             $html[] = '</label>';
+        }
+
+        return implode(PHP_EOL, $html);
+    }
+
+    /**
+     * Generates an HTML radio list
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function radiolist($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'list' 		=> null,
+            'name'   	=> 'id',
+            'attribs'	=> array(),
+            'key'		=> 'id',
+            'text'		=> 'title',
+            'selected'	=> null,
+            'translate'	=> false
+        ));
+
+        $name    = $config->name;
+        $attribs = KHelperArray::toString($config->attribs);
+
+        $html = array();
+        foreach($config->list as $row)
+        {
+            $key  = $row->{$config->key};
+            $text = $config->translate ? $this->translate( $row->{$config->text} ) : $row->{$config->text};
+            $id	  = isset($row->id) ? $row->id : null;
+
+            $extra = '';
+
+            if ($config->selected instanceof KConfig)
+            {
+                foreach ($config->selected as $value)
+                {
+                    $sel = is_object( $value ) ? $value->{$config->key} : $value;
+                    if ($key == $sel)
+                    {
+                        $extra .= 'selected="selected"';
+                        break;
+                    }
+                }
+            }
+            else $extra .= ($key == $config->selected ? 'checked="checked"' : '');
+
+            $html[] = '<input type="radio" name="'.$name.'" id="'.$name.$id.'" value="'.$key.'" '.$extra.' '.$attribs.' />';
+            $html[] = '<label for="'.$name.$id.'">'.$text.'</label>';
+            $html[] = '<br />';
         }
 
         return implode(PHP_EOL, $html);

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version 	$Id$
  * @package		Koowa_Database
  * @subpackage 	Behavior
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -64,7 +63,6 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 *
 	 * @param	integer	Amount to move up or down
 	 * @return 	KDatabaseRowAbstract
-	 * @throws 	KDatabaseBehaviorException
 	 */
 	public function order($change)
 	{

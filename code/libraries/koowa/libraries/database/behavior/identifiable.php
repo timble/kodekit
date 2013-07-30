@@ -1,6 +1,5 @@
 <?php
 /**
- * @version 	$Id$
  * @package		Koowa_Database
  * @subpackage 	Behavior
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -19,10 +18,10 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	/**
 	 * Get the methods that are available for mixin based
 	 *
-	 * This function conditionaly mixes of the behavior. Only if the mixer
+	 * This function conditionally mixes of the behavior. Only if the mixer
 	 * has a 'uuid' property the behavior will be mixed in.
 	 *
-	 * @param object The mixer requesting the mixable methods.
+	 * @param KObject $mixer The mixer requesting the mixable methods.
 	 * @return array An array of methods
 	 */
 	public function getMixableMethods(KObject $mixer = null)
@@ -42,6 +41,7 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	 * Requires an 'uuid' column, if the column type is char the uuid will be
 	 * a string, if the column type is binary a hex value will be returned.
 	 *
+     * @param KCommandContext $context
 	 * @return void
 	 */
 	protected function _beforeTableInsert(KCommandContext $context)
@@ -54,11 +54,11 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	}
 
 	/**
-     * Generates a Universally Unique IDentifier, version 4.
+     * Generates a Universally Unique Identifier, version 4.
      *
      * This function generates a truly random UUID.
      *
-     * @param boolean	If TRUE return the uuid in hex format, otherwise as a string
+     * @param boolean	$hex If TRUE return the uuid in hex format, otherwise as a string
      * @see http://tools.ietf.org/html/rfc4122#section-4.4
      * @see http://en.wikipedia.org/wiki/UUID
      * @return string A UUID, made up of 36 characters or 16 hex digits.

@@ -1,6 +1,5 @@
 <?php
 /**
-* @version      $Id$
 * @package      Koowa_Template
 * @subpackage   Filter
 * @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -27,7 +26,7 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
     	'@service('     => '$this->getService(',
         '@date('        => '$this->renderHelper(\'date.format\',',
         '@overlay('     => '$this->renderHelper(\'behavior.overlay\', ',
-        '@text('        => '$this->getHelper(\'translator\')->translate(',
+        '@text('        => '$this->translate(',
         '@template('    => '$this->loadIdentifier(',
         '@route('       => '$this->getView()->createRoute(',
         '@escape('      => '$this->getView()->escape(',

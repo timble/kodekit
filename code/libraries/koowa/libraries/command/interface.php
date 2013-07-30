@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Command
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -15,13 +14,13 @@
  */
 interface KCommandInterface extends KObjectHandlable
 {
-	/**
-	 * Generic Command handler
-	 *
-	 * @param 	string 	The command name
-	 * @param 	object  The command context
-	 * @return	boolean
-	 */
+    /**
+     * Command handler
+     *
+     * @param   string          $name     The command name
+     * @param   KCommandContext $context  The command context
+     * @return  boolean
+     */
 	public function execute( $name, KCommandContext $context);
 
 	/**

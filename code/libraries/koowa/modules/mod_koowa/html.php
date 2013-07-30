@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Nooku_Modules
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -59,8 +58,8 @@ class ModKoowaHtml extends KViewHtml
 		{
 		    $identifier = clone $this->getIdentifier();
 		    $identifier->package = substr($this->module->module, 4);
-		    
-		    $this->getService('translator')->getTranslator($identifier)->loadLanguageFiles();
+
+            $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
 		}
 
         if(empty($this->module->content))
@@ -82,8 +81,8 @@ class ModKoowaHtml extends KViewHtml
     /**
      * Set a view properties
      *
-     * @param   string  The property name.
-     * @param   mixed   The property value.
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
      */
     public function __set($property, $value)
     {

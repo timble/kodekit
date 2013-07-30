@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Controller
  * @subpackage	Command
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -60,10 +59,13 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      *
      * Only handles before.action commands to check ACL rules.
      *
-     * @param   string      The command name
-     * @param   object      The command context
-     * @return  boolean     Can return both true or false.
-     * @throws  KControllerException
+     * @param   string          $name       The command name
+     * @param   KCommandContext $context    The command context
+     *
+     * @return  boolean
+     *
+     * @throws  KControllerExceptionForbidden
+     * @throws  KControllerExceptionNotImplemented
      */
     public function execute( $name, KCommandContext $context)
     {
@@ -76,7 +78,7 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
             //Check if the action exists
             if(!in_array($action, $context->caller->getActions()))
             {
-                $context->setError(new KControllerException(
+                $context->setError(new KControllerExceptionNotImplemented(
             		'Action '.ucfirst($action).' Not Implemented', KHttpResponse::NOT_IMPLEMENTED
                 ));
 
@@ -93,7 +95,7 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
 		        {
 		            if($context->action != 'options')
 		            {
-		                $context->setError(new KControllerException(
+		                $context->setError(new KControllerExceptionForbidden(
 		        			'Action '.ucfirst($action).' Not Allowed', KHttpResponse::FORBIDDEN
 		                ));
 

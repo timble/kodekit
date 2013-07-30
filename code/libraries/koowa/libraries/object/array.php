@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Object
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -44,7 +43,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $object An optional KConfig object with configuration options
+     * @param   KConfig $config An optional KConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KConfig $config)
@@ -60,6 +59,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * Get a value by key
      *
      * @param   string  $key The key name.
+     * @param   mixed   $default The default value
      * @throws  \InvalidArgumentException If the key cannot be found in the array
      * @return  string  The corresponding value.
      */
@@ -225,7 +225,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     /**
      * Set the data from an array
      *
-     * @param array An associative array of data
+     * @param array $data An associative array of data
      * @return KObjectArray
      */
     public function fromArray(array $data)
@@ -275,7 +275,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function __isset($key)
     {
-        return $this->has($key) && !is_null($this->_data[$key]);
+        return $this->has($key);
     }
 
     /**

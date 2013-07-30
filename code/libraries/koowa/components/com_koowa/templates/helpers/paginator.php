@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: default.php 2721 2010-10-27 00:58:51Z johanjanssens $
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -17,14 +16,91 @@
  * @uses        KRequest
  * @uses        KConfig
  */
-class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
+class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 {
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(KConfig $config)
+    {
+        if($config->total != 0)
+        {
+            $config->limit  = (int) max($config->limit, 1);
+            $config->offset = (int) max($config->offset, 0);
+
+            if($config->limit > $config->total) {
+                $config->offset = 0;
+            }
+
+            if(!$config->limit)
+            {
+                $config->offset = 0;
+                $config->limit  = $config->total;
+            }
+
+            $config->count  = (int) ceil($config->total / $config->limit);
+
+            if($config->offset > $config->total) {
+                $config->offset = ($config->count-1) * $config->limit;
+            }
+
+            $config->current = (int) floor($config->offset / $config->limit) + 1;
+        }
+        else
+        {
+            $config->limit   = 0;
+            $config->offset  = 0;
+            $config->count   = 0;
+            $config->current = 0;
+        }
+
+        parent::_initialize($config);
+    }
+
+    /**
+     * Render a select box with limit values
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return 	string	Html select box
+     */
+    public function limit($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'limit'	  	=> 0,
+            'attribs'	=> array(),
+        ));
+
+        $html     = '';
+        $selected = '';
+        $options  = array();
+
+        foreach(array(5, 10, 15, 20, 25, 30, 50, 100) as $value)
+        {
+            if($value == $config->limit) {
+                $selected = $value;
+            }
+
+            $options[] = $this->option(array('text' => $value, 'value' => $value));
+        }
+
+        $html .= $this->optionlist(array('options' => $options, 'name' => 'limit', 'attribs' => $config->attribs, 'selected' => $selected));
+        return $html;
+    }
+
     /**
      * Render item pagination
      *
-     * @param   array   An optional array with configuration options
-     * @return  string  Html
      * @see     http://developer.yahoo.com/ypatterns/navigation/pagination/
+     *
+     * @param   array   $config An optional array with configuration options
+     *
+     * @return  string  Html
      */
     public function pagination($config = array())
     {
@@ -75,7 +151,7 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
      * This function is overriddes the default behavior to render the links in the khepri template
      * backend style.
      *
-     * @param   araay   An array of page data
+     * @param   array   $pages An array of page data
      * @return  string  Html
      */
     protected function _pages($pages)
@@ -181,5 +257,92 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
         }
 
         return $html;
+    }
+
+    /**
+     * Get a list of pages
+     *
+     * @param   KConfig $config
+     *
+     * @return  array   Returns and array of pages information
+     */
+    protected function _items(KConfig $config)
+    {
+        $elements  = array();
+        $prototype = new KObject();
+        $current   = ($config->current - 1) * $config->limit;
+
+        // First
+        $page    = 1;
+        $offset  = 0;
+        $active  = $offset != $config->offset;
+        $props   = array('page' => 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active );
+        $element = clone $prototype;
+        $elements['first'] = $element->set($props);
+
+        // Previous
+        $offset  = max(0, ($config->current - 2) * $config->limit);
+        $active  = $offset != $config->offset;
+        $props   = array('page' => $config->current - 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
+        $element = clone $prototype;
+        $elements['previous'] = $element->set($props);
+
+        // Pages
+        $elements['pages'] = array();
+        foreach($this->_offsets($config) as $page => $offset)
+        {
+            $current = $offset == $config->offset;
+            $props = array('page' => $page, 'offset' => $offset, 'limit' => $config->limit, 'current' => $current, 'active' => !$current);
+            $element    = clone $prototype;
+            $elements['pages'][] = $element->set($props);
+        }
+
+        // Next
+        $offset  = min(($config->count-1) * $config->limit, ($config->current) * $config->limit);
+        $active  = $offset != $config->offset;
+        $props   = array('page' => $config->current + 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
+        $element = clone $prototype;
+        $elements['next'] = $element->set($props);
+
+        // Last
+        $offset  = ($config->count - 1) * $config->limit;
+        $active  = $offset != $config->offset;
+        $props   = array('page' => $config->count, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
+        $element = clone $prototype;
+        $elements['last'] = $element->set($props);
+
+        return $elements;
+    }
+
+    /**
+     * Get the offset for each page, optionally with a range
+     *
+     * @param   KConfig $config
+     *
+     * @return  array   Page number => offset
+     */
+    protected function _offsets(KConfig $config)
+    {
+        if($display = $config->display)
+        {
+            $start  = (int) max($config->current - $display, 1);
+            $start  = min($config->count, $start);
+            $stop   = (int) min($config->current + $display, $config->count);
+        }
+        else // show all pages
+        {
+            $start = 1;
+            $stop = $config->count;
+        }
+
+        $result = array();
+        if($start > 0)
+        {
+            foreach(range($start, $stop) as $pagenumber) {
+                $result[$pagenumber] =  ($pagenumber-1) * $config->limit;
+            }
+        }
+
+        return $result;
     }
 }

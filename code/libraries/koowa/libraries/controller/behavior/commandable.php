@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Controller
  * @subpackage	Command
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -56,7 +55,6 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Get the view object attached to the controller
 	 *
-	 * @throws  KControllerException if the view cannot be found.
 	 * @return	KControllerToolbarAbstract
 	 */
     public function getToolbar()
@@ -81,9 +79,9 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Method to set a toolbar object attached to the controller
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$toolbar An object that implements KObjectServiceable, KServiceIdentifier object
 	 * 					or valid identifier string
-	 * @throws	KControllerBehaviorException	If the identifier is not a view identifier
+	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract
 	 */
     public function setToolbar($toolbar)
@@ -99,7 +97,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 			else $identifier = $this->getIdentifier($toolbar);
 
 			if($identifier->path[1] != 'toolbar') {
-				throw new KControllerBehaviorException('Identifier: '.$identifier.' is not a toolbar identifier');
+				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a toolbar identifier');
 			}
 
 			$toolbar = $identifier;
@@ -113,7 +111,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
     /**
 	 * Add default toolbar commands
 	 * .
-	 * @param	KCommandContext	A command context object
+	 * @param	KCommandContext	$context A command context object
 	 */
     protected function _beforeGet(KCommandContext $context)
     {
@@ -125,7 +123,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Add default toolbar commands and set the toolbar title
 	 * .
-	 * @param	KCommandContext	A command context object
+	 * @param	KCommandContext	$context A command context object
 	 */
     protected function _afterRead(KCommandContext $context)
     {
@@ -159,7 +157,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
     /**
 	 * Add default toolbar commands
 	 * .
-	 * @param	KCommandContext	A command context object
+	 * @param	KCommandContext	$context A command context object
 	 */
     protected function _afterBrowse(KCommandContext $context)
     {

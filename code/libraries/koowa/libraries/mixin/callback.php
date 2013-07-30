@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Mixin
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -46,13 +45,13 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 		parent::__construct($config);
 
 		if(is_null($config->command_chain)) {
-			throw new KMixinException('command_chain [KCommandChain] option is required');
+			throw new InvalidArgumentException('command_chain [KCommandChain] option is required');
 		}
 
 		//Set the command priority
 		$this->_priority = $config->command_priority;
 
-		//Enque the command in the mixer's command chain
+		//Enqueue the command in the mixer's command chain
 		$config->command_chain->enqueue($this);
 	}
 

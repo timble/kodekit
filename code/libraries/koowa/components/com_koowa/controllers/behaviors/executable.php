@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id$
  * @package     Nooku_Components
  * @subpackage  Default
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
@@ -20,10 +19,10 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
  	/**
      * Command handler
      *
-     * @param   string      The command name
-     * @param   object      The command context
+     * @param   string          $name    The command name
+     * @param   KCommandContext	$context A command context object
      * @return  boolean     Can return both true or false.
-     * @throws  KControllerException
+     * @throws  KControllerExceptionForbidden
      */
     public function execute( $name, KCommandContext $context)
     {
@@ -33,7 +32,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
         {
             if(!$this->_checkToken($context))
             {
-                $context->setError(new KControllerException(
+                $context->setError(new KControllerExceptionForbidden(
                 	'Invalid token or session time-out', KHttpResponse::FORBIDDEN
                 ));
 
@@ -95,7 +94,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
 	/**
 	 * Check the token to prevent CSRF exploits
 	 *
-	 * @param   object  The command context
+     * @param   KCommandContext	$context A command context object
 	 * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
 	 */
     protected function _checkToken(KCommandContext $context)

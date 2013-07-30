@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		Koowa_Model
  * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -36,8 +35,8 @@ class KConfigState extends KConfig
     /**
      * Set state value
      *
-     * @param  	string 	The user-specified state name.
-     * @param  	mixed  	The user-specified state value.
+     * @param  	string 	$name The user-specified state name.
+     * @param  	mixed  	$value The user-specified state value.
      * @return 	void
      */
     public function __set($name, $value)
@@ -50,7 +49,7 @@ class KConfigState extends KConfig
     /**
      * Unset a state value
      *
-     * @param   string  The column key.
+     * @param   string  $name The column key.
      * @return  void
      */
     public function __unset($name)
@@ -63,11 +62,11 @@ class KConfigState extends KConfig
     /**
      * Insert a new state
      *
-     * @param   string      The name of the state
-     * @param   mixed       Filter(s), can be a KFilterInterface object, a filter name or an array of filter names
-     * @param   mixed       The default value of the state
-     * @param   boolean     TRUE if the state uniquely indetifies an enitity, FALSE otherwise. Default FALSE.
-     * @param   array       Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
+     * @param   string      $name     The name of the state
+     * @param   mixed       $filter   Filter(s), can be a KFilterInterface object, a filter name or an array of filter names
+     * @param   mixed       $default  The default value of the state
+     * @param   boolean     $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
+     * @param   array       $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
      * @return  KConfigState
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array())
@@ -87,7 +86,7 @@ class KConfigState extends KConfig
     /**
      * Remove an existing state
      *
-     * @param   string      The name of the state
+     * @param   string      $name The name of the state
      * @return  KConfigState
      */
     public function remove( $name )
@@ -99,7 +98,7 @@ class KConfigState extends KConfig
     /**
      * Reset all state data and revert to the default state
      *
-     * @param   boolean If TRUE use defaults when resetting. Default is TRUE
+     * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
      * @return KConfigState
      */
     public function reset($default = true)
@@ -155,7 +154,7 @@ class KConfigState extends KConfig
      *
      * This function only returns states that have been been set.
      *
-     * @param   boolean If TRUE only retrieve unique state values, default FALSE
+     * @param   boolean $unique If TRUE only retrieve unique state values, default FALSE
      * @return  array   An associative array of state values by name
      */
     public function getData($unique = false)
@@ -235,7 +234,7 @@ class KConfigState extends KConfig
     /**
      * Check if the state information is empty
      *
-     * @param   array   An array of states names to exclude.
+     * @param   array   $exclude An array of states names to exclude.
      * @return  boolean TRUE if the state is empty, otherwise FALSE.
      */
     public function isEmpty(array $exclude = array())
@@ -252,7 +251,7 @@ class KConfigState extends KConfig
 	/**
      * Return an associative array of the states.
      *
-     * @param bool 	If TRUE return only as associative array of the state values. Default is TRUE.
+     * @param bool 	$values If TRUE return only as associative array of the state values. Default is TRUE.
      * @return array
      */
     public function toArray($values = true)
@@ -272,7 +271,7 @@ class KConfigState extends KConfig
 	/**
      * Validate a unique state.
      *
-     * @param  object  The state object.
+     * @param  object  $state The state object.
      * @return boolean True if unique state is valid, false otherwise.
      */
     protected function _validate($state)
