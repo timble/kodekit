@@ -72,7 +72,7 @@ class KViewJson extends KViewAbstract
         $config->append(array(
             'mimetype'	  => 'application/json',
             'padding'	  => '',
-            'version'     => '2.0',
+            'version'     => '1.0',
             'text_fields' => array('description'), // Links are converted to absolute in these fields
             'item_name'   => KInflector::singularize($this->getName()),
             'list_name'   => KInflector::pluralize($this->getName())
