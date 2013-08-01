@@ -124,9 +124,11 @@ class ComKoowaViewJson extends KViewAbstract
      */
     protected function _getData()
     {
-        $data = $this->getModel()->getData();
-
-        $result = KInflector::isPlural($this->getName()) ? $this->_renderList($data) : $this->_renderItem($data);
+        if (KInflector::isPlural($this->getName())) {
+            $result = $this->_renderList($this->getModel()->getList());
+        } else {
+            $result = $this->_renderItem($this->getModel()->getItem());
+        }
 
         return $result;
     }
@@ -158,18 +160,46 @@ class ComKoowaViewJson extends KViewAbstract
             )
         );
 
+        $model  = $this->getModel();
+        $total  = $model->getTotal();
+        $limit  = (int) $model->limit;
+        $offset = (int) $model->offset;
+
+        if ($limit && $total-($limit + $offset) > 0) {
+            $output['links']['next'] = array(
+                'href' => $this->_getListLink($rowset, array('offset' => $limit+$offset)),
+                'type' => 'application/json'
+            );
+        }
+
+        if ($limit && $offset && $offset >= $limit)
+        {
+            $output['links']['previous'] = array(
+                'href' => $this->_getListLink($rowset, array('offset' => max($offset-$limit, 0))),
+                'type' => 'application/json'
+            );
+        }
+
         return $output;
     }
 
     /**
-     * Get the item link for JSON output
+     * Get the list link for JSON output
      *
      * @param KDatabaseRowsetInterface  $rowset
+     * @param array                     $query Additional query parameters to merge
      * @return string
      */
-    protected function _getListLink(KDatabaseRowsetInterface $rowset)
+    protected function _getListLink(KDatabaseRowsetInterface $rowset, array $query = array())
     {
-        return (string) KRequest::url();
+        $url = KRequest::url();
+
+        if ($query) {
+            $previous = $url->getQuery(true);
+            $url->setQuery(array_merge($previous, $query));
+        }
+
+        return (string) $url;
     }
 
     /**
