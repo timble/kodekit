@@ -98,8 +98,8 @@ abstract class KModelAbstract extends KObject
      * This function overloads the KObject::set() function and only acts on state properties it
      * will reset (unsets) the $_list, $_item and $_total model properties when a state changes.
      *
-     * @param   string|array|object	The name of the property, an associative array or an object
-     * @param   mixed  				The value of the property
+     * @param   string|array|object	$property The name of the property, an associative array or an object
+     * @param   mixed  				$value    The value of the property
      * @return	KModelAbstract
      */
     public function set( $property, $value = null )
@@ -154,8 +154,8 @@ abstract class KModelAbstract extends KObject
      * If the property does not exist and a  default value is specified this is
      * returned, otherwise the function return NULL.
      *
-     * @param   string  The name of the property
-     * @param   mixed   The default value
+     * @param   string  $property The name of the property
+     * @param   mixed   $default  The default value
      * @return  mixed   The value of the property, an associative array or NULL
      */
     public function get($property = null, $default = null)
@@ -178,7 +178,7 @@ abstract class KModelAbstract extends KObject
     /**
      * Reset all cached data and reset the model state to it's default
      *
-     * @param   boolean If TRUE use defaults when resetting. Default is TRUE
+     * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
      * @return KModelAbstract
      */
     public function reset($default = true)
@@ -205,7 +205,7 @@ abstract class KModelAbstract extends KObject
     /**
      * Method to get a item
      *
-     * @return  object
+     * @return  KDatabaseRowInterface
      */
     public function getItem()
     {
@@ -215,7 +215,7 @@ abstract class KModelAbstract extends KObject
     /**
      * Get a list of items
      *
-     * @return  object
+     * @return  KDatabaseRowsetInterface
      */
     public function getList()
     {
@@ -236,9 +236,9 @@ abstract class KModelAbstract extends KObject
      * Get the model data
      *
      * If the model state is unique this function will call getItem(), otherwise
-     * it will calle getList().
+     * it will call getList().
      *
-     * @return KDatabaseRowset or KDatabaseRow
+     * @return KDatabaseRowsetInterface|KDatabaseRowInterface
      */
     public function getData()
     {
@@ -254,7 +254,7 @@ abstract class KModelAbstract extends KObject
 	/**
      * Get a model state by name
      *
-     * @param   string  The key name.
+     * @param   string  $key The key name.
      * @return  string  The corresponding value.
      */
     public function __get($key)
@@ -265,8 +265,8 @@ abstract class KModelAbstract extends KObject
     /**
      * Set a model state by name
      *
-     * @param   string  The key name.
-     * @param   mixed   The value for the key
+     * @param   string  $key   The key name.
+     * @param   mixed   $value The value for the key
      * @return  void
      */
     public function __set($key, $value)
@@ -280,8 +280,8 @@ abstract class KModelAbstract extends KObject
      *
      * For example : $model->sort('name')->limit(10)->getList();
      *
-     * @param   string  Method name
-     * @param   array   Array containing all the arguments for the original call
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
      * @return  KModelAbstract
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
