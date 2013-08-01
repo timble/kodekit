@@ -266,8 +266,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 * This functions only accepts full identifiers of the format
 	 * -  com:[//application/]component.view.[.path].name
 	 *
-	 * @param   string 	The template identifier
-	 * @param	array	An associative array of data to be extracted in local template scope
+	 * @param   string 	$template   The template identifier
+	 * @param	array	$data       An associative array of data to be extracted in local template scope
      * @throws \InvalidArgumentException If the template could not be found
 	 * @return KTemplateAbstract
 	 */
@@ -366,7 +366,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	/**
      * Check if a filter exists
      *
-     * @param 	string	The name of the filter
+     * @param 	string	$filter The name of the filter
      * @return  boolean	TRUE if the filter exists, FALSE otherwise
      */
 	public function hasFilter($filter)
@@ -378,7 +378,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 * Adds one or more filters for template transformation
 	 *
 	 * @param array 	Array of one or more behaviors to add.
-	 * @return KTemplate
+	 * @return $this
 	 */
 	public function addFilter($filters)
  	{
@@ -400,11 +400,15 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 		return $this;
  	}
 
- 	/**
-	 * Get a filter by identifier
-	 *
-	 * @return KTemplateFilterInterface
-	 */
+    /**
+     * Get a filter by identifier
+     *
+     * @param   mixed $filter    An object that implements KObjectServiceable, KServiceIdentifier object
+    or valid identifier string
+     *
+     * @throws UnexpectedValueException
+     * @return KTemplateFilterInterface
+     */
  	 public function getFilter($filter)
  	 {
          //Create the complete identifier if a partial identifier was passed
@@ -429,12 +433,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         return $filter;
  	 }
 
-	/**
-	 * Get a template helper
-	 *
-	 * @param	mixed	KServiceIdentifierInterface
-	 * @return 	KTemplateHelperInterface
-	 */
+    /**
+     * Get a template helper
+     *
+     * @param mixed $helper KServiceIdentifierInterface
+     * @throws UnexpectedValueException
+     * @return KTemplateHelperInterface
+     */
 	public function getHelper($helper)
 	{
 		//Create the complete identifier if a partial identifier was passed
@@ -463,8 +468,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 * This functions accepts a partial identifier, in the form of helper.function. If a partial
 	 * identifier is passed a full identifier will be created using the template identifier.
 	 *
-	 * @param	string	Name of the helper, dot separated including the helper function to call
-	 * @param	mixed	Parameters to be passed to the helper
+	 * @param	string	$identifier Name of the helper, dot separated including the helper function to call
+	 * @param	mixed	$params     Parameters to be passed to the helper
      * @throws BadMethodCallException
 	 * @return 	string	Helper output
 	 */
@@ -487,7 +492,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	/**
 	 * Searches for the file
 	 *
-	 * @param	string	The file path to look for.
+	 * @param	string	$file The file path to look for.
 	 * @return	mixed	The full path and file name for the target file, or FALSE
 	 * 					if the file is not found
 	 */
