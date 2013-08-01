@@ -113,4 +113,11 @@ interface KDatabaseRowsetInterface
 	 * @return	bool
 	 */
     public function isConnected();
+
+    /**
+     * Return an associative array of the data.
+     *
+     * @return array
+     */
+    public function toArray();
 }
