@@ -33,8 +33,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Constructor
      *
-     * @param KConfig|null $config  An optional KConfig object with configuration options
-     * @return \KObjectDecorator
+     * @param KConfig $config  An optional KConfig object with configuration options
      */
     public function __construct(KConfig $config)
     {
@@ -49,7 +48,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $object An optional KConfig object with configuration options
+     * @param   KConfig $config An optional KConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KConfig $config)
@@ -136,7 +135,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Set the database adapter
      *
-     * @param \KDatabaseAdpaterInterface $adapter
+     * @param \KDatabaseAdapterInterface $adapter
      * @return \KDatabaseQueryInterface
      */
     public function setAdapter(KDatabaseAdapterInterface $adapter)

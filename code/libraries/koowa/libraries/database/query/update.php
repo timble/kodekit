@@ -61,7 +61,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
     /**
      * Build the table clause 
      *
-     * @param   string The name of the table to update.
+     * @param   string $table The name of the table to update.
      * @return  KDatabaseQueryUpdate
      */
     public function table($table)
@@ -101,8 +101,8 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
     /**
      * Build the set clause 
      *
-     * @param   array|string $columns An array or string of columns to update.
-     * @return  \KDatabaseQueryUpdate
+     * @param   array|string $values An array or string of columns to update.
+     * @return  $this
      */
     public function values($values)
     {
@@ -114,7 +114,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
     /**
      * Build the where clause
      *
-     * @param   string $condiaiton  The condition.
+     * @param   string $condition  The condition.
      * @param   string $combination Combination type, defaults to 'AND'.
      * @return  \KDatabaseQueryUpdate
      */
