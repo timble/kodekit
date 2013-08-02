@@ -81,11 +81,11 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     /**
      * Command handler
      *
-     * @param   string      The command name
-     * @param   object      The command context
+     * @param   string          $name    The command name
+     * @param   KCommandContext $context The command context
      * @return  boolean     Always returns TRUE
      */
-    final public function execute( $name, KCommandContext $context)
+    final public function execute($name, KCommandContext $context)
     {
         //Set the template
         $this->_template = $context->caller;

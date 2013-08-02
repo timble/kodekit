@@ -60,6 +60,9 @@ class KTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplat
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getWrapper()
     {
         return $this->_wrapper;
