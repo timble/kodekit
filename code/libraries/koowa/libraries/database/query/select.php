@@ -93,7 +93,8 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      */
     public function isCountQuery()
     {
-        return $this->columns && current($this->columns) == 'COUNT(*)';
+        $columns = $this->columns;
+        return $columns && current($columns) == 'COUNT(*)';
     }
 
     /**
