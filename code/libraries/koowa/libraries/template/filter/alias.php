@@ -42,8 +42,9 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
     /**
      * Append an alias
      *
-     * @param array     An array of aliases to be appended
-     * @return KTemplateFilterAlias
+     * @param   array   $alias An array of aliases to be appended
+     * @param   integer $mode  Filter mode
+     * @return $this
      */
     public function append(array $alias, $mode = KTemplateFilter::MODE_READ)
     {

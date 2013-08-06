@@ -192,7 +192,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         }
 
 
-        return JHtml::_('behavior.calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KConfig::unbox($config->attribs));
+        return JHtml::_('calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KConfig::unbox($config->attribs));
     }
 
     /**

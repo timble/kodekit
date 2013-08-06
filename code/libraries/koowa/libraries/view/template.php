@@ -129,8 +129,8 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Set a view properties
      *
-     * @param   string  The property name.
-     * @param   mixed   The property value.
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
      */
     public function __set($property, $value)
     {
@@ -140,7 +140,7 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Get a view property
      *
-     * @param   string  The property name.
+     * @param   string  $property The property name.
      * @return  string  The property value.
      */
     public function __get($property)
@@ -238,7 +238,7 @@ abstract class KViewTemplate extends KViewAbstract
      /**
      * Sets the _escape() callback.
      *
-     * @param   mixed The callback for _escape() to use.
+     * @param   mixed $spec The callback for _escape() to use.
      * @return  KViewAbstract
      */
     public function setEscape($spec)
@@ -250,7 +250,7 @@ abstract class KViewTemplate extends KViewAbstract
 	/**
      * Sets the layout name
      *
-     * @param    string  The template name.
+     * @param    string  $layout The template name.
      * @return   KViewAbstract
      */
     public function setLayout($layout)
@@ -304,7 +304,7 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Method to set a template object attached to the view
      *
-     * @param   mixed   An object that implements KObjectServiceable, an object that
+     * @param   mixed   $template An object that implements KObjectServiceable, an object that
      *                  implements KServiceIdentifierInterface or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KViewAbstract
@@ -350,8 +350,8 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * For example : $view->layout('foo')->title('name')->display().
      *
-     * @param   string  Method name
-     * @param   array   Array containing all the arguments for the original call
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
      * @return  KViewAbstract
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html

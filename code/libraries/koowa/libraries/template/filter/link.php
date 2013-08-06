@@ -19,7 +19,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	/**
 	 * Find any <link /> elements and render them
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return KTemplateFilterLink
 	 */
 	public function write(&$text)
@@ -36,7 +36,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	/**
 	 * Parse the text for script tags
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return string
 	 */
 	protected function _parseLinks(&$text)
@@ -61,8 +61,8 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	/**
 	 * Render script information
 	 *
-	 * @param string	The script information
-	 * @param array		Associative array of attributes
+	 * @param string	$link       The script information
+	 * @param array		$attribs    Associative array of attributes
 	 * @return string
 	 */
 	protected function _renderLink($link, $attribs = array())

@@ -93,7 +93,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
     /**
      * Build the where clause
      *
-     * @param   string  $conditition The condition.
+     * @param   string  $condition The condition.
      * @param   string  $combination Combination type, defaults to 'AND'.
      * @return  \KDatabaseQueryDelete
      */

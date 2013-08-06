@@ -52,7 +52,7 @@ interface KTemplateInterface
     /**
      * Get the view object attached to the template
      *
-     * @return  KViewInterface
+     * @return  KViewAbstract
      */
 	public function getView();
 
@@ -102,7 +102,6 @@ interface KTemplateInterface
      *
      * @param   mixed    $filter    An object that implements KObjectServiceable, KServiceIdentifier object
                                     or valid identifier string
-     * @param   array    $config    An optional associative array of configuration settings
      * @return KTemplateFilterInterface
      */
     public function getFilter($filter);
@@ -119,7 +118,6 @@ interface KTemplateInterface
      * Get a template helper
      *
      * @param    mixed    $helper KServiceIdentifierInterface
-     * @param    array    $config An optional associative array of configuration settings
      * @return  KTemplateHelperInterface
      */
     public function getHelper($helper);
@@ -131,7 +129,7 @@ interface KTemplateInterface
      * full identifier will be created using the template identifier.
      *
      * @param    string   $identifier Name of the helper, dot separated including the helper function to call
-     * @param    array    $params     An optional associative array of functions parameters to be passed to the helper
+     * @param    array    $config     An optional associative array of functions parameters to be passed to the helper
      * @return   string   Helper output
      * @throws   \BadMethodCallException If the helper function cannot be called.
      */

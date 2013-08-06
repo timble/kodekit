@@ -65,7 +65,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Render a select box with limit values
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KConfig 	$config An optional array with configuration options
      * @return 	string	Html select box
      */
     public function limit($config = array())

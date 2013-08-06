@@ -97,11 +97,12 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Get the methods that are available for mixin based
      *
-     * This function conditionaly mixes the behavior. Only if the mixer
-     * has a 'slug' property the behavior will be mixed in.
+     * This function conditionally mixes the behavior. Only if the mixer
+     * has a 'created_by' or 'created_on' property the behavior will be
+     * mixed in.
      *
-     * @param object The mixer requesting the mixable methods.
-     * @return array An array of methods
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
      */
     public function getMixableMethods(KObject $mixer = null)
     {
@@ -122,6 +123,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Requires a 'slug' column
      *
+     * @param  KCommandContext $context
      * @return void
      */
     protected function _afterTableInsert(KCommandContext $context)
@@ -139,6 +141,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Requires a 'slug' column
      *
+     * @param  KCommandContext $context
      * @return void
      */
     protected function _beforeTableUpdate(KCommandContext $context)
@@ -151,7 +154,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Create a sluggable filter
      *
-     * @return void
+     * @return KFilterSlug
      */
     protected function _createFilter()
     {
@@ -221,10 +224,9 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
             $this->_unique = $table->getColumn('slug', true)->unique;
         }
 
-        //If the slug needs to be unique and it already exist make it unqiue
+        //If the slug needs to be unique and it already exists, make it unique
         if($this->_unique && $table->count(array('slug' => $this->slug)))
         {
-            $db    = $table->getDatabase();
             $query = $this->getService('koowa:database.query.select')
                         ->columns('slug')
                         ->where('slug LIKE :slug')

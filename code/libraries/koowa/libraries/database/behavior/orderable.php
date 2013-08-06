@@ -16,15 +16,16 @@
  */
 class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 {
-	/**
-	 * Get the methods that are available for mixin based
-	 *
-	 * This functions conditionaly mixes the behavior. Only if the mixer
-	 * has a 'ordering' property the behavior will be mixed in.
-	 *
-	 * @param object The mixer requesting the mixable methods.
-	 * @return array An array of methods
-	 */
+    /**
+     * Get the methods that are available for mixin based
+     *
+     * This function conditionally mixes the behavior. Only if the mixer
+     * has a 'created_by' or 'created_on' property the behavior will be
+     * mixed in.
+     *
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
+     */
 	public function getMixableMethods(KObject $mixer = null)
 	{
 		$methods = array();
@@ -45,6 +46,8 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 *
 	 * @param 	KDatabaseQuerySelect $query
 	 * @return  void
+     *
+     * @throws InvalidArgumentException
 	 */
 	public function _buildQueryWhere($query)
 	{
@@ -61,7 +64,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires an 'ordering' column
 	 *
-	 * @param	integer	Amount to move up or down
+	 * @param	integer	$change Amount to move up or down
 	 * @return 	KDatabaseRowAbstract
 	 */
 	public function order($change)
@@ -114,7 +117,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * Resetting starts at $base to allow creating space in sequence for later
      * record insertion.
      *
-     * @param	integer 	Order at which to start resetting.
+     * @param	integer 	$base Order at which to start resetting.
      * @return	KDatabaseBehaviorOrderable
      */
     public function reorder($base = 0)
@@ -168,6 +171,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * This performs an intelligent insert/update and reloads the properties
      * with fresh data from the table on success.
      *
+     * @param   KCommandContext $context
      * @return KDatabaseRowAbstract
      */
     protected function _beforeTableInsert(KCommandContext $context)
@@ -186,7 +190,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * Changes the rows ordering if the virtual order field is set. Order is
      * relative to the row's current position.
      *
-     * @param   KCommandContext Context
+     * @param   KCommandContext $context
      */
     protected function _beforeTableUpdate(KCommandContext $context)
     {
@@ -198,7 +202,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Clean up the ordering after an item was deleted
      *
-     * @param   KCommandContext Context
+     * @param   KCommandContext $context
      */
     protected function _afterTableDelete(KCommandContext $context)
     {

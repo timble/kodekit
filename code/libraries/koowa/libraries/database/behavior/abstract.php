@@ -98,11 +98,11 @@ abstract class KDatabaseBehaviorAbstract extends KMixinAbstract implements KData
 	 * the format '_beforeX[Command]' or '_afterX[Command]. Command handler
 	 * functions should be declared protected.
 	 *
-	 * @param 	string  	The command name
-	 * @param 	object   	The command context
+	 * @param 	string  	    $name    The command name
+	 * @param 	KCommandContext $context The command context
 	 * @return 	boolean		Can return both true or false.
 	 */
-	final public function execute( $name, KCommandContext $context)
+	final public function execute($name, KCommandContext $context)
 	{
 		$identifier = clone $context->caller->getIdentifier();
 		$type       = array_pop($identifier->path);
@@ -190,8 +190,8 @@ abstract class KDatabaseBehaviorAbstract extends KMixinAbstract implements KData
      * This function also dynamically adds a function of format is[Behavior]
      * to allow client code to check if the behavior is callable.
      *
-     * @param object The mixer requesting the mixable methods.
-     * @return array An array of methods
+     * @param KObject $mixer  The mixer requesting the mixable methods.
+     * @return array  An array of methods
      */
     public function getMixableMethods(KObject $mixer = null)
     {
@@ -205,9 +205,8 @@ abstract class KDatabaseBehaviorAbstract extends KMixinAbstract implements KData
 	 * Get an instance of a class based on a class identifier only creating it
 	 * if it doesn't exist yet.
 	 *
-	 * @param	string|object	The class identifier or identifier object
-	 * @param	array  			An optional associative array of configuration settings.
-	 * @throws	KServiceServiceException
+	 * @param	string|object	$identifier The class identifier or identifier object
+	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectServiceable
 	 */
@@ -219,6 +218,7 @@ abstract class KDatabaseBehaviorAbstract extends KMixinAbstract implements KData
 	/**
 	 * Gets the service identifier.
 	 *
+     * @param	string|object	$identifier The class identifier or identifier object
 	 * @return	KServiceIdentifier
 	 * @see 	KObjectServiceable
 	 */

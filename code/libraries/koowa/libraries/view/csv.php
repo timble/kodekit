@@ -57,9 +57,7 @@ class KViewCsv extends KViewFile
     }
 
 	/**
-	 * Return the views output
- 	 *
-	 *  @return string 	The output of the view
+	 * Sets the views output
 	 */
 	public function display()
 	{
@@ -94,14 +92,14 @@ class KViewCsv extends KViewFile
 		// Set the output
 		$this->output = $header.$rows;
 
-		return parent::display();
+		parent::display();
 	}
 
 	/**
      * Render
      *
-     * @param	string	Value
-     * return 	boolean
+     * @param	array	$data Value
+     * @return 	boolean
      */
 	protected function _arrayToString($data)
     {
@@ -128,8 +126,8 @@ class KViewCsv extends KViewFile
     /**
      * Check if the value should be quoted
      *
-     * @param	string	Value
-     * return 	boolean
+     * @param	string	$value Value
+     * @return 	boolean
      */
     protected function _quoteValue($value)
     {
