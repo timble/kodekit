@@ -1,0 +1,111 @@
+<?php
+/**
+ * @package     Nooku_Modules
+ * @subpackage  Default
+ * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        http://www.nooku.org
+ */
+
+/**
+ * Default Module View
+ *
+ * @author      Johan Janssens <johan@nooku.org>
+ * @package     Nooku_Modules
+ * @subpackage  Default
+ */
+class ModKoowaHtml extends KViewHtml
+{
+    /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(KConfig $config)
+    {
+        $config->append(array(
+        	'template_filters' => array('chrome'),
+            'data'			   => array(
+                'styles' => array()
+            )
+        ));
+
+        parent::_initialize($config);
+    }
+
+	/**
+	 * Get the name
+	 *
+	 * @return 	string 	The name of the object
+	 */
+	public function getName()
+	{
+		return $this->getIdentifier()->package;
+	}
+
+    /**
+     * Renders and echo's the views output
+     *
+     * @return ModKoowaHtml
+     */
+    public function display()
+    {
+		//Load the language files.
+		if(isset($this->module->module)) 
+		{
+		    $identifier = clone $this->getIdentifier();
+		    $identifier->package = substr($this->module->module, 4);
+
+            $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
+		}
+
+        if(empty($this->module->content))
+		{
+            $this->output = $this->getTemplate()
+                ->loadIdentifier($this->_layout, $this->_data)
+                ->render();
+		}
+		else
+		{
+		     $this->output = $this->getTemplate()
+                ->loadString($this->module->content, $this->_data, false)
+                ->render();
+		}
+
+        return $this->output;
+    }
+
+    /**
+     * Set a view properties
+     *
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
+     */
+    public function __set($property, $value)
+    {
+        if($property == 'module')
+        {
+            if(is_string($value->params)) {
+                $value->params = $this->_parseParams($value->params);
+            }
+        }
+
+        parent::__set($property, $value);
+    }
+
+	/**
+     * Method to extract key/value pairs out of a string
+     *
+     * @param   string  String containing the parameters
+     * @return  array   Key/Value pairs for the attributes
+     */
+    protected function _parseParams( $string )
+    {
+        $params = new KConfig((array) json_decode($string));
+
+        return $params;
+    }
+}
