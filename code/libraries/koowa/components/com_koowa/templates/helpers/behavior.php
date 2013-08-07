@@ -427,6 +427,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         // Load the necessary files if they haven't yet been loaded
         if(!isset(self::$_loaded['autocomplete']))
         {
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
+
             if(isset(self::$_loaded['validator']))
             {
                 $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
