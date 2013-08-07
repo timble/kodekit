@@ -318,7 +318,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'element' => '.select2-listbox',
             'options' => array(
                 'width' => 'resolve',
-                'dropdownCssClass' => 'com_docman'
+                'dropdownCssClass' => 'com_docman' //@TODO change
             )
         ));
 
@@ -354,8 +354,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads the autocomplete behavior and attaches it to a specified element
      *
-     * @see    http://mootools.net/forge/p/meio_autocomplete
-     *
      * @param  array|KConfig $config
      * @return string	The html output
      */
@@ -363,6 +361,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KConfig($config);
         $config->append(array(
+            'element' => '.select2-listbox',
+            'options' => array(
+                'width' => 'resolve',
+                'dropdownCssClass' => 'com_docman' //@TODO change
+            ),
+
             'identifier'    => null,
             'element'       => null,
             'path'          => 'name',
@@ -389,6 +393,25 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 )
             ));
 
+        $html ='';
+
+        if (!isset(self::$_loaded['jquery'])) {
+            $html .= $this->jquery();
+        }
+
+        if (!isset(self::$_loaded['select2'])) {
+
+            $html .= '<script src="media://com_docman/js/select2.js" />';
+
+            $html .= '<script>jQuery(function($){
+                $("'.$config->element.'").select2('.$config->options.');
+            });</script>';
+
+
+
+            self::$_loaded['select2'] = true;
+        }
+
         if($config->validate)
         {
             $config->attribs['data-value']  = $config->value_element;
@@ -406,6 +429,15 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         // Load the necessary files if they haven't yet been loaded
         if(!isset(self::$_loaded['autocomplete']))
         {
+            if(isset(self::$_loaded['validator']))
+            {
+                $html .= '<script src="media://com_docman/js/select2.validator.js" />';
+
+                $html .= '<script>jQuery(function($){
+                    $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+                });</script>';
+            }
+            
             if(version_compare(JVERSION, '3.0', 'ge')) {
                 $html .= '<script src="media://koowa/com_koowa/js/autocomplete-2.0.js" />';
             } else {
