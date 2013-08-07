@@ -318,7 +318,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'element' => '.select2-listbox',
             'options' => array(
                 'width' => 'resolve',
-                'dropdownCssClass' => 'com_docman' //@TODO change
+                'dropdownCssClass' => 'koowa'
             )
         ));
 
@@ -364,7 +364,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'element' => '.select2-listbox',
             'options' => array(
                 'width' => 'resolve',
-                'dropdownCssClass' => 'com_docman' //@TODO change
+                'dropdownCssClass' => 'koowa'
             ),
 
             'identifier'    => null,
