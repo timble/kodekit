@@ -86,16 +86,31 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             self::$_loaded['bootstrap-css'] = true;
         }
 
-        $app      = $config->application ? '-'.$config->application : '';
-        $suffix   = version_compare(JVERSION, '3.0', '>=') ? '.j3' : '';
-        $filename = sprintf('bootstrap%s%s', $app, $suffix);
+        $filename = 'bootstrap'.($config->application ? '-'.$config->application : '');
 
         if (!isset(self::$_loaded[$config->package.'-'.$filename]))
         {
-            $template = '<style src="media://com_%s/css/%s.css" />';
-            $html    .= sprintf($template, $config->package, $filename);
+            $template  = 'com_%s/css/%s.css';
+            $try_files = array(
+                sprintf($template, $config->package, $filename)
+            );
 
-            self::$_loaded[$config->package.'-'.$filename] = true;
+            if (version_compare(JVERSION, '3.0', '<')) {
+                array_unshift($try_files, sprintf($template, $config->package, $filename.'-25'));
+            }
+
+            foreach ($try_files as $file)
+            {
+                if (file_exists(JPATH_ROOT.'/media/'.$file))
+                {
+                    $html .= sprintf('<style src="media://%s" />', $file);
+
+                    self::$_loaded[$config->package.'-'.$filename] = true;
+
+                    break;
+                }
+            }
+
         }
 
         if ($config->wrapper)
