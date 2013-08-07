@@ -122,24 +122,39 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'text'  option is specified the 'value' option will be used instead.
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array 	An optional array with configuration options
      * @return	string	Html
      * @see __call()
+     * @TODO this is no longer needed re #78
      */
     protected function _render($config = array())
     {
+        return $this->_listbox($config);
+    }
+
+    //@TODO re #78 this may not stay, used to easier test specialized listbox classes without modifying them with new code
+    public function optionlist($config = array())
+    {
         $config = new KConfig($config);
         $config->append(array(
-            'autocomplete' => false
-        ));
+            'autocomplete'          => false,
+            'autocomplete_options'  => array(),
+            'searchinput'           => false, //@TODO re #78 this may change, the property name 'filter' is already used
+            'searchinput_options'   => array(),
+        ))->append(array(
+                'searchinput_options'   => array('element' => 'select[name='.$config->name.']')
+            ));
+
+        $html = parent::optionlist($config);
 
         if($config->autocomplete) {
-            $result = $this->_autocomplete($config);
-        } else {
-            $result = $this->_listbox($config);
+            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
+        }
+        elseif($config->searchinput) {
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->searchinput_options);
         }
 
-        return $result;
+        return $html;
     }
 
     /**
@@ -201,7 +216,20 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         //Add the options to the config object
         $config->options = $options;
 
-        return $this->optionlist($config);
+        $html = $this->optionlist($config);
+
+        /*
+        if($config->autocomplete) {
+            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
+        }
+        elseif($config->searchinput) {
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->searchinput_options);
+        }
+
+        //@TODO re #78 need to have a special case when both searchinput and autocomplete is enabled
+        //*/
+
+        return $html;
     }
 
     /**
