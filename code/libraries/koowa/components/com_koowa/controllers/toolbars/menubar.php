@@ -49,7 +49,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
 	{
 	    $name     = $this->getController()->getIdentifier()->name;
 	    $package  = $this->getIdentifier()->package;
-	    $manifest = JPATH_ADMINISTRATOR.'/components/com_'.$package.'/manifest.xml';
+	    $manifest = JPATH_ADMINISTRATOR.'/components/com_'.$package.'/'.$package.'.xml';
 
 	    if(file_exists($manifest))
 	    {

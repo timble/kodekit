@@ -174,7 +174,10 @@ class plgSystemKoowa extends JPlugin
 
             while (@ob_end_clean());
 
-            header('Content-Type: text/html');
+            if (!headers_sent()) {
+                header('Content-Type: text/html');
+            }
+
             echo $template->render();
 
             exit;

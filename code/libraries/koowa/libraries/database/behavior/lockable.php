@@ -42,15 +42,16 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
     	parent::_initialize($config);
    	}
 
-	/**
-	 * Get the methods that are available for mixin based
-	 *
-	 * This function conditionaly mixies the behavior. Only if the mixer
-	 * has a 'locked_by' property the behavior will be mixed in.
-	 *
-	 * @param object The mixer requesting the mixable methods.
-	 * @return array An array of methods
-	 */
+    /**
+     * Get the methods that are available for mixin based
+     *
+     * This function conditionally mixes the behavior. Only if the mixer
+     * has a 'created_by' or 'created_on' property the behavior will be
+     * mixed in.
+     *
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
+     */
 	public function getMixableMethods(KObject $mixer = null)
 	{
 		$methods = array();
@@ -67,7 +68,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires an 'locked_on' and 'locked_by' column
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function lock()
 	{
@@ -163,7 +164,8 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 * If a row is locked, and not by the logged in user, the function will return false,
 	 * otherwise it will return true
 	 *
-	 * @return boolean True if row can be updated, false otherwise
+     * @param  KCommandContext $context
+	 * @return boolean         True if row can be updated, false otherwise
 	 */
 	protected function _beforeTableUpdate(KCommandContext $context)
 	{
@@ -177,8 +179,9 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 * If a row is locked, and not by the logged in user, the function will return false,
 	 * otherwise it will return true
 	 *
-	 * @return boolean True if row can be deleted, false otherwise
-	 */
+     * @param  KCommandContext $context
+     * @return boolean         True if row can be deleted, false otherwise
+     */
 	protected function _beforeTableDelete(KCommandContext $context)
 	{
 		return (bool) !$this->locked();

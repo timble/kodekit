@@ -66,7 +66,7 @@ class KLoaderAdapterPlugin extends KLoaderAdapterAbstract
 			}
 
             //Find the basepath
-            if(!empty($basepath)) {
+            if(!empty($basepath) && empty($this->_basepaths[$package])) {
                 $this->_basepath = $basepath;
             }
 

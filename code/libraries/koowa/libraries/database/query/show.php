@@ -59,8 +59,8 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
     /**
      * Build the from clause 
      *
-     * @param   string $form The name of the database or table.
-     * @return  \KDatabaseQueryShow
+     * @param   string $from The name of the database or table.
+     * @return  $this
      */
     public function from($from)
     {

@@ -78,7 +78,7 @@ class KLoaderAdapterModule extends KLoaderAdapterAbstract
 			else $path = $file;
 
             //Find the basepath
-            if(!empty($basepath)) {
+            if(!empty($basepath) && empty($this->_basepaths[$package])) {
                 $this->_basepath = $basepath;
             }
 

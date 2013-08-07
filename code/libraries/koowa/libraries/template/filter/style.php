@@ -36,9 +36,9 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
 	/**
 	 * Find any <style src"" /> or <style></style> elements and render them
 	 *
-	 * @param string Block of text to parse
-	 * @return KTemplateFilterStyle
-	 */
+     * @param string $text Block of text to parse
+     * @return $this
+     */
 	public function write(&$text)
 	{
 		//Parse the script information
@@ -53,7 +53,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
 	/**
 	 * Parse the text for style tags
 	 *
-	 * @param 	string 	Block of text to parse
+	 * @param 	string 	$text Block of text to parse
 	 * @return 	string
 	 */
 	protected function _parseStyles(&$text)
@@ -90,11 +90,11 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
 	/**
 	 * Render style information
 	 *
-	 * @param 	string	The style information
-	 * @param 	boolean	True, if the style information is a URL
-	 * @param 	array	Associative array of attributes
-	 * @return string
-	 */
+     * @param string	$script  The script information
+     * @param boolean	$link    True, if the script information is a URL.
+     * @param array		$attribs Associative array of attributes
+     * @return string
+     */
 	protected function _renderStyle($style, $link, $attribs = array())
 	{
 		$attribs = KHelperArray::toString($attribs);

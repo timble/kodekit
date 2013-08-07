@@ -38,8 +38,8 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	 *
 	 * <script inline></script> can be used for inline scripts
 	 *
-	 * @param string Block of text to parse
-	 * @return KTemplateFilterLink
+	 * @param string $text Block of text to parse
+	 * @return $this
 	 */
 	public function write(&$text)
 	{
@@ -55,7 +55,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	/**
 	 * Parse the text for script tags
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return string
 	 */
 	protected function _parseScripts(&$text)
@@ -102,9 +102,9 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	/**
 	 * Render script information
 	 *
-	 * @param string	The script information
-	 * @param boolean	True, if the script information is a URL.
-	 * @param array		Associative array of attributes
+	 * @param string	$script  The script information
+	 * @param boolean	$link    True, if the script information is a URL.
+	 * @param array		$attribs Associative array of attributes
 	 * @return string
 	 */
 	protected function _renderScript($script, $link, $attribs = array())

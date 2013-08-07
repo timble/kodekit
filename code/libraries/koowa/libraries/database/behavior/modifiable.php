@@ -32,16 +32,16 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     	parent::_initialize($config);
    	}
 
-	/**
-	 * Get the methods that are available for mixin based
-	 *
-	 * This function conditionaly mixes the behavior. Only if the mixer
-	 * has a 'modified_by' or 'modified_by' property the behavior will
-	 * be mixed in.
-	 *
-	 * @param object The mixer requesting the mixable methods.
-	 * @return array An array of methods
-	 */
+    /**
+     * Get the methods that are available for mixin based
+     *
+     * This function conditionally mixes the behavior. Only if the mixer
+     * has a 'created_by' or 'created_on' property the behavior will be
+     * mixed in.
+     *
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
+     */
 	public function getMixableMethods(KObject $mixer = null)
 	{
 		$methods = array();
@@ -58,6 +58,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires a 'modified_on' and 'modified_by' column
 	 *
+     * @param KCommandContext $context
 	 * @return void
 	 */
 	protected function _beforeTableUpdate(KCommandContext $context)

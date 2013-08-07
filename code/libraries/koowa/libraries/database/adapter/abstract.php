@@ -393,7 +393,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->query     = $query;
 
-        //Excute the delete operation
+        //Execute the delete operation
         if ($this->getCommandChain()->run('before.delete', $context) !== false)
         {
             //Execute the query
@@ -415,7 +415,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *                     use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
      *                     unless you free the result first.
      * @throws \RuntimeException If the query could not be executed
-     * @return boolean     For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
+     * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                     For other successful queries  return TRUE.
      */
     public function execute($query, $mode = KDatabase::RESULT_STORE)
