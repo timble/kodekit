@@ -368,7 +368,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             ),
 
             'identifier'    => null,
-            'element'       => null,
             'path'          => 'name',
             'filter'		=> array(),
             'validate'		=> true,
@@ -401,7 +400,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['select2'])) {
 
-            $html .= '<script src="media://com_docman/js/select2.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
 
             $html .= '<script>jQuery(function($){
                 $("'.$config->element.'").select2('.$config->options.');
@@ -424,43 +423,30 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $config->url = JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name.'&format=json', false);
         }
 
-        $html = '';
-
         // Load the necessary files if they haven't yet been loaded
         if(!isset(self::$_loaded['autocomplete']))
         {
             if(isset(self::$_loaded['validator']))
             {
-                $html .= '<script src="media://com_docman/js/select2.validator.js" />';
+                $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
 
                 $html .= '<script>jQuery(function($){
                     $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
                 });</script>';
             }
-            
-            if(version_compare(JVERSION, '3.0', 'ge')) {
-                $html .= '<script src="media://koowa/com_koowa/js/autocomplete-2.0.js" />';
-            } else {
-                $html .= '<script src="media://koowa/com_koowa/js/autocomplete-1.0.js" />';
-            }
-            $html .= '<script src="media://koowa/com_koowa/js/patch.autocomplete.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/autocomplete.css" />';
+
+
+            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
         }
 
+        /*
         $html .= "
 		<script>
 			window.addEvent('domready', function(){
 				new Koowa.Autocomplete(document.id('".$config->element."'), ".json_encode($config->url).", ".json_encode(KConfig::unbox($config->options)).");
 			});
 		</script>";
-
-        $html .= '<input '.KHelperArray::toString($config->attribs).' />';
-        $html .= '<input '.KHelperArray::toString(array(
-                'type'  => 'hidden',
-                'name'  => $config->name,
-                'id'    => $config->element.'-value',
-                'value' => $config->selected
-            )).' />';
+        //*/
 
         return $html;
     }
