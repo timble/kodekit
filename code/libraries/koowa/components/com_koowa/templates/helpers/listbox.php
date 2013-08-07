@@ -139,10 +139,10 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $config->append(array(
             'autocomplete'          => false,
             'autocomplete_options'  => array(),
-            'searchinput'           => false, //@TODO re #78 this may change, the property name 'filter' is already used
-            'searchinput_options'   => array(),
+            'select2'           => false, //@TODO re #78 this may change, the property name 'filter' is already used
+            'select2_options'   => array(),
         ))->append(array(
-                'searchinput_options'   => array('element' => 'select[name='.$config->name.']')
+                'select2_options'   => array('element' => 'select[name='.$config->name.']')
             ));
 
         $html = parent::optionlist($config);
@@ -150,8 +150,8 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         if($config->autocomplete) {
             $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
         }
-        elseif($config->searchinput) {
-            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->searchinput_options);
+        elseif($config->select2) {
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
         }
 
         return $html;
@@ -222,47 +222,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         if($config->autocomplete) {
             $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
         }
-        elseif($config->searchinput) {
-            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->searchinput_options);
+        elseif($config->select2) {
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
         }
 
         //@TODO re #78 need to have a special case when both searchinput and autocomplete is enabled
         //*/
-
-        return $html;
-    }
-
-    /**
-     * Renders a listbox with autocomplete behavior
-     *
-     * @see    KTemplateHelperBehavior::autocomplete
-     *
-     * @param  array    $config
-     * @return string	The html output
-     */
-    protected function _autocomplete($config = array())
-    {
-        $config = new KConfig($config);
-        $config->append(array(
-            'name'		 => '',
-            'attribs'	 => array(),
-            'model'		 => KInflector::pluralize($this->getIdentifier()->package),
-            'validate'   => true,
-        ))->append(array(
-                'value'		 => $config->name,
-                'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
-            ))->append(array(
-                'text'		=> $config->value,
-            ))->append(array(
-                'filter' 	=> array(),
-            ));
-
-        //For the autocomplete behavior
-        $config->element = $config->value;
-        $config->path    = $config->text;
-
-        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
 
         return $html;
     }

@@ -330,7 +330,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['select2'])) {
 
-            $html .= '<script src="media://com_docman/js/select2.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
 
             $html .= '<script>jQuery(function($){
                 $("'.$config->element.'").select2('.$config->options.');
@@ -338,7 +338,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
             if(isset(self::$_loaded['validator']))
             {
-                $html .= '<script src="media://com_docman/js/select2.validator.js" />';
+                $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
 
                 $html .= '<script>jQuery(function($){
                     $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
@@ -392,6 +392,20 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 )
             ));
 
+
+        if(!isset($config->url))
+        {
+            $identifier = $this->getIdentifier($config->identifier);
+            $config->append(array(
+                'options' => array(
+                    'ajax' => array(
+                        'url' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name.'&format=json', false)
+                    )
+                )
+            ));
+        }
+
+
         $html ='';
 
         if (!isset(self::$_loaded['jquery'])) {
@@ -401,27 +415,14 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['select2'])) {
 
             $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
-
-            $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").select2('.$config->options.');
-            });</script>';
-
-
+            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
 
             self::$_loaded['select2'] = true;
         }
 
-        if($config->validate)
-        {
-            $config->attribs['data-value']  = $config->value_element;
-            $config->attribs['data-value'] .= ' ma-required';
-        }
-
-        if(!isset($config->url))
-        {
-            $identifier = $this->getIdentifier($config->identifier);
-            $config->url = JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name.'&format=json', false);
-        }
+        $html .= '<script>jQuery(function($){
+                $("'.$config->element.'").select2('.$config->options.');
+            });</script>';
 
         // Load the necessary files if they haven't yet been loaded
         if(!isset(self::$_loaded['autocomplete']))
@@ -435,18 +436,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 });</script>';
             }
 
-
-            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
+            //@TODO move ajax specific code into separate js file
         }
-
-        /*
-        $html .= "
-		<script>
-			window.addEvent('domready', function(){
-				new Koowa.Autocomplete(document.id('".$config->element."'), ".json_encode($config->url).", ".json_encode(KConfig::unbox($config->options)).");
-			});
-		</script>";
-        //*/
 
         return $html;
     }
