@@ -306,6 +306,52 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
+     * Loads the select2 behavior and attaches it to a specified element
+     *
+     * @see    http://ivaynberg.github.io/select2/select-2.1.html
+     * @return string	The html output
+     */
+    public function select2($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'element' => '.select2-listbox',
+            'options' => array(
+                'width' => 'resolve',
+                'dropdownCssClass' => 'com_docman'
+            )
+        ));
+
+        $html ='';
+
+        if (!isset(self::$_loaded['jquery'])) {
+            $html .= $this->jquery();
+        }
+
+        if (!isset(self::$_loaded['select2'])) {
+
+            $html .= '<script src="media://com_docman/js/select2.js" />';
+
+            $html .= '<script>jQuery(function($){
+                $("'.$config->element.'").select2('.$config->options.');
+            });</script>';
+
+            if(isset(self::$_loaded['validator']))
+            {
+                $html .= '<script src="media://com_docman/js/select2.validator.js" />';
+
+                $html .= '<script>jQuery(function($){
+                    $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+                });</script>';
+            }
+
+            self::$_loaded['select2'] = true;
+        }
+
+        return $html;
+    }
+
+    /**
      * Loads the autocomplete behavior and attaches it to a specified element
      *
      * @see    http://mootools.net/forge/p/meio_autocomplete
