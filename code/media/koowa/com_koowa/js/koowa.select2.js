@@ -29,7 +29,14 @@
 
             //Workaround for Select2 refusing to ajaxify select elements
             if (element.get(0).tagName.toLowerCase() === "select") {
+                var data = element.children();
+                element.empty();
+                element.get(0).typeName = 'input';
 
+
+                var newElement = $('<input />');
+                var replaced = element.replaceWith(newElement);
+                element = newElement;
             }
 
             element.select2(settings);
