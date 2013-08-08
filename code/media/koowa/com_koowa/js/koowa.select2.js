@@ -24,7 +24,7 @@
             //placeholder: '{$config->placeholder}', @TODO shouldn't be necessary
             minimumInputLength: 2,
             ajax: {
-                //url: '{$config->link}', @TODO shouldn't be necessary
+                url: options.url,
                 quietMillis: 100,
                 data: function (term, page) { // page is the one-based page number tracked by Select2
                     return {
@@ -48,7 +48,7 @@
             initSelection: function(element, callback) {
                 var id=$(element).val();
                 if (id!=='') {
-                    $.ajax('{$config->link}', {//@TODO fix url
+                    $.ajax(options.url, {//@TODO fix url
                         data: {
                             view: 'document',
                             slug: id

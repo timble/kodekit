@@ -148,25 +148,17 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $html = parent::optionlist($config);
 
         if($config->autocomplete) {
-            if(!empty($config->name)) {
-                $config->append(array(
-                    'autocomplete_options' => array(
-                        'element' => 'select[name='.$config->name.']'
-                    )
-                ));
-            }
+            $identifier = $this->getIdentifier($config->identifier);
 
-            if(empty($config->url))
-            {
-                $identifier = $this->getIdentifier($config->identifier);
-                $config->append(array(
-                    'autocomplete_options' => array(
-                        'url' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$config->model.'&format=json', false)
-                    )
-                ));
-            }
+            $autocomplete_options = new KConfig($config->autocomplete_options);
+            $autocomplete_options->append(array(
+                'element' => 'select[name='.$config->name.']',
+                'options' => array(
+                    'url' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$config->model.'&format=json', false)
+                )
+            ));
 
-            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
+            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($autocomplete_options);
         }
         elseif($config->select2) {
             $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);

@@ -394,6 +394,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             ));
 
 
+        /*
         if(empty($config->url))
         {
             $identifier = $this->getIdentifier($config->identifier);
@@ -405,6 +406,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 )
             ));
         }
+        //*/
 
 
         $html ='';
