@@ -371,7 +371,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'path'          => 'name',
             'filter'		=> array(),
             'validate'		=> true,
-            'selected'		=> null
+            'selected'		=> null,
+            'url'           => null,
         ))->append(array(
                 'value_element' => $config->element.'-value',
                 'attribs' => array(
@@ -393,7 +394,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             ));
 
 
-        if(!isset($config->url))
+        if(empty($config->url))
         {
             $identifier = $this->getIdentifier($config->identifier);
             $config->append(array(

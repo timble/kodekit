@@ -19,8 +19,46 @@
 
     $.fn.koowaSelect2 = function (options) {
 
-        var settings = $.extend({
-            width: "resolve"
+        var settings = $.extend(true, {
+            width: "resolve",
+            //placeholder: '{$config->placeholder}', @TODO shouldn't be necessary
+            minimumInputLength: 2,
+            ajax: {
+                //url: '{$config->link}', @TODO shouldn't be necessary
+                quietMillis: 100,
+                data: function (term, page) { // page is the one-based page number tracked by Select2
+                    return {
+                        search: term, //search term
+                        limit: 10, // page size
+                        offset: (page-1)*10
+                    };
+                },
+                results: function (data, page) {
+                    var results = [],
+                        more = (page * 10) < data.documents.total; // whether or not there are more results available
+
+                    $.each(data.documents.data, function(i, document) {
+                        results.push(document.data);
+                    });
+
+                    // notice we return the value of more so Select2 knows if more results can be loaded
+                    return {results: results, more: more};
+                }
+            },
+            initSelection: function(element, callback) {
+                var id=$(element).val();
+                if (id!=='') {
+                    $.ajax('{$config->link}', {//@TODO fix url
+                        data: {
+                            view: 'document',
+                            slug: id
+                        }
+                    }).done(function(data) { callback(data.data); });
+                }
+            },
+            formatResult: function (item) { return item.title; },
+            formatSelection: function (item) { return item.title; },
+            id: 'slug'
         }, options );
 
         this.each(function() {
