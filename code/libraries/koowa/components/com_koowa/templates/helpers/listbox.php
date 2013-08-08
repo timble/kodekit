@@ -148,6 +148,13 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $html = parent::optionlist($config);
 
         if($config->autocomplete) {
+            if(!empty($config->name)) {
+                $config->append(array(
+                    'autocomplete_options' => array(
+                        'element' => 'select[name='.$config->name.']'
+                    )
+                ));
+            }
             $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
         }
         elseif($config->select2) {

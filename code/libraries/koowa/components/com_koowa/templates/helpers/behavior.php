@@ -421,7 +421,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         }
 
         $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").select2('.$config->options.');
+                $("'.$config->element.'").koowaSelect2('.$config->options.');
             });</script>';
 
         // Load the necessary files if they haven't yet been loaded
@@ -434,7 +434,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
 
                 $html .= '<script>jQuery(function($){
-                    $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+                    $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
                 });</script>';
             }
 
