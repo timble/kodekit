@@ -19,15 +19,22 @@
 
     $.fn.koowaSelect2 = function (options) {
 
-        this.each(function () {
-            $(this).select2(options);
+        var settings = $.extend({
+            width: "resolve"
+        }, options );
+
+        this.each(function() {
+
+            var element = $(this);
+
+            //Workaround for Select2 refusing to ajaxify select elements
+            if (element.get(0).tagName.toLowerCase() === "select") {
+
+            }
+
+            element.select2(settings);
         });
         return this;
-    };
-
-    // plugin defaults, accessible to users
-    $.fn.koowaSelect2.defaults = {
-        width: "resolve"
     };
 
 })(jQuery);
