@@ -229,7 +229,11 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'prompt'               => false
         ))->append(array(
             'autocomplete_options' => array(
-                'placeholder' => $config->prompt
+                'name'          => $config->name,
+                'text'          => $config->text,
+                'value'         => $config->value,
+                'placeholder'   => $config->prompt,
+                'model'         => $config->model
             ),
             'value'                => $config->name,
             'selected'             => $config->{$config->name},
@@ -248,7 +252,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'options' => array(
                 'allowClear' => $config->deselect,
                 'placeholder'=> $options->placeholder,
-                'model' => $config->model
+                'model'      => $options->model,
+                'text'       => $options->text,
+                'value'      => $options->value,
             )
         ));
 

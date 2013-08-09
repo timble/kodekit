@@ -28,12 +28,13 @@
                 url: options.url,
                 quietMillis: 100,
                 data: function (term, page) { // page is the one-based page number tracked by Select2
-                    console.warn(options.queryVarName);
-                    return {
+                    var query = {
                         search: term, //search term
                         limit: 10, // page size
                         offset: (page-1)*10
                     };
+                    query[options.queryVarName] = term;
+                    return query;
                 },
                 results: function (data, page) {
                     var results = [],
@@ -49,7 +50,6 @@
             },
             initSelection: function(element, callback) {
                 var id=$(element).val();
-                console.log('stian', id);
                 if (id!=='') {
                     $.ajax(options.url, {//@TODO fix url
                         data: {
@@ -59,10 +59,9 @@
                     }).done(function(data) { callback(data.data); });
                 }
             },
-            formatResult: function (item) { return item.title; },
-            formatSelection: function (item) { return item.title; },
-            id: 'slug'
-             //*/
+            formatResult: function (item) { return item[options.text]; },
+            formatSelection: function (item) { return item[options.text]; },
+            id: options.value
         }, options );
 
         this.each(function() {
