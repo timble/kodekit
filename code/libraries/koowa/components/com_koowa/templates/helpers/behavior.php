@@ -354,6 +354,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads the autocomplete behavior and attaches it to a specified element
      *
+     * Dropped/changed params:
+     *                  'path' changed to 'text'
+     *
      * @param  array|KConfig $config
      * @return string	The html output
      */
@@ -362,30 +365,24 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config = new KConfig($config);
         $config->append(array(
             'element' => '.select2-listbox',
-
-
             'identifier'    => null,
-            'path'          => 'name',
+            //@TODO deprecate path, using same options as listbox helper instead
+            'path'          => 'title',
             'filter'		=> array(),
             'validate'		=> true,
             'selected'		=> null,
             'url'           => null,
+            'name'          => null,
+            'value'         => null
         ))->append(array(
             'options' => array(
+                'url'   => $config->url,
                 'width' => 'resolve',
                 'dropdownCssClass' => 'koowa',
-                'path'
+                'path' => $config->path,
+                'placeholder' => false,
+                'filter' => KConfig::unbox($config->filter)
             ),
-        ))->append(array(
-            'options' => array(
-                'valueField'     => $config->value_element,
-                'filter'         => array('path' => $config->path),
-                'requestOptions' => array('method' => 'get'),
-                'urlOptions'	 => array(
-                    'queryVarName' => 'search',
-                    'extraParams'  => KConfig::unbox($config->filter)
-                )
-            )
         ));
 
 

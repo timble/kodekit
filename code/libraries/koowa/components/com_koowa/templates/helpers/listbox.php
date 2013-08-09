@@ -226,8 +226,8 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'model'                => KInflector::pluralize($this->getIdentifier()->package),
             'validate'             => true,
             'deselect'             => false,
-            'autocomplete_options' => array()
         ))->append(array(
+            'autocomplete_options' => array(''),
             'value'                => $config->name,
             'selected'             => $config->{$config->name},
             'identifier'           => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
@@ -241,8 +241,8 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $options = new KConfig($config->autocomplete_options);
         $options->append(array(
             'element' => 'select[name='.$config->name.']',
+            'url'     => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false),
             'options' => array(
-                'url'        => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false),
                 'allowClear' => $config->deselect
             )
         ));

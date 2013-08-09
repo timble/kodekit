@@ -21,8 +21,8 @@
 
         var settings = $.extend(true, {
             width: "resolve",
-            //placeholder: '{$config->placeholder}', @TODO shouldn't be necessary
-            //minimumInputLength: 2, @TODO this shouldn't be necessary
+            placeholder: options.placeholder,
+            minimumInputLength: 2,
             ///*
             ajax: {
                 url: options.url,
@@ -48,7 +48,7 @@
             },
             initSelection: function(element, callback) {
                 var id=$(element).val();
-                console.log(id);
+                console.log('stian', id);
                 if (id!=='') {
                     $.ajax(options.url, {//@TODO fix url
                         data: {
