@@ -129,15 +129,15 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
         $extra = $config->selected ? 'checked="checked"' : '';
         $text  = $config->translate ? $this->translate( $config->true ) : $config->true;
 
-        $html[] = '<label for="'.$name.'1" class="radio inline">';
-        $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
+        $html[] = '<label for="'.$name.'1" class="btn">';
+        $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
 
         $extra = !$config->selected ? 'checked="checked"' : '';
         $text  = $config->translate ? $this->translate( $config->false ) : $config->false;
 
-        $html[] = '<label for="'.$name.'0" class="radio inline">';
-        $html[] = '<input type="radio" class="radio inline" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
+        $html[] = '<label for="'.$name.'0" class="btn">';
+        $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
 
         return implode(PHP_EOL, $html);
