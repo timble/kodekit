@@ -362,10 +362,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config = new KConfig($config);
         $config->append(array(
             'element' => '.select2-listbox',
-            'options' => array(
-                'width' => 'resolve',
-                'dropdownCssClass' => 'koowa'
-            ),
+
 
             'identifier'    => null,
             'path'          => 'name',
@@ -374,24 +371,22 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'selected'		=> null,
             'url'           => null,
         ))->append(array(
-                'value_element' => $config->element.'-value',
-                'attribs' => array(
-                    'id'    => $config->element,
-                    'type'  => 'text',
-                    'class' => 'inputbox value',
-                    'size'	=> 60
-                ),
-            ))->append(array(
-                'options' => array(
-                    'valueField'     => $config->value_element,
-                    'filter'         => array('path' => $config->path),
-                    'requestOptions' => array('method' => 'get'),
-                    'urlOptions'	 => array(
-                        'queryVarName' => 'search',
-                        'extraParams'  => KConfig::unbox($config->filter)
-                    )
+            'options' => array(
+                'width' => 'resolve',
+                'dropdownCssClass' => 'koowa',
+                'path'
+            ),
+        ))->append(array(
+            'options' => array(
+                'valueField'     => $config->value_element,
+                'filter'         => array('path' => $config->path),
+                'requestOptions' => array('method' => 'get'),
+                'urlOptions'	 => array(
+                    'queryVarName' => 'search',
+                    'extraParams'  => KConfig::unbox($config->filter)
                 )
-            ));
+            )
+        ));
 
 
         /*
