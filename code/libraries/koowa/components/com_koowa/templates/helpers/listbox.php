@@ -132,38 +132,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         return $this->_listbox($config);
     }
 
-    //@TODO re #78 this may not stay, used to easier test specialized listbox classes without modifying them with new code
-    public function optionlist($config = array())
-    {
-        $config = new KConfig($config);
-        $config->append(array(
-            'autocomplete'          => false,
-            'autocomplete_options'  => array(),
-            'select2'           => false, //@TODO re #78 this may change, the property name 'filter' is already used
-            'select2_options'   => array(),
-        ))->append(array(
-                'select2_options'   => array('element' => 'select[name='.$config->name.']')
-            ));
-
-        $html = parent::optionlist($config);
-
-        if($config->autocomplete) {
-            $identifier = $this->getIdentifier($config->identifier);
-
-            $autocomplete_options = new KConfig($config->autocomplete_options);
-            $autocomplete_options->append(array(
-                'element' => 'select[name='.$config->name.']',
-                'options' => array(
-                    'url' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$config->model.'&format=json', false)
-                )
-            ));
-
-            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($autocomplete_options);
-        }
-
-        return $html;
-    }
-
     /**
      * Generates an HTML optionlist based on the distinct data from a model column.
      *
@@ -257,20 +225,25 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'model'         => KInflector::pluralize($this->getIdentifier()->package),
             'validate'   => true,
         ))->append(array(
-                'value'         => $config->name,
-                'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
-            ))->append(array(
-                'text'        => $config->value,
-            ))->append(array(
-                'filter'     => array(),
-            ));
+            'value'         => $config->name,
+            'selected'   => $config->{$config->name},
+            'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+        ))->append(array(
+        'text'        => $config->value,
+    ))->append(array(
+            'filter'     => array(),
+        ));
 
         //For the autocomplete behavior
-        $config->element = $config->value;
-        $config->path    = $config->text;
+        $options = new KConfig;
+        $options->append(array(
+            'element' => 'select[name='.$config->name.']',
+            'options' => array(
+                'url' => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false)
+            )
+        ));
 
-        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($options);
 
         return $html;
     }
