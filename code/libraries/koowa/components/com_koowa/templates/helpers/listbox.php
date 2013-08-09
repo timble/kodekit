@@ -197,6 +197,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $html = '';
 
         if($config->autocomplete) {
+            //@TODO avoid loading a complete options array, we only need one item for autocomplete
             $html .= $this->_autocomplete($config);
         }
         elseif($config->select2) {
@@ -220,26 +221,29 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     {
         $config = new KConfig($config);
         $config->append(array(
-            'name'         => '',
-            'attribs'     => array(),
-            'model'         => KInflector::pluralize($this->getIdentifier()->package),
-            'validate'   => true,
+            'name'                 => '',
+            'attribs'              => array(),
+            'model'                => KInflector::pluralize($this->getIdentifier()->package),
+            'validate'             => true,
+            'deselect'             => false,
+            'autocomplete_options' => array()
         ))->append(array(
-            'value'         => $config->name,
-            'selected'   => $config->{$config->name},
-            'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+            'value'                => $config->name,
+            'selected'             => $config->{$config->name},
+            'identifier'           => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
         ))->append(array(
-        'text'        => $config->value,
-    ))->append(array(
-            'filter'     => array(),
+            'text'                 => $config->value,
+        ))->append(array(
+            'filter'               => array(),
         ));
 
         //For the autocomplete behavior
-        $options = new KConfig;
+        $options = new KConfig($config->autocomplete_options);
         $options->append(array(
             'element' => 'select[name='.$config->name.']',
             'options' => array(
-                'url' => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false)
+                'url'        => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false),
+                'allowClear' => $config->deselect
             )
         ));
 
