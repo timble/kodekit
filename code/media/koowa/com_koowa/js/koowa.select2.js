@@ -22,7 +22,8 @@
         var settings = $.extend(true, {
             width: "resolve",
             //placeholder: '{$config->placeholder}', @TODO shouldn't be necessary
-            minimumInputLength: 2,
+            //minimumInputLength: 2,
+            /*
             ajax: {
                 url: options.url,
                 quietMillis: 100,
@@ -59,6 +60,7 @@
             formatResult: function (item) { return item.title; },
             formatSelection: function (item) { return item.title; },
             id: 'slug'
+             //*/
         }, options );
 
         this.each(function() {
@@ -67,10 +69,16 @@
 
             //Workaround for Select2 refusing to ajaxify select elements
             if (element.get(0).tagName.toLowerCase() === "select") {
-                var data = element.children();
+                var data = [];
+                element.children().each(function(i, child){
+                    data.push({id: $(child).val(), text: $(child).text()});
+
+                });
                 element.empty();
                 element.get(0).typeName = 'input';
 
+                settings.data = data;
+                //settings.ajax = false;
 
                 var newElement = $('<input />');
                 var replaced = element.replaceWith(newElement);
