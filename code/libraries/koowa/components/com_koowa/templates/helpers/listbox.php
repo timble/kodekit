@@ -233,7 +233,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 'text'          => $config->text,
                 'value'         => $config->value,
                 'placeholder'   => $config->prompt,
-                'model'         => $config->model
+                'model'         => $config->model,
+                'width'         => 'resolve',
+                'selected'      => $config->selected
             ),
             'value'                => $config->name,
             'selected'             => $config->{$config->name},
@@ -255,6 +257,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 'model'      => $options->model,
                 'text'       => $options->text,
                 'value'      => $options->value,
+                'width'      => $options->width
             )
         ));
 

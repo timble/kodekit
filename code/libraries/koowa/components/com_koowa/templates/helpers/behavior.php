@@ -383,6 +383,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'options' => array(
                 'text' => $config->text,
                 'value' => $config->value,
+                'selected' => $config->selected,
                 'url'   => $config->url,
                 'width' => 'resolve',
                 'dropdownCssClass' => 'koowa',
@@ -392,22 +393,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'filter' => KConfig::unbox($config->filter)
             ),
         ));
-
-
-        /*
-        if(empty($config->url))
-        {
-            $identifier = $this->getIdentifier($config->identifier);
-            $config->append(array(
-                'options' => array(
-                    'ajax' => array(
-                        'url' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name.'&format=json', false)
-                    )
-                )
-            ));
-        }
-        //*/
-
 
         $html ='';
 

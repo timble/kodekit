@@ -23,7 +23,6 @@
             width: "resolve",
             placeholder: options.placeholder,
             minimumInputLength: 2,
-            ///*
             ajax: {
                 url: options.url,
                 quietMillis: 100,
@@ -51,12 +50,13 @@
             initSelection: function(element, callback) {
                 var id=$(element).val();
                 if (id!=='') {
-                    $.ajax(options.url, {//@TODO fix url
-                        data: {
-                            view: 'document',
-                            slug: id
-                        }
-                    }).done(function(data) { callback(data.data); });
+                    var data = {};
+                    data[options.value] = id;
+                    $.ajax(options.url, {
+                        data: data
+                    }).done(function(data) {
+                        callback(data[options.model].data[0].data);
+                    });
                 }
             },
             formatResult: function (item) { return item[options.text]; },
@@ -81,7 +81,7 @@
 
                 settings.data = data;
 
-                var newElement = $('<input />');
+                var newElement = $('<input />', {name: element.attr('name'), id: element.attr('id'), value: options.selected});
                 var replaced = element.replaceWith(newElement);
                 element = newElement;
             }
