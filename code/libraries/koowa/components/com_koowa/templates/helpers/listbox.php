@@ -160,9 +160,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
             $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($autocomplete_options);
         }
-        elseif($config->select2) {
-            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
-        }
 
         return $html;
     }
@@ -187,21 +184,24 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     {
         $config = new KConfig($config);
         $config->append(array(
-            'name'		  => '',
-            'attribs'	  => array(),
-            'model'		  => KInflector::pluralize($this->getIdentifier()->package),
-            'deselect'    => true,
-            'prompt'      => '- Select -',
-            'unique'	  => true
+            'name'		      => '',
+            'attribs'	      => array(),
+            'model'		      => KInflector::pluralize($this->getIdentifier()->package),
+            'deselect'        => true,
+            'prompt'          => '- Select -',
+            'unique'	      => true,
+            'autocomplete'    => false
         ))->append(array(
-                'value'		 => $config->name,
-                'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
-            ))->append(array(
-                'text'		=> $config->value,
-            ))->append(array(
-                'filter' 	=> array('sort' => $config->text),
-            ));
+            'select2'         => false,
+            'select2_options' => array('element' => 'select[name='.$config->name.']'),
+            'value'		      => $config->name,
+            'selected'        => $config->{$config->name},
+            'identifier'      => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+        ))->append(array(
+            'text'		      => $config->value,
+        ))->append(array(
+            'filter' 	      => array('sort' => $config->text),
+        ));
 
         $list = $this->getService($config->identifier)->set($config->filter)->getList();
 
@@ -226,18 +226,51 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         //Add the options to the config object
         $config->options = $options;
 
-        $html = $this->optionlist($config);
+        $html = '';
 
-        /*
         if($config->autocomplete) {
-            $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config->autocomplete_options);
+            $html .= $this->_autocomplete($config);
         }
         elseif($config->select2) {
             $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
         }
 
-        //@TODO re #78 need to have a special case when both searchinput and autocomplete is enabled
-        //*/
+        $html .= $this->optionlist($config);
+
+        return $html;
+    }
+
+    /**
+     * Renders a listbox with autocomplete behavior
+     *
+     * @see    KTemplateHelperBehavior::autocomplete
+     *
+     * @param  array    $config
+     * @return string    The html output
+     */
+    protected function _autocomplete($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'name'         => '',
+            'attribs'     => array(),
+            'model'         => KInflector::pluralize($this->getIdentifier()->package),
+            'validate'   => true,
+        ))->append(array(
+                'value'         => $config->name,
+                'selected'   => $config->{$config->name},
+                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+            ))->append(array(
+                'text'        => $config->value,
+            ))->append(array(
+                'filter'     => array(),
+            ));
+
+        //For the autocomplete behavior
+        $config->element = $config->value;
+        $config->path    = $config->text;
+
+        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
 
         return $html;
     }
