@@ -22,8 +22,8 @@
         var settings = $.extend(true, {
             width: "resolve",
             //placeholder: '{$config->placeholder}', @TODO shouldn't be necessary
-            //minimumInputLength: 2,
-            /*
+            //minimumInputLength: 2, @TODO this shouldn't be necessary
+            ///*
             ajax: {
                 url: options.url,
                 quietMillis: 100,
@@ -48,6 +48,7 @@
             },
             initSelection: function(element, callback) {
                 var id=$(element).val();
+                console.log(id);
                 if (id!=='') {
                     $.ajax(options.url, {//@TODO fix url
                         data: {
@@ -71,8 +72,9 @@
             if (element.get(0).tagName.toLowerCase() === "select") {
                 var data = [];
                 element.children().each(function(i, child){
-                    data.push({id: $(child).val(), text: $(child).text()});
-
+                    if($(child).val()) {
+                        data.push({id: $(child).val(), text: $(child).text()});
+                    }
                 });
                 element.empty();
                 element.get(0).typeName = 'input';
