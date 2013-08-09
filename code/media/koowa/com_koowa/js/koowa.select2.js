@@ -28,6 +28,7 @@
                 url: options.url,
                 quietMillis: 100,
                 data: function (term, page) { // page is the one-based page number tracked by Select2
+                    console.warn(options.queryVarName);
                     return {
                         search: term, //search term
                         limit: 10, // page size
@@ -36,10 +37,10 @@
                 },
                 results: function (data, page) {
                     var results = [],
-                        more = (page * 10) < data.documents.total; // whether or not there are more results available
+                        more = (page * 10) < data[options.model].total; // whether or not there are more results available
 
-                    $.each(data.documents.data, function(i, document) {
-                        results.push(document.data);
+                    $.each(data[options.model].data, function(i, item) {
+                        results.push(item.data);
                     });
 
                     // notice we return the value of more so Select2 knows if more results can be loaded
@@ -80,7 +81,6 @@
                 element.get(0).typeName = 'input';
 
                 settings.data = data;
-                //settings.ajax = false;
 
                 var newElement = $('<input />');
                 var replaced = element.replaceWith(newElement);

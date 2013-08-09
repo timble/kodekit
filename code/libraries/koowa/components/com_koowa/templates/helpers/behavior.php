@@ -370,17 +370,25 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'path'          => 'title',
             'filter'		=> array(),
             'validate'		=> true,
-            'selected'		=> null,
+
+
+            //Shortcut options
             'url'           => null,
+            'queryVarName'  => 'search',
+            'selected'		=> null,
             'name'          => null,
-            'value'         => null
+            'text'          => null,
+            'value'         => null,
         ))->append(array(
             'options' => array(
+                'text' => $config->text,
+                'value' => $config->value,
                 'url'   => $config->url,
                 'width' => 'resolve',
                 'dropdownCssClass' => 'koowa',
                 'path' => $config->path,
                 'placeholder' => false,
+                'queryVarName' => $config->queryVarName,
                 'filter' => KConfig::unbox($config->filter)
             ),
         ));
