@@ -1,9 +1,10 @@
 <?php
 /**
- * @package     Koowa
- * @copyright   Copyright (C) 2011 - 2013 Timble CVBA (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.joomlatools.com
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
@@ -33,8 +34,7 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
         $variables = func_get_args();
 
         $output = array();
-        foreach ($variables as $var)
-        {
+        foreach ($variables as $var) {
             $output[] = $this->_dump($var, 1024);
         }
 
