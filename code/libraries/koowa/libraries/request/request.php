@@ -6,17 +6,15 @@
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
+
 //Instantiate the request singleton
 KRequest::getInstance();
 
 /**
- * Request class
+ * Request
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Request
- * @uses        KFilter
- * @uses        KInflector
- * @uses        KService
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  * @static
  */
 class KRequest

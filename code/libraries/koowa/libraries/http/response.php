@@ -8,14 +8,12 @@
  */
 
 /**
- * HTTP Response class
+ * Http Response
  *
- * @todo Add other statuses
  * @see http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Http
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Http
  */
 class KHttpResponse
 {

@@ -8,15 +8,12 @@
  */
 
 /**
- * Abstract Table Class
+ * Abstract Database Table
  *
  * Parent class to all tables.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Table
- * @uses        KMixinClass
- * @uses        KFilter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseTableAbstract extends KObject
 {

@@ -8,11 +8,10 @@
  */
 
 /**
- * Template helper interface
+ * Template Helper Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Helper
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 interface KTemplateHelperInterface
 {

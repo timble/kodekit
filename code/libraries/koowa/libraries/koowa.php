@@ -13,11 +13,12 @@
 define('KOOWA', 1);
 
 /**
- * Koowa class
+ * Koowa
  *
  * Loads classes and files, and provides metadata for Koowa such as version info
  *
- * @author      Johan Janssens <johan@nooku.org>
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library
  */
 class Koowa
 {

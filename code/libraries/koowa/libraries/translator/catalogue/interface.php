@@ -8,9 +8,9 @@
  */
 
 /**
- * Translation catalogue interface
+ * Translation Catalogue Interface
  *
- * @author		Ercan Ozkaya <ercan@timble.net>
- * @package		Koowa_Translator
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Library\Translator
  */
 interface KTranslatorCatalogueInterface extends IteratorAggregate, ArrayAccess, Serializable {}

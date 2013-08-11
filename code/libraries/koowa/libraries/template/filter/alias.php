@@ -8,11 +8,12 @@
  */
 
 /**
- * Template read filter for aliases such as @template, @text, @helper, @route etc
+ * Alias Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * Filter for aliases such as @template, @text, @helper, @route etc
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateFilterRead, KTemplateFilterWrite
 {

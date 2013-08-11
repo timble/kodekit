@@ -8,14 +8,13 @@
  */
 
 /**
- * Command handler
+ * Command
  *
- * The command handler will translate the command name into a function format and
- * call it for the object class to handle it if the method exists.
+ * The command handler will translate the command name into a function format and call it for the object class to
+ * handle it if the method exists.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Command
- * @uses        KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 class KCommand extends KObject implements KCommandInterface
 {

@@ -8,11 +8,10 @@
  */
 
 /**
- * Controller Discoverable Command Class
+ * Discoverable Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerBehaviorDiscoverable extends KControllerBehaviorAbstract
 {

@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Rowset Default
+ * Default Database Rowset
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Rowset
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseRowsetDefault extends KDatabaseRowsetTable
 {

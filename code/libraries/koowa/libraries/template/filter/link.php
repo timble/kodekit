@@ -8,11 +8,12 @@
  */
 
 /**
- * Template filter to parse link tags
+ * Link Template Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter to parse link tags
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

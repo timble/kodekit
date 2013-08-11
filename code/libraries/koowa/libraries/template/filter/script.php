@@ -8,11 +8,12 @@
  */
 
 /**
- * Template filter to parse script tags
+ * Script Template Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter to parse script tags
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

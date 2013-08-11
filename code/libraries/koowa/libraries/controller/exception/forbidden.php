@@ -8,10 +8,9 @@
  */
 
 /**
- * Controller Exception Forbidden Class
+ * Forbidden Controller Exception
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage  Exception
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerExceptionForbidden extends Exception implements KControllerException {}

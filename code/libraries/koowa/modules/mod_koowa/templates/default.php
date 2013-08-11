@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Module View
+ * Default Template
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Modules
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Module\Koowa
  */
 class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
 {

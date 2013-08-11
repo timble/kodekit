@@ -9,12 +9,10 @@
 
 
 /**
- * Template Accordion Behavior Helper
+ * Accordion Template Helper
  *
- * @author		Stian Didriksen <stian@timble.net>
- * @package		Koowa_Template
- * @subpackage	Helper
- * @uses		KArrayHelper
+ *a @author  Stian Didriksen <https://github.com/stipsan>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 {

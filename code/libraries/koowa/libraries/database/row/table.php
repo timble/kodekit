@@ -8,11 +8,10 @@
  */
 
 /**
- * Table Row Class
+ * Table Database Row
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Row
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseRowTable extends KDatabaseRowAbstract
 {

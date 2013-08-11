@@ -9,11 +9,10 @@
 
 
 /**
- * Template Behavior Helper
+ * Behavior Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 {

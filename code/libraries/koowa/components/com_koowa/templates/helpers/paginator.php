@@ -9,13 +9,10 @@
 
 
 /**
- * Default Paginator Helper
+ * Paginator Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
- * @uses        KRequest
- * @uses        KConfig
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 {

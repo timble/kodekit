@@ -9,11 +9,10 @@
 
 
 /**
- * Default Controller Authorization Command
+ * Executable Controller Behavior
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
 {

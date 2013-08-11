@@ -8,7 +8,7 @@
  */
 
 /**
- * Default Koowa plugin
+ * Default Plugin
  *
  * Koowa plugins can handle a number of events that are dynamically generated. The following
  * is a list of available events. This list is not meant to be exclusive.
@@ -42,9 +42,8 @@
  * }
  * </code>
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Plugins
- * @subpackage  Koowa
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Plugin\Koowa
  */
 abstract class PlgKoowaDefault extends KEventListener
 {

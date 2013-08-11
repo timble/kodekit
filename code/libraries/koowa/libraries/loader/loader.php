@@ -13,10 +13,10 @@ require_once dirname(__FILE__) . '/adapter/koowa.php';
 require_once dirname(__FILE__) . '/registry.php';
 
 /**
- * KLoader class
+ * Loader
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Loader
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 class KLoader
 {

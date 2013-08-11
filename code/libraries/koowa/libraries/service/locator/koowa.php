@@ -7,12 +7,10 @@
  */
 
 /**
- * Service Locator for the Koowa framework
+ * Koowa Service Locator
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage 	Locator
- * @uses 		KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 class KServiceLocatorKoowa extends KServiceLocatorAbstract
 {

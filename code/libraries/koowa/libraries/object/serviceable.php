@@ -10,8 +10,8 @@
 /**
  * Object Serviceable Interface
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 interface KObjectServiceable
 {

@@ -10,8 +10,8 @@
 /**
  * Command Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Command
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 interface KCommandInterface extends KObjectHandlable
 {

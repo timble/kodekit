@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Module View
+ * Html View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Modules
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Module\Koowa
  */
 class ModKoowaHtml extends KViewHtml
 {

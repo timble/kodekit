@@ -8,10 +8,10 @@
  */
 
 /**
- * Abstract filter.
+ * Abstract Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 abstract class KFilterAbstract extends KObject implements KFilterInterface
 {

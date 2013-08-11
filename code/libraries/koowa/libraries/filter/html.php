@@ -7,14 +7,14 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 /**
- * Html XSS Filter
+ * Html Filter
  *
  * Forked from the php input filter library by: Daniel Morris <dan@rootcube.com>
  * Original Contributors: Gianpaolo Racca, Ghislain Picard, Marco Wandschneider,
  * Chris Tobin.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterHtml extends KFilterAbstract
 {

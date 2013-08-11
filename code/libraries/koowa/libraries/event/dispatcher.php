@@ -8,10 +8,10 @@
  */
 
 /**
- * Class to handle dispatching of events.
+ * Event Dispatcher
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Event
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Event
  */
 class KEventDispatcher extends KObject
 {

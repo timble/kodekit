@@ -8,11 +8,10 @@
  */
 
 /**
- * HTTP Request class
+ * Http Request
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Http
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Http
  */
 class KHttpRequest
 {

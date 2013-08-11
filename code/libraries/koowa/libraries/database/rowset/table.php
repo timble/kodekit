@@ -8,12 +8,10 @@
  */
 
 /**
- * Table Rowset Class
+ * Table Database Rowset
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Rowset
- * @uses 		KMixinClass
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 {

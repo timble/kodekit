@@ -8,10 +8,10 @@
  */
 
 /**
- * Database Namespace class
+ * Database Namespace
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabase
 {

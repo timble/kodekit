@@ -8,14 +8,13 @@
  */
 
 /**
- * Service Identifier interface
+ * Service Identifier Interface
  *
- * Wraps identifiers of the form [application::]type.component.[.path].name
- * in an object, providing public accessors and methods for derived formats
+ * Wraps identifiers of the form [application::]type.component.[.path].name in an object, providing public accessors
+ * and methods for derived formats
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage  Identifier
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 interface KServiceIdentifierInterface extends Serializable
 {

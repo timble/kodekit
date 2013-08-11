@@ -8,11 +8,10 @@
  */
 
 /**
- * Service Identifier Registry Class
+ * Service Identifier Registry
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage  Identifier
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 class KServiceIdentifierRegistry extends ArrayObject
 {

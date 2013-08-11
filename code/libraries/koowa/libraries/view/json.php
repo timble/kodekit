@@ -8,13 +8,13 @@
  */
 
 /**
- * View JSON Class
+ * Json View
  *
- * The JSON view implements supports for JSONP through the model's callback
- * state. If a callback is present the output will be padded.
+ * The JSON view implements supports for JSONP through the model's callback state. If a callback is present the output
+ * will be padded.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 class KViewJson extends KViewAbstract
 {

@@ -10,8 +10,8 @@
 /**
  * Command Context
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Command
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 class KCommandContext extends KConfig
 {

@@ -8,12 +8,12 @@
  */
 
 /**
- * Digit filter
+ * Digit Filter
  *
  * Checks if all of the characters in the provided string are numerical
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterDigit extends KFilterAbstract
 {

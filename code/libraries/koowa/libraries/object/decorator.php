@@ -8,11 +8,10 @@
  */
 
 /**
- * An Object Decorator Class
+ * Object Decorator
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Object
- * @uses 		KObject
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 class KObjectDecorator extends KObject
 {

@@ -8,12 +8,10 @@
  */
 
 /**
- * Abstract Controller Toolbar Class
+ * Abstract Controller Toolbar
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage 	Toolbar
- * @uses        KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerToolbarAbstract extends KObject
 {

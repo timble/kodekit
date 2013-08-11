@@ -8,15 +8,15 @@
  */
 
 /**
- * Template write filter to handle form html elements
+ * Form Template Filter
  *
- * For forms that use a post method this filter adds a token to prevent CSRF. For forms
- * that use a get method this filter adds the action url query params as hidden fields
- * to comply with the html form standard.
+ * Filter to handle form html elements
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * For forms that use a post method this filter adds a token to prevent CSRF. For forms that use a get method this
+ * filter adds the action url query params as hidden fields to comply with the html form standard.
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  * @see         http://www.w3.org/TR/html401/interact/forms.html#h-17.13.3.4
  */
 class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFilterWrite

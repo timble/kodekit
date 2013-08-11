@@ -8,11 +8,10 @@
  */
 
 /**
- * Insert Database Query Class
+ * Insert Database Query
  *
- * @author      Gergo Erdosi <gergo@timble.net>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Gergo Erdosi <https://github.com/gergoerdosi>
+ * @package Koowa\Library\Database
  */
 class KDatabaseQueryInsert extends KDatabaseQueryAbstract
 {

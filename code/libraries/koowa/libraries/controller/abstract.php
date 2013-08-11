@@ -8,14 +8,12 @@
  */
 
 /**
- * Abstract Controller Class
+ * Abstract Controller
  *
  * Note: Concrete controllers must have a singular name
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @uses        KMixinClass
- * @uses        KCommandChain
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerAbstract extends KObject
 {

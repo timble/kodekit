@@ -8,11 +8,10 @@
  */
 
 /**
- * Controller Toolbar Command Class
+ * Controller Toolbar Command
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage 	Toolbar
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerToolbarCommand extends KConfig
 {

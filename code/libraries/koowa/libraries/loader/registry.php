@@ -8,11 +8,10 @@
  */
 
 /**
- * Loader Registry Class
+ * Loader Registry
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Loader
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 class KLoaderRegistry extends ArrayObject
 {

@@ -12,8 +12,8 @@
  *
  * Filters Windows and Unix style file paths
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterPath extends KFilterAbstract
 {

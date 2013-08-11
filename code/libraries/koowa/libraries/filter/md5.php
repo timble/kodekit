@@ -8,12 +8,12 @@
  */
 
 /**
- * MD5 filter
+ * MD5 Filter
  *
  * Validates or sanitizes an md5 hash (32 chars [a-f0-9])
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterMd5 extends KFilterAbstract
 {

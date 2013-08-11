@@ -8,12 +8,10 @@
  */
 
 /**
- * Abstract Rowset Class
+ * Abstract Database Rowset
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Rowset
- * @uses 		KMixinClass
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRowsetInterface
 {

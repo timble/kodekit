@@ -8,12 +8,12 @@
  */
 
 /**
- * Word filter.
+ * Word Filter
  *
  * A 'word' is a string containing only the characters [A-Za-z_]
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterWord extends KFilterAbstract
 {

@@ -8,11 +8,10 @@
  */
 
 /**
- * Abstract Row Class
+ * Abstract Database Row
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Row
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRowInterface
 {

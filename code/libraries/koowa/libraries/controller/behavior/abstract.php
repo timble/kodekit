@@ -9,10 +9,8 @@
 /**
  * Abstract Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @category	Koowa
- * @package     Koowa_Controller
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KControllerBehaviorInterface
 {

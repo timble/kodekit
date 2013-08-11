@@ -9,12 +9,10 @@
 
 
 /**
- * Date Helper
+ * Date Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
 {

@@ -13,12 +13,8 @@
  * The event commend will translate the command name to a onCommandName format
  * and let the event dispatcher dispatch to any registered event handlers.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Command
- * @uses        KService
- * @uses        KEventDispatcher
- * @uses        KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 class KCommandEvent extends KCommand
 {

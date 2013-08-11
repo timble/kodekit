@@ -8,12 +8,12 @@
  */
 
 /**
- * Date filter
+ * Date Filter
  *
  * Validates or sanitizes a value is an ISO 8601 date string.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterDate extends KFilterTimestamp
 {

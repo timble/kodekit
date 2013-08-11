@@ -8,11 +8,10 @@
  */
 
 /**
- * Service Container Class
+ * Service Container
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Service
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 class KServiceContainer extends ArrayObject
 {

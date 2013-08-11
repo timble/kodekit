@@ -8,11 +8,12 @@
  */
 
 /**
- * Template read filter for the @template alias. To load templates inline
+ * Template Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * Filter for the @template alias. To load templates inline
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTemplateFilterRead
 {

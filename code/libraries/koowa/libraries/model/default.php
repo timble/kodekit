@@ -8,10 +8,10 @@
  */
 
 /**
- * Default Model Class
+ * Default Model
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Model
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Model
  */
 class KModelDefault extends KModelTable
 {

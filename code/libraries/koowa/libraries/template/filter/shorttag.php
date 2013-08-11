@@ -8,11 +8,12 @@
  */
 
 /**
- * Template read filter for short_open_tags support
+ * Shorttag Template Filter
  *
- * @author	Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter for short_open_tags support
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTemplateFilterRead
 {

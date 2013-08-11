@@ -8,12 +8,10 @@
  */
 
 /**
- * Template Tabs Behavior Helper
+ * Tabs Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Helper
- * @uses        KArrayHelper
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
 {

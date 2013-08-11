@@ -8,13 +8,13 @@
  */
 
 /**
- * An Object Set Class
+ * Object Set
  *
- * KObjectSet implements an associative container that stores objects, and in which the object
- * themselves are the keys. Objects are stored in the set in FIFO order.
+ * KObjectSet implements an associative container that stores objects, and in which the object themselves are the keys.
+ * Objects are stored in the set in FIFO order.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  * @see			http://www.php.net/manual/en/class.splobjectstorage.php
  */
 class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Serializable

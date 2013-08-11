@@ -9,10 +9,10 @@
 
 
 /**
- * Alias filter
+ * Alias Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaFilterAlias extends KFilterAbstract
 {

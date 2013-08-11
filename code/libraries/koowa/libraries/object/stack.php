@@ -8,12 +8,12 @@
  */
 
  /**
-  * Object Stack Class
+  * Object Stack
   * 
   * Implements a simple stack collection (LIFO) 
-  * 
-  * @author     Johan Janssens <johan@nooku.org>
-  * @package    Koowa_Object
+  *
+  * @author  Johan Janssens <https://github.com/johanjanssens>
+  * @package Koowa\Library\Object
   */
 class KObjectStack extends KObject implements Countable
 { 

@@ -8,13 +8,12 @@
  */
 
 /**
- * Event Class
+ * Event
  *
- * You can call the method stopPropagation() to abort the execution of
- * further listeners in your event listener.
+ * You can call the method stopPropagation() to abort the execution of further listeners in your event listener.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Event
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Event
  */
 class KEvent extends KConfig
 {

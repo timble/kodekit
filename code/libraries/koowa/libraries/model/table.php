@@ -9,12 +9,12 @@
 
 
 /**
- * Table Model Class
+ * Table Model
  *
  * Provides interaction with a database table
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Model
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Model
  */
 class KModelTable extends KModelAbstract
 {

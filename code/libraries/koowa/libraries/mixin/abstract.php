@@ -8,15 +8,13 @@
  */
 
 /**
- * Abstract mixing class
+ * Abstract Mixin
  *
- * This class does not extend from KObject and acts as a special core
- * class that is intended to offer semi-multiple inheritance features
- * to KObject derived classes.
+ * This class does not extend from KObject and acts as a special core class that is intended to offer semi-multiple
+ * inheritance features to KObject derived classes.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
- * @uses        KObject
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 abstract class KMixinAbstract implements KMixinInterface
 {

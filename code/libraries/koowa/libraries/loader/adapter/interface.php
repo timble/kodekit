@@ -10,9 +10,8 @@
 /**
  * Loader Adapter Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Loader
- * @subpackage 	Adapter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 interface KLoaderAdapterInterface
 {

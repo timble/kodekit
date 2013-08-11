@@ -8,11 +8,10 @@
  */
 
 /**
- * Database Schema Column Class
+ * Column Database Schema
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Schema
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseSchemaColumn extends KObject
 {

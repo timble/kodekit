@@ -8,12 +8,10 @@
  */
 
 /**
- * Loader Adapter for the Koowa framework
+ * Koowa Loader Adapter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Loader
- * @subpackage 	Adapter
- * @uses 		Koowa
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 class KLoaderAdapterKoowa extends KLoaderAdapterAbstract
 {

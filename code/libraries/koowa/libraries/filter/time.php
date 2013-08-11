@@ -8,12 +8,12 @@
  */
 
 /**
- * Time filter
+ * Time Filter
  *
  * Validates or sanitizes a value to an ISO-8601 time
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterTime extends KFilterTimestamp
 {

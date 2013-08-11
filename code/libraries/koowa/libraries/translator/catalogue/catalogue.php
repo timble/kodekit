@@ -8,9 +8,9 @@
  */
 
 /**
- * A translation catalogue of key, value pairs
+ * Translator Catalogue
  *
- * @author		Ercan Ozkaya <ercan@timble.net>
- * @package		Koowa_Translator
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Library\Translator
  */
 class KTranslatorCatalogue extends KObjectArray implements KTranslatorCatalogueInterface {}

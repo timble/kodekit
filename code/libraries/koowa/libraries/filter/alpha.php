@@ -8,10 +8,10 @@
  */
 
 /**
- * Alphabetic filter.
+ * Alphabetic Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterAlpha extends KFilterAbstract
 {

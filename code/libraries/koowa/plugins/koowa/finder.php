@@ -15,11 +15,12 @@ jimport('joomla.application.component.helper');
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
 /**
- * Finder adapter for Koowa packages.
+ * Finder Plugin
  *
- * @package     Joomla.Plugin
- * @subpackage  Finder.Content
- * @since       2.5
+ * Finder plugin adapter for Koowa extensions.
+ *
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Plugin\Finder
  */
 abstract class PlgKoowaFinder extends FinderIndexerAdapter
 {

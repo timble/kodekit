@@ -13,9 +13,8 @@
  *
  * This filter allows to apply module chrome to a template
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

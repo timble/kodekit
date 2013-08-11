@@ -8,10 +8,12 @@
  */
 
 /**
+ * Inflector
+ *
  * KInflector to pluralize and singularize English nouns.
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Inflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Inflector
  * @static
  */
 class KInflector

@@ -8,12 +8,12 @@
  */
 
 /**
- * Raw filter
+ * Raw Filter
  *
  * Always validates and returns the raw variable
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterRaw extends KFilterAbstract
 {

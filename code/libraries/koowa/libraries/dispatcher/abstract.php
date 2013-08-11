@@ -8,12 +8,10 @@
  */
 
 /**
- * Abstract controller dispatcher
+ * Abstract Dispatcher
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Dispatcher
- * @uses		KMixinClass
- * @uses        KObject
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Dispatcher
  */
 abstract class KDispatcherAbstract extends KControllerAbstract
 {

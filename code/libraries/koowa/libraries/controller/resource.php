@@ -8,11 +8,10 @@
  */
 
 /**
- * Abstract View Controller Class
+ * Abstract View Controller
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @uses        KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerResource extends KControllerAbstract
 {

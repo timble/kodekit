@@ -8,12 +8,12 @@
  */
 
 /**
- * Filter interface
+ * Filter Interface
  *
  * Validate or sanitize data
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 interface KFilterInterface extends KCommandInterface, KServiceInstantiatable
 {

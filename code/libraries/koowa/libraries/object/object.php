@@ -8,13 +8,12 @@
  */
 
 /**
- * Object class
+ * Object
  *
  * Provides getters and setters, mixin, object handles
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 class KObject implements KObjectHandlable, KObjectServiceable
 {

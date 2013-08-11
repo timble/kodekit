@@ -10,11 +10,10 @@
 /**
  * Filter Chain
  *
- * The filter chain overrides the run method to implement a seperate
- * validate and santize method
+ * The filter chain overrides the run method to implement a separate validate and santize method
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterChain extends KCommandChain
 {

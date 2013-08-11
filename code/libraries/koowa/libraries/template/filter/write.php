@@ -12,9 +12,8 @@
  *
  * Process the template on output
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 interface KTemplateFilterWrite
 {

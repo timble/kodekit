@@ -16,9 +16,8 @@
  * Filter will parse elements of the form <modules position="[position]">[content]</modules>
  * and prepend or append the content to the module position.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

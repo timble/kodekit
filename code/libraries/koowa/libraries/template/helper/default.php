@@ -8,11 +8,10 @@
  */
 
 /**
- * Template Helper Class
+ * Default Template Helper
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Template
- * @subpackage	Helper
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateHelperDefault extends KTemplateHelperAbstract
 {

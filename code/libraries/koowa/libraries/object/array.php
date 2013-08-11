@@ -8,14 +8,13 @@
  */
 
 /**
- * An Object Array Class
+ * Object Array
  *
  * The KObjectArray class provides provides the main functionality of an array and at the same time implement the
  * features of KObject
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Serializable, Countable
 {

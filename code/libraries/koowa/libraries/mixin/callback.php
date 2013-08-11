@@ -8,10 +8,10 @@
  */
 
 /**
- * Callback Command Mixin
+ * Callback Mixin
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 class KMixinCallback extends KMixinAbstract implements KCommandInterface
 {

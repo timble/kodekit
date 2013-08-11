@@ -9,12 +9,10 @@
 
 
 /**
- * Editor Helper
+ * Editor Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
- * @uses        KConfig
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
 {

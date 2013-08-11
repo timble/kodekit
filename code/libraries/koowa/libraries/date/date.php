@@ -8,9 +8,10 @@
  */
 
 /**
- * Date Class
+ * Date
  *
- * @package Koowa_Date
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Date
  */
 class KDate extends DateTime
 {

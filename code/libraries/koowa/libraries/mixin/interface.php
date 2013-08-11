@@ -8,10 +8,10 @@
  */
 
 /**
- * Mixes a chain of command behaviour into a class
+ * Mixin Interface
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 interface KMixinInterface extends KObjectHandlable
 {

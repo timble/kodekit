@@ -10,12 +10,11 @@
 /**
  * Event Dispatcher Mixin
  *
- * Class can be used as a mixin in classes that want to implement a an
- * event dispatcher and allow adding and removing listeners.
+ * Class can be used as a mixin in classes that want to implement an event dispatcher and allow adding and removing
+ * listeners.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
- * @uses        KEventDispatcher
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 class KMixinEventdispatcher extends KMixinAbstract
 {

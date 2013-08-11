@@ -10,10 +10,8 @@
 /**
  * Abstract Database Adapter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Adapter
- * @uses 		KPatternCommandChain
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdapterInterface
 {

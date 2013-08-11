@@ -28,8 +28,8 @@
  * }
  * </code>
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 class KViewFile extends KViewAbstract
 {

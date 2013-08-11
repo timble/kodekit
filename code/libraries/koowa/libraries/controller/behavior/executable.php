@@ -8,11 +8,10 @@
  */
 
 /**
- * Controller Executable Behavior Class
+ * Executable Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
 {

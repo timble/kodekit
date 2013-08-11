@@ -8,15 +8,14 @@
  */
 
 /**
- * Vcard Class
+ * Vcard View
  *
  * Complies to version 2.1 of the vCard specification
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
- * @see         http://www.imc.org/pdi/
- * @see         http://en.wikipedia.org/wiki/VCard
- * @uses        KFilter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
+ * @see     http://www.imc.org/pdi/
+ * @see     http://en.wikipedia.org/wiki/VCard
  */
 class KViewVcard extends KViewFile
 {

@@ -8,10 +8,10 @@
  */
 
 /**
- * Base64 filter
+ * Base64 Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterBase64 extends KFilterAbstract
 {

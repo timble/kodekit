@@ -7,11 +7,10 @@
  */
 
 /**
- * Service Abstract Locator
+ * Abstract Service Locator
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage 	Locator
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 abstract class KServiceLocatorAbstract extends KObject implements KServiceLocatorInterface
 {

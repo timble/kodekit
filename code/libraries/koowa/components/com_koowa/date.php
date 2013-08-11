@@ -10,7 +10,8 @@
 /**
  * Date Class
  *
- * @package Koowa_Date
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaDate extends KDate
 {

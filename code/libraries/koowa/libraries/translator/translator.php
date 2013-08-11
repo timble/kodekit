@@ -8,10 +8,10 @@
  */
 
 /**
- * Translator Class
+ * Translator
  *
- * @author		Ercan Ozkaya <ercan@timble.net>
- * @package		Koowa_Translator
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Library\Translator
  */
 class KTranslator extends KObject
 {

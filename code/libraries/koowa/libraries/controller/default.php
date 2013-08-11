@@ -8,10 +8,10 @@
  */
 
 /**
- * Default Controller Class
+ * Default Controller
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerDefault extends KControllerService
 {

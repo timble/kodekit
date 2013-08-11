@@ -8,15 +8,14 @@
  */
 
 /**
- * Koowa System plugin
+ * Koowa System Plugin
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Plugins
- * @subpackage  System
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Plugin\System\Koowa
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class plgSystemKoowa extends JPlugin
+class PlgSystemKoowa extends JPlugin
 {
     /**
      * Boots Koowa framework and applies some bug fixes for certain environments

@@ -8,15 +8,13 @@
  */
 
 /**
- * Object Queue Class
+ * Object Queue
  *
- * KObjectQueue is a type of container adaptor implemeneted as a double linked list
- * and specifically designed such that its first element is always the greatest of
- * the elements it contains based on the priority of the element.
+ * KObjectQueue is a type of container adaptor implemented as a double linked list and specifically designed such that
+ * its first element is always the greatest of the elements it contains based on the priority of the element.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  * @see 		http://www.php.net/manual/en/class.splpriorityqueue.php
  */
 class KObjectQueue extends KObject implements Iterator, Countable

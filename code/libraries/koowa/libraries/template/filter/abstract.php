@@ -10,9 +10,8 @@
 /**
  * Abstract Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilterInterface
 {

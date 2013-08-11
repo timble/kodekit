@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Row Default
+ * Default Database Row
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Row
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseRowDefault extends KDatabaseRowTable
 {

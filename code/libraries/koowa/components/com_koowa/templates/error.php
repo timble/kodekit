@@ -11,8 +11,12 @@
  * Extends the template class with debugging and dumping tools.
  *
  * This class is based on Kohana_Debug class and subject to the BSD License
+ *
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaphp.com/license
+ *
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateError extends ComKoowaTemplateAbstract
 {

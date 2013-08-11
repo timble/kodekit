@@ -8,12 +8,13 @@
  */
 
 /**
- * Language filter for ISO codes like en-GB (lang-COUNTRY)
+ * Language Filter
  *
- * Only checks the format, it doesn't care whether the language or country actually exist
+ * Filter for ISO codes like en-GB (lang-COUNTRY) Only checks the format, it doesn't care whether the language or
+ * country actually exist
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterLang extends KFilterAbstract
 {

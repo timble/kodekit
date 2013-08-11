@@ -8,10 +8,9 @@
  */
 
 /**
- * Controller Exception Not Found Class
+ * Not Found Controller Exception
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage  Exception
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerExceptionNotFound extends Exception implements KControllerException {}

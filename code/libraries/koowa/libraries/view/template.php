@@ -8,13 +8,10 @@
  */
 
 /**
- * Abstract Template View Class
+ * Abstract Template View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
- * @uses        KMixinClass
- * @uses        KTemplate
- * @uses        KService
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 abstract class KViewTemplate extends KViewAbstract
 {

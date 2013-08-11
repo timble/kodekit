@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Controller Toolbar Class
+ * Default Controller Toolbar
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage 	Toolbar
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerToolbarDefault extends KControllerToolbarAbstract
 {

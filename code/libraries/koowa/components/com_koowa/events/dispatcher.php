@@ -9,12 +9,10 @@
 
 
 /**
- * Default Event Dispatcher
+ * Event Dispatcher
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaEventDispatcher extends KEventDispatcher implements KServiceInstantiatable
 {

@@ -8,11 +8,10 @@
  */
 
 /**
- * Object Hashable interface
+ * Object Handlable Interface
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 interface KObjectHandlable
 {

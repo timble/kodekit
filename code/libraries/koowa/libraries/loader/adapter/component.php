@@ -6,13 +6,12 @@
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
+
 /**
- * Loader Adapter for a component
+ * Component Loader Adapter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Loader
- * @subpackage 	Adapter
- * @uses		KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 class KLoaderAdapterComponent extends KLoaderAdapterAbstract
 {

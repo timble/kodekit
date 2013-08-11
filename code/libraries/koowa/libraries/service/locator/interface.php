@@ -9,9 +9,8 @@
 /**
  * Service Locator Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage 	Locator
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 interface KServiceLocatorInterface
 {

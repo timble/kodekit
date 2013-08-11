@@ -8,11 +8,12 @@
  */
 
 /**
- * Template filter for wrapping a template output
+ * Wrapper Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * Filter for wrapping a template output
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

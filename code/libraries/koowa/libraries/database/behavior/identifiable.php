@@ -8,11 +8,10 @@
  */
 
 /**
- * Database Identifiable Behavior
+ * Identifiable Database Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 {

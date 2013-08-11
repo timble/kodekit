@@ -8,10 +8,12 @@
  */
 
 /**
- * Filename filter, strips path info
+ * Filename Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * Filter strips path info
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterFilename extends KFilterAbstract
 {

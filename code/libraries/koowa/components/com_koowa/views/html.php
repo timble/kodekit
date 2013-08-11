@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Html View
+ * Error Html View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaViewHtml extends KViewDefault
 {

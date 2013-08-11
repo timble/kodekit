@@ -7,11 +7,10 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 /**
- * Array helper
+ * Array Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Helper
- * @subpackage  Array
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Helper
  * @static
  */
 class KHelperArray

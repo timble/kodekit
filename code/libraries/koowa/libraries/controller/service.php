@@ -8,10 +8,10 @@
  */
 
 /**
- * Abstract Bread Controller Class
+ * Abstract Service Controller
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Controller
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerService extends KControllerResource
 {

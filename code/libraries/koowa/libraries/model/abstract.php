@@ -8,11 +8,10 @@
  */
 
 /**
- * Abstract Model Class
+ * Abstract Model
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Model
- * @uses		KObject
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Model
  */
 abstract class KModelAbstract extends KObject
 {

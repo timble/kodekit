@@ -8,11 +8,12 @@
  */
 
 /**
- * Template filter to parse style tags
+ * Style Template Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter to parse style tags
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

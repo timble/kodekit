@@ -10,9 +10,8 @@
 /**
  * Database Behavior Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 interface KDatabaseBehaviorInterface extends KCommandInterface, KObjectServiceable
 {

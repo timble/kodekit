@@ -8,10 +8,9 @@
  */
 
 /**
- * Service Identifier Exception class
+ * Service Identifier Exception
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage  Identifier
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 class KServiceIdentifierException extends Exception {}

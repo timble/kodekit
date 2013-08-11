@@ -12,8 +12,8 @@
  *
  * KConfig provides a property based interface to an array
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Config
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Config
  */
 interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
 {

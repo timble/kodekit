@@ -8,7 +8,7 @@
  */
 
 /**
- * HTTP Url Class
+ * Http Url
  *
  * This class helps you to create and manipulate urls, including query
  * strings and path elements. It does so by splitting up the pieces of the
@@ -81,9 +81,8 @@
  * ?>
  * </code>
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Http
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Http
  */
 class KHttpUrl extends KObject
 {

@@ -8,16 +8,12 @@
  */
 
 /**
- * Chain of command mixin
+ * Command Chain Mixin
  *
- * Class can be used as a mixin in classes that want to implement a chain
- * of responsability or chain of command pattern.
+ * Class can be used as a mixin in classes that want to implement a chain of responsability or chain of command pattern.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
- * @uses        KCommandChain
- * @uses        KCommandInterface
- * @uses        KCommandEvent
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 class KMixinCommandchain extends KMixinAbstract
 {

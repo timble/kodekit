@@ -8,11 +8,10 @@
  */
 
 /**
- * Module Chrome Filter
+ * Chrome Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
-* @package      Nooku_Module
-* @subpackage   Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Module\Koowa
  */
 class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {

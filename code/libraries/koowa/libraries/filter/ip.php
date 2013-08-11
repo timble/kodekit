@@ -8,10 +8,10 @@
  */
 
 /**
- * IP filter
+ * IP Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterIP extends KFilterAbstract
 {

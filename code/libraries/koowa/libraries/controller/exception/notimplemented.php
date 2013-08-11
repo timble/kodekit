@@ -8,10 +8,9 @@
  */
 
 /**
- * Controller Exception Not Implemented Class
+ * Not Implemented Controller Exception
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Dispatcher
- * @subpackage  Exception
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerExceptionNotImplemented extends Exception implements KControllerException {}

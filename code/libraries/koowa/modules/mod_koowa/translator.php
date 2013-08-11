@@ -8,10 +8,10 @@
  */
 
 /**
- * Translator Class
+ * Translator
  *
- * @author		Ercan Ozkaya <ercan@timble.net>
- * @package		Koowa_Translator
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Module\Koowa
  */
 class ModKoowaTranslator extends ComKoowaTranslator
 {

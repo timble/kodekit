@@ -8,11 +8,10 @@
  */
 
 /**
- * Service Class
+ * Service
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @uses 		KServiceIdentifier
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 class KService implements KServiceInterface
 {

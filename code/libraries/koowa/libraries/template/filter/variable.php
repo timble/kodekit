@@ -8,11 +8,12 @@
  */
 
 /**
- * Template read filter to convert @ to $this->
+ * Variable Template Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter to convert @ to $this->
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterVariable extends KTemplateFilterAbstract implements KTemplateFilterRead
 {

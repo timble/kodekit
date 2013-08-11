@@ -8,15 +8,13 @@
  */
 
 /**
- * Internal url filter
+ * Internal Url Filter
  *
- * Check if an refers to a legal URL inside the system. Use when
- * redirecting to an URL that was passed in a request
+ * Check if an refers to a legal URL inside the system. Use when redirecting to an URL that was passed in a request
  *
- * @todo        Do a proper implementation, see KoowaFilterEditlink for ideas
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterInternalurl extends KFilterAbstract
 {

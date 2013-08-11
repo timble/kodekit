@@ -10,10 +10,11 @@
 /**
  * Returns the plural rules for a given locale.
  * 
- * This class is based on Symfony 2 class Symfony\Component\Translation\PluralizationRules
- * and subject to MIT license
+ * This class is based on Symfony 2 class Symfony\Component\Translation\PluralizationRules and subject to MIT license
  * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Library\Translator
  */
 class KTranslatorInflector extends KInflector
 {

@@ -8,13 +8,12 @@
  */
 
 /**
- * Template Write Filter Interface
+ * Template Read Filter Interface
  *
  * Processes the template on input
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 interface KTemplateFilterRead
 {

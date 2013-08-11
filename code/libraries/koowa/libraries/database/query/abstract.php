@@ -7,11 +7,10 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 /**
- * Abstract Database Query Class
+ * Abstract Database Query
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
 {

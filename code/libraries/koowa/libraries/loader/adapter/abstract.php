@@ -10,9 +10,8 @@
 /**
  * Abstract Loader Adapter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Loader
- * @subpackage  Adapter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 abstract class KLoaderAdapterAbstract implements KLoaderAdapterInterface
 {

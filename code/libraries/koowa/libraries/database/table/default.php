@@ -8,11 +8,10 @@
  */
 
 /**
- * Default Database Table Class
+ * Default Database Table
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Table
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseTableDefault extends KDatabaseTableAbstract implements KServiceInstantiatable
 {

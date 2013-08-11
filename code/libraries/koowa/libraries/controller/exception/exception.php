@@ -10,8 +10,7 @@
 /**
  * Controller Exception Interface
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage  Exception
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 interface KControllerException {}
