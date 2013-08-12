@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEventListener extends KObject
+class KEventListener extends KObject implements KEventListenerInterface
 {
  	/**
      * List of event handlers
@@ -98,7 +98,7 @@ class KEventListener extends KObject
     /**
      * Connect to an event dispatcher
      *
-     * @param  object	The event dispatcher to connect too
+     * @param  KEventDispatcher $dispatcher	The event dispatcher to connect too
      * @return KEventListener
      */
     public function connect(KEventDispatcher $dispatcher)
@@ -115,7 +115,7 @@ class KEventListener extends KObject
 	/**
      * Disconnect from an event dispatcher
      *
-     * @param  object	The event dispatcher to disconnect from
+     * @param  KEventDispatcher $dispatcher	The event dispatcher to disconnect from
      * @return KEventListener
      */
     public function disconnect(KEventDispatcher $dispatcher)

@@ -19,7 +19,7 @@ class ComKoowaFilterAlias extends KFilterAbstract
 	/**
 	 * Validate a value
 	 *
-	 * @param	string	Variable to be validated
+	 * @param	string	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	protected function _validate($value)
@@ -30,15 +30,14 @@ class ComKoowaFilterAlias extends KFilterAbstract
 	/**
 	 * Sanitize a value
 	 *
-	 * @param	string Variable to be sanitized
+	 * @param	string $value Variable to be sanitized
 	 * @return	string
 	 */
 	protected function _sanitize($value)
 	{
 		if (JFactory::getApplication()->getCfg('unicodeslugs') == 1) {
             $value = JFilterOutput::stringURLUnicodeSlug($value);
-		}
-		else {
+		} else {
             $value = JFilterOutput::stringURLSafe($value);
 		}
 

@@ -16,16 +16,14 @@
 class KFilterSlug extends KFilterAbstract
 {
 	/**
-	 * Separator character / string to use for replacing non alphabetic characters
-	 * in generated slug
+	 * Separator character / string to use for replacing non alphabetic characters in generated slug
 	 *
 	 * @var	string
 	 */
 	protected $_separator;
 
 	/**
-	 * Maximum length the generated slug can have. If this is null the length of
-	 * the slug column will be used.
+	 * Maximum length the generated slug can have. If this is null the length of the slug column will be used.
 	 *
 	 * @var	integer
 	 */
@@ -34,7 +32,7 @@ class KFilterSlug extends KFilterAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param 	object	An optional KConfig object with configuration options
+	 * @param KConfig $config	An optional KConfig object with configuration options
 	 */
 	public function __construct(KConfig $config)
 	{
@@ -68,7 +66,7 @@ class KFilterSlug extends KFilterAbstract
 	 * Returns true if the string only contains US-ASCII and does not contain
 	 * any spaces
 	 *
-	 * @param	mixed	Variable to be validated
+	 * @param	mixed	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	protected function _validate($value)
@@ -79,10 +77,10 @@ class KFilterSlug extends KFilterAbstract
 	/**
 	 * Sanitize a value
 	 *
-	 * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents",
-	 * replace whitespaces by hyphens and lowercase the result.
+	 * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents", replace whitespaces by hyphens and
+     * lowercase the result.
 	 *
-	 * @param	scalar	Variable to be sanitized
+	 * @param	scalar	$value Variable to be sanitized
 	 * @return	scalar
 	 */
 	protected function _sanitize($value)

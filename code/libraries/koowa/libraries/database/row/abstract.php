@@ -16,8 +16,7 @@
 abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRowInterface
 {
     /**
-     * Tracks columns where data has been updated. Allows more specific
-     * save operations.
+     * Tracks columns where data has been updated. Allows more specific save operations.
      *
      * @var array
      */
@@ -66,7 +65,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 
         parent::__construct($config);
 
-        // Set the table indentifier
+        // Set the table identifier
     	if(isset($config->identity_column)) {
 			$this->_identity_column = $config->identity_column;
 		}
@@ -127,7 +126,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
  	/**
     * Returns an associative array of the raw data
     *
-    * @param   boolean  If TRUE, only return the modified data. Default FALSE
+    * @param   boolean $modified If TRUE, only return the modified data. Default FALSE
     * @return  array
     */
     public function getData($modified = false)
@@ -144,9 +143,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set the row data
      *
-     * @param   mixed   Either and associative array, an object or a KDatabaseRow
-     * @param   boolean If TRUE, update the modified information for each column being set.
-     *                  Default TRUE
+     * @param   mixed   $data       Either and associative array, an object or a KDatabaseRow
+     * @param   boolean $modified   If TRUE, update the modified information for each column being set. Default TRUE
      * @return  KDatabaseRowAbstract
      */
      public function setData( $data, $modified = true )
@@ -184,7 +182,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set the status
      *
-     * @param   string|null     The status value or NULL to reset the status
+     * @param   string|null $status The status value or NULL to reset the status
      * @return  KDatabaseRowAbstract
      */
     public function setStatus($status)
@@ -209,7 +207,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set the status message
      *
-     * @param   string      The status message
+     * @param   string $message The status message
      * @return  KDatabaseRowAbstract
      */
     public function setStatusMessage($message)
@@ -221,7 +219,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Load the row from the database.
      *
-     * @return object	If successfull returns the row object, otherwise NULL
+     * @return object	If successful returns the row object, otherwise NULL
      */
     public function load()
     {
@@ -233,10 +231,9 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Saves the row to the database.
      *
-     * This performs an intelligent insert/update and reloads the properties
-     * with fresh data from the table on success.
+     * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
      *
-     * @return boolean  If successfull return TRUE, otherwise FALSE
+     * @return boolean  If successful return TRUE, otherwise FALSE
      */
     public function save()
     {
@@ -248,7 +245,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Deletes the row form the database.
      *
-     * @return boolean  If successfull return TRUE, otherwise FALSE
+     * @return boolean  If successful return TRUE, otherwise FALSE
      */
     public function delete()
     {
@@ -258,7 +255,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Resets to the default properties
      *
-     * @return boolean  If successfull return TRUE, otherwise FALSE
+     * @return boolean  If successful return TRUE, otherwise FALSE
      */
     public function reset()
     {
@@ -281,12 +278,11 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set row field value
      *
-     * If the value is the same as the current value and the row is loaded from the database
-     * the value will not be reset. If the row is new the value will be (re)set and marked
-     * as modified
+     * If the value is the same as the current value and the row is loaded from the database the value will not be
+     * reset. If the row is new the value will be (re)set and marked as modified
      *
-     * @param   string  The column name.
-     * @param   mixed   The value for the property.
+     * @param   string  $column The column name.
+     * @param   mixed   $value  The value for the property.
      * @return  void
      */
     public function __set($column, $value)
@@ -303,7 +299,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Unset a row field
      *
-     * @param   string  The column name.
+     * @param   string  $column The column name.
      * @return  void
      */
     public function __unset($column)
@@ -314,7 +310,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     }
 
  	/**
-     * Gets the identitiy column of the rowset
+     * Gets the identity column of the rowset
      *
      * @return string
      */
@@ -336,7 +332,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Check if a column has been modified
      *
-     * @param   string  The column name.
+     * @param   string  $column The column name.
      * @return  boolean
      */
     public function isModified($column)
@@ -362,12 +358,11 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 	/**
 	 * Search the mixin method map and call the method or trigger an error
 	 *
-	 * Function is also capable of checking is a behavior has been mixed succesfully
-	 * using is[Behavior] function. If the behavior exists the function will return
-	 * TRUE, otherwise FALSE.
+	 * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+     * the behavior exists the function will return TRUE, otherwise FALSE.
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method     The function name
+	 * @param  array  	$arguments  The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */

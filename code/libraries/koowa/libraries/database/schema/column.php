@@ -97,8 +97,7 @@ class KDatabaseSchemaColumn extends KObject
 	/**
      * Implements the virtual $filter property.
      *
-     * The value can be a KFilter object, a filter name, an array of filter
-     * names or a filter identifier
+     * The value can be a KFilter object, a filter name, an array of filter names or a filter identifier
      *
      * @param 	string  $key	The virtual property to set, only accepts 'filter'
      * @param 	string 	$value  Set the virtual property to this value.
@@ -111,8 +110,7 @@ class KDatabaseSchemaColumn extends KObject
     }
 
     /**
-     * Implements access to $_filter by reference so that it appears to be
-     * a public $filter property.
+     * Implements access to $_filter by reference so that it appears to be a public $filter property.
      *
      * @param   string  $key The virtual property to return, only accepts 'filter'
      * @return  mixed   The value of the virtual property.

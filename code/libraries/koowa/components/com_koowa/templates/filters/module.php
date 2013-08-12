@@ -13,8 +13,8 @@
  *
  * This filter allow to dynamically inject data into module position.
  *
- * Filter will parse elements of the form <modules position="[position]">[content]</modules>
- * and prepend or append the content to the module position.
+ * Filter will parse elements of the form <modules position="[position]">[content]</modules> and prepend or append
+ * the content to the module position.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
@@ -41,7 +41,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     /**
 	 * Find any <module></module> elements and inject them into the JDocument object
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterModule
 	 */
     public function write(&$text)
@@ -92,10 +92,8 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  * This is a specialised modules renderer which prepends or appends the dynamically created modules
  * to the list of modules before rendering them.
 .*
- * @author      Johan Janssens <johan@nooku.org>
-
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class JDocumentRendererModules extends JDocumentRenderer
 {

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEventDispatcher extends KObject
+class KEventDispatcher extends KObject implements KEventDispatcherInterface
 {
     /**
 	 * An associative array of event listeners queues
@@ -44,11 +44,11 @@ class KEventDispatcher extends KObject
 	    $this->_listeners = array();
 	}
 
- 	/**
-     * Dispatches an event by dispatching arguments to all listeners that handle
-     * the event and returning their return values.
+    /**
+     * Dispatches an event by dispatching arguments to all listeners that handle the event and returning
+     * their return values.
      *
-     * @param   string  The event name
+     * @param   string  $name  The event name
      * @param   object|array   An array, a KConfig or a KEvent object
      * @return  KEventDispatcher
      */
@@ -80,11 +80,11 @@ class KEventDispatcher extends KObject
     /**
      * Add an event listener
      *
-     * @param  string  The event name
-     * @param  object  An object implementing the KObjectHandlable interface
-     * @param  integer The event priority, usually between 1 (high priority) and 5 (lowest),
-     *                 default is 3. If no priority is set, the command priority will be used
-     *                 instead.
+     * @param  string            $name The event name
+     * @param  KObjectHandlable  $listener An object implementing the KObjectHandlable interface
+     * @param  integer           $priority The event priority, usually between 1 (high priority) and 5 (lowest),
+     *                                     default is 3. If no priority is set, the command priority will be used
+     *                                     instead.
      * @return KEventDispatcher
      */
     public function addEventListener($name, KObjectHandlable $listener, $priority = KEvent::PRIORITY_NORMAL)
@@ -104,8 +104,8 @@ class KEventDispatcher extends KObject
     /**
      * Remove an event listener
      *
-     * @param   string  The event name
-     * @param   object  An object implementing the KObjectHandlable interface
+     * @param   string           $name      The event name
+     * @param   KObjectHandlable $listener  An object implementing the KObjectHandlable interface
      * @return  KEventDispatcher
      */
     public function removeEventListener($name, KObjectHandlable $listener)
@@ -123,8 +123,8 @@ class KEventDispatcher extends KObject
     /**
      * Get a list of listeners for a specific event
      *
-     * @param   string  		The event name
-     * @return  KObjectQueue	An object queue containing the listeners
+     * @param   string  $name The event name
+     * @return  KObjectQueue An object queue containing the listeners
      */
     public function getListeners($name)
     {
@@ -139,7 +139,7 @@ class KEventDispatcher extends KObject
     /**
      * Check if we are listening to a specific event
      *
-     * @param   string  The event name
+     * @param   string  $name The event name
      * @return  boolean	TRUE if we are listening for a specific event, otherwise FALSE.
      */
     public function hasListeners($name)
@@ -152,12 +152,12 @@ class KEventDispatcher extends KObject
         return $result;
     }
 
-	/**
+    /**
      * Set the priority of an event
      *
-     * @param  string    The event name
-     * @param  object    An object implementing the KObjectHandlable interface
-     * @param  integer   The event priority
+     * @param  string            $name     The event name
+     * @param  KObjectHandlable  $listener  An object implementing the KObjectHandlable interface
+     * @param  integer           $priority The event priority
      * @return KCommandChain
      */
     public function setEventPriority($name, KObjectHandlable $listener, $priority)
@@ -172,8 +172,8 @@ class KEventDispatcher extends KObject
     /**
      * Get the priority of an event
      *
-     * @param   string  The event name
-     * @param   object  An object implementing the KObjectHandlable interface
+     * @param   string            $name     The event name
+     * @param   KObjectHandlable  $listener An object implementing the KObjectHandlable interface
      * @return  integer|false The event priority or FALSE if the event isn't listened for.
      */
     public function getEventPriority($name, KObjectHandlable $listener)

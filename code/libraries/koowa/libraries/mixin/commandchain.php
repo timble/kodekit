@@ -10,7 +10,7 @@
 /**
  * Command Chain Mixin
  *
- * Class can be used as a mixin in classes that want to implement a chain of responsability or chain of command pattern.
+ * Class can be used as a mixin in classes that want to implement a chain of responsibility or chain of command pattern.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Mixin
@@ -77,15 +77,14 @@ class KMixinCommandchain extends KMixinAbstract
     /**
      * Get the command chain context
      *
-     * This functions inserts a 'caller' variable in the context which contains
-     * the mixer object.
+     * This functions inserts a 'caller' variable in the context which contains the mixer object.
      *
      * @return  KCommandContext
      */
     public function getCommandContext()
     {
         $context = $this->_command_chain->getContext();
-        $context->caller = $this->_mixer;
+        $context->caller = $this->getMixer();
 
         return $context;
     }
@@ -103,13 +102,13 @@ class KMixinCommandchain extends KMixinAbstract
     /**
      * Set the chain of command object
      *
-     * @param   object 	A command chain object
+     * @param   KCommandChain $chain A command chain object
      * @return  KObject The mixer object
      */
     public function setCommandChain(KCommandChain $chain)
     {
         $this->_command_chain = $chain;
-        return $this->_mixer;
+        return $this->getMixer();
     }
 
 	/**

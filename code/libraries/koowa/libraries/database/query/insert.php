@@ -40,7 +40,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the table clause 
      *
      * @param  string $table The table name.
-     * @return \KDatabaseQueryInsert
+     * @return KDatabaseQueryInsert
      */
     public function table($table)
     {
@@ -53,7 +53,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the columns clause 
      *
      * @param  array $columns Array of column names.
-     * @return \KDatabaseQueryInsert
+     * @return KDatabaseQueryInsert
      */
     public function columns(array $columns)
     {
@@ -66,7 +66,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the values clause 
      *
      * @param  array $values Array of values.
-     * @return \KDatabaseQueryInsert
+     * @return KDatabaseQueryInsert
      */
     public function values($values)
     {

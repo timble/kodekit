@@ -146,8 +146,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Render a list of pages links
      *
-     * This function is overriddes the default behavior to render the links in the khepri template
-     * backend style.
+     * This function is overriddes the default behavior to render the links in the khepri template backend style.
      *
      * @param   array   $pages An array of page data
      * @return  string  Html
@@ -212,15 +211,19 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 
         $total = count($pages['pages']);
         $hellip = false;
-        foreach ($pages['pages'] as $i => $page) {
+        foreach ($pages['pages'] as $i => $page)
+        {
             $in_range = $i > ($current - $padding) && $i < ($current + $padding);
 
-            if ($i < $padding || $in_range || $i >= ($total - $padding)) {
+            if ($i < $padding || $in_range || $i >= ($total - $padding))
+            {
                 $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
                 $html .= $this->_bootstrap_link($page, $page->page);
 
                 $hellip = false;
-            } else {
+            }
+            else
+            {
                 if($hellip == true) continue;
 
                 $html .= '<li class="disabled">';

@@ -45,7 +45,7 @@ class KHelperString
      *
      * Find position of first occurrence of a string
      *
-     * @param $str - string String being examined
+     * @param $str string String being examined
      * @param $search - string String being searced for
      * @param $offset - int Optional, specifies the position from which the search should be performed
      * @return mixed Number of characters before the first match or FALSE on failure

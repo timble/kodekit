@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-abstract class KModelAbstract extends KObject
+abstract class KModelAbstract extends KObject implements KModelInterface
 {
 	/**
 	 * A state object
@@ -95,8 +95,8 @@ abstract class KModelAbstract extends KObject
 	/**
      * Set the model state properties
      *
-     * This function overloads the KObject::set() function and only acts on state properties it
-     * will reset (unsets) the $_list, $_item and $_total model properties when a state changes.
+     * This function overloads the KObject::set() function and only acts on state properties it will reset (unsets) the
+     * $_list, $_item and $_total model properties when a state changes.
      *
      * @param   string|array|object	$property The name of the property, an associative array or an object
      * @param   mixed  				$value    The value of the property
@@ -145,14 +145,9 @@ abstract class KModelAbstract extends KObject
     /**
      * Get the model state properties
      *
-     * This function overloads the KObject::get() function and only acts on state
-     * properties
-     *
-     * If no property name is given then the function will return an associative
-     * array of all properties.
-     *
-     * If the property does not exist and a  default value is specified this is
-     * returned, otherwise the function return NULL.
+     * This function overloads the KObject::get() function and only acts on state properties. If no property name is given
+     * then the function will return an associative array of all properties. If the property does not exist and a  default
+     * value is specified this is returned, otherwise the function return NULL.
      *
      * @param   string  $property The name of the property
      * @param   mixed   $default  The default value
@@ -275,8 +270,7 @@ abstract class KModelAbstract extends KObject
     }
 
     /**
-     * Supports a simple form Fluent Interfaces. Allows you to set states by
-     * using the state name as the method name.
+     * Supports a simple form Fluent Interfaces. Allows you to set states by using the state name as the method name.
      *
      * For example : $model->sort('name')->limit(10)->getList();
      *

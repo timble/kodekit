@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObjectDecorator extends KObject
+class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 {
 	/**
      * Class methods
@@ -66,8 +66,8 @@ class KObjectDecorator extends KObject
 	/**
 	 * Get a list of all the available methods
 	 *
-	 * This function returns an array of all the methods, both native and mixed.
-	 * It will also return the methods exposed by the decorated object.
+	 * This function returns an array of all the methods, both native and mixed. It will also return the methods exposed
+     * by the decorated object.
 	 *
 	 * @return array An array
 	 */
@@ -96,7 +96,7 @@ class KObjectDecorator extends KObject
 	/**
      * Checks if the decorated object or one of it's mixins inherits from a class.
      *
-     * @param 	string|object 	The class to check
+     * @param 	string|object 	$class The class to check
      * @return 	boolean 		Returns TRUE if the object inherits from the class
      */
 	public function inherits($class)

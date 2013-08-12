@@ -24,7 +24,7 @@ class KFilterDate extends KFilterTimestamp
      * itself is valid (for example, no Feb 30).
      *
      *
-     * @param   scalar  Value to be validated
+     * @param   scalar  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)
@@ -43,8 +43,8 @@ class KFilterDate extends KFilterTimestamp
     /**
      * Forces the value to an ISO-8601 formatted date ("yyyy-mm-dd").
      *
-     * @param string The value to be sanitized.  If an integer, it is used as a Unix timestamp;
-     *               otherwise, converted to a Unix timestamp using [[php::strtotime() | ]].
+     * @param string $value The value to be sanitized.  If an integer, it is used as a Unix timestamp;
+     *                      otherwise, converted to a Unix timestamp using [[php::strtotime() | ]].
      * @return  string The sanitized value.
      */
     protected function _sanitize($value)

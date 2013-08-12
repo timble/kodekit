@@ -20,7 +20,7 @@ class KFilterDigit extends KFilterAbstract
     /**
      * Validate a value
      *
-     * @param   scalar  Value to be validated
+     * @param   scalar  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)
@@ -31,7 +31,7 @@ class KFilterDigit extends KFilterAbstract
     /**
      * Sanitize a value
      *
-     * @param   mixed   Value to be sanitized
+     * @param   mixed   $value Value to be sanitized
      * @return  int
      */
     protected function _sanitize($value)

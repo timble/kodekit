@@ -13,7 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-class KServiceContainer extends ArrayObject
-{
-
-}
+class KServiceContainer extends ArrayObject { }

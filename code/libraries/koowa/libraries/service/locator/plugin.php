@@ -24,7 +24,7 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 	/**
 	 * Get the classname based on an identifier
 	 *
-	 * @param  mixed  		 An identifier object - plg.type.plugin.[.path].name
+	 * @param  KServiceIdentifier $identifier An identifier object - plg.type.plugin.[.path].name
 	 * @return string|false  Return object on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier)
@@ -43,7 +43,7 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 	/**
 	 * Get the path based on an identifier
 	 *
-	 * @param  object  			An Identifier object - plg.type.plugin.[.path].name
+	 * @param  KServiceIdentifier $identifier An Identifier object - plg.type.plugin.[.path].name
 	 * @return string|false		Returns the path on success FALSE on failure
 	 */
 	public function findPath(KServiceIdentifier $identifier)
@@ -60,7 +60,7 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 			{
 				$path    = array_shift($parts).
 				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
-				$path   .= DIRECTORY_SEPARATOR.strtolower($identifier->name);
+				$path   .= '/'.strtolower($identifier->name);
 			}
 			else $path  = strtolower($identifier->name);
 		}

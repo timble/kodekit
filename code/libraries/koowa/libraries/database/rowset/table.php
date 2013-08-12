@@ -62,8 +62,8 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	/**
      * Method to get a table object
      *
-     * Function catches RuntimeException that are thrown for tables that
-     * don't exist. If no table object can be created the function will return FALSE.
+     * Function catches RuntimeException that are thrown for tables the don't exist. If no table object can be created
+     * the function will return FALSE.
      *
      * @return KDatabaseTableAbstract
      */
@@ -92,8 +92,8 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	/**
 	 * Method to set a table object attached to the rowset
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
-	 * 					or valid identifier string
+	 * @param	mixed	$table An object that implements KObjectServiceable, KServiceIdentifier object or valid
+     *                         identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KDatabaseRowsetAbstract
 	 */
@@ -134,7 +134,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	/**
 	 * Get an empty row
 	 *
-	 * @param	array An optional associative array of configuration settings.
+	 * @param	array $options An optional associative array of configuration settings.
 	 * @return	object	A KDatabaseRow object.
 	 */
 	public function getRow(array $options = array())
@@ -155,8 +155,8 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	 * a just in time mixin strategy. Available table behaviors are only mixed
 	 * when needed.
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method     The function name
+	 * @param  array  	$arguments  The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */

@@ -17,7 +17,7 @@ interface KServiceLocatorInterface
 	/**
 	 * Get the classname based on an identifier
 	 *
-	 * @param 	object 			An identifier object - [application::]type.package.[.path].name
+	 * @param 	KServiceIdentifier $identifier An identifier object - [application::]type.package.[.path].name
 	 * @return 	string|false 	Returns the class on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier);
@@ -25,7 +25,7 @@ interface KServiceLocatorInterface
 	 /**
      * Get the path based on an identifier
      *
-     * @param  object   An identifier object - [application::]type.package.[.path].name
+     * @param  KServiceIdentifier $identifier  An identifier object - [application::]type.package.[.path].name
      * @return string	Returns the path
      */
     public function findPath(KServiceIdentifier $identifier);

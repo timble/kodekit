@@ -10,8 +10,8 @@
 /**
  * Default Plugin
  *
- * Koowa plugins can handle a number of events that are dynamically generated. The following
- * is a list of available events. This list is not meant to be exclusive.
+ * Koowa plugins can handle a number of events that are dynamically generated. The following is a list of available
+ * events. This list is not meant to be exclusive.
  *
  * onBeforeController[Action]
  * onAfterController[Action]

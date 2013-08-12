@@ -26,6 +26,8 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
     protected function _initialize(KConfig $config)
     {
         /*
+         * Joomla 3.x Compat
+         *
          * Re-run the routing and add returned keys to the $_GET request
          * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
          */
@@ -56,8 +58,8 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
+     * @param   KConfigInterface $config        Configuration options
+     * @param 	KServiceInterface $container	A KServiceInterface object
      * @return KDispatcherDefault
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
@@ -83,12 +85,8 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
      * This function divert the standard behavior and will redirect if no view
      * information can be found in the request.
      *
-     * @param   string      The view to dispatch. If null, it will default to
-     *                      retrieve the controller information from the request or
-     *                      default to the component name if no controller info can
-     *                      be found.
-     *
-     * @return  KDispatcherDefault
+     * @param   KCommandContext	$context A command context object
+     * @return  ComKoowaDispatcher
      */
     protected function _actionDispatch(KCommandContext $context)
     {
@@ -107,10 +105,10 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
     /**
      * Push the controller data into the document
      *
-     * This function divert the standard behavior and will push specific controller data
-     * into the document
+     * This function divert the standard behavior and will push specific controller data into the document
      *
-     * @return  KDispatcherDefault
+     * @param   KCommandContext	$context A command context object
+     * @return  ComKoowaDispatcher
      */
     protected function _actionRender(KCommandContext $context)
     {

@@ -13,6 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Module\Koowa
  */
-class ModKoowaTranslator extends ComKoowaTranslator
-{
-}
+class ModKoowaTranslator extends ComKoowaTranslator {}

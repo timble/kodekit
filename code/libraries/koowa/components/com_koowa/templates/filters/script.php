@@ -19,9 +19,9 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
     /**
      * Render script information
      *
-     * @param string    The script information
-     * @param boolean   True, if the script information is a URL.
-     * @param array     Associative array of attributes
+     * @param string    $script  The script information
+     * @param boolean   $link    True, if the script information is a URL.
+     * @param array     $attribs Associative array of attributes
      * @return string
      */
     protected function _renderScript($script, $link, $attribs = array())

@@ -17,36 +17,42 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
 {
     /**
      * A reference to Joomla translator
+     *
      * @var object
      */
     protected $_translation_helper;
 
     /**
      * A prefix attached to every generated key
+     *
      * @var string
      */
     protected $_prefix;
 
     /**
      * Catalogue to map common Joomla keys
+     *
      * @var KTranslatorCatalogueInterface
      */
     protected $_alias_catalogue;
 
     /**
      * Default catalogue that generates the keys
+     *
      * @var KTranslatorCatalogueInterface
      */
     protected $_catalogue;
 
     /**
      * Fallback locale to always load the language files from
+     *
      * @var string
      */
     protected $_fallback_locale;
 
     /**
      * Maps identifier types to words
+     *
      * @var array
      */
     protected static $_type_map = array(
@@ -81,7 +87,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         if (!in_array('koowa', self::$_loaded_files))
         {
             $this->loadLanguageFiles('com_koowa');
-
             self::$_loaded_files[] = 'koowa';
         }
     }
@@ -109,6 +114,25 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     }
 
     /**
+     * Force creation of a singleton
+     *
+     * @param KConfigInterface  $config optional KConfig object with configuration options
+     * @param KServiceInterface $container
+     * @return ComKoowaTranslator
+     */
+    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    {
+        if (!$container->has($config->service_identifier))
+        {
+            $classname = $config->service_identifier->classname;
+            $instance  = new $classname($config);
+            $container->set($config->service_identifier, $instance);
+        }
+
+        return $container->get($config->service_identifier);
+    }
+
+    /**
      * Translates a string and handles parameter replacements
      *
      * @param string $string String to translate
@@ -126,7 +150,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         elseif (isset($this->_alias_catalogue[$result])) {
             $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
         }
-        else {
+        else
+        {
             if (substr($string, 0, strlen($this->_prefix)) === $this->_prefix) {
                 $key = $string;
             } else {
@@ -163,7 +188,9 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
 
         $key = $this->getKey($strings[1]);
         $found = null;
-        while ($choice > 0) {
+
+        while ($choice > 0)
+        {
             $looking_for = $key.($choice === 1 ? '' : '_'.$choice);
             if ($this->isTranslatable($looking_for)) {
                 $found = $looking_for;
@@ -191,7 +218,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Gets a key from the catalogue and prefixes it
      *
      * @param string $string Language key
-     *
      * @return string Translated string
      */
     public function getKey($string)
@@ -238,7 +264,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      *
      * @param string $extension Extension
      * @param string $app       Application. Leave blank for current one.
-     *
      * @return string
      */
     protected function _getExtensionFolder($extension, $app = null)
@@ -278,7 +303,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * @param string $extension
      * @param string $locale Locale name
      * @param string $base   Base path
-     *
      * @return bool
      */
     protected function _loadLanguageFile($extension, $locale, $base)
@@ -302,7 +326,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Creates and returns a catalogue from the passed identifier
      *
      * @param string|null $identifier Full identifier or just the name part
-     *
      * @return KTranslatorCatalogue
      */
     public function createCatalogue($identifier = null)
@@ -337,9 +360,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Set the alias catalogue
      *
-     * @param $catalogue
-     *
-     * @return $this
+     * @param KTranslatorCatalogueInterface $catalogue
+     * @return ComKoowaTranslator
      */
     public function setAliasCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
@@ -362,8 +384,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Set the default catalogue
      *
      * @param KTranslatorCatalogueInterface $catalogue
-     *
-     * @return $this
+     * @return ComKoowaTranslator
      */
     public function setDefaultCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
@@ -386,9 +407,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Set the translation helper
      *
      * @param object $translator
-     *
-     * @return $this
      * @throws InvalidArgumentException
+     * @return ComKoowaTranslator
      */
     public function setTranslationHelper($translator)
     {
@@ -397,7 +417,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         }
 
         $this->_translation_helper = $translator;
-
         return $this;
     }
 
@@ -415,33 +434,11 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Set the language key prefix
      *
      * @param string $prefix
-     *
-     * @return $this
+     * @return ComKoowaTranslator
      */
     public function setPrefix($prefix)
     {
         $this->_prefix = $prefix;
-
         return $this;
-    }
-
-    /**
-     * Force creation of a singleton
-     *
-     * @param KConfigInterface  $config optional KConfig object with configuration options
-     * @param KServiceInterface $container
-     *
-     * @return  KTranslator
-     */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
-    {
-        if (!$container->has($config->service_identifier))
-        {
-            $classname = $config->service_identifier->classname;
-            $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
-        }
-
-        return $container->get($config->service_identifier);
     }
 }

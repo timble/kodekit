@@ -82,7 +82,6 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
                 'data'  => $defaults
             ));
         }
-
     
         parent::_initialize($config);
     }

@@ -48,7 +48,8 @@ interface KLoaderAdapterInterface
     /**
      * Get the path based on a class name
      *
-     * @param  string           The class name
+     * @param  string  $classname The class name
+     * @param  string  $basepath  The basepath to use to find the class
      * @return string|false     Returns the path on success FALSE on failure
      */
     public function findPath($classname, $basepath = null);

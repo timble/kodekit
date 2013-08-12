@@ -20,10 +20,9 @@ interface KFilterInterface extends KCommandInterface, KServiceInstantiatable
     /**
      * Validate a value or data collection
      *
-     * NOTE: This should always be a simple yes/no question (is $value valid?), so
-     * only true or false should be returned
+     * NOTE: This should always be a simple yes/no question (is $value valid?), so only true or false should be returned
      *
-     * @param   mixed   Data to be validated
+     * @param   mixed   $value Data to be validated
      * @return  bool    True when the variable is valid
      */
     public function validate($value);
@@ -31,7 +30,7 @@ interface KFilterInterface extends KCommandInterface, KServiceInstantiatable
     /**
      * Sanitize a value or data collection
      *
-     * @param   mixed   Data to be sanitized
+     * @param   mixed   $value Data to be sanitized
      * @return  mixed
      */
     public function sanitize($value);

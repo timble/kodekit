@@ -43,7 +43,6 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 * Ends the pane
 	 *
      * @param 	array|KConfig $config An optional array with configuration options
-     *
 	 * @return 	string	Html
 	 */
 	public function endPane($config = array())
@@ -55,7 +54,6 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 * Creates a tab panel with title and starts that panel
 	 *
      * @param 	array|KConfig $config An optional array with configuration options
-     *
      * @return 	string	Html
 	 */
 	public function startPanel($config = array())
@@ -77,7 +75,6 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 * Ends a tab page
 	 *
      * @param 	array|KConfig $config An optional array with configuration options
-     *
 	 * @return 	string	Html
 	 */
 	public function endPanel($config = array())

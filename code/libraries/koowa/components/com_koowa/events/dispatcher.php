@@ -19,8 +19,8 @@ class ComKoowaEventDispatcher extends KEventDispatcher implements KServiceInstan
  	/**
      * Force creation of a singleton
      *
-     * @param 	object	An optional KConfig object with configuration options
-     * @param 	object	A KServiceInterface object
+     * @param 	KConfigInterface $config	    An optional KConfig object with configuration options
+     * @param 	KServiceInterface $container	A KServiceInterface object
      * @return ComKoowaEventDispatcher
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)

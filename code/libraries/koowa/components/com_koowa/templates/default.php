@@ -23,8 +23,8 @@ class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract
      *
      * If the view state have the same string keys, then the parameter value for that key will overwrite the state.
      *
-     * @param   string  Name of the helper, dot separated including the helper function to call
-     * @param   mixed   Parameters to be passed to the helper
+     * @param   string  $identifier Name of the helper, dot separated including the helper function to call
+     * @param   mixed   $params     Parameters to be passed to the helper
      * @return  string  Helper output
      */
     public function renderHelper($identifier, $params = array())

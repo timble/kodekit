@@ -8,40 +8,25 @@
  */
 
 /**
- * Command Context
+ * Command Context Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandContext extends KConfig
+interface KCommandContextInterface
 {
-    /**
-     * Error
-     *
-     * @var string
-     */
-    protected $_error;
-
     /**
      * Set the error
      *
      * @param string $error
-     *
      * @return  KCommandContext
      */
-    function setError($error)
-    {
-        $this->_error = $error;
-        return $this;
-    }
+    public function setError($error);
 
     /**
      * Get the error
      *
      * @return  string|Exception  The error
      */
-    function getError()
-    {
-        return $this->_error;
-    }
+    public function getError();
 }

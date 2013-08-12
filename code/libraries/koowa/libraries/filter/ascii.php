@@ -20,7 +20,7 @@ class KFilterAscii extends KFilterAbstract
 	 *
 	 * Returns true if the string only contains US-ASCII
 	 *
-	 * @param	mixed	Variable to be validated
+	 * @param	mixed	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	protected function _validate($value)
@@ -29,10 +29,9 @@ class KFilterAscii extends KFilterAbstract
 	}
 
 	/**
-	 * Transliterate all unicode characters to US-ASCII. The string must be
-	 * well-formed UTF8
+	 * Transliterate all unicode characters to US-ASCII. The string must be well-formed UTF8
 	 *
-	 * @param	scalar	Variable to be sanitized
+	 * @param	scalar	$value Variable to be sanitized
 	 * @return	scalar
 	 */
 	protected function _sanitize($value)

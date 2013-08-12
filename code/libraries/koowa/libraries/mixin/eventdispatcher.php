@@ -68,8 +68,8 @@ class KMixinEventdispatcher extends KMixinAbstract
     /**
      * Set the chain of command object
      *
-     * @param   object 		An event dispatcher object
-     * @return  KObject     The mixer object
+     * @param   KEventDispatcher $dispatcher An event dispatcher object
+     * @return  KObject The mixer object
      */
     public function setEventDispatcher(KEventDispatcher $dispatcher)
     {
@@ -80,24 +80,24 @@ class KMixinEventdispatcher extends KMixinAbstract
 	/**
      * Add an event listener
      *
-     * @param  string  The event name
-     * @param  object  An object implementing the KObjectHandlable interface
-     * @param  integer The event priority, usually between 1 (high priority) and 5 (lowest),
-     *                 default is 3. If no priority is set, the command priority will be used
-     *                 instead.
-     * @return  KObject The mixer objects
+     * @param  string  $event The event name
+     * @param  object  KObjectHandlable $listener An object implementing the KObjectHandlable interface
+     * @param  integer $priority  The event priority, usually between 1 (high priority) and 5 (lowest),
+     *                            default is 3. If no priority is set, the command priority will be used
+     *                            instead.
+     * @return  KObject The mixer object
      */
     public function addEventListener($event, KObjectHandlable $listener, $priority = KEvent::PRIORITY_NORMAL)
     {
         $this->_event_dispatcher->addEventListener($event, $listener, $priority);
-        return $this->_mixer;
+        return $this->getMixer();
     }
 
     /**
      * Remove an event listener
      *
-     * @param   string  The event name
-     * @param   object  An object implementing the KObjectHandlable interface
+     * @param   string           $event     The event name
+     * @param   KObjectHandlable $listener  An object implementing the KObjectHandlable interface
      * @return  KObject  The mixer object
      */
     public function removeEventListener($event, KObjectHandlable $listener)

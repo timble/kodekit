@@ -15,7 +15,7 @@
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
- * @see			http://www.php.net/manual/en/class.splobjectstorage.php
+ * @see		http://www.php.net/manual/en/class.splobjectstorage.php
  */
 class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Serializable
 {
@@ -44,7 +44,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
   	/**
      * Inserts an object in the set
      *
-     * @param   object	The object to insert
+     * @param   KObjectHandlable $object	The object to insert
      * @return  boolean	TRUE on success FALSE on failure
      */
     public function insert( KObjectHandlable $object)
@@ -66,7 +66,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      * All numerical array keys will be modified to start counting from zero while
      * literal keys won't be touched.
      *
-     * @param   object      The object to remove
+     * @param   KObjectHandlable $object The object to remove
      * @return  KObjectQueue
      */
     public function extract( KObjectHandlable $object)
@@ -83,7 +83,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
 	/**
      * Checks if the set contains a specific object
      *
-     * @param   object      The object to look for.
+     * @param   KObjectHandlable $object  The object to look for.
      * @return  bool		Returns TRUE if the object is in the set, FALSE otherwise.
      */
     public function contains( KObjectHandlable $object)
@@ -94,7 +94,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
 	/**
      * Merge-in another set
      *
-     * @param   object      The object set to merge
+     * @param   KObjectSet $set The object set to merge
      * @return  KObjectQueue
      */
     public function merge( KObjectSet $set)
@@ -111,7 +111,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object 	The object to look for.
+     * @param   KObjectHandlable $object The object to look for.
      * @return  bool	Returns TRUE if the object exists in the storage, and FALSE otherwise
      */
     public function offsetExists($object)
@@ -126,8 +126,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object  The object to look for.
-     * @return  mixed   The object
+     * @param   KObjectHandlable  $object The object to look for.
+     * @return  mixed The object
      */
     public function offsetGet($object)
     {
@@ -141,8 +141,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object  The object to store
-     * @param   mixed   The data to associate with the object. [UNUSED]
+     * @param   KObjectHandlable  $object The object to store
+     * @param   mixed              $data  The data to associate with the object. [UNUSED]
      * @return  object  KObjectSet
      */
     public function offsetSet($object, $data)
@@ -158,8 +158,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object  The object to remove.
-     * @return  object 	KObjectSet
+     * @param   object $object The object to remove.
+     * @return  KObjectSet
      */
     public function offsetUnset($object)
     {
@@ -187,7 +187,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface Serializable
      *
-     * @param   string  An serialized data
+     * @param   string $serialized The serialized data
      */
     public function unserialize($serialized)
     {

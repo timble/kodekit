@@ -53,7 +53,6 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      * Loads necessary Bootstrap files
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
     public function load($config = array())

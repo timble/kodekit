@@ -45,9 +45,8 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
     /**
      * Get the methods that are available for mixin based
      *
-     * This function conditionally mixes the behavior. Only if the mixer
-     * has a 'created_by' or 'created_on' property the behavior will be
-     * mixed in.
+     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
+     * the behavior will be mixed in.
      *
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
@@ -160,9 +159,8 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	/**
 	 * Checks if a row can be updated
 	 *
-	 * This function determines if a row can be updated based on it's locked_by information.
-	 * If a row is locked, and not by the logged in user, the function will return false,
-	 * otherwise it will return true
+	 * This function determines if a row can be updated based on it's locked_by information. If a row is locked, and
+     * not by the logged in user, the function will return false, otherwise it will return true
 	 *
      * @param  KCommandContext $context
 	 * @return boolean         True if row can be updated, false otherwise
@@ -175,9 +173,8 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	/**
 	 * Checks if a row can be deleted
 	 *
-	 * This function determines if a row can be deleted based on it's locked_by information.
-	 * If a row is locked, and not by the logged in user, the function will return false,
-	 * otherwise it will return true
+	 * This function determines if a row can be deleted based on it's locked_by information. If a row is locked, and
+     * not by the logged in user, the function will return false, otherwise it will return true
 	 *
      * @param  KCommandContext $context
      * @return boolean         True if row can be deleted, false otherwise

@@ -21,8 +21,7 @@
 class ComKoowaTemplateError extends ComKoowaTemplateAbstract
 {
     /**
-     * Returns an HTML string of debugging information about any number of
-     * variables, each wrapped in a "pre" tag:
+     * Returns an HTML string of debugging information about any number of variables, each wrapped in a "pre" tag:
      *
      *     // Displays the type and value of each variable
      *     echo Debug::vars($foo, $bar, $baz);
@@ -250,8 +249,7 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      */
     public function path($file)
     {
-        if (strpos($file, JPATH_ROOT) === 0)
-        {
+        if (strpos($file, JPATH_ROOT) === 0) {
             $file = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
         }
 
@@ -259,8 +257,7 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
     }
 
     /**
-     * Returns an HTML string, highlighting a specific line of a file, with some
-     * number of lines padded above and below.
+     * Returns an HTML string, highlighting a specific line of a file, with some number of lines padded above and below.
      *
      *     // Highlights the current line of the current file
      *     echo Debug::source(__FILE__, __LINE__);
@@ -273,9 +270,8 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      */
     public function source($file, $line_number, $padding = 5)
     {
-        if ( ! $file OR ! is_readable($file))
-        {
-            // Continuing will cause errors
+        // Continuing will cause errors
+        if ( ! $file OR ! is_readable($file)) {
             return FALSE;
         }
 
@@ -336,9 +332,8 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      */
     public function trace(array $trace = NULL)
     {
-        if ($trace === NULL)
-        {
-            // Start a new trace
+        // Start a new trace
+        if ($trace === NULL) {
             $trace = debug_backtrace();
         }
 

@@ -13,10 +13,11 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Translator
  */
-class KTranslator extends KObject
+class KTranslator extends KObject implements KTranslatorInterface
 {
     /**
      * Locale
+     *
      * @var string
      */
     protected $_locale;
@@ -53,13 +54,11 @@ class KTranslator extends KObject
     /**
      * Translates a string and handles parameter replacements
      *
-     * Parameters are wrapped in curly braces.
-     * So {foo} would be replaced with bar given that $parameters['foo'] = 'bar'
+     * Parameters are wrapped in curly braces. So {foo} would be replaced with bar given that $parameters['foo'] = 'bar'
      * 
      * @param string $string String to translate
      * @param array  $parameters An array of parameters
-     * 
-     * @return string Translated strign
+     * @return string Translated string
      */
     public function translate($string, array $parameters = array())
     {
@@ -75,7 +74,6 @@ class KTranslator extends KObject
      *
      * @param string $string String
      * @param array  $parameters An array of parameters
-     *
      * @return string String after replacing the parameters
      */
     public function replaceParameters($string, array $parameters = array())
@@ -90,7 +88,7 @@ class KTranslator extends KObject
     /**
      * Adds curly braces around keys to make strtr work in replaceParameters method
      *
-     * @param $key
+     * @param string $key
      * @return string
      */
     protected function _replaceKeys($key)
@@ -104,9 +102,7 @@ class KTranslator extends KObject
      * @param array   $strings Strings to choose from
      * @param integer $number The umber of items
      * @param array   $parameters An array of parameters
-     *
      * @throws InvalidArgumentException
-     *
      * @return string Translated string
      */
     public function choose(array $strings, $number, array $parameters = array())
@@ -138,13 +134,12 @@ class KTranslator extends KObject
     /**
      * Sets the locale
      *
-     * @param $locale
-     * @return $this
+     * @param string $locale
+     * @return KTranslator
      */
     public function setLocale($locale)
     {
         $this->_locale = $locale;
-        
         return $this;
     }
 

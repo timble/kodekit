@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEvent extends KConfig
+class KEvent extends KConfig implements KEventInterface
 {
  	/**
      * Priority levels

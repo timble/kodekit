@@ -18,7 +18,6 @@
  */
 class KTranslatorInflector extends KInflector
 {
-    // @codeCoverageIgnoreStart
     private static $position_rules = array();
 
     /**
@@ -213,6 +212,4 @@ class KTranslatorInflector extends KInflector
 
         self::$position_rules[$locale] = $rule;
     }
-
-    // @codeCoverageIgnoreEnd
 }

@@ -154,12 +154,11 @@ abstract class KViewTemplate extends KViewAbstract
     /**
     * Assigns variables to the view script via differing strategies.
     *
-    * This method is overloaded; you can assign all the properties of
-    * an object, an associative array, or a single value by name.
+    * This method is overloaded; you can assign all the properties of an object, an associative array, or a single value
+     * by name.
     *
-    * You are not allowed to set variables that begin with an underscore;
-    * these are either private properties for KView or private variables
-    * within the template script itself.
+    * You are not allowed to set variables that begin with an underscore; these are either private properties for KView
+     * or private variables within the template script itself.
     *
     * <code>
     * $view = new KViewDefault();
@@ -342,9 +341,8 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
-     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view
-     * by using the variable name as the method name. If the method name is a setter method the
-     * setter will be called instead.
+     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
+     * name as the method name. If the method name is a setter method the setter will be called instead.
      *
      * For example : $view->layout('foo')->title('name')->display().
      *

@@ -13,7 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerToolbarDefault extends KControllerToolbarAbstract
-{
-
-}
+class KControllerToolbarDefault extends KControllerToolbarAbstract {}

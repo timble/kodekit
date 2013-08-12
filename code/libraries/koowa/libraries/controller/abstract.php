@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerAbstract extends KObject
+abstract class KControllerAbstract extends KObject implements KControllerInterface
 {
     /**
      * Array of class methods to call for a given action.
@@ -48,9 +48,8 @@ abstract class KControllerAbstract extends KObject
 	/**
 	 * List of behaviors
 	 *
-	 * Associative array of behaviors, where key holds the behavior identifier string
-	 * and the value is an identifier object.
-	 *
+	 * Associative array of behaviors, where key holds the behavior identifier string and the value is an identifier object.
+     *
 	 * @var	array
 	 */
 	protected $_behaviors = array();
@@ -119,11 +118,8 @@ abstract class KControllerAbstract extends KObject
      *
      * @param   string          $action  The action to execute
      * @param   KCommandContext $context A command context object
-     * @return  mixed|bool      The value returned by the called method, false in error case.
-     *
-     * @throws  Exception
      * @throws  BadMethodCallException
-     *
+     * @return  mixed|bool      The value returned by the called method, false in error case.
      */
     public function execute($action, KCommandContext $context)
     {
@@ -354,8 +350,8 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Set a request properties
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {
@@ -365,7 +361,7 @@ abstract class KControllerAbstract extends KObject
   	/**
      * Get a request property
      *
-     * @param  	string 	The property name.
+     * @param  	string 	$property The property name.
      * @return 	string 	The property value.
      */
     public function __get($property)
@@ -381,15 +377,12 @@ abstract class KControllerAbstract extends KObject
     /**
      * Execute a controller action by it's name.
 	 *
-	 * Function is also capable of checking is a behavior has been mixed succesfully
-	 * using is[Behavior] function. If the behavior exists the function will return
-	 * TRUE, otherwise FALSE.
+	 * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+     * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string  $method Method name
      * @param  array   $args   Array containing all the arguments for the original call
-     *
      * @return mixed
-     *
      * @see execute()
      */
     public function __call($method, $args)

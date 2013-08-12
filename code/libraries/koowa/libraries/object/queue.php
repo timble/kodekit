@@ -53,9 +53,9 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Inserts an object to the queue.
      *
-     * @param   object      A KObject instance
-     * @param   integer     The associated priority
-     * @return  boolean		TRUE on success FALSE on failure
+     * @param   KObjectHandlable $object    A KObject instance
+     * @param   integer          $priority  The associated priority
+     * @return  boolean TRUE on success FALSE on failure
      */
     public function enqueue( KObjectHandlable $object, $priority)
     {
@@ -77,7 +77,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Removes an object from the queue
      *
-     * @param   object	A KObject instance
+     * @param   KObjectHandlable $object A KObject instance
      * @return  boolean	TRUE on success FALSE on failure
      */
     public function dequeue( KObjectHandlable $object)
@@ -101,8 +101,8 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Set the priority of an object in the queue
      *
-     * @param object    A KCommand object
-     * @param integer   The priority
+     * @param KObjectHandlable $object    A KCommand object
+     * @param integer          $priority  The priority
      * @return KCommandChain
      */
     public function setPriority(KObjectHandlable $object, $priority)
@@ -121,8 +121,8 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Get the priority of an object in the queue
      *
-     * @param   object  A KObject instance
-     * @return  integer|false The command priority or FALSE if the commnand isn't enqueued
+     * @param   KObjectHandlable $object A KObject instance
+     * @return  integer|false The command priority or FALSE if the command isn't enqueued
      */
     public function getPriority(KObjectHandlable $object)
     {
@@ -141,7 +141,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Check if the queue has an item with the given priority
      *
-     * @param  int 	The priority to search for
+     * @param  int 	$priority The priority to search for
      * @return boolean
      */
     public function hasPriority($priority)

@@ -14,7 +14,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaModelDefault extends KModelDefault
-{
-
-}
+class ComKoowaModelDefault extends KModelDefault {}

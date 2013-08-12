@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerToolbarAbstract extends KObject
+abstract class KControllerToolbarAbstract extends KObject implements KControllerToolbarInterface
 {
     /**
      * The toolbar title

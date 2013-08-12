@@ -60,11 +60,9 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      *
      * @param   string          $name       The command name
      * @param   KCommandContext $context    The command context
-     *
-     * @return  boolean
-     *
      * @throws  KControllerExceptionForbidden
      * @throws  KControllerExceptionNotImplemented
+     * @return  boolean
      */
     public function execute( $name, KCommandContext $context)
     {

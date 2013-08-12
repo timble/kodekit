@@ -18,9 +18,8 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Get the methods that are available for mixin based
      *
-     * This function conditionally mixes the behavior. Only if the mixer
-     * has a 'created_by' or 'created_on' property the behavior will be
-     * mixed in.
+     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
+     * the behavior will be mixed in.
      *
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
@@ -113,8 +112,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 /**
      * Resets the order of all rows
      *
-     * Resetting starts at $base to allow creating space in sequence for later
-     * record insertion.
+     * Resetting starts at $base to allow creating space in sequence for later record insertion.
      *
      * @param	integer 	$base Order at which to start resetting.
      * @return	KDatabaseBehaviorOrderable
@@ -167,8 +165,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
  	/**
      * Saves the row to the database.
      *
-     * This performs an intelligent insert/update and reloads the properties
-     * with fresh data from the table on success.
+     * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
      *
      * @param   KCommandContext $context
      * @return KDatabaseRowAbstract
@@ -186,8 +183,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     }
 
     /**
-     * Changes the rows ordering if the virtual order field is set. Order is
-     * relative to the row's current position.
+     * Changes the rows ordering if the virtual order field is set. Order is relative to the row's current position.
      *
      * @param   KCommandContext $context
      */

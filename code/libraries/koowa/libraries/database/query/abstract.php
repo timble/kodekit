@@ -111,7 +111,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      * Gets the database adapter
      *
      * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
-     * @return \KDatabaseAdapterInterface
+     * @return KDatabaseAdapterInterface
      */
     public function getAdapter()
     {
@@ -133,8 +133,8 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Set the database adapter
      *
-     * @param \KDatabaseAdapterInterface $adapter
-     * @return \KDatabaseQueryInterface
+     * @param KDatabaseAdapterInterface $adapter
+     * @return KDatabaseQueryInterface
      */
     public function setAdapter(KDatabaseAdapterInterface $adapter)
     {

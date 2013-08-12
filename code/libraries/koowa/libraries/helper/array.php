@@ -59,14 +59,14 @@ class KHelperArray
     /**
      * Merge two arrays recursively
      *
-     * Matching keys' values in the second array overwrite those in the first array, as is the
-     * case with array_merge, i.e.:
+     * Matching keys' values in the second array overwrite those in the first array, as is the case with array_merge,
+     * i.e.:
      *
      * KHelperArray::merge(array('key' => 'org value'), array('key' => 'new value'));
      *     => array('key' => array('new value'));
      *
-     * Parameters are passed by reference, though only for performance reasons. They're not
-     * altered by this function and the data types of the values in the arrays are unchanged.
+     * Parameters are passed by reference, though only for performance reasons. They're not altered by this function
+     * and the data types of the values in the arrays are unchanged.
      *
      * @param array $array1
      * @param array $array2

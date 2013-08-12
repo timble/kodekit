@@ -95,7 +95,7 @@ class KFilterHtml extends KFilterAbstract
     /**
      * Validate a value
      *
-     * @param   scalar  Value to be validated
+     * @param   scalar  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)
@@ -109,7 +109,7 @@ class KFilterHtml extends KFilterAbstract
     /**
      * Sanitize a value
      *
-     * @param   scalar  Input string/array-of-string to be 'cleaned'
+     * @param   scalar  $value Input string/array-of-string to be 'cleaned'
      * @return  mixed   'Cleaned' version of input parameter
      */
     protected function _sanitize($value)

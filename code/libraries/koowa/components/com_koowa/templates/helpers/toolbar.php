@@ -18,7 +18,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 	/**
      * Render the toolbar title
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function title($config = array())
@@ -49,9 +49,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         }
 
         $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
-
         $html .= '<h2>'.$title.'</h2>';
-
 		$html .= '</div>';
 
         return $html;
@@ -60,7 +58,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     /**
      * Render the toolbar
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function render($config = array())
@@ -105,7 +103,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     /**
      * Render a toolbar command
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function command($config = array())
@@ -162,7 +160,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 	/**
      * Render a separator
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function separator($config = array())
@@ -184,7 +182,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 	/**
      * Render a modal button
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function modal($config = array())

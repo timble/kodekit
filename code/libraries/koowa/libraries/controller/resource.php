@@ -99,13 +99,11 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Get the view object attached to the controller
 	 *
-	 * This function will check if the view folder exists. If not it will throw
-	 * an exception. This is a security measure to make sure we can only explicitly
-	 * get data from views the have been physically defined.
+	 * This function will check if the view folder exists. If not it will throw an exception. This is a security measure
+     * to make sure we can only explicitly get data from views the have been physically defined.
 	 *
 	 * @throws  KControllerExceptionNotFound if the view cannot be found.
 	 * @return	KViewAbstract
-	 *
 	 */
 	public function getView()
 	{
@@ -237,8 +235,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 * Set a URL for browser redirection.
 	 *
 	 * @param	string  $url URL to redirect to.
-	 * @param	string	$msg Message to display on redirect. Optional, defaults to
-	 * 			value set internally by controller, if any.
+	 * @param	string	$msg Message to display on redirect. Optional, defaults to value set internally by controller, if any.
 	 * @param	string	$type Message type. Optional, defaults to 'message'.
 	 * @return	KControllerAbstract
 	 */
@@ -254,7 +251,7 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Returns an array with the redirect url, the message and the message type
 	 *
-	 * @return array	Named array containing url, message and messageType, or null if no redirect was set
+	 * @return array Named array containing url, message and messageType, or null if no redirect was set
 	 */
 	public function getRedirect()
 	{
@@ -303,22 +300,20 @@ abstract class KControllerResource extends KControllerAbstract
   	}
 
 	/**
-	 * Supports a simple form Fluent Interfaces. Allows you to set the request
-	 * properties by using the request property name as the method name.
+	 * Supports a simple form Fluent Interfaces. Allows you to set the request properties by using the request property
+     * name as the method name.
 	 *
 	 * For example : $controller->view('name')->limit(10)->browse();
 	 *
 	 * @param	string	$method Method name
 	 * @param	array	$args   Array containing all the arguments for the original call
-     *
 	 * @return	mixed
-	 *
 	 * @see http://martinfowler.com/bliki/FluentInterface.html
 	 */
 	public function __call($method, $args)
 	{
 	    //Check first if we are calling a mixed in method.
-	    //This prevents the model being loaded durig object instantiation.
+	    //This prevents the model being loaded during object instantiation.
 		if(!isset($this->_mixed_methods[$method]))
         {
             //Check if the method is a state property

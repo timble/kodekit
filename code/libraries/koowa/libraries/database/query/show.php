@@ -47,7 +47,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      * Build the show clause 
      *
      * @param   string $table The name of the table.
-     * @return  \KDatabaseQueryShow
+     * @return  KDatabaseQueryShow
      */
     public function show($table) 
     {
@@ -71,7 +71,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      * Build the like clause 
      *
      * @param   string $pattern The pattern to match.
-     * @return  \KDatabaseQueryShow
+     * @return  KDatabaseQueryShow
      */
     public function like($pattern)
     {

@@ -18,8 +18,8 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 	/**
 	 * Load the model state from the request
 	 *
-	 * This functions merges the request information with any model state information
-	 * that was saved in the session and returns the result.
+	 * This functions merges the request information with any model state information that was saved in the session and
+     * returns the result.
 	 *
 	 * @param 	KCommandContext $context The active command context
 	 * @return 	void

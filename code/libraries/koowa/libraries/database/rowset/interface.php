@@ -18,7 +18,7 @@ interface KDatabaseRowsetInterface
 	/**
      * Returns all data as an array.
      *
-     * @param   boolean 	If TRUE, only return the modified data. Default FALSE
+     * @param   boolean $modified If TRUE, only return the modified data. Default FALSE
      * @return array
      */
     public function getData($modified = false);
@@ -26,9 +26,8 @@ interface KDatabaseRowsetInterface
 	/**
   	 * Set the rowset data based on a named array/hash
   	 *
-  	 * @param   mixed 	Either and associative array, a KDatabaseRow object or object
-  	 * @param   boolean If TRUE, update the modified information for each column being set.
-  	 * 					Default TRUE
+  	 * @param   mixed 	$data       Either and associative array, a KDatabaseRow object or object
+  	 * @param   boolean $modified   If TRUE, update the modified information for each column being set. Default TRUE
  	 * @return 	KDatabaseRowsetAbstract
   	 */
   	 public function setData( $data, $modified = true );
@@ -36,8 +35,8 @@ interface KDatabaseRowsetInterface
 	/**
      * Add rows to the rowset
      *
-     * @param  array    An associative array of row data to be inserted.
-     * @param  boolean  If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
+     * @param  array    $data   An associative array of row data to be inserted.
+     * @param  boolean  $new    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
      * @return void
      * @see __construct
      */
@@ -56,7 +55,7 @@ interface KDatabaseRowsetInterface
      * This functions accepts either a know position or associative
      * array of key/value pairs
      *
-     * @param 	string 	The position or the key to search for
+     * @param 	string 	$needle     The position or the key to search for
      * @param 	mixed  	The value to search for
      * @return KDatabaseRowAbstract
      */
@@ -86,10 +85,9 @@ interface KDatabaseRowsetInterface
 	/**
      * Insert a row in the rowset
      *
-     * The row will be stored by i'ts identity_column if set or otherwise by
-     * it's object handle.
+     * The row will be stored by i'ts identity_column if set or otherwise by it's object handle.
      *
-     * @param  object 	A KDatabaseRow object to be inserted
+     * @param  KDatabaseRowInterface 	$row A KDatabaseRow object to be inserted
      * @return KDatabaseRowsetAbstract
      */
     public function insert(KObjectHandlable $row);
@@ -100,7 +98,7 @@ interface KDatabaseRowsetInterface
      * The row will be removed based on it's identity_column if set or otherwise by
      * it's object handle.
      *
-     * @param  object 	A KDatabaseRow object to be removed
+     * @param  KDatabaseRowInterface $row 	A KDatabaseRow object to be removed
      * @return KDatabaseRowsetAbstract
      */
     public function extract(KObjectHandlable $row);

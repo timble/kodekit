@@ -20,7 +20,7 @@ class KTemplateFilterVariable extends KTemplateFilterAbstract implements KTempla
 	/**
 	 * Convert '@' to '$this->', unless when they are escaped '\@'
 	 *
-	 * @param string
+	 * @param string $text
 	 * @return KTemplateFilterVariable
 	 */
 	public function read(&$text)

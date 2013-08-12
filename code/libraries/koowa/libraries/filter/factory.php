@@ -18,8 +18,8 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
+     * @param   KConfigInterface  $config     Configuration options
+     * @param 	KServiceInterface $container  A KServiceInterface object
      * @return KFilterFactory
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
@@ -39,8 +39,8 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	/**
 	 * Factory method for KFilterInterface classes.
 	 *
-	 * @param	string 	Filter indentifier
-	 * @param   KConfig $config Configuration options
+	 * @param string $identifier Filter indentifier
+	 * @param array  $config Configuration options
 	 * @return KFilterAbstract
 	 */
 	public function instantiate($identifier, $config = array())
@@ -65,7 +65,8 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	 * If the filter is not an identifier this function will create it directly
 	 * instead of going through the KService identification process.
 	 *
-	 * @param 	string	Filter identifier
+	 * @param  string$filter Filter identifier
+     * @param  array   $config Configuration options
      * @throws	\InvalidArgumentException	When the filter could not be found
      * @throws	\UnexpectedValueException	When the filter does not implement FilterInterface
 	 * @return  KFilterInterface

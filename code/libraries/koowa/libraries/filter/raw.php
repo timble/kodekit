@@ -20,7 +20,7 @@ class KFilterRaw extends KFilterAbstract
     /**
      * Validate a value
      *
-     * @param   scalar  Variable to be validated
+     * @param   scalar  $value Variable to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)
@@ -31,7 +31,7 @@ class KFilterRaw extends KFilterAbstract
     /**
      * Sanitize a value
      *
-     * @param   scalar  Variable to be sanitized
+     * @param   scalar  $value Variable to be sanitized
      * @return  mixed
      */
     protected function _sanitize($value)

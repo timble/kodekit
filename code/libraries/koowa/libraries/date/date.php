@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Date
  */
-class KDate extends DateTime
+class KDate extends DateTime implements KDateInterface
 {
     /**
      * Constructor.
@@ -49,5 +49,18 @@ class KDate extends DateTime
             'date'       => 'now',
             'timezone'   => 'UTC'
         ));
+    }
+
+    /**
+     * Get a handle for this object
+     *
+     * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
+     * or for identifying an object
+     *
+     * @return string A string that is unique
+     */
+    public function getHandle()
+    {
+        return spl_object_hash($this);
     }
 }

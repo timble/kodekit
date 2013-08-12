@@ -43,9 +43,8 @@ class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
     /**
      * Make sure the slug is unique
      *
-     * This function checks if the slug already exists and if so appends
-     * a number to the slug to make it unique. The slug will get the form
-     * of slug-x.
+     * This function checks if the slug already exists and if so appends a number to the slug to make it unique. The
+     * slug will get the form of slug-x.
      *
      * If the slug is empty it returns the current date in the format Y-m-d-H-i-s
      *

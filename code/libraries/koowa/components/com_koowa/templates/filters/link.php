@@ -19,8 +19,8 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
     /**
      * Render script information
      *
-     * @param string    The script information
-     * @param array     Associative array of attributes
+     * @param string    $link    The script information
+     * @param array     $attribs Associative array of attributes
      * @return string
      */
     protected function _renderScript($link, $attribs = array())
@@ -33,7 +33,6 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
         $relValue = $attribs['rel'];
         unset($attribs['rel']);
 
-        JFactory::getDocument()
-            ->addHeadLink($link, $relValue, $relType, $attribs);
+        JFactory::getDocument()->addHeadLink($link, $relValue, $relType, $attribs);
     }
 }

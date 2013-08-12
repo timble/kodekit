@@ -192,6 +192,12 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         return $html;
     }
 
+    /**
+     * Render an order field
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
     public function order($config = array())
     {
         $config = new KConfig($config);
@@ -233,6 +239,12 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         return $html;
     }
 
+    /**
+     * Render an access field
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
     public function access($config = array())
     {
         $config = new KConfig($config);

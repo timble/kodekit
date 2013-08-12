@@ -68,7 +68,7 @@ class ComKoowaControllerDefault extends KControllerService
      *
      * If the controller was not dispatched manually load the langauges files
      *
-     * @param   KCommandContext A command context object
+     * @param   KCommandContext $context A command context object
      * @return  KDatabaseRow(set)   A row(set) object containing the data to display
      */
     protected function _actionGet(KCommandContext $context)
@@ -81,10 +81,9 @@ class ComKoowaControllerDefault extends KControllerService
 	/**
      * Browse action
      *
-     * Use the application default limit if no limit exists in the model and limit the
-     * limit to a maximum.
+     * Use the application default limit if no limit exists in the model and limit the limit to a maximum.
      *
-     * @param   KCommandContext A command context object
+     * @param   KCommandContext $context A command context object
      * @return  KDatabaseRow(set)   A row(set) object containing the data to display
      */
     protected function _actionBrowse(KCommandContext $context)
@@ -112,10 +111,10 @@ class ComKoowaControllerDefault extends KControllerService
     /**
      * Read action
      *
-     * This functions implements an extra check to hide the main menu is the view name
-     * is singular (item views)
+     * This functions implements an extra check to hide the main menu is the view name is singular (item views)
      *
-     *  @return KDatabaseRow    A row object containing the selected row
+     * @param  KCommandContext $context A command context object
+     * @return KDatabaseRow A row object containing the selected row
      */
     protected function _actionRead(KCommandContext $context)
     {
@@ -138,8 +137,8 @@ class ComKoowaControllerDefault extends KControllerService
      *
      *  This function translates 'limitstart' to 'offset' for compatibility with Joomla
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {

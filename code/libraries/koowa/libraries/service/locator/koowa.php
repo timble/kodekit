@@ -24,7 +24,7 @@ class KServiceLocatorKoowa extends KServiceLocatorAbstract
 	/**
 	 * Get the classname based on an identifier
 	 *
-	 * @param 	mixed  		 An identifier object - koowa:[path].name
+	 * @param 	KServiceIdentifier $identifier An identifier object - koowa:[path].name
 	 * @return string|false  Return object on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier)
@@ -47,7 +47,7 @@ class KServiceLocatorKoowa extends KServiceLocatorAbstract
 	/**
 	 * Get the path based on an identifier
 	 *
-	 * @param  object  	An identifier object - koowa:[path].name
+	 * @param  KServiceIdentifier $identifier An identifier object - koowa:[path].name
 	 * @return string	Returns the path
 	 */
 	public function findPath(KServiceIdentifier $identifier)

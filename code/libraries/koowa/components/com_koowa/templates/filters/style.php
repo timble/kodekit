@@ -19,9 +19,9 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
     /**
      * Render style information
      *
-     * @param string    The style information
-     * @param boolean   True, if the style information is a URL
-     * @param array     Associative array of attributes
+     * @param string    $style  The style information
+     * @param boolean   $link   True, if the style information is a URL
+     * @param array     $attribs Associative array of attributes
      * @return string
      */
     protected function _renderStyle($style, $link, $attribs = array())

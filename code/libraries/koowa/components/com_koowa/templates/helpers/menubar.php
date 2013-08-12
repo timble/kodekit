@@ -36,7 +36,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
  	/**
      * Render the menubar
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function render($config = array())
@@ -77,7 +77,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
     /**
      * Render a menubar command
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function command($config = array())

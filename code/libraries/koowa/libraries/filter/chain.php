@@ -20,8 +20,8 @@ class KFilterChain extends KCommandChain
     /**
      * Run the commands in the chain
      *
-     * @param string  The filter name
-     * @param array   The data to be filtered
+     * @param string          $name     The filter name
+     * @param KCommandContext $context  The data to be filtered
      * @return  mixed
      */
     final public function run( $name, KCommandContext $context )
@@ -34,8 +34,8 @@ class KFilterChain extends KCommandChain
     /**
      * Validate the data
      *
-     * @param   scalar  Value to be validated
-     * @return  bool    True when the data is valid
+     * @param   KCommandContext $context  Value to be validated
+     * @return  bool True when the data is valid
      */
     final protected function _validate( KCommandContext $context )
     {
@@ -52,7 +52,7 @@ class KFilterChain extends KCommandChain
     /**
      * Sanitize the data
      *
-     * @param   scalar  Valuae to be sanitized
+     * @param   KCommandContext $context  Value to be sanitized
      * @return  mixed
      */
     final protected function _sanitize( KCommandContext $context )

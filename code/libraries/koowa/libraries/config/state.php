@@ -113,8 +113,8 @@ class KConfigState extends KConfig
      /**
      * Set the state data
      *
-     * This function will only filter values if we have a value. If the value
-     * is an empty string it will be filtered to NULL.
+     * This function will only filter values if we have a value. If the value is an empty string it will be filtered
+      * to NULL.
      *
      * @param   array|object    An associative array of state values by name
      * @return  KConfigState

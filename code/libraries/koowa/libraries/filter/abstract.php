@@ -23,8 +23,8 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	protected $_chain = null;
 
 	/**
-	 * If the data to be santized or validated if an object or array,
-	 * walk over each individual property or element. Default TRUE.
+	 * If the data to be santized or validated if an object or array, walk over each individual property or element.
+     * Default TRUE.
 	 *
 	 * @var	boolean
 	 */
@@ -33,7 +33,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Constructor
 	 *
-	 * @param 	object	An optional KConfig object with configuration options
+	 * @param 	KConfig $config	An optional KConfig object with configuration options
 	 */
 	public function __construct(KConfig $config)
 	{
@@ -46,8 +46,8 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
     /**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
+     * @param   KConfigInterface  $config    Configuration options
+     * @param 	KServiceInterface $container A KServiceInterface object
      * @return KFilterInterface
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
@@ -67,8 +67,8 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Command handler
 	 *
-	 * @param string  The command name
-	 * @param object  The command context
+	 * @param string          $name The command name
+	 * @param KCommandContext $context  The command context
 	 *
 	 * @return object
 	 */
@@ -81,8 +81,8 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Validate a variable or data collection
 	 *
-	 * @param	mixed	Data to be validated
-	 * @return	bool	True when the data is valid
+	 * @param	mixed $data Data to be validated
+	 * @return	bool  True when the data is valid
 	 */
 	final public function validate($data)
 	{
@@ -115,7 +115,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Sanitize a variable or data collection
 	 *
-	 * @param	mixed	Data to be sanitized
+	 * @param	mixed	$data Data to be sanitized
 	 * @return	mixed	The sanitized data
 	 */
 	public final function sanitize($data)
@@ -149,11 +149,10 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Add a filter based on priority
 	 *
-	 * @param object 	A KFilter
-	 * @param integer	The command priority, usually between 1 (high priority) and 5 (lowest),
-     *                  default is 3. If no priority is set, the command priority will be used
-     *                  instead.
-	 *
+	 * @param KFilterInterface $filter	A KFilter
+	 * @param integer $priority The command priority, usually between 1 (high priority) and 5 (lowest),
+     *                          default is 3. If no priority is set, the command priority will be used
+     *                          instead.
 	 * @return KFilterAbstract
 	 */
 	public function addFilter(KFilterInterface $filter, $priority = null)
@@ -165,8 +164,8 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Get a handle for this object
 	 *
-	 * This function returns an unique identifier for the object. This id can be used as
-	 * a hash key for storing objects or for identifying an object
+	 * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
+     * or for identifying an object
 	 *
 	 * @return string A string that is unique
 	 */
@@ -190,7 +189,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	 *
 	 * Variable passed to this function will always be a scalar
 	 *
-	 * @param	scalar	Value to be validated
+	 * @param	scalar	$value Value to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	abstract protected function _validate($value);
@@ -200,7 +199,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	 *
 	 * Variable passed to this function will always be a scalar
 	 *
-	 * @param	scalar	Value to be sanitized
+	 * @param	scalar	$value Value to be sanitized
 	 * @return	mixed
 	 */
 	abstract protected function _sanitize($value);

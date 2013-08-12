@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
-abstract class KViewAbstract extends KObject
+abstract class KViewAbstract extends KObject implements KViewInterface
 {
     /**
      * Translator object
@@ -152,7 +152,7 @@ abstract class KViewAbstract extends KObject
 	 * Method to set a model object attached to the view
 	 *
 	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
-	 * 					or valid identifier string
+	 * 					       or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewAbstract
 	 */
@@ -324,7 +324,6 @@ abstract class KViewAbstract extends KObject
 			}
 
 			$result = 'index.php?'.implode('&', $result);
-
 		}
 
 		return JRoute::_($result);

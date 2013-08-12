@@ -26,7 +26,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
+	 * Prevent creating instances of this class by making the constructor private
 	 *
 	 * @param   KConfig $config Configuration options
 	 */
@@ -42,9 +42,9 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
-     * @return KDatabaseTableInterface
+     * @param  KConfigInterface  $config     Configuration options
+     * @param  KServiceInterface $container  A KServiceInterface object
+     * @return KDatabaseAdapterInterface
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
     {
@@ -84,10 +84,10 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
 	 * Retrieves the table schema information about the given table
 	 *
-	 * This function try to get the table schema from the cache. If it cannot be found
-	 * the table schema will be retrieved from the database and stored in the cache.
+	 * This function try to get the table schema from the cache. If it cannot be found the table schema will be
+     * retrieved from the database and stored in the cache.
 	 *
-	 * @param 	string 	A table name or a list of table names
+	 * @param 	string 	$table A table name or a list of table names
 	 * @return	KDatabaseSchemaTable
 	 */
 	public function getTableSchema($table)

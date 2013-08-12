@@ -10,11 +10,9 @@
 /**
  * Http Url
  *
- * This class helps you to create and manipulate urls, including query
- * strings and path elements. It does so by splitting up the pieces of the
- * url and allowing you modify them individually; you can then then fetch
- * them as a single url string. This helps when building complex links,
- * such as in a paged navigation system.
+ * This class helps you to create and manipulate urls, including query strings and path elements. It does so by splitting
+ * up the pieces of the url and allowing you modify them individually; you can then then fetch them as a single url
+ * string.
  *
  * The following is a simple example. Say that the page address is currently
  * `http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor`.
@@ -84,7 +82,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Http
  */
-class KHttpUrl extends KObject
+class KHttpUrl extends KObject implements KHttpUrlInterafce
 {
     /**
      * The url parts

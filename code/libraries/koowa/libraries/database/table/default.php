@@ -18,8 +18,8 @@ class KDatabaseTableDefault extends KDatabaseTableAbstract implements KServiceIn
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
+     * @param   KConfigInterface    $config    Configuration options
+     * @param 	KServiceInterface	$container A KServiceInterface object
      * @return KDatabaseTableDefault
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)

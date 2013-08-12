@@ -37,10 +37,9 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
     /**
      * Replace template alias with loadFile functions.
      *
-     * This function only replaces relative identifiers to a full path
-     * based on the path of the template.
+     * This function only replaces relative identifiers to a full path based on the path of the template.
      *
-     * @param string
+     * @param string $text
      * @return KTemplateFilterAlias
      */
     public function read(&$text)

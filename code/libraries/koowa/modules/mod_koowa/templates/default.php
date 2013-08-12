@@ -13,7 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Module\Koowa
  */
-class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
-{
-
-}
+class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract {}

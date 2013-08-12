@@ -18,8 +18,8 @@ class KFilterTrim extends KFilterAbstract
 	/**
      * List of characters provided to the trim() function
      *
-     * If this is null, then trim() is called with no specific character list,
-     * and its default behavior will be invoked, trimming whitespace.
+     * If this is null, then trim() is called with no specific character list, and its default behavior will be invoked,
+     * trimming whitespace.
      *
      * @var string|null
      */
@@ -54,7 +54,7 @@ class KFilterTrim extends KFilterAbstract
      * Sets the charList option
      *
      * @param  string|null $charList
-     * @return this
+     * @return KFilterTrim
      */
     public function setCharList($charList)
     {
@@ -65,7 +65,7 @@ class KFilterTrim extends KFilterAbstract
     /**
      * Validate a value
      *
-     * @param   scalar  Value to be validated
+     * @param   scalar  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)
@@ -78,7 +78,7 @@ class KFilterTrim extends KFilterAbstract
      *
      * Returns the variable with characters stripped from the beginning and end
      *
-     * @param   mixed   Value to be sanitized
+     * @param   mixed   $value Value to be sanitized
      * @return  string
      */
     protected function _sanitize($value)

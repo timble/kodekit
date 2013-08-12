@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandChain extends KObjectQueue
+class KCommandChain extends KObjectQueue implements KCommandChainInterface
 {
     /**
      * Enabled status of the chain

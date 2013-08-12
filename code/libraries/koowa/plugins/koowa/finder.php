@@ -49,8 +49,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     protected $category_model;
 
     /**
-     * Array of instructions. These are used to tell the indexer to include certain properties
-     * and how important they are
+     * Array of instructions. These are used to tell the indexer to include certain properties their importance
      * @var array
      */
     protected $instructions = array();
@@ -60,8 +59,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      *
      * @param   object  &$subject  The object to observe
      * @param   array   $config    An array that holds the plugin configuration
-     *
-     * @since   2.5
      */
     public function __construct(&$subject, $config)
     {
@@ -116,11 +113,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      *
      * @param   string  $context  The context of the action being performed.
      * @param   JTable  $table    A JTable object containing the record to be deleted
-     *
-     * @return  boolean  True on success.
-     *
-     * @since   2.5
      * @throws  Exception on database error.
+     * @return  boolean  True on success.
      */
     public function onFinderAfterDelete($context, $table)
     {
@@ -144,11 +138,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * @param   string   $context  The context of the content passed to the plugin.
      * @param   JTable   $row      A JTable object
      * @param   boolean  $isNew    If the content has just been created
-     *
-     * @return  boolean  True on success.
-     *
-     * @since   2.5
      * @throws  Exception on database error.
+     * @return  boolean  True on success.
      */
     public function onFinderAfterSave($context, $row, $isNew)
     {
@@ -170,17 +161,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
     /**
-     * Method to update the link information for items that have been changed
-     * from outside the edit screen. This is fired when the item is published,
-     * unpublished, archived, or unarchived from the list view.
+     * Method to update the link information for items that have been changed from outside the edit screen. This is
+     * fired when the item is published, unpublished, archived, or unarchived from the list view.
      *
      * @param   string   $context  The context for the content passed to the plugin.
      * @param   array    $pks      A list of primary key ids of the content that has changed state.
      * @param   integer  $value    The value of the state that the content has been changed to.
-     *
      * @return  void
-     *
-     * @since   2.5
      */
     public function onFinderChangeState($context, $pks, $value)
     {
@@ -193,17 +180,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
     /**
-     * Method to update the item link information when the item category is
-     * changed. This is fired when the item category is published or unpublished
-     * from the list view.
+     * Method to update the item link information when the item category is changed. This is fired when the item
+     * category is published or unpublished from the list view.
      *
      * @param   string   $extension  The extension whose category has been updated.
      * @param   array    $pks        A list of primary key ids of the content that has changed state.
      * @param   integer  $value      The value of the state that the content has been changed to.
-     *
      * @return  void
-     *
-     * @since   2.5
      */
     public function onFinderCategoryChangeState($extension, $pks, $value)
     {
@@ -214,6 +197,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 
     /**
      * Main index function run when indexing happens
+     *
      * @param FinderIndexerResult $item
      * @return bool|void
      */
@@ -249,8 +233,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * Method to setup the indexer to be run.
      *
      * @return  boolean  True on success.
-     *
-     * @since   2.5
      */
     protected function setup()
     {
@@ -282,10 +264,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * Method to update index data on category access level changes
      *
      * @param   JTable  $category  A JTable object
-     *
      * @return  void
-     *
-     * @since   2.5
      */
     protected function categoryAccessChange($category)
     {
@@ -310,10 +289,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      *
      * @param   array    $pks    A list of primary key ids of the content that has changed state.
      * @param   integer  $value  The value of the state that the content has been changed to.
-     *
      * @return  void
-     *
-     * @since   2.5
      */
     protected function categoryStateChange($pks, $value)
     {
@@ -341,10 +317,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     /**
      * Method to get the number of content items available to index.
      *
-     * @return  integer  The number of content items available to index.
-     *
-     * @since   2.5
      * @throws  Exception on database error.
+     * @return  integer  The number of content items available to index.
      */
     protected function getContentCount()
     {
@@ -355,10 +329,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * Method to get a content item to index.
      *
      * @param   integer  $id  The id of the content item.
-     *
      * @return  FinderIndexerResult  A FinderIndexerResult object.
-     *
-     * @since   2.5
      */
     protected function getItem($id)
     {
@@ -373,11 +344,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * @param   integer         $offset  The list offset.
      * @param   integer         $limit   The list limit.
      * @param   JDatabaseQuery  $query   A JDatabaseQuery object. [optional]
-     *
-     * @return  array  An array of FinderIndexerResult objects.
-     *
-     * @since   2.5
      * @throws  Exception on database error.
+     * @return  array  An array of FinderIndexerResult objects.
      */
     protected function getItems($offset, $limit, $query = null)
     {
@@ -435,7 +403,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 
     /**
      * Turns a standard KDatabaseRow into a finder item
-     * @param $row
+     *
+     * @param KDatabaseRowInterface $row
      * @return object
      */
     protected function getFinderItem(KDatabaseRowInterface $row)
@@ -475,7 +444,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
 
-    protected function getLink(KDatabaseRowInterface $row) {
+    protected function getLink(KDatabaseRowInterface $row)
+    {
         return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->resource, $row->slug);
     }
 }

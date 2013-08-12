@@ -136,8 +136,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Return the cached data after read
 	 *
-	 * Only if cached data was found return it but allow the chain to continue to allow
-	 * processing all the read commands
+	 * Only if cached data was found return it but allow the chain to continue to allow processing all the read commands
 	 *
      * @param   KCommandContext	$context A command context object
 	 * @return 	void
@@ -152,8 +151,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Return the cached data before browse
 	 *
-	 * Only if cached data was fetch return it and break the chain to disallow any
-	 * further processing to take place
+	 * Only if cached data was fetch return it and break the chain to disallow any further processing to take place
 	 *
      * @param   KCommandContext	$context A command context object
 	 * @return 	void

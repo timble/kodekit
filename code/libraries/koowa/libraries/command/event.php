@@ -10,8 +10,8 @@
 /**
  * Event Command
  *
- * The event commend will translate the command name to a onCommandName format
- * and let the event dispatcher dispatch to any registered event handlers.
+ * The event commend will translate the command name to a onCommandName format and let the event dispatcher dispatch to
+ * any registered event handlers.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
@@ -62,11 +62,11 @@ class KCommandEvent extends KCommand
      *
      * @param   string          $name     The command name
      * @param   KCommandContext $context  The command context
-     * @return  boolean         Always returns true
+     * @return  boolean Always returns TRUE
      */
     public function execute($name, KCommandContext $context)
     {
-        $type = '';
+        $type    = '';
         $package = '';
         $subject = '';
 
@@ -80,16 +80,14 @@ class KCommandEvent extends KCommand
                 $type = array_shift($identifier->path);
                 $subject = $identifier->name;
             }
-            else {
-                $type = $identifier->name;
-            }
+            else $type = $identifier->name;
         }
 
         $parts  = explode('.', $name);
-        $when   = array_shift($parts); // before or after
+        $when   = array_shift($parts);         // Before or After
         $name   = KInflector::implode($parts); // Read Dispatch Select etc.
 
-        // Compile specific & generic event names
+        // Create Specific and Generic event names
         $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;
         $event_generic  = 'on'.ucfirst($when).ucfirst($type).$name;
 

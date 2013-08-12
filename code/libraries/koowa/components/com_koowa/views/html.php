@@ -47,7 +47,6 @@ class ComKoowaViewHtml extends KViewDefault
             ));
         }
 
-
         parent::_initialize($config);
     }
 }

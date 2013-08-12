@@ -13,7 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
-class KViewDefault extends KViewHtml
-{
-	
-}
+class KViewDefault extends KViewHtml {}

@@ -34,7 +34,7 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
 	 *                     -> Framework Specific
 	 *                     -> Framework Default
 	 *
-	 * @param mixed  		 An identifier object - com:[//application/]component.view.[.path].name
+	 * @param KServiceIdentifier $identifier An identifier object - com:[//application/]component.view.[.path].name
 	 * @return string|false  Return object on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier)
@@ -84,15 +84,9 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
 	/**
 	 * Get the path based on an identifier
 	 *
-	 * @param  object  	An identifier object - com:[//application/]component.view.[.path].name
+	 * @param  KServiceIdentifier $identifier  An identifier object - com:[//application/]component.view.[.path].name
 	 * @return string	Returns the path
 	 */
-    /**
-     * Get the path
-     *
-     * @param  object      An identifier object - com:[//application/]component.[path].name
-     * @return string    Returns the path
-     */
     public function findPath(KServiceIdentifier $identifier)
     {
         $path  = '';

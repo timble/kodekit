@@ -18,8 +18,8 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	/**
 	 * Get the methods that are available for mixin based
 	 *
-	 * This function conditionally mixes of the behavior. Only if the mixer
-	 * has a 'uuid' property the behavior will be mixed in.
+	 * This function conditionally mixes of the behavior. Only if the mixer has a 'uuid' property the behavior will be
+     * mixed in.
 	 *
 	 * @param KObject $mixer The mixer requesting the mixable methods.
 	 * @return array An array of methods
@@ -38,8 +38,8 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	/**
 	 * Set uuid information
 	 *
-	 * Requires an 'uuid' column, if the column type is char the uuid will be
-	 * a string, if the column type is binary a hex value will be returned.
+	 * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
+     * hex value will be returned.
 	 *
      * @param KCommandContext $context
 	 * @return void

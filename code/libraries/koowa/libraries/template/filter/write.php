@@ -20,7 +20,7 @@ interface KTemplateFilterWrite
     /**
      * Parse the text and filter it
      *
-     * @param string Block of text to parse
+     * @param string $text Block of text to parse
      * @return KTemplateFilterWrite
      */
     public function write(&$text);

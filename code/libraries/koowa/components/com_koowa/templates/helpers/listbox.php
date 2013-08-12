@@ -112,8 +112,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     /**
      * Generates an HTML optionlist based on the distinct data from a model column.
      *
-     * The column used will be defined by the name -> value => column options in
-     * cascading order.
+     * The column used will be defined by the name -> value => column options in cascading order.
      *
      * If no 'model' name is specified the model identifier will be created using
      * the helper identifier. The model name will be the pluralised package name.
@@ -241,12 +240,10 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     /**
      * Search the mixin method map and call the method or trigger an error
      *
-     * This function check to see if the method exists in the mixing map if not
-     * it will call the 'listbox' function. The method name will become the 'name'
-     * in the config array.
+     * This function check to see if the method exists in the mixing map if not it will call the 'listbox' function.
+     * The method name will become the 'name' in the config array.
      *
-     * This can be used to auto-magically create select filters based on the
-     * function name.
+     * This can be used to auto-magically create select filters based on the function name.
      *
      * @param  string   $method The function name
      * @param  array    $arguments The function arguments

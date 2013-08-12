@@ -21,8 +21,8 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 	/**
      * The module title
      *
-     * If set this will be passed to the module chrome rendered. If the renderer support
-     * rendering of a title it will be displayed.
+     * If set this will be passed to the module chrome rendered. If the renderer support rendering of a title it
+     * will be displayed.
      *
      * @var string
      */
@@ -92,7 +92,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
     /**
 	 * Apply module chrome to the template output
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterChrome
 	 */
     public function write(&$text)

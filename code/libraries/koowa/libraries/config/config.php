@@ -66,8 +66,7 @@ class KConfig implements KConfigInterface
 	/**
      * Return the data
      *
-     * If the data being passed is an instance of KConfig the data will be transformed
-     * to an associative array.
+     * If the data being passed is an instance of KConfig the data will be transformed to an associative array.
      *
      * @param mixed|KConfig $data
      * @return mixed|array

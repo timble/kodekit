@@ -13,7 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateHelperDefault extends KTemplateHelperAbstract
-{
-
-}
+class KTemplateHelperDefault extends KTemplateHelperAbstract { }

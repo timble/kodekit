@@ -18,7 +18,7 @@ class KFilterAlpha extends KFilterAbstract
 	/**
 	 * Validate a variable
 	 *
-	 * @param	scalar	Value to be validated
+	 * @param	scalar	$value Value to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	protected function _validate($value)
@@ -31,7 +31,7 @@ class KFilterAlpha extends KFilterAbstract
 	/**
 	 * Sanitize a variable
 	 *
-	 * @param	scalar	Value to be sanitized
+	 * @param	scalar	$value Value to be sanitized
 	 * @return	string
 	 */
 	protected function _sanitize($value)

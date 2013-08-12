@@ -21,8 +21,8 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
      *
      * @param   string          $name    The command name
      * @param   KCommandContext	$context A command context object
-     * @return  boolean     Can return both true or false.
      * @throws  KControllerExceptionForbidden
+     * @return  boolean  Can return both true or false.
      */
     public function execute( $name, KCommandContext $context)
     {
@@ -46,7 +46,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     /**
      * Generic authorize handler for controller add actions
      *
-     * @return  boolean     Can return both true or false.
+     * @return  boolean  Can return both true or false.
      */
     public function canAdd()
     {
@@ -62,7 +62,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     /**
      * Generic authorize handler for controller edit actions
      *
-     * @return  boolean     Can return both true or false.
+     * @return  boolean  Can return both true or false.
      */
     public function canEdit()
     {
@@ -78,7 +78,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     /**
      * Generic authorize handler for controller delete actions
      *
-     * @return  boolean     Can return both true or false.
+     * @return  boolean  Can return both true or false.
      */
     public function canDelete()
     {

@@ -175,11 +175,11 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Get action
 	 *
-	 * This function translates a GET request into a read or browse action. If the view name is
-	 * singular a read action will be executed, if plural a browse action will be executed.
+	 * This function translates a GET request into a read or browse action. If the view name is singular a read action
+     * will be executed, if plural a browse action will be executed.
 	 *
-	 * If the result of the read or browse action is not a row or rowset object the function will
-	 * pass through the result, request the attached view to render itself.
+	 * If the result of the read or browse action is not a row or rowset object the function will pass through the
+     * result, request the attached view to render itself.
 	 *
 	 * @param	KCommandContext	$context A command context object
 	 * @return 	string|bool 	The rendered output of the view or FALSE if something went wrong
@@ -203,9 +203,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Post action
 	 *
-	 * This function translated a POST request action into an edit or add action. If the model
-	 * state is unique a edit action will be executed, if not unique an add action will
-	 * be executed.
+	 * This function translated a POST request action into an edit or add action. If the model state is unique a edit
+     * action will be executed, if not unique an add action will be executed.
 	 *
 	 * @param	KCommandContext	 $context	A command context object
 	 * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
@@ -219,17 +218,15 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Put action
 	 *
-	 * This function translates a PUT request into an edit or add action. Only if the model
-	 * state is unique and the item exists an edit action will be executed, if the resources
-	 * doesn't exist and the state is unique an add action will be executed.
+	 * This function translates a PUT request into an edit or add action. Only if the model state is unique and the
+     * item exists an edit action will be executed, if the resources doesn't exist and the state is unique an add
+     * action will be executed.
 	 *
-	 * If the resource already exists it will be completely replaced based on the data
-	 * available in the request.
+	 * If the resource already exists it will be completely replaced based on the data available in the request.
 	 *
-     * @param	KCommandContext	 $context	A command context object
-     * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
-     *
-	 * @throws  KControllerExceptionNotFound 	If the model state is not unique
+     * @param	KCommandContext	 $context A command context object
+     * @throws  KControllerExceptionNotFound If the model state is not unique
+     * @return 	KDatabaseRowsetInterface     A row(set) object containing the modified data
 	 */
 	protected function _actionPut(KCommandContext $context)
 	{

@@ -13,7 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherDefault extends KDispatcherAbstract
-{
-
-}
+class KDispatcherDefault extends KDispatcherAbstract {}

@@ -21,8 +21,8 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
      *
      * Disable the menubar only for singular views that are editable.
      *
-     * @param   string	The command name
-     * @param	mixed	Parameters to be passed to the command
+     * @param   string	$name   The command name
+     * @param	mixed	$config Parameters to be passed to the command
      * @return  KControllerToolbarInterface
      */
     public function addCommand($name, $config = array())

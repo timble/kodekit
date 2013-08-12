@@ -19,7 +19,7 @@ class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
     /**
      * Generates an HTML editor
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function display($config = array())

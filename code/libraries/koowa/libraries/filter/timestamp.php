@@ -27,8 +27,8 @@ class KFilterTimestamp extends KFilterAbstract
      *
      * Also checks that the date itself is valid (for example, no Feb 30).
      *
-     * @param mixed The value to validate.
-     * @return  bool    True when the variable is valid
+     * @param mixed $value The value to validate.
+     * @return  bool  True when the variable is valid
      */
     protected function _validate($value)
     {
@@ -64,13 +64,13 @@ class KFilterTimestamp extends KFilterAbstract
     }
 
     /**
-     * Forces the value to an ISO-8601 formatted timestamp using a space separator
-     * ("yyyy-mm-dd hh:ii:ss") instead of a "T" separator.
+     * Forces the value to an ISO-8601 formatted timestamp using a space separator ("yyyy-mm-dd hh:ii:ss") instead of
+     * a "T" separator.
      *
-     * @param mixed The value to be sanitized.  If an integer, it is used as a Unix timestamp;
-     *              otherwise, converted to a Unix timestamp using [[php::strtotime() | ]].
-     *              If an array, and it has *all* the keys for `Y, m, d, h, i, s`, then the
-     *              array is converted into an ISO 8601 string before sanitizing.
+     * @param mixed $value The value to be sanitized.  If an integer, it is used as a Unix timestamp;
+     *                     otherwise, converted to a Unix timestamp using [[php::strtotime() | ]].
+     *                     If an array, and it has *all* the keys for `Y, m, d, h, i, s`, then the
+     *                     array is converted into an ISO 8601 string before sanitizing.
      * @return  string The sanitized value.
      */
     protected function _sanitize($value)
@@ -97,7 +97,7 @@ class KFilterTimestamp extends KFilterAbstract
     /**
      * Converts an array of timestamp parts to a string timestamp.
      *
-     * @param array The array of timestamp parts.
+     * @param array $array The array of timestamp parts.
      * @return string
      */
     protected function _arrayToTimestamp($array)
@@ -112,7 +112,7 @@ class KFilterTimestamp extends KFilterAbstract
     /**
      * Converts an array of date parts to a string date.
      *
-     * @param array The array of date parts.
+     * @param array $array The array of date parts.
      * @return string
      */
     protected function _arrayToDate($array)
@@ -136,7 +136,7 @@ class KFilterTimestamp extends KFilterAbstract
     /**
      * Converts an array of time parts to a string time.
      *
-     * @param array The array of time parts.
+     * @param array $array The array of time parts.
      * @return string
      */
     protected function _arrayToTime($array)

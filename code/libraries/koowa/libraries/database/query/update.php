@@ -150,7 +150,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      * Build the limit clause
      *
      * @param   integer $limit Number of items to update.
-     * @return  \KDatabaseQueryUpdate
+     * @return  KDatabaseQueryUpdate
      */
     public function limit($limit)
     {

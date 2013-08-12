@@ -67,8 +67,8 @@ class KDatabaseSchemaTable extends KObject
 	/**
 	 * List of columns
 	 *
-	 * Associative array of columns, where key holds the columns name and the value is
-	 * an KDatabaseSchemaColumn object.
+	 * Associative array of columns, where key holds the columns name and the value is an KDatabaseSchemaColumn
+     * object.
 	 *
 	 * @var	array
 	 */
@@ -77,8 +77,8 @@ class KDatabaseSchemaTable extends KObject
 	/**
 	 * List of behaviors
 	 *
-	 * Associative array of behaviors, where key holds the behavior identifier string
-	 * and the value is an KDatabaseBehavior object.
+	 * Associative array of behaviors, where key holds the behavior identifier string and the value is an
+     * KDatabaseBehavior object.
 	 *
 	 * @var	array
 	 */
@@ -87,8 +87,7 @@ class KDatabaseSchemaTable extends KObject
 	/**
 	 * List of indexes
 	 *
-	 * Associative array of indexes, where key holds the index name and the
-	 * and the value is an object.
+	 * Associative array of indexes, where key holds the index name and the and the value is an object.
 	 *
 	 * @var	array
 	 */
