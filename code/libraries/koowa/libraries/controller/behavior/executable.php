@@ -117,7 +117,7 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      */
     public function getHandle()
     {
-        return KMixinAbstract::getHandle();
+        return KObjectMixinAbstract::getHandle();
     }
 
     /**

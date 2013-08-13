@@ -70,7 +70,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $this->_dispatched = $config->dispatched;
 
         // Mixin the command chain
-        $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         //Set the request
         $this->setRequest((array) KConfig::unbox($config->request));

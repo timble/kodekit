@@ -155,11 +155,11 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   KMixinInterface $object  An object that implements KMinxInterface
+     * @param   KObjectMixinInterface $object  An object that implements KMinxInterface
      * @param   array           $config  An optional associative array of configuration options
      * @return  KObject
      */
-    public function mixin(KMixinInterface $object, $config = array())
+    public function mixin(KObjectMixinInterface $object, $config = array())
     {
         $methods = $object->getMixableMethods($this);
 

@@ -85,7 +85,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_data = $config->data;
 
 		 // Mixin a command chain
-        $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         //Attach the filters
         $this->addFilter($config->filters);

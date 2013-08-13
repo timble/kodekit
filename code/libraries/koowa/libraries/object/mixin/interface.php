@@ -11,9 +11,9 @@
  * Mixin Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Mixin
+ * @package Koowa\Library\Object\Mixin
  */
-interface KMixinInterface extends KObjectHandlable
+interface KObjectMixinInterface extends KObjectHandlable
 {
     /**
      * Get the methods that are available for mixin.
@@ -33,7 +33,7 @@ interface KMixinInterface extends KObjectHandlable
      * Set the mixer object
      *
      * @param  KObject $mixer The mixer object
-     * @return KMixinInterface
+     * @return KObjectMixinInterface
      */
     public function setMixer($mixer);
 }

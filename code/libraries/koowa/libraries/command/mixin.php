@@ -13,9 +13,9 @@
  * Class can be used as a mixin in classes that want to implement a chain of responsibility or chain of command pattern.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Mixin
+ * @package Koowa\Library\Command\Mixin
  */
-class KMixinCommandchain extends KMixinAbstract
+class KCommandMixin extends KObjectMixinAbstract
 {
     /**
      * Chain of command object
@@ -39,7 +39,7 @@ class KMixinCommandchain extends KMixinAbstract
         //Mixin the callback mixer if callbacks have been enabled
         if($config->enable_callbacks)
         {
-            $this->_mixer->mixin(new KMixinCallback(new KConfig(array(
+            $this->_mixer->mixin(new KObjectMixinCallback(new KConfig(array(
                 'mixer'             => $this->_mixer,
                 'command_chain'     => $this->_command_chain,
                 'command_priority'  => $config->callback_priority

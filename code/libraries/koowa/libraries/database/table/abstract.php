@@ -109,7 +109,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         }
 
         // Mixin a command chain
-         $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+         $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         // Set the table behaviors
         if(!empty($config->behaviors)) {

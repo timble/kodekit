@@ -11,9 +11,9 @@
  * Callback Mixin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Mixin
+ * @package Koowa\Library\Object\Mixin
  */
-class KMixinCallback extends KMixinAbstract implements KCommandInterface
+class KObjectMixinCallback extends KObjectMixinAbstract implements KCommandInterface
 {
  	/**
  	 * Array of callbacks
@@ -36,11 +36,12 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 	 */
 	protected $_priority;
 
-	/**
-	 * Object constructor
-	 *
-	 * @param KConfig $config Configuration options
-	 */
+    /**
+     * Object constructor
+     *
+     * @param KConfig $config Configuration options
+     * @throws InvalidArgumentException
+     */
 	public function __construct(KConfig $config)
 	{
 		parent::__construct($config);
@@ -204,9 +205,10 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 	/**
 	 * Get the methods that are available for mixin.
 	 *
-	 * This functions overloads KMixinAbstract::getMixableMethods and excludes the execute() function from the list
+	 * This functions overloads KObjectMixinAbstract::getMixableMethods and excludes the execute() function from the list
      * of available mixable methods.
 	 *
+     * @param  KObject $mixer Mixer object
 	 * @return array An array of methods
 	 */
 	public function getMixableMethods(KObject $mixer = null)

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseBehaviorAbstract extends KMixinAbstract implements KDatabaseBehaviorInterface
+abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements KDatabaseBehaviorInterface
 {
 	/**
 	 * The behavior priority

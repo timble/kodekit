@@ -20,12 +20,12 @@ interface KObjectMixable
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @@param  KMixinInterface $object  An object that implements ObjectMixinInterface, ObjectIdentifier object
+     * @@param  KObjectMixinInterface $object  An object that implements ObjectMixinInterface, ObjectIdentifier object
      *                                   or valid identifier string
      * @param   array $config  An optional associative array of configuration options
      * @return  KObjectInterface
      */
-    public function mixin(KMixinInterface $object, $config = array());
+    public function mixin(KObjectMixinInterface $object, $config = array());
 
     /**
      * Checks if the object or one of it's mixin's inherits from a class.

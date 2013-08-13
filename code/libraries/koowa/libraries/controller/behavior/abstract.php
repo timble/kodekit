@@ -12,7 +12,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KControllerBehaviorInterface
+abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implements KControllerBehaviorInterface
 {
 	/**
 	 * The behavior priority
