@@ -52,7 +52,7 @@ class Koowa
         require_once $this->_path.'/legacy.php';
 
         //Setup the loader
-        require_once $this->_path.'/class/loader/loader.php';
+        require_once $this->_path.'/class/loader.php';
         $loader = KClassLoader::getInstance($config);
 
         //Setup the factory

@@ -62,7 +62,7 @@ class KClassLoader implements KClassLoaderInterface
 
         //Add the koowa class loader
         $this->registerLocator(new KClassLocatorKoowa(
-            array('basepaths' => array('*' => dirname(dirname(dirname(__FILE__)))))
+            array('basepaths' => array('*' => dirname(dirname(__FILE__))))
         ));
 
         //Auto register the loader
