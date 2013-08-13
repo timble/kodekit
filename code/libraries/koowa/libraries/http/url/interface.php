@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Http
  */
-interface KHttpUrlInterafce
+interface KHttpUrlInterface
 {
     /**
      * Get the full url, of the format scheme://user:pass@host/path?query#fragment';
@@ -29,7 +29,7 @@ interface KHttpUrlInterafce
      * @param   string  $url url
      * @return  KHttpUrl
      */
-    public function fromString($url);
+    public static function fromString($url);
 
     /**
      * Sets the query string in the url, for KHttpUrl::getQuery() and KHttpUrl::$query.
