@@ -8,57 +8,13 @@
  */
 
 /**
- * State Config
+ * Model State
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelState extends KConfig
+class KModelState extends KConfig implements KModelStateInterface
 {
-	/**
-     * Retrieve a configuration item and return $default if there is no element set.
-     *
-     * @param string
-     * @param mixed
-     * @return mixed
-     */
-    public function get($name, $default = null)
-    {
-        $result = $default;
-        if(isset($this->_data[$name])) {
-            $result = $this->_data[$name]->value;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Set state value
-     *
-     * @param  	string 	$name The user-specified state name.
-     * @param  	mixed  	$value The user-specified state value.
-     * @return 	void
-     */
-    public function __set($name, $value)
-    {
-    	if(isset($this->_data[$name])) {
-    		$this->_data[$name]->value = $value;
-    	}
-    }
-
-    /**
-     * Unset a state value
-     *
-     * @param   string  $name The column key.
-     * @return  void
-     */
-    public function __unset($name)
-    {
-        if(isset($this->_data[$name])) {
-            $this->_data[$name]->value = $this->_data[$name]->default;
-        }
-    }
-
     /**
      * Insert a new state
      *
@@ -81,6 +37,50 @@ class KModelState extends KConfig
         $this->_data[$name] = $state;
 
         return $this;
+    }
+
+    /**
+     * Retrieve a configuration item and return $default if there is no element set.
+     *
+     * @param string
+     * @param mixed
+     * @return mixed
+     */
+    public function get($name, $default = null)
+    {
+        $result = $default;
+        if(isset($this->_data[$name])) {
+            $result = $this->_data[$name]->value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set state value
+     *
+     * @param  	string 	$name The state name.
+     * @param  	mixed  	$value The state value.
+     * @return 	KModelStateInterface
+     */
+    public function set($name, $value)
+    {
+        if(isset($this->_data[$name])) {
+            $this->_data[$name]->value = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Check if a state exists
+     *
+     * @param  	string 	$name The state name.
+     * @return  boolean
+     */
+    public function has($name)
+    {
+        return isset($this->_data[$name]);
     }
 
     /**
@@ -291,5 +291,30 @@ class KModelState extends KConfig
         }
 
         return true;
+    }
+
+    /**
+     * Set state value
+     *
+     * @param  	string 	$name The user-specified state name.
+     * @param  	mixed  	$value The user-specified state value.
+     * @return 	void
+     */
+    public function __set($name, $value)
+    {
+        $this->set($name, $value);
+    }
+
+    /**
+     * Unset a state value
+     *
+     * @param   string  $name The column key.
+     * @return  void
+     */
+    public function __unset($name)
+    {
+        if(isset($this->_data[$name])) {
+            $this->_data[$name]->value = $this->_data[$name]->default;
+        }
     }
 }
