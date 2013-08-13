@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-interface KDispatcherInterface
+interface KDispatcherInterface extends KControllerInterface
 {
 	/**
 	 * Method to get a controller object

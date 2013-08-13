@@ -177,7 +177,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 		$object = $this->getObject();
 
 		//Check if the method exists
-		if($object instanceof KObject)
+		if($object instanceof KObjectMixable)
 		{
 			$methods = $object->getMethods();
 			$exists  = in_array($method, $methods);
