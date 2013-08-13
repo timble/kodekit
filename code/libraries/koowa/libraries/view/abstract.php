@@ -153,7 +153,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 *
 	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					       or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewAbstract
 	 */
     public function setModel($model)
@@ -172,10 +171,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 			    $identifier->name	= $model;
 			}
 			else $identifier = $this->getIdentifier($model);
-
-			if($identifier->path[0] != 'model') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a model identifier');
-			}
 
 			$model = $identifier;
 		}

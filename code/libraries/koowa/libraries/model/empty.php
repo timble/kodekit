@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-final class ModelEmpty extends ModelAbstract { }
+final class KModelEmpty extends KModelAbstract { }

@@ -60,8 +60,6 @@ defined('KOOWA') or die; ?>
         .error ol.trace li { margin: 0; padding: 0; }
         .js .collapsed { display: none; }
     </style>
-
-
 </head>
 <body>
 
@@ -70,16 +68,16 @@ defined('KOOWA') or die; ?>
     <h1><span class="message"><?= $exception->getMessage() ?></span></h1>
     <div class="content">
         <p><span class="file"><?= $exception->getFile() ?>:<?= $exception->getLine() ?></span></p>
-        <?= $this->source($exception->getFile(), $exception->getLine()) ?>
+        <?= @helper('debug.source', array('file' => $exception->getFile(), 'line' => $exception->getLine())) ?>
         <ol class="trace">
-            <?php foreach ($this->trace($exception->getTrace()) as $i => $step): ?>
+            <?php foreach (@helper('debug.trace', array('trace' => $exception->getTrace())) as $i => $step): ?>
                 <li>
                     <p>
                         <?= $step['function'] ?>(<?php if ($step['args']): $args_id = 'args'.$i; ?><a href="#<?= $args_id ?>" onclick="return toggleElement('<?= $args_id ?>')"><?= 'arguments' ?></a><?php endif ?>)
                         &raquo;
                         <span class="file">
                             <?php if ($step['file']): $source_id = 'source'.$i; ?>
-                                <a href="#<?= $source_id ?>" onclick="return toggleElement('<?= $source_id ?>')"><?= $this->path($step['file']) ?>:<?= $step['line'] ?></a>
+                                <a href="#<?= $source_id ?>" onclick="return toggleElement('<?= $source_id ?>')"><?= @helper('debug.path', array('file' => $step['file'])) ?>:<?= $step['line'] ?></a>
                             <?php else: ?>
                                 {<?= 'PHP internal call' ?>}
                             <?php endif ?>
@@ -91,7 +89,7 @@ defined('KOOWA') or die; ?>
                                 <?php foreach ($step['args'] as $name => $arg): ?>
                                     <tr>
                                         <td><code><?= $name ?></code></td>
-                                        <td><pre><?= $this->dump($arg) ?></pre></td>
+                                        <td><pre><?= @helper('debug.dump', array('value' => $arg)) ?></pre></td>
                                     </tr>
                                 <?php endforeach ?>
                             </table>
@@ -113,7 +111,7 @@ defined('KOOWA') or die; ?>
             <table cellspacing="0">
                 <?php foreach ($included as $file): ?>
                     <tr>
-                        <td><code><?= $this->path($file) ?></code></td>
+                        <td><code><?= @helper('debug.path', array('file' => $file)) ?></code></td>
                     </tr>
                 <?php endforeach ?>
             </table>
@@ -124,7 +122,7 @@ defined('KOOWA') or die; ?>
             <table cellspacing="0">
                 <?php foreach ($included as $file): ?>
                     <tr>
-                        <td><code><?= $this->path($file) ?></code></td>
+                        <td><code><?= @helper('debug.path', array('file' => $file)) ?></code></td>
                     </tr>
                 <?php endforeach ?>
             </table>
@@ -137,7 +135,7 @@ defined('KOOWA') or die; ?>
                     <?php foreach ($GLOBALS[$var] as $key => $value): ?>
                         <tr>
                             <td><code><?= $key ?></code></td>
-                            <td><pre><?= $this->dump($value) ?></pre></td>
+                            <td><pre><?= @helper('debug.dump', array('value' => $value)) ?></pre></td>
                         </tr>
                     <?php endforeach ?>
                 </table>
