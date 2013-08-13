@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-interface KDatabaseBehaviorInterface extends KCommandInterface, KObjectServiceable
+interface KDatabaseBehaviorInterface extends KCommandInterface, KObjectInterface
 {
 
 }

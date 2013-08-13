@@ -89,7 +89,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 	/**
 	 * Method to set a menubar object attached to the controller
 	 *
-	 * @param	mixed	$menubar An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$menubar An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					         or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract

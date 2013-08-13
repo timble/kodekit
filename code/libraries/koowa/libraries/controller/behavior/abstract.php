@@ -170,7 +170,7 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	 * @param	string|object	$identifier The class identifier or identifier object
 	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @return	object  		Return object on success, throws exception on failure
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
 	 */
 	final public function getService($identifier, array $config = array())
 	{
@@ -182,7 +182,7 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
      *
      * @param mixed $identifier
      * @return KServiceIdentifier
-     * @see    KObjectServiceable
+     * @see    KObjectInterface
      */
 	final public function getIdentifier($identifier = null)
 	{

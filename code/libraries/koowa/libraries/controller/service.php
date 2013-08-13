@@ -36,7 +36,7 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @return	KControllerAbstract
 	 */

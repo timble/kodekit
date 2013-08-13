@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KObjectServiceable
+class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 {
     /**
      * Class methods
@@ -241,7 +241,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @throws	RuntimeException if the service container has not been defined.
 	 * @return	object  		Return object on success, throws exception on failure
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
 	 */
 	final public function getService($identifier, array $config = array())
 	{
@@ -258,7 +258,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * @param   null|KServiceIdentifier|string $identifier Identifier
 	 * @return	KServiceIdentifier
      *
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
      * @throws	RuntimeException if the service container has not been defined.
 	 */
 	final public function getIdentifier($identifier = null)

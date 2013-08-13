@@ -64,10 +64,10 @@ interface KServiceInterface
      * Returns an identifier object.
 	 *
 	 * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
-	 * object that implements KObjectServiceable, or a KServiceIdentifier object, or valid identifier
+	 * object that implements KObjectInterface, or a KServiceIdentifier object, or valid identifier
 	 * string. Function will also check for identifier mappings and return the mapped identifier.
 	 *
-	 * @param	mixed	$identifier An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					            or valid identifier string
 	 * @return KServiceIdentifier
 	 */
@@ -76,7 +76,7 @@ interface KServiceInterface
 	/**
 	 * Set the configuration options for an identifier
 	 *
-	 * @param mixed	 $identifier An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param mixed	 $identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 				             or valid identifier string
 	 * @param array	 $config     An associative array of configuration options
 	 */
@@ -85,7 +85,7 @@ interface KServiceInterface
 	/**
 	 * Get the configuration options for an identifier
 	 *
-	 * @param mixed	  $identifier   An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param mixed	  $identifier   An object that implements KObjectInterface, KServiceIdentifier object
 	 * 				                or valid identifier string
 	 *  @param array  An associative array of configuration options
 	 */

@@ -29,7 +29,7 @@ interface KObjectInterface
 	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @throws	RuntimeException if the service container has not been defined.
 	 * @return	object  		Return object on success, throws exception on failure
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
 	 */
 	public function getService($identifier, array $config = array());
 
@@ -39,7 +39,7 @@ interface KObjectInterface
      * @param   null|KServiceIdentifier|string $identifier Identifier
 	 * @return	KServiceIdentifier
      *
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
      * @throws	RuntimeException if the service container has not been defined.
 	 */
     public function getIdentifier($identifier = null);

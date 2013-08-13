@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-interface KControllerBehaviorInterface extends KCommandInterface, KObjectServiceable
+interface KControllerBehaviorInterface extends KCommandInterface, KObjectInterface
 {
 
 }
