@@ -1,18 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Template Behavior Helper
+ * Bootstrap Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 {
@@ -53,7 +53,6 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      * Loads necessary Bootstrap files
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
     public function load($config = array())
@@ -66,7 +65,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             'javascript'   => false,
             'wrapper'      => $identifier->type.'_'.$identifier->package,
             'package'      => $identifier->package,
-            'application'  => $identifier->type === 'mod' ? 'module' : $identifier->application,
+            'file'         => $identifier->type === 'mod' ? 'module' : $identifier->application,
             'load_default' => version_compare(JVERSION, '3.0', '<')
         ));
 
@@ -86,17 +85,15 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             self::$_loaded['bootstrap-css'] = true;
         }
 
-        $filename = 'bootstrap'.($config->application ? '-'.$config->application : '');
-
-        if (!isset(self::$_loaded[$config->package.'-'.$filename]))
+        if (!isset(self::$_loaded[$config->package.'-'.$config->file]))
         {
             $template  = 'com_%s/css/%s.css';
             $try_files = array(
-                sprintf($template, $config->package, $filename)
+                sprintf($template, $config->package, $config->file)
             );
 
             if (version_compare(JVERSION, '3.0', '<')) {
-                array_unshift($try_files, sprintf($template, $config->package, $filename.'-25'));
+                array_unshift($try_files, sprintf($template, $config->package, $config->file.'-25'));
             }
 
             foreach ($try_files as $file)
@@ -105,7 +102,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
                 {
                     $html .= sprintf('<style src="media://%s" />', $file);
 
-                    self::$_loaded[$config->package.'-'.$filename] = true;
+                    self::$_loaded[$config->package.'-'.$config->file] = true;
 
                     break;
                 }

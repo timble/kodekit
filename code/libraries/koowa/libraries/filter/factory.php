@@ -1,24 +1,25 @@
 <?php
 /**
-* @package      Koowa_Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
  * Filter Factory
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterFactory extends KObject implements KServiceInstantiatable
 {
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
+     * @param   KConfigInterface  $config     Configuration options
+     * @param 	KServiceInterface $container  A KServiceInterface object
      * @return KFilterFactory
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
@@ -38,8 +39,8 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	/**
 	 * Factory method for KFilterInterface classes.
 	 *
-	 * @param	string 	Filter indentifier
-	 * @param   KConfig $config Configuration options
+	 * @param string $identifier Filter indentifier
+	 * @param array  $config Configuration options
 	 * @return KFilterAbstract
 	 */
 	public function instantiate($identifier, $config = array())
@@ -64,7 +65,8 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	 * If the filter is not an identifier this function will create it directly
 	 * instead of going through the KService identification process.
 	 *
-	 * @param 	string	Filter identifier
+	 * @param  string$filter Filter identifier
+     * @param  array   $config Configuration options
      * @throws	\InvalidArgumentException	When the filter could not be found
      * @throws	\UnexpectedValueException	When the filter does not implement FilterInterface
 	 * @return  KFilterInterface

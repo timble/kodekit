@@ -1,9 +1,10 @@
 <?php
 /**
- * @package     Koowa_Helper
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
@@ -33,10 +34,8 @@ if (function_exists('iconv') || ((!strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' &&
  *
  * All functions assume the validity of utf-8 strings.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Helper
- * @subpackage  String
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Helper
  * @static
  */
 class KHelperString
@@ -46,7 +45,7 @@ class KHelperString
      *
      * Find position of first occurrence of a string
      *
-     * @param $str - string String being examined
+     * @param $str string String being examined
      * @param $search - string String being searced for
      * @param $offset - int Optional, specifies the position from which the search should be performed
      * @return mixed Number of characters before the first match or FALSE on failure

@@ -1,17 +1,18 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Behavior
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Database Sluggable Behavior
+ * Sluggable Database Behavior
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
 {
@@ -42,9 +43,8 @@ class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
     /**
      * Make sure the slug is unique
      *
-     * This function checks if the slug already exists and if so appends
-     * a number to the slug to make it unique. The slug will get the form
-     * of slug-x.
+     * This function checks if the slug already exists and if so appends a number to the slug to make it unique. The
+     * slug will get the form of slug-x.
      *
      * If the slug is empty it returns the current date in the format Y-m-d-H-i-s
      *

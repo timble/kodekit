@@ -1,21 +1,21 @@
 <?php
 /**
- * @package     Koowa_Event
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Event Class
+ * Event
  *
- * You can call the method stopPropagation() to abort the execution of
- * further listeners in your event listener.
+ * You can call the method stopPropagation() to abort the execution of further listeners in your event listener.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Event
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Event
  */
-class KEvent extends KConfig
+class KEvent extends KConfig implements KEventInterface
 {
  	/**
      * Priority levels

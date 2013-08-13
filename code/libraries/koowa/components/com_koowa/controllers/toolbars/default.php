@@ -1,30 +1,33 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright  	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license   	GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Default Toolbar
+ * Default Controller Toolbar
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
 {
     /**
      * A list of Joomla standard toolbar buttons to correctly translate labels
+     *
      * @var array
      */
     protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back', 'options');
     
     /**
-     * If the method is called with one of the standard Joomla toolbar buttons
-     * translate the label correctly
+     * If the method is called with one of the standard Joomla toolbar buttons translate the label correctly
+     *
+     * @param $name   The command name
+     * $param $config The command configuration options
      */
     public function addCommand($name, $config = array())
     {
@@ -34,12 +37,24 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
 
         return parent::addCommand($name, $config);
     }
-    
+
+    /**
+     * Publish Toolbar Command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
     protected function _commandPublish(KControllerToolbarCommand $command)
     {
         return $this->_commandEnable($command);
     }
-    
+
+    /**
+     * Unpublish Toolbar Command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
     protected function _commandUnpublish(KControllerToolbarCommand $command)
     {
         return $this->_commandDisable($command);
@@ -48,7 +63,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
     /**
      * Enable toolbar command
      *
-     * @param   object  A KControllerToolbarCommand object
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
      * @return  void
      */
     protected function _commandEnable(KControllerToolbarCommand $command)
@@ -66,7 +81,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
     /**
      * Disable toolbar command
      *
-     * @param   object  A KControllerToolbarCommand object
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
      * @return  void
      */
     protected function _commandDisable(KControllerToolbarCommand $command)
@@ -80,23 +95,29 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
             )
         ));
     }
-    
+
+    /**
+     * Disable Toolbar Command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
     protected function _commandSave2new(KControllerToolbarCommand $command)
     {
         $command->label = 'JTOOLBAR_SAVE_AND_NEW';
         $command->icon = 'icon-32-save-new';
     
         $command->append(array(
-        'attribs' => array(
-        'data-action' => 'save2new'
+            'attribs' => array(
+            'data-action' => 'save2new'
         )
         ));
     }
 
     /**
-     * Export toolbar command
+     * Export Toolbar Command
      *
-     * @param   object  A KControllerToolbarCommand object
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
      * @return  void
      */
     protected function _commandExport(KControllerToolbarCommand $command)
@@ -120,7 +141,13 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
             )
         ));
     }
-    
+
+    /**
+     * Options Toolbar Command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
     protected function _commandOptions(KControllerToolbarCommand $command)
     {
         $option = $this->getIdentifier()->package;
@@ -153,7 +180,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
     /**
      * Modal toolbar command
      *
-     * @param   object  A KControllerToolbarCommand object
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
      * @return  void
      */
     protected function _commandModal(KControllerToolbarCommand $command)

@@ -1,18 +1,16 @@
 <?php
 /**
- * @package     Koowa_Helper
- * @subpackage	Array
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
- */
-
-/**
- * Array helper
+ * Koowa Framework - http://developer.joomlatools.com/koowa
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Helper
- * @subpackage  Array
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
+/**
+ * Array Helper
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Helper
  * @static
  */
 class KHelperArray
@@ -61,14 +59,14 @@ class KHelperArray
     /**
      * Merge two arrays recursively
      *
-     * Matching keys' values in the second array overwrite those in the first array, as is the
-     * case with array_merge, i.e.:
+     * Matching keys' values in the second array overwrite those in the first array, as is the case with array_merge,
+     * i.e.:
      *
      * KHelperArray::merge(array('key' => 'org value'), array('key' => 'new value'));
      *     => array('key' => array('new value'));
      *
-     * Parameters are passed by reference, though only for performance reasons. They're not
-     * altered by this function and the data types of the values in the arrays are unchanged.
+     * Parameters are passed by reference, though only for performance reasons. They're not altered by this function
+     * and the data types of the values in the arrays are unchanged.
      *
      * @param array $array1
      * @param array $array2

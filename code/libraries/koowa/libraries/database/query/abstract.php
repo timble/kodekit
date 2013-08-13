@@ -1,18 +1,16 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
- */
-
-/**
- * Abstract Database Query Class
+ * Koowa Framework - http://developer.joomlatools.com/koowa
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
+/**
+ * Abstract Database Query
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
 {
@@ -113,7 +111,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      * Gets the database adapter
      *
      * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
-     * @return \KDatabaseAdapterInterface
+     * @return KDatabaseAdapterInterface
      */
     public function getAdapter()
     {
@@ -135,8 +133,8 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Set the database adapter
      *
-     * @param \KDatabaseAdapterInterface $adapter
-     * @return \KDatabaseQueryInterface
+     * @param KDatabaseAdapterInterface $adapter
+     * @return KDatabaseQueryInterface
      */
     public function setAdapter(KDatabaseAdapterInterface $adapter)
     {

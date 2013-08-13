@@ -1,18 +1,17 @@
 <?php
 /**
- * @package		Koowa_Template
- * @subpackage	Helper
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Template Helper Class
+ * Template Helper
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Template
- * @subpackage	Helper
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelperInterface
 {
@@ -25,8 +24,6 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 
 	/**
 	 * Constructor
-	 *
-	 * Prevent creating instances of this class by making the contructor private
 	 *
 	 * @param   KConfig $config Configuration options
 	 */

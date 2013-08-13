@@ -1,21 +1,21 @@
 <?php
 /**
- * @package     Koowa_View
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Vcard Class
+ * Vcard View
  *
  * Complies to version 2.1 of the vCard specification
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
- * @see         http://www.imc.org/pdi/
- * @see         http://en.wikipedia.org/wiki/VCard
- * @uses        KFilter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
+ * @see     http://www.imc.org/pdi/
+ * @see     http://en.wikipedia.org/wiki/VCard
  */
 class KViewVcard extends KViewFile
 {

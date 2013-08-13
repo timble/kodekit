@@ -1,22 +1,23 @@
 <?php
 /**
- * @package     Koowa_Translator
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.joomlatools.com
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Returns the plural rules for a given locale.
  * 
- * This class is based on Symfony 2 class Symfony\Component\Translation\PluralizationRules
- * and subject to MIT license
+ * This class is based on Symfony 2 class Symfony\Component\Translation\PluralizationRules and subject to MIT license
  * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Library\Translator
  */
 class KTranslatorInflector extends KInflector
 {
-    // @codeCoverageIgnoreStart
     private static $position_rules = array();
 
     /**
@@ -211,6 +212,4 @@ class KTranslatorInflector extends KInflector
 
         self::$position_rules[$locale] = $rule;
     }
-
-    // @codeCoverageIgnoreEnd
 }

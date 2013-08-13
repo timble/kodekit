@@ -1,31 +1,29 @@
 <?php
 /**
-* @category		Koowa
-* @package      Koowa_Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Slug filter
+ * Slug Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterSlug extends KFilterAbstract
 {
 	/**
-	 * Separator character / string to use for replacing non alphabetic characters
-	 * in generated slug
+	 * Separator character / string to use for replacing non alphabetic characters in generated slug
 	 *
 	 * @var	string
 	 */
 	protected $_separator;
 
 	/**
-	 * Maximum length the generated slug can have. If this is null the length of
-	 * the slug column will be used.
+	 * Maximum length the generated slug can have. If this is null the length of the slug column will be used.
 	 *
 	 * @var	integer
 	 */
@@ -34,7 +32,7 @@ class KFilterSlug extends KFilterAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param 	object	An optional KConfig object with configuration options
+	 * @param KConfig $config	An optional KConfig object with configuration options
 	 */
 	public function __construct(KConfig $config)
 	{
@@ -68,7 +66,7 @@ class KFilterSlug extends KFilterAbstract
 	 * Returns true if the string only contains US-ASCII and does not contain
 	 * any spaces
 	 *
-	 * @param	mixed	Variable to be validated
+	 * @param	mixed	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	protected function _validate($value)
@@ -79,10 +77,10 @@ class KFilterSlug extends KFilterAbstract
 	/**
 	 * Sanitize a value
 	 *
-	 * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents",
-	 * replace whitespaces by hyphens and lowercase the result.
+	 * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents", replace whitespaces by hyphens and
+     * lowercase the result.
 	 *
-	 * @param	scalar	Variable to be sanitized
+	 * @param	scalar	$value Variable to be sanitized
 	 * @return	scalar
 	 */
 	protected function _sanitize($value)

@@ -1,8 +1,10 @@
 <?php
 /**
- * @package		Koowa_Loader
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 require_once dirname(__FILE__) . '/adapter/interface.php';
@@ -11,10 +13,10 @@ require_once dirname(__FILE__) . '/adapter/koowa.php';
 require_once dirname(__FILE__) . '/registry.php';
 
 /**
- * KLoader class
+ * Loader
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Loader
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Loader
  */
 class KLoader
 {

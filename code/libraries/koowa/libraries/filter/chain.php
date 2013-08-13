@@ -1,27 +1,27 @@
 <?php
 /**
- * @package		Koowa_Filter
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Filter Chain
  *
- * The filter chain overrides the run method to implement a seperate
- * validate and santize method
+ * The filter chain overrides the run method to implement a separate validate and santize method
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
 class KFilterChain extends KCommandChain
 {
     /**
      * Run the commands in the chain
      *
-     * @param string  The filter name
-     * @param array   The data to be filtered
+     * @param string          $name     The filter name
+     * @param KCommandContext $context  The data to be filtered
      * @return  mixed
      */
     final public function run( $name, KCommandContext $context )
@@ -34,8 +34,8 @@ class KFilterChain extends KCommandChain
     /**
      * Validate the data
      *
-     * @param   scalar  Value to be validated
-     * @return  bool    True when the data is valid
+     * @param   KCommandContext $context  Value to be validated
+     * @return  bool True when the data is valid
      */
     final protected function _validate( KCommandContext $context )
     {
@@ -52,7 +52,7 @@ class KFilterChain extends KCommandChain
     /**
      * Sanitize the data
      *
-     * @param   scalar  Valuae to be sanitized
+     * @param   KCommandContext $context  Value to be sanitized
      * @return  mixed
      */
     final protected function _sanitize( KCommandContext $context )

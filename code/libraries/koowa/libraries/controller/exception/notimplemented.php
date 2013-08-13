@@ -1,17 +1,16 @@
 <?php
 /**
- * @package     Koowa_Controller
- * @subpackage  Exception
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Controller Exception Not Implemented Class
+ * Not Implemented Controller Exception
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Dispatcher
- * @subpackage  Exception
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerExceptionNotImplemented extends Exception implements KControllerException {}

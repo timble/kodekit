@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Adapter
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Database Adapter Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Adapter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 interface KDatabaseAdapterInterface
 {
@@ -40,8 +39,8 @@ interface KDatabaseAdapterInterface
 	/**
 	 * Get the connection
 	 *
-	 * Provides access to the underlying database connection. Useful for when
-	 * you need to call a proprietary method such as postgresql's lo_* methods
+	 * Provides access to the underlying database connection. Useful for when you need to call a proprietary method
+     * on the database driver
 	 *
 	 * @return resource
 	 */
@@ -181,9 +180,8 @@ interface KDatabaseAdapterInterface
     /**
      * Safely quotes a value for an SQL statement.
      *
-     * If an array is passed as the value, the array values are quoted
-     * and then returned as a comma-separated string; this is useful
-     * for generating IN() lists.
+     * If an array is passed as the value, the array values are quoted and then returned as a comma-separated string;
+     * this is useful for generating IN() lists.
      *
      * @param   mixed $value The value to quote.
      * @return string An SQL-safe quoted value (or a string of separated-
@@ -192,14 +190,12 @@ interface KDatabaseAdapterInterface
     public function quoteValue($value);
 
     /**
-     * Quotes a single identifier name (table, table alias, table column,
-     * index, sequence).  Ignores empty values.
+     * Quotes a single identifier name (table, table alias, table column, index, sequence).  Ignores empty values.
      *
-     * This function requires all SQL statements, operators and functions to be
-     * uppercased.
+     * This function requires all SQL statements, operators and functions to be uppercased.
      *
-     * @param string|array The identifier name to quote.  If an array, quotes
-     *                      each element in the array as an identifier name.
+     * @param string|array The identifier name to quote.  If an array, quotes each element in the array as an
+     *                      identifier name.
      * @return string|array The quoted identifier name (or array of names).
      */
     public function quoteIdentifier($spec);

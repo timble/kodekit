@@ -1,18 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Default View Controller
+ * Resource Controller
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerResource extends KControllerResource
 {
@@ -21,7 +21,7 @@ class ComKoowaControllerResource extends KControllerResource
      *
      * If the controller was not dispatched manually load the langauges files
      *
-     * @param   KCommandContext A command context object
+     * @param   KCommandContext $context A command context object
      * @return  KDatabaseRow(set)   A row(set) object containing the data to display
      */
     protected function _actionGet(KCommandContext $context)
@@ -36,8 +36,8 @@ class ComKoowaControllerResource extends KControllerResource
      *
      *  This function translates 'limitstart' to 'offset' for compatibility with Joomla
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {

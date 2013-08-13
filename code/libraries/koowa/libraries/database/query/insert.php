@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Insert Database Query Class
+ * Insert Database Query
  *
- * @author      Gergo Erdosi <gergo@timble.net>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Gergo Erdosi <https://github.com/gergoerdosi>
+ * @package Koowa\Library\Database
  */
 class KDatabaseQueryInsert extends KDatabaseQueryAbstract
 {
@@ -41,7 +40,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the table clause 
      *
      * @param  string $table The table name.
-     * @return \KDatabaseQueryInsert
+     * @return KDatabaseQueryInsert
      */
     public function table($table)
     {
@@ -54,7 +53,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the columns clause 
      *
      * @param  array $columns Array of column names.
-     * @return \KDatabaseQueryInsert
+     * @return KDatabaseQueryInsert
      */
     public function columns(array $columns)
     {
@@ -67,7 +66,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the values clause 
      *
      * @param  array $values Array of values.
-     * @return \KDatabaseQueryInsert
+     * @return KDatabaseQueryInsert
      */
     public function values($values)
     {

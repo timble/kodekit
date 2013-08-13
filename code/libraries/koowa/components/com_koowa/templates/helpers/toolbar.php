@@ -1,25 +1,24 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Template Toolbar Helper
+ * Toolbar Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 {
 	/**
      * Render the toolbar title
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function title($config = array())
@@ -50,9 +49,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         }
 
         $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
-
         $html .= '<h2>'.$title.'</h2>';
-
 		$html .= '</div>';
 
         return $html;
@@ -61,7 +58,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     /**
      * Render the toolbar
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function render($config = array())
@@ -106,7 +103,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     /**
      * Render a toolbar command
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function command($config = array())
@@ -163,7 +160,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 	/**
      * Render a separator
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function separator($config = array())
@@ -185,7 +182,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 	/**
      * Render a modal button
      *
-     * @param   array   An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function modal($config = array())

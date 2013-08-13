@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Default Controller Cacheable Behavior
+ * Cacheable Controller Behavior
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 {
@@ -137,8 +136,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Return the cached data after read
 	 *
-	 * Only if cached data was found return it but allow the chain to continue to allow
-	 * processing all the read commands
+	 * Only if cached data was found return it but allow the chain to continue to allow processing all the read commands
 	 *
      * @param   KCommandContext	$context A command context object
 	 * @return 	void
@@ -153,8 +151,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Return the cached data before browse
 	 *
-	 * Only if cached data was fetch return it and break the chain to disallow any
-	 * further processing to take place
+	 * Only if cached data was fetch return it and break the chain to disallow any further processing to take place
 	 *
      * @param   KCommandContext	$context A command context object
 	 * @return 	void

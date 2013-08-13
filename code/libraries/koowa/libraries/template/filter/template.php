@@ -1,18 +1,19 @@
 <?php
 /**
-* @package      Koowa_Template
-* @subpackage   Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link         http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Template read filter for the @template alias. To load templates inline
+ * Template Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * Filter for the @template alias. To load templates inline
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTemplateFilterRead
 {
@@ -36,10 +37,9 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
     /**
      * Replace template alias with loadFile functions.
      *
-     * This function only replaces relative identifiers to a full path
-     * based on the path of the template.
+     * This function only replaces relative identifiers to a full path based on the path of the template.
      *
-     * @param string
+     * @param string $text
      * @return KTemplateFilterAlias
      */
     public function read(&$text)

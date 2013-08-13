@@ -1,16 +1,19 @@
 <?php
 /**
- * @package		Koowa_Inflector
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
+ * Inflector
+ *
  * KInflector to pluralize and singularize English nouns.
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Inflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Inflector
  * @static
  */
 class KInflector
@@ -126,8 +129,7 @@ class KInflector
 	private function __construct() {}
 
 	/**
-	 * Add a word to the cache, useful to make exceptions or to add words in
-	 * other languages
+	 * Add a word to the cache, useful to make exceptions or to add words in other languages
 	 *
 	 * @param	string	$singular Singular word
 	 * @param 	string	$plural   Plural word
@@ -212,9 +214,8 @@ class KInflector
    	/**
 	 * Returns given word as CamelCased
 	 *
-	 * Converts a word like "foo_bar" or "foo bar" to "FooBar". It
-	 * will remove non alphanumeric characters from the word, so
-	 * "who's online" will be converted to "WhoSOnline"
+	 * Converts a word like "foo_bar" or "foo bar" to "FooBar". It will remove non alphanumeric characters from the
+     * word, so "who's online" will be converted to "WhoSOnline"
 	 *
 	 * @param   string 	$word    Word to convert to camel case
 	 * @return	string	UpperCamelCasedWord
@@ -231,7 +232,7 @@ class KInflector
 	 *
 	 * Convert any "CamelCased" or "ordinary Word" into an "underscored_word".
 	 *
-	 * @param    string    $word    Word to underscore
+	 * @param  string $word  Word to underscore
 	 * @return string Underscored word
 	 */
 	public static function underscore($word)
@@ -244,8 +245,8 @@ class KInflector
 	/**
 	 * Convert any "CamelCased" word into an array of strings
 	 *
-	 * Returns an array of strings each of which is a substring of string formed
-	 * by splitting it at the camelcased letters.
+	 * Returns an array of strings each of which is a substring of string formed by splitting it at the camelcased `
+     * letters.
 	 *
 	 * @param	string  $word Word to explode
 	 * @return 	array	Array of strings
@@ -271,11 +272,10 @@ class KInflector
    	/**
 	 * Returns a human-readable string from $word
 	 *
-	 * Returns a human-readable string from $word, by replacing
-	 * underscores with a space, and by upper-casing the initial
-	 * character by default.
+	 * Returns a human-readable string from $word, by replacing underscores with a space, and by upper-casing the
+     * initial character by default.
 	 *
-	 * @param    string    $word    String to "humanize"
+	 * @param  string $word String to "humanize"
 	 * @return string Human-readable word
      */
 	public static function humanize($word)
@@ -285,12 +285,11 @@ class KInflector
 	}
 
    	/**
-	 * Converts a class name to its table name according to Koowa
-	 * naming conventions.
+	 * Converts a class name to its table name according to Koowa naming conventions.
 	 *
 	 * Converts "Person" to "people"
 	 *
-	 * @param  string    $className    Class name for getting related table_name.
+	 * @param  string $className    Class name for getting related table_name.
 	 * @return string plural_table_name
 	 * @see classify
 	 */
@@ -310,8 +309,8 @@ class KInflector
 	 * Converts "people" to "Person"
 	 *
 	 * @see tableize()
-	 * @param    string    $table_name    Table name for getting related ClassName.
-	 * @return   string
+	 * @param   string $table_name Table name for getting related ClassName.
+	 * @return  string
 	 */
 	public static function classify($table_name)
 	{
@@ -379,8 +378,7 @@ class KInflector
     /**
      * Gets a part of a CamelCased word by index
      *
-     * Use a negative index to start at the last part of the word (-1 is the
-     * last part)
+     * Use a negative index to start at the last part of the word (-1 is the last part)
      *
      * @param   string  $string  Word
      * @param   integer $index   Index of the part

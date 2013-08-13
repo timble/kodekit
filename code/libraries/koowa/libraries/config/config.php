@@ -1,18 +1,19 @@
 <?php
 /**
- * @package		Koowa_Config
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Config Class
+ * Config
  *
  * KConfig provides a property based interface to an array
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Config
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Config
  */
 class KConfig implements KConfigInterface
 {
@@ -65,8 +66,7 @@ class KConfig implements KConfigInterface
 	/**
      * Return the data
      *
-     * If the data being passed is an instance of KConfig the data will be transformed
-     * to an associative array.
+     * If the data being passed is an instance of KConfig the data will be transformed to an associative array.
      *
      * @param mixed|KConfig $data
      * @return mixed|array

@@ -1,22 +1,21 @@
 <?php
 /**
- * @package     Nooku_Plugins
- * @subpackage  System
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Koowa System plugin
+ * Koowa System Plugin
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Plugins
- * @subpackage  System
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Plugin\System\Koowa
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class plgSystemKoowa extends JPlugin
+class PlgSystemKoowa extends JPlugin
 {
     /**
      * Boots Koowa framework and applies some bug fixes for certain environments

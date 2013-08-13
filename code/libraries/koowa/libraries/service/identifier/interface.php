@@ -1,20 +1,20 @@
 <?php
 /**
- * @package		Koowa_Service
- * @subpackage  Identifier
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Service Identifier interface
+ * Service Identifier Interface
  *
- * Wraps identifiers of the form [application::]type.component.[.path].name
- * in an object, providing public accessors and methods for derived formats
+ * Wraps identifiers of the form [application::]type.component.[.path].name in an object, providing public accessors
+ * and methods for derived formats
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Service
- * @subpackage  Identifier
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Service
  */
 interface KServiceIdentifierInterface extends Serializable
 {

@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Adapter
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Mysqli Database Adapter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Adapter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 {
@@ -31,8 +30,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     protected $_database;
 
 	/**
- 	 * Map of native MySQL types to generic types used when reading
- 	 * table column information.
+ 	 * Map of native MySQL types to generic types used when reading table column information.
  	 *
  	 * @var array
  	 */
@@ -351,8 +349,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Fetch all result rows of a result set as an array of associative arrays
 	 *
-	 * If <var>key</var> is not empty then the returned array is indexed by the value
-	 * of the database key.  Returns <var>null</var> if the query fails.
+	 * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
+     * Returns <var>null</var> if the query fails.
 	 *
 	 * @param 	mysqli_result  	$result The result object. A result set identifier returned by the select() function
 	 * @param 	string 			$key    The column name of the index to use
@@ -392,8 +390,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Fetch all rows of a result set as an array of objects
 	 *
-	 * If <var>key</var> is not empty then the returned array is indexed by the value
-	 * of the database key.  Returns <var>null</var> if the query fails.
+	 * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
+     * Returns <var>null</var> if the query fails.
 	 *
 	 * @param	mysqli_result  $result The result object. A result set identifier returned by the select() function
 	 * @param 	string 		   $key    The column name of the index to use
@@ -578,8 +576,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Given a raw column specification, parse into datatype, length, and decimal scope.
 	 *
-	 * @param string $spec The column specification; for example,
- 	 * "VARCHAR(255)" or "NUMERIC(10,2)" or "float(6,2) UNSIGNED" or ENUM('yes','no','maybe')
+	 * @param string $spec The column specification; for example, "VARCHAR(255)" or "NUMERIC(10,2)" or "float(6,2)
+     *                     UNSIGNED" or ENUM('yes','no','maybe')
  	 *
  	 * @return array A sequential array of the column type, size, and scope.
  	 */

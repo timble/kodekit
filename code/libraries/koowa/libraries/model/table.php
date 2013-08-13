@@ -1,18 +1,20 @@
 <?php
 /**
- * @package		Koowa_Model
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Table Model Class
+ * Table Model
  *
  * Provides interaction with a database table
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Model
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Model
  */
 class KModelTable extends KModelAbstract
 {
@@ -76,8 +78,8 @@ class KModelTable extends KModelAbstract
      *
      * This function overloads the KDatabaseTableAbstract::set() function and only acts on state properties.
      *
-     * @param   string|array|object The name of the property, an associative array or an object
-     * @param   mixed               The value of the property
+     * @param   string|array|object $property The name of the property, an associative array or an object
+     * @param   mixed               $value    The value of the property
      * @return  KModelTable
      */
     public function set( $property, $value = null )
@@ -95,10 +97,10 @@ class KModelTable extends KModelAbstract
     /**
      * Method to get a table object
      *
-     * Function catches RuntimeException that are thrown for tables that
-     * don't exist. If no table object can be created the function will return FALSE.
+     * Function catches RuntimeException that are thrown for tables that don't exist. If no table object can be created
+     * the function will return FALSE.
      *
-     * @return KDatabaseTableAbstract
+     * @return KDatabaseTableAbstractInterface
      */
     public function getTable()
     {
@@ -125,8 +127,8 @@ class KModelTable extends KModelAbstract
     /**
      * Method to set a table object attached to the model
      *
-     * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
-	 * 					or valid identifier string
+     * @param	mixed	$table An object that implements KObjectServiceable, KServiceIdentifier object
+	 * 					       or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KModelTable
      */
@@ -170,7 +172,7 @@ class KModelTable extends KModelAbstract
      * If the model state is unique a row is fetched from the database based on the state.
      * If not, an empty row is be returned instead.
      *
-     * @return KDatabaseRow
+     * @return KDatabaseRowInterface
      */
     public function getItem()
     {
@@ -202,7 +204,7 @@ class KModelTable extends KModelAbstract
     /**
      * Get a list of items which represnts a  table rowset
      *
-     * @return KDatabaseRowset
+     * @return KDatabaseRowsetInterface
      */
     public function getList()
     {

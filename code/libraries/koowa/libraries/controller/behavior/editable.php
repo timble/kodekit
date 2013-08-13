@@ -1,18 +1,17 @@
 <?php
 /**
- * @package		Koowa_Controller
- * @subpackage	Command
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Editable Controller Behavior Class
+ * Editable Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 {
@@ -157,9 +156,8 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	/**
 	 * Save action
 	 *
-	 * This function wraps around the edit or add action. If the model state is
-	 * unique a edit action will be executed, if not unique an add action will be
-	 * executed.
+	 * This function wraps around the edit or add action. If the model state is unique a edit action will be executed,
+     * if not unique an add action will be executed.
 	 *
 	 * This function also sets the redirect to the referrer.
 	 *
@@ -180,9 +178,8 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	/**
 	 * Apply action
 	 *
-	 * This function wraps around the edit or add action. If the model state is
-	 * unique a edit action will be executed, if not unique an add action will be
-	 * executed.
+	 * This function wraps around the edit or add action. If the model state is unique a edit action will be executed,
+     * if not unique an add action will be executed.
 	 *
 	 * This function also sets the redirect to the current url
 	 *
@@ -225,7 +222,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 * This function will unlock the row(s) and set the redirect to the referrer
      *
      * @param	KCommandContext	         $context A command context object
-     * @return 	KDatabaseRowInterface 	      A row object containing the saved data
+     * @return 	KDatabaseRowInterface 	 A row object containing the saved data
 	 */
 	protected function _actionCancel(KCommandContext $context)
 	{

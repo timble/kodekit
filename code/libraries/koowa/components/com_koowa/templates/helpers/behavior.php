@@ -1,18 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Template Behavior Helper
+ * Behavior Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 {
@@ -27,7 +27,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * Loads Mootools from Joomla sources
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
     public function koowa($config = array())
@@ -37,7 +36,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['koowa']))
         {
             $html .= $this->mootools();
-
             $html .= '<script src="media://koowa/com_koowa/js/koowa.js" />';
 
             self::$_loaded['koowa'] = true;
@@ -53,7 +51,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * version will be included.
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
     public function jquery($config = array())
@@ -83,7 +80,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * Loads Mootools from Joomla sources
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
 	public function mootools($config = array())
@@ -107,13 +103,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * Keeps session alive
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
     public function keepalive($config = array())
     {
         JHtml::_('behavior.keepalive');
-
         return '';
     }
 
@@ -121,7 +115,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 	 * Render a modal box
      *
      * @param array|KConfig $config
-	 *
 	 * @return string	The html output
 	 */
 	public function modal($config = array())
@@ -133,7 +126,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
  		));
 
         JHTML::_('behavior.modal', $config->selector, $config->toArray());
-
 		return '';
 	}
 
@@ -142,7 +134,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * Render a tooltip
      *
      * @param array|KConfig $config
-     *
      * @return string	The html output
      */
     public function tooltip($config = array())
@@ -156,15 +147,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         JHTML::_('behavior.tooltip', $config->selector, $config->toArray());
 
         return '';
-
-        return $html;
     }
 
     /**
      * Loads the calendar behavior and attaches it to a specified element
      *
      * @param array|KConfig $config
-     *
      * @return string	The html output
      */
     public function calendar($config = array())
@@ -191,7 +179,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['calendar'] = true;
         }
 
-
         return JHtml::_('calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KConfig::unbox($config->attribs));
     }
 
@@ -199,7 +186,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * Renders an overlay
      *
      * @param array|KConfig $config
-     *
      * @return string
      */
     public function overlay($config = array())
@@ -258,13 +244,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads the Forms.Validator class and connects it to Koowa.Controller
      *
-     * This allows you to do easy, CSS class based forms validation.
-     * Koowa.Controller.Form automatically works with it.
+     * This allows you to do easy, CSS class based forms validation. Koowa.Controller.Form automatically works with it.
      *
      * @see    http://www.mootools.net/docs/more125/more/Forms/Form.Validator
      *
      * @param array|KConfig $config
-     *
      * @return string	The html output
      */
     public function validator($config = array())

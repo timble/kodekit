@@ -1,21 +1,21 @@
 <?php
 /**
- * @package		Koowa_Object
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Object class
+ * Object
  *
  * Provides getters and setters, mixin, object handles
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
-class KObject implements KObjectHandlable, KObjectServiceable
+class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KObjectServiceable
 {
     /**
      * Class methods
@@ -116,11 +116,10 @@ class KObject implements KObjectHandlable, KObjectServiceable
     /**
      * Get the object properties
      *
-     * If no property name is given then the function will return an associative
-     * array of all properties.
+     * If no property name is given then the function will return an associative array of all properties.
      *
-     * If the property does not exist and a  default value is specified this is
-     * returned, otherwise the function return NULL.
+     * If the property does not exist and a  default value is specified this is returned, otherwise the function
+     * return NULL.
      *
      * @param   string  $property The name of the property
      * @param   mixed   $default  The default value
@@ -154,8 +153,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
     /**
      * Mixin an object
      *
-     * When using mixin(), the calling object inherits the methods of the mixed
-     * in objects, in a LIFO order.
+     * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
      * @param   KMixinInterface $object  An object that implements KMinxInterface
      * @return  KObject
@@ -201,8 +199,8 @@ class KObject implements KObjectHandlable, KObjectServiceable
     /**
      * Get a handle for this object
      *
-     * This function returns an unique identifier for the object. This id can be used as
-     * a hash key for storing objects or for identifying an object
+     * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
+     * or for identifying an object
      *
      * @return string A string that is unique
      */
@@ -236,8 +234,7 @@ class KObject implements KObjectHandlable, KObjectServiceable
     }
 
 	/**
-	 * Get an instance of a class based on a class identifier only creating it
-	 * if it doesn't exist yet.
+	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
 	 *
 	 * @param	string|object	$identifier The class identifier or identifier object
 	 * @param	array  			$config     An optional associative array of configuration settings.

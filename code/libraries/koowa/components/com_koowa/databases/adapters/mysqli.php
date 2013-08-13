@@ -1,20 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 
 /**
- * Default Database MySQLi Adapter
+ * MySQLi Database Adapter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KServiceInstantiatable
 {
@@ -28,7 +26,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
+	 * Prevent creating instances of this class by making the constructor private
 	 *
 	 * @param   KConfig $config Configuration options
 	 */
@@ -44,9 +42,9 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
-     * @return KDatabaseTableInterface
+     * @param  KConfigInterface  $config     Configuration options
+     * @param  KServiceInterface $container  A KServiceInterface object
+     * @return KDatabaseAdapterInterface
      */
     public static function getInstance(KConfigInterface $config, KServiceInterface $container)
     {
@@ -86,10 +84,10 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
 	 * Retrieves the table schema information about the given table
 	 *
-	 * This function try to get the table schema from the cache. If it cannot be found
-	 * the table schema will be retrieved from the database and stored in the cache.
+	 * This function try to get the table schema from the cache. If it cannot be found the table schema will be
+     * retrieved from the database and stored in the cache.
 	 *
-	 * @param 	string 	A table name or a list of table names
+	 * @param 	string 	$table A table name or a list of table names
 	 * @return	KDatabaseSchemaTable
 	 */
 	public function getTableSchema($table)

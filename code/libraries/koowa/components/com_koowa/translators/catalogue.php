@@ -1,16 +1,17 @@
 <?php
 /**
- * @package		Koowa_Translator
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Translator Class
+ * Translator Catalogue
  *
- * @author		Ercan Ozkaya <ercan@timble.net>
- * @package		Koowa_Translator
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTranslatorCatalogue extends KTranslatorCatalogue
 { 
@@ -27,10 +28,13 @@ class ComKoowaTranslatorCatalogue extends KTranslatorCatalogue
     {
         $string = strtolower($string);
         
-        if (strlen($string) > 40) {
+        if (strlen($string) > 40)
+        {
             $key = $this->generateKey(substr($string, 0, 40));
             $key .= '_'.strtoupper(substr(md5($string), 0, 5));
-        } else {
+        }
+        else
+        {
             $key = strip_tags($string);
             $key = preg_replace('#\s+#m', ' ', $key);
             $key = preg_replace('#\{([A-Za-z0-9_\-\.]+)\}#', '$1', $key);

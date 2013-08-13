@@ -1,17 +1,17 @@
 <?php
 /**
- * @package		Koowa_Model
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * State Config Class
+ * State Config
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @category	Koowa
- * @package     Koowa_Config
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Config
  */
 class KConfigState extends KConfig
 {
@@ -113,8 +113,8 @@ class KConfigState extends KConfig
      /**
      * Set the state data
      *
-     * This function will only filter values if we have a value. If the value
-     * is an empty string it will be filtered to NULL.
+     * This function will only filter values if we have a value. If the value is an empty string it will be filtered
+      * to NULL.
      *
      * @param   array|object    An associative array of state values by name
      * @return  KConfigState

@@ -1,18 +1,16 @@
 <?php
 /**
- * @package     Koowa_Controller
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Default Controller Class
+ * Default Controller
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
-class KControllerDefault extends KControllerService
-{
-
-}
+class KControllerDefault extends KControllerService {}

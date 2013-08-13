@@ -1,23 +1,23 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
+
 
 /**
  * Module Template Filter
  *
  * This filter allow to dynamically inject data into module position.
  *
- * Filter will parse elements of the form <modules position="[position]">[content]</modules>
- * and prepend or append the content to the module position.
+ * Filter will parse elements of the form <modules position="[position]">[content]</modules> and prepend or append
+ * the content to the module position.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
@@ -41,7 +41,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     /**
 	 * Find any <module></module> elements and inject them into the JDocument object
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterModule
 	 */
     public function write(&$text)
@@ -92,10 +92,8 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  * This is a specialised modules renderer which prepends or appends the dynamically created modules
  * to the list of modules before rendering them.
 .*
- * @author      Johan Janssens <johan@nooku.org>
-
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class JDocumentRendererModules extends JDocumentRenderer
 {

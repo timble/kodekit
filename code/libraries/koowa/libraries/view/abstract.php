@@ -1,20 +1,19 @@
 <?php
 /**
- * @package		Koowa_View
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract View Class
+ * Abstract View
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_View
- * @uses		KMixinClass
- * @uses 		KTemplate
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
-abstract class KViewAbstract extends KObject
+abstract class KViewAbstract extends KObject implements KViewInterface
 {
     /**
      * Translator object
@@ -153,7 +152,7 @@ abstract class KViewAbstract extends KObject
 	 * Method to set a model object attached to the view
 	 *
 	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
-	 * 					or valid identifier string
+	 * 					       or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewAbstract
 	 */
@@ -325,7 +324,6 @@ abstract class KViewAbstract extends KObject
 			}
 
 			$result = 'index.php?'.implode('&', $result);
-
 		}
 
 		return JRoute::_($result);

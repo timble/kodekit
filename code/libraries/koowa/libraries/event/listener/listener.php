@@ -1,18 +1,19 @@
 <?php
 /**
- * @package     Koowa_Event
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Class to handle events.
+ * Event Listener
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Event
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Event
  */
-class KEventListener extends KObject
+class KEventListener extends KObject implements KEventListenerInterface
 {
  	/**
      * List of event handlers
@@ -97,7 +98,7 @@ class KEventListener extends KObject
     /**
      * Connect to an event dispatcher
      *
-     * @param  object	The event dispatcher to connect too
+     * @param  KEventDispatcher $dispatcher	The event dispatcher to connect too
      * @return KEventListener
      */
     public function connect(KEventDispatcher $dispatcher)
@@ -114,7 +115,7 @@ class KEventListener extends KObject
 	/**
      * Disconnect from an event dispatcher
      *
-     * @param  object	The event dispatcher to disconnect from
+     * @param  KEventDispatcher $dispatcher	The event dispatcher to disconnect from
      * @return KEventListener
      */
     public function disconnect(KEventDispatcher $dispatcher)

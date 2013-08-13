@@ -1,19 +1,17 @@
 <?php
 /**
- * @package     Koowa_View
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract Template View Class
+ * Abstract Template View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
- * @uses        KMixinClass
- * @uses        KTemplate
- * @uses        KService
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 abstract class KViewTemplate extends KViewAbstract
 {
@@ -156,12 +154,11 @@ abstract class KViewTemplate extends KViewAbstract
     /**
     * Assigns variables to the view script via differing strategies.
     *
-    * This method is overloaded; you can assign all the properties of
-    * an object, an associative array, or a single value by name.
+    * This method is overloaded; you can assign all the properties of an object, an associative array, or a single value
+     * by name.
     *
-    * You are not allowed to set variables that begin with an underscore;
-    * these are either private properties for KView or private variables
-    * within the template script itself.
+    * You are not allowed to set variables that begin with an underscore; these are either private properties for KView
+     * or private variables within the template script itself.
     *
     * <code>
     * $view = new KViewDefault();
@@ -344,9 +341,8 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
-     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view
-     * by using the variable name as the method name. If the method name is a setter method the
-     * setter will be called instead.
+     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
+     * name as the method name. If the method name is a setter method the setter will be called instead.
      *
      * For example : $view->layout('foo')->title('name')->display().
      *

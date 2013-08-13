@@ -1,18 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
+
 
 /**
  * Default Controller
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerDefault extends KControllerService
 {
@@ -68,7 +68,7 @@ class ComKoowaControllerDefault extends KControllerService
      *
      * If the controller was not dispatched manually load the langauges files
      *
-     * @param   KCommandContext A command context object
+     * @param   KCommandContext $context A command context object
      * @return  KDatabaseRow(set)   A row(set) object containing the data to display
      */
     protected function _actionGet(KCommandContext $context)
@@ -81,10 +81,9 @@ class ComKoowaControllerDefault extends KControllerService
 	/**
      * Browse action
      *
-     * Use the application default limit if no limit exists in the model and limit the
-     * limit to a maximum.
+     * Use the application default limit if no limit exists in the model and limit the limit to a maximum.
      *
-     * @param   KCommandContext A command context object
+     * @param   KCommandContext $context A command context object
      * @return  KDatabaseRow(set)   A row(set) object containing the data to display
      */
     protected function _actionBrowse(KCommandContext $context)
@@ -112,10 +111,10 @@ class ComKoowaControllerDefault extends KControllerService
     /**
      * Read action
      *
-     * This functions implements an extra check to hide the main menu is the view name
-     * is singular (item views)
+     * This functions implements an extra check to hide the main menu is the view name is singular (item views)
      *
-     *  @return KDatabaseRow    A row object containing the selected row
+     * @param  KCommandContext $context A command context object
+     * @return KDatabaseRow A row object containing the selected row
      */
     protected function _actionRead(KCommandContext $context)
     {
@@ -138,8 +137,8 @@ class ComKoowaControllerDefault extends KControllerService
      *
      *  This function translates 'limitstart' to 'offset' for compatibility with Joomla
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {

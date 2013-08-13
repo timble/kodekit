@@ -1,23 +1,27 @@
 <?php
 /**
- * @package     Koowa
- * @copyright   Copyright (C) 2011 - 2013 Timble CVBA (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.joomlatools.com
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Extends the template class with debugging and dumping tools.
  *
  * This class is based on Kohana_Debug class and subject to the BSD License
+ *
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaphp.com/license
+ *
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateError extends ComKoowaTemplateAbstract
 {
     /**
-     * Returns an HTML string of debugging information about any number of
-     * variables, each wrapped in a "pre" tag:
+     * Returns an HTML string of debugging information about any number of variables, each wrapped in a "pre" tag:
      *
      *     // Displays the type and value of each variable
      *     echo Debug::vars($foo, $bar, $baz);
@@ -33,8 +37,7 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
         $variables = func_get_args();
 
         $output = array();
-        foreach ($variables as $var)
-        {
+        foreach ($variables as $var) {
             $output[] = $this->_dump($var, 1024);
         }
 
@@ -246,8 +249,7 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      */
     public function path($file)
     {
-        if (strpos($file, JPATH_ROOT) === 0)
-        {
+        if (strpos($file, JPATH_ROOT) === 0) {
             $file = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
         }
 
@@ -255,8 +257,7 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
     }
 
     /**
-     * Returns an HTML string, highlighting a specific line of a file, with some
-     * number of lines padded above and below.
+     * Returns an HTML string, highlighting a specific line of a file, with some number of lines padded above and below.
      *
      *     // Highlights the current line of the current file
      *     echo Debug::source(__FILE__, __LINE__);
@@ -269,9 +270,8 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      */
     public function source($file, $line_number, $padding = 5)
     {
-        if ( ! $file OR ! is_readable($file))
-        {
-            // Continuing will cause errors
+        // Continuing will cause errors
+        if ( ! $file OR ! is_readable($file)) {
             return FALSE;
         }
 
@@ -332,9 +332,8 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      */
     public function trace(array $trace = NULL)
     {
-        if ($trace === NULL)
-        {
-            // Start a new trace
+        // Start a new trace
+        if ($trace === NULL) {
             $trace = debug_backtrace();
         }
 

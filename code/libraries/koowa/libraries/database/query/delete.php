@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Delete Database Query Class
+ * Delete Database Query
  *
- * @author      Gergo Erdosi <gergo@timble.net>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Gergo Erdosi <https://github.com/gergoerdosi>
+ * @package Koowa\Library\Database
  */
 class KDatabaseQueryDelete extends KDatabaseQueryAbstract
 {
@@ -55,7 +54,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      * Build the table clause 
      *
      * @param  array|string $table The table string or array name.
-     * @return \KDatabaseQueryDelete
+     * @return KDatabaseQueryDelete
      */
     public function table($table)
     {
@@ -69,7 +68,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      * @param string $table      The table name to join to.
      * @param string $condition  The join conditation statement.
      * @param string|array $type The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
-     * @return \KDatabaseQueryDelete
+     * @return KDatabaseQueryDelete
      */
     public function join($table, $condition = null, $type = 'LEFT')
     {
@@ -95,7 +94,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      *
      * @param   string  $condition The condition.
      * @param   string  $combination Combination type, defaults to 'AND'.
-     * @return  \KDatabaseQueryDelete
+     * @return  KDatabaseQueryDelete
      */
     public function where($condition, $combination = 'AND')
     {
@@ -112,7 +111,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      *
      * @param   array|string  $columns    A string or array of ordering columns.
      * @param   string        $direction Either DESC or ASC.
-     * @return  \KDatabaseQueryDelete
+     * @return  KDatabaseQueryDelete
      */
     public function order($columns, $direction = 'ASC')
     {
@@ -131,7 +130,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      * Build the limit clause 
      *
      * @param   integer $limit Number of items to update.
-     * @return  \KDatabaseQueryDelete
+     * @return  KDatabaseQueryDelete
      */
     public function limit($limit)
     {

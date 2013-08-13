@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Show Database Query Class
+ * Show Database Query
  *
- * @author      Gergo Erdosi <gergo@timble.net>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Gergo Erdosi <https://github.com/gergoerdosi>
+ * @package Koowa\Library\Database
  */
 class KDatabaseQueryShow extends KDatabaseQueryAbstract
 {
@@ -48,7 +47,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      * Build the show clause 
      *
      * @param   string $table The name of the table.
-     * @return  \KDatabaseQueryShow
+     * @return  KDatabaseQueryShow
      */
     public function show($table) 
     {
@@ -72,7 +71,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      * Build the like clause 
      *
      * @param   string $pattern The pattern to match.
-     * @return  \KDatabaseQueryShow
+     * @return  KDatabaseQueryShow
      */
     public function like($pattern)
     {

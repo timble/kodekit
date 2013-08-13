@@ -1,24 +1,21 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Table
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract Table Class
+ * Abstract Database Table
  *
  * Parent class to all tables.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Table
- * @uses        KMixinClass
- * @uses        KFilter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
-abstract class KDatabaseTableAbstract extends KObject
+abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableInterface
 {
     /**
      * Real name of the table in the db schema
@@ -217,9 +214,8 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Gets the base table name without the table prefix
      *
-     * If the table type is 'VIEW' the base name will be the name of the base
-     * table that is connected to the view. If the table type is 'BASE' this
-     * function will return the same as {@link getName}
+     * If the table type is 'VIEW' the base name will be the name of the base table that is connected to the view.
+     * If the table type is 'BASE' this function will return the same as {@link getName}
      *
      * @return string
      */
@@ -251,7 +247,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	/**
      * Check if a behavior exists
      *
-     * @param 	string	The name of the behavior
+     * @param 	string	$behavior The name of the behavior
      * @return  boolean	TRUE if the behavior exists, FALSE otherwise
      */
 	public function hasBehavior($behavior)
@@ -262,7 +258,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	/**
      * Register one or more behaviors to the table
      *
-     * @param   array   Array of one or more behaviors to add.
+     * @param   array  $behaviors Array of one or more behaviors to add.
      * @return  KDatabaseTableAbstract
      */
     public function addBehavior($behaviors)
@@ -283,11 +279,13 @@ abstract class KDatabaseTableAbstract extends KObject
         return $this;
     }
 
-	/**
+    /**
      * Get a behavior by identifier
      *
-     * @param
-     * @return KControllerBehaviorAbstract
+     * @param  string        $behavior The name of the behavior
+     * @param  KConfig|array $config Configuration of the behavior
+     * @throws UnexpectedValueException
+     * @return KDatabaseBehaviorInterface
      */
     public function getBehavior($behavior, $config = array())
     {
@@ -320,7 +318,7 @@ abstract class KDatabaseTableAbstract extends KObject
 	/**
      * Gets the behaviors of the table
      *
-     * @return array    An asscociate array of table behaviors, keys are the behavior names
+     * @return array An associative array of table behaviors, keys are the behavior names
      */
     public function getBehaviors()
     {
@@ -346,9 +344,9 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Get a column by name
      *
-     * @param  boolean  If TRUE, get the column information from the base table. Default is FALSE.
-     * @return KDatabaseColumn  Returns a KDatabaseSchemaColumn object or NULL if the
-     *                          column does not exist
+     * @param  string  $columnname The name of the column
+     * @param  boolean $base If TRUE, get the column information from the base table. Default is FALSE.
+     * @return KDatabaseSchemaColumn  Returns a KDatabaseSchemaColumn object or NULL if the column does not exist
      */
      public function getColumn($columnname, $base = false)
      {
@@ -359,7 +357,7 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Gets the columns for the table
      *
-     * @param   boolean  If TRUE, get the column information from the base table. Default is FALSE.
+     * @param   boolean  $base If TRUE, get the column information from the base table. Default is FALSE.
      * @return  array    Associative array of KDatabaseSchemaColumn objects
      */
     public function getColumns($base = false)
@@ -378,8 +376,8 @@ abstract class KDatabaseTableAbstract extends KObject
      *
      * This functions maps the column names to those in the table schema
      *
-     * @param  array|string An associative array of data to be mapped, or a column name
-     * @param  boolean      If TRUE, perform a reverse mapping
+     * @param  array|string $data    An associative array of data to be mapped, or a column name
+     * @param  boolean      $reverse If TRUE, perform a reverse mapping
      * @return array|string The mapped data or column name
      */
     public function mapColumns($data, $reverse = false)
@@ -503,8 +501,7 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Get a default by name
      *
-     * @return mixed    Returns the column default value or NULL if the
-     *                  column does not exist
+     * @return string $columnname Returns the column default value or NULL if the column does not exist
      */
     public function getDefault($columnname)
     {
@@ -515,7 +512,7 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Get an instance of a row object for this table
      *
-     * @param	array An optional associative array of configuration settings.
+     * @param	array $options An optional associative array of configuration settings.
      * @return  KDatabaseRowInterface
      */
     public function getRow(array $options = array())
@@ -538,7 +535,7 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Get an instance of a rowset object for this table
      *
-     * @param    array An optional associative array of configuration settings.
+     * @param   array $options An optional associative array of configuration settings.
      * @return  KDatabaseRowInterface
      */
     public function getRowset(array $options = array())
@@ -668,8 +665,8 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Count table rows
      *
-     * @param   mixed KDatabaseQuery object or query string or null to count all rows
-     * @param   array $options An optional associative array of configuration options.
+     * @param   mixed $query    A  KDatabaseQuery object or query string or null to count all rows
+     * @param   array $options  An optional associative array of configuration options.
      * @return  int   Number of rows
      */
     public function count($query = null, array $options = array())
@@ -707,11 +704,11 @@ abstract class KDatabaseTableAbstract extends KObject
         $result = (int)$this->select($query, KDatabase::FETCH_FIELD, $options);
         return $result;
     }
-    
+
     /**
      * Table insert method
      *
-     * @param  object       A KDatabaseRow object
+     * @param  KDatabaseRowInterface $row A KDatabaseRow object
      * @return bool|integer Returns the number of rows inserted, or FALSE if insert query was not executed.
      */
     public function insert(KDatabaseRowInterface $row)
@@ -760,7 +757,7 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Table update method
      *
-     * @param  object           A KDatabaseRow object
+     * @param  KDatabaseRowTable $row A KDatabaseRow object
      * @return boolean|integer  Returns the number of rows updated, or FALSE if insert query was not executed.
      */
     public function update(KDatabaseRowTable $row)
@@ -814,7 +811,7 @@ abstract class KDatabaseTableAbstract extends KObject
     /**
      * Table delete method
      *
-     * @param  object       A KDatabaseRow object
+     * @param  KDatabaseRowInterface $row A KDatabaseRow object
      * @return bool|integer Returns the number of rows deleted, or FALSE if delete query was not executed.
      */
     public function delete(KDatabaseRowInterface $row)
@@ -907,8 +904,8 @@ abstract class KDatabaseTableAbstract extends KObject
      * This function removes extra columns based on the table columns taking any table mappings into account and
      * filters the data based on each column type.
      *
-     * @param  array    An associative array of data to be filtered
-     * @param  boolean  If TRUE, get the column information from the base table.
+     * @param  array    $data   An associative array of data to be filtered
+     * @param  boolean  $base   If TRUE, get the column information from the base table.
      * @return array    The filtered data
      */
     public function filter(array $data, $base = true)

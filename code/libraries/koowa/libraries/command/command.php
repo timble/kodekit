@@ -1,20 +1,20 @@
 <?php
 /**
- * @package		Koowa_Command
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Command handler
+ * Command
  *
- * The command handler will translate the command name into a function format and
- * call it for the object class to handle it if the method exists.
+ * The command handler will translate the command name into a function format and call it for the object class to
+ * handle it if the method exists.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Command
- * @uses        KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 class KCommand extends KObject implements KCommandInterface
 {

@@ -1,17 +1,19 @@
 <?php
 /**
- * @package     Koowa_Date
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Date Class
+ * Date
  *
- * @package Koowa_Date
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Date
  */
-class KDate extends DateTime
+class KDate extends DateTime implements KDateInterface
 {
     /**
      * Constructor.
@@ -47,5 +49,18 @@ class KDate extends DateTime
             'date'       => 'now',
             'timezone'   => 'UTC'
         ));
+    }
+
+    /**
+     * Get a handle for this object
+     *
+     * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
+     * or for identifying an object
+     *
+     * @return string A string that is unique
+     */
+    public function getHandle()
+    {
+        return spl_object_hash($this);
     }
 }

@@ -1,22 +1,21 @@
 <?php
 /**
- * @package		Koowa_Controller
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract Controller Class
+ * Abstract Controller
  *
  * Note: Concrete controllers must have a singular name
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @uses        KMixinClass
- * @uses        KCommandChain
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
-abstract class KControllerAbstract extends KObject
+abstract class KControllerAbstract extends KObject implements KControllerInterface
 {
     /**
      * Array of class methods to call for a given action.
@@ -49,9 +48,8 @@ abstract class KControllerAbstract extends KObject
 	/**
 	 * List of behaviors
 	 *
-	 * Associative array of behaviors, where key holds the behavior identifier string
-	 * and the value is an identifier object.
-	 *
+	 * Associative array of behaviors, where key holds the behavior identifier string and the value is an identifier object.
+     *
 	 * @var	array
 	 */
 	protected $_behaviors = array();
@@ -120,11 +118,8 @@ abstract class KControllerAbstract extends KObject
      *
      * @param   string          $action  The action to execute
      * @param   KCommandContext $context A command context object
-     * @return  mixed|bool      The value returned by the called method, false in error case.
-     *
-     * @throws  Exception
      * @throws  BadMethodCallException
-     *
+     * @return  mixed|bool      The value returned by the called method, false in error case.
      */
     public function execute($action, KCommandContext $context)
     {
@@ -355,8 +350,8 @@ abstract class KControllerAbstract extends KObject
 	/**
      * Set a request properties
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {
@@ -366,7 +361,7 @@ abstract class KControllerAbstract extends KObject
   	/**
      * Get a request property
      *
-     * @param  	string 	The property name.
+     * @param  	string 	$property The property name.
      * @return 	string 	The property value.
      */
     public function __get($property)
@@ -382,15 +377,12 @@ abstract class KControllerAbstract extends KObject
     /**
      * Execute a controller action by it's name.
 	 *
-	 * Function is also capable of checking is a behavior has been mixed succesfully
-	 * using is[Behavior] function. If the behavior exists the function will return
-	 * TRUE, otherwise FALSE.
+	 * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+     * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string  $method Method name
      * @param  array   $args   Array containing all the arguments for the original call
-     *
      * @return mixed
-     *
      * @see execute()
      */
     public function __call($method, $args)

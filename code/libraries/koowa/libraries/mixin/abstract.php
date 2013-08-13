@@ -1,21 +1,20 @@
 <?php
 /**
- * @package     Koowa_Mixin
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract mixing class
+ * Abstract Mixin
  *
- * This class does not extend from KObject and acts as a special core
- * class that is intended to offer semi-multiple inheritance features
- * to KObject derived classes.
+ * This class does not extend from KObject and acts as a special core class that is intended to offer semi-multiple
+ * inheritance features to KObject derived classes.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
- * @uses        KObject
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 abstract class KMixinAbstract implements KMixinInterface
 {
@@ -73,7 +72,7 @@ abstract class KMixinAbstract implements KMixinInterface
   	/**
      * Get the mixer object
      *
-     * @return object 	The mixer object
+     * @return KObject The mixer object
      */
     public function getMixer()
     {
@@ -83,7 +82,7 @@ abstract class KMixinAbstract implements KMixinInterface
     /**
      * Set the mixer object
      *
-     * @param object The mixer object
+     * @param KObject $mixer The mixer object
      * @return KMixinInterface
      */
     public function setMixer($mixer)
@@ -95,8 +94,8 @@ abstract class KMixinAbstract implements KMixinInterface
     /**
      * Get a handle for this object
      *
-     * This function returns an unique identifier for the object. This id can be used as
-     * a hash key for storing objects or for identifying an object
+     * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
+     * or for identifying an object
      *
      * @return string A string that is unique
      */
@@ -134,7 +133,7 @@ abstract class KMixinAbstract implements KMixinInterface
      *
      * Only public methods can be mixed
      *
-     * @param object The mixer requesting the mixable methods.
+     * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array An array of public methods
      */
     public function getMixableMethods(KObject $mixer = null)
@@ -167,8 +166,8 @@ abstract class KMixinAbstract implements KMixinInterface
     /**
      * Overloaded set function
      *
-     * @param  string   The variable name
-     * @param  mixed    The variable value.
+     * @param  string   $key    The variable name
+     * @param  mixed    $value  The variable value.
      * @return mixed
      */
     public function __set($key, $value)
@@ -179,7 +178,7 @@ abstract class KMixinAbstract implements KMixinInterface
     /**
      * Overloaded get function
      *
-     * @param  string   The variable name.
+     * @param  string $key The variable name.
      * @return mixed
      */
     public function __get($key)
@@ -192,7 +191,7 @@ abstract class KMixinAbstract implements KMixinInterface
      *
      * Allows testing with empty() and isset() functions
      *
-     * @param  string   The variable name
+     * @param  string $key The variable name
      * @return boolean
      */
     public function __isset($key)
@@ -205,7 +204,7 @@ abstract class KMixinAbstract implements KMixinInterface
      *
      * Allows unset() on object properties to work
      *
-     * @param string    The variable name.
+     * @param string $key The variable name.
      * @return void
      */
     public function __unset($key)
@@ -218,8 +217,8 @@ abstract class KMixinAbstract implements KMixinInterface
     /**
      * Search the mixin method map and call the method or trigger an error
      *
-     * @param  string   The function name
-     * @param  array    The function arguments
+     * @param  string   $method     The function name
+     * @param  array    $arguments  The function arguments
      * @throws BadMethodCallException   If method could not be found
      * @return mixed The result of the function
      */

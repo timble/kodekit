@@ -1,20 +1,19 @@
 <?php
 /**
- * @package     Koowa_Http
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * HTTP Response class
+ * Http Response
  *
- * @todo Add other statuses
  * @see http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Http
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Http
  */
 class KHttpResponse
 {

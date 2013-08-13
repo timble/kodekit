@@ -1,27 +1,25 @@
 <?php
 /**
- * @package		Koowa_Database
- * @subpackage 	Behavior
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * FIXME: Fix queries
- * Database Orderable Behavior
+ * Orderable Database Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 {
     /**
      * Get the methods that are available for mixin based
      *
-     * This function conditionally mixes the behavior. Only if the mixer
-     * has a 'created_by' or 'created_on' property the behavior will be
-     * mixed in.
+     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
+     * the behavior will be mixed in.
      *
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
@@ -114,8 +112,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 /**
      * Resets the order of all rows
      *
-     * Resetting starts at $base to allow creating space in sequence for later
-     * record insertion.
+     * Resetting starts at $base to allow creating space in sequence for later record insertion.
      *
      * @param	integer 	$base Order at which to start resetting.
      * @return	KDatabaseBehaviorOrderable
@@ -168,8 +165,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
  	/**
      * Saves the row to the database.
      *
-     * This performs an intelligent insert/update and reloads the properties
-     * with fresh data from the table on success.
+     * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
      *
      * @param   KCommandContext $context
      * @return KDatabaseRowAbstract
@@ -187,8 +183,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     }
 
     /**
-     * Changes the rows ordering if the virtual order field is set. Order is
-     * relative to the row's current position.
+     * Changes the rows ordering if the virtual order field is set. Order is relative to the row's current position.
      *
      * @param   KCommandContext $context
      */

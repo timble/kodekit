@@ -1,16 +1,17 @@
 <?php
 /**
- * @package		Koowa_Mixin
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Callback Command Mixin
+ * Callback Mixin
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Mixin
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Mixin
  */
 class KMixinCallback extends KMixinAbstract implements KCommandInterface
 {
@@ -38,7 +39,7 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 	/**
 	 * Object constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param KConfig $config Configuration options
 	 */
 	public function __construct(KConfig $config)
 	{
@@ -76,8 +77,8 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 	/**
 	 * Command handler
 	 *
-	 * @param string  The command name
-	 * @param object  The command context
+	 * @param string          $name     The command name
+	 * @param KCommandContext $context  The command context
 	 *
 	 * @return boolean
 	 */
@@ -113,7 +114,7 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 	/**
  	 * Get the registered callbacks for a command
  	 *
- 	 * @param  	string	The method to return the functions for
+ 	 * @param  	string	$command The method to return the functions for
  	 * @return  array	A list of registered functions
  	 */
 	public function getCallbacks($command)
@@ -137,8 +138,8 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
  	 * context of the command chain and passed along. If they are passed as an indexed array they
  	 * will be passed to the callback directly.
  	 *
- 	 * @param  	string|array	The command name to register the callback for or an array of command names
- 	 * @param 	callback		The callback function to register
+ 	 * @param  	string|array	$commands   The command name to register the callback for or an array of command names
+ 	 * @param 	callable		$callback   The callback function to register
  	 * @param   array|object    An associative array of config parameters or a KConfig object
  	 * @return  KObject	The mixer object
  	 */
@@ -171,14 +172,14 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 			}
 		}
 
-		return $this->_mixer;
+		return $this->getMixer();
 	}
 
 	/**
  	 * Unregister a callback function
  	 *
- 	 * @param  	string|array	The method name to unregister the callback from or an array of method names
- 	 * @param 	callback		The callback function to unregister
+ 	 * @param  	string|array	$commands   The method name to unregister the callback from or an array of method names
+ 	 * @param 	callback		$callback   The callback function to unregister
  	 * @return  KObject The mixer object
  	 */
 	public function unregisterCallback($commands, $callback)
@@ -197,14 +198,14 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 			}
 		}
 
-		return $this->_mixer;
+		return $this->getMixer();
 	}
 
 	/**
 	 * Get the methods that are available for mixin.
 	 *
-	 * This functions overloads KMixinAbstract::getMixableMethods and excludes the execute()
-	 * function from the list of available mixable methods.
+	 * This functions overloads KMixinAbstract::getMixableMethods and excludes the execute() function from the list
+     * of available mixable methods.
 	 *
 	 * @return array An array of methods
 	 */
