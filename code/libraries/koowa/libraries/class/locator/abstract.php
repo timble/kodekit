@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-abstract class KClassAdapterAbstract implements KClassAdapterInterface
+abstract class KClassLocatorAbstract implements KClassLocatorInterface
 {
 	/**
 	 * The adapter type
@@ -64,7 +64,7 @@ abstract class KClassAdapterAbstract implements KClassAdapterInterface
      *
      * @param  string   $basepath The base path of the package
      * @param  string   $package
-     * @return KClassAdapterInterface
+     * @return KClassLocatorInterface
      */
     public function registerBasepath($basepath, $package = '*')
     {

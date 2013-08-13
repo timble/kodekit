@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KClassAdapterKoowa extends KClassAdapterAbstract
+class KClassLocatorKoowa extends KClassLocatorAbstract
 {
 	/**
 	 * The adapter type
@@ -36,7 +36,7 @@ class KClassAdapterKoowa extends KClassAdapterAbstract
      * @param  string $basepath     The base path
 	 * @return string|boolean		Returns the path on success FALSE on failure
 	 */
-	public function findPath($classname, $basepath = null)
+	public function locate($classname, $basepath = null)
 	{
 		$path = false;
 

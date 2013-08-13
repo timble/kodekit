@@ -7,10 +7,11 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
-require_once dirname(__FILE__) . '/adapter/interface.php';
-require_once dirname(__FILE__) . '/adapter/abstract.php';
-require_once dirname(__FILE__) . '/adapter/koowa.php';
-require_once dirname(__FILE__) . '/registry.php';
+require_once dirname(__FILE__) . '/../locator/interface.php';
+require_once dirname(__FILE__) . '/../locator/abstract.php';
+require_once dirname(__FILE__) . '/../locator/koowa.php';
+require_once dirname(__FILE__) . '/../registry.php';
+require_once dirname(__FILE__) . '/interface.php';
 
 /**
  * Loader
@@ -18,7 +19,7 @@ require_once dirname(__FILE__) . '/registry.php';
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KClass
+class KClassLoader implements KClassLoaderInterface
 {
     /**
      * The file container
@@ -32,14 +33,14 @@ class KClass
      *
      * @var array
      */
-    protected static $_adapters = array();
+    protected $_locators = array();
 
     /**
      * Prefix map
      *
      * @var array
      */
-    protected static $_prefix_map = array();
+    protected $_prefix_map = array();
 
     /**
      * Constructor
@@ -60,8 +61,8 @@ class KClass
         }
 
         //Add the koowa class loader
-        self::addAdapter(new KClassAdapterKoowa(
-            array('basepaths' => array('*' => dirname(dirname(__FILE__))))
+        $this->registerLocator(new KClassLocatorKoowa(
+            array('basepaths' => array('*' => dirname(dirname(dirname(__FILE__)))))
         ));
 
         //Auto register the loader
@@ -79,7 +80,7 @@ class KClass
      * Singleton instance
      *
      * @param  array  $config An optional array with configuration options.
-     * @return KClass
+     * @return KClassLoader
      */
     public static function getInstance($config = array())
     {
@@ -97,13 +98,25 @@ class KClass
      *
      * @return void
      */
-    public function register()
+    public function register($prepend = false)
     {
-        spl_autoload_register(array($this, 'loadClass'));
+        spl_autoload_register(array($this, 'loadClass'), true, $prepend);
 
         if (function_exists('__autoload')) {
             spl_autoload_register('__autoload');
         }
+    }
+
+    /**
+     * Unregisters the loader with the PHP autoloader.
+     *
+     * @return void
+     *
+     * @see spl_autoload_unregister();
+     */
+    public function unregister()
+    {
+        spl_autoload_unregister(array($this, 'loadClass'));
     }
 
 
@@ -117,16 +130,33 @@ class KClass
         return $this->_registry;
     }
 
- 	/**
-     * Add a loader adapter
+    /**
+     * Register a class locator
      *
-     * @param KClassAdapterInterface $adapter  A class loader adapter
+     * @param  KClassLocatorInterface $locator
      * @return void
      */
-    public static function addAdapter(KClassAdapterInterface $adapter)
+    public function registerLocator(KClassLocatorInterface $locator)
     {
-        self::$_adapters[$adapter->getType()]     = $adapter;
-        self::$_prefix_map[$adapter->getPrefix()] = $adapter->getType();
+        $this->_locators[$locator->getType()]     = $locator;
+        $this->_prefix_map[$locator->getPrefix()] = $locator->getType();
+    }
+
+    /**
+     * Get a registered class locator based on his type
+     *
+     * @param string $type The locator type
+     * @return KClassLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     */
+    public function getLocator($type)
+    {
+        $result = null;
+
+        if(isset($this->_locators[$type])) {
+            $result = $this->_locators[$type];
+        }
+
+        return $result;
     }
 
 	/**
@@ -134,9 +164,9 @@ class KClass
      *
      * @return array
      */
-    public static function getAdapters()
+    public function getLocators()
     {
-        return self::$_adapters;
+        return $this->_locators;
     }
 
     /**
@@ -150,7 +180,7 @@ class KClass
     {
         $result = false;
 
-        //Extra filter added to circomvent issues with Zend Optimiser and strange classname.
+        //Extra filter added to circumvent issues with Zend Optimiser and strange classname.
         if((ctype_upper(substr($class, 0, 1)) || (strpos($class, '.') !== false)))
         {
             //Pre-empt further searching for the named class or interface.
@@ -159,10 +189,10 @@ class KClass
             if (!class_exists($class, false) && !interface_exists($class, false))
             {
                 //Get the path
-                $path = self::findPath( $class, $basepath );
+                $path = $this->findPath( $class, $basepath );
 
                 if ($path !== false) {
-                    $result = self::loadFile($path);
+                    $result = $this->loadFile($path);
                 }
             }
             else $result = true;
@@ -187,7 +217,7 @@ class KClass
         $path = $identifier->filepath;
 
         if ($path !== false) {
-            $result = self::loadFile($path);
+            $result = $this->loadFile($path);
         }
 
         return $result;
@@ -236,9 +266,9 @@ class KClass
             $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $class);
             $parts = explode(' ', $word);
 
-            if(isset(self::$_prefix_map[$parts[0]]))
+            if(isset($this->_prefix_map[$parts[0]]))
             {
-                $result = self::$_adapters[self::$_prefix_map[$parts[0]]]->findPath( $class, $basepath);
+                $result = $this->_locators[$this->_prefix_map[$parts[0]]]->locate( $class, $basepath);
 
                 if ($result !== false)
                 {

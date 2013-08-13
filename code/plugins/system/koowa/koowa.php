@@ -69,15 +69,17 @@ class PlgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            KClass::addAdapter(new KClassAdapterModule(array(
+            $loader = KService::get('koowa:class.loader');
+
+            $loader->registerLocator(new KClassLocatorModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KClass::addAdapter(new KClassAdapterPlugin(array(
+            $loader->registerLocator(new KClassLocatorPlugin(array(
                 'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KClass::addAdapter(new KClassAdapterComponent(array(
+            $loader->registerLocator(new KClassLocatorComponent(array(
                 'basepaths' => array(
                     '*'          => JPATH_BASE,
                     'koowa'      => JPATH_LIBRARIES.'/koowa',
