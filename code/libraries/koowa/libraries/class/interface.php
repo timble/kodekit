@@ -47,6 +47,13 @@ interface KClassLoaderInterface
     public function getLocator($type);
 
     /**
+     * Get the registered adapters
+     *
+     * @return array
+     */
+    public function getLocators();
+
+    /**
      * Load a class based on a class name
      *
      * @param  string   $class  The class name
@@ -69,4 +76,12 @@ interface KClassLoaderInterface
      * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
     public function findPath($class);
+
+    /**
+     * Tells if a class, interface or trait exists.
+     *
+     * @params string $class
+     * @return boolean
+     */
+    public function isDeclared($class);
 }
