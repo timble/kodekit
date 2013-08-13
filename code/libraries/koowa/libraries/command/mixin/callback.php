@@ -77,16 +77,15 @@ class KCommandMixinCallback extends KObjectMixinCallback implements KCommandInte
 		$result    = true;
 
         $callbacks = $this->getCallbacks($name);
-        $params    = $this->_params[$name];
 
         foreach($callbacks as $key => $callback)
         {
-            $param = $params[$key];
+            $params = $this->_params[$name][$key];
 
-            if(is_array($param) && is_numeric(key($param))) {
+            if(is_array($params) && is_numeric(key($params))) {
                 $result = call_user_func_array($callback, $params);
             } else {
-                $result = call_user_func($callback,  $context->append($param));
+                $result = call_user_func($callback,  $context->append($params));
             }
 
             //Call the callback

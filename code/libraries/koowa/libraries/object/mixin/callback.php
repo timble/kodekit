@@ -40,13 +40,12 @@ class KObjectMixinCallback extends KObjectMixinAbstract
         $result = true;
 
         $callbacks = $this->getCallbacks($name);
-        $params    = $this->_params[$name];
 
         foreach($callbacks as $key => $callback)
         {
-            $param = $params[$key];
+            $params = $this->_params[$name][$key];
 
-            if(is_array($param) && !empty($params)) {
+            if(is_array($params) && !empty($params)) {
                 call_user_func_array($callback, $params);
             } else {
                 call_user_func($callback);
