@@ -69,15 +69,15 @@ class PlgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            KLoader::addAdapter(new KLoaderAdapterModule(array(
+            KClass::addAdapter(new KClassAdapterModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KLoader::addAdapter(new KLoaderAdapterPlugin(array(
+            KClass::addAdapter(new KClassAdapterPlugin(array(
                 'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KLoader::addAdapter(new KLoaderAdapterComponent(array(
+            KClass::addAdapter(new KClassAdapterComponent(array(
                 'basepaths' => array(
                     '*'          => JPATH_BASE,
                     'koowa'      => JPATH_LIBRARIES.'/koowa',

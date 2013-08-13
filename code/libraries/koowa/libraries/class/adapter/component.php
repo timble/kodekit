@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KLoaderAdapterComponent extends KLoaderAdapterAbstract
+class KClassAdapterComponent extends KClassAdapterAbstract
 {
 	/**
 	 * The adapter type

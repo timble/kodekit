@@ -370,7 +370,7 @@ class KService implements KServiceInterface
         $result = null;
 
         //Load the class manually using the basepath
-        if(self::get('koowa:loader')->loadClass($identifier->classname, $identifier->basepath))
+        if(self::get('koowa:class')->loadClass($identifier->classname, $identifier->basepath))
         {
             if(array_key_exists('KObjectServiceable', class_implements($identifier->classname)))
             {

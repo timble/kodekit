@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-abstract class KLoaderAdapterAbstract implements KLoaderAdapterInterface
+abstract class KClassAdapterAbstract implements KClassAdapterInterface
 {
 	/**
 	 * The adapter type
@@ -23,7 +23,7 @@ abstract class KLoaderAdapterAbstract implements KLoaderAdapterInterface
 	protected $_type = '';
 
 	/**
-	 * The class prefiex
+	 * The class prefix
 	 *
 	 * @var string
 	 */
@@ -64,7 +64,7 @@ abstract class KLoaderAdapterAbstract implements KLoaderAdapterInterface
      *
      * @param  string   $basepath The base path of the package
      * @param  string   $package
-     * @return KLoaderAdapterInterface
+     * @return KClassAdapterInterface
      */
     public function registerBasepath($basepath, $package = '*')
     {

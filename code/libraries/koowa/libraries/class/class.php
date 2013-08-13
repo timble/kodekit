@@ -18,7 +18,7 @@ require_once dirname(__FILE__) . '/registry.php';
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KLoader
+class KClass
 {
     /**
      * The file container
@@ -49,7 +49,7 @@ class KLoader
     final private function __construct($config = array())
     {
         //Create the class registry
-        $this->_registry = new KLoaderRegistry();
+        $this->_registry = new KClassRegistry();
 
         if(isset($config['cache_prefix'])) {
             $this->_registry->setCachePrefix($config['cache_prefix']);
@@ -60,7 +60,7 @@ class KLoader
         }
 
         //Add the koowa class loader
-        self::addAdapter(new KLoaderAdapterKoowa(
+        self::addAdapter(new KClassAdapterKoowa(
             array('basepaths' => array('*' => dirname(dirname(__FILE__))))
         ));
 
@@ -79,7 +79,7 @@ class KLoader
      * Singleton instance
      *
      * @param  array  $config An optional array with configuration options.
-     * @return KLoader
+     * @return KClass
      */
     public static function getInstance($config = array())
     {
@@ -110,7 +110,7 @@ class KLoader
     /**
      * Get the class registry object
      *
-     * @return object KLoaderRegistry
+     * @return object KClassRegistry
      */
     public function getRegistry()
     {
@@ -120,10 +120,10 @@ class KLoader
  	/**
      * Add a loader adapter
      *
-     * @param KLoaderAdapterInterface $adapter  A KLoaderAdapter
+     * @param KClassAdapterInterface $adapter  A class loader adapter
      * @return void
      */
-    public static function addAdapter(KLoaderAdapterInterface $adapter)
+    public static function addAdapter(KClassAdapterInterface $adapter)
     {
         self::$_adapters[$adapter->getType()]     = $adapter;
         self::$_prefix_map[$adapter->getPrefix()] = $adapter->getType();

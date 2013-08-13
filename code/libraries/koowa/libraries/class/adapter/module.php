@@ -8,39 +8,38 @@
  */
 
 /**
- * Koowa Loader Adapter
+ * Module Loader Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KLoaderAdapterKoowa extends KLoaderAdapterAbstract
+class KClassAdapterModule extends KClassAdapterAbstract
 {
 	/**
 	 * The adapter type
 	 *
 	 * @var string
 	 */
-	protected $_type = 'koowa';
+	protected $_type = 'mod';
 
 	/**
 	 * The class prefix
 	 *
 	 * @var string
 	 */
-	protected $_prefix = 'K';
+	protected $_prefix = 'Mod';
 
 	/**
 	 * Get the path based on a class name
 	 *
-     * @param  string $classname    The class name
+	 * @param  string $classname    The class name
      * @param  string $basepath     The base path
-	 * @return string|false		Returns the path on success FALSE on failure
+	 * @return string|boolean		Returns the path on success FALSE on failure
 	 */
 	public function findPath($classname, $basepath = null)
 	{
 		$path = false;
 
-		// If class start with a 'K' it is a Koowa framework class and we handle it
         if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
         {
             /*
@@ -53,25 +52,45 @@ class KLoaderAdapterKoowa extends KLoaderAdapterAbstract
                 $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
 
-            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1',  $classname);
+            $word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
             $parts = explode(' ', $word);
 
-            // Remove the K prefix
-            array_shift($parts);
+            $type    = array_shift($parts);
+            $package = array_shift($parts);
 
-		    $path = strtolower(implode('/', $parts));
+		    $module = 'mod_'.$package;
+			$file 	   = array_pop($parts);
 
-			if(count($parts) == 1) {
-				$path = $path.'/'.$path;
+			if(count($parts))
+			{
+				if($parts[0] != 'view')
+			    {
+			        foreach($parts as $key => $value) {
+					    $parts[$key] = KInflector::pluralize($value);
+				    }
+			    }
+			    else $parts[0] = KInflector::pluralize($parts[0]);
+
+				$path = implode('/', $parts);
+				$path = $path.'/'.$file;
 			}
+			else $path = $file;
 
-			if(!is_file($this->_basepath.'/'.$path.'.php')) {
-				$path = $path.'/'.strtolower(array_pop($parts));
-			}
+            //Find the basepath
+            if(!empty($basepath) && empty($this->_basepaths[$package])) {
+                $this->_basepath = $basepath;
+            }
 
-			$path = $this->_basepath.'/'.$path.'.php';
+            if(isset($this->_basepaths[$package])) {
+                $basepath = $this->_basepaths[$package];
+            } else {
+                $basepath = $this->_basepath;
+            }
+
+			$path = $basepath.'/modules/'.$module.'/'.$path.'.php';
 		}
 
 		return $path;
+
 	}
 }
