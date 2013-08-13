@@ -11,9 +11,9 @@
  * State Config
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Config
+ * @package Koowa\Library\Model
  */
-class KConfigState extends KConfig
+class KModelState extends KConfig
 {
 	/**
      * Retrieve a configuration item and return $default if there is no element set.
@@ -67,7 +67,7 @@ class KConfigState extends KConfig
      * @param   mixed       $default  The default value of the state
      * @param   boolean     $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
      * @param   array       $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
-     * @return  KConfigState
+     * @return  KModelState
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array())
     {
@@ -87,7 +87,7 @@ class KConfigState extends KConfig
      * Remove an existing state
      *
      * @param   string      $name The name of the state
-     * @return  KConfigState
+     * @return  KModelState
      */
     public function remove( $name )
     {
@@ -99,7 +99,7 @@ class KConfigState extends KConfig
      * Reset all state data and revert to the default state
      *
      * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
-     * @return KConfigState
+     * @return  KModelState
      */
     public function reset($default = true)
     {
@@ -117,7 +117,7 @@ class KConfigState extends KConfig
       * to NULL.
      *
      * @param   array|object    An associative array of state values by name
-     * @return  KConfigState
+     * @return  KModelState
      */
     public function setData(array $data)
     {
