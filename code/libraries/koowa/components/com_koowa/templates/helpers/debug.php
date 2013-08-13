@@ -8,7 +8,7 @@
  */
 
 /**
- * Extends the template class with debugging and dumping tools.
+ * Debug Template Helper
  *
  * This class is based on Kohana_Debug class and subject to the BSD License
  *
@@ -18,45 +18,29 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateError extends ComKoowaTemplateAbstract
+class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
 {
-    /**
-     * Returns an HTML string of debugging information about any number of variables, each wrapped in a "pre" tag:
-     *
-     *     // Displays the type and value of each variable
-     *     echo Debug::vars($foo, $bar, $baz);
-     *
-     * @return  string
-     */
-    public function vars()
-    {
-        if (func_num_args() === 0)
-            return '';
-
-        // Get all passed variables
-        $variables = func_get_args();
-
-        $output = array();
-        foreach ($variables as $var) {
-            $output[] = $this->_dump($var, 1024);
-        }
-
-        return '<pre class="debug">'.implode("\n", $output).'</pre>';
-    }
-
     /**
      * Returns an HTML string of information about a single variable.
      *
      * Borrows heavily on concepts from the Debug class of [Nette](http://nettephp.com/).
      *
-     * @param   mixed   $value              variable to dump
-     * @param   integer $length             maximum length of strings
-     * @param   integer $level_recursion    recursion limit
+     * @param array $config
+     * @internal param mixed $value variable to dump
+     * @internal param int $length maximum length of strings
+     * @internal param int $level_recursion recursion limit
      * @return  string
      */
-    public function dump($value, $length = 128, $level_recursion = 5)
+    public function dump($config = array())
     {
-        return $this->_dump($value, $length, $level_recursion);
+        $config = new KConfig($config);
+        $config->append(array(
+            'value'           => null,
+            'length'          => 128,
+            'level_recursion' => 5
+        ));
+
+        return $this->_dump($config->value, $config->length, $config->level_recursion);
     }
 
     /**
@@ -244,11 +228,16 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      *
      * Useful for debugging when you want to display a shorter path.
      *
-     * @param   string  $file   path to debug
+     * @param array $config
+     * @internal param string $file path to debug
      * @return  string
      */
-    public function path($file)
+    public function path($config = array())
     {
+        $config = new KConfig($config);
+
+        $file = $config->file;
+
         if (strpos($file, JPATH_ROOT) === 0) {
             $file = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
         }
@@ -262,14 +251,25 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      *     // Highlights the current line of the current file
      *     echo Debug::source(__FILE__, __LINE__);
      *
-     * @param   string  $file           file to open
-     * @param   integer $line_number    line number to highlight
-     * @param   integer $padding        number of padding lines
+     * @param array $config
+     *
+     * @internal param   string  $file           file to open
+     * @internal param int $line line number to highlight
+     * @internal param int $padding number of padding lines
      * @return  string   source of file
-     * @return  bool    file is unreadable
+     * @return string file is unreadable
      */
-    public function source($file, $line_number, $padding = 5)
+    public function source($config = array())
     {
+        $config = new KConfig($config);
+        $config->append(array(
+            'padding' => 5
+        ));
+
+        $file        = $config->file;
+        $line_number = $config->line;
+        $padding     = $config->padding;
+
         // Continuing will cause errors
         if ( ! $file OR ! is_readable($file)) {
             return FALSE;
@@ -327,11 +327,19 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
      *     // Displays the entire current backtrace
      *     echo implode('<br/>', Debug::trace());
      *
-     * @param   array   $trace
+     * @param array $config
+     * @internal param array $trace
      * @return  string
      */
-    public function trace(array $trace = NULL)
+    public function trace($config = array())
     {
+        $config = new KConfig($config);
+        $config->append(array(
+            'trace' => null
+        ));
+
+        $trace = $config->trace;
+
         // Start a new trace
         if ($trace === NULL) {
             $trace = debug_backtrace();
@@ -446,5 +454,4 @@ class ComKoowaTemplateError extends ComKoowaTemplateAbstract
 
         return $output;
     }
-
 }

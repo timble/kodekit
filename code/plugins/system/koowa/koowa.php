@@ -158,7 +158,7 @@ class PlgSystemKoowa extends JPlugin
         try
         {
             // If Koowa does not exist let Joomla handle the exception
-            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateError')) {
+            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateDefault')) {
                 throw new Exception('');
             }
 
@@ -166,10 +166,10 @@ class PlgSystemKoowa extends JPlugin
                 'exception' => $exception
             );
 
-            $template = KService::get('com:koowa.template.error');
-            $template->addFilter(array('shorttag', 'variable'));
+            $template = KService::get('com:koowa.template.default');
+            $template->addFilter(array('alias', 'shorttag', 'variable'));
             $template->loadFile(
-                JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/error/tmpl/default.php',
+                JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php',
                 $data
             );
 
@@ -184,7 +184,7 @@ class PlgSystemKoowa extends JPlugin
             exit;
         }
         catch (Exception $e)
-        {
+        {var_dump($e);die;
             if (version_compare(JVERSION, '3.0', '>=')) {
                 JErrorPage::render($exception);
             } else {
