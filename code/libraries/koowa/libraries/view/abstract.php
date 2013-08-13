@@ -87,7 +87,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-			'model'   	 => $this->getName(),
+            'model'      => 'koowa:model.empty',
             'translator' => null,
 	    	'output'	 => '',
     		'mimetype'	 => '',
