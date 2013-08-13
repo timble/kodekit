@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-interface KDatabaseTableAbstract
+interface KDatabaseTableInterface
 {
     /**
      * Gets the database adapter

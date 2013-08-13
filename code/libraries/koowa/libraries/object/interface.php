@@ -20,7 +20,7 @@ interface KObjectInterface
      *
      * @param   KConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null);
+    public function __construct(KConfig $config);
 
 	/**
 	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
