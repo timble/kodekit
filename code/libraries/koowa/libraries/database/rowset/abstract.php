@@ -77,13 +77,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
 	    return true;
 	}
 
-	/**
+    /**
      * Insert a row into the rowset
      *
      * The row will be stored by it's identity_column if set or otherwise by it's object handle.
      *
-     * @param  KDatabaseRowInterface $row A KDatabaseRow object to be inserted
-     * @return boolean	TRUE on success FALSE on failure
+     * @param KDatabaseRowInterface $row A KDatabaseRow object to be inserted
+     * @throws InvalidArgumentException
+     * @return boolean    TRUE on success FALSE on failure
      */
     public function insert(KObjectHandlable $row)
     {
@@ -182,7 +183,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Add rows to the rowset
      *
      * @param  array    $data   An associative array of row data to be inserted.
-     * @param  boolean  $enw    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
+     * @param  boolean  $new    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
      * @return  KDatabaseRowsetAbstract
      * @see __construct
      */
@@ -249,8 +250,8 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * This functions accepts either a know position or associative array of key/value pairs
      *
-     * @param   string|array $needle The position or the key or an associatie array of column data to match
-     * @return KDatabaseRow(set)Abstract Returns a row or rowset if successfull. Otherwise NULL.
+     * @param   string|array $needle The position or the key or an associative array of column data to match
+     * @return KDatabaseRowInterface|KDatabaseRowsetInterface Returns a row or rowset if successful. Otherwise NULL.
      */
     public function find($needle)
     {
@@ -385,7 +386,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      */
     public function __call($method, $arguments)
     {
-        //If the method is of the formet is[Bahavior] handle it
+        //If the method is of the format is[Bahavior] handle it
         $parts = KInflector::explode($method);
 
         if($parts[0] == 'is' && isset($parts[1]))

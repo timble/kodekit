@@ -189,7 +189,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	 *
 	 * Variable passed to this function will always be a scalar
 	 *
-	 * @param	scalar	$value Value to be validated
+	 * @param	mixed	$value Value to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	abstract protected function _validate($value);
@@ -199,7 +199,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	 *
 	 * Variable passed to this function will always be a scalar
 	 *
-	 * @param	scalar	$value Value to be sanitized
+	 * @param	mixed	$value Value to be sanitized
 	 * @return	mixed
 	 */
 	abstract protected function _sanitize($value);

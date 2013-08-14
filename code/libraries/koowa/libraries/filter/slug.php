@@ -80,8 +80,8 @@ class KFilterSlug extends KFilterAbstract
 	 * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents", replace whitespaces by hyphens and
      * lowercase the result.
 	 *
-	 * @param	scalar	$value Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	$value Variable to be sanitized
+	 * @return	mixed
 	 */
 	protected function _sanitize($value)
 	{

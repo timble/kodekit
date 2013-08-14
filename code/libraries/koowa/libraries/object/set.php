@@ -257,7 +257,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
     /**
      * Return the key of the current element
      *
-     * @return  scalar
+     * @return  mixed
      */
     public function key()
     {
@@ -277,7 +277,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
 	/**
      * Move forward to next element
      *
-     * @return  void
+     * @return  mixed
      */
     public function next()
     {

@@ -92,7 +92,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Method to set a table object attached to the rowset
 	 *
-	 * @param	mixed	An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$table An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KDatabaseRowsetAbstract
@@ -134,7 +134,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Load the row from the database using the data in the row
 	 *
-	 * @return object	If successfull returns the row object, otherwise NULL
+	 * @return object	If successful returns the row object, otherwise NULL
 	 */
 	public function load()
 	{
@@ -265,7 +265,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * This function will reset required column to their default value, not required
 	 * fields will be unset.
 	 *
-	 * @param	string  The column name.
+	 * @param	string  $column The column name.
 	 * @return	void
 	 */
 	public function __unset($column)
@@ -289,8 +289,8 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * a just in time mixin strategy. Available table behaviors are only mixed
 	 * when needed.
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method    The function name
+	 * @param  array  	$arguments The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */

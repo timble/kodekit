@@ -37,5 +37,7 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
         } else {
             $document->addStyleDeclaration($style);
         }
+
+        return '';
     }
 }

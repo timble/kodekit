@@ -23,7 +23,7 @@ class KFilterTime extends KFilterTimestamp
      * As an alternative, the value may be an array with all of the keys for `H`, `i`, and optionally `s`, in which
      * case the value is converted to an ISO 8601 string before validating it.
      *
-     * @param   scalar  $value Value to be validated
+     * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)

@@ -35,7 +35,7 @@ interface KDatabaseTableInterface
     /**
      * Set the database adapter
      *
-     * @param   KDatabaseAdapterInterface $adapter
+     * @param   KDatabaseAdapterInterface $database
      * @return  KDatabaseTableAbstract
      */
     public function setDatabase(KDatabaseAdapterInterface $database);
@@ -180,7 +180,8 @@ interface KDatabaseTableInterface
     /**
      * Get a default by name
      *
-     * @return string $columnname Returns the column default value or NULL if the column does not exist
+     * @param  string $columnname Column name
+     * @return string Returns the column default value or NULL if the column does not exist
      */
     public function getDefault($columnname);
 
@@ -209,7 +210,7 @@ interface KDatabaseTableInterface
      * @param integer  $mode    The database fetch style.
      * @param integer  $mode    The database fetch style.
      * @param array    $options An optional associative array of configuration options.
-     * @return KDatabaseRow(set) depending on the mode.
+     * @return KDatabaseRowInterface|KDatabaseRowsetInterface depending on the mode.
      */
     public function select($query = null, $mode = KDatabase::FETCH_ROWSET, array $options = array());
 

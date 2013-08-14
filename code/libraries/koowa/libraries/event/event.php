@@ -43,8 +43,8 @@ class KEvent extends KConfig implements KEventInterface
     /**
      * Constructor.
      *
-     * @param	string 			The event name
-     * @param   array|KConfig 	An associative array of configuration settings or a KConfig instance.
+     * @param	string 			$name   The event name
+     * @param   array|KConfig 	$config An associative array of configuration settings or a KConfig instance.
      */
     public function __construct( $name, $config = array() )
     {

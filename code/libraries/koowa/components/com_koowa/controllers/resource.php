@@ -22,7 +22,7 @@ class ComKoowaControllerResource extends KControllerResource
      * If the controller was not dispatched manually load the langauges files
      *
      * @param   KCommandContext $context A command context object
-     * @return  KDatabaseRow(set)   A row(set) object containing the data to display
+     * @return 	string|bool 	The rendered output of the view or false if something went wrong
      */
     protected function _actionGet(KCommandContext $context)
     {

@@ -171,7 +171,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     /**
      * Set the database adapter
      *
-     * @param   KDatabaseAdapterInterface $adapter
+     * @param   KDatabaseAdapterInterface $database
      * @return  KDatabaseTableAbstract
      */
     public function setDatabase(KDatabaseAdapterInterface $database)
@@ -501,7 +501,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     /**
      * Get a default by name
      *
-     * @return string $columnname Returns the column default value or NULL if the column does not exist
+     * @param  string $columnname Column name
+     * @return string Returns the column default value or NULL if the column does not exist
      */
     public function getDefault($columnname)
     {
@@ -563,7 +564,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      * @param integer  $mode    The database fetch style.
      * @param integer  $mode    The database fetch style.
      * @param array    $options An optional associative array of configuration options.
-     * @return KDatabaseRow(set) depending on the mode.
+     * @return KDatabaseRowInterface|KDatabaseRowsetInterface depending on the mode.
      */
     public function select($query = null, $mode = KDatabase::FETCH_ROWSET, array $options = array())
     {
@@ -841,7 +842,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
             // Set the query in the context.
             if ($context->affected !== false) {
-                $context->data->setStatus($context->affected ? KDatabase::STATUS_DELETED : KDatabase::STATUS_FALIED);
+                $context->data->setStatus($context->affected ? KDatabase::STATUS_DELETED : KDatabase::STATUS_FAILED);
             }
 
             $this->getCommandChain()->run('after.delete', $context);
@@ -946,8 +947,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 	 * using is[Behavior] function. If the behavior exists the function will return
 	 * TRUE, otherwise FALSE.
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method    The function name
+	 * @param  array  	$arguments The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */

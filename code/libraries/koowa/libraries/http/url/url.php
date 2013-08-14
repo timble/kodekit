@@ -324,7 +324,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     /**
      * Set the URL password
      *
-     * @param  string $user
+     * @param  string $pass
      * @return KHttpUrl
      */
     public function setPass($pass)
@@ -537,7 +537,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = new static(array('components' => $parts));
+        $url = new self(array('components' => $parts));
         return $url;
     }
 

@@ -69,7 +69,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	        }
 	    }
 
-		return parent::loadFile($path, $data);;
+		return parent::loadFile($path, $data);
 	}
 
 	/**

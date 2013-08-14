@@ -118,7 +118,8 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * @param   string          $action  The action to execute
      * @param   KCommandContext $context A command context object
-     * @throws  BadMethodCallException
+     * @throws Exception
+     * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
     public function execute($action, KCommandContext $context)

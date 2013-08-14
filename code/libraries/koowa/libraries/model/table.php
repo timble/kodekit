@@ -100,7 +100,7 @@ class KModelTable extends KModelAbstract
      * Function catches RuntimeException that are thrown for tables that don't exist. If no table object can be created
      * the function will return FALSE.
      *
-     * @return KDatabaseTableAbstractInterface
+     * @return KDatabaseTableInterface
      */
     public function getTable()
     {
@@ -202,7 +202,7 @@ class KModelTable extends KModelAbstract
     }
 
     /**
-     * Get a list of items which represnts a  table rowset
+     * Get a list of items which represents a  table rowset
      *
      * @return KDatabaseRowsetInterface
      */

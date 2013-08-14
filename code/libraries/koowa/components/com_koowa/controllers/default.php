@@ -69,7 +69,7 @@ class ComKoowaControllerDefault extends KControllerService
      * If the controller was not dispatched manually load the langauges files
      *
      * @param   KCommandContext $context A command context object
-     * @return  KDatabaseRow(set)   A row(set) object containing the data to display
+     * @return 	string|bool 	The rendered output of the view or FALSE if something went wrong
      */
     protected function _actionGet(KCommandContext $context)
     {
@@ -84,7 +84,7 @@ class ComKoowaControllerDefault extends KControllerService
      * Use the application default limit if no limit exists in the model and limit the limit to a maximum.
      *
      * @param   KCommandContext $context A command context object
-     * @return  KDatabaseRow(set)   A row(set) object containing the data to display
+     * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
      */
     protected function _actionBrowse(KCommandContext $context)
     {
@@ -114,7 +114,7 @@ class ComKoowaControllerDefault extends KControllerService
      * This functions implements an extra check to hide the main menu is the view name is singular (item views)
      *
      * @param  KCommandContext $context A command context object
-     * @return KDatabaseRow A row object containing the selected row
+     * @return KDatabaseRowInterface A row object containing the selected row
      */
     protected function _actionRead(KCommandContext $context)
     {

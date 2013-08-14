@@ -26,8 +26,10 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
     /**
      * If the method is called with one of the standard Joomla toolbar buttons translate the label correctly
      *
-     * @param $name   The command name
-     * $param $config The command configuration options
+     * @param string $name   The command name
+     * @param array  $config The command configuration options
+     *
+     * @return $this
      */
     public function addCommand($name, $config = array())
     {
@@ -46,7 +48,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
      */
     protected function _commandPublish(KControllerToolbarCommand $command)
     {
-        return $this->_commandEnable($command);
+        $this->_commandEnable($command);
     }
 
     /**
@@ -57,7 +59,7 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
      */
     protected function _commandUnpublish(KControllerToolbarCommand $command)
     {
-        return $this->_commandDisable($command);
+        $this->_commandDisable($command);
     }
     
     /**
@@ -109,8 +111,8 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
     
         $command->append(array(
             'attribs' => array(
-            'data-action' => 'save2new'
-        )
+                'data-action' => 'save2new'
+            )
         ));
     }
 
@@ -185,8 +187,6 @@ class ComKoowaControllerToolbarDefault extends KControllerToolbarDefault
      */
     protected function _commandModal(KControllerToolbarCommand $command)
     {
-        $option = $this->getIdentifier()->package;
-
         $command->append(array(
             'width'   => '640',
             'height'  => '480',

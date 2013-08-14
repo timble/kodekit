@@ -68,7 +68,7 @@ interface KHttpUrlInterface
     /**
      * Set the URL password
      *
-     * @param  string $user
+     * @param  string $pass
      * @return KHttpUrl
      */
     public function setPass($pass);

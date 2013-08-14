@@ -56,7 +56,6 @@ interface KDatabaseRowsetInterface
      * array of key/value pairs
      *
      * @param 	string 	$needle     The position or the key to search for
-     * @param 	mixed  	The value to search for
      * @return KDatabaseRowAbstract
      */
     public function find($needle);
@@ -95,7 +94,7 @@ interface KDatabaseRowsetInterface
 	/**
      * Removes a row
      *
-     * The row will be removed based on it's identity_column if set or otherwise by
+     * The row will be removed based on its identity_column if set or otherwise by
      * it's object handle.
      *
      * @param  KDatabaseRowInterface $row 	A KDatabaseRow object to be removed

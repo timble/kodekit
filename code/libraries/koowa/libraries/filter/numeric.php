@@ -21,7 +21,7 @@ class KFilterNumeric extends KFilterAbstract
  	 * valid numeric value. Hexadecimal notation (0xFF) is allowed too but only without sign, decimal
  	 * and exponential part
 	 *
-	 * @param	scalar	$value Value to be validated
+	 * @param	mixed	$value Value to be validated
 	 * @return	bool	True when the variable is valid
 	 */
 	protected function _validate($value)
@@ -32,7 +32,7 @@ class KFilterNumeric extends KFilterAbstract
 	/**
 	 * Sanitize non-numeric characters from the value.
 	 *
-	 * @param	scalar	$value Value to be sanitized
+	 * @param	mixed	$value Value to be sanitized
 	 * @return	float
 	 */
 	protected function _sanitize($value)

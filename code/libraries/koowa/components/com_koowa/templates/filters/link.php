@@ -34,5 +34,7 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
         unset($attribs['rel']);
 
         JFactory::getDocument()->addHeadLink($link, $relValue, $relType, $attribs);
+
+        return '';
     }
 }

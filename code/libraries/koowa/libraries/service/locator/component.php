@@ -35,7 +35,7 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
 	 *                     -> Framework Default
 	 *
 	 * @param KServiceIdentifier $identifier An identifier object - com:[//application/]component.view.[.path].name
-	 * @return string|false  Return object on success, returns FALSE on failure
+	 * @return string|boolean  Return object on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier)
 	{

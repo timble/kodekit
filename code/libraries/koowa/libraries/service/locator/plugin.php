@@ -25,7 +25,7 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 	 * Get the classname based on an identifier
 	 *
 	 * @param  KServiceIdentifier $identifier An identifier object - plg.type.plugin.[.path].name
-	 * @return string|false  Return object on success, returns FALSE on failure
+	 * @return string|boolean  Return object on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier)
 	{
@@ -44,7 +44,7 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 	 * Get the path based on an identifier
 	 *
 	 * @param  KServiceIdentifier $identifier An Identifier object - plg.type.plugin.[.path].name
-	 * @return string|false		Returns the path on success FALSE on failure
+	 * @return string|boolean		Returns the path on success FALSE on failure
 	 */
 	public function findPath(KServiceIdentifier $identifier)
 	{

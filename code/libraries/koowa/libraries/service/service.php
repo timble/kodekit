@@ -149,7 +149,7 @@ class KService implements KServiceInterface
 	/**
 	 * Check if the object instance exists based on the identifier
 	 *
-	 * @param	mixed	$identfiier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					            or valid identifier string
 	 * @return boolean Returns TRUE on success or FALSE on failure.
 	 */
@@ -183,7 +183,7 @@ class KService implements KServiceInterface
     {
         settype($mixins, 'array');
 
-        $objIdentifier = self::getIdentfier($identifier);
+        $objIdentifier = self::getIdentifier($identifier);
         $strIdentifier = (string) $objIdentifier;
 
         if (!isset(self::$_mixins[$strIdentifier]) ) {
@@ -297,7 +297,7 @@ class KService implements KServiceInterface
 	 *
 	 * @param mixed	  $identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 				              or valid identifier string
-	 * @param array	  An associative array of configuration options
+	 * @param array	  $config     An associative array of configuration options
 	 */
 	public static function setConfig($identifier, array $config)
 	{
@@ -314,9 +314,9 @@ class KService implements KServiceInterface
 	/**
 	 * Get the configuration options for an identifier
 	 *
-	 * @param mixed	  $identfier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param mixed	  $identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 				             or valid identifier string
-	 *  @param array  An associative array of configuration options
+	 * @return array  An associative array of configuration options
 	 */
 	public static function getConfig($identifier)
 	{

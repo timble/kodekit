@@ -31,8 +31,8 @@ class KFilterAscii extends KFilterAbstract
 	/**
 	 * Transliterate all unicode characters to US-ASCII. The string must be well-formed UTF8
 	 *
-	 * @param	scalar	$value Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	$value Variable to be sanitized
+	 * @return	mixed
 	 */
 	protected function _sanitize($value)
 	{

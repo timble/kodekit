@@ -37,5 +37,7 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
         } else {
             $document->addScriptDeclaration($script);
         }
+
+        return '';
     }
 }
