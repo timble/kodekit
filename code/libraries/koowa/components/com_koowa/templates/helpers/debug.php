@@ -31,14 +31,17 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
      */
     public function dump($config = array())
     {
+        // Have to do this to avoid array to KConfig conversion
+        $value = $config['value'];
+        unset($config['value']);
+
         $config = new KConfig($config);
         $config->append(array(
-            'value'           => null,
             'length'          => 128,
             'level_recursion' => 5
         ));
 
-        return $this->_dump($config->value, $config->length, $config->level_recursion);
+        return $this->_dump($value, $config->length, $config->level_recursion);
     }
 
     /**
@@ -56,9 +59,9 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
             'file'    => '',
         ));
 
-        $html = '';
+        $html = $config->file;
         if (strpos($config->file, JPATH_ROOT) === 0) {
-            $file = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($config->file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
+            $html = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($config->file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
         }
 
         return $html;
@@ -86,7 +89,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
         $html = '';
 
         // Continuing will cause errors
-        if (!$file || !is_readable($file))
+        if ($file && is_readable($file))
         {
             // Open the file and set the line position
             $file = fopen($file, 'r');
@@ -167,7 +170,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
 
             // Include the source of this step
             if (isset($step['file']) AND isset($step['line'])) {
-                $source = $this->source($step['file'], $step['line']);
+                $source = $this->source(array('file' => $step['file'], 'line' => $step['line']));
             }
 
             if (isset($step['file']))
@@ -403,7 +406,5 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
             return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
         }
         else return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, TRUE), ENT_NOQUOTES, 'utf-8');
-
-        return '';
     }
 }
