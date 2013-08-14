@@ -265,8 +265,6 @@ class KRequest
      */
     public static function content($key = null)
     {
-        $result = '';
-
         if (!isset(self::$_content) && isset($_SERVER['CONTENT_TYPE']))
         {
             $type = $_SERVER['CONTENT_TYPE'];

@@ -55,7 +55,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             $word    = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
             $parts   = explode(' ', $word);
 
-            $type    = array_shift($parts);
+            array_shift($parts);
             $package = array_shift($parts);
 
             $component = 'com_'.$package;

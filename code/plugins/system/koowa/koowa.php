@@ -132,7 +132,7 @@ class PlgSystemKoowa extends JPlugin
 		}
 		
 		$headers = JResponse::getHeaders();
-		foreach ($headers as $key => $header)
+		foreach ($headers as $header)
 		{
 			if ($header['name'] === 'Content-disposition')
 			{

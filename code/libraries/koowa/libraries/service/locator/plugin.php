@@ -51,7 +51,6 @@ class KServiceLocatorPlugin extends KServiceLocatorAbstract
 	    $path  = '';
 	    $parts = $identifier->path;
 
-		$name  = array_shift($parts);
 		$type  = $identifier->package;
 
 		if(!empty($identifier->name))

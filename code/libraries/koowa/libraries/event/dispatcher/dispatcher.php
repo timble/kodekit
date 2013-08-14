@@ -54,8 +54,6 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
      */
     public function dispatchEvent($name, $event = array())
     {
-        $result = array();
-
         //Make sure we have an event object
         if(!$event instanceof KEvent) {
             $event = new KEvent($name, $event);

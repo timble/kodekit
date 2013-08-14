@@ -108,9 +108,6 @@ abstract class KViewTemplate extends KViewAbstract
      */
     protected function _initialize(KConfig $config)
     {
-        //Clone the identifier
-        $identifier = clone $this->getIdentifier();
-
         $config->append(array(
             'data'			   => array(),
             'escape'           => 'htmlspecialchars',

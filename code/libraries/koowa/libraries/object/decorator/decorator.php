@@ -101,7 +101,6 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
      */
 	public function inherits($class)
     {
-		$result = false;
     	$object = $this->getObject();
 
         if($object instanceof KObject) {

@@ -231,7 +231,7 @@ class KViewVcard extends KViewFile
         }
 
         if ($country != '') {
-            $country.= $country;
+            $label.= $country;
             $label.= "\r\n";
         }
 

@@ -661,8 +661,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected function _quoteIdentifier($name)
     {
-    	$result = '';
-    
     	if (is_array($name)) {
     		$name = $name[0];
     	}

@@ -191,7 +191,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     public function addData(array $data, $new = true)
     {
         //Set the data in the row object and insert the row
-        foreach($data as $k => $row)
+        foreach($data as $row)
         {
             $options = array(
             	'data'   => $row,
@@ -262,7 +262,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         {
             $result = clone $this;
 
-            foreach ($this as $i => $row)
+            foreach ($this as $row)
             {
                 foreach($needle as $key => $value)
                 {
@@ -295,7 +295,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         {
             $result = true;
 
-            foreach ($this as $i => $row)
+            foreach ($this as $row)
             {
                 if(!$row->save()) {
                     $result = false;
@@ -319,7 +319,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         {
             $result = true;
 
-            foreach ($this as $i => $row)
+            foreach ($this as $row)
             {
                 if(!$row->delete()) {
                     $result = false;
@@ -403,7 +403,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
              //If the mixed method exists call it for all the rows
             if(isset($this->_mixed_methods[$method]))
             {
-                foreach ($this as $i => $row) {
+                foreach ($this as $row) {
                      $row->__call($method, $arguments);
                 }
 

@@ -102,9 +102,6 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	 */
 	public function execute($name, KCommandContext $context)
 	{
-		$identifier = clone $context->caller->getIdentifier();
-		$type       = array_pop($identifier->path);
-
 		$parts  = explode('.', $name);
 		$method = '_'.$parts[0].ucfirst($parts[1]);
 
