@@ -76,7 +76,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     final private function __clone()
     {
-        throw new \Exception("An instance of ".get_called_class()." cannot be cloned.");
+        throw new Exception("An instance of KClassLoader cannot be cloned.");
     }
 
     /**
@@ -286,7 +286,7 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Tells if a class, interface or trait exists.
      *
-     * @params string $class
+     * @param string $class
      * @return boolean
      */
     public function isDeclared($class)

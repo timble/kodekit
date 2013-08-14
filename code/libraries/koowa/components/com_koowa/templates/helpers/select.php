@@ -44,7 +44,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML select list
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KConfig 	$config An optional array with configuration options
      * @return	string	Html
      */
     public function optionlist($config = array())
@@ -106,7 +106,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 	/**
 	 * Generates an HTML boolean radio list
 	 *
-	 * @param 	array 	$config An optional array with configuration options
+	 * @param 	array|KConfig 	$config An optional array with configuration options
 	 * @return	string	Html
 	 */
     public function booleanlist($config = array())
@@ -146,7 +146,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML check list
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KConfig 	$config An optional array with configuration options
      * @return	string	Html
      */    
     public function checklist( $config = array())
@@ -197,7 +197,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML radio list
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KConfig 	$config An optional array with configuration options
      * @return	string	Html
      */
     public function radiolist($config = array())

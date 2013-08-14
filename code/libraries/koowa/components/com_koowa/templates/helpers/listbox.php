@@ -152,7 +152,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'text'  option is specified the 'value' option will be used instead.
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KConfig 	$config An optional array with configuration options
      * @return	string	Html
      * @see __call()
      */
@@ -207,7 +207,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      *
      * @see    KTemplateHelperBehavior::autocomplete
      *
-     * @param  array    $config
+     * @param  array|KConfig    $config
      * @return string	The html output
      */
     protected function _autocomplete($config = array())

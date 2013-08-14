@@ -28,7 +28,8 @@ interface KControllerInterface
     /**
      * Gets the available actions in the controller.
      *
-     * @return  array Array[i] of action names.
+     * @param  bool $reload Reload the actions again
+     * @return array Actions
      */
     public function getActions($reload = false);
 

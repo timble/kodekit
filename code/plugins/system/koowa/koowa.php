@@ -7,14 +7,14 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
 /**
  * Koowa System Plugin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Plugin\System\Koowa
  */
-defined( '_JEXEC' ) or die( 'Restricted access' );
-
 class PlgSystemKoowa extends JPlugin
 {
     /**
@@ -184,7 +184,7 @@ class PlgSystemKoowa extends JPlugin
             exit;
         }
         catch (Exception $e)
-        {var_dump($e);die;
+        {
             if (version_compare(JVERSION, '3.0', '>=')) {
                 JErrorPage::render($exception);
             } else {

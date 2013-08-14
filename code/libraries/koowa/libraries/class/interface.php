@@ -11,7 +11,7 @@
  * Class Loader Interface
  *
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Class
+ * @package Koowa\Library\Class
  */
 interface KClassLoaderInterface
 {
@@ -80,7 +80,7 @@ interface KClassLoaderInterface
     /**
      * Tells if a class, interface or trait exists.
      *
-     * @params string $class
+     * @param string $class
      * @return boolean
      */
     public function isDeclared($class);

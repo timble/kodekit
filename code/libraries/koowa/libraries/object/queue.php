@@ -36,7 +36,6 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Constructor
      *
-     * @return  void
      */
     public function __construct(KConfig $config = null)
     {

@@ -278,7 +278,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         {
             switch ($app) {
                 case 'admin':
-                    $base = JPATH_ADMIN;
+                    $base = JPATH_ADMINISTRATOR;
                     break;
                 case 'site':
                     $base = JPATH_SITE;

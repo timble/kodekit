@@ -80,9 +80,9 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Insert a row into the rowset
      *
-     * The row will be stored by it's identity_column if set or otherwise by it's object handle.
+     * The row will be stored by its identity_column if set or otherwise by it's object handle.
      *
-     * @param KDatabaseRowInterface $row A KDatabaseRow object to be inserted
+     * @param KDatabaseRowInterface|KObjectHandlable $row A KDatabaseRow object to be inserted
      * @throws InvalidArgumentException
      * @return boolean    TRUE on success FALSE on failure
      */
@@ -105,13 +105,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         return true;
     }
 
- 	/**
+    /**
      * Removes a row
      *
      * The row will be removed based on it's identity_column if set or otherwise by
      * it's object handle.
      *
-     * @param  KDatabaseRowInterface $row A KDatabaseRow object to be removed
+     * @param \KDatabaseRowInterface|\KObjectHandlable $row A KDatabaseRow object to be removed
+     * @throws InvalidArgumentException
      * @return KDatabaseRowsetAbstract
      */
 	public function extract(KObjectHandlable $row)

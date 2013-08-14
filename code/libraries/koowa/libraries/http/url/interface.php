@@ -201,5 +201,5 @@ interface KHttpUrlInterface
      * @param integer $parts A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @return  string
      */
-    public function toString($parts = self::FULL);
+    public function toString($parts);
 }

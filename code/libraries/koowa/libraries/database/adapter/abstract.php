@@ -427,7 +427,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 
         if ($result === false)
         {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 $this->getConnection()->error . ' of the following query : ' . $query, $this->getConnection()->errno
             );
         }

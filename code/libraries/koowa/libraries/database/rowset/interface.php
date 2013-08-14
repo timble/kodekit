@@ -84,9 +84,9 @@ interface KDatabaseRowsetInterface
 	/**
      * Insert a row in the rowset
      *
-     * The row will be stored by i'ts identity_column if set or otherwise by it's object handle.
+     * The row will be stored by its identity_column if set or otherwise by it's object handle.
      *
-     * @param  KDatabaseRowInterface 	$row A KDatabaseRow object to be inserted
+     * @param  KDatabaseRowInterface|KObjectHandlable 	$row A KDatabaseRow object to be inserted
      * @return KDatabaseRowsetAbstract
      */
     public function insert(KObjectHandlable $row);
@@ -97,7 +97,7 @@ interface KDatabaseRowsetInterface
      * The row will be removed based on its identity_column if set or otherwise by
      * it's object handle.
      *
-     * @param  KDatabaseRowInterface $row 	A KDatabaseRow object to be removed
+     * @param  KDatabaseRowInterface|KObjectHandlable $row 	A KDatabaseRow object to be removed
      * @return KDatabaseRowsetAbstract
      */
     public function extract(KObjectHandlable $row);

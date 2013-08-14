@@ -20,7 +20,7 @@ interface KEventDispatcherInterface
      * their return values.
      *
      * @param   string  $name  The event name
-     * @param   object|array   An array, a KConfig or a KEvent object
+     * @param   KEvent|array   $event An array, a KConfig or a KEvent object
      * @return  KEventDispatcher
      */
     public function dispatchEvent($name, $event = array());
