@@ -247,9 +247,11 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public function setUrl($url)
     {
+        $url = KConfig::unbox($url);
+
         if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')) && !is_array($url))
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'The url must be a array as returned by parse_url() a string or object implementing __toString(), "'.gettype($url).'" given.'
             );
         }
@@ -537,7 +539,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = new self(array('components' => $parts));
+        $url = KService::get('koowa:http.url', array('url' => $parts));
         return $url;
     }
 
@@ -555,7 +557,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     {
         if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')))
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'The url must be a string or object implementing __toString(), "'.gettype($url).'" given.'
             );
         }
