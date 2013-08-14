@@ -23,8 +23,6 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
     /**
      * Returns an HTML string of information about a single variable.
      *
-     * Borrows heavily on concepts from the Debug class of [Nette](http://nettephp.com/).
-     *
      * @param array $config
      * @internal param mixed $value variable to dump
      * @internal param int $length maximum length of strings
@@ -44,292 +42,103 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
     }
 
     /**
-     * Helper for Debug::dump(), handles recursion in arrays and objects.
-     *
-     * @param   mixed   $var    variable to dump
-     * @param   integer $length maximum length of strings
-     * @param   integer $limit  recursion limit
-     * @param   integer $level  current recursion level (internal usage only!)
-     * @return  string
-     */
-    protected function _dump(&$var, $length = 128, $limit = 10, $level = 0)
-    {
-        if ($var === NULL)
-        {
-            return '<small>NULL</small>';
-        }
-        elseif (is_bool($var))
-        {
-            return '<small>bool</small> '.($var ? 'TRUE' : 'FALSE');
-        }
-        elseif (is_float($var))
-        {
-            return '<small>float</small> '.$var;
-        }
-        elseif (is_resource($var))
-        {
-            if (($type = get_resource_type($var)) === 'stream' AND $meta = stream_get_meta_data($var))
-            {
-                $meta = stream_get_meta_data($var);
-
-                if (isset($meta['uri']))
-                {
-                    $file = $meta['uri'];
-
-                    if (function_exists('stream_is_local'))
-                    {
-                        // Only exists on PHP >= 5.2.4
-                        if (stream_is_local($file))
-                        {
-                            $file = $this->path($file);
-                        }
-                    }
-
-                    return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, 'utf-8');
-                }
-            }
-            else
-            {
-                return '<small>resource</small><span>('.$type.')</span>';
-            }
-        }
-        elseif (is_string($var))
-        {
-            if (mb_strlen($var) > $length)
-            {
-                // Encode the truncated string
-                $str = htmlspecialchars(mb_substr($var, 0, $length), ENT_NOQUOTES, 'utf-8').'&nbsp;&hellip;';
-            }
-            else
-            {
-                // Encode the string
-                $str = htmlspecialchars($var, ENT_NOQUOTES, 'utf-8');
-            }
-
-            return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
-        }
-        elseif (is_array($var))
-        {
-            $output = array();
-
-            // Indentation for this variable
-            $space = str_repeat($s = '    ', $level);
-
-            static $marker;
-
-            if ($marker === NULL)
-            {
-                // Make a unique marker
-                $marker = uniqid("\x00");
-            }
-
-            if (empty($var))
-            {
-                // Do nothing
-            }
-            elseif (isset($var[$marker]))
-            {
-                $output[] = "(\n$space$s*RECURSION*\n$space)";
-            }
-            elseif ($level < $limit)
-            {
-                $output[] = "<span>(";
-
-                $var[$marker] = TRUE;
-                foreach ($var as $key => & $val)
-                {
-                    if ($key === $marker) continue;
-                    if ( ! is_int($key))
-                    {
-                        $key = '"'.htmlspecialchars($key, ENT_NOQUOTES, 'utf-8').'"';
-                    }
-
-                    $output[] = "$space$s$key => ".$this->_dump($val, $length, $limit, $level + 1);
-                }
-                unset($var[$marker]);
-
-                $output[] = "$space)</span>";
-            }
-            else
-            {
-                // Depth too great
-                $output[] = "(\n$space$s...\n$space)";
-            }
-
-            return '<small>array</small><span>('.count($var).')</span> '.implode("\n", $output);
-        }
-        elseif (is_object($var))
-        {
-            // Copy the object as an array
-            $array = (array) $var;
-
-            $output = array();
-
-            // Indentation for this variable
-            $space = str_repeat($s = '    ', $level);
-
-            $hash = spl_object_hash($var);
-
-            // Objects that are being dumped
-            static $objects = array();
-
-            if (empty($var))
-            {
-                // Do nothing
-            }
-            elseif (isset($objects[$hash]))
-            {
-                $output[] = "{\n$space$s*RECURSION*\n$space}";
-            }
-            elseif ($level < $limit)
-            {
-                $output[] = "<code>{";
-
-                $objects[$hash] = TRUE;
-                foreach ($array as $key => & $val)
-                {
-                    if ($key[0] === "\x00")
-                    {
-                        // Determine if the access is protected or protected
-                        $access = '<small>'.(($key[1] === '*') ? 'protected' : 'private').'</small>';
-
-                        // Remove the access level from the variable name
-                        $key = substr($key, strrpos($key, "\x00") + 1);
-                    }
-                    else
-                    {
-                        $access = '<small>public</small>';
-                    }
-
-                    $output[] = "$space$s$access $key => ".$this->_dump($val, $length, $limit, $level + 1);
-                }
-                unset($objects[$hash]);
-
-                $output[] = "$space}</code>";
-            }
-            else
-            {
-                // Depth too great
-                $output[] = "{\n$space$s...\n$space}";
-            }
-
-            return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
-        }
-        else
-        {
-            return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, TRUE), ENT_NOQUOTES, 'utf-8');
-        }
-
-        return '';
-    }
-
-    /**
      * Removes Joomla root from a filename replacing them with the plain text equivalents.
      *
      * Useful for debugging when you want to display a shorter path.
      *
-     * @param array $config
-     * @internal param string $file path to debug
-     * @return  string
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
      */
     public function path($config = array())
     {
         $config = new KConfig($config);
+        $config->append(array(
+            'file'    => '',
+        ));
 
-        $file = $config->file;
-
-        if (strpos($file, JPATH_ROOT) === 0) {
-            $file = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
+        $html = '';
+        if (strpos($config->file, JPATH_ROOT) === 0) {
+            $file = 'JPATH_ROOT'.DIRECTORY_SEPARATOR.trim(substr($config->file, strlen(JPATH_ROOT)), DIRECTORY_SEPARATOR);
         }
 
-        return $file;
+        return $html;
     }
 
     /**
      * Returns an HTML string, highlighting a specific line of a file, with some number of lines padded above and below.
      *
-     *     // Highlights the current line of the current file
-     *     echo Debug::source(__FILE__, __LINE__);
-     *
-     * @param array $config
-     *
-     * @internal param   string  $file           file to open
-     * @internal param int $line line number to highlight
-     * @internal param int $padding number of padding lines
-     * @return  string   source of file
-     * @return string file is unreadable
+     *  @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
      */
     public function source($config = array())
     {
         $config = new KConfig($config);
         $config->append(array(
-            'padding' => 5
+            'padding' => 5,
+            'file'    => '',
+            'line'    => ''
         ));
 
         $file        = $config->file;
         $line_number = $config->line;
         $padding     = $config->padding;
 
+        $html = '';
+
         // Continuing will cause errors
-        if ( ! $file OR ! is_readable($file)) {
-            return FALSE;
-        }
-
-        // Open the file and set the line position
-        $file = fopen($file, 'r');
-        $line = 0;
-
-        // Set the reading range
-        $range = array('start' => $line_number - $padding, 'end' => $line_number + $padding);
-
-        // Set the zero-padding amount for line numbers
-        $format = '% '.strlen($range['end']).'d';
-
-        $source = '';
-        while (($row = fgets($file)) !== FALSE)
+        if (!$file || !is_readable($file))
         {
-            // Increment the line number
-            if (++$line > $range['end'])
-                break;
+            // Open the file and set the line position
+            $file = fopen($file, 'r');
+            $line = 0;
 
-            if ($line >= $range['start'])
+            // Set the reading range
+            $range = array('start' => $line_number - $padding, 'end' => $line_number + $padding);
+
+            // Set the zero-padding amount for line numbers
+            $format = '% '.strlen($range['end']).'d';
+
+            while (($row = fgets($file)) !== FALSE)
             {
-                // Make the row safe for output
-                $row = htmlspecialchars($row, ENT_NOQUOTES, 'utf-8');
+                // Increment the line number
+                if (++$line > $range['end']) {
+                    break;
+                }
 
-                // Trim whitespace and sanitize the row
-                $row = '<span class="number">'.sprintf($format, $line).'</span> '.$row;
-
-                if ($line === $line_number)
+                if ($line >= $range['start'])
                 {
+                    // Make the row safe for output
+                    $row = htmlspecialchars($row, ENT_NOQUOTES, 'utf-8');
+
+                    // Trim whitespace and sanitize the row
+                    $row = '<span class="number">'.sprintf($format, $line).'</span> '.$row;
+
                     // Apply highlighting to this row
-                    $row = '<span class="line highlight">'.$row.'</span>';
-                }
-                else
-                {
-                    $row = '<span class="line">'.$row.'</span>';
-                }
+                    if ($line === $line_number) {
+                        $row = '<span class="line highlight">'.$row.'</span>';
+                    } else {
+                        $row = '<span class="line">'.$row.'</span>';
+                    }
 
-                // Add to the captured source
-                $source .= $row;
+                    // Add to the captured source
+                    $html .= $row;
+                }
             }
+
+            // Close the file
+            fclose($file);
+
+            $html = '<pre class="source"><code>'.$html.'</code></pre>';
         }
 
-        // Close the file
-        fclose($file);
-
-        return '<pre class="source"><code>'.$source.'</code></pre>';
+        return $html;
     }
 
     /**
      * Returns an array of HTML strings that represent each step in the backtrace.
      *
-     *     // Displays the entire current backtrace
-     *     echo implode('<br/>', Debug::trace());
-     *
-     * @param array $config
-     * @internal param array $trace
-     * @return  string
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
      */
     public function trace($config = array())
     {
@@ -351,15 +160,13 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
         $output = array();
         foreach ($trace as $step)
         {
-            if ( ! isset($step['function']))
-            {
-                // Invalid trace step
+            // Invalid trace step
+            if (!isset($step['function'])) {
                 continue;
             }
 
-            if (isset($step['file']) AND isset($step['line']))
-            {
-                // Include the source of this step
+            // Include the source of this step
+            if (isset($step['file']) AND isset($step['line'])) {
                 $source = $this->source($step['file'], $step['line']);
             }
 
@@ -367,8 +174,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
             {
                 $file = $step['file'];
 
-                if (isset($step['line']))
-                {
+                if (isset($step['line'])) {
                     $line = $step['line'];
                 }
             }
@@ -378,20 +184,16 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
 
             if (in_array($step['function'], $statements))
             {
-                if (empty($step['args']))
-                {
-                    // No arguments
+                // No arguments
+                if (empty($step['args'])) {
                     $args = array();
-                }
-                else
-                {
-                    // Sanitize the file path
+                } else {
                     $args = array($step['args'][0]);
                 }
             }
             elseif (isset($step['args']))
             {
-                if ( ! function_exists($step['function']) OR strpos($step['function'], '{closure}') !== FALSE)
+                if ( !function_exists($step['function']) || strpos($step['function'], '{closure}') !== FALSE)
                 {
                     // Introspection on closures or language constructs in a stack trace is impossible
                     $params = NULL;
@@ -400,19 +202,13 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
                 {
                     if (isset($step['class']))
                     {
-                        if (method_exists($step['class'], $step['function']))
-                        {
+                        if (method_exists($step['class'], $step['function'])) {
                             $reflection = new ReflectionMethod($step['class'], $step['function']);
-                        }
-                        else
-                        {
+                        } else {
                             $reflection = new ReflectionMethod($step['class'], '__call');
                         }
                     }
-                    else
-                    {
-                        $reflection = new ReflectionFunction($step['function']);
-                    }
+                    else  $reflection = new ReflectionFunction($step['function']);
 
                     // Get the function parameters
                     $params = $reflection->getParameters();
@@ -422,22 +218,16 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
 
                 foreach ($step['args'] as $i => $arg)
                 {
-                    if (isset($params[$i]))
-                    {
-                        // Assign the argument by the parameter name
-                        $args[$params[$i]->name] = $arg;
-                    }
-                    else
-                    {
-                        // Assign the argument by number
-                        $args[$i] = $arg;
+                    if (isset($params[$i])) {
+                        $args[$params[$i]->name] = $arg;  // Assign the argument by the parameter name
+                    } else {
+                        $args[$i] = $arg; // Assign the argument by number
                     }
                 }
             }
 
-            if (isset($step['class']))
-            {
-                // Class->method() or Class::method()
+            // Class->method() or Class::method()
+            if (isset($step['class'])) {
                 $function = $step['class'].$step['type'].$step['function'];
             }
 
@@ -453,5 +243,167 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
         }
 
         return $output;
+    }
+
+    /**
+     * Helper for Debug::dump(), handles recursion in arrays and objects.
+     *
+     * Borrows heavily on concepts from the Debug class of [Nette](http://nettephp.com/).
+     *
+     * @param   mixed   $var    variable to dump
+     * @param   integer $length maximum length of strings
+     * @param   integer $limit  recursion limit
+     * @param   integer $level  current recursion level (internal usage only!)
+     * @return  string
+     */
+    protected function _dump(&$var, $length = 128, $limit = 10, $level = 0)
+    {
+        if ($var === NULL) {
+            return '<small>NULL</small>';
+        }
+
+        if (is_bool($var)) {
+            return '<small>bool</small> '.($var ? 'TRUE' : 'FALSE');
+        }
+
+        if (is_float($var)) {
+            return '<small>float</small> '.$var;
+        }
+
+        if (is_resource($var))
+        {
+            if (($type = get_resource_type($var)) === 'stream' AND $meta = stream_get_meta_data($var))
+            {
+                $meta = stream_get_meta_data($var);
+
+                if (isset($meta['uri']))
+                {
+                    $file = $meta['uri'];
+
+                    if (function_exists('stream_is_local'))
+                    {
+                        // Only exists on PHP >= 5.2.4
+                        if (stream_is_local($file)) {
+                            $file = $this->path($file);
+                        }
+                    }
+
+                    return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, 'utf-8');
+                }
+            }
+            else return '<small>resource</small><span>('.$type.')</span>';
+        }
+
+        if (is_string($var))
+        {
+            if (mb_strlen($var) > $length) {
+                $str = htmlspecialchars(mb_substr($var, 0, $length), ENT_NOQUOTES, 'utf-8').'&nbsp;&hellip;';
+            } else {
+                $str = htmlspecialchars($var, ENT_NOQUOTES, 'utf-8');
+            }
+
+            return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
+        }
+
+        if (is_array($var))
+        {
+            $output = array();
+
+            // Indentation for this variable
+            $space = str_repeat($s = '    ', $level);
+
+            static $marker;
+
+            // Make a unique marker
+            if ($marker === NULL) {
+                $marker = uniqid("\x00");
+            }
+
+            if (!empty($var))
+            {
+                if (!isset($var[$marker]))
+                {
+                    if ($level < $limit)
+                    {
+                        $output[] = "<span>(";
+
+                        $var[$marker] = TRUE;
+                        foreach ($var as $key => & $val)
+                        {
+                            if ($key === $marker) {
+                                continue;
+                            }
+
+                            if ( ! is_int($key)) {
+                                $key = '"'.htmlspecialchars($key, ENT_NOQUOTES, 'utf-8').'"';
+                            }
+
+                            $output[] = "$space$s$key => ".$this->_dump($val, $length, $limit, $level + 1);
+                        }
+                        unset($var[$marker]);
+
+                        $output[] = "$space)</span>";
+                    }
+                    else $output[] = "(\n$space$s...\n$space)";
+                }
+                else  $output[] = "(\n$space$s*RECURSION*\n$space)";
+            }
+
+            return '<small>array</small><span>('.count($var).')</span> '.implode("\n", $output);
+        }
+
+        if (is_object($var))
+        {
+            // Copy the object as an array
+            $array = (array) $var;
+
+            $output = array();
+
+            // Indentation for this variable
+            $space = str_repeat($s = '    ', $level);
+
+            $hash = spl_object_hash($var);
+
+            // Objects that are being dumped
+            static $objects = array();
+
+            if (!empty($var))
+            {
+                if (!isset($objects[$hash]))
+                {
+                    if ($level < $limit)
+                    {
+                        $output[] = "<code>{";
+
+                        $objects[$hash] = TRUE;
+                        foreach ($array as $key => & $val)
+                        {
+                            if ($key[0] === "\x00")
+                            {
+                                // Determine if the access is protected or protected
+                                $access = '<small>'.(($key[1] === '*') ? 'protected' : 'private').'</small>';
+
+                                // Remove the access level from the variable name
+                                $key = substr($key, strrpos($key, "\x00") + 1);
+                            }
+                            else $access = '<small>public</small>';
+
+                            $output[] = "$space$s$access $key => ".$this->_dump($val, $length, $limit, $level + 1);
+                        }
+                        unset($objects[$hash]);
+
+                        $output[] = "$space}</code>";
+                    }
+                    else $output[] = "{\n$space$s...\n$space}";
+                }
+                else $output[] = "{\n$space$s*RECURSION*\n$space}";
+
+            }
+
+            return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
+        }
+        else return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, TRUE), ENT_NOQUOTES, 'utf-8');
+
+        return '';
     }
 }
