@@ -292,7 +292,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	/**
      * Preform a deep clone of the object.
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

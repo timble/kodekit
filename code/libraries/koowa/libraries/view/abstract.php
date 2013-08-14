@@ -129,7 +129,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	}
 
 	/**
-	 * Get the model object attached to the contoller
+	 * Get the model object attached to the controller
 	 *
 	 * @return	KModelAbstract
 	 */

@@ -377,7 +377,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Search the mixin method map and call the method or forward the call to each row for processing.
      *
-     * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+     * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
      * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string   $method     The function name
@@ -387,7 +387,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      */
     public function __call($method, $arguments)
     {
-        //If the method is of the format is[Bahavior] handle it
+        //If the method is of the format is[Behavior] handle it
         $parts = KInflector::explode($method);
 
         if($parts[0] == 'is' && isset($parts[1]))

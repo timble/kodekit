@@ -46,7 +46,7 @@ interface KViewInterface
 	public function getFormat();
 
 	/**
-	 * Get the model object attached to the contoller
+	 * Get the model object attached to the controller
 	 *
 	 * @return	KModelInterface
 	 */
@@ -95,7 +95,7 @@ interface KViewInterface
 	/**
 	 * Create a route based on a full or partial query string
 	 *
-	 * index.php, option, view and layout can be ommitted. The following variations
+	 * index.php, option, view and layout can be omitted. The following variations
 	 * will all result in the same route
 	 *
 	 * - foo=bar

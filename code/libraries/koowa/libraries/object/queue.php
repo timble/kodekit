@@ -271,7 +271,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
 	/**
      * Preform a deep clone of the object
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

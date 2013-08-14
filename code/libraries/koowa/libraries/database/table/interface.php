@@ -108,7 +108,7 @@ interface KDatabaseTableInterface
 	/**
      * Gets the behaviors of the table
      *
-     * @return array An asscociate array of table behaviors, keys are the behavior names
+     * @return array An associate array of table behaviors, keys are the behavior names
      */
     public function getBehaviors();
 

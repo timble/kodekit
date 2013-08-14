@@ -14,7 +14,13 @@
  * @package Koowa\Component\Koowa
  */
 class ComKoowaTranslatorCatalogue extends KTranslatorCatalogue
-{ 
+{
+    /**
+     * Caches and returns the generated key
+     *
+     * @param string $key
+     * @return string Generated key
+     */
     public function __get($key)
     {
         if (!isset($this->_data[$key])) {
@@ -24,6 +30,12 @@ class ComKoowaTranslatorCatalogue extends KTranslatorCatalogue
         return $this->_data[$key];
     }
 
+    /**
+     * Generates a translation key that is safe for INI format
+     *
+     * @param  string $string
+     * @return string
+     */
     public function generateKey($string)
     {
         $string = strtolower($string);

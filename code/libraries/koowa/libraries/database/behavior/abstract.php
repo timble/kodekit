@@ -94,7 +94,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	/**
 	 * Command handler
 	 *
-	 * This function transmlated the command name to a command handler function of the format '_beforeX[Command]' or
+	 * This function translated the command name to a command handler function of the format '_beforeX[Command]' or
      * '_afterX[Command]. Command handler functions should be declared protected.
 	 *
 	 * @param 	string  	    $name    The command name

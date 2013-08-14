@@ -351,6 +351,8 @@ class KServiceIdentifier implements KServiceIdentifierInterface
 
             return $this->{'_'.$property};
         }
+
+        return null;
     }
 
     /**

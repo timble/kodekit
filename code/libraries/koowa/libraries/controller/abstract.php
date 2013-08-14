@@ -320,7 +320,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Gets the behaviors of the table
      *
-     * @return array    An asscociate array of table behaviors, keys are the behavior names
+     * @return array    An associate array of table behaviors, keys are the behavior names
      */
     public function getBehaviors()
     {
@@ -379,7 +379,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Execute a controller action by it's name.
 	 *
-	 * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+	 * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
      * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string  $method Method name

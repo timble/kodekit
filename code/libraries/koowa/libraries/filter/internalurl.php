@@ -45,7 +45,7 @@ class KFilterInternalurl extends KFilterAbstract
      */
     protected function _sanitize($value)
     {
-        //TODO : internal url's should not only have path and query information
+        //TODO : internal URLs should not only have path and query information
         return filter_var($value, FILTER_SANITIZE_URL);
     }
 }

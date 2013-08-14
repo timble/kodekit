@@ -146,7 +146,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Render a list of pages links
      *
-     * This function is overriddes the default behavior to render the links in the khepri template backend style.
+     * This function is overrides the default behavior to render the links in the khepri template backend style.
      *
      * @param   array   $pages An array of page data
      * @return  string  Html
@@ -174,6 +174,13 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         return $html;
     }
 
+    /**
+     * Generates a pagination link
+     *
+     * @param KObject $page Page object
+     * @param string  $title Page title
+     * @return string
+     */
     protected function _link($page, $title)
     {
         $url   = clone KRequest::url();
@@ -196,6 +203,14 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         return $html;
     }
 
+    /**
+     * Render a list of page links using Bootstrap HTML output
+     *
+     * This function is overrides the default behavior to render the links in the khepri template backend style.
+     *
+     * @param   array   $pages An array of page data
+     * @return  string  Html
+     */
     protected function _bootstrap_pages($pages)
     {
         $html  = $pages['previous']->active ? '<li>'.$this->_bootstrap_link($pages['previous'], '&larr;').'</li>' : '';
@@ -240,6 +255,13 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         return $html;
     }
 
+    /**
+     * Generates a pagination link using Bootstrap HTML output
+     *
+     * @param KObject $page Page object
+     * @param string  $title Page title
+     * @return string
+     */
     protected function _bootstrap_link($page, $title)
     {
         $url   = clone KRequest::url();

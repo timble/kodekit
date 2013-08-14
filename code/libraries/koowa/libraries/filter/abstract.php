@@ -23,7 +23,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	protected $_chain = null;
 
 	/**
-	 * If the data to be santized or validated if an object or array, walk over each individual property or element.
+	 * If the data to be sanitized or validated if an object or array, walk over each individual property or element.
      * Default TRUE.
 	 *
 	 * @var	boolean

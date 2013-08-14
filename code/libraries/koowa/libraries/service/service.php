@@ -171,7 +171,7 @@ class KService implements KServiceInterface
 	/**
      * Add a mixin or an array of mixins for an identifier
      *
-     * The mixins are mixed when the indentified object is first instantiated see {@link get} Mixins are also added to
+     * The mixins are mixed when the identified object is first instantiated see {@link get} Mixins are also added to
      * objects that already exist in the service container.
      *
      * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
@@ -283,7 +283,7 @@ class KService implements KServiceInterface
 	}
 
 	/**
-     * Get a list of aliasses
+     * Get a list of aliases
      *
      * @return array
      */

@@ -147,7 +147,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
                 $data  = $this->getTable()->filter($this->getData(true), true);
 		        $row   = $this->getTable()->select($data, KDatabase::FETCH_ROW);
 
-		        // Set the data if the row was loaded succesfully.
+		        // Set the data if the row was loaded successfully.
 		        if(!$row->isNew())
 		        {
 			        $this->setData($row->toArray(), false);
@@ -169,7 +169,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * This performs an intelligent insert/update and reloads the properties
 	 * with fresh data from the table on success.
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function save()
 	{
@@ -198,7 +198,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Deletes the row form the database.
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function delete()
 	{

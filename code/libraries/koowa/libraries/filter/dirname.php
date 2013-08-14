@@ -8,7 +8,9 @@
  */
 
 /**
- * Dirname Filter
+ * Directory name Filter
+ *
+ * Calls {@link dirname()} on the passed value
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter

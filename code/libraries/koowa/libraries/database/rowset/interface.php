@@ -43,7 +43,7 @@ interface KDatabaseRowsetInterface
     public function addData(array $data, $new = true);
 
 	/**
-	 * Gets the identitiy column of the rowset
+	 * Gets the identity column of the rowset
 	 *
 	 * @return string
 	 */

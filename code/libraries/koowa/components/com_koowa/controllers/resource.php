@@ -19,7 +19,7 @@ class ComKoowaControllerResource extends KControllerResource
     /**
      * Display action
      *
-     * If the controller was not dispatched manually load the langauges files
+     * If the controller was not dispatched manually load the languages files
      *
      * @param   KCommandContext $context A command context object
      * @return 	string|bool 	The rendered output of the view or false if something went wrong

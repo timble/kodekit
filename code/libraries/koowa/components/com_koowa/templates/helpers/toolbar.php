@@ -197,7 +197,13 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 
     	return $html;
     }
-    
+
+    /**
+     * Render an options button
+     *
+     * @param array|KConfig $config
+     * @return string
+     */
     public function options($config = array())
     {
         return $this->modal($config);

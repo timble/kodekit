@@ -114,7 +114,7 @@ class KCommandMixin extends KObjectMixinAbstract
 	/**
      * Preform a deep clone of the object.
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

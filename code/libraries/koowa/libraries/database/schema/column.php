@@ -72,7 +72,7 @@ class KDatabaseSchemaColumn extends KObject
 	public $autoinc = false;
 
 	/**
-	 * Is the column unqiue
+	 * Is the column unique
 	 *
 	 * @var	bool
 	 */

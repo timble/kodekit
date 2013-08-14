@@ -14,7 +14,7 @@
 // check if mbstring extension is loaded and attempt to load it if not present except for windows
 if (extension_loaded('mbstring') || ((!strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && dl('mbstring.so'))))
 {
-    //Make sure to surpress the output in case ini_set is disabled
+    //Make sure to suppress the output in case ini_set is disabled
     @ini_set('mbstring.internal_encoding', 'UTF-8');
     @ini_set('mbstring.http_input', 'UTF-8');
     @ini_set('mbstring.http_output', 'UTF-8');
@@ -68,8 +68,9 @@ class KHelperString
      *
      * Finds position of last occurrence of a string
      *
-     * @param $str - string String being examined
-     * @param $search - string String being searced for
+     * @param string $str String being examined
+     * @param string $search String being searched for
+     * @param bool   $offset
      * @return mixed Number of characters before the last match or FALSE on failure
      * @see http://www.php.net/strrpos
      */
@@ -106,8 +107,9 @@ class KHelperString
      * Return part of a string given character offset (and optionally length)
      *
      * @param string
-     * @param integer number of UTF-8 characters offset (from left)
-     * @param integer (optional) length in UTF-8 characters from offset
+     * @param integer $str number of UTF-8 characters offset (from left)
+     * @param integer $offset (optional) length in UTF-8 characters from offset
+     * @param integer|bool $length
      * @return mixed string or FALSE if failure
      * @see http://www.php.net/substr
      */
@@ -163,7 +165,7 @@ class KHelperString
      *
      * Returns the number of characters in the string (NOT THE NUMBER OF BYTES),
      *
-     * @param string UTF-8 string
+     * @param string $str UTF-8 string
      * @return int number of UTF-8 characters in string
      * @see http://www.php.net/strlen
      */
@@ -177,11 +179,13 @@ class KHelperString
      *
      * Case-insensitive version of str_replace
      *
-     * @param string string to search
-     * @param string existing string to replace
-     * @param string new string to replace with
-     * @param int optional count value to be passed by referene
+     * @param string $search string to search
+     * @param string $replace existing string to replace
+     * @param string $str new string to replace with
+     * @param int $count optional count value to be passed by reference
      * @see http://www.php.net/str_ireplace
+     *
+     * @return string
     */
     public static function str_ireplace($search, $replace, $str, $count = NULL)
     {
@@ -235,8 +239,8 @@ class KHelperString
      *
      * Convert a string to an array
      *
-     * @param string UTF-8 encoded
-     * @param int number to characters to split string by
+     * @param string $str UTF-8 encoded
+     * @param int $split_len number to characters to split string by
      * @return array
      * @see http://www.php.net/str_split
     */
@@ -258,10 +262,10 @@ class KHelperString
     /**
      * UTF-8 aware alternative to strcasecmp
      *
-     * A case insensivite string comparison
+     * A case insensitive string comparison
      *
-     * @param string string 1 to compare
-     * @param string string 2 to compare
+     * @param string $strX string 1 to compare
+     * @param string $strY string 2 to compare
      * @return int < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
      * @see http://www.php.net/strcasecmp
     */
@@ -276,10 +280,10 @@ class KHelperString
      * UTF-8 aware alternative to strcspn
      * Find length of initial segment not matching mask
      *
-     * @param string
-     * @param string the mask
-     * @param int Optional starting character position (in characters)
-     * @param int Optional length
+     * @param string $str
+     * @param string $mask the mask
+     * @param int $start Optional starting character position (in characters)
+     * @param int $length Optional length
      * @return int the length of the initial segment of str1 which does not contain any of the characters in str2
      * @see http://www.php.net/strcspn
     */
@@ -298,7 +302,7 @@ class KHelperString
         preg_match('/^[^'.$mask.']+/u',$str, $matches);
 
         if ( isset($matches[0]) ) {
-            return utf8_strlen($matches[0]);
+            return KHelperString::strlen($matches[0]);
         }
 
         return 0;
@@ -311,8 +315,8 @@ class KHelperString
      * needle and haystack are examined in a case-insensitive manner
      * Find first occurrence of a string using case insensitive comparison
      *
-     * @param string the haystack
-     * @param string the needle
+     * @param string $str the haystack
+     * @param string $search the needle
      * @return string the sub string
      * @see http://www.php.net/stristr
     */
@@ -353,11 +357,13 @@ class KHelperString
      *
      * Find length of initial segment matching mask
      *
-     * @param string the haystack
-     * @param string the mask
-     * @param int start optional
-     * @param int length optional
+     * @param string $str the haystack
+     * @param string $mask the mask
+     * @param int $start start optional
+     * @param int $length length optional
      * @see http://www.php.net/strspn
+     *
+     * @return int
     */
     public static function strspn($str, $mask, $start = NULL, $length = NULL)
     {
@@ -381,11 +387,13 @@ class KHelperString
      *
      * Replace text within a portion of a string
      *
-     * @param string the haystack
-     * @param string the replacement string
-     * @param int start
-     * @param int length (optional)
+     * @param string $str the haystack
+     * @param string $repl the replacement string
+     * @param int $start start
+     * @param int $length length (optional)
      * @see http://www.php.net/substr_replace
+     *
+     * @return string
     */
     public static function substr_replace($str, $repl, $start, $length = NULL )
     {
@@ -406,8 +414,8 @@ class KHelperString
      * optional arg and it contains UTF-8 characters. Otherwise ltrim will
      * work normally on a UTF-8 string
      *
-     * @param string the string to be trimmed
-     * @param string the optional charlist of additional characters to trim
+     * @param string $str the string to be trimmed
+     * @param string|bool $charlist the optional charlist of additional characters to trim
      * @return string the trimmed string
      * @see http://www.php.net/ltrim
     */
@@ -429,8 +437,8 @@ class KHelperString
      * optional arg and it contains UTF-8 characters. Otherwise rtrim will
      * work normally on a UTF-8 string
      *
-     * @param string the string to be trimmed
-     * @param string the optional charlist of additional characters to trim
+     * @param string $str the string to be trimmed
+     * @param string|bool $charlist the optional charlist of additional characters to trim
      * @return string the trimmed string
      * @see http://www.php.net/rtrim
     */
@@ -454,8 +462,8 @@ class KHelperString
      * optional arg and it contains UTF-8 characters. Otherwise trim will
      * work normally on a UTF-8 string
      *
-     * @param string the string to be trimmed
-     * @param string the optional charlist of additional characters to trim
+     * @param string $str the string to be trimmed
+     * @param string|bool $charlist the optional charlist of additional characters to trim
      * @return string the trimmed string
      * @see http://www.php.net/trim
     */
@@ -465,7 +473,7 @@ class KHelperString
             return trim($str);
         }
 
-        return KHelperString::ltrim(utf8_rtrim($str, $charlist), $charlist);
+        return KHelperString::ltrim(KHelperString::rtrim($str, $charlist), $charlist);
     }
 
     /**
@@ -473,7 +481,7 @@ class KHelperString
      *
      * Make a string's first character uppercase
      *
-     * @param string
+     * @param string $str
      * @return string with first character as upper case (if applicable)
      * @see http://www.php.net/ucfirst
     */
@@ -517,7 +525,7 @@ class KHelperString
      *
      * You don't need to call this yourself
      *
-     * @param array of matches corresponding to a single word
+     * @param array  $matches array of matches corresponding to a single word
      * @return string with first char of the word in uppercase
      * @see ucwords
      * @see strtoupper
@@ -549,6 +557,8 @@ class KHelperString
              */
             return iconv($from_encoding, $to_encoding.'//TRANSLIT', $source);
         }
+
+        return '';
     }
 
     /**
@@ -557,7 +567,7 @@ class KHelperString
      * Note: this function has been modified to simple return true or false
      *
      * @author <hsivonen@iki.fi>
-     * @param string UTF-8 encoded string
+     * @param string $str UTF-8 encoded string
      * @return boolean true if valid
      * @see http://hsivonen.iki.fi/php-utf8/
      * @see compliant
@@ -692,7 +702,7 @@ class KHelperString
      *
      * @see valid
      * @see http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
-     * @param string UTF-8 string to check
+     * @param string $str UTF-8 string to check
      * @return boolean TRUE if string is valid UTF-8
      */
     public static function compliant($str)

@@ -87,7 +87,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires an locked_on and locked_by column to be present in the table
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function unlock()
 	{

@@ -30,7 +30,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
+	 * Prevent creating instances of this class by making the constructor private
 	 *
 	 * @param   KConfig $config Configuration options
 	 */

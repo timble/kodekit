@@ -119,6 +119,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
         if($object instanceof KObjectHandlable) {
             return $this->contains($object);
         }
+
+        return false;
     }
 
     /**
@@ -134,6 +136,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
         if($object instanceof KObjectHandlable) {
             return $this->_object_set->offsetGet($object->getHandle());
         }
+
+        return null;
     }
 
     /**
@@ -297,7 +301,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
     /**
      * Preform a deep clone of the object
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

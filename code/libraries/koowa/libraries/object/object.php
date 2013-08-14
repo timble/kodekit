@@ -279,7 +279,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	/**
      * Preform a deep clone of the object.
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {
