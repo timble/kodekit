@@ -35,10 +35,8 @@ class KObjectMixinCallback extends KObjectMixinAbstract
      * @param string   $name  The callback name
      * @return void
      */
-    public function executeCallbacks( $name )
+    public function executeCallbacks($name)
     {
-        $result = true;
-
         $callbacks = $this->getCallbacks($name);
 
         foreach($callbacks as $key => $callback)
@@ -58,7 +56,7 @@ class KObjectMixinCallback extends KObjectMixinAbstract
  	 *
  	 * If the callback has already been registered. It will not be re-registered.
  	 *
- 	 * @param  	string      	$name       The callback name to register the callback for
+ 	 * @param  	string    $name       The callback name to register the callback for
  	 * @param 	callable		$callback   The callback function to register
  	 * @param   array|object    An associative array of config parameters or a KConfig object
      * @throws  InvalidArgumentException If the callback is not a callable
