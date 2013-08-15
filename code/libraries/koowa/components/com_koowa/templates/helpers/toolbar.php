@@ -30,7 +30,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 
         $title = $this->translate($config->toolbar->getTitle());
         
-        if (version_compare(JVERSION, '3.0', 'ge'))
+        if ($this->_useBootstrap())
         {
             // Strip the extension.
             $icons = explode(' ', $config->toolbar->getIcon());
@@ -68,7 +68,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         	'toolbar' => null
         ));
 
-        if (version_compare(JVERSION, '3.0', 'ge')) {
+        if ($this->_useBootstrap()) {
         	$html = '<div class="btn-toolbar toolbar-list" id="toolbar">';
         	$html .= '%s';
 		    $html .= '</div>';
@@ -122,20 +122,22 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         //Create the id
         $id = 'toolbar-'.$command->id;
         
-        if (version_compare(JVERSION, '3.0', 'ge')) {
+        if ($this->_useBootstrap())
+        {
         	$command->attribs->class->append(array('btn', 'btn-small'));
 			
-        	$icon = str_replace('icon-32-', '', $command->icon);
+        	$icon = $this->_getIconClass($command->icon);
         	if ($command->id === 'new' || $command->id === 'apply') {
         		$command->attribs->class->append(array('btn-success'));
         		$icon .= ' icon-white';
         	}
 
-        	$command->attribs->class = implode(" ", KConfig::unbox($command->attribs->class));
+            $attribs = clone $command->attribs;
+            $attribs->class = implode(" ", KConfig::unbox($attribs->class));
         	
         	$html = '<div class="btn-group" id="'.$id.'">';
-        	$html .= '<a '.KHelperArray::toString($command->attribs).'>';
-        	$html .= '<i class="icon-'.$icon.'"></i> ';
+        	$html .= '<a '.KHelperArray::toString($attribs).'>';
+        	$html .= '<i class="'.$icon.'"></i> ';
         	$html .= $this->translate($command->label);
         	$html .= '</a>';
         	$html .= '</div>';
@@ -143,11 +145,13 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         	return $html;
         }
 
-		$command->attribs->class = implode(" ", KConfig::unbox($command->attribs->class));
+
+        $attribs = clone $command->attribs;
+        $attribs->class = implode(" ", KConfig::unbox($attribs->class));
 
         $html = '<li class="button" id="'.$id.'">';
         
-        $html .= '<a '.KHelperArray::toString($command->attribs).'>';
+        $html .= '<a '.KHelperArray::toString($attribs).'>';
         $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
        	$html .= $this->translate($command->label);
        	$html .= '</a>';
@@ -170,7 +174,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         	'command' => NULL
         ));
         
-    	if (version_compare(JVERSION,'3.0','ge')) {
+    	if ($this->_useBootstrap()) {
             $html = '<div class="btn-group"></div>';
         } else {
             $html = '<li class="divider"></li>';
@@ -207,5 +211,41 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     public function options($config = array())
     {
         return $this->modal($config);
+    }
+
+    /**
+     * Decides if the renderers should use Bootstrap markup or not
+     *
+     * @return bool
+     */
+    protected function _useBootstrap()
+    {
+        return version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite();
+    }
+
+    /**
+     * Converts Joomla 3.0+ custom icons back to Glyphicons ones used in Joomla 2.5
+     *
+     * @param  string $icon Toolbar icon
+     * @return string Icon class
+     */
+    protected function _getIconClass($icon)
+    {
+        static $map = array(
+            'icon-save'   => 'icon-ok',
+            'icon-cancel' => 'icon-remove-sign',
+            'icon-apply'  => 'icon-edit'
+        );
+
+        if (version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite())
+        {
+            $icon = str_replace('icon-32-', 'icon-', $icon);
+        }
+
+        if (version_compare(JVERSION, '3.0', '<') && array_key_exists($icon, $map)) {
+            $icon = $map[$icon];
+        }
+
+        return $icon;
     }
 }
