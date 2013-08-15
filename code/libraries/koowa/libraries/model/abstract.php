@@ -76,7 +76,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-            'state' => new KConfigState(),
+            'state' => new KModelState(),
        	));
 
        	parent::_initialize($config);
@@ -292,7 +292,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	/**
      * Preform a deep clone of the object.
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

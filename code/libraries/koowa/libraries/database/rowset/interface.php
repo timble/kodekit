@@ -43,7 +43,7 @@ interface KDatabaseRowsetInterface
     public function addData(array $data, $new = true);
 
 	/**
-	 * Gets the identitiy column of the rowset
+	 * Gets the identity column of the rowset
 	 *
 	 * @return string
 	 */
@@ -56,7 +56,6 @@ interface KDatabaseRowsetInterface
      * array of key/value pairs
      *
      * @param 	string 	$needle     The position or the key to search for
-     * @param 	mixed  	The value to search for
      * @return KDatabaseRowAbstract
      */
     public function find($needle);
@@ -85,9 +84,9 @@ interface KDatabaseRowsetInterface
 	/**
      * Insert a row in the rowset
      *
-     * The row will be stored by i'ts identity_column if set or otherwise by it's object handle.
+     * The row will be stored by its identity_column if set or otherwise by it's object handle.
      *
-     * @param  KDatabaseRowInterface 	$row A KDatabaseRow object to be inserted
+     * @param  KDatabaseRowInterface|KObjectHandlable 	$row A KDatabaseRow object to be inserted
      * @return KDatabaseRowsetAbstract
      */
     public function insert(KObjectHandlable $row);
@@ -95,10 +94,10 @@ interface KDatabaseRowsetInterface
 	/**
      * Removes a row
      *
-     * The row will be removed based on it's identity_column if set or otherwise by
+     * The row will be removed based on its identity_column if set or otherwise by
      * it's object handle.
      *
-     * @param  KDatabaseRowInterface $row 	A KDatabaseRow object to be removed
+     * @param  KDatabaseRowInterface|KObjectHandlable $row 	A KDatabaseRow object to be removed
      * @return KDatabaseRowsetAbstract
      */
     public function extract(KObjectHandlable $row);

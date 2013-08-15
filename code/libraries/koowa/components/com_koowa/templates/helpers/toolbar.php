@@ -103,7 +103,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     /**
      * Render a toolbar command
      *
-     * @param   array   $config An optional array with configuration options
+     * @param   array|KConfig   $config An optional array with configuration options
      * @return  string  Html
      */
     public function command($config = array())
@@ -197,7 +197,13 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 
     	return $html;
     }
-    
+
+    /**
+     * Render an options button
+     *
+     * @param array|KConfig $config
+     * @return string
+     */
     public function options($config = array())
     {
         return $this->modal($config);

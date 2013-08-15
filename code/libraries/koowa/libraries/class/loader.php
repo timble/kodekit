@@ -7,10 +7,11 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
-require_once dirname(__FILE__) . '/adapter/interface.php';
-require_once dirname(__FILE__) . '/adapter/abstract.php';
-require_once dirname(__FILE__) . '/adapter/koowa.php';
+require_once dirname(__FILE__) . '/locator/interface.php';
+require_once dirname(__FILE__) . '/locator/abstract.php';
+require_once dirname(__FILE__) . '/locator/koowa.php';
 require_once dirname(__FILE__) . '/registry.php';
+require_once dirname(__FILE__) . '/interface.php';
 
 /**
  * Loader
@@ -18,7 +19,7 @@ require_once dirname(__FILE__) . '/registry.php';
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KLoader
+class KClassLoader implements KClassLoaderInterface
 {
     /**
      * The file container
@@ -32,14 +33,14 @@ class KLoader
      *
      * @var array
      */
-    protected static $_adapters = array();
+    protected $_locators = array();
 
     /**
      * Prefix map
      *
      * @var array
      */
-    protected static $_prefix_map = array();
+    protected $_prefix_map = array();
 
     /**
      * Constructor
@@ -49,7 +50,7 @@ class KLoader
     final private function __construct($config = array())
     {
         //Create the class registry
-        $this->_registry = new KLoaderRegistry();
+        $this->_registry = new KClassRegistry();
 
         if(isset($config['cache_prefix'])) {
             $this->_registry->setCachePrefix($config['cache_prefix']);
@@ -60,7 +61,7 @@ class KLoader
         }
 
         //Add the koowa class loader
-        self::addAdapter(new KLoaderAdapterKoowa(
+        $this->registerLocator(new KClassLocatorKoowa(
             array('basepaths' => array('*' => dirname(dirname(__FILE__))))
         ));
 
@@ -73,15 +74,18 @@ class KLoader
      *
      * Prevent creating clones of this class
      */
-    final private function __clone() { }
+    final private function __clone()
+    {
+        throw new Exception("An instance of KClassLoader cannot be cloned.");
+    }
 
     /**
      * Singleton instance
      *
      * @param  array  $config An optional array with configuration options.
-     * @return KLoader
+     * @return KClassLoader
      */
-    public static function getInstance($config = array())
+    final public static function getInstance($config = array())
     {
         static $instance;
 
@@ -95,48 +99,78 @@ class KLoader
     /**
      * Registers this instance as an autoloader.
      *
+     * @param boolean $prepend Whether to prepend the autoloader or not
      * @return void
      */
-    public function register()
+    public function register($prepend = false)
     {
-        spl_autoload_register(array($this, 'loadClass'));
+        spl_autoload_register(array($this, 'loadClass'), true, $prepend);
 
         if (function_exists('__autoload')) {
             spl_autoload_register('__autoload');
         }
     }
 
+    /**
+     * Unregisters the loader with the PHP autoloader.
+     *
+     * @return void
+     *
+     * @see spl_autoload_unregister();
+     */
+    public function unregister()
+    {
+        spl_autoload_unregister(array($this, 'loadClass'));
+    }
+
 
     /**
      * Get the class registry object
      *
-     * @return object KLoaderRegistry
+     * @return object KClassRegistry
      */
     public function getRegistry()
     {
         return $this->_registry;
     }
 
- 	/**
-     * Add a loader adapter
+    /**
+     * Register a class locator
      *
-     * @param KLoaderAdapterInterface $adapter  A KLoaderAdapter
+     * @param  KClassLocatorInterface $locator
      * @return void
      */
-    public static function addAdapter(KLoaderAdapterInterface $adapter)
+    public function registerLocator(KClassLocatorInterface $locator)
     {
-        self::$_adapters[$adapter->getType()]     = $adapter;
-        self::$_prefix_map[$adapter->getPrefix()] = $adapter->getType();
+        $this->_locators[$locator->getType()]     = $locator;
+        $this->_prefix_map[$locator->getPrefix()] = $locator->getType();
     }
 
-	/**
+    /**
+     * Get a registered class locator based on his type
+     *
+     * @param string $type The locator type
+     * @return KClassLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     */
+    public function getLocator($type)
+    {
+        $result = null;
+
+        if(isset($this->_locators[$type])) {
+            $result = $this->_locators[$type];
+        }
+
+        return $result;
+    }
+
+    /**
      * Get the registered adapters
      *
      * @return array
      */
-    public static function getAdapters()
+    public function getLocators()
     {
-        return self::$_adapters;
+        return $this->_locators;
     }
 
     /**
@@ -148,24 +182,18 @@ class KLoader
      */
     public function loadClass($class, $basepath = null)
     {
-        $result = false;
+        $result = true;
 
-        //Extra filter added to circomvent issues with Zend Optimiser and strange classname.
-        if((ctype_upper(substr($class, 0, 1)) || (strpos($class, '.') !== false)))
+        if(!$this->isDeclared($class))
         {
-            //Pre-empt further searching for the named class or interface.
-            //Do not use autoload, because this method is registered with
-            //spl_autoload already.
-            if (!class_exists($class, false) && !interface_exists($class, false))
-            {
-                //Get the path
-                $path = self::findPath( $class, $basepath );
+            //Get the path
+            $path = $this->findPath( $class, $basepath );
 
-                if ($path !== false) {
-                    $result = self::loadFile($path);
-                }
+            if ($path !== false) {
+                $result = $this->loadFile($path);
+            } else {
+                $result = false;
             }
-            else $result = true;
         }
 
         return $result;
@@ -187,7 +215,7 @@ class KLoader
         $path = $identifier->filepath;
 
         if ($path !== false) {
-            $result = self::loadFile($path);
+            $result = $this->loadFile($path);
         }
 
         return $result;
@@ -236,9 +264,9 @@ class KLoader
             $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $class);
             $parts = explode(' ', $word);
 
-            if(isset(self::$_prefix_map[$parts[0]]))
+            if(isset($this->_prefix_map[$parts[0]]))
             {
-                $result = self::$_adapters[self::$_prefix_map[$parts[0]]]->findPath( $class, $basepath);
+                $result = $this->_locators[$this->_prefix_map[$parts[0]]]->locate( $class, $basepath);
 
                 if ($result !== false)
                 {
@@ -253,5 +281,18 @@ class KLoader
         } else $result = $this->_registry->offsetGet($base.'-'.(string)$class);
 
         return $result;
+    }
+
+    /**
+     * Tells if a class, interface or trait exists.
+     *
+     * @param string $class
+     * @return boolean
+     */
+    public function isDeclared($class)
+    {
+        return class_exists($class, false)
+        || interface_exists($class, false)
+        || (function_exists('trait_exists') && trait_exists($class, false));
     }
 }

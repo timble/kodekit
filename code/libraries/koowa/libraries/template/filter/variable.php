@@ -34,7 +34,7 @@ class KTemplateFilterVariable extends KTemplateFilterAbstract implements KTempla
 		// Replace \@ with \$
 		$text = str_replace('\@', '\$', $text);
 
-        // Now replace non-eescaped @'s
+        // Now replace non-escaped @'s
          $text = str_replace(array('@$'), '$', $text);
 
         // Replace \$ with @

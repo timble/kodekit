@@ -20,7 +20,7 @@ class KFilterMd5 extends KFilterAbstract
     /**
      * Validate a value
      *
-     * @param   scalar  $value Variable to be validated
+     * @param   mixed  $value Variable to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)
@@ -31,9 +31,9 @@ class KFilterMd5 extends KFilterAbstract
     }
 
     /**
-     * Sanitize a valaue
+     * Sanitize a value
      *
-     * @param   scalar  $value Variable to be sanitized
+     * @param   mixed  $value Variable to be sanitized
      * @return  string
      */
     protected function _sanitize($value)

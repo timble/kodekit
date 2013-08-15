@@ -12,6 +12,9 @@
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
   * @package Koowa\Library\Template
+  *
+  * @method KCommandContext getCommandContext() Get the command context
+  * @method KCommandChain   getCommandChain() Get the command chain
   */
 abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 {
@@ -85,7 +88,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_data = $config->data;
 
 		 // Mixin a command chain
-        $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         //Attach the filters
         $this->addFilter($config->filters);
@@ -181,7 +184,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KTemplateAbstract
@@ -293,7 +296,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	/**
      * Load a template by path
      *
-     * @param   string  $file     The template path
+     * @param   string  $path     The template path
      * @param   array   $data     An associative array of data to be extracted in local template scope
      * @return KTemplateAbstract
      */
@@ -404,7 +407,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed $filter    An object that implements KObjectServiceable, KServiceIdentifier object
+     * @param   mixed $filter    An object that implements KObjectInterface, KServiceIdentifier object
     or valid identifier string
      *
      * @throws UnexpectedValueException
@@ -557,7 +560,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * This function passes the template through read filter chain and returns the result.
      *
-     * @return string The parsed data
+     * @param  string $content Data to parse
      */
     protected function _parse(&$content)
     {
@@ -573,7 +576,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * This function writes the template to a temporary file and then includes it.
      *
-     * @return string The evaluated data
+     * @param string $content The evaluated data
      * @see tempnam()
      */
     protected function _evaluate(&$content)
@@ -599,7 +602,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         unlink($tempfile);
 
         //Reduce counter
-        $this->__counter--;;
+        $this->__counter--;
     }
 
     /**
@@ -607,7 +610,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * This function passes the template through write filter chain and returns the result.
      *
-     * @return string  The rendered data
+     * @param string $content Data to render
      */
     protected function _process(&$content)
     {

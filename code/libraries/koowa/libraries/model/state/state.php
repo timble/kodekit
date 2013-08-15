@@ -8,14 +8,38 @@
  */
 
 /**
- * State Config
+ * Model State
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Config
+ * @package Koowa\Library\Model
  */
-class KConfigState extends KConfig
+class KModelState extends KConfig implements KModelStateInterface
 {
-	/**
+    /**
+     * Insert a new state
+     *
+     * @param   string      $name     The name of the state
+     * @param   mixed       $filter   Filter(s), can be a KFilterInterface object, a filter name or an array of filter names
+     * @param   mixed       $default  The default value of the state
+     * @param   boolean     $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
+     * @param   array       $required Array of required states to determine if the state is unique. Only applicable if the state is unique.
+     * @return  KModelState
+     */
+    public function insert($name, $filter, $default = null, $unique = false, $required = array())
+    {
+        $state = new stdClass();
+        $state->name     = $name;
+        $state->filter   = $filter;
+        $state->value    = $default;
+        $state->unique   = $unique;
+        $state->required = $required;
+        $state->default  = $default;
+        $this->_data[$name] = $state;
+
+        return $this;
+    }
+
+    /**
      * Retrieve a configuration item and return $default if there is no element set.
      *
      * @param string
@@ -35,59 +59,35 @@ class KConfigState extends KConfig
     /**
      * Set state value
      *
-     * @param  	string 	$name The user-specified state name.
-     * @param  	mixed  	$value The user-specified state value.
-     * @return 	void
+     * @param  	string 	$name The state name.
+     * @param  	mixed  	$value The state value.
+     * @return 	KModelStateInterface
      */
-    public function __set($name, $value)
-    {
-    	if(isset($this->_data[$name])) {
-    		$this->_data[$name]->value = $value;
-    	}
-    }
-
-    /**
-     * Unset a state value
-     *
-     * @param   string  $name The column key.
-     * @return  void
-     */
-    public function __unset($name)
+    public function set($name, $value)
     {
         if(isset($this->_data[$name])) {
-            $this->_data[$name]->value = $this->_data[$name]->default;
+            $this->_data[$name]->value = $value;
         }
+
+        return $this;
     }
 
     /**
-     * Insert a new state
+     * Check if a state exists
      *
-     * @param   string      $name     The name of the state
-     * @param   mixed       $filter   Filter(s), can be a KFilterInterface object, a filter name or an array of filter names
-     * @param   mixed       $default  The default value of the state
-     * @param   boolean     $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
-     * @param   array       $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
-     * @return  KConfigState
+     * @param  	string 	$name The state name.
+     * @return  boolean
      */
-    public function insert($name, $filter, $default = null, $unique = false, $required = array())
+    public function has($name)
     {
-        $state = new stdClass();
-        $state->name     = $name;
-        $state->filter   = $filter;
-        $state->value    = $default;
-        $state->unique   = $unique;
-        $state->required = $required;
-        $state->default  = $default;
-        $this->_data[$name] = $state;
-
-        return $this;
+        return isset($this->_data[$name]);
     }
 
     /**
      * Remove an existing state
      *
      * @param   string      $name The name of the state
-     * @return  KConfigState
+     * @return  KModelState
      */
     public function remove( $name )
     {
@@ -99,7 +99,7 @@ class KConfigState extends KConfig
      * Reset all state data and revert to the default state
      *
      * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
-     * @return KConfigState
+     * @return  KModelState
      */
     public function reset($default = true)
     {
@@ -117,7 +117,7 @@ class KConfigState extends KConfig
       * to NULL.
      *
      * @param   array|object    An associative array of state values by name
-     * @return  KConfigState
+     * @return  KModelState
      */
     public function setData(array $data)
     {
@@ -291,5 +291,30 @@ class KConfigState extends KConfig
         }
 
         return true;
+    }
+
+    /**
+     * Set state value
+     *
+     * @param  	string 	$name The user-specified state name.
+     * @param  	mixed  	$value The user-specified state value.
+     * @return 	void
+     */
+    public function __set($name, $value)
+    {
+        $this->set($name, $value);
+    }
+
+    /**
+     * Unset a state value
+     *
+     * @param   string  $name The column key.
+     * @return  void
+     */
+    public function __unset($name)
+    {
+        if(isset($this->_data[$name])) {
+            $this->_data[$name]->value = $this->_data[$name]->default;
+        }
     }
 }

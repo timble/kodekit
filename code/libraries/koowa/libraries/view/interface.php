@@ -46,7 +46,7 @@ interface KViewInterface
 	public function getFormat();
 
 	/**
-	 * Get the model object attached to the contoller
+	 * Get the model object attached to the controller
 	 *
 	 * @return	KModelInterface
 	 */
@@ -55,7 +55,7 @@ interface KViewInterface
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					       or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewInterface
@@ -95,7 +95,7 @@ interface KViewInterface
 	/**
 	 * Create a route based on a full or partial query string
 	 *
-	 * index.php, option, view and layout can be ommitted. The following variations
+	 * index.php, option, view and layout can be omitted. The following variations
 	 * will all result in the same route
 	 *
 	 * - foo=bar

@@ -14,9 +14,9 @@
  * inheritance features to KObject derived classes.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Mixin
+ * @package Koowa\Library\Object\Mixin
  */
-abstract class KMixinAbstract implements KMixinInterface
+abstract class KObjectMixinAbstract implements KObjectMixinInterface
 {
     /**
      * The object doing the mixin
@@ -83,7 +83,7 @@ abstract class KMixinAbstract implements KMixinInterface
      * Set the mixer object
      *
      * @param KObject $mixer The mixer object
-     * @return KMixinInterface
+     * @return KObjectMixinInterface
      */
     public function setMixer($mixer)
     {

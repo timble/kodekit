@@ -97,6 +97,17 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  */
 class JDocumentRendererModules extends JDocumentRenderer
 {
+    /**
+     * Renders a script and returns the results as a string
+     *
+     * @param   string  $position The name of the element to render
+     * @param   array   $params   Array of values
+     * @param   string  $content  Override the output of the renderer
+     *
+     * @return  string  The output of the script
+     *
+     * @since   11.1
+     */
 	public function render( $position, $params = array(), $content = null )
 	{
         //Get the modules

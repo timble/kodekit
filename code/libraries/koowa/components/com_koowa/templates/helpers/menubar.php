@@ -51,11 +51,12 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         	foreach ($config->menubar->getCommands() as $command) {
         		JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
         	}
-        	return;
+
+        	return '';
         }
 
         if (!count($config->menubar->getCommands())) {
-            return;
+            return '';
         }
 
 		$html = '<div id="submenu-box"><div class="m">';

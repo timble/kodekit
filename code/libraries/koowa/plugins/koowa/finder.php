@@ -243,6 +243,11 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         return true;
     }
 
+    /**
+     * Boots the Koowa framework if the plugin is running in CLI mode
+     *
+     * @return bool
+     */
     protected function bootFramework()
     {
         // This is useful in CLI mode
@@ -443,7 +448,11 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         return $item;
     }
 
-
+    /**
+     * Returns a link to a row
+     * @param KDatabaseRowInterface $row
+     * @return string
+     */
     protected function getLink(KDatabaseRowInterface $row)
     {
         return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->resource, $row->slug);

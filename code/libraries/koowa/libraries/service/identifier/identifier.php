@@ -15,6 +15,8 @@
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
+ *
+ * @property string $name object name
  */
 class KServiceIdentifier implements KServiceIdentifierInterface
 {
@@ -105,7 +107,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     /**
      * Constructor
      *
-     * @param   string  $dientifier Identifier string or object in [application::]type.package.[.path].name format
+     * @param   string  $identifier Identifier string or object in [application::]type.package.[.path].name format
      * @throws  KServiceIdentifierException if the identifier is not valid
      */
     public function __construct($identifier)
@@ -169,7 +171,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
 	/**
 	 * Unserialize the identifier
 	 *
-	 * @return string 	The serialised identifier
+	 * @param string 	$data The serialised identifier
 	 */
 	public function unserialize($data)
 	{
@@ -228,7 +230,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     /**
      * Get a package path
      *
-     * @param string    $application   The name of the application
+     * @param string    $package   The name of the application
      * @return string	The path of the application
      */
     public static function getPackage($package)
@@ -270,10 +272,11 @@ class KServiceIdentifier implements KServiceIdentifierInterface
     /**
      * Implements the virtual class properties
      *
-     * This functions creates a string representation of the identifier.
+     * This function creates a string representation of the identifier.
      *
-     * @param   string  $property The virtual property to set.
-     * @param   string  $value    Set the virtual property to this value.
+     * @param   string $property The virtual property to set.
+     * @param   string $value    Set the virtual property to this value.
+     * @throws KServiceIdentifierException
      */
     public function __set($property, $value)
     {
@@ -348,6 +351,8 @@ class KServiceIdentifier implements KServiceIdentifierInterface
 
             return $this->{'_'.$property};
         }
+
+        return null;
     }
 
     /**

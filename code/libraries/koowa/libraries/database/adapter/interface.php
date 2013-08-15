@@ -126,7 +126,7 @@ interface KDatabaseAdapterInterface
 	 * Delete rows from the table.
 	 *
 	 * @param  KDatabaseQueryDelete $query The query object.
-	 * @return integer 	Number of rows affected, or -1 if an error occured.
+	 * @return integer 	Number of rows affected, or -1 if an error occurred.
 	*/
 	public function delete(KDatabaseQueryDelete $query);
 	

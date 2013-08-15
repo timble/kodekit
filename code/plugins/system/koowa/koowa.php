@@ -7,14 +7,14 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
 /**
  * Koowa System Plugin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Plugin\System\Koowa
  */
-defined( '_JEXEC' ) or die( 'Restricted access' );
-
 class PlgSystemKoowa extends JPlugin
 {
     /**
@@ -69,15 +69,17 @@ class PlgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            KLoader::addAdapter(new KLoaderAdapterModule(array(
+            $loader = KService::get('koowa:class.loader');
+
+            $loader->registerLocator(new KClassLocatorModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KLoader::addAdapter(new KLoaderAdapterPlugin(array(
+            $loader->registerLocator(new KClassLocatorPlugin(array(
                 'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KLoader::addAdapter(new KLoaderAdapterComponent(array(
+            $loader->registerLocator(new KClassLocatorComponent(array(
                 'basepaths' => array(
                     '*'          => JPATH_BASE,
                     'koowa'      => JPATH_LIBRARIES.'/koowa',
@@ -130,7 +132,7 @@ class PlgSystemKoowa extends JPlugin
 		}
 		
 		$headers = JResponse::getHeaders();
-		foreach ($headers as $key => $header)
+		foreach ($headers as $header)
 		{
 			if ($header['name'] === 'Content-disposition')
 			{
@@ -156,7 +158,7 @@ class PlgSystemKoowa extends JPlugin
         try
         {
             // If Koowa does not exist let Joomla handle the exception
-            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateError')) {
+            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateDefault')) {
                 throw new Exception('');
             }
 
@@ -164,10 +166,10 @@ class PlgSystemKoowa extends JPlugin
                 'exception' => $exception
             );
 
-            $template = KService::get('com:koowa.template.error');
-            $template->addFilter(array('shorttag', 'variable'));
+            $template = KService::get('com:koowa.template.default');
+            $template->addFilter(array('alias', 'shorttag', 'variable'));
             $template->loadFile(
-                JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/error/tmpl/default.php',
+                JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php',
                 $data
             );
 

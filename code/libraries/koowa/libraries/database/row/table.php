@@ -92,7 +92,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Method to set a table object attached to the rowset
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$table An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KDatabaseRowsetAbstract
@@ -134,7 +134,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Load the row from the database using the data in the row
 	 *
-	 * @return object	If successfull returns the row object, otherwise NULL
+	 * @return object	If successful returns the row object, otherwise NULL
 	 */
 	public function load()
 	{
@@ -147,7 +147,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
                 $data  = $this->getTable()->filter($this->getData(true), true);
 		        $row   = $this->getTable()->select($data, KDatabase::FETCH_ROW);
 
-		        // Set the data if the row was loaded succesfully.
+		        // Set the data if the row was loaded successfully.
 		        if(!$row->isNew())
 		        {
 			        $this->setData($row->toArray(), false);
@@ -169,7 +169,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * This performs an intelligent insert/update and reloads the properties
 	 * with fresh data from the table on success.
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function save()
 	{
@@ -198,7 +198,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Deletes the row form the database.
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function delete()
 	{
@@ -265,7 +265,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * This function will reset required column to their default value, not required
 	 * fields will be unset.
 	 *
-	 * @param	string  The column name.
+	 * @param	string  $column The column name.
 	 * @return	void
 	 */
 	public function __unset($column)
@@ -289,8 +289,8 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * a just in time mixin strategy. Available table behaviors are only mixed
 	 * when needed.
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method    The function name
+	 * @param  array  	$arguments The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */

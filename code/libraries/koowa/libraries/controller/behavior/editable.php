@@ -69,8 +69,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function getReferrer()
 	{
-	    $identifier = $this->getMixer()->getIdentifier();
-
 	    $referrer = $this->getService('koowa:http.url',
 	        array('url' => KRequest::get('cookie.referrer', 'url'))
 	    );
@@ -113,7 +111,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function unsetReferrer()
 	{
-	    $identifier = $this->getMixer()->getIdentifier();
 	    KRequest::set('cookie.referrer', null);
 	}
 

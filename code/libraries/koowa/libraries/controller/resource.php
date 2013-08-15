@@ -139,7 +139,7 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	object	A KViewAbstract object or a KServiceIdentifier object
@@ -196,7 +196,7 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a model object attached to the controller
 	 *
-	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
 	 * @return	object	A KModelAbstract object or a KServiceIdentifier object

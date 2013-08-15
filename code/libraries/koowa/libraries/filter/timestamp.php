@@ -125,7 +125,7 @@ class KFilterTimestamp extends KFilterAbstract
                 trim($array['d']) != '';
 
         if (! $date) {
-            return;
+            return '';
         }
 
         return $array['Y'] . '-'
@@ -147,7 +147,7 @@ class KFilterTimestamp extends KFilterAbstract
                 trim($array['i']) != '';
 
         if (! $time) {
-            return;
+            return '';
         }
 
         $s = array_key_exists('s', $array) && trim($array['s']) != ''

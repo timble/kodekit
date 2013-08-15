@@ -87,7 +87,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-			'model'   	 => $this->getName(),
+            'model'      => 'koowa:model.empty',
             'translator' => null,
 	    	'output'	 => '',
     		'mimetype'	 => '',
@@ -129,7 +129,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	}
 
 	/**
-	 * Get the model object attached to the contoller
+	 * Get the model object attached to the controller
 	 *
 	 * @return	KModelAbstract
 	 */
@@ -151,9 +151,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					       or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewAbstract
 	 */
     public function setModel($model)
@@ -172,10 +171,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 			    $identifier->name	= $model;
 			}
 			else $identifier = $this->getIdentifier($model);
-
-			if($identifier->path[0] != 'model') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a model identifier');
-			}
 
 			$model = $identifier;
 		}

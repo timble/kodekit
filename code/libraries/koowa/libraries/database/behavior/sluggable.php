@@ -122,7 +122,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Insert a slug
      *
-     * If multiple columns are set they will be concatenated and seperated by the separator in the order they are
+     * If multiple columns are set they will be concatenated and separated by the separator in the order they are
      * defined.
      *
      * Requires a 'slug' column

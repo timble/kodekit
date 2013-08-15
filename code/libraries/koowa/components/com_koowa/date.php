@@ -18,7 +18,7 @@ class ComKoowaDate extends KDate
     /**
      * Constructor.
      *
-     * @param   array|KConfig An associative array of configuration settings or a ObjectConfig instance.
+     * @param   array|KConfig $config An associative array of configuration settings or a KConfig instance.
      */
     public function __construct($config = array())
     {

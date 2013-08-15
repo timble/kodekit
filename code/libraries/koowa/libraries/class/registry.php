@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KLoaderRegistry extends ArrayObject
+class KClassRegistry extends ArrayObject
 {
  	/**
  	 * Cache

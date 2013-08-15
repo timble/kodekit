@@ -8,7 +8,7 @@
     <authorEmail>support@joomlatools.com</authorEmail>
     <authorUrl>www.joomlatools.com</authorUrl>
     <version>1.0.4</version>
-    <description></description>
+    <description />
 
     <files folder="plugins/system">
         <filename plugin="koowa">koowa.php</filename>

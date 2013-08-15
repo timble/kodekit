@@ -38,8 +38,10 @@ if(extension_loaded('apc') && !function_exists('apc_exists'))
      */
     function apc_exists($keys)
     {
-		$r;
-		apc_fetch($keys,$r);
-		return $r;
+		$result = null;
+
+		apc_fetch($keys,$result);
+
+		return $result;
     }
 }

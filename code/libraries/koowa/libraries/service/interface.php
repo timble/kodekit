@@ -43,10 +43,10 @@ interface KServiceInterface
 	/**
      * Set a mixin or an array of mixins for an identifier
      *
-     * The mixins are mixed when the indentified object is first instantiated see {@link get} Mixins are also added to
+     * The mixins are mixed when the identified object is first instantiated see {@link get} Mixins are also added to
      * objects that already exist in the object registry.
      *
-     * @param  string|object $identifier An identifier string or KIdentfier object
+     * @param  string|object $identifier An identifier string or KServiceIdentifier object
      * @param  string|array  $mixins     A mixin identifier or a array of mixin identifiers
      * @see KObject::mixin
      */
@@ -64,10 +64,10 @@ interface KServiceInterface
      * Returns an identifier object.
 	 *
 	 * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
-	 * object that implements KObjectServiceable, or a KServiceIdentifier object, or valid identifier
+	 * object that implements KObjectInterface, or a KServiceIdentifier object, or valid identifier
 	 * string. Function will also check for identifier mappings and return the mapped identifier.
 	 *
-	 * @param	mixed	$identifier An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					            or valid identifier string
 	 * @return KServiceIdentifier
 	 */
@@ -76,7 +76,7 @@ interface KServiceInterface
 	/**
 	 * Set the configuration options for an identifier
 	 *
-	 * @param mixed	 $identifier An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param mixed	 $identifier An object that implements KObjectInterface, KServiceIdentifier object
 	 * 				             or valid identifier string
 	 * @param array	 $config     An associative array of configuration options
 	 */
@@ -85,7 +85,7 @@ interface KServiceInterface
 	/**
 	 * Get the configuration options for an identifier
 	 *
-	 * @param mixed	  $identifier   An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param mixed	  $identifier   An object that implements KObjectInterface, KServiceIdentifier object
 	 * 				                or valid identifier string
 	 *  @param array  An associative array of configuration options
 	 */
@@ -102,7 +102,7 @@ interface KServiceInterface
 	 * Set an alias for an identifier
 	 *
 	 * @param string  $alias        The alias
-	 * @param mixed   $identifier   The class indentifier or identifier object
+	 * @param mixed   $identifier   The class identifier or identifier object
 	 */
 	public static function setAlias($alias, $identifier);
 
@@ -110,12 +110,12 @@ interface KServiceInterface
 	 * Get an alias for an identifier
 	 *
 	 * @param  string  $alias   The alias
-	 * @return mixed   The class indentifier or identifier object, or NULL if no alias was found.
+	 * @return mixed   The class identifier or identifier object, or NULL if no alias was found.
 	 */
 	public static function getAlias($alias);
 
 	/**
-     * Get a list of aliasses
+     * Get a list of aliases
      *
      * @return array
      */

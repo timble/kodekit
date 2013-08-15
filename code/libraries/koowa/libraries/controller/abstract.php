@@ -70,7 +70,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $this->_dispatched = $config->dispatched;
 
         // Mixin the command chain
-        $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         //Set the request
         $this->setRequest((array) KConfig::unbox($config->request));
@@ -118,7 +118,8 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * @param   string          $action  The action to execute
      * @param   KCommandContext $context A command context object
-     * @throws  BadMethodCallException
+     * @throws Exception
+     * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
     public function execute($action, KCommandContext $context)
@@ -181,7 +182,8 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Gets the available actions in the controller.
      *
-     * @return  array Array[i] of action names.
+     * @param  bool $reload Reload the actions again
+     * @return array Actions
      */
     public function getActions($reload = false)
     {
@@ -318,7 +320,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Gets the behaviors of the table
      *
-     * @return array    An asscociate array of table behaviors, keys are the behavior names
+     * @return array    An associate array of table behaviors, keys are the behavior names
      */
     public function getBehaviors()
     {
@@ -377,7 +379,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Execute a controller action by it's name.
 	 *
-	 * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+	 * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
      * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string  $method Method name

@@ -36,7 +36,6 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Constructor
      *
-     * @return  void
      */
     public function __construct(KConfig $config = null)
     {
@@ -122,7 +121,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      * Get the priority of an object in the queue
      *
      * @param   KObjectHandlable $object A KObject instance
-     * @return  integer|false The command priority or FALSE if the command isn't enqueued
+     * @return  integer|boolean The command priority or FALSE if the command isn't enqueued
      */
     public function getPriority(KObjectHandlable $object)
     {
@@ -151,9 +150,9 @@ class KObjectQueue extends KObject implements Iterator, Countable
     }
 
     /**
-     * Check if the queue Does contain a given object
+     * Check if the queue contains a given object
      *
-     * @param  mixed $datum
+     * @param  KObjectHandlable $object
      * @return bool
      */
     public function contains(KObjectHandlable $object)
@@ -211,7 +210,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      *
      * Required by the Iterator interface
      *
-     * @return	scalar
+     * @return	mixed
      */
 	public function key()
 	{
@@ -235,7 +234,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      *
      * Required by the Iterator interface
      *
-     * @return	void
+     * @return	mixed
      */
 	public function next()
 	{
@@ -272,7 +271,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
 	/**
      * Preform a deep clone of the object
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

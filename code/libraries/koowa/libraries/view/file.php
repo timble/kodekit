@@ -153,7 +153,7 @@ class KViewFile extends KViewAbstract
     	    apache_setenv('no-gzip', '1');
     	}
 
-    	// Remove php's time limit
+    	// Remove PHP's time limit
     	if(!ini_get('safe_mode')) {
     		@set_time_limit(0);
     	}

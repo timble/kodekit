@@ -77,7 +77,6 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$new = $new <= 0 ? 1 : $new;
 
 			$table = $this->getTable();
-			$db    = $table->getDatabase();
 			$query = $this->getService('koowa:database.query.update')
 			    ->table($table->getBase());
 

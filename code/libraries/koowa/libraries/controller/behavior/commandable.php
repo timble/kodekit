@@ -78,7 +78,7 @@ class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 	/**
 	 * Method to set a toolbar object attached to the controller
 	 *
-	 * @param	mixed	$toolbar An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$toolbar An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KControllerToolbarAbstract

@@ -124,7 +124,7 @@ class KInflector
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
+	 * Prevent creating instances of this class by making the constructor private
 	 */
 	private function __construct() {}
 
@@ -356,7 +356,7 @@ class KInflector
 	}
 
 	/**
-	 * Check to see if an Enlish word is plural
+	 * Check to see if an English word is plural
 	 *
 	 * @param string $string
 	 * @return boolean

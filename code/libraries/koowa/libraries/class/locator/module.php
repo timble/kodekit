@@ -8,35 +8,35 @@
  */
 
 /**
- * Component Loader Adapter
+ * Module Loader Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KLoaderAdapterComponent extends KLoaderAdapterAbstract
+class KClassLocatorModule extends KClassLocatorAbstract
 {
 	/**
 	 * The adapter type
 	 *
 	 * @var string
 	 */
-	protected $_type = 'com';
+	protected $_type = 'mod';
 
 	/**
 	 * The class prefix
 	 *
 	 * @var string
 	 */
-	protected $_prefix = 'Com';
+	protected $_prefix = 'Mod';
 
 	/**
 	 * Get the path based on a class name
 	 *
-	 * @param  string $classname The class name
-     * @param  string $basepath  The base path
-	 * @return string|bool  	 Returns the path on success FALSE on failure
+	 * @param  string $classname    The class name
+     * @param  string $basepath     The base path
+	 * @return string|boolean		Returns the path on success FALSE on failure
 	 */
-	public function findPath($classname, $basepath = null)
+	public function locate($classname, $basepath = null)
 	{
 		$path = false;
 
@@ -52,29 +52,29 @@ class KLoaderAdapterComponent extends KLoaderAdapterAbstract
                 $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
 
-            $word    = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
-            $parts   = explode(' ', $word);
+            $word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
+            $parts = explode(' ', $word);
 
-            $type    = array_shift($parts);
+            array_shift($parts);
             $package = array_shift($parts);
 
-            $component = 'com_'.$package;
-            $file 	   = array_pop($parts);
+		    $module = 'mod_'.$package;
+			$file 	   = array_pop($parts);
 
-            if(count($parts))
-            {
-                if($parts[0] != 'view')
-                {
-                    foreach($parts as $key => $value) {
-                        $parts[$key] = KInflector::pluralize($value);
-                    }
-                }
-                else $parts[0] = KInflector::pluralize($parts[0]);
+			if(count($parts))
+			{
+				if($parts[0] != 'view')
+			    {
+			        foreach($parts as $key => $value) {
+					    $parts[$key] = KInflector::pluralize($value);
+				    }
+			    }
+			    else $parts[0] = KInflector::pluralize($parts[0]);
 
-                $path = implode('/', $parts);
-                $path = $path.'/'.$file;
-            }
-            else $path = $file;
+				$path = implode('/', $parts);
+				$path = $path.'/'.$file;
+			}
+			else $path = $file;
 
             //Find the basepath
             if(!empty($basepath) && empty($this->_basepaths[$package])) {
@@ -87,9 +87,10 @@ class KLoaderAdapterComponent extends KLoaderAdapterAbstract
                 $basepath = $this->_basepath;
             }
 
-            $path = $basepath.'/components/'.$component.'/'.$path.'.php';
-        }
-        
+			$path = $basepath.'/modules/'.$module.'/'.$path.'.php';
+		}
+
 		return $path;
+
 	}
 }

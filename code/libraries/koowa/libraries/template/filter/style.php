@@ -91,7 +91,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
 	/**
 	 * Render style information
 	 *
-     * @param string	$script  The script information
+     * @param string	$style   The script information
      * @param boolean	$link    True, if the script information is a URL.
      * @param array		$attribs Associative array of attributes
      * @return string

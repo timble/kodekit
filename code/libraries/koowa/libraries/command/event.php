@@ -23,7 +23,7 @@ class KCommandEvent extends KCommand
      *
      * @var KEventDispatcher
      */
-    protected $_dispatcher;
+    protected $_event_dispatcher;
 
     /**
      * Constructor.
@@ -37,7 +37,7 @@ class KCommandEvent extends KCommand
 
         parent::__construct($config);
 
-        $this->_dispatcher = $config->dispatcher;
+        $this->_event_dispatcher = $config->event_dispatcher;
     }
 
     /**
@@ -51,10 +51,20 @@ class KCommandEvent extends KCommand
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'dispatcher'   => $this->getService('koowa:event.dispatcher')
+            'event_dispatcher' => $this->getService('koowa:event.dispatcher')
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Get the event dispatcher
+     *
+     * @return  KEventDispatcherInterface
+     */
+    public function getEventDispatcher()
+    {
+        return $this->_event_dispatcher;
     }
 
     /**
@@ -93,11 +103,11 @@ class KCommandEvent extends KCommand
 
         // Create event object to check for propagation
         $event = new KEvent($event_specific, $context);
-        $this->_dispatcher->dispatchEvent($event_specific, $event);
+        $this->getEventDispatcher()->dispatchEvent($event_specific, $event);
 
         // Ensure event can be propagated and event name is different
         if ($event->canPropagate() && $event_specific != $event_generic) {
-            $this->_dispatcher->dispatchEvent($event_generic, $event);
+            $this->getEventDispatcher()->dispatchEvent($event_generic, $event);
         }
 
         return true;

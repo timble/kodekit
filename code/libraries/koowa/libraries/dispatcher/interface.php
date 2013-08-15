@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-interface KDispatcherInterface
+interface KDispatcherInterface extends KControllerInterface
 {
 	/**
 	 * Method to get a controller object
@@ -25,7 +25,7 @@ interface KDispatcherInterface
 	/**
 	 * Method to set a controller object attached to the dispatcher
 	 *
-	 * @param	mixed	$controller An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$controller An object that implements KObjectInterface, KServiceIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
 	 * @return	KDispatcherAbstract

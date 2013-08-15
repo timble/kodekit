@@ -77,13 +77,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
 	    return true;
 	}
 
-	/**
+    /**
      * Insert a row into the rowset
      *
-     * The row will be stored by it's identity_column if set or otherwise by it's object handle.
+     * The row will be stored by its identity_column if set or otherwise by it's object handle.
      *
-     * @param  KDatabaseRowInterface $row A KDatabaseRow object to be inserted
-     * @return boolean	TRUE on success FALSE on failure
+     * @param KDatabaseRowInterface|KObjectHandlable $row A KDatabaseRow object to be inserted
+     * @throws InvalidArgumentException
+     * @return boolean    TRUE on success FALSE on failure
      */
     public function insert(KObjectHandlable $row)
     {
@@ -104,13 +105,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         return true;
     }
 
- 	/**
+    /**
      * Removes a row
      *
      * The row will be removed based on it's identity_column if set or otherwise by
      * it's object handle.
      *
-     * @param  KDatabaseRowInterface $row A KDatabaseRow object to be removed
+     * @param \KDatabaseRowInterface|\KObjectHandlable $row A KDatabaseRow object to be removed
+     * @throws InvalidArgumentException
      * @return KDatabaseRowsetAbstract
      */
 	public function extract(KObjectHandlable $row)
@@ -182,14 +184,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Add rows to the rowset
      *
      * @param  array    $data   An associative array of row data to be inserted.
-     * @param  boolean  $enw    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
+     * @param  boolean  $new    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
      * @return  KDatabaseRowsetAbstract
      * @see __construct
      */
     public function addData(array $data, $new = true)
     {
         //Set the data in the row object and insert the row
-        foreach($data as $k => $row)
+        foreach($data as $row)
         {
             $options = array(
             	'data'   => $row,
@@ -249,8 +251,8 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * This functions accepts either a know position or associative array of key/value pairs
      *
-     * @param   string|array $needle The position or the key or an associatie array of column data to match
-     * @return KDatabaseRow(set)Abstract Returns a row or rowset if successfull. Otherwise NULL.
+     * @param   string|array $needle The position or the key or an associative array of column data to match
+     * @return KDatabaseRowInterface|KDatabaseRowsetInterface Returns a row or rowset if successful. Otherwise NULL.
      */
     public function find($needle)
     {
@@ -260,7 +262,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         {
             $result = clone $this;
 
-            foreach ($this as $i => $row)
+            foreach ($this as $row)
             {
                 foreach($needle as $key => $value)
                 {
@@ -293,7 +295,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         {
             $result = true;
 
-            foreach ($this as $i => $row)
+            foreach ($this as $row)
             {
                 if(!$row->save()) {
                     $result = false;
@@ -317,7 +319,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         {
             $result = true;
 
-            foreach ($this as $i => $row)
+            foreach ($this as $row)
             {
                 if(!$row->delete()) {
                     $result = false;
@@ -375,7 +377,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Search the mixin method map and call the method or forward the call to each row for processing.
      *
-     * Function is also capable of checking is a behavior has been mixed succesfully using is[Behavior] function. If
+     * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
      * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string   $method     The function name
@@ -385,7 +387,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      */
     public function __call($method, $arguments)
     {
-        //If the method is of the formet is[Bahavior] handle it
+        //If the method is of the format is[Behavior] handle it
         $parts = KInflector::explode($method);
 
         if($parts[0] == 'is' && isset($parts[1]))
@@ -401,7 +403,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
              //If the mixed method exists call it for all the rows
             if(isset($this->_mixed_methods[$method]))
             {
-                foreach ($this as $i => $row) {
+                foreach ($this as $row) {
                      $row->__call($method, $arguments);
                 }
 

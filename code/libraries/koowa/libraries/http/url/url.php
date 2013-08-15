@@ -26,7 +26,7 @@
  *     $url = 'http://anonymous:guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor'
  *     $url = KService::get('koowa:http.url', array('url' => $url) );
  *
- *     // the $ur properties are ...
+ *     // the $url properties are ...
  *     //
  *     // $url->scheme   => 'http'
  *     // $url->host     => 'example.com'
@@ -71,7 +71,7 @@
  *     // is always applied to the last path-element.
  *     // /something/else/entirely/another.php?baz=zab&zim=gir#anchor
  *
- *     // Get the full URL to get the shceme and host
+ *     // Get the full URL to get the scheme and host
  *     $full_url = $url->toString(true);
  *
  *     // the $full_url string is:
@@ -82,7 +82,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Http
  */
-class KHttpUrl extends KObject implements KHttpUrlInterafce
+class KHttpUrl extends KObject implements KHttpUrlInterface
 {
     /**
      * The url parts
@@ -99,10 +99,10 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
     const QUERY    = 128;
     const FRAGMENT = 256;
 
-    const AUTH     = 6;
-    const AUTHORITY = 31;
-    const BASE     = 127;
-    const FULL     = 511;
+    const USERINFO  = 6;     //User info
+    const AUTHORITY = 31;    //Authority
+    const BASE      = 127;   //Hierarchical part
+    const FULL      = 511;   //Complete url
 
     /**
      * The scheme [http|https|ftp|mailto|...]
@@ -140,19 +140,18 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
     public $pass = '';
 
     /**
-     * The path portion (for example, 'path/to/index.php').
-     *
-     * @var string
-     */
-    public $path = '';
-
-    /**
-     * The dot-format extension of the last path element (for example, the "rss"
-     * in "feed.rss").
+     * The dot-format extension of the last path element (for example, the "rss" in "feed.rss").
      *
      * @var string
      */
     public $format = '';
+
+    /**
+     * The fragment aka anchor portion (for example, the "foo" in "#foo").
+     *
+     * @var string
+     */
+    public $fragment = '';
 
     /**
      * The query portion (for example baz=dib)
@@ -167,11 +166,14 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
     protected $_query = array();
 
     /**
-     * The fragment aka anchor portion (for example, the "foo" in "#foo").
+     * The path portion (for example, 'path/to/index.php').
      *
-     * @var string
+     * @var array
+     *
+     * @see setPath()
+     * @see getPath()
      */
-    public $fragment = '';
+    protected $_path = '';
 
     /**
      * Url-encode only these characters in path elements.
@@ -180,7 +182,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
      *
      * @var array
      */
-    protected $_encode_path = array (
+    protected $_encode_path = array(
         ' ' => '+',
         '/' => '%2F',
         '?' => '%3F',
@@ -189,66 +191,379 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
     );
 
     /**
+     * Escape '&' to '&amp;'
+     *
+     * @var boolean
+     *
+     * @see getQuery()
+     * @see getUrl()
+     */
+    protected $_escape;
+
+    /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param KConfig $config  An optional KConfig object with configuration options
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KConfig $config)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
-
         parent::__construct($config);
 
-        $this->fromString($config->url);
+        //Set the escaping behavior
+        $this->_escape = $config->escape;
+
+        //Set the url
+        $this->setUrl($config->url);
     }
 
     /**
      * Initializes the options for the object
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
+     * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KConfig $config Configuration options
+     * @param   KConfig $config  An optional KConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'url'  => '',
+            'url'    => '',
+            'escape' => false
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Implements the virtual $query property.
+     * Parse the url from a string
      *
-     * @param   string  $key The virtual property to set.
-     * @param   string  $val Set the virtual property to this value.
+     * Partial URLs are also accepted. setUrl() tries its best to parse them correctly. Function also accepts an
+     * associative array like parse_url returns.
+     *
+     * @param   string|array  $url Part(s) of an URL in form of a string or associative array like parse_url() returns
+     * @throws  \UnexpectedValueException If the url is not an array a string or cannot be casted to one.
+     * @return  KHttpUrl
+     * @see     parse_url()
      */
-    public function __set($key, $val)
+    public function setUrl($url)
     {
-        if ($key == 'query') {
-            $this->setQuery($val);
+        $url = KConfig::unbox($url);
+
+        if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')) && !is_array($url))
+        {
+            throw new UnexpectedValueException(
+                'The url must be a array as returned by parse_url() a string or object implementing __toString(), "'.gettype($url).'" given.'
+            );
         }
 
-        if($key == 'path') {
-            $this->setPath($val);
+        if(!is_array($url)) {
+            $parts = parse_url((string) $url);
+        } else {
+            $parts = $url;
         }
+
+        foreach ($parts as $key => $value) {
+            $this->$key = $value;
+        }
+
+        return $this;
     }
 
     /**
-     * Implements access to $_query by reference so that it appears to be
-     * a public $query property.
+     * Get the scheme part of the URL
      *
-     * @param   string  $key The virtual property to return.
-     * @return  array   The value of the virtual property.
+     * @return string|null
      */
-    public function &__get($key)
+    public function getScheme()
     {
-        if ($key == 'query') {
-           return $this->_query;
+        return $this->scheme;
+    }
+
+    /**
+     * Set the URL scheme
+     *
+     * @param  string $scheme
+     * @return  KHttpUrl
+     */
+    public function setScheme($scheme)
+    {
+        $this->scheme = $scheme;
+        return $this;
+    }
+
+    /**
+     * Get the URL user
+     *
+     * @return string|null
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the URL user
+     *
+     * @param  string $user
+     * @return KHttpUrl
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * Get the URL password
+     *
+     * @return string|null
+     */
+    public function getPass()
+    {
+        return $this->pass;
+    }
+
+    /**
+     * Set the URL password
+     *
+     * @param  string $pass
+     * @return KHttpUrl
+     */
+    public function setPass($pass)
+    {
+        $this->pass = $pass;
+        return $this;
+    }
+
+    /**
+     * Get the URL host
+     *
+     * @return string|null
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * Set the URL Host
+     *
+     * @param  string $host
+     * @return KHttpUrl
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
+        return $this;
+    }
+
+    /**
+     * Get the URL port
+     *
+     * @return integer|null
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * Set the port part of the URL
+     *
+     * @param  integer $port
+     * @return KHttpUrl
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+        return $this;
+    }
+
+    /**
+     * Returns the path portion as a string or array
+     *
+     * @param     boolean $toArray If TRUE return an array. Default FALSE
+     * @return  string|array The path string; e.g., `path/to/site`.
+     */
+    public function getPath($toArray = false)
+    {
+        $result = $toArray ? $this->_path : $this->_pathEncode($this->_path);
+        return $result;
+    }
+
+    /**
+     * Sets the HttpUrl::$path array and $format from a string.
+     *
+     * This will overwrite any previous values. Also, resets the format based on the final path value.
+     *
+     * @param   string|array  $path The path string or array of elements to use; for example,"/foo/bar/baz/dib".
+     *                              A leading slash will *not* create an empty first element; if the string has a
+     *                              leading slash, it is ignored.
+     * @return  KHttpUrl
+     */
+    public function setPath($path)
+    {
+        if (is_string($path))
+        {
+            if (!empty($path)) {
+                $path = explode('/', $path);
+            } else {
+                $path = array();
+            }
         }
+
+        foreach ($path as $key => $val) {
+            $path[$key] = urldecode($val);
+        }
+
+        if ($val = end($path))
+        {
+            // find the last dot in the value
+            $pos = strrpos($val, '.');
+
+            if ($pos !== false) {
+                $key = key($path);
+                $this->format = substr($val, $pos + 1);
+                $path[$key] = substr($val, 0, $pos);
+            }
+        }
+
+        $this->_path = $path;
+        return $this;
+    }
+
+    /**
+     * Returns the query portion as a string or array
+     *
+     * @param   boolean $toArray If TRUE return an array. Default FALSE
+     * @param   boolean $escape  If TRUE escapes '&' to '&amp;' for xml compliance. Default FALSE
+     * @return  string|array The query string; e.g., `foo=bar&baz=dib`.
+     */
+    public function getQuery($toArray = false, $escape = false)
+    {
+        $result = $this->_query;
+
+        if(!$toArray)
+        {
+            $result =  http_build_query($this->_query, '', $escape ? '&amp;' : '&');
+
+            // We replace the + used for spaces by http_build_query with the more standard %20.
+            $result = str_replace('+', '%20', $result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sets the query string
+     *
+     * If an string is provided, will decode the string to an array of parameters. Array values will be represented in
+     * the query string using PHP's common square bracket notation.
+     *
+     * @param   string|array  $query  The query string to use; for example `foo=bar&baz=dib`.
+     * @param   boolean       $merge  If TRUE the data in $query will be merged instead of replaced. Default FALSE.
+     * @return  KHttpUrl
+     */
+    public function setQuery($query, $merge = false)
+    {
+        $result = $query;
+        if (!is_array($query))
+        {
+            if (strpos($query, '&amp;') !== false) {
+                $query = str_replace('&amp;', '&', $query);
+            }
+
+            //Set the query vars
+            parse_str($query, $result);
+        }
+
+        if ($merge) {
+            $this->_query = array_merge($this->_query, $result);
+        } else {
+            $this->_query = $result;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the URL format
+     *
+     * @return string|null
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * Set the URL format
+     *
+     * @param  string $format
+     * @return KHttpUrl
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
+        return $this;
+    }
+
+    /**
+     * Get the URL fragment
+     *
+     * @return string|null
+     */
+    public function getFragment()
+    {
+        return $this->fragment;
+    }
+
+    /**
+     * Set the URL fragment part
+     *
+     * @param  string $fragment
+     * @return KHttpUrl
+     */
+    public function setFragment($fragment)
+    {
+        $this->fragment = $fragment;
+        return $this;
+    }
+
+    /**
+     * Build the url from an array
+     *
+     * @param   array  $parts Associative array like parse_url() returns.
+     * @return  KHttpUrl
+     * @see     parse_url()
+     */
+    public static function fromArray(array $parts)
+    {
+        $url = KService::get('koowa:http.url', array('url' => $parts));
+        return $url;
+    }
+
+    /**
+     * Build the url from a string
+     *
+     * Partial URLs are also accepted. fromString tries its best to parse them correctly.
+     *
+     * @param   string  $url
+     * @throws  \UnexpectedValueException If the url is not a string or cannot be casted to one.
+     * @return  KHttpUrl
+     * @see     parse_url()
+     */
+    public static function fromString($url)
+    {
+        if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')))
+        {
+            throw new UnexpectedValueException(
+                'The url must be a string or object implementing __toString(), "'.gettype($url).'" given.'
+            );
+        }
+
+        $url = self::fromArray(parse_url((string) $url));
+        return $url;
     }
 
     /**
@@ -262,15 +577,15 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
         $url = '';
 
         //Add the scheme
-        if(($parts & self::SCHEME) && !empty($this->scheme)) {
-            $url .=  urlencode($this->scheme).'://';
+        if (($parts & self::SCHEME) && !empty($this->scheme)) {
+            $url .= urlencode($this->scheme) . '://';
         }
 
         //Add the username and password
-        if(($parts & self::USER) && !empty($this->user))
+        if (($parts & self::USER) && !empty($this->user))
         {
             $url .= urlencode($this->user);
-            if(($parts & self::PASS) && !empty($this->pass)) {
+            if (($parts & self::PASS) && !empty($this->pass)) {
                 $url .= ':' . urlencode($this->pass);
             }
 
@@ -278,165 +593,42 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
         }
 
         // Add the host and port, if any.
-        if(($parts & self::HOST) && !empty($this->host))
+        if (($parts & self::HOST) && !empty($this->host))
         {
-            $url .=  urlencode($this->host);
+            $url .= urlencode($this->host);
 
-            if(($parts & self::PORT) && !empty($this->port)) {
-                $url .=  ':' . (int) $this->port;
+            if (($parts & self::PORT) && !empty($this->port)) {
+                $url .= ':' . (int)$this->port;
             }
         }
 
         // Add the rest of the url. we use trim() instead of empty() on string
         // elements to allow for string-zero values.
-        if(($parts & self::PATH) && !empty($this->path))
+        if (($parts & self::PATH) && !empty($this->_path))
         {
-            $url .= $this->_pathEncode($this->path);
-            if(($parts & self::FORMAT) && trim($this->format) !== '') {
+            $url .= $this->getPath();
+            if (($parts & self::FORMAT) && trim($this->format) !== '') {
                 $url .= '.' . urlencode($this->format);
             }
         }
 
-        $query = $this->getQuery();
-        if(($parts & self::QUERY) && !empty($query)) {
-            $url .= '?' . $this->getQuery();
+        if (($parts & self::QUERY) && !empty($this->_query)) {
+            $url .= '?' . $this->getQuery(false, $this->_escape);
         }
 
-        if(($parts & self::FRAGMENT) && trim($this->fragment) !== '') {
-            $url .=  '#' . urlencode($this->fragment);
+        if (($parts & self::FRAGMENT) && trim($this->fragment) !== '') {
+            $url .= '#' . urlencode($this->fragment);
         }
 
         return $url;
     }
 
     /**
-     * Set the url
-     *
-     * @param   string  $url url
-     * @return  KHttpUrl
-     */
-    public function fromString($url)
-    {
-        if(!empty($url))
-        {
-            $segments = parse_url($url);
-
-            foreach ($segments as $key => $value) {
-                $this->$key = $value;
-            }
-
-            if($this->format = pathinfo($this->path, PATHINFO_EXTENSION)) {
-                $this->path = str_replace('.'.$this->format, '', $this->path);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Sets the query string in the url, for KHttpUrl::getQuery() and KHttpUrl::$query.
-     *
-     * This will overwrite any previous values.
-     *
-     * @param   string|array    The query string to use; for example `foo=bar&baz=dib`.
-     * @return  KHttpUrl
-     */
-    public function setQuery($query)
-    {
-        if(!is_array($query))
-        {
-            if(strpos($query, '&amp;') !== false) {
-               $query = str_replace('&amp;','&',$query);
-            }
-
-            //Set the query vars
-            parse_str($query, $this->_query);
-        }
-
-        if(is_array($query)) {
-            $this->_query = $query;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns the query portion as a string or array
-     *
-     * @param 	boolean			$toArray If TRUE return an array. Default FALSE
-     * @return  string|array    The query string; e.g., `foo=bar&baz=dib`.
-     */
-    public function getQuery($toArray = false)
-    {
-		$result = $toArray ? $this->_query : http_build_query($this->_query, '', '&');
-		
-		if (!$toArray) {
-			// We replace the + used for spaces by http_build_query with the more standard %20.
-			$result = str_replace('+', '%20', $result);
-		}
-		
-		return $result;
-    }
-
-    /**
-     * Sets the KHttpUrl::$path array and $format from a string.
-     *
-     * This will overwrite any previous values. Also, resets the format based
-     * on the final path value.
-     *
-     * @param   string  $path The path string to use; for example,"/foo/bar/baz/dib".
-     * A leading slash will *not* create an empty first element; if the string
-     * has a leading slash, it is ignored.
-     * @return  KHttpUrl
-     */
-    public function setPath($path)
-    {
-        $spec = trim($path, '/');
-
-        $this->path = array();
-        if (! empty($path)) {
-            $this->path = explode('/', $path);
-        }
-
-        foreach ($this->path as $key => $val) {
-            $this->path[$key] = urldecode($val);
-        }
-
-        if ($val = end($this->path))
-        {
-            // find the last dot in the value
-            $pos = strrpos($val, '.');
-
-            if ($pos !== false)
-            {
-                $key = key($this->path);
-                $this->format = substr($val, $pos + 1);
-                $this->path[$key] = substr($val, 0, $pos);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Return a string representation of this url.
-     *
-     * @see    toString()
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString(self::FULL);
-    }
-
-    /**
      * Converts an array of path elements into a string.
      *
-     * Does not use urlencode(); instead, only converts characters found in
-     * KHttpUrl::$_encode_path.
+     * Does not use urlencode(); instead, only converts characters found in HttpUrl::$_encode_path.
      *
-     * @param   array $spec The path elements.
+     * @param  array $spec The path elements.
      * @return string A url path string.
      */
     protected function _pathEncode($spec)
@@ -449,10 +641,56 @@ class KHttpUrl extends KObject implements KHttpUrlInterafce
         $vals = array_values($this->_encode_path);
 
         $out = array();
-        foreach ((array) $spec as $elem) {
+        foreach ((array)$spec as $elem) {
             $out[] = str_replace($keys, $vals, $elem);
         }
 
         return implode('/', $out);
+    }
+
+    /**
+     * Set the virtual properties.
+     *
+     * @param   string $key   The virtual property to set.
+     * @param   string $value Set the virtual property to this value.
+     */
+    public function __set($key, $value)
+    {
+        if ($key == 'query') {
+            $this->setQuery($value);
+        }
+
+        if ($key == 'path') {
+            $this->setPath($value);
+        }
+    }
+
+    /**
+     * Get the virtual properties by reference so that they appears to be public
+     *
+     * @param   string  $key The virtual property to return.
+     * @return  mixed   The value of the virtual property.
+     */
+    public function &__get($key)
+    {
+        if ($key == 'query') {
+            return $this->_query;
+        }
+
+        if ($key == 'path') {
+            return $this->_path;
+        }
+
+        return null;
+    }
+
+    /**
+     * Allow PHP casting of this object
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
     }
 }

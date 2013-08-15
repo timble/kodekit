@@ -10,7 +10,7 @@
 /**
  * Filter Chain
  *
- * The filter chain overrides the run method to implement a separate validate and santize method
+ * The filter chain overrides the run method to implement a separate validate and sanitize method
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter

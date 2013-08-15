@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-interface KLoaderAdapterInterface
+interface KClassLocatorInterface
 {
     /**
 	 * Get the type
@@ -34,7 +34,7 @@ interface KLoaderAdapterInterface
      *
      * @param  string   $basepath The base path of the package
      * @param  string   $package
-     * @return KLoaderAdapterInterface
+     * @return KClassLocatorInterface
      */
     public function registerBasepath($basepath, $package = null);
 
@@ -50,7 +50,7 @@ interface KLoaderAdapterInterface
      *
      * @param  string  $classname The class name
      * @param  string  $basepath  The basepath to use to find the class
-     * @return string|false     Returns the path on success FALSE on failure
+     * @return string|boolean     Returns the path on success FALSE on failure
      */
-    public function findPath($classname, $basepath = null);
+    public function locate($classname, $basepath = null);
 }

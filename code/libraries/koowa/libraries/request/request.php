@@ -176,7 +176,7 @@ class KRequest
             return $default;
         }
 
-        // Handle magic quotes compatability
+        // Handle magic quotes compatibility
         if (get_magic_quotes_gpc() && !in_array($hash, array('FILES', 'SESSION'))) {
             $result = self::_stripSlashes( $result );
         }
@@ -265,8 +265,6 @@ class KRequest
      */
     public static function content($key = null)
     {
-        $result = '';
-
         if (!isset(self::$_content) && isset($_SERVER['CONTENT_TYPE']))
         {
             $type = $_SERVER['CONTENT_TYPE'];

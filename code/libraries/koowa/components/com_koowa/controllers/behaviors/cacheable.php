@@ -154,7 +154,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * Only if cached data was fetch return it and break the chain to disallow any further processing to take place
 	 *
      * @param   KCommandContext	$context A command context object
-	 * @return 	void
+	 * @return 	mixed
 	 */
     protected function _beforeBrowse(KCommandContext $context)
 	{

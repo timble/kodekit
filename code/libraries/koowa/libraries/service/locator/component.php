@@ -35,7 +35,7 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
 	 *                     -> Framework Default
 	 *
 	 * @param KServiceIdentifier $identifier An identifier object - com:[//application/]component.view.[.path].name
-	 * @return string|false  Return object on success, returns FALSE on failure
+	 * @return string|boolean  Return object on success, returns FALSE on failure
 	 */
 	public function findClass(KServiceIdentifier $identifier)
 	{
@@ -43,7 +43,7 @@ class KServiceLocatorComponent extends KServiceLocatorAbstract
         $classname = 'Com'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
 
       	//Manually load the class to set the basepath
-		if (!$this->getService('koowa:loader')->loadClass($classname, $identifier->basepath))
+		if (!$this->getService('koowa:class.loader')->loadClass($classname, $identifier->basepath))
 		{
 		    $classpath = $identifier->path;
 			$classtype = !empty($classpath) ? array_shift($classpath) : '';

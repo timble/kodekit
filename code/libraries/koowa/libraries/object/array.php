@@ -68,13 +68,12 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     	if ($key === null) {
     		throw new InvalidArgumentException('Empty key passed');
     	}
-    	$result = null;
+
+        $result = null;
     	if (isset($this->_data[$key])) {
     		$result = $this->_data[$key];
-    	} //else {
-    	//throw new \InvalidArgumentException('Not a valid key in this array: '. $key);
-    	//}
-    
+    	}
+
     	return $result;
     }
     

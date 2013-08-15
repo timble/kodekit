@@ -80,12 +80,12 @@ class KFilterSlug extends KFilterAbstract
 	 * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents", replace whitespaces by hyphens and
      * lowercase the result.
 	 *
-	 * @param	scalar	$value Variable to be sanitized
-	 * @return	scalar
+	 * @param	mixed	$value Variable to be sanitized
+	 * @return	mixed
 	 */
 	protected function _sanitize($value)
 	{
-		//remove any '-' from the string they will be used as concatonater
+		//remove any '-' from the string they will be used as concatenator
 		$value = str_replace($this->_separator, ' ', $value);
 
 		//convert to ascii characters
@@ -97,7 +97,7 @@ class KFilterSlug extends KFilterAbstract
 		//remove any duplicate whitespace, and ensure all characters are alphanumeric
 		$value = preg_replace(array('/\s+/','/[^A-Za-z0-9\-]/'), array($this->_separator,''), $value);
 
-		//remove repeated occurences of the separator
+		//remove repeated occurrences of the separator
 		$value = preg_replace('/['.preg_quote($this->_separator, '/').']+/', $this->_separator, $value);
 
 		//limit length

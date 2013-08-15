@@ -116,7 +116,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 		$this->_options = $config->options;
 
 		// Mixin a command chain
-        $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 	}
 
 	/**
@@ -383,7 +383,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Delete rows from the table.
      *
      * @param  KDatabaseQueryDelete $query The query object.
-     * @return integer     Number of rows affected, or -1 if an error occured.
+     * @return integer     Number of rows affected, or -1 if an error occurred.
      */
     public function delete(KDatabaseQueryDelete $query)
     {
@@ -427,7 +427,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 
         if ($result === false)
         {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 $this->getConnection()->error . ' of the following query : ' . $query, $this->getConnection()->errno
             );
         }
@@ -661,8 +661,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected function _quoteIdentifier($name)
     {
-    	$result = '';
-    
     	if (is_array($name)) {
     		$name = $name[0];
     	}

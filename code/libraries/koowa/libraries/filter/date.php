@@ -24,7 +24,7 @@ class KFilterDate extends KFilterTimestamp
      * itself is valid (for example, no Feb 30).
      *
      *
-     * @param   scalar  $value Value to be validated
+     * @param   mixed   $value Value to be validated
      * @return  bool    True when the variable is valid
      */
     protected function _validate($value)

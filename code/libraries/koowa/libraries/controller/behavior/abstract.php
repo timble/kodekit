@@ -12,7 +12,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KControllerBehaviorInterface
+abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implements KControllerBehaviorInterface
 {
 	/**
 	 * The behavior priority
@@ -102,9 +102,6 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	 */
 	public function execute($name, KCommandContext $context)
 	{
-		$identifier = clone $context->caller->getIdentifier();
-		$type       = array_pop($identifier->path);
-
 		$parts  = explode('.', $name);
 		$method = '_'.$parts[0].ucfirst($parts[1]);
 
@@ -170,7 +167,7 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	 * @param	string|object	$identifier The class identifier or identifier object
 	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @return	object  		Return object on success, throws exception on failure
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
 	 */
 	final public function getService($identifier, array $config = array())
 	{
@@ -182,7 +179,7 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
      *
      * @param mixed $identifier
      * @return KServiceIdentifier
-     * @see    KObjectServiceable
+     * @see    KObjectInterface
      */
 	final public function getIdentifier($identifier = null)
 	{
