@@ -142,7 +142,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
         {
             $filter = $this->getView()->getTemplate()->getFilter('toolbar');
 
-            $filter->setRenderers($this->_render);
+            $filter->setToolbars($this->_render);
             $filter->setToolbar($this->getToolbar());
             $filter->setMenubar($this->getMenubar());
 

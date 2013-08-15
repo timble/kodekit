@@ -89,7 +89,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      * @param   KTemplateInterface $template The template object
      * @return  $this
      */
-    public function setTemplate(KTemplateInterface $template)
+    public function setTemplate($template)
     {
         $this->_template = $template;
 

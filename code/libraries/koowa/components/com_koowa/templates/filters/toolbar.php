@@ -17,10 +17,10 @@
 class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
     /**
-     * Renderers such as toolbar, menubar, title
+     * Toolbars to render such as toolbar, menubar, title
      * @var array
      */
-    protected $_renderers = array();
+    protected $_toolbars = array();
 
     /**
      * Toolbar
@@ -40,20 +40,20 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
     /**
      * @return array
      */
-    public function getRenderers()
+    public function getToolbars()
     {
-        return $this->_renderers;
+        return $this->_toolbars;
     }
 
     /**
-     * Set the renderers to replace
+     * Set the toolbars to render
      *
-     * @param array $renderers
+     * @param array $toolbars
      * @return $this
      */
-    public function setRenderers(array $renderers)
+    public function setToolbars(array $toolbars)
     {
-        $this->_renderers = $renderers;
+        $this->_toolbars = $toolbars;
 
         return $this;
     }
@@ -111,15 +111,17 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
      */
     public function write(&$text)
     {
-        if (in_array('toolbar', $this->_renderers) && $this->getToolbar()) {
+        $toolbars = $this->getToolbars();
+
+        if (in_array('toolbar', $toolbars) && $this->getToolbar()) {
             $this->_renderToolbar($text);
         }
 
-        if (in_array('menubar', $this->_renderers) && $this->getMenubar()) {
+        if (in_array('menubar', $toolbars) && $this->getMenubar()) {
             $this->_renderMenubar($text);
         }
 
-        if (in_array('title', $this->_renderers) && $this->getToolbar()) {
+        if (in_array('title', $toolbars) && $this->getToolbar()) {
             $this->_renderTitle($text);
         }
 
