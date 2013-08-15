@@ -426,7 +426,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
         if (!isset($this->_filters[$identifier->name]))
         {
-            $filter = KService::get($identifier);
+            $filter = $this->getService($identifier, array('template' => $this));
 
             if(!($filter instanceof KTemplateFilterInterface)) {
 			    throw new UnexpectedValueException("Template filter $identifier does not implement KTemplateFilterInterface");
