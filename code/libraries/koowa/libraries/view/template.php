@@ -112,7 +112,7 @@ abstract class KViewTemplate extends KViewAbstract
             'data'			   => array(),
             'escape'           => 'htmlspecialchars',
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template'),
+            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template', 'toolbar'),
             'auto_assign'      => true,
             'base_url'         => KRequest::base(),
             'media_url'        => KRequest::root().'/media',

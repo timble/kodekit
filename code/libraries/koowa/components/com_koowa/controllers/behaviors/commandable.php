@@ -96,7 +96,7 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
 	 */
     public function setMenubar($menubar)
     {
-        if(!($menubar instanceof KControllerToolbarAbstract))
+        if(!($menubar instanceof KControllerToolbarInterface))
 		{
 			if(is_string($menubar) && strpos($menubar, '.') === false )
 		    {
@@ -118,46 +118,39 @@ class ComKoowaControllerBehaviorCommandable  extends KControllerBehaviorCommanda
         return $this;
     }
 
+    protected function _beforeGet(KCommandContext $context)
+    {
+        if (JFactory::getApplication()->isSite() && $this->isDispatched())
+        {
+            if ($this->getView() instanceof KViewHtml && $this->getRequest()->layout === 'form')
+            {
+                $this->_render = array_merge($this->_render, array('toolbar'));
+            }
+        }
+
+        parent::_beforeGet($context);
+    }
+
     /**
-	 * Add default toolbar commands
+	 * Run the toolbar filter to convert toolbars and menubars to HTML in the template
 	 * .
      * @param   KCommandContext	$context A command context object
 	 */
     protected function _afterGet(KCommandContext $context)
     {
-        if($this->isDispatched() && ($this->getView() instanceof KViewHtml))
+        if ($this->isDispatched() && $this->getView() instanceof KViewHtml)
         {
-            //Render the toolbar
-	        $document = JFactory::getDocument();
+            $filter = $this->getView()->getTemplate()->getFilter('toolbar');
 
-            if(in_array('toolbar', $this->_render))
-            {
-                $config   = array('toolbar' => $this->getToolbar());
-	            $toolbar = $this->getView()->getTemplate()->getHelper('toolbar')->render($config);
-            }
-            else $toolbar = false;
+            $filter->setRenderers($this->_render);
+            $filter->setToolbar($this->getToolbar());
+            $filter->setMenubar($this->getMenubar());
 
-            $document->setBuffer($toolbar, 'modules', 'toolbar');
+            $result = $context->result;
 
-            //Render the title
-            if(in_array('title', $this->_render))
-            {
-                $config   = array('toolbar' => $this->getToolbar());
-                $title = $this->getView()->getTemplate()->getHelper('toolbar')->title($config);
-            }
-            else $title = false;
+            $filter->write($result);
 
-            $document->setBuffer($title, 'modules', 'title');
-
-            //Render the menubar
-            if(in_array('menubar', $this->_render))
-            {
-                $config = array('menubar' => $this->getMenubar());
-                $menubar = $this->getView()->getTemplate()->getHelper('menubar')->render($config);
-            }
-            else $menubar = false;
-
-            $document->setBuffer($menubar, 'modules', 'submenu');
+            $context->result = $result;
         }
     }
 }
