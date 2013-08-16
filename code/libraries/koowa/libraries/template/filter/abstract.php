@@ -34,11 +34,15 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      *
      * @param   KConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct(KConfig $config)
     {
         parent::__construct($config);
 
         $this->_priority = $config->priority;
+
+        if ($config->template) {
+            $this->setTemplate($config->template);
+        }
     }
 
     /**
@@ -52,7 +56,8 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_NORMAL,
+            'priority' => KCommand::PRIORITY_NORMAL,
+            'template' => null
         ));
 
         parent::_initialize($config);
@@ -76,6 +81,19 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     public function getTemplate()
     {
         return $this->_template;
+    }
+
+    /**
+     * Set the template object
+     *
+     * @param   KTemplateInterface $template The template object
+     * @return  $this
+     */
+    public function setTemplate($template)
+    {
+        $this->_template = $template;
+
+        return $this;
     }
 
     /**
@@ -105,7 +123,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         $context->data = $data;
 
         //Reset the template
-        $this->_template = null;
+        //$this->_template = null;
 
         //@TODO : Allows filters to return false and halt the filter chain
         return true;

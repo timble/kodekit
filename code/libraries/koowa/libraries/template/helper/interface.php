@@ -21,4 +21,12 @@ interface KTemplateHelperInterface
      * @return  object	The template object
      */
     public function getTemplate();
+
+    /**
+     * Sets the template object
+     *
+     * @param string|KTemplateInterface $template A template object or identifier
+     * @return $this
+     */
+    public function setTemplate($template);
 }
