@@ -253,34 +253,29 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	/**
 	 * Create a route based on a full or partial query string
 	 *
-	 * index.php, option, view and layout can be ommitted. The following variations
-	 * will all result in the same route
+     * index.php? will be automatically added.
+	 * option, view and layout can be omitted. The following variations will result in the same route:
 	 *
 	 * - foo=bar
+     * - view=myview&foo=bar
 	 * - option=com_mycomp&view=myview&foo=bar
-	 * - index.php?option=com_mycomp&view=myview&foo=bar
 	 *
-	 * If the route starts '&' the information will be appended to the current URL.
+	 * If the route starts with '&' the query string will be appended to the current URL.
 	 *
 	 * In templates, use @route()
 	 *
-	 * @param	string	$route The query string used to create the route
-	 * @return 	string 	The route
+     * @param   string|array $route  The query string or array used to create the route
+     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to FALSE.
+     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
+     * @return  string The route
 	 */
-	public function createRoute( $route = '')
+	public function createRoute($route = '', $fqr = true, $escape = true)
 	{
-		$route = trim($route);
-
-		// Special cases
-		if($route == 'index.php' || $route == 'index.php?')
-		{
-			$result = $route;
-		}
-		else if (substr($route, 0, 1) == '&')
+        if (is_string($route) && substr($route, 0, 1) === '&')
 		{
 			$url   = clone KRequest::url();
 			$vars  = array();
-			parse_str($route, $vars);
+			parse_str(trim($route), $vars);
 
 			$url->setQuery(array_merge($url->getQuery(true), $vars));
 
@@ -288,40 +283,43 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		}
 		else
 		{
-			// Strip 'index.php?'
-			if(substr($route, 0, 10) == 'index.php?') {
-				$route = substr($route, 10);
-			}
+            $parts = array();
 
-			// Parse route
-			$parts = array();
-			parse_str($route, $parts);
-			$result = array();
+            if (is_string($route)) {
+                parse_str(trim($route), $parts);
+            } else {
+                $parts = $route;
+            }
 
-			// Check to see if there is component information in the route if not add it
-			if(!isset($parts['option'])) {
-				$result[] = 'option=com_'.$this->getIdentifier()->package;
-			}
+            if (!isset($parts['option'])) {
+                $parts['option'] = 'com_'.$this->getIdentifier()->package;
+            }
 
-			// Add the layout information to the route only if it's not 'default'
-			if(!isset($parts['view'])) {
-				$result[] = 'view='.$this->getName();
-			}
+            if (!isset($parts['view'])) {
+                $parts['view'] = $this->getName();
+            }
 
-			// Add the format information to the URL only if it's not 'html'
-			if(!isset($parts['format']) && $this->getIdentifier()->name != 'html') {
-				$result[] = 'format='.$this->getIdentifier()->name;
-			}
+            // Add the layout information to the route only if there is no layout information
+            // in the menu item and the current layout is not default
+            if (!isset($parts['layout']) && $this->getLayout() !== 'default') {
+                $parts['layout'] = $this->getLayout();
+            }
 
-			// Reconstruct the route
-			if(!empty($route)) {
-				$result[] = $route;
-			}
+            // Add the format information to the URL only if it's not 'html'
+            if (!isset($parts['format']) && $this->getIdentifier()->name !== 'html') {
+                $parts['format'] = $this->getIdentifier()->name;
+            }
 
-			$result = 'index.php?'.implode('&', $result);
+            $result = 'index.php?'.http_build_query($parts, '', '&');
 		}
 
-		return JRoute::_($result);
+		$result = JRoute::_($result, $escape);
+
+        if ($fqr) {
+            $result = KRequest::url()->toString(KHttpUrl::AUTHORITY).$result;
+        }
+
+        return $result;
 	}
 
 	/**
