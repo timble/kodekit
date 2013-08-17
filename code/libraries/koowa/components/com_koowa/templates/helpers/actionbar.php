@@ -8,15 +8,15 @@
  */
 
 /**
- * Toolbar Template Helper
+ * Action bar Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
+class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 {
 	/**
-     * Render the toolbar title
+     * Render the action bar title
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
@@ -25,17 +25,16 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     {
         $config = new KConfig($config);
         $config->append(array(
-        	'toolbar' => null
+        	'actionbar' => null
         ));
 
-        $title = $this->translate($config->toolbar->getTitle());
+        $title = $this->translate($config->actionbar->getTitle());
         
         if ($this->_useBootstrap())
         {
             // Strip the extension.
-            $icons = explode(' ', $config->toolbar->getIcon());
-            foreach ($icons as &$icon)
-            {
+            $icons = explode(' ', $config->actionbar->getIcon());
+            foreach ($icons as &$icon) {
                 $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
             }
 
@@ -48,7 +47,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         	return '';
         }
 
-        $html = '<div class="header pagetitle icon-48-'.$config->toolbar->getIcon().'">';
+        $html = '<div class="header pagetitle icon-48-'.$config->actionbar->getIcon().'">';
         $html .= '<h2>'.$title.'</h2>';
 		$html .= '</div>';
 
@@ -56,26 +55,27 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     }
 
     /**
-     * Render the toolbar
+     * Render the action bar commands
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function render($config = array())
+    public function commands($config = array())
     {
         $config = new KConfig($config);
         $config->append(array(
-        	'toolbar' => null
+        	'actionbar' => null
         ));
 
-        if ($this->_useBootstrap()) {
+        if ($this->_useBootstrap())
+        {
         	$html = '<div class="btn-toolbar toolbar-list" id="toolbar">';
         	$html .= '%s';
 		    $html .= '</div>';
         }
         else
         {
-		    $html  = '<div class="toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
+		    $html  = '<div class="toolbar-list" id="toolbar-'.$config->actionbar->getName().'">';
 		    $html .= '<ul>';
 		    $html .= '%s';
 		    $html .= '</ul>';
@@ -84,7 +84,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
         }
 
         $buttons = '';
-	    foreach ($config->toolbar->getCommands() as $command)
+	    foreach ($config->actionbar->getCommands() as $command)
 	    {
             $name = $command->getName();
 
@@ -101,7 +101,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     }
 
     /**
-     * Render a toolbar command
+     * Render a action bar command
      *
      * @param   array|KConfig   $config An optional array with configuration options
      * @return  string  Html
@@ -117,7 +117,12 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
 
          //Add a toolbar class	
         $command->attribs->class->append(array('toolbar'));
+
+        //Create the href
         $command->attribs->append(array('href' => '#'));
+        if(!empty($command->href)) {
+            $command->attribs['href'] = $this->getTemplate()->getView()->createRoute($command->href);
+        }
 
         //Create the id
         $id = 'toolbar-'.$command->id;
@@ -226,7 +231,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
     /**
      * Converts Joomla 3.0+ custom icons back to Glyphicons ones used in Joomla 2.5
      *
-     * @param  string $icon Toolbar icon
+     * @param  string $icon Action bar icon
      * @return string Icon class
      */
     protected function _getIconClass($icon)
@@ -237,8 +242,7 @@ class ComKoowaTemplateHelperToolbar extends KTemplateHelperAbstract
             'icon-apply'  => 'icon-edit'
         );
 
-        if (version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite())
-        {
+        if (version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite()) {
             $icon = str_replace('icon-32-', 'icon-', $icon);
         }
 
