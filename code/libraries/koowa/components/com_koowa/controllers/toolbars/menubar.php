@@ -9,14 +9,31 @@
 
 
 /**
- * Menubar Controller Toolbar
+ * Menu Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
+class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
 {
- 	/**
+    /**
+     * Initializes the config for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(KConfig $config)
+    {
+        $config->append(array(
+            'type'  => 'menubar',
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Add a command
      *
      * Disable the menubar only for singular views that are editable.
@@ -27,12 +44,12 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
      */
     public function addCommand($name, $config = array())
     {
-        parent::addCommand($name, $config);
+        $command = parent::addCommand($name, $config);
 
         $controller = $this->getController();
 
         if($controller->isEditable() && KInflector::isSingular($controller->getView()->getName())) {
-            $this->_commands[$name]->disabled = true;
+            $command->disabled = true;
         }
 
         return $this;
