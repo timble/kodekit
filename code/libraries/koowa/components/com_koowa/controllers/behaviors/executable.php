@@ -91,6 +91,28 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
         return $result;
     }
 
+    /**
+     * Check if user can perform administrative tasks such as changing configuration options
+     *
+     * @return  boolean  Can return both true or false.
+     */
+    public function canAdmin()
+    {
+        $component = $this->getIdentifier()->package;
+        return JFactory::getUser()->authorise('core.admin', 'com_'.$component) === true;
+    }
+
+    /**
+     * Check if user can can access a component in the administrator backend
+     *
+     * @return  boolean  Can return both true or false.
+     */
+    public function canManage()
+    {
+        $component = $this->getIdentifier()->package;
+        return JFactory::getUser()->authorise('core.manage', 'com_'.$component) === true;
+    }
+
 	/**
 	 * Check the token to prevent CSRF exploits
 	 *
