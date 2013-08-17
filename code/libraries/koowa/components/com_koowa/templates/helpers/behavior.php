@@ -351,51 +351,31 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             //Shared options
             'model'		    => KInflector::pluralize($this->getIdentifier()->package),
             'validate'      => false, //Toggle if the forms validation helper is loaded
-
+            'queryVarName'  => 'search',
+            'width'         => 'resolve',
 
             'name'          => '',
             'deselect'      => true,
-            'prompt'        => '- Select -',
-            //'unique'      => true, //Token support
         ))->append(array(
-            //Shared options
+            'prompt'        => 'Select '.$config->name,
             'value'         => $config->name,
             'selected'      => $config->{$config->name},
-            'url'           => '',
-
+            'url'           => ''
         ))->append(array(
-            //Shared options
-            'text'          => $config->value,
+            'text'          => $config->value
         ))->append(array(
-
             'filter'		=> array('sort' => $config->text),
-
-
-            //Shortcut options
-            'url'           => null,
-            'queryVarName'  => 'search',
-            'selected'		=> null,
-            'name'          => null,
-            'id'            => false,
-            'text'          => null,
-            'value'         => null,
-            'prompt'        => false,
-            'model'         => false, //vital for traversing the remote json data
         ))->append(array(
-            'element' => $config->id ? '#'.$config->id : ($config->name ? '[name='.$config->name.']' : '.select2-listbox'),
+            'element' => $config->name ? '[name='.$config->name.']' : '.select2-listbox',
             'options' => array(
-                'value' => $config->value,
-                'selected' => $config->selected,
-                'url'   => $config->url,
-                'width' => 'resolve',
                 'dropdownCssClass' => 'koowa',
                 'placeholder' => $config->prompt,
-                'queryVarName' => $config->queryVarName,
-                'filter' => KConfig::unbox($config->filter)
+                'filter' => KConfig::unbox($config->filter),
+                'allowClear' => $config->deselect
             ),
         ));
         //Shared options
-        $shared = array('text', 'model');
+        $shared = array('model', 'validate', 'queryVarName', 'value', 'selected', 'url', 'text', 'width');
         foreach($shared as $key){
             $config->append(array('options' => array($key => $config->{$key})));
         }
