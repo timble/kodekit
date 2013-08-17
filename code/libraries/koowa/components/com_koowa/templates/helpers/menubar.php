@@ -9,7 +9,7 @@
 
 
 /**
- * Menubar Template Helper
+ * Menu bar Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
@@ -34,22 +34,22 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
     }
 
  	/**
-     * Render the menubar
+     * Render the menu bar
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function render($config = array())
+    public function commands($config = array())
     {
         $config = new KConfig($config);
         $config->append(array(
         	'menubar' => null
         ));
-        
-        if (version_compare(JVERSION, '3.0', 'ge') && class_exists('JSubmenuHelper'))
+
+        if (version_compare(JVERSION, '3.0', 'ge'))
         {
         	foreach ($config->menubar->getCommands() as $command) {
-        		JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
+                JHtml::_('sidebar.addEntry', $this->translate($command->label), $command->href, $command->active);
         	}
 
         	return '';
@@ -76,7 +76,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
     }
 
     /**
-     * Render a menubar command
+     * Render a menu bar command
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
