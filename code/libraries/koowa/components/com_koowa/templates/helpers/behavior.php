@@ -349,8 +349,26 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config = new KConfig($config);
         $config->append(array(
             //Shared options
-            'filter'		=> array(),
-            'validate'		=> true,
+            'model'		    => KInflector::pluralize($this->getIdentifier()->package),
+            'validate'      => false, //Toggle if the forms validation helper is loaded
+
+
+            'name'          => '',
+            'deselect'      => true,
+            'prompt'        => '- Select -',
+            //'unique'      => true, //Token support
+        ))->append(array(
+            //Shared options
+            'value'         => $config->name,
+            'selected'      => $config->{$config->name},
+            'url'           => '',
+
+        ))->append(array(
+            //Shared options
+            'text'          => $config->value,
+        ))->append(array(
+
+            'filter'		=> array('sort' => $config->text),
 
 
             //Shortcut options
@@ -366,8 +384,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         ))->append(array(
             'element' => $config->id ? '#'.$config->id : ($config->name ? '[name='.$config->name.']' : '.select2-listbox'),
             'options' => array(
-                //Shortcut options
-                'text' => $config->text,
                 'value' => $config->value,
                 'selected' => $config->selected,
                 'url'   => $config->url,
@@ -375,10 +391,14 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'dropdownCssClass' => 'koowa',
                 'placeholder' => $config->prompt,
                 'queryVarName' => $config->queryVarName,
-                'model' => $config->model,
                 'filter' => KConfig::unbox($config->filter)
             ),
         ));
+        //Shared options
+        $shared = array('text', 'model');
+        foreach($shared as $key){
+            $config->append(array('options' => array($key => $config->{$key})));
+        }
 
         $html ='';
 
