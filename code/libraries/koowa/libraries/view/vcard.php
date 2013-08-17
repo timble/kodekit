@@ -37,16 +37,16 @@ class KViewVcard extends KViewFile
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'mimetype'    => 'text/x-vcard',
+            'mimetype' => 'text/x-vcard; version=2.1',
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Return the views output
+     * Return the view content
      *
-     *  @return string  The output of the view
+     * @return string  The content of the view
      */
     public function display()
     {
@@ -71,8 +71,7 @@ class KViewVcard extends KViewFile
         $data   .= 'END:VCARD';
         $data   .= "\r\n";
 
-        $this->output = $data;
-
+        $this->setContent($data);
         parent::display();
     }
 
@@ -300,6 +299,19 @@ class KViewVcard extends KViewFile
     {
         $this->_properties['NOTE;ENCODING=QUOTED-PRINTABLE'] = $this->_quoted_printable_encode($note);
         return $this;
+    }
+
+    /**
+     * Force the route to fully qualified and not escaped by default
+     *
+     * @param   string  $route   The query string used to create the route
+     * @param   boolean $fqr     If TRUE create a fully qualified route. Default TRUE.
+     * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default FALSE.
+     * @return  string  The route
+     */
+    public function createRoute($route = '', $fqr = true, $escape = false)
+    {
+        return parent::createRoute($route, $fqr, $escape);
     }
 
     /**
