@@ -29,26 +29,26 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 */
 	protected $_model;
 
-	/**
-	 * The output of the view
-	 *
-	 * @var string
-	 */
-	public $output = '';
+    /**
+     * The content of the view
+     *
+     * @var string
+     */
+    protected $_content;
 
-	/**
-	 * The mimetype
-	 *
-	 * @var string
-	 */
-	public $mimetype = '';
-
-	/**
+    /**
      * Layout name
      *
      * @var     string
      */
     protected $_layout;
+
+    /**
+	 * The mimetype
+	 *
+	 * @var string
+	 */
+	public $mimetype = '';
 
 	/**
 	 * Constructor
@@ -63,7 +63,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		parent::__construct($config);
 
 		//Set the output if defined in the config
-		$this->output = $config->output;
+        $this->setContent($config->content);
 
 		//Set the mimetype of defined in the config
 		$this->mimetype = $config->mimetype;
@@ -89,7 +89,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $config->append(array(
             'model'      => 'koowa:model.empty',
             'translator' => null,
-	    	'output'	 => '',
+	    	'content'	 => '',
     		'mimetype'	 => '',
             'layout'     => 'default',
 	  	));
@@ -97,7 +97,31 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         parent::_initialize($config);
     }
 
-	/**
+    /**
+     * Return the views output
+     *
+     * @return string 	The content of the view
+     */
+    public function display()
+    {
+        $content = $this->getContent();
+        return trim($content);
+    }
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTranslator()->translate($string, $parameters);
+    }
+
+    /**
 	 * Get the name
 	 *
 	 * @return 	string 	The name of the object
@@ -118,15 +142,27 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		return $this->getIdentifier()->name;
 	}
 
-	/**
-	 * Return the views output
- 	 *
-	 * @return string 	The output of the view
-	 */
-	public function display()
-	{
-		return $this->output;
-	}
+    /**
+     * Get the content
+     *
+     * @return  string The content of the view
+     */
+    public function getContent()
+    {
+        return $this->_content;
+    }
+
+    /**
+     * Get the contents
+     *
+     * @param  string $contents The contents of the view
+     * @return ViewAbstract
+     */
+    public function setContent($content)
+    {
+        $this->_content = $content;
+        return $this;
+    }
 
 	/**
 	 * Get the model object attached to the controller
@@ -213,19 +249,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $this->_translator = $translator;
 
         return $this;
-    }
-
-    /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     *
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTranslator()->translate($string, $parameters);
     }
 
  	/**
