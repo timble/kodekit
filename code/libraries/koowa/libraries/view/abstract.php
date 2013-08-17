@@ -100,7 +100,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     /**
      * Return the views output
      *
-     * @return string 	The content of the view
+     * @return string 	The  of the view
      */
     public function display()
     {
@@ -156,7 +156,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * Get the contents
      *
      * @param  string $contents The contents of the view
-     * @return ViewAbstract
+     * @return KViewAbstract
      */
     public function setContent($content)
     {
