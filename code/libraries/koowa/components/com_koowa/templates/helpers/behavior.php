@@ -348,7 +348,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KConfig($config);
         $config->append(array(
-            'element' => '.select2-listbox',
             'identifier'    => null,
             //@TODO deprecate path, using same options as listbox helper instead
             'path'          => 'title',
@@ -361,9 +360,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'queryVarName'  => 'search',
             'selected'		=> null,
             'name'          => null,
+            'id'            => false,
             'text'          => null,
             'value'         => null,
+            'prompt'        => false,
         ))->append(array(
+            'element' => $config->id ? '#'.$config->id : ($config->name ? '[name='.$config->name.']' : '.select2-listbox'),
             'options' => array(
                 'text' => $config->text,
                 'value' => $config->value,
@@ -372,7 +374,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'width' => 'resolve',
                 'dropdownCssClass' => 'koowa',
                 'path' => $config->path,
-                'placeholder' => false,
+                'placeholder' => $config->prompt,
                 'queryVarName' => $config->queryVarName,
                 'filter' => KConfig::unbox($config->filter)
             ),
