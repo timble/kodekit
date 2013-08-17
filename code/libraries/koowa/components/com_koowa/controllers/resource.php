@@ -17,6 +17,27 @@
 class ComKoowaControllerResource extends KControllerResource
 {
     /**
+     * Constructor
+     *
+     * @param   KConfig $config Configuration options
+     */
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_limit = $config->limit;
+
+        if($this->isDispatched())
+        {
+            if(!JFactory::getUser()->guest)
+            {
+                $this->attachToolbars(); //attach the toolbars
+                $this->registerCallback('after.get' , array($this, 'renderToolbars'));
+            }
+        }
+    }
+
+    /**
      * Display action
      *
      * If the controller was not dispatched manually load the languages files
@@ -27,8 +48,44 @@ class ComKoowaControllerResource extends KControllerResource
     protected function _actionGet(KCommandContext $context)
     {
         $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
-
         return parent::_actionGet($context);
+    }
+
+    /**
+     * Attach the toolbars to the controller
+     * .
+     * void
+     */
+    public function attachToolbars()
+    {
+        if ($this->getView() instanceof KViewHtml)
+        {
+            $this->attachToolbar($this->getView()->getName());
+
+            if(JFactory::getApplication()->isAdmin()) {
+                $this->attachToolbar('menubar');
+            };
+        }
+    }
+
+    /**
+     * Run the toolbar filter to convert toolbars to HTML in the template
+     * .
+     * @param   KCommandContext	$context A command context object
+     */
+    public function renderToolbars(KCommandContext $context)
+    {
+        if ($this->getView() instanceof KViewHtml)
+        {
+            $filter = $this->getView()
+                ->getTemplate()
+                ->getFilter('toolbar')
+                ->setToolbars($this->getToolbars());
+
+            $result = $context->result;
+            $filter->write($result);
+            $context->result = $result;
+        }
     }
 
 	/**

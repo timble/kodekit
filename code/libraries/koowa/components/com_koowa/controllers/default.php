@@ -34,8 +34,17 @@ class ComKoowaControllerDefault extends KControllerService
 
 		$this->_limit = $config->limit;
 
-        if($config->persistable && $this->isDispatched()) {
-            $this->addBehavior('persistable');
+        if($this->isDispatched())
+        {
+            if($config->persistable) {
+                $this->addBehavior('persistable');
+            }
+
+            if(!JFactory::getUser()->guest)
+            {
+                $this->attachToolbars(); //attach the toolbars
+                $this->registerCallback('after.get' , array($this, 'renderToolbars'));
+            }
         }
 	}
 
@@ -49,15 +58,19 @@ class ComKoowaControllerDefault extends KControllerService
      */
     protected function _initialize(KConfig $config)
     {
-        /*
-         * Disable controller persistency on non-HTTP requests, e.g. AJAX, and requests containing
-         * the tmpl variable set to component, e.g. requests using modal boxes. This avoids
-         * changing the model state session variable of the requested model, which is often
-         * undesirable under these circumstances.
-         */
+        //Disable controller persistency on non-HTTP requests,
+        //e.g. AJAX, and requests containing the tmpl variable set to component (modal boxes)
+        if(JFactory::getApplication()->isAdmin())
+        {
+            $persistable = (KRequest::type() == 'HTTP' && KRequest::get('get.tmpl','cmd') != 'component');
+            $config->append(array(
+                'persistable'    => $persistable,
+            ));
+        }
+
+        //Set the maximum list limit to 100
         $config->append(array(
-            'persistable'    => (JFactory::getApplication()->isAdmin() && KRequest::type() == 'HTTP' && KRequest::get('get.tmpl','cmd') != 'component'),
-            'limit'          => array('max' => 100, 'default' => JFactory::getApplication()->getCfg('list_limit'))
+            'limit' => array('max' => 100, 'default' => JFactory::getApplication()->getCfg('list_limit'))
         ));
 
         parent::_initialize($config);
@@ -74,7 +87,6 @@ class ComKoowaControllerDefault extends KControllerService
     protected function _actionGet(KCommandContext $context)
     {
         $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
-
         return parent::_actionGet($context);
     }
 
@@ -130,6 +142,43 @@ class ComKoowaControllerDefault extends KControllerService
         }
 
         return $row;
+    }
+
+    /**
+     * Attach the toolbars to the controller
+     * .
+     * void
+     */
+    public function attachToolbars()
+    {
+        if ($this->getView() instanceof KViewHtml)
+        {
+            $this->attachToolbar($this->getView()->getName());
+
+            if(JFactory::getApplication()->isAdmin()) {
+                $this->attachToolbar('menubar');
+            };
+        }
+    }
+
+    /**
+     * Run the toolbar filter to convert toolbars to HTML in the template
+     * .
+     * @param   KCommandContext	$context A command context object
+     */
+    public function renderToolbars(KCommandContext $context)
+    {
+        if ($this->getView() instanceof KViewHtml)
+        {
+            $filter = $this->getView()
+                ->getTemplate()
+                ->getFilter('toolbar')
+                ->setToolbars($this->getToolbars());
+
+            $result = $context->result;
+            $filter->write($result);
+            $context->result = $result;
+        }
     }
 
 	/**
