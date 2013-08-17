@@ -80,7 +80,12 @@
 
                 settings.data = data;
 
-                var newElement = $('<input />', {name: element.attr('name'), id: element.attr('id'), value: options.selected});
+                var newElement = $('<input />', {
+                    name: element.attr('name'),
+                    id: element.attr('id'),
+                    value: options.selected,
+                    onchange: element.attr('onchange')
+                });
                 var replaced = element.replaceWith(newElement);
                 element = newElement;
             }
