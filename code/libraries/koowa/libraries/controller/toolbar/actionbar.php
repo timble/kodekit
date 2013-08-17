@@ -157,6 +157,55 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     }
 
     /**
+     * Export Toolbar Command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandExport(KControllerToolbarCommand $command)
+    {
+        //Get the states
+        $states = $this->getController()->getModel()->getState()->toArray();
+
+        unset($states['limit']);
+        unset($states['offset']);
+
+        $states['format'] = 'csv';
+
+        //Get the query options
+        $query  = http_build_query($states, '', '&');
+        $option = $this->getIdentifier()->package;
+        $view   = $this->getIdentifier()->name;
+
+        $command->append(array(
+            'attribs' => array(
+                'href' =>  JRoute::_('index.php?option=com_'.$option.'&view='.$view.'&'.$query)
+            )
+        ));
+    }
+
+    /**
+     * Modal toolbar command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandModal(KControllerToolbarCommand $command)
+    {
+        $command->append(array(
+            'width'   => '640',
+            'height'  => '480',
+            'href'	  => ''
+        ))->append(array(
+                'attribs' => array(
+                    'class' => array('modal'),
+                    'href'  => $command->href,
+                    'rel'   => '{handler: \'iframe\', size: {x: '.$command->width.', y: '.$command->height.'}}'
+                )
+            ));
+    }
+
+    /**
      * Add default action commands and set the action bar title
      * .
      * @param	KCommandContext	$context A command context object
