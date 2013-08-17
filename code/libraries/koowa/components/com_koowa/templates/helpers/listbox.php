@@ -226,6 +226,13 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'deselect'             => false,
             'prompt'               => false
         ))->append(array(
+            'value'                => $config->name,
+            'selected'             => $config->{$config->name},
+            'identifier'           => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+        ))->append(array(
+            'text'                 => $config->value,
+        ))->append(array(
+            'filter'               => array(),
             'autocomplete_options' => array(
                 'name'          => $config->name,
                 'text'          => $config->text,
@@ -234,18 +241,15 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 'model'         => $config->model,
                 'width'         => 'resolve',
                 'selected'      => $config->selected
-            ),
-            'value'                => $config->name,
-            'selected'             => $config->{$config->name},
-            'identifier'           => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
-        ))->append(array(
-            'text'                 => $config->value,
-        ))->append(array(
-            'filter'               => array(),
+            )
         ));
 
         //For the autocomplete behavior
         $options = new KConfig($config->autocomplete_options);
+        $shortcuts = array('name', 'text');
+        foreach($shortcuts as $key) {
+
+        }
         $options->append(array(
             'element' => 'select[name='.$config->name.']',
             'url'     => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false),
