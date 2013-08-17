@@ -28,7 +28,6 @@
                 quietMillis: 100,
                 data: function (term, page) { // page is the one-based page number tracked by Select2
                     var query = {
-                        search: term, //search term
                         limit: 10, // page size
                         offset: (page-1)*10
                     };
