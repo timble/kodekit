@@ -219,12 +219,9 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
-        if(empty($this->output))
-		{
-		    $this->output = $this->getTemplate()
-                                 ->loadIdentifier($this->_layout, $this->_data)
-                                 ->render();
-		}
+        $this->_content = $this->getTemplate()
+            ->loadIdentifier($this->_layout, $this->_data)
+            ->render();
 
         return parent::display();
     }
@@ -239,6 +236,28 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $this->_escape = $spec;
         return $this;
+    }
+
+    /**
+     * Sets the view data
+     *
+     * @param   array $data The view data
+     * @return  KViewTemplate
+     */
+    public function setData(array $data)
+    {
+        $this->_data = $data;
+        return $this;
+    }
+
+    /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData()
+    {
+        return $this->_data;
     }
 
 	/**
