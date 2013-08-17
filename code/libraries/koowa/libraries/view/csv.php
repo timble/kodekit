@@ -46,13 +46,15 @@ class KViewCsv extends KViewFile
 	 */
 	protected function _initialize(KConfig $config)
 	{
-		$config->append(array(
-			'mimetype'	  => 'text/csv',
-			'disposition' => 'inline',
-			'quote'		  => '"',
-			'separator'	  => ',',
-			'eol'		  => "\n"
-       	));
+        $config->append(array(
+            'version'     => '1.0',
+            'disposition' => 'inline',
+            'quote'		  => '"',
+            'separator'	  => ',',
+            'eol'		  => "\n"
+        ))->append(array(
+            'mimetype'	  => 'text/csv; version='.$config->version,
+        ));
 
        	parent::_initialize($config);
     }
@@ -90,10 +92,9 @@ class KViewCsv extends KViewFile
 		// Create the header
 		$header = $this->_arrayToString(array_keys($columns)).$this->eol;
 
-		// Set the output
-		$this->output = $header.$rows;
-
-		parent::display();
+        // Set the content
+        $this->setContent($header.$rows);
+        return parent::display();
 	}
 
 	/**
