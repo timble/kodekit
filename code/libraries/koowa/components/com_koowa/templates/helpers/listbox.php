@@ -195,7 +195,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $html = '';
 
         if($config->autocomplete) {
-            //@TODO avoid loading a complete options array, we only need one item for autocomplete
             $html .= $this->_autocomplete($config);
         }
         elseif($config->select2) {
