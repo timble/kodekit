@@ -63,18 +63,18 @@ class ModKoowaHtml extends KViewHtml
 
         if(empty($this->module->content))
 		{
-            $this->output = $this->getTemplate()
+            $this->_content = $this->getTemplate()
                 ->loadIdentifier($this->_layout, $this->_data)
                 ->render();
 		}
 		else
 		{
-		     $this->output = $this->getTemplate()
+		     $this->_content = $this->getTemplate()
                 ->loadString($this->module->content, $this->_data, false)
                 ->render();
 		}
 
-        return $this->output;
+        return $this->_content;
     }
 
     /**
@@ -104,7 +104,6 @@ class ModKoowaHtml extends KViewHtml
     protected function _parseParams( $string )
     {
         $params = new KConfig((array) json_decode($string));
-
         return $params;
     }
 }
