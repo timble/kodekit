@@ -68,6 +68,9 @@ abstract class KControllerResource extends KControllerAbstract
 		//Register display as alias for get
 		$this->registerActionAlias('display', 'get');
 
+        // Mixin the toolbar
+        $this->mixin(new KControllerToolbarMixin($config->append(array('mixer' => $this))));
+
 		//Made the executable behavior read-only
 		if($this->isExecutable()) {
 		    $this->getBehavior('executable')->setReadOnly($config->readonly);
@@ -86,7 +89,7 @@ abstract class KControllerResource extends KControllerAbstract
     {
         $config->append(array(
     	    'model'	     => $this->getIdentifier()->name,
-    	    'behaviors'  => array('executable', 'commandable'),
+    	    'behaviors'  => array('executable'),
     	    'readonly'   => true,
     		'request' 	 => array('format' => 'html')
          ))->append(array(
@@ -181,11 +184,6 @@ abstract class KControllerResource extends KControllerAbstract
 		    if(!($this->_model instanceof KServiceIdentifier)) {
 		        $this->setModel($this->_model);
 			}
-
-		    /* @TODO : Pass the state to the model using the options
-		    $options = array(
-				'state' => $this->getRequest()
-            );*/
 
 		    $this->_model = $this->getService($this->_model)->set($this->getRequest());
 		}
