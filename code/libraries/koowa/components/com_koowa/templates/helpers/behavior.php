@@ -373,7 +373,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'url'   => $config->url,
                 'width' => 'resolve',
                 'dropdownCssClass' => 'koowa',
-                'path' => $config->path,
                 'placeholder' => $config->prompt,
                 'queryVarName' => $config->queryVarName,
                 'model' => $config->model,
