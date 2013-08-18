@@ -141,7 +141,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             $attribs->class = implode(" ", KConfig::unbox($attribs->class));
         	
         	$html = '<div class="btn-group" id="'.$id.'">';
-        	$html .= '<a '.KHelperArray::toString($attribs).'>';
+        	$html .= '<a '.$this->buildAttributes($attribs).'>';
         	$html .= '<i class="'.$icon.'"></i> ';
         	$html .= $this->translate($command->label);
         	$html .= '</a>';
@@ -156,7 +156,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         $html = '<li class="button" id="'.$id.'">';
         
-        $html .= '<a '.KHelperArray::toString($attribs).'>';
+        $html .= '<a '.$this->buildAttributes($attribs).'>';
         $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
        	$html .= $this->translate($command->label);
        	$html .= '</a>';

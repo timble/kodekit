@@ -69,7 +69,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 		{
 			foreach(array_unique($matches[1]) as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[2][$key]);
+				$attribs = $this->parseAttributes( $matches[2][$key]);
 
                 if (!isset($attribs['type'])) {
                     $attribs['type'] = 'text/javascript';
@@ -90,7 +90,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 		{
 			foreach($matches[2] as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[1][$key]);
+				$attribs = $this->parseAttributes( $matches[1][$key]);
 				$scripts .= $this->_renderScript($match, false, $attribs);
 			}
 
@@ -110,7 +110,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	 */
 	protected function _renderScript($script, $link, $attribs = array())
 	{
-		$attribs = KHelperArray::toString($attribs);
+		$attribs = $this->buildAttributes($attribs);
 
 		if(!$link)
 		{

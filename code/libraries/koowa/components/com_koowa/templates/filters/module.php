@@ -64,7 +64,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
 					'prepend'   => true
 				);
 
-		        $attributes = array_merge($attributes, $this->_parseAttributes($matches[1][$key]));
+		        $attributes = array_merge($attributes, $this->parseAttributes($matches[1][$key]));
 
 		        //Create module object
 			    $module   	       = new KObject();

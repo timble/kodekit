@@ -220,7 +220,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $url->query['format'] = 'overlay';
         }
 
-        $attribs = KHelperArray::toString($config->attribs);
+        $attribs = $this->buildAttributes($config->attribs);
 
         $id = 'overlay'.rand();
         if($url->fragment)
@@ -360,8 +360,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 			});
 		</script>";
 
-        $html .= '<input '.KHelperArray::toString($config->attribs).' />';
-        $html .= '<input '.KHelperArray::toString(array(
+        $html .= '<input '.$this->buildAttributes($config->attribs).' />';
+        $html .= '<input '.$this->buildAttributes(array(
                 'type'  => 'hidden',
                 'name'  => $config->name,
                 'id'    => $config->element.'-value',

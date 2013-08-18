@@ -29,4 +29,20 @@ interface KTemplateFilterInterface  extends KCommandInterface
      * @return $this
      */
     public function setTemplate($template);
+
+    /**
+     * Method to extract key/value pairs out of a string with xml style attributes
+     *
+     * @param   string  String containing xml style attributes
+     * @return  array   Key/Value pairs for the attributes
+     */
+    public function parseAttributes( $string );
+
+    /**
+     * Method to build a string with xml style attributes from  an array of key/value pairs
+     *
+     * @param   mixed   $array The array of Key/Value pairs for the attributes
+     * @return  string  String containing xml style attributes
+     */
+    public function buildAttributes($array);
 }

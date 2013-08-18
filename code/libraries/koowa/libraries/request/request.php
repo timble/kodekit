@@ -228,9 +228,9 @@ class KRequest
         // Add the global if it's doesn't exist
         if(!isset($GLOBALS['_'.$hash])) { 
            $GLOBALS['_'.$hash] = array(); 
-        } 
-        
-        $GLOBALS['_'.$hash] = KHelperArray::merge($GLOBALS['_'.$hash], $value);
+        }
+
+        $GLOBALS['_'.$hash] = self::_mergeArrays($GLOBALS['_'.$hash], $value);
     }
 
     /**
@@ -426,7 +426,7 @@ class KRequest
     /**
      * Returns the base path of the request.
      *
-     * @return  object  A KHttpUrl object
+     * @return  KHttpUrl  A KHttpUrl object
      */
     public static function base()
     {
@@ -455,8 +455,8 @@ class KRequest
     /**
      * Returns the root path of the request.
      *
-     * In most case this value will be the same as KRequest::base however it can be
-     * changed by pushing in a different value
+     * In most case this value will be the same as KRequest::base however it can be changed by pushing in a
+     * different value
      *
      * @param   null|KHttpUrl Used to change the stored root path
      * @return  KHttpUrl  A KHttpUrl object
@@ -480,25 +480,34 @@ class KRequest
     }
 
     /**
-     * Returns the current request protocol, based on $_SERVER['https']. In CLI
-     * mode, 'cli' will be returned.
+     * Returns the current request scheme, based on $_SERVER['https']. In CLI mode, 'cli' will be returned.
+     *
+     * @return  string
+     */
+    public static function scheme()
+    {
+        $scheme = 'cli';
+
+        if (PHP_SAPI !== 'cli')
+        {
+            $scheme = 'http';
+
+            if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
+                $scheme = 'https';
+            }
+        }
+
+        return $scheme;
+    }
+
+    /**
+     * Return the protocol based on $_SERVER['SERVER_PROTOCOL']
      *
      * @return  string
      */
     public static function protocol()
     {
-        $protocol = 'cli';
-        
-        if (PHP_SAPI !== 'cli') 
-        {
-            $protocol = 'http';
-            
-            if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-                $protocol = 'https';
-            }
-        } 
-     
-        return $protocol;
+        return $_SERVER['SERVER_PROTOCOL'];
     }
 
     /**
@@ -704,5 +713,38 @@ class KRequest
         }
 
         return $value;
+    }
+
+    /**
+     * Merge two arrays recursively
+     *
+     * Matching keys' values in the second array overwrite those in the first array, as is the
+     * case with array_merge.
+     *
+     * Parameters are passed by reference, though only for performance reasons. They're not
+     * altered by this function and the datatypes of the values in the arrays are unchanged.
+     *
+     * @param array
+     * @param array
+     * @return array    An array of values resulted from merging the arguments together.
+     */
+    protected static function _mergeArrays( array &$array1, array &$array2 )
+    {
+        $args   = func_get_args();
+        $merged = array_shift($args);
+
+        foreach($args as $array)
+        {
+            foreach ( $array as $key => &$value )
+            {
+                if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) ){
+                    $merged [$key] = self::_mergeArrays ( $merged [$key], $value );
+                } else {
+                    $merged [$key] = $value;
+                }
+            }
+        }
+
+        return $merged;
     }
 }

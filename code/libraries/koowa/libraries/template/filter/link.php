@@ -49,7 +49,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 		{
 			foreach(array_unique($matches[1]) as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[2][$key]);
+				$attribs = $this->parseAttributes( $matches[2][$key]);
 				$scripts .= $this->_renderScript($match, $attribs);
 			}
 
@@ -68,7 +68,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	 */
 	protected function _renderLink($link, $attribs = array())
 	{
-		$attribs = KHelperArray::toString($attribs);
+		$attribs = $this->buildAttributes($attribs);
 
 		$html = '<link href="'.$link.'" '.$attribs.'/>'."\n";
 		return $html;
