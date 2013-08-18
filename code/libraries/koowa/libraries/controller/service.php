@@ -47,9 +47,9 @@ abstract class KControllerService extends KControllerResource
 		    if(!isset($this->_request->view))
 		    {
 		        if($this->getModel()->getState()->isUnique()) {
-			        $view = KInflector::singularize($view);
+			        $view = KStringInflector::singularize($view);
 		        } else {
-			        $view = KInflector::pluralize($view);
+			        $view = KStringInflector::pluralize($view);
 	    	    }
 		    }
 		}
@@ -187,7 +187,7 @@ abstract class KControllerService extends KControllerResource
 	protected function _actionGet(KCommandContext $context)
 	{
 		//Check if we are reading or browsing
-	    $action = KInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
+	    $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
 
 	    //Execute the action
 		$result = $this->execute($action, $context);

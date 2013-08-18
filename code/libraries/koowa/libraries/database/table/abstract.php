@@ -520,7 +520,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     {
         $identifier = clone $this->getIdentifier();
         $identifier->path = array('database', 'row');
-        $identifier->name = KInflector::singularize($this->getIdentifier()->name);
+        $identifier->name = KStringInflector::singularize($this->getIdentifier()->name);
 
         //Force the table
         $options['table'] = $this;
@@ -955,7 +955,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 	public function __call($method, $arguments)
 	{
 		// If the method is of the form is[Bahavior] handle it.
-		$parts = KInflector::explode($method);
+		$parts = KStringInflector::explode($method);
 
 		if($parts[0] == 'is' && isset($parts[1]))
 		{

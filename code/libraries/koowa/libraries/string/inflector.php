@@ -8,15 +8,15 @@
  */
 
 /**
- * Inflector
+ * String Inflector
  *
- * KInflector to pluralize and singularize English nouns.
+ * KStringInflector to pluralize and singularize English nouns.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Inflector
+ * @package Koowa\Library\String
  * @static
  */
-class KInflector
+class KStringInflector
 {
    	/**
 	 * Rules for pluralizing and singularizing of nouns.

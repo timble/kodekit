@@ -95,7 +95,7 @@ class KCommandEvent extends KCommand
 
         $parts  = explode('.', $name);
         $when   = array_shift($parts);         // Before or After
-        $name   = KInflector::implode($parts); // Read Dispatch Select etc.
+        $name   = KStringInflector::implode($parts); // Read Dispatch Select etc.
 
         // Create Specific and Generic event names
         $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;

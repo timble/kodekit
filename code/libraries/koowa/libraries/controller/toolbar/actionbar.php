@@ -58,7 +58,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     {
         $config->append(array(
             'type'  => 'actionbar',
-            'title' => KInflector::humanize($this->getName()),
+            'title' => KStringInflector::humanize($this->getName()),
             'icon'  => $this->getName(),
         ));
 

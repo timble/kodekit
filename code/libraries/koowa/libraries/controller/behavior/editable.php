@@ -94,7 +94,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	        if(!isset($referrer) || ((string) $referrer == (string) $request))
 	        {
 	            $option = 'com_'.$identifier->package;
-	            $view   = KInflector::pluralize($identifier->name);
+	            $view   = KStringInflector::pluralize($identifier->name);
 	            $url    = 'index.php?option='.$option.'&view='.$view;
 
 	            $referrer = $this->getService('koowa:http.url',array('url' => $url));

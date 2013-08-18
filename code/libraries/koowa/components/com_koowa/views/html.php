@@ -40,7 +40,7 @@ class ComKoowaViewHtml extends KViewDefault
      */
     protected function _initialize(KConfig $config)
     {
-        if ($this->getIdentifier()->application === 'admin' && KInflector::isSingular($this->getName()))
+        if ($this->getIdentifier()->application === 'admin' && KStringInflector::isSingular($this->getName()))
         {
             $config->append(array(
                 'layout' => 'form'

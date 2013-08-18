@@ -140,7 +140,7 @@ class KModelTable extends KModelAbstract
 		    {
 		        $identifier         = clone $this->getIdentifier();
 		        $identifier->path   = array('database', 'table');
-		        $identifier->name   = KInflector::tableize($table);
+		        $identifier->name   = KStringInflector::tableize($table);
 		    }
 		    else  $identifier = $this->getIdentifier($table);
 

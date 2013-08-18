@@ -94,7 +94,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
                 'resource' => $config->package,
         ))->append(array(
             'layout'     => $config->resource,
-            'model'      => KInflector::pluralize($config->resource),
+            'model'      => KStringInflector::pluralize($config->resource),
             'category_model' => 'categories',
             'context'    => $config->package,
             'extension'  => 'com_'.$config->package,

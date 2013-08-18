@@ -352,7 +352,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     {
         $identifier         = clone $this->getIdentifier();
         $identifier->path   = array('database', 'row');
-        $identifier->name   = KInflector::singularize($this->getIdentifier()->name);
+        $identifier->name   = KStringInflector::singularize($this->getIdentifier()->name);
 
         //The row default options
         $options['identity_column'] = $this->getIdentityColumn();
@@ -388,7 +388,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     public function __call($method, $arguments)
     {
         //If the method is of the format is[Behavior] handle it
-        $parts = KInflector::explode($method);
+        $parts = KStringInflector::explode($method);
 
         if($parts[0] == 'is' && isset($parts[1]))
         {

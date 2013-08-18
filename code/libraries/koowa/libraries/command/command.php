@@ -89,7 +89,7 @@ class KCommand extends KObject implements KCommandInterface
         }
 
         $parts  = explode('.', $name);
-        $method = !empty($type) ? '_'.$type.ucfirst(KInflector::implode($parts)) : '_'.lcfirst(KInflector::implode($parts));
+        $method = !empty($type) ? '_'.$type.ucfirst(KStringInflector::implode($parts)) : '_'.lcfirst(KStringInflector::implode($parts));
 
         if(in_array($method, $this->getMethods())) {
             return $this->$method($context);

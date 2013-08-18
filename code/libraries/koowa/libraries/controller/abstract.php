@@ -409,7 +409,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         //Check if a behavior is mixed
-		$parts = KInflector::explode($method);
+		$parts = KStringInflector::explode($method);
 
 		if($parts[0] == 'is' && isset($parts[1]))
 		{

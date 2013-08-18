@@ -262,7 +262,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
      */
     public function __call($method, $args)
     {
-        $parts = KInflector::explode($method);
+        $parts = KStringInflector::explode($method);
 
         if ($parts[0] == 'add' && isset($parts[1]))
         {

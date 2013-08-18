@@ -162,14 +162,14 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $config->append(array(
             'name'		  => '',
             'attribs'	  => array(),
-            'model'		  => KInflector::pluralize($this->getIdentifier()->package),
+            'model'		  => KStringInflector::pluralize($this->getIdentifier()->package),
             'deselect'    => true,
             'prompt'      => '- Select -',
             'unique'	  => true
         ))->append(array(
                 'value'		 => $config->name,
                 'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
             ))->append(array(
                 'text'		=> $config->value,
             ))->append(array(
@@ -216,12 +216,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $config->append(array(
             'name'		 => '',
             'attribs'	 => array(),
-            'model'		 => KInflector::pluralize($this->getIdentifier()->package),
+            'model'		 => KStringInflector::pluralize($this->getIdentifier()->package),
             'validate'   => true,
         ))->append(array(
                 'value'		 => $config->name,
                 'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
             ))->append(array(
                 'text'		=> $config->value,
             ))->append(array(
@@ -255,7 +255,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         if(!in_array($method, $this->getMethods()))
         {
             $config = $arguments[0];
-            $config['name']  = KInflector::singularize(strtolower($method));
+            $config['name']  = KStringInflector::singularize(strtolower($method));
 
             return $this->_render($config);
         }

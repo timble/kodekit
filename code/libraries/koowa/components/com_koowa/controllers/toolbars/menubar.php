@@ -48,7 +48,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
 
         $controller = $this->getController();
 
-        if($controller->isEditable() && KInflector::isSingular($controller->getView()->getName())) {
+        if($controller->isEditable() && KStringInflector::isSingular($controller->getView()->getName())) {
             $command->disabled = true;
         }
 
@@ -80,7 +80,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
 
 	                $this->addCommand((string)$menu, array(
 	            		'href'   => JRoute::_('index.php?option=com_'.$package.'&view='.$view),
-	            		'active' => ($name == KInflector::singularize($view))
+	            		'active' => ($name == KStringInflector::singularize($view))
 	                ));
 	            }
 	        }

@@ -39,7 +39,7 @@ class KServiceLocatorModule extends KServiceLocatorAbstract
 	 */
 	public function findClass(KServiceIdentifier $identifier)
 	{
-	    $path = KInflector::camelize(implode('_', $identifier->path));
+	    $path = KStringInflector::camelize(implode('_', $identifier->path));
 		$classname = 'Mod'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
 
 		//Don't allow the auto-loader to load module classes if they don't exists yet
@@ -49,8 +49,8 @@ class KServiceLocatorModule extends KServiceLocatorAbstract
 			$classtype = !empty($classpath) ? array_shift($classpath) : 'view';
 
 			//Create the fallback path and make an exception for views
-			$com_path = ($classtype != 'view') ? ucfirst($classtype).KInflector::camelize(implode('_', $classpath)) : ucfirst($classtype);
-			$mod_path = ($classtype != 'view') ? ucfirst($classtype).KInflector::camelize(implode('_', $classpath)) : '';
+			$com_path = ($classtype != 'view') ? ucfirst($classtype).KStringInflector::camelize(implode('_', $classpath)) : ucfirst($classtype);
+			$mod_path = ($classtype != 'view') ? ucfirst($classtype).KStringInflector::camelize(implode('_', $classpath)) : '';
 
 			/*
 			 * Find the classname to fallback too and auto-load the class
@@ -105,7 +105,7 @@ class KServiceLocatorModule extends KServiceLocatorAbstract
 		{
 			if(count($parts))
 			{
-				$path    = KInflector::pluralize(array_shift($parts)).
+				$path    = KStringInflector::pluralize(array_shift($parts)).
 				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
 				$path   .= '/'.strtolower($identifier->name);
 			}

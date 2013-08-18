@@ -105,7 +105,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 		    {
 		        $identifier         = clone $this->getIdentifier();
 		        $identifier->path   = array('database', 'table');
-		        $identifier->name   = KInflector::tableize($table);
+		        $identifier->name   = KStringInflector::tableize($table);
 		    }
 		    else  $identifier = $this->getIdentifier($table);
 
@@ -298,7 +298,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	{
 	    if($this->isConnected())
 		{
-		    $parts = KInflector::explode($method);
+		    $parts = KStringInflector::explode($method);
 
 		     //Check if a behavior is mixed
 		    if($parts[0] == 'is' && isset($parts[1]))

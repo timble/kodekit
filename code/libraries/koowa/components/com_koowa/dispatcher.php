@@ -117,7 +117,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
         JFactory::getDocument()->setMimeEncoding($view->mimetype);
 
         //Disabled the application menubar
-        if(JFactory::getApplication()->isAdmin() && $this->getController()->isEditable() && KInflector::isSingular($view->getName())) {
+        if(JFactory::getApplication()->isAdmin() && $this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
             KRequest::set('get.hidemainmenu', 1);
         }
 

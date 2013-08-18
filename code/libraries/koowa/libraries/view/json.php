@@ -72,8 +72,8 @@ class KViewJson extends KViewAbstract
             'padding'	  => '',
             'version'     => '1.0',
             'text_fields' => array('description'), // Links are converted to absolute in these fields
-            'item_name'   => KInflector::singularize($this->getName()),
-            'list_name'   => KInflector::pluralize($this->getName())
+            'item_name'   => KStringInflector::singularize($this->getName()),
+            'list_name'   => KStringInflector::pluralize($this->getName())
         ))->append(array(
             'mimetype' => 'application/json; version=' . $config->version,
         ));
@@ -141,7 +141,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _getData()
     {
-        if (KInflector::isPlural($this->getName())) {
+        if (KStringInflector::isPlural($this->getName())) {
             $result = $this->_renderList($this->getModel()->getList());
         } else {
             $result = $this->_renderItem($this->getModel()->getItem());

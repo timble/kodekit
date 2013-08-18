@@ -101,8 +101,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			if(is_string($controller) && strpos($controller, '.') === false )
 		    {
 		        // Controller names are always singular
-			    if(KInflector::isPlural($controller)) {
-				    $controller = KInflector::singularize($controller);
+			    if(KStringInflector::isPlural($controller)) {
+				    $controller = KStringInflector::singularize($controller);
 			    }
 
 			    $identifier			= clone $this->getIdentifier();

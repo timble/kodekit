@@ -206,8 +206,8 @@ abstract class KControllerResource extends KControllerAbstract
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {
 			    // Model names are always plural
-			    if(KInflector::isSingular($model)) {
-				    $model = KInflector::pluralize($model);
+			    if(KStringInflector::isSingular($model)) {
+				    $model = KStringInflector::pluralize($model);
 			    }
 
 			    $identifier			= clone $this->getIdentifier();

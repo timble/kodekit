@@ -227,7 +227,7 @@ class KControllerToolbarCommand extends KConfig implements KControllerToolbarCom
      */
     public function __call($method, $args)
     {
-        $parts = KInflector::explode($method);
+        $parts = KStringInflector::explode($method);
 
         if($parts[0] == 'add' && isset($parts[1]))
         {
