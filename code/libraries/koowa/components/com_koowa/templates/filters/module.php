@@ -13,8 +13,8 @@
  *
  * This filter allow to dynamically inject data into module position.
  *
- * Filter will parse elements of the form <modules position="[position]">[content]</modules> and prepend or append
- * the content to the module position.
+ * Filter will parse elements of the form <ktml:module position="[position]">[content]</ktml:module> and prepend or
+ * append the content to the module position.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
