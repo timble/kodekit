@@ -77,7 +77,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
             $toolbar = $this->createToolbar($toolbar, $config);
         }
 
-        //Store the toolbar to allow for name lookups
+        //Store the toolbar to allow for type lookups
         $this->_toolbars[$toolbar->getType()] = $toolbar;
 
         if ($this->inherits('KCommandMixin')) {
@@ -93,23 +93,23 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
      * @param   string   $toolbar The name of the toolbar
      * @return  boolean  TRUE if the toolbar exists, FALSE otherwise
      */
-    public function hasToolbar($name = 'actionbar')
+    public function hasToolbar($type = 'actionbar')
     {
-        return isset($this->_toolbars[$name]);
+        return isset($this->_toolbars[$type]);
     }
 
     /**
-     * Get a toolbar by name
+     * Get a toolbar by type
      *
      * @param  string  $name   The toolbar name
      * @return KControllerToolbarInterface
      */
-    public function getToolbar($name = 'actionbar')
+    public function getToolbar($type = 'actionbar')
     {
         $result = null;
 
-        if(isset($this->_toolbars[$name])) {
-            $result = $this->_toolbars[$name];
+        if(isset($this->_toolbars[$type])) {
+            $result = $this->_toolbars[$type];
         }
 
         return $result;

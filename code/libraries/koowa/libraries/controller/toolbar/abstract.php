@@ -30,6 +30,13 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
     protected $_commands = array();
 
     /**
+     * The toolbar type
+     *
+     * @var array
+     */
+    protected $_type;
+
+    /**
      * Constructor
      *
      * @param   KConfig $config Configuration options
@@ -109,7 +116,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
     /**
      * Get the toolbar type
      *
-     * @return  KControllerAbstract
+     * @return  string
      */
     public function getType()
     {
