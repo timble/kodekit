@@ -206,7 +206,7 @@ class KRequest
         }
         
         // Store cookies persistently
-        if($hash == 'COOKIE' && strpos(KRequest::protocol(), 'http') !== false)
+        if($hash == 'COOKIE' && strpos(KRequest::scheme(), 'http') !== false)
         {
             // rewrite the $keys as foo[bar][bar]
             $ckeys = $keys; // get a copy
@@ -376,7 +376,7 @@ class KRequest
     {
         if(!isset(self::$_url))
         {
-            $url = self::protocol().'://';
+            $url = self::scheme().'://';
             
             if (PHP_SAPI !== 'cli') 
         	{
@@ -388,7 +388,7 @@ class KRequest
         	    if (!empty ($_SERVER['PHP_SELF']) && !empty ($_SERVER['REQUEST_URI']))
                 {
                 	/*
-                 	 * To build the entire URI we need to prepend the protocol, and the http host
+                 	 * To build the entire URI we need to prepend the scheme, and the http host
                  	 * to the URI string.
                  	 */
                     $url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
