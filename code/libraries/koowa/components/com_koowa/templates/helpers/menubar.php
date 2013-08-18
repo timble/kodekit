@@ -46,31 +46,31 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         	'menubar' => null
         ));
 
+        $html = '';
         if (version_compare(JVERSION, '3.0', 'ge'))
         {
         	foreach ($config->menubar->getCommands() as $command) {
                 JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
         	}
-
-        	return '';
         }
+        else
+        {
+            if (count($config->menubar->getCommands()))
+            {
+                $html = '<div id="submenu-box"><div class="m">';
 
-        if (!count($config->menubar->getCommands())) {
-            return '';
+                $html .= '<ul id="submenu">';
+                foreach ($config->menubar->getCommands() as $command)
+                {
+                    $html .= '<li>';
+                    $html .= $this->command(array('command' => $command));
+                    $html .= '</li>';
+                }
+
+                $html .= '</ul>';
+                $html .= '<div class="clr"></div></div></div>';
+            }
         }
-
-		$html = '<div id="submenu-box"><div class="m">';
-
-        $html .= '<ul id="submenu">';
-	    foreach ($config->menubar->getCommands() as $command)
-	    {
-	        $html .= '<li>';
-            $html .= $this->command(array('command' => $command));
-            $html .= '</li>';
-        }
-
-        $html .= '</ul>';
-        $html .= '<div class="clr"></div></div></div>';
 
 		return $html;
     }
