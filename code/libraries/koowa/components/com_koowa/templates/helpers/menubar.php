@@ -49,7 +49,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         if (version_compare(JVERSION, '3.0', 'ge'))
         {
         	foreach ($config->menubar->getCommands() as $command) {
-                JHtml::_('sidebar.addEntry', $this->translate($command->label), $command->href, $command->active);
+                JSubmenuHelper::addEntry('sidebar.addEntry', $this->translate($command->label), $command->href, $command->active);
         	}
 
         	return '';
