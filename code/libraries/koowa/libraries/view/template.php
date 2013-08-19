@@ -331,7 +331,7 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function setTemplate($template)
     {
-        if(!($template instanceof KTemplateAbstract))
+        if(!($template instanceof KTemplateInterface))
         {
             if(is_string($template) && strpos($template, '.') === false )
 		    {
