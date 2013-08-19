@@ -8,12 +8,12 @@
  */
 
 /**
- * Service Instantiatable Interface
+ * Object Instantiatable Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KServiceInstantiatable
+interface KObjectInstantiatable
 {
     /**
      * Get the object identifier

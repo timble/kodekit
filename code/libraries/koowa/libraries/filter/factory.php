@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterFactory extends KObject implements KServiceInstantiatable
+class KFilterFactory extends KObject implements KObjectInstantiatable
 {
 	/**
      * Force creation of a singleton
@@ -63,7 +63,7 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	 * Create a filter based on it's name
 	 *
 	 * If the filter is not an identifier this function will create it directly
-	 * instead of going through the KService identification process.
+	 * instead of going through the KObjectManager identification process.
 	 *
 	 * @param  string$filter Filter identifier
      * @param  array   $config Configuration options

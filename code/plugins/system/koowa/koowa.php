@@ -69,7 +69,7 @@ class PlgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            $loader = KService::get('koowa:class.loader');
+            $loader = KObjectManager::get('koowa:class.loader');
 
             $loader->registerLocator(new KClassLocatorModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
@@ -88,9 +88,9 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            KObjectIdentifier::addLocator(KService::get('koowa:object.locator.module'));
-            KObjectIdentifier::addLocator(KService::get('koowa:object.locator.plugin'));
-            KObjectIdentifier::addLocator(KService::get('koowa:object.locator.component'));
+            KObjectIdentifier::addLocator(KObjectManager::get('koowa:object.locator.module'));
+            KObjectIdentifier::addLocator(KObjectManager::get('koowa:object.locator.plugin'));
+            KObjectIdentifier::addLocator(KObjectManager::get('koowa:object.locator.component'));
 
             KObjectIdentifier::registerApplication('site' , JPATH_SITE);
             KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
@@ -99,8 +99,8 @@ class PlgSystemKoowa extends JPlugin
             KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
             KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
-            KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-            KService::setAlias('translator', 'com:koowa.translator');
+            KObjectManager::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+            KObjectManager::setAlias('translator', 'com:koowa.translator');
 
             //Setup the request
             if (JFactory::getApplication()->getName() !== 'site') {
@@ -165,7 +165,7 @@ class PlgSystemKoowa extends JPlugin
             $data = array('exception' => $exception);
             $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
-            $template = KService::get('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
+            $template = KObjectManager::get('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
             $template->loadFile($file, $data);
 
             while (@ob_end_clean());

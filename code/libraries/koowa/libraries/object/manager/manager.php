@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-class KService implements KObjectManagerInterface
+class KObjectManager implements KObjectManagerInterface
 {
 	/**
      * The identifier registry
@@ -86,7 +86,7 @@ class KService implements KObjectManagerInterface
      * Force creation of a singleton
      *
      * @param  array  $config An optional array with configuration options.
-     * @return KService
+     * @return KObjectManager
      */
 	public static function getInstance($config = array())
 	{
@@ -382,7 +382,7 @@ class KService implements KObjectManagerInterface
                 $config->service_identifier = $identifier;
 
                 // If the class has an instantiate method call it
-                if(array_key_exists('KServiceInstantiatable', class_implements($identifier->classname))) {
+                if(array_key_exists('KObjectInstantiatable', class_implements($identifier->classname))) {
                     $result = call_user_func(array($identifier->classname, 'getInstance'), $config, self::getInstance());
                 } else {
                     $result = new $identifier->classname($config);

@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
+class ComKoowaTranslator extends KTranslator implements KObjectInstantiatable
 {
     /**
      * A reference to Joomla translator

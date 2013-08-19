@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaEventDispatcher extends KEventDispatcher implements KServiceInstantiatable
+class ComKoowaEventDispatcher extends KEventDispatcher implements KObjectInstantiatable
 {
  	/**
      * Force creation of a singleton

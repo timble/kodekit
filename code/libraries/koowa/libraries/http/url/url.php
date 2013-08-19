@@ -24,7 +24,7 @@
  *     // Create a url object;
  *
  *     $url = 'http://anonymous:guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor'
- *     $url = KService::get('koowa:http.url', array('url' => $url) );
+ *     $url = KObjectManager::get('koowa:http.url', array('url' => $url) );
  *
  *     // the $url properties are ...
  *     //
@@ -539,7 +539,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = KService::get('koowa:http.url', array('url' => $parts));
+        $url = KObjectManager::get('koowa:http.url', array('url' => $parts));
         return $url;
     }
 

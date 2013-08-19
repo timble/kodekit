@@ -429,7 +429,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             $identifier->path = array('template', 'filter');
             $identifier->name = $filter;
         }
-        else $identifier = KService::getIdentifier($filter);
+        else $identifier = KObjectManager::getIdentifier($filter);
 
         if (!isset($this->_filters[$identifier->name]))
         {

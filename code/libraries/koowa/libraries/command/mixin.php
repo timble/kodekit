@@ -63,8 +63,8 @@ class KCommandMixin extends KObjectMixinAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => KService::get('koowa:command.chain'),
-            'event'				=> KService::get('koowa:command.event'),
+            'command_chain'     => KObjectManager::get('koowa:command.chain'),
+            'event'				=> KObjectManager::get('koowa:command.event'),
             'dispatch_events'   => true,
             'event_priority'    => KCommand::PRIORITY_LOWEST,
             'enable_callbacks'  => false,

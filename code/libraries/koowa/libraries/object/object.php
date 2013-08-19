@@ -41,7 +41,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     /**
      * The service container
      *
-     * @var KService
+     * @var KObjectManager
      */
     private $__service_container;
 
