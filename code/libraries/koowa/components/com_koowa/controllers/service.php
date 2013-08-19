@@ -34,17 +34,14 @@ class ComKoowaControllerService extends KControllerService
 
 		$this->_limit = $config->limit;
 
-        if($this->isDispatched())
-        {
-            if($config->persistable) {
-                $this->addBehavior('persistable');
-            }
+        // Mixin the toolbar interface
+        $this->mixin(new KControllerToolbarMixin($config->append(array('mixer' => $this))));
 
-            if(!JFactory::getUser()->guest)
-            {
-                $this->attachToolbars(); //attach the toolbars
-                $this->registerCallback('after.get' , array($this, 'renderToolbars'));
-            }
+        //Attach the toolbars
+        $this->registerCallback('before.get' , array($this, 'attachToolbars'));
+
+        if($this->isDispatched() && $config->persistable) {
+            $this->addBehavior('persistable');
         }
 	}
 
@@ -60,7 +57,7 @@ class ComKoowaControllerService extends KControllerService
     {
         //Disable controller persistency on non-HTTP requests,
         //e.g. AJAX, and requests containing the tmpl variable set to component (modal boxes)
-        if(JFactory::getApplication()->isAdmin())
+        if($this->getIdentifier()->application === 'admin')
         {
             $persistable = (KRequest::type() == 'HTTP' && KRequest::get('get.tmpl','cmd') != 'component');
             $config->append(array(
@@ -74,6 +71,33 @@ class ComKoowaControllerService extends KControllerService
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Attach the toolbars to the controller
+     *
+     * void
+     */
+    public function attachToolbars()
+    {
+        if($this->getView() instanceof KViewHtml)
+        {
+            if($this->isDispatched() && !JFactory::getUser()->guest)
+            {
+                $this->attachToolbar($this->getView()->getName());
+
+                if($this->getIdentifier()->application === 'admin') {
+                    $this->attachToolbar('menubar');
+                };
+            }
+
+            if($toolbars = $this->getToolbars())
+            {
+                $this->getView()
+                    ->getTemplate()
+                    ->addFilter('toolbar', array('toolbars' => $toolbars));
+            };
+        }
     }
 
     /**
@@ -134,7 +158,7 @@ class ComKoowaControllerService extends KControllerService
         $row = parent::_actionRead($context);
 
         //Add the notice if the row is locked
-        if(JFactory::getApplication()->isAdmin() && isset($row))
+        if($this->getIdentifier()->application === 'admin' && isset($row))
         {
             if(!isset($this->_request->layout) && $row->isLockable() && $row->locked()) {
                 JFactory::getApplication()->enqueueMessage($row->lockMessage(), 'notice');
@@ -142,43 +166,6 @@ class ComKoowaControllerService extends KControllerService
         }
 
         return $row;
-    }
-
-    /**
-     * Attach the toolbars to the controller
-     * .
-     * void
-     */
-    public function attachToolbars()
-    {
-        if ($this->getView() instanceof KViewHtml)
-        {
-            $this->attachToolbar($this->getView()->getName());
-
-            if(JFactory::getApplication()->isAdmin()) {
-                $this->attachToolbar('menubar');
-            };
-        }
-    }
-
-    /**
-     * Run the toolbar filter to convert toolbars to HTML in the template
-     * .
-     * @param   KCommandContext	$context A command context object
-     */
-    public function renderToolbars(KCommandContext $context)
-    {
-        if ($this->getView() instanceof KViewHtml)
-        {
-            $filter = $this->getView()
-                ->getTemplate()
-                ->getFilter('toolbar')
-                ->setToolbars($this->getToolbars());
-
-            $result = $context->result;
-            $filter->write($result);
-            $context->result = $result;
-        }
     }
 
 	/**
