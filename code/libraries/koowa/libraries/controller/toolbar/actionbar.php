@@ -17,20 +17,6 @@
 abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
 {
     /**
-     * The toolbar title
-     *
-     * @var     string
-     */
-    protected $_title = '';
-
-    /**
-     * The toolbar icon
-     *
-     * @var     string
-     */
-    protected $_icon = '';
-
-    /**
      * Constructor
      *
      * @param   KConfig $config Configuration options
@@ -39,11 +25,8 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     {
         parent::__construct($config);
 
-        // Set the title
-        $this->setTitle($config->title);
-
-        // Set the icon
-        $this->setIcon($config->icon);
+        //Add a title command
+        $this->addTitle($config->title, $config->icon);
     }
 
     /**
@@ -66,57 +49,29 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     }
 
     /**
-     * Set the toolbar's title
-     *
-     * @param   string  $title Title
-     * @return  KControllerToolbarAbstract
-     */
-    public function setTitle($title)
-    {
-        $this->_title = $title;
-        return $this;
-    }
-
-    /**
-     * Get the toolbar's title
-     *
-     * @return   string  Title
-     */
-    public function getTitle()
-    {
-        return $this->_title;
-    }
-
-    /**
-     * Set the toolbar's icon
-     *
-     * @param   string  $icon Icon
-     * @return  KControllerToolbarAbstract
-     */
-    public function setIcon($icon)
-    {
-        $this->_icon = $icon;
-        return $this;
-    }
-
-    /**
-     * Get the toolbar's icon
-     *
-     * @return   string  Icon
-     */
-    public function getIcon()
-    {
-        return $this->_icon;
-    }
-
-    /**
-     * Add a separator
+     * Add a separator command
      *
      * @return  KControllerToolbarAbstract
      */
     public function addSeparator()
     {
         $this->_commands[] = new KControllerToolbarCommand('separator');
+        return $this;
+    }
+
+    /**
+     * Add a title command
+     *
+     * @param   string $title   The title
+     * @param   string $icon    The icon
+     * @return  KControllerToolbarAbstract
+     */
+    public function addTitle($title, $icon = '')
+    {
+        $this->_commands[] = new KControllerToolbarCommand('title', array(
+            'title' => $title,
+            'icon'  => $icon
+        ));
         return $this;
     }
 
@@ -228,9 +183,9 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
 
         if($saveable)
         {
-            $this->setTitle($title)
-                 ->addCommand('save')
-                 ->addCommand('apply');
+            $this->getCommand('title')->title = $title;
+            $this->addCommand('save');
+            $this->addCommand('apply');
         }
 
         $this->addCommand('cancel',  array('attribs' => array('data-novalidate' => 'novalidate')));
