@@ -16,51 +16,34 @@
  */
 class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
 {
-	/**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KConfig $config Configuration options
-     * @return 	void
-     */
-    protected function _initialize(KConfig $config)
-    {
-    	$config->append(array(
-    		'menubar' => null,
-        ));
-
-        parent::_initialize($config);
-    }
-
  	/**
      * Render the menu bar
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function commands($config = array())
+    public function render($config = array())
     {
         $config = new KConfig($config);
         $config->append(array(
-        	'menubar' => null
+        	'toolbar' => null
         ));
 
         $html = '';
         if (version_compare(JVERSION, '3.0', 'ge'))
         {
-        	foreach ($config->menubar->getCommands() as $command) {
+        	foreach ($config->toolbar->getCommands() as $command) {
                 JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
         	}
         }
         else
         {
-            if (count($config->menubar->getCommands()))
+            if (count($config->toolbar->getCommands()))
             {
                 $html = '<div id="submenu-box"><div class="m">';
 
                 $html .= '<ul id="submenu">';
-                foreach ($config->menubar->getCommands() as $command)
+                foreach ($config->toolbar->getCommands() as $command)
                 {
                     $html .= '<li>';
                     $html .= $this->command(array('command' => $command));
