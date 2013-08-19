@@ -47,10 +47,10 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
      * Force creation of a singleton
      *
      * @param   KObjectConfigInterface  $config    Configuration options
-     * @param 	KServiceInterface $container A KServiceInterface object
+     * @param 	KObjectManagerInterface $container A KObjectManagerInterface object
      * @return KFilterInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

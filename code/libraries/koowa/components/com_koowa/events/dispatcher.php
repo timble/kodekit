@@ -20,10 +20,10 @@ class ComKoowaEventDispatcher extends KEventDispatcher implements KServiceInstan
      * Force creation of a singleton
      *
      * @param 	KObjectConfigInterface $config	    An optional KObjectConfig object with configuration options
-     * @param 	KServiceInterface $container	A KServiceInterface object
+     * @param 	KObjectManagerInterface $container	A KObjectManagerInterface object
      * @return ComKoowaEventDispatcher
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

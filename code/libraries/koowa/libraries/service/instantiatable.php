@@ -19,8 +19,8 @@ interface KServiceInstantiatable
      * Get the object identifier
      *
      * @param   KObjectConfigInterface $config        Configuration options
-     * @param 	KServiceInterface $container	A KServiceInterface object
+     * @param 	KObjectManagerInterface $container	A KObjectManagerInterface object
      * @return  object
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container);
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $container);
 }

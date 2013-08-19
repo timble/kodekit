@@ -117,10 +117,10 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Force creation of a singleton
      *
      * @param KObjectConfigInterface  $config optional KObjectConfig object with configuration options
-     * @param KServiceInterface $container
+     * @param KObjectManagerInterface $container
      * @return ComKoowaTranslator
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $container)
     {
         if (!$container->has($config->service_identifier))
         {

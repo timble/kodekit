@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KServiceInterface
+interface KObjectManagerInterface
 {
 	/**
 	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.

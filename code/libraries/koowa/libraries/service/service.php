@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-class KService implements KServiceInterface
+class KService implements KObjectManagerInterface
 {
 	/**
      * The identifier registry

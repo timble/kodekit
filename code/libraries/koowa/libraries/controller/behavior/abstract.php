@@ -31,7 +31,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
     /**
      * The service container
      *
-     * @var KServiceInterface
+     * @var KObjectManagerInterface
      */
     private $__service_container;
 
