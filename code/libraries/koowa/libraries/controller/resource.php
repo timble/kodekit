@@ -68,9 +68,6 @@ abstract class KControllerResource extends KControllerAbstract
 		//Register display as alias for get
 		$this->registerActionAlias('display', 'get');
 
-        // Mixin the toolbar
-        $this->mixin(new KControllerToolbarMixin($config->append(array('mixer' => $this))));
-
 		//Made the executable behavior read-only
 		if($this->isExecutable()) {
 		    $this->getBehavior('executable')->setReadOnly($config->readonly);
