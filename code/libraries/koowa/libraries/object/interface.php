@@ -31,7 +31,7 @@ interface KObjectInterface
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	public function getService($identifier, array $config = array());
+	//public function getService($identifier, array $config = array());
 
 	/**
 	 * Gets the service identifier.
@@ -42,5 +42,5 @@ interface KObjectInterface
 	 * @see 	KObjectInterface
      * @throws	RuntimeException if the service container has not been defined.
 	 */
-    public function getIdentifier($identifier = null);
+    //public function getIdentifier($identifier = null);
 }

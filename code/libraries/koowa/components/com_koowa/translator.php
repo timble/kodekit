@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
+class ComKoowaTranslator extends KTranslator implements KObjectInstantiatable
 {
     /**
      * A reference to Joomla translator
@@ -117,10 +117,10 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Force creation of a singleton
      *
      * @param KObjectConfigInterface  $config optional KObjectConfig object with configuration options
-     * @param KServiceInterface $container
+     * @param KObjectInterface $container
      * @return ComKoowaTranslator
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
     {
         if (!$container->has($config->service_identifier))
         {

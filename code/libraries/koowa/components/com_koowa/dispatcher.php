@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantiatable
+class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiatable
 {
  	/**
      * Initializes the options for the object
@@ -59,10 +59,10 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
      * Force creation of a singleton
      *
      * @param   KObjectConfigInterface $config        Configuration options
-     * @param 	KServiceInterface $container	A KServiceInterface object
+     * @param 	KObjectInterface $container	A KObjectInterface object
      * @return KDispatcherDefault
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

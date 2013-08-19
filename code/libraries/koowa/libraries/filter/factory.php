@@ -13,16 +13,16 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterFactory extends KObject implements KServiceInstantiatable
+class KFilterFactory extends KObject implements KObjectInstantiatable
 {
 	/**
      * Force creation of a singleton
      *
      * @param   KObjectConfigInterface  $config     Configuration options
-     * @param 	KServiceInterface $container  A KServiceInterface object
+     * @param 	KObjectInterface $container  A KObjectInterface object
      * @return KFilterFactory
      */
-    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

@@ -32,7 +32,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     /**
      * The service container
      *
-     * @var KServiceInterface
+     * @var KObjectInterface
      */
     private $__service_container;
 
