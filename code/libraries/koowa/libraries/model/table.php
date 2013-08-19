@@ -114,7 +114,7 @@ class KModelTable extends KModelAbstract
 			    }
 
 		        try {
-		            $this->_table = $this->getService($this->_table);
+		            $this->_table = $this->getObject($this->_table);
                 } catch (RuntimeException $e) {
                     $this->_table = false;
                 }
@@ -184,7 +184,7 @@ class KModelTable extends KModelAbstract
 
                 if($this->_state->isUnique())
                 {
-                	$query = $this->getService('koowa:database.query.select');
+                	$query = $this->getObject('koowa:database.query.select');
 
                 	$this->_buildQueryColumns($query);
                 	$this->_buildQueryTable($query);
@@ -217,7 +217,7 @@ class KModelTable extends KModelAbstract
 
                 if(!$this->_state->isEmpty())
                 {
-                	$query = $this->getService('koowa:database.query.select');
+                	$query = $this->getObject('koowa:database.query.select');
 
                 	$this->_buildQueryColumns($query);
                 	$this->_buildQueryTable($query);
@@ -248,7 +248,7 @@ class KModelTable extends KModelAbstract
         {
             if($this->isConnected())
             {
-	            $query = $this->getService('koowa:database.query.select');
+	            $query = $this->getObject('koowa:database.query.select');
 	            $query->columns('COUNT(*)');
 
 	            $this->_buildQueryTable($query);

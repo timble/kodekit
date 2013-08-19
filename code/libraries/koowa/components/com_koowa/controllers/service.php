@@ -110,7 +110,7 @@ class ComKoowaControllerService extends KControllerService
      */
     protected function _actionGet(KCommandContext $context)
     {
-        $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
+        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
         return parent::_actionGet($context);
     }
 

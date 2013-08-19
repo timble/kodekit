@@ -82,7 +82,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         if(!$this->_params instanceof KObjectArray)
         {
-            $this->_params = $this->getService($this->_params);
+            $this->_params = $this->getObject($this->_params);
 
             if(!$this->_params instanceof KObjectArray)
             {
@@ -117,7 +117,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         if(!$this->_adapter instanceof KDatabaseAdapterInterface)
         {
-            $this->_adapter = $this->getService($this->_adapter);
+            $this->_adapter = $this->getObject($this->_adapter);
 
             if(!$this->_adapter instanceof KDatabaseAdapterInterface)
             {

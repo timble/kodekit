@@ -51,7 +51,7 @@ class KViewVcard extends KViewFile
     public function display()
     {
         //Set the filename
-        $filename = $this->getService('koowa:filter.filename')->sanitize($this->_properties['FN']);
+        $filename = $this->getObject('koowa:filter.filename')->sanitize($this->_properties['FN']);
         $this->filename = $filename.'.vcf';
 
         //Render the vcard

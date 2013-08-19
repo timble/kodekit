@@ -43,19 +43,19 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KO
      * Force creation of a singleton
      *
      * @param  KObjectConfigInterface  $config     Configuration options
-     * @param  KObjectManagerInterface $container  A KObjectManagerInterface object
+     * @param  KObjectManagerInterface $manager  A KObjectManagerInterface object
      * @return KDatabaseAdapterInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        if (!$container->has($config->service_identifier))
+        if (!$manager->has($config->service_identifier))
         {
             $classname = $config->service_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+            $manager->set($config->service_identifier, $instance);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->get($config->service_identifier);
     }
 
     /**

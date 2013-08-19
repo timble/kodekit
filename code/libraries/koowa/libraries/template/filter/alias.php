@@ -24,7 +24,7 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
      */
     protected $_alias_read = array(
         '@helper('      => '$this->renderHelper(',
-    	'@service('     => '$this->getService(',
+    	'@service('     => '$this->getObject(',
         '@date('        => '$this->renderHelper(\'date.format\',',
         '@overlay('     => '$this->renderHelper(\'behavior.overlay\', ',
         '@text('        => '$this->translate(',

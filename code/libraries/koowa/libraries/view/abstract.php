@@ -178,7 +178,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		        $this->setModel($this->_model);
 			}
 
-		    $this->_model = $this->getService($this->_model);
+		    $this->_model = $this->getObject($this->_model);
 		}
 
 		return $this->_model;
@@ -243,7 +243,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
                 $identifier->name = 'translator';
             } else $identifier = $this->getIdentifier($translator);
 
-            $translator = $this->getService($identifier);
+            $translator = $this->getObject($identifier);
         }
 
         $this->_translator = $translator;

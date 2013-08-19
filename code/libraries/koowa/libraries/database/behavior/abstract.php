@@ -193,7 +193,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
         $methods   = parent::getMixableMethods($mixer);
         $methods[] = 'is'.ucfirst($this->getIdentifier()->name);
 
-        return array_diff($methods, array('execute', 'save', 'delete', 'getHandle', 'getPriority', 'getIdentifier', 'getService'));
+        return array_diff($methods, array('execute', 'save', 'delete', 'getHandle', 'getPriority', 'getIdentifier', 'getObject'));
     }
 
 	/**
@@ -204,7 +204,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getObject($identifier, array $config = array())
 	{
 	    return $this->__service_container->get($identifier, $config);
 	}

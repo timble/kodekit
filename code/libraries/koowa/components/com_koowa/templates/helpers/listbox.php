@@ -176,7 +176,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 'filter' 	=> array('sort' => $config->text),
             ));
 
-        $list = $this->getService($config->identifier)->set($config->filter)->getList();
+        $list = $this->getObject($config->identifier)->set($config->filter)->getList();
 
         //Get the list of items
         $items = $list->getColumn($config->value);

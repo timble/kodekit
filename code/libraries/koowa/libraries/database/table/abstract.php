@@ -131,13 +131,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $name    = $this->getIdentifier()->name;
 
         $config->append(array(
-            'database'          => $this->getService('koowa:database.adapter.mysqli'),
+            'database'          => $this->getObject('koowa:database.adapter.mysqli'),
             'name'              => empty($package) ? $name : $package.'_'.$name,
             'column_map'        => null,
             'filters'           => array(),
             'behaviors'         => array(),
             'identity_column'   => null,
-            'command_chain'     => $this->getService('koowa:command.chain'),
+            'command_chain'     => $this->getObject('koowa:command.chain'),
             'dispatch_events'   => false,
             'enable_callbacks'  => false,
         ))->append(
@@ -303,7 +303,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
        if(!isset($this->getSchema()->behaviors[$identifier->name]))
        {
-           $behavior = $this->getService($identifier, array_merge($config, array('mixer' => $this)));
+           $behavior = $this->getObject($identifier, array_merge($config, array('mixer' => $this)));
 
            //Check the behavior interface
 		   if(!($behavior instanceof KDatabaseBehaviorInterface)) {
@@ -530,7 +530,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             $options['identity_column'] = $this->mapColumns($this->getIdentityColumn(), true);
         }
 
-        return $this->getService($identifier, $options);
+        return $this->getObject($identifier, $options);
     }
 
     /**
@@ -552,7 +552,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     		$options['identity_column'] = $this->mapColumns($this->getIdentityColumn(), true);
     	}
     
-    	return $this->getService($identifier, $options);
+    	return $this->getObject($identifier, $options);
     }
     
     /**
@@ -572,7 +572,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if (is_numeric($query) || is_string($query) || (is_array($query) && is_numeric(key($query))))
         {
             $key = $this->getIdentityColumn();
-            $query = $this->getService('koowa:database.query.select')
+            $query = $this->getObject('koowa:database.query.select')
                 ->where('tbl.'.$key . ' IN :' . $key)
                 ->bind(array($key => (array)$query));
         }
@@ -580,7 +580,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if (is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query = $this->getService('koowa:database.query.select');
+            $query = $this->getObject('koowa:database.query.select');
 
             foreach ($columns as $column => $value)
             {
@@ -682,7 +682,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if (is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query = $this->getService('koowa:database.query.select');
+            $query = $this->getObject('koowa:database.query.select');
 
             foreach ($columns as $column => $value)
             {
@@ -715,7 +715,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     public function insert(KDatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getService('koowa:database.query.insert')
+        $query = $this->getObject('koowa:database.query.insert')
                       ->table($this->getBase());
 
         //Create commandchain context
@@ -764,7 +764,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     public function update(KDatabaseRowTable $row)
     {
         // Create query object.
-        $query = $this->getService('koowa:database.query.update')
+        $query = $this->getObject('koowa:database.query.update')
                       ->table($this->getBase());
 
         // Create commandchain context.
@@ -818,7 +818,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     public function delete(KDatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getService('koowa:database.query.delete')
+        $query = $this->getObject('koowa:database.query.delete')
                       ->table($this->getBase());
 
         //Create commandchain context

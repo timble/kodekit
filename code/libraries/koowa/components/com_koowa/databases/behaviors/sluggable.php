@@ -35,7 +35,7 @@ class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
         }
 
         //Create the filter
-        $filter = $this->getService('com:koowa.filter.alias', $config);
+        $filter = $this->getObject('com:koowa.filter.alias', $config);
 
         return $filter;
     }

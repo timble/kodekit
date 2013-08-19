@@ -31,7 +31,7 @@ interface KObjectInterface
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	public function getService($identifier, array $config = array());
+	public function getObject($identifier, array $config = array());
 
 	/**
 	 * Gets the service identifier.

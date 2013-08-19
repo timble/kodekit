@@ -158,7 +158,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
             }
         }
 
-        return array_diff($methods, array('execute', 'getIdentifier', 'getPriority', 'getHandle', 'getService', 'getIdentifier'));
+        return array_diff($methods, array('execute', 'getIdentifier', 'getPriority', 'getHandle', 'getObject', 'getIdentifier'));
     }
 
 	/**
@@ -169,7 +169,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getObject($identifier, array $config = array())
 	{
 	    return $this->__service_container->get($identifier, $config);
 	}

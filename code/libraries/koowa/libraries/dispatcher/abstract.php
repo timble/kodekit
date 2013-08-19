@@ -80,7 +80,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			    'dispatched'   => true
         	);
 
-			$this->_controller = $this->getService($this->_controller, $config);
+			$this->_controller = $this->getObject($this->_controller, $config);
 		}
 
 		return $this->_controller;

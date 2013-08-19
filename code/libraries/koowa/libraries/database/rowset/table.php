@@ -79,7 +79,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 			    }
 
 		        try {
-		            $this->_table = $this->getService($this->_table);
+		            $this->_table = $this->getObject($this->_table);
                 } catch (RuntimeException $e) {
                     $this->_table = false;
                 }

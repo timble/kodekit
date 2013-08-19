@@ -43,7 +43,7 @@ class KObjectLocatorModule extends KObjectLocatorAbstract
 		$classname = 'Mod'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
 
 		//Don't allow the auto-loader to load module classes if they don't exists yet
-		if (!$this->getService('koowa:class.loader')->loadClass($classname, $identifier->basepath))
+		if (!$this->getObject('koowa:class.loader')->loadClass($classname, $identifier->basepath))
 		{
 			$classpath = $identifier->path;
 			$classtype = !empty($classpath) ? array_shift($classpath) : 'view';

@@ -19,20 +19,20 @@ class KDatabaseTableDefault extends KDatabaseTableAbstract implements KObjectIns
      * Force creation of a singleton
      *
      * @param   KObjectConfigInterface    $config    Configuration options
-     * @param 	KObjectManagerInterface	$container A KObjectManagerInterface object
+     * @param 	KObjectManagerInterface	$manager A KObjectManagerInterface object
      * @return KDatabaseTableDefault
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
         // Check if an instance with this identifier already exists or not
-        if (!$container->has($config->service_identifier))
+        if (!$manager->has($config->service_identifier))
         {
             //Create the singleton
             $classname = $config->service_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+            $manager->set($config->service_identifier, $instance);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->get($config->service_identifier);
     }
 }

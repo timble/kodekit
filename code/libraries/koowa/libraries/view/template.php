@@ -315,7 +315,7 @@ abstract class KViewTemplate extends KViewAbstract
                 'translator' => $this->getTranslator()
             );
 
-            $this->_template = $this->getService($this->_template, $options);
+            $this->_template = $this->getObject($this->_template, $options);
         }
 
         return $this->_template;

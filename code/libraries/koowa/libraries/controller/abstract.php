@@ -92,7 +92,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => $this->getService('koowa:command.chain'),
+            'command_chain'     => $this->getObject('koowa:command.chain'),
             'dispatch_events'   => true,
             'enable_callbacks'  => true,
             'dispatched'		=> false,
@@ -305,7 +305,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
        if(!isset($this->_behaviors[$identifier->name]))
        {
-           $behavior = $this->getService($identifier, array_merge($config, array('mixer' => $this)));
+           $behavior = $this->getObject($identifier, array_merge($config, array('mixer' => $this)));
 
            //Check the behavior interface
 		   if(!($behavior instanceof KControllerBehaviorInterface)) {

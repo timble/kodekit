@@ -77,7 +77,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'stack'     => $this->getService('koowa:object.stack'),
+            'stack'     => $this->getObject('koowa:object.stack'),
             'context'   => new KCommandContext(),
             'enabled'   => true,
             'break_condition' => false,

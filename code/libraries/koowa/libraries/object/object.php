@@ -243,10 +243,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getObject($identifier, array $config = array())
 	{
 	    if(!isset($this->__service_container)) {
-	        throw new RuntimeException("Failed to call ".get_class($this)."::getService(). No service_container object defined.");
+	        throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No service_container object defined.");
 	    }
 
 	    return $this->__service_container->get($identifier, $config);

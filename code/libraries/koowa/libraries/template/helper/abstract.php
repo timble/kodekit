@@ -61,7 +61,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
                 $identifier->name	= $template ? $template : 'default';
             } else $identifier = $this->getIdentifier($template);
 	
-            $template = $this->getService($identifier);
+            $template = $this->getObject($identifier);
         }
     
         $this->_template = $template;

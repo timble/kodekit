@@ -129,7 +129,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             'translator'       => null,
             'data'             => array(),
             'view'             => null,
-            'filter_chain' 	=> $this->getService('koowa:template.filter.chain'),
+            'filter_chain' 	   => $this->getObject('koowa:template.filter.chain'),
             'filters'          => array(),
         ));
 
@@ -181,7 +181,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
                 $this->setView($this->_view);
             }
 
-            $this->_view = $this->getService($this->_view);
+            $this->_view = $this->getObject($this->_view);
 
             //Make sure the view implements KViewAbstract
             if(!$this->_view instanceof KViewAbstract)
@@ -257,7 +257,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
                 $identifier->name = 'translator';
             } else $identifier = $this->getIdentifier($translator);
 
-            $translator = $this->getService($identifier);
+            $translator = $this->getObject($identifier);
         }
 
         $this->_translator = $translator;
@@ -429,11 +429,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             $identifier->path = array('template', 'filter');
             $identifier->name = $filter;
         }
-        else $identifier = KObjectManager::getIdentifier($filter);
+        else $identifier = $this->getIdentifier($filter);
 
         if (!isset($this->_filters[$identifier->name]))
         {
-            $filter = $this->getService($identifier, array_merge($config, array('template' => $this)));
+            $filter = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
             if(!($filter instanceof KTemplateFilterInterface))
             {
@@ -468,7 +468,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 		else $identifier = $this->getIdentifier($helper);
 
 		//Create the template helper
-		$helper = $this->getService($identifier, array('template' => $this));
+		$helper = $this->getObject($identifier, array('template' => $this));
 
 	    //Check the helper interface
         if(!($helper instanceof KTemplateHelperInterface)) {

@@ -120,7 +120,7 @@ abstract class KControllerResource extends KControllerAbstract
 			    $config['auto_assign'] = !$this->getBehavior('executable')->isReadOnly();
 			}
 
-			$this->_view = $this->getService($this->_view, $config);
+			$this->_view = $this->getObject($this->_view, $config);
 
 			//Set the layout
 			if(isset($this->_request->layout)) {
@@ -182,7 +182,7 @@ abstract class KControllerResource extends KControllerAbstract
 		        $this->setModel($this->_model);
 			}
 
-		    $this->_model = $this->getService($this->_model)->set($this->getRequest());
+		    $this->_model = $this->getObject($this->_model)->set($this->getRequest());
 		}
 
 		return $this->_model;

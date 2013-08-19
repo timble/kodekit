@@ -146,9 +146,9 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 		if($this->locked())
 		{
 	        $user = JFactory::getUser($this->locked_by);
-			$date = $this->getService('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
+			$date = $this->getObject('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
 			
-			$message = $this->getService('translator')->translate(
+			$message = $this->getObject('translator')->translate(
 			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
 			);
 		}

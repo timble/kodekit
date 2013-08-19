@@ -149,7 +149,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
         else $identifier = $toolbar;
 
         $config['controller'] = $this->getMixer();
-        $toolbar = $this->getService($identifier, $config);
+        $toolbar = $this->getObject($identifier, $config);
 
         if (!($toolbar instanceof KControllerToolbarInterface)) {
             throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");

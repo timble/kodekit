@@ -69,7 +69,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function getReferrer()
 	{
-	    $referrer = $this->getService('koowa:http.url',
+	    $referrer = $this->getObject('koowa:http.url',
 	        array('url' => KRequest::get('cookie.referrer', 'url'))
 	    );
 
@@ -97,7 +97,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	            $view   = KStringInflector::pluralize($identifier->name);
 	            $url    = 'index.php?option='.$option.'&view='.$view;
 
-	            $referrer = $this->getService('koowa:http.url',array('url' => $url));
+	            $referrer = $this->getObject('koowa:http.url',array('url' => $url));
 	        }
 
 	        KRequest::set('cookie.referrer', (string) $referrer);

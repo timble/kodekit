@@ -171,7 +171,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         }
 
         //Create the filter
-        $filter = $this->getService('koowa:filter.slug', $config);
+        $filter = $this->getObject('koowa:filter.slug', $config);
         return $filter;
     }
 
@@ -229,7 +229,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         //If the slug needs to be unique and it already exists, make it unique
         if($this->_unique && $table->count(array('slug' => $this->slug)))
         {
-            $query = $this->getService('koowa:database.query.select')
+            $query = $this->getObject('koowa:database.query.select')
                         ->columns('slug')
                         ->where('slug LIKE :slug')
                         ->bind(array('slug' => $this->slug . '-%'));

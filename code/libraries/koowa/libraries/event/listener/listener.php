@@ -41,7 +41,7 @@ class KEventListener extends KObject implements KEventListenerInterface
 		if($config->auto_connect)
 		{
 		    if(!($config->dispatcher instanceof KEventDispatcher)) {
-		        $config->dispatcher = $this->getService($config->dispatcher);
+		        $config->dispatcher = $this->getObject($config->dispatcher);
 		    }
 
 		    $this->connect($config->dispatcher);
