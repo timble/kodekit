@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KObjectInstantiatable
+class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KServiceInstantiatable
 {
     /**
 	 * The cache object
@@ -43,10 +43,10 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KO
      * Force creation of a singleton
      *
      * @param  KObjectConfigInterface  $config     Configuration options
-     * @param  KObjectInterface $container  A KObjectInterface object
+     * @param  KServiceInterface $container  A KServiceInterface object
      * @return KDatabaseAdapterInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
     {
         if (!$container->has($config->service_identifier))
         {

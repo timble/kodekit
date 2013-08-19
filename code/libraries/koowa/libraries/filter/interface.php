@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-interface KFilterInterface extends KCommandInterface, KObjectInstantiatable
+interface KFilterInterface extends KCommandInterface, KServiceInstantiatable
 {
     /**
      * Validate a value or data collection

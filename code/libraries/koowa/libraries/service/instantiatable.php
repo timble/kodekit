@@ -8,19 +8,19 @@
  */
 
 /**
- * Object Instantiatable Interface
+ * Service Instantiatable Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KObjectInstantiatable
+interface KServiceInstantiatable
 {
     /**
      * Get the object identifier
      *
      * @param   KObjectConfigInterface $config        Configuration options
-     * @param 	KObjectInterface $container	A KObjectInterface object
+     * @param 	KServiceInterface $container	A KServiceInterface object
      * @return  object
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container);
+    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container);
 }
