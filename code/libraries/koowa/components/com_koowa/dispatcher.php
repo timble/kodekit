@@ -82,8 +82,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
     /**
      * Dispatch the controller and redirect
      *
-     * This function divert the standard behavior and will redirect if no view
-     * information can be found in the request.
+     * This function divert the standard behavior and will redirect if no view information can be found in the request.
      *
      * @param   KCommandContext	$context A command context object
      * @return  ComKoowaDispatcher
@@ -117,7 +116,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
         JFactory::getDocument()->setMimeEncoding($view->mimetype);
 
         //Disabled the application menubar
-        if(JFactory::getApplication()->isAdmin() && $this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
+        if($this->getIdentifier()->application === 'admin' && $this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
             KRequest::set('get.hidemainmenu', 1);
         }
 
