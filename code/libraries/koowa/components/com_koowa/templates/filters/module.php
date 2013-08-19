@@ -42,7 +42,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     }
 
     /**
-	 * Find any <module></module> elements and inject them into the JDocument object
+	 * Find tags
 	 *
 	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterModule
@@ -56,7 +56,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     }
 
     /**
-     * Parse <ktml:module></ktml:module> tags
+     * Parse <ktml:module position="..."></ktml:module> tags
      *
      * @param string $text Block of text to parse
      */
@@ -106,7 +106,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     }
 
     /**
-     * Parse <ktml:modules> and <ktml:modules></ktml:modules> tags
+     * Parse <ktml:modules position="..."> and <ktml:modules position="..."></ktml:modules> tags
      *
      * @param string $text Block of text to parse
      */
