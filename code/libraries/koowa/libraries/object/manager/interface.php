@@ -63,14 +63,6 @@ interface KObjectManagerInterface
     public static function setConfig($identifier, array $config);
 
 	/**
-	 * Check if the object instance exists based on the identifier
-	 *
-	 * @param mixed $identifier The class identifier
-	 * @return boolean Returns TRUE on success or FALSE on failure.
-	 */
-	public static function isRegistered($identifier);
-
-	/**
      * Set a mixin or an array of mixins for an identifier
      *
      * The mixins are mixed when the identified object is first instantiated see {@link get} Mixins are also added to
@@ -80,7 +72,22 @@ interface KObjectManagerInterface
      * @param  string|array  $mixins     A mixin identifier or a array of mixin identifiers
      * @see KObject::mixin
      */
-    public static function addMixin($identifier, $mixins);
+    public static function registerMixin($identifier, $mixins);
+
+    /**
+     * Register an alias for an identifier
+     *
+     * @param string  $alias        The alias
+     * @param mixed   $identifier   The class identifier or identifier object
+     */
+    public static function registerAlias($alias, $identifier);
+
+    /**
+     * Get a list of aliases
+     *
+     * @return array
+     */
+    public static function getAliases();
 
     /**
      * Get the mixins for an identifier
@@ -98,14 +105,6 @@ interface KObjectManagerInterface
     public static function getConfigs();
 
 	/**
-	 * Register an alias for an identifier
-	 *
-	 * @param string  $alias        The alias
-	 * @param mixed   $identifier   The class identifier or identifier object
-	 */
-	public static function registerAlias($alias, $identifier);
-
-	/**
 	 * Get an alias for an identifier
 	 *
 	 * @param  string  $alias   The alias
@@ -113,10 +112,11 @@ interface KObjectManagerInterface
 	 */
 	public static function getAlias($alias);
 
-	/**
-     * Get a list of aliases
+    /**
+     * Check if the object instance exists based on the identifier
      *
-     * @return array
+     * @param mixed $identifier The class identifier
+     * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public static function getAliases();
+    public static function isRegistered($identifier);
 }

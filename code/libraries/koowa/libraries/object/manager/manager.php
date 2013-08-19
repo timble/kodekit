@@ -179,7 +179,7 @@ class KObjectManager implements KObjectManagerInterface
      * @param  string|array $mixins A mixin identifier or a array of mixin identifiers
      * @see KObject::mixin
      */
-    public static function addMixin($identifier, $mixins)
+    public static function registerMixin($identifier, $mixins)
     {
         settype($mixins, 'array');
 
