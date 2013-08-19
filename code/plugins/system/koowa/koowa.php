@@ -88,16 +88,16 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.module'));
-            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
-            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.component'));
+            KObjectIdentifier::addLocator(KService::get('koowa:service.locator.module'));
+            KObjectIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
+            KObjectIdentifier::addLocator(KService::get('koowa:service.locator.component'));
 
-            KServiceIdentifier::registerApplication('site' , JPATH_SITE);
-            KServiceIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
+            KObjectIdentifier::registerApplication('site' , JPATH_SITE);
+            KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
 
-            KServiceIdentifier::registerPackage('koowa'     , JPATH_LIBRARIES.'/koowa');
-            KServiceIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
-            KServiceIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
+            KObjectIdentifier::registerPackage('koowa'     , JPATH_LIBRARIES.'/koowa');
+            KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
+            KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
             KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
             KService::setAlias('translator', 'com:koowa.translator');

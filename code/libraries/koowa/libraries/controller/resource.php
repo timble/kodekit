@@ -110,7 +110,7 @@ abstract class KControllerResource extends KControllerAbstract
 	    if(!$this->_view instanceof KViewAbstract)
 		{
 		    //Make sure we have a view identifier
-		    if(!($this->_view instanceof KServiceIdentifier)) {
+		    if(!($this->_view instanceof KObjectIdentifier)) {
 		        $this->setView($this->_view);
 			}
 
@@ -139,10 +139,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
-	 * @return	object	A KViewAbstract object or a KServiceIdentifier object
+	 * @return	object	A KViewAbstract object or a KObjectIdentifier object
 	 */
 	public function setView($view)
 	{
@@ -178,7 +178,7 @@ abstract class KControllerResource extends KControllerAbstract
 		if(!$this->_model instanceof KModelAbstract)
 		{
 			//Make sure we have a model identifier
-		    if(!($this->_model instanceof KServiceIdentifier)) {
+		    if(!($this->_model instanceof KObjectIdentifier)) {
 		        $this->setModel($this->_model);
 			}
 
@@ -191,10 +191,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a model object attached to the controller
 	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
-	 * @return	object	A KModelAbstract object or a KServiceIdentifier object
+	 * @return	object	A KModelAbstract object or a KObjectIdentifier object
 	 */
 	public function setModel($model)
 	{

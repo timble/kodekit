@@ -24,7 +24,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	/**
      * The service identifier
      *
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     private $__service_identifier;
 
@@ -178,7 +178,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
      * Gets the service identifier.
      *
      * @param mixed $identifier
-     * @return KServiceIdentifier
+     * @return KObjectIdentifier
      * @see    KObjectInterface
      */
 	final public function getIdentifier($identifier = null)

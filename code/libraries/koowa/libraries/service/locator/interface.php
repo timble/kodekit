@@ -17,18 +17,18 @@ interface KServiceLocatorInterface
 	/**
 	 * Get the classname based on an identifier
 	 *
-	 * @param 	KServiceIdentifier $identifier An identifier object - [application::]type.package.[.path].name
+	 * @param 	KObjectIdentifier $identifier An identifier object - [application::]type.package.[.path].name
 	 * @return 	string|boolean 	Returns the class on success, returns FALSE on failure
 	 */
-	public function findClass(KServiceIdentifier $identifier);
+	public function findClass(KObjectIdentifier $identifier);
 
 	 /**
      * Get the path based on an identifier
      *
-     * @param  KServiceIdentifier $identifier  An identifier object - [application::]type.package.[.path].name
+     * @param  KObjectIdentifier $identifier  An identifier object - [application::]type.package.[.path].name
      * @return string	Returns the path
      */
-    public function findPath(KServiceIdentifier $identifier);
+    public function findPath(KObjectIdentifier $identifier);
 
 	/**
 	 * Get the type

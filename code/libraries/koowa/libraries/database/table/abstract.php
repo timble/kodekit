@@ -289,7 +289,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      */
     public function getBehavior($behavior, $config = array())
     {
-       if(!($behavior instanceof KServiceIdentifier))
+       if(!($behavior instanceof KObjectIdentifier))
        {
             //Create the complete identifier if a partial identifier was passed
            if(is_string($behavior) && strpos($behavior, '.') === false )

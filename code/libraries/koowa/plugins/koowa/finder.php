@@ -38,13 +38,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 
     /**
      * Model identifier/model object
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     protected $model;
 
     /**
      * Model identifier/model object
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     protected $category_model;
 

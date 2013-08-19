@@ -8,20 +8,9 @@
  */
 
 /**
- * Service Identifier Interface
- *
- * Wraps identifiers of the form [application::]type.component.[.path].name in an object, providing public accessors
- * and methods for derived formats
+ * Service Identifier Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KServiceIdentifierInterface extends Serializable
-{
-    /**
-     * Formats the identifier as a [application::]type.component.[.path].name string
-     *
-     * @return string
-     */
-    public function __toString();
-}
+class KObjectIdentifierException extends Exception {}

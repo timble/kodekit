@@ -25,7 +25,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	/**
      * The service identifier
      *
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     private $__service_identifier;
 
@@ -213,7 +213,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	 * Gets the service identifier.
 	 *
      * @param	string|object	$identifier The class identifier or identifier object
-	 * @return	KServiceIdentifier
+	 * @return	KObjectIdentifier
 	 * @see 	KObjectInterface
 	 */
 	final public function getIdentifier($identifier = null)

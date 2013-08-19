@@ -172,7 +172,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         if(!$this->_view instanceof KViewAbstract)
         {
             //Make sure we have a view identifier
-            if(!($this->_view instanceof KServiceIdentifier)) {
+            if(!($this->_view instanceof KObjectIdentifier)) {
                 $this->setView($this->_view);
             }
 
@@ -193,7 +193,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KTemplateAbstract
@@ -447,7 +447,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a template helper
      *
-     * @param mixed $helper KServiceIdentifierInterface
+     * @param mixed $helper KObjectIdentifierInterface
      * @throws UnexpectedValueException
      * @return KTemplateHelperInterface
      */

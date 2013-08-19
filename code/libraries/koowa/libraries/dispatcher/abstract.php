@@ -71,7 +71,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 		if(!($this->_controller instanceof KControllerAbstract))
 		{
 		    //Make sure we have a controller identifier
-		    if(!($this->_controller instanceof KServiceIdentifier)) {
+		    if(!($this->_controller instanceof KObjectIdentifier)) {
 		        $this->setController($this->_controller);
 			}
 
@@ -89,7 +89,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	/**
 	 * Method to set a controller object attached to the dispatcher
 	 *
-	 * @param	mixed	$controller An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$controller An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
 	 * @return	KDispatcherAbstract

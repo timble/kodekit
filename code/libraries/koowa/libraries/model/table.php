@@ -109,7 +109,7 @@ class KModelTable extends KModelAbstract
             if(!($this->_table instanceof KDatabaseTableAbstract))
 		    {
 		        //Make sure we have a table identifier
-		        if(!($this->_table instanceof KServiceIdentifier)) {
+		        if(!($this->_table instanceof KObjectIdentifier)) {
 		            $this->setTable($this->_table);
 			    }
 
@@ -127,7 +127,7 @@ class KModelTable extends KModelAbstract
     /**
      * Method to set a table object attached to the model
      *
-     * @param	mixed	$table An object that implements KObjectInterface, KServiceIdentifier object
+     * @param	mixed	$table An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					       or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KModelTable

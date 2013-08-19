@@ -36,8 +36,8 @@ interface KObjectInterface
 	/**
 	 * Gets the service identifier.
 	 *
-     * @param   null|KServiceIdentifier|string $identifier Identifier
-	 * @return	KServiceIdentifier
+     * @param   null|KObjectIdentifier|string $identifier Identifier
+	 * @return	KObjectIdentifier
      *
 	 * @see 	KObjectInterface
      * @throws	RuntimeException if the service container has not been defined.

@@ -70,7 +70,7 @@ interface KViewInterface
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					       or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewInterface

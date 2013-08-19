@@ -24,10 +24,10 @@ class KServiceLocatorKoowa extends KServiceLocatorAbstract
 	/**
 	 * Get the classname based on an identifier
 	 *
-	 * @param 	KServiceIdentifier $identifier An identifier object - koowa:[path].name
+	 * @param 	KObjectIdentifier $identifier An identifier object - koowa:[path].name
 	 * @return string|boolean  Return object on success, returns FALSE on failure
 	 */
-	public function findClass(KServiceIdentifier $identifier)
+	public function findClass(KObjectIdentifier $identifier)
 	{
         $classname = 'K'.ucfirst($identifier->package).KStringInflector::implode($identifier->path).ucfirst($identifier->name);
 
@@ -47,10 +47,10 @@ class KServiceLocatorKoowa extends KServiceLocatorAbstract
 	/**
 	 * Get the path based on an identifier
 	 *
-	 * @param  KServiceIdentifier $identifier An identifier object - koowa:[path].name
+	 * @param  KObjectIdentifier $identifier An identifier object - koowa:[path].name
 	 * @return string	Returns the path
 	 */
-	public function findPath(KServiceIdentifier $identifier)
+	public function findPath(KObjectIdentifier $identifier)
 	{
 	    $path = '';
 

@@ -74,7 +74,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
             if(!($this->_table instanceof KDatabaseTableAbstract))
 		    {
 		        //Make sure we have a table identifier
-		        if(!($this->_table instanceof KServiceIdentifier)) {
+		        if(!($this->_table instanceof KObjectIdentifier)) {
 		            $this->setTable($this->_table);
 			    }
 
@@ -92,7 +92,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	/**
 	 * Method to set a table object attached to the rowset
 	 *
-	 * @param	mixed	$table An object that implements KObjectInterface, KServiceIdentifier object or valid
+	 * @param	mixed	$table An object that implements KObjectInterface, KObjectIdentifier object or valid
      *                         identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KDatabaseRowsetAbstract

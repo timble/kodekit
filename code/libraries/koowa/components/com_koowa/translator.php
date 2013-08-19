@@ -234,14 +234,14 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Load the extension language files.
      *
-     * @param string|KServiceIdentifier $extension Extension identifier or name (e.g. com_docman)
+     * @param string|KObjectIdentifier $extension Extension identifier or name (e.g. com_docman)
      * @param string $app Application. Leave blank for current one.
      *
      * @return boolean
      */
     public function loadLanguageFiles($extension, $app = null)
     {
-        if ($extension instanceof KServiceIdentifier) {
+        if ($extension instanceof KObjectIdentifier) {
             $extension = $extension->type.'_'.$extension->package;
         }
 
@@ -271,7 +271,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         $type    = substr($extension, 0, 3);
         $package = substr($extension, 4);
 
-        if ($override = KServiceIdentifier::getPackage($package)) {
+        if ($override = KObjectIdentifier::getPackage($package)) {
             $base = $override;
         }
         else

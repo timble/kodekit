@@ -174,7 +174,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		if(!$this->_model instanceof KModelAbstract)
 		{
 			//Make sure we have a model identifier
-		    if(!($this->_model instanceof KServiceIdentifier)) {
+		    if(!($this->_model instanceof KObjectIdentifier)) {
 		        $this->setModel($this->_model);
 			}
 
@@ -187,7 +187,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					       or valid identifier string
 	 * @return	KViewAbstract
 	 */
