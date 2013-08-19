@@ -25,9 +25,9 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
 		parent::__construct($config);
 
@@ -47,10 +47,10 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * @return void
 	 */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
 	{
 		$config->append(array(
 			'table'	=> $this->getIdentifier()->name

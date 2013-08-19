@@ -33,9 +33,9 @@ class KViewJson extends KViewAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -55,7 +55,7 @@ class KViewJson extends KViewAbstract
         $this->_item_name = $config->item_name;
         $this->_list_name = $config->list_name;
 
-        $this->_text_fields = KConfig::unbox($config->text_fields);
+        $this->_text_fields = KObjectConfig::unbox($config->text_fields);
     }
 
     /**
@@ -63,10 +63,10 @@ class KViewJson extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'padding'	  => '',

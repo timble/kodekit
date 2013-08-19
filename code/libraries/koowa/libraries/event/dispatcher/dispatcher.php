@@ -35,9 +35,9 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
 	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
 		parent::__construct($config);
 
@@ -49,7 +49,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
      * their return values.
      *
      * @param   string  $name  The event name
-     * @param   KEvent|array   An array, a KConfig or a KEvent object
+     * @param   KEvent|array   An array, a KObjectConfig or a KEvent object
      * @return  KEventDispatcher
      */
     public function dispatchEvent($name, $event = array())

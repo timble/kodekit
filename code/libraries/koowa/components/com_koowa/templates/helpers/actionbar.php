@@ -23,7 +23,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function render($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
         	'toolbar' => null,
             'title'   => null,
@@ -85,12 +85,12 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
     /**
      * Render a action bar command
      *
-     * @param   array|KConfig   $config An optional array with configuration options
+     * @param   array|KObjectConfig   $config An optional array with configuration options
      * @return  string  Html
      */
     public function command($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
         	'command' => NULL
         ));
@@ -120,7 +120,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         	}
 
             $attribs = clone $command->attribs;
-            $attribs->class = implode(" ", KConfig::unbox($attribs->class));
+            $attribs->class = implode(" ", KObjectConfig::unbox($attribs->class));
         	
         	$html = '<div class="btn-group" id="'.$id.'">';
         	$html .= '<a '.$this->buildAttributes($attribs).'>';
@@ -132,7 +132,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         else
         {
             $attribs = clone $command->attribs;
-            $attribs->class = implode(" ", KConfig::unbox($attribs->class));
+            $attribs->class = implode(" ", KObjectConfig::unbox($attribs->class));
 
             $html = '<li class="button" id="'.$id.'">';
 
@@ -155,7 +155,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function title($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'command' => NULL,
         ));
@@ -199,7 +199,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function separator($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
         	'command' => NULL
         ));
@@ -221,7 +221,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function modal($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
         	'command' => NULL
         ));
@@ -235,7 +235,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
     /**
      * Render an options button
      *
-     * @param array|KConfig $config
+     * @param array|KObjectConfig $config
      * @return string
      */
     public function options($config = array())

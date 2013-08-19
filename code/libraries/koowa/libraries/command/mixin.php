@@ -27,9 +27,9 @@ class KCommandMixin extends KObjectMixinAbstract
     /**
      * Object constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -39,7 +39,7 @@ class KCommandMixin extends KObjectMixinAbstract
         //Mixin the callback mixer if callbacks have been enabled
         if($config->enable_callbacks)
         {
-            $this->_mixer->mixin(new KCommandCallback(new KConfig(array(
+            $this->_mixer->mixin(new KCommandCallback(new KObjectConfig(array(
                 'mixer'           => $this->_mixer,
                 'priority'        => $config->callback_priority,
                 'command_chain'   => $this->_command_chain,
@@ -57,10 +57,10 @@ class KCommandMixin extends KObjectMixinAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'command_chain'     => KService::get('koowa:command.chain'),

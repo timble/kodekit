@@ -28,14 +28,14 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     /**
      * Constructor
      *
-     * @param KConfig $config  An optional KConfig object with configuration options
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      * @return KObjectArray
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->_data = KConfig::unbox($config->data);
+        $this->_data = KObjectConfig::unbox($config->data);
     }
 
     /**
@@ -43,10 +43,10 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config An optional KConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'data' => array(),

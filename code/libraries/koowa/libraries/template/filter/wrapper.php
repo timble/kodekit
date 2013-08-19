@@ -25,9 +25,9 @@ class KTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplat
     protected $_wrapper;
 
     /**
-     * @param KConfig $config
+     * @param KObjectConfig $config
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -35,9 +35,9 @@ class KTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplat
     }
 
     /**
-     * @param KConfig $config
+     * @param KObjectConfig $config
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'priority'  => KCommand::PRIORITY_LOWEST,

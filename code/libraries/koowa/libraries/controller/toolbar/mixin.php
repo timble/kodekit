@@ -27,14 +27,14 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     /**
      * Constructor
      *
-     * @param KConfig $config  An optional ObjectConfig object with configuration options.
+     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
         //Add the toolbars
-        $toolbars = (array)KConfig::unbox($config->toolbars);
+        $toolbars = (array)KObjectConfig::unbox($config->toolbars);
 
         foreach ($toolbars as $key => $value)
         {
@@ -51,10 +51,10 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KConfig $config  An optional ObjectConfig object with configuration options.
+     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         parent::_initialize($config);
 
@@ -129,7 +129,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
      * Get a toolbar by identifier
      *
      * @param  KServiceIdentifier|string $toolbar Toolbar identifier
-     * @param  array|KConfig             $config  Configuration options
+     * @param  array|KObjectConfig             $config  Configuration options
      * @throws UnexpectedValueException
      * @return KControllerToolbarInterface
      */

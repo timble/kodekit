@@ -99,7 +99,7 @@ interface KDatabaseTableInterface
      * Get a behavior by identifier
      *
      * @param  string        $behavior The name of the behavior
-     * @param  KConfig|array $config Configuration of the behavior
+     * @param  KObjectConfig|array $config Configuration of the behavior
      * @throws UnexpectedValueException
      * @return KDatabaseBehaviorInterface
      */

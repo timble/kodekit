@@ -60,9 +60,9 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -70,7 +70,7 @@ abstract class KViewTemplate extends KViewAbstract
         $this->_auto_assign = $config->auto_assign;
 
         //Set the data
-        $this->_data = KConfig::unbox($config->data);
+        $this->_data = KObjectConfig::unbox($config->data);
 
          //User-defined escaping callback
         $this->setEscape($config->escape);
@@ -79,7 +79,7 @@ abstract class KViewTemplate extends KViewAbstract
         $this->_template = $config->template;
 
         //Add the template filters
-        $filters = (array) KConfig::unbox($config->template_filters);
+        $filters = (array) KObjectConfig::unbox($config->template_filters);
 
         foreach ($filters as $key => $value)
         {
@@ -110,10 +110,10 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'data'			   => array(),

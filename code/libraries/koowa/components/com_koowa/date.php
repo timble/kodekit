@@ -18,12 +18,12 @@ class ComKoowaDate extends KDate
     /**
      * Constructor.
      *
-     * @param   array|KConfig $config An associative array of configuration settings or a KConfig instance.
+     * @param   array|KObjectConfig $config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct($config = array())
     {
-        if (!$config instanceof KConfig) {
-            $config = new KConfig($config);
+        if (!$config instanceof KObjectConfig) {
+            $config = new KObjectConfig($config);
         }
 
         $this->_initialize($config);
@@ -38,10 +38,10 @@ class ComKoowaDate extends KDate
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'translator' => 'com:koowa.translator'

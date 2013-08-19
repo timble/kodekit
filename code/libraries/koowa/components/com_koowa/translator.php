@@ -68,9 +68,9 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     protected static $_loaded_files = array();
 
     /**
-     * @param KConfig $config
+     * @param KObjectConfig $config
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -96,10 +96,10 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'prefix'     => 'KLS_',
@@ -116,11 +116,11 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Force creation of a singleton
      *
-     * @param KConfigInterface  $config optional KConfig object with configuration options
+     * @param KObjectConfigInterface  $config optional KObjectConfig object with configuration options
      * @param KServiceInterface $container
      * @return ComKoowaTranslator
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
     {
         if (!$container->has($config->service_identifier))
         {

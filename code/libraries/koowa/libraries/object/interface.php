@@ -18,9 +18,9 @@ interface KObjectInterface
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    //public function __construct(KConfig $config);
+    //public function __construct(KObjectConfig $config);
 
 	/**
 	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.

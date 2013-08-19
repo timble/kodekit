@@ -67,7 +67,7 @@ class KRequest
      *
      * Prevent creating instances of this class by making the constructor private
      */
-    final private function __construct(KConfig $config)
+    final private function __construct(KObjectConfig $config)
     {
         $content = self::content();
 
@@ -123,7 +123,7 @@ class KRequest
     /**
      * Force creation of a singleton
      *
-     * @param  array|KConfig $config
+     * @param  array|KObjectConfig $config
      * @return $this
      */
     public static function getInstance($config = array())
@@ -132,8 +132,8 @@ class KRequest
 
         if ($instance === NULL)
         {
-            if(!$config instanceof KConfig) {
-                $config = new KConfig($config);
+            if(!$config instanceof KObjectConfig) {
+                $config = new KObjectConfig($config);
             }
 
             $instance = new self($config);

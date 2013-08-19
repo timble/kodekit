@@ -41,10 +41,10 @@ class KViewCsv extends KViewFile
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * @return  void
 	 */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
 	{
         $config->append(array(
             'version'     => '1.0',

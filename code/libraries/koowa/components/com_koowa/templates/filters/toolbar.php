@@ -26,13 +26,13 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->setToolbars(KConfig::unbox($config->toolbars));
+        $this->setToolbars(KObjectConfig::unbox($config->toolbars));
     }
 
     /**
@@ -40,10 +40,10 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'toolbars' => array(),
@@ -113,7 +113,7 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
                 $attributes = $this->parseAttributes($matches[1][$key]);
 
                 //Create attributes array
-                $config = new KConfig($attributes);
+                $config = new KObjectConfig($attributes);
                 $config->append(array(
                     'type'  => 'actionbar',
                 ));

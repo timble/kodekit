@@ -62,11 +62,11 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     /**
      * Object constructor
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      *
      * @throws RuntimeException
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -104,7 +104,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if(!empty($config->filters))
         {
             foreach($config->filters as $column => $filter) {
-                $this->getColumn($column, true)->filter = KConfig::unbox($filter);
+                $this->getColumn($column, true)->filter = KObjectConfig::unbox($filter);
             }
         }
 
@@ -122,10 +122,10 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $package = $this->getIdentifier()->package;
         $name    = $this->getIdentifier()->name;
@@ -263,7 +263,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      */
     public function addBehavior($behaviors)
     {
-        $behaviors = (array) KConfig::unbox($behaviors);
+        $behaviors = (array) KObjectConfig::unbox($behaviors);
 
         foreach($behaviors as $behavior)
         {
@@ -283,7 +283,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      * Get a behavior by identifier
      *
      * @param  string        $behavior The name of the behavior
-     * @param  KConfig|array $config Configuration of the behavior
+     * @param  KObjectConfig|array $config Configuration of the behavior
      * @throws UnexpectedValueException
      * @return KDatabaseBehaviorInterface
      */
@@ -629,7 +629,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                             $data[$key] = $this->mapColumns($value, true);
                         }
                     }
-                    else $data = $this->mapColumns(KConfig::unbox($data), true);
+                    else $data = $this->mapColumns(KObjectConfig::unbox($data), true);
                 }
             }
 
@@ -660,7 +660,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             $this->getCommandChain()->run('after.select', $context);
         }
 
-        return KConfig::unbox($context->data);
+        return KObjectConfig::unbox($context->data);
     }
 
     /**

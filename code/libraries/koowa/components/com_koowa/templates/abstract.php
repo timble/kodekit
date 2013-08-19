@@ -32,9 +32,9 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	 *
 	 * Prevent creating instances of this class by making the constructor private
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 

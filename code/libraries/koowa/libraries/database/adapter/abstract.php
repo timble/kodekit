@@ -74,7 +74,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	/**
 	 * The connection options
 	 *
-	 * @var KConfig
+	 * @var KObjectConfig
 	 */
 	protected $_options = null;
     
@@ -88,11 +88,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * Recognized key values include 'command_chain', 'charset', 'table_prefix',
 	 * (this list is not meant to be comprehensive).
 	 */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
         parent::__construct($config);
 
@@ -134,10 +134,10 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'options'			=> array(),
@@ -315,7 +315,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             $this->getCommandChain()->run('after.select', $context);
         }
 
-        return KConfig::unbox($context->result);
+        return KObjectConfig::unbox($context->result);
     }
 
     /**

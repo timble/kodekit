@@ -18,11 +18,11 @@ class KFilterFactory extends KObject implements KServiceInstantiatable
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfigInterface  $config     Configuration options
+     * @param   KObjectConfigInterface  $config     Configuration options
      * @param 	KServiceInterface $container  A KServiceInterface object
      * @return KFilterFactory
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

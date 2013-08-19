@@ -20,10 +20,10 @@ class ModKoowaHtml extends KViewHtml
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
         	'template_filters' => array('chrome'),
@@ -103,7 +103,7 @@ class ModKoowaHtml extends KViewHtml
      */
     protected function _parseParams( $string )
     {
-        $params = new KConfig((array) json_decode($string));
+        $params = new KObjectConfig((array) json_decode($string));
         return $params;
     }
 }

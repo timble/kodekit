@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandContext extends KConfig implements KCommandContextInterface
+class KCommandContext extends KObjectConfig implements KCommandContextInterface
 {
     /**
      * Error
@@ -55,7 +55,7 @@ class KCommandContext extends KConfig implements KCommandContextInterface
     public function set($name, $value)
     {
         if (is_array($value)) {
-            $this->_data[$name] = new KConfig($value);
+            $this->_data[$name] = new KObjectConfig($value);
         } else {
             $this->_data[$name] = $value;
         }

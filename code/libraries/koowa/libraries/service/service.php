@@ -55,7 +55,7 @@ class KService implements KServiceInterface
 	 *
 	 * Prevent creating instances of this class by making the constructor private
 	 */
-	final private function __construct(KConfig $config)
+	final private function __construct(KObjectConfig $config)
 	{
 	    //Create the identifier registry
         self::$_identifiers = new KServiceIdentifierRegistry();
@@ -94,8 +94,8 @@ class KService implements KServiceInterface
 
 		if ($instance === NULL)
 		{
-			if(!$config instanceof KConfig) {
-				$config = new KConfig($config);
+			if(!$config instanceof KObjectConfig) {
+				$config = new KObjectConfig($config);
 			}
 
 			$instance = new self($config);
@@ -375,7 +375,7 @@ class KService implements KServiceInterface
             if(array_key_exists('KObjectInterface', class_implements($identifier->classname)))
             {
                 //Create the configuration object
-                $config = new KConfig(array_merge(self::getConfig($identifier), $config));
+                $config = new KObjectConfig(array_merge(self::getConfig($identifier), $config));
 
                 //Set the service container and identifier
                 $config->service_container  = self::getInstance();

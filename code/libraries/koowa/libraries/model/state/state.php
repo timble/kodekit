@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelState extends KConfig implements KModelStateInterface
+class KModelState extends KObjectConfig implements KModelStateInterface
 {
     /**
      * Insert a new state

@@ -28,9 +28,9 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	 *
 	 * Prevent creating instances of this class by making the constructor private
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -42,11 +42,11 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
      * Force creation of a singleton
      *
-     * @param  KConfigInterface  $config     Configuration options
+     * @param  KObjectConfigInterface  $config     Configuration options
      * @param  KServiceInterface $container  A KServiceInterface object
      * @return KDatabaseAdapterInterface
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KServiceInterface $container)
     {
         if (!$container->has($config->service_identifier))
         {
@@ -63,10 +63,10 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $db = JFactory::getDBO();
 

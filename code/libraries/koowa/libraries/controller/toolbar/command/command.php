@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerToolbarCommand extends KConfig implements KControllerToolbarCommandInterface
+class KControllerToolbarCommand extends KObjectConfig implements KControllerToolbarCommandInterface
 {
     /**
      * The command name
@@ -47,7 +47,7 @@ class KControllerToolbarCommand extends KConfig implements KControllerToolbarCom
      * Constructor.
      *
      * @param	string 			$name The command name
-     * @param   array|KConfig 	$config An associative array of configuration settings or a KConfig instance.
+     * @param   array|KObjectConfig 	$config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
@@ -167,7 +167,7 @@ class KControllerToolbarCommand extends KConfig implements KControllerToolbarCom
     public function set($name, $value)
     {
         if (is_array($value)) {
-            $this->_data[$name] = new KConfig($value);
+            $this->_data[$name] = new KObjectConfig($value);
         } else {
             $this->_data[$name] = $value;
         }

@@ -56,12 +56,12 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KObjectConfig $config = null)
     {
         //If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
+        if(!isset($config)) $config = new KObjectConfig();
 
         parent::__construct($config);
 
@@ -78,7 +78,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 
         // Set the row data
         if(isset($config->data))  {
-            $this->setData((array) KConfig::unbox($config->data), $this->_new);
+            $this->setData((array) KObjectConfig::unbox($config->data), $this->_new);
         }
 
         //Set the status
@@ -97,10 +97,10 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
              'data'             => null,

@@ -25,9 +25,9 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -92,8 +92,8 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     {
         $output = array();
 
-        if($array instanceof KConfig) {
-            $array = KConfig::unbox($array);
+        if($array instanceof KObjectConfig) {
+            $array = KObjectConfig::unbox($array);
         }
 
         if(is_array($array))

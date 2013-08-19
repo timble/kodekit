@@ -75,9 +75,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * Prevent creating instances of this class by making the constructor private
      *
-     * @param KConfig $config   An optional KConfig object with configuration options
+     * @param KObjectConfig $config   An optional KObjectConfig object with configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -91,7 +91,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         //Attach the filters
-        $filters = (array) KConfig::unbox($config->filters);
+        $filters = (array) KObjectConfig::unbox($config->filters);
 
         foreach ($filters as $key => $value)
         {
@@ -113,10 +113,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KConfig $config  An optional KConfig object with configuration options.
+     * @param  KObjectConfig $config  An optional KObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
             'translator'       => null,

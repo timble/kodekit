@@ -42,9 +42,9 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
     /**
      * Object constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         if(!empty($config)) {
             $this->_initialize($config);
@@ -59,10 +59,10 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'mixer' =>  $this,

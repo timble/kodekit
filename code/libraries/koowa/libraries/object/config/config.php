@@ -10,12 +10,12 @@
 /**
  * Config
  *
- * KConfig provides a property based interface to an array
+ * KObjectConfig provides a property based interface to an array
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
  */
-class KConfig implements KConfigInterface
+class KObjectConfig implements KObjectConfigInterface
 {
     /**
      * The data container
@@ -27,11 +27,11 @@ class KConfig implements KConfigInterface
     /**
      * Constructor.
      *
-     * @param   array|KConfig An associative array of configuration settings or a KConfig instance.
+     * @param   array|KObjectConfig An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $config = array() )
     {
-        if ($config instanceof KConfig) {
+        if ($config instanceof KObjectConfig) {
             $data = $config->toArray();
         } else {
             $data = $config;
@@ -94,7 +94,7 @@ class KConfig implements KConfigInterface
      * Remove a configuration item
      *
      * @param   string $name The configuration item name.
-     * @return  KConfig
+     * @return  KObjectConfig
      */
     public function remove( $name )
     {
@@ -108,11 +108,11 @@ class KConfig implements KConfigInterface
      * This method only adds keys that don't exist and it filters out any duplicate values
      *
      * @param  mixed    $config A value of an or array of values to be appended
-     * @return KConfig
+     * @return KObjectConfig
      */
     public function append($config)
     {
-        $config = KConfig::unbox($config);
+        $config = KObjectConfig::unbox($config);
 
         if(is_array($config))
         {
@@ -122,7 +122,7 @@ class KConfig implements KConfigInterface
                 {
                     if(array_key_exists($key, $this->_data))
                     {
-                        if(!empty($value) && ($this->_data[$key] instanceof KConfig)) {
+                        if(!empty($value) && ($this->_data[$key] instanceof KObjectConfig)) {
                             $this->_data[$key] = $this->_data[$key]->append($value);
                         }
                     }
@@ -146,14 +146,14 @@ class KConfig implements KConfigInterface
 	/**
      * Return the data
      *
-     * If the data being passed is an instance of KConfig the data will be transformed to an associative array.
+     * If the data being passed is an instance of KObjectConfig the data will be transformed to an associative array.
      *
-     * @param mixed|KConfig $data
+     * @param mixed|KObjectConfig $data
      * @return mixed|array
      */
     public static function unbox($data)
     {
-        return ($data instanceof KConfig) ? $data->toArray() : $data;
+        return ($data instanceof KObjectConfig) ? $data->toArray() : $data;
     }
 
     /**
@@ -205,7 +205,7 @@ class KConfig implements KConfigInterface
         if(isset($this->_data[$offset]))
         {
             $result = $this->_data[$offset];
-            if($result instanceof KConfig) {
+            if($result instanceof KObjectConfig) {
                 $result = $result->toArray();
             }
         }
@@ -221,7 +221,7 @@ class KConfig implements KConfigInterface
      * @param   int    $offset   The offset
      * @param   mixed  $value    The item's value
      *
-     * @return  KConfig
+     * @return  KObjectConfig
      */
     public function offsetSet($offset, $value)
     {
@@ -238,7 +238,7 @@ class KConfig implements KConfigInterface
      * Required by interface ArrayAccess
      *
      * @param   int     $offset The offset of the item
-     * @return  KConfig
+     * @return  KObjectConfig
      */
     public function offsetUnset($offset)
     {
@@ -258,7 +258,7 @@ class KConfig implements KConfigInterface
         $data  = $this->_data;
         foreach ($data as $key => $value)
         {
-            if ($value instanceof KConfig) {
+            if ($value instanceof KObjectConfig) {
                 $array[$key] = $value->toArray();
             } else {
                 $array[$key] = $value;
@@ -324,7 +324,7 @@ class KConfig implements KConfigInterface
     }
 
  	/**
-     * Deep clone of this instance to ensure that nested KConfigs
+     * Deep clone of this instance to ensure that nested KObjectConfigs
      * are also cloned.
      *
      * @return void
@@ -334,7 +334,7 @@ class KConfig implements KConfigInterface
         $array = array();
         foreach ($this->_data as $key => $value)
         {
-            if ($value instanceof KConfig || $value instanceof stdClass) {
+            if ($value instanceof KObjectConfig || $value instanceof stdClass) {
                 $array[$key] = clone $value;
             } else {
                 $array[$key] = $value;

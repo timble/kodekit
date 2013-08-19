@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function checkbox($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
         ));
@@ -54,7 +54,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function search($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'search' => null
         ));
@@ -86,7 +86,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function sort($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'title'   	=> '',
             'column'  	=> '',
@@ -142,7 +142,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function enable($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'enabled'
@@ -170,7 +170,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function publish($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'enabled',
@@ -200,7 +200,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function order($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'total'		=> null,
@@ -247,7 +247,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function access($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'access'

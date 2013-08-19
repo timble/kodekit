@@ -50,13 +50,13 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     /**
      * Constructor
      *
-     * @param KConfig|null $config  An optional KConfig object with configuration options
+     * @param KObjectConfig|null $config  An optional KObjectConfig object with configuration options
      * @return KCommandChain
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KObjectConfig $config = null)
     {
 		//If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
+        if(!isset($config)) $config = new KObjectConfig();
     	
         parent::__construct($config);
 
@@ -71,10 +71,10 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'stack'     => $this->getService('koowa:object.stack'),

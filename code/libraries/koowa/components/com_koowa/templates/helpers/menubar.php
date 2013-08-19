@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
      */
     public function render($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
         	'toolbar' => null
         ));
