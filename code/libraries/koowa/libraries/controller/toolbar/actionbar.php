@@ -203,11 +203,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         if($controller->canAdd())
         {
             $identifier = $context->caller->getIdentifier();
-            $config     = array('attribs' => array(
-                'href' => JRoute::_( 'index.php?option=com_'.$identifier->package.'&view='.$identifier->name)
-            ));
 
-            $this->addCommand('new', $config);
+            $this->addCommand('new', array(
+                'href' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name)
+            ));
         }
 
         if($controller->canDelete()) {

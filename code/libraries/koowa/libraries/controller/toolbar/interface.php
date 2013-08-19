@@ -36,7 +36,7 @@ interface KControllerToolbarInterface extends IteratorAggregate, Countable
      *
      * @param string $name  The command name
      * @param array $config  An optional associative array of configuration settings
-     * @return KControllerToolbarCommandInterface|false A toolbar command if found, false otherwise.
+     * @return KControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
      */
     public function getCommand($name, $config = array()) ;
 

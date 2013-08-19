@@ -90,7 +90,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     /**
      * Check if a toolbar exists
      *
-     * @param   string   $toolbar The name of the toolbar
+     * @param   string   $type The name of the toolbar
      * @return  boolean  TRUE if the toolbar exists, FALSE otherwise
      */
     public function hasToolbar($type = 'actionbar')
@@ -101,7 +101,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     /**
      * Get a toolbar by type
      *
-     * @param  string  $name   The toolbar name
+     * @param  string  $type   The toolbar name
      * @return KControllerToolbarInterface
      */
     public function getToolbar($type = 'actionbar')
@@ -128,6 +128,9 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     /**
      * Get a toolbar by identifier
      *
+     * @param  KServiceIdentifier|string $toolbar Toolbar identifier
+     * @param  array|KConfig             $config  Configuration options
+     * @throws UnexpectedValueException
      * @return KControllerToolbarInterface
      */
     public function createToolbar($toolbar, $config = array())
@@ -149,7 +152,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
         $toolbar = $this->getService($identifier, $config);
 
         if (!($toolbar instanceof KControllerToolbarInterface)) {
-            throw new \UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
+            throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
         }
 
         return $toolbar;

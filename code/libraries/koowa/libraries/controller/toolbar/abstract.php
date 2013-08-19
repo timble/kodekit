@@ -132,6 +132,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
     /**
      * Set the controller
      *
+     * @param   KControllerInterface $controller Controller
      * @return  KControllerToolbarAbstract
      */
     public function setController(KControllerInterface $controller)
@@ -165,7 +166,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
      *
      * @param string $name  The command name
      * @param array $config An optional associative array of configuration settings
-     * @return KControllerToolbarCommandInterface|false A toolbar command if found, false otherwise.
+     * @return KControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
      */
     public function getCommand($name, $config = array())
     {
@@ -247,7 +248,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
     /**
      * Return the command count
      *
-     * Required by Countabe interface
+     * Required by Countable interface
      *
      * @return  integer
      */
