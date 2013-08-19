@@ -34,7 +34,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
      *
      * @var KObjectManagerInterface
      */
-    private $__service_container;
+    private $__object_manager;
 
 	/**
 	 * Constructor.
@@ -44,8 +44,8 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	public function __construct( KObjectConfig $config = null)
 	{
 	    //Set the service container
-        if(isset($config->service_container)) {
-            $this->__service_container = $config->service_container;
+        if(isset($config->object_manager)) {
+            $this->__object_manager = $config->object_manager;
         }
 
         //Set the service identifier
@@ -206,7 +206,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	 */
 	final public function getObject($identifier, array $config = array())
 	{
-	    return $this->__service_container->getObject($identifier, $config);
+	    return $this->__object_manager->getObject($identifier, $config);
 	}
 
 	/**
@@ -219,7 +219,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	final public function getIdentifier($identifier = null)
 	{
 		if(isset($identifier)) {
-		    $result = $this->__service_container->getIdentifier($identifier);
+		    $result = $this->__object_manager->getIdentifier($identifier);
 		} else {
 		    $result = $this->__service_identifier;
 		}
