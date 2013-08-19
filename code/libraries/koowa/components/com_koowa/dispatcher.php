@@ -73,7 +73,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiat
             $manager->setObject($config->object_identifier, $instance);
 
             //Add the factory map to allow easy access to the singleton
-            $manager->setAlias('dispatcher', $config->object_identifier);
+            $manager->registerAlias('dispatcher', $config->object_identifier);
         }
 
         return $manager->getObject($config->object_identifier);

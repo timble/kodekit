@@ -98,12 +98,12 @@ interface KObjectManagerInterface
     public static function getConfigs();
 
 	/**
-	 * Set an alias for an identifier
+	 * Register an alias for an identifier
 	 *
 	 * @param string  $alias        The alias
 	 * @param mixed   $identifier   The class identifier or identifier object
 	 */
-	public static function setAlias($alias, $identifier);
+	public static function registerAlias($alias, $identifier);
 
 	/**
 	 * Get an alias for an identifier

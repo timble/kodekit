@@ -99,8 +99,8 @@ class PlgSystemKoowa extends JPlugin
             KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
             KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
-            KObjectManager::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-            KObjectManager::setAlias('translator', 'com:koowa.translator');
+            KObjectManager::registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+            KObjectManager::registerAlias('translator', 'com:koowa.translator');
 
             //Setup the request
             if (JFactory::getApplication()->getName() !== 'site') {

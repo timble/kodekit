@@ -264,7 +264,7 @@ class KObjectManager implements KObjectManagerInterface
 	 * @param mixed	  $identifier   An object that implements KObjectInterface, KObjectIdentifier object
 	 * 				                or valid identifier string
 	 */
-	public static function setAlias($alias, $identifier)
+	public static function registerAlias($alias, $identifier)
 	{
 		$identifier = self::getIdentifier($identifier);
 

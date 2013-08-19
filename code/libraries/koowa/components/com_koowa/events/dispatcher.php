@@ -34,7 +34,7 @@ class ComKoowaEventDispatcher extends KEventDispatcher implements KObjectInstant
             $manager->setObject($config->object_identifier, $instance);
 
             //Add the factory map to allow easy access to the singleton
-            $manager->setAlias('koowa:event.dispatcher', $config->object_identifier);
+            $manager->registerAlias('koowa:event.dispatcher', $config->object_identifier);
         }
 
         return $manager->getObject($config->object_identifier);
