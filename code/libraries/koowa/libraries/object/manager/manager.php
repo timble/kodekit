@@ -30,11 +30,11 @@ class KObjectManager implements KObjectManagerInterface
 	protected static $_aliases = array();
 
 	/**
-	 * The services
+	 * The objects
 	 *
 	 * @var	array
 	 */
-	protected static $_services = null;
+	protected static $_objects = null;
 
 	/**
 	 * The mixins
@@ -69,7 +69,7 @@ class KObjectManager implements KObjectManagerInterface
         }
 
         //Create the object container
-	    self::$_services = new ArrayObject();
+	    self::$_objects = new ArrayObject();
 
 	    //Auto-load the koowa adapter
         KObjectIdentifier::addLocator(new KObjectLocatorKoowa());
@@ -118,7 +118,7 @@ class KObjectManager implements KObjectManagerInterface
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
-		if(!self::$_services->offsetExists($strIdentifier))
+		if(!self::$_objects->offsetExists($strIdentifier))
 		{
 		    //Instantiate the identifier
 			$instance = self::_instantiate($objIdentifier, $config);
@@ -126,7 +126,7 @@ class KObjectManager implements KObjectManagerInterface
 			//Perform the mixin
 			self::_mixin($strIdentifier, $instance);
 		}
-		else $instance = self::$_services->offsetGet($strIdentifier);
+		else $instance = self::$_objects->offsetGet($strIdentifier);
 
 		return $instance;
 	}
@@ -143,7 +143,7 @@ class KObjectManager implements KObjectManagerInterface
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
-		self::$_services->offsetSet($strIdentifier, $object);
+		self::$_objects->offsetSet($strIdentifier, $object);
 	}
 
 	/**
@@ -159,7 +159,7 @@ class KObjectManager implements KObjectManagerInterface
 		{
 	        $objIdentifier = self::getIdentifier($identifier);
 	        $strIdentifier = (string) $objIdentifier;
-	        $result = (bool) self::$_services->offsetExists($strIdentifier);
+	        $result = (bool) self::$_objects->offsetExists($strIdentifier);
 
 		} catch (KObjectIdentifierException $e) {
 		    $result = false;
@@ -192,9 +192,9 @@ class KObjectManager implements KObjectManagerInterface
 
         self::$_mixins[$strIdentifier] = array_unique(array_merge(self::$_mixins[$strIdentifier], $mixins));
 
-        if(self::$_services->offsetExists($strIdentifier))
+        if(self::$_objects->offsetExists($strIdentifier))
         {
-            $instance = self::$_services->offsetGet($strIdentifier);
+            $instance = self::$_objects->offsetGet($strIdentifier);
             self::_mixin($strIdentifier, $instance);
         }
     }
