@@ -52,7 +52,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      */
     public function setTemplate($template)
     {
-        if(!$template instanceof KTemplateAbstract)
+        if(!$template instanceof KTemplateInterface)
         {
             if(empty($template) || (is_string($template) && strpos($template, '.') === false) )
             {
