@@ -15,58 +15,39 @@
  */
 class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 {
-	/**
-     * Render the action bar title
-     *
-     * @param   array   $config An optional array with configuration options
-     * @return  string  Html
-     */
-    public function title($config = array())
-    {
-        $config = new KConfig($config);
-        $config->append(array(
-        	'actionbar' => null
-        ));
-
-        $title = $this->translate($config->actionbar->getTitle());
-        
-        if ($this->_useBootstrap())
-        {
-            // Strip the extension.
-            $icons = explode(' ', $config->actionbar->getIcon());
-            foreach ($icons as &$icon) {
-                $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
-            }
-
-            $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
-
-            $app = JFactory::getApplication();
-            $app->JComponentTitle = $html;
-            JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $title);
-
-        	return '';
-        }
-
-        $html = '<div class="header pagetitle icon-48-'.$config->actionbar->getIcon().'">';
-        $html .= '<h2>'.$title.'</h2>';
-		$html .= '</div>';
-
-        return $html;
-    }
-
     /**
      * Render the action bar commands
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function commands($config = array())
+    public function render($config = array())
     {
         $config = new KConfig($config);
         $config->append(array(
-        	'actionbar' => null
+        	'toolbar' => null,
+            'title'   => null,
+        ))->append(array(
+            'icon' => $config->toolbar->getName()
         ));
 
+        //Set a custom title
+        if($config->title)
+        {
+            if($config->toolbar->hasCommand('title'))
+            {
+                $config->toolbar->getCommand('title')->set(array(
+                    'title' => $config->title,
+                    'icon'  => $config->icon
+                ));
+            }
+            else $config->toolbar->addTitle($config->title, $config->icon);
+        }
+
+        // Load the language strings for toolbar button labels
+        JFactory::getLanguage()->load('joomla', JPATH_ADMINISTRATOR);
+
+        //Render the buttons
         if ($this->_useBootstrap())
         {
         	$html = '<div class="btn-toolbar toolbar-list" id="toolbar">';
@@ -75,7 +56,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         }
         else
         {
-		    $html  = '<div class="toolbar-list" id="toolbar-'.$config->actionbar->getName().'">';
+		    $html  = '<div class="toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
 		    $html .= '<ul>';
 		    $html .= '%s';
 		    $html .= '</ul>';
@@ -84,7 +65,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         }
 
         $buttons = '';
-	    foreach ($config->actionbar->getCommands() as $command)
+	    foreach ($config->toolbar->getCommands() as $command)
 	    {
             $name = $command->getName();
 
@@ -94,6 +75,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
                 $buttons .= $this->command(array('command' => $command));
             }
        	}
+
 
        	$html = sprintf($html, $buttons);
        	 
@@ -146,24 +128,67 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         	$html .= $this->translate($command->label);
         	$html .= '</a>';
         	$html .= '</div>';
-        	
-        	return $html;
+        }
+        else
+        {
+            $attribs = clone $command->attribs;
+            $attribs->class = implode(" ", KConfig::unbox($attribs->class));
+
+            $html = '<li class="button" id="'.$id.'">';
+
+            $html .= '<a '.$this->buildAttributes($attribs).'>';
+            $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
+            $html .= $this->translate($command->label);
+            $html .= '</a>';
+
+            $html .= '</li>';
         }
 
-
-        $attribs = clone $command->attribs;
-        $attribs->class = implode(" ", KConfig::unbox($attribs->class));
-
-        $html = '<li class="button" id="'.$id.'">';
-        
-        $html .= '<a '.$this->buildAttributes($attribs).'>';
-        $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
-       	$html .= $this->translate($command->label);
-       	$html .= '</a>';
-
-        $html .= '</li>';
-
     	return $html;
+    }
+
+    /**
+     * Render the action bar title
+     *
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
+     */
+    public function title($config = array())
+    {
+        $config = new KConfig($config);
+        $config->append(array(
+            'command' => NULL,
+        ));
+
+        $title = $this->translate($config->command->title);
+        $icon  = $config->command->icon;
+
+        if($this->getIdentifier()->application == 'admin' && !empty($title))
+        {
+            if ($this->_useBootstrap())
+            {
+                // Strip the extension.
+                $icons = explode(' ', $icon);
+                foreach ($icons as &$icon) {
+                    $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
+                }
+
+                $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
+            }
+            else
+            {
+                $html = '<div class="header pagetitle icon-48-'.$icon.'">';
+                $html .= '<h2>'.$title.'</h2>';
+                $html .= '</div>';
+            }
+
+            $app = JFactory::getApplication();
+            $app->JComponentTitle = $html;
+
+            JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $config->title);
+        }
+
+        return;
     }
 
 	/**
@@ -225,7 +250,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     protected function _useBootstrap()
     {
-        return version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite();
+        return version_compare(JVERSION, '3.0', '>=') || $this->getIdentifier()->application == 'site';
     }
 
     /**
@@ -242,7 +267,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             'icon-apply'  => 'icon-edit'
         );
 
-        if (version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite()) {
+        if (version_compare(JVERSION, '3.0', '>=') || $this->getIdentifier()->application == 'site') {
             $icon = str_replace('icon-32-', 'icon-', $icon);
         }
 
