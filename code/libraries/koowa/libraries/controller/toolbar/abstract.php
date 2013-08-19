@@ -48,28 +48,14 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
 
         parent::__construct($config);
 
-        if (is_null($config->controller))
-        {
-            throw new InvalidArgumentException(
-                'controller [KControllerInterface] config option is required'
-            );
-        }
-
-        if(!$config->controller instanceof KControllerInterface)
-        {
-            throw new UnexpectedValueException(
-                'Controller: '.get_class($config->controller).' does not implement KControllerInterface'
-            );
-        }
-
         //Create the commands array
         $this->_commands = array();
 
-        // Set the controller
-        $this->_controller = $config->controller;
-
         //Set the toolbar type
         $this->_type = $config->type;
+
+        // Set the controller
+        $this->setController($config->controller);
     }
 
     /**
@@ -123,7 +109,17 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
         return $this->_type;
     }
 
-	/**
+    /**
+     * Get the toolbar's name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getIdentifier()->name;
+    }
+
+    /**
      * Get the controller object
      *
      * @return  KControllerAbstract
@@ -134,13 +130,14 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
     }
 
     /**
-     * Get the toolbar's name
+     * Set the controller
      *
-     * @return string
+     * @return  KControllerToolbarAbstract
      */
-    public function getName()
+    public function setController(KControllerInterface $controller)
     {
-        return $this->getIdentifier()->name;
+        $this->_controller = $controller;
+        return $this;
     }
 
     /**
