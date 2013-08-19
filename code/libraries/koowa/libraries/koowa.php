@@ -53,11 +53,14 @@ class Koowa
 
         //Setup the loader
         require_once $this->_path.'/class/loader.php';
-        $loader = KClassLoader::getInstance($config);
+
+        if (!isset($config['class_loader'])) {
+            $config['class_loader'] = KClassLoader::getInstance($config);
+        }
 
         //Setup the factory
         $manager = KObjectManager::getInstance($config);
-        $manager->setObject('koowa:class.loader', $loader);
+        $manager->setObject('koowa:class.loader', $config['class_loader']);
     }
 
 	/**

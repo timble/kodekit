@@ -69,7 +69,8 @@ class PlgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            $loader = KObjectManager::getObject('koowa:class.loader');
+            $manager = KObjectManager::getInstance();
+            $loader  = $manager->getClassLoader();
 
             $loader->registerLocator(new KClassLocatorModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
@@ -88,9 +89,9 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            KObjectIdentifier::addLocator(KObjectManager::getObject('koowa:object.locator.module'));
-            KObjectIdentifier::addLocator(KObjectManager::getObject('koowa:object.locator.plugin'));
-            KObjectIdentifier::addLocator(KObjectManager::getObject('koowa:object.locator.component'));
+            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.module'));
+            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.plugin'));
+            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.component'));
 
             KObjectIdentifier::registerApplication('site' , JPATH_SITE);
             KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
@@ -99,8 +100,8 @@ class PlgSystemKoowa extends JPlugin
             KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
             KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
-            KObjectManager::registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-            KObjectManager::registerAlias('translator', 'com:koowa.translator');
+            $manager->registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+            $manager->registerAlias('translator', 'com:koowa.translator');
 
             //Setup the request
             if (JFactory::getApplication()->getName() !== 'site') {
@@ -165,7 +166,7 @@ class PlgSystemKoowa extends JPlugin
             $data = array('exception' => $exception);
             $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
-            $template = KObjectManager::getObject('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
+            $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
             $template->loadFile($file, $data);
 
             while (@ob_end_clean());

@@ -209,7 +209,7 @@ class KClassLoader implements KClassLoaderInterface
     {
         $result = false;
 
-        $identifier = KObjectManager::getIdentifier($identifier);
+        $identifier = KObjectManager::getInstance()->getIdentifier($identifier);
 
         //Get the path
         $path = $identifier->filepath;

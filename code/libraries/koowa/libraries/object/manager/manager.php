@@ -20,35 +20,42 @@ class KObjectManager implements KObjectManagerInterface
      *
      * @var array
      */
-    protected static $_identifiers = null;
+    protected $_identifiers = null;
 
     /**
 	 * The identifier aliases
 	 *
 	 * @var	array
 	 */
-	protected static $_aliases = array();
+	protected $_aliases = array();
 
 	/**
 	 * The objects
 	 *
 	 * @var	array
 	 */
-	protected static $_objects = null;
+	protected $_objects = null;
 
 	/**
 	 * The mixins
 	 *
 	 * @var	array
 	 */
-	protected static $_mixins = array();
+	protected $_mixins = array();
 
 	/**
 	 * The configs
 	 *
 	 * @var	array
 	 */
-	protected static $_configs = array();
+	protected $_configs = array();
+
+    /*
+     * The class loader
+     *
+     * @var KClassLoader
+     */
+    protected $_loader;
 
 	/**
 	 * Constructor
@@ -57,30 +64,42 @@ class KObjectManager implements KObjectManagerInterface
 	 */
 	final private function __construct(KObjectConfig $config)
 	{
-	    //Create the identifier registry
-        self::$_identifiers = new KObjectIdentifierRegistry();
+        // Set the class loader
+        if (!$config->class_loader instanceof KClassLoaderInterface)
+        {
+            throw new InvalidArgumentException(
+                'class_loader [KClassLoaderInterface] config option is required, "'.gettype($config->class_loader).'" given.'
+            );
+        }
+        else $this->setClassLoader($config['class_loader']);
 
-	    if(isset($config['cache_prefix'])) {
-            self::$_identifiers->setCachePrefix($config['cache_prefix']);
+        // Create the object container
+        $this->_objects = new ArrayObject();
+
+        // Create the identifier registry
+        $this->_identifiers = new KObjectIdentifierRegistry();
+
+	    if ($config->cache_prefix) {
+            $this->_identifiers->setCachePrefix($config->cache_prefix);
         }
 
-	    if(isset($config['cache_enabled'])) {
-            self::$_identifiers->enableCache($config['cache_enabled']);
+	    if ($config->cache_enabled) {
+            $this->_identifiers->enableCache($config->cache_enabled);
         }
-
-        //Create the object container
-	    self::$_objects = new ArrayObject();
 
 	    //Auto-load the koowa adapter
         KObjectIdentifier::addLocator(new KObjectLocatorKoowa());
 	}
 
 	/**
-	 * Clone
-	 *
 	 * Prevent creating clones of this class
+     *
+     * @throws Exception
 	 */
-	final private function __clone() { }
+	final private function __clone()
+    {
+        throw new Exception("An instance of KObjectManager cannot be cloned.");
+    }
 
 	/**
      * Force creation of a singleton
@@ -113,12 +132,12 @@ class KObjectManager implements KObjectManagerInterface
 	 * @param	array   $config     An optional associative array of configuration settings.
 	 * @return	object  Return object on success, throws exception on failure
 	 */
-	public static function getObject($identifier, array $config = array())
+	public function getObject($identifier, array $config = array())
 	{
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
-		if(!self::$_objects->offsetExists($strIdentifier))
+		if(!$this->_objects->offsetExists($strIdentifier))
 		{
 		    //Instantiate the identifier
 			$instance = self::_instantiate($objIdentifier, $config);
@@ -126,7 +145,7 @@ class KObjectManager implements KObjectManagerInterface
 			//Perform the mixin
 			self::_mixin($strIdentifier, $instance);
 		}
-		else $instance = self::$_objects->offsetGet($strIdentifier);
+		else $instance = $this->_objects->offsetGet($strIdentifier);
 
 		return $instance;
 	}
@@ -138,12 +157,12 @@ class KObjectManager implements KObjectManagerInterface
 	 * 					        or valid identifier string
 	 * @param object $object    The object instance to store
 	 */
-	public static function setObject($identifier, $object)
+	public function setObject($identifier, $object)
 	{
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
-		self::$_objects->offsetSet($strIdentifier, $object);
+		$this->_objects->offsetSet($strIdentifier, $object);
 	}
 
 	/**
@@ -153,13 +172,13 @@ class KObjectManager implements KObjectManagerInterface
 	 * 					            or valid identifier string
 	 * @return boolean Returns TRUE on success or FALSE on failure.
 	 */
-	public static function isRegistered($identifier)
+	public function isRegistered($identifier)
 	{
 		try
 		{
 	        $objIdentifier = self::getIdentifier($identifier);
 	        $strIdentifier = (string) $objIdentifier;
-	        $result = (bool) self::$_objects->offsetExists($strIdentifier);
+	        $result = (bool) $this->_objects->offsetExists($strIdentifier);
 
 		} catch (KObjectIdentifierException $e) {
 		    $result = false;
@@ -179,22 +198,22 @@ class KObjectManager implements KObjectManagerInterface
      * @param  string|array $mixins A mixin identifier or a array of mixin identifiers
      * @see KObject::mixin
      */
-    public static function registerMixin($identifier, $mixins)
+    public function registerMixin($identifier, $mixins)
     {
         settype($mixins, 'array');
 
         $objIdentifier = self::getIdentifier($identifier);
         $strIdentifier = (string) $objIdentifier;
 
-        if (!isset(self::$_mixins[$strIdentifier]) ) {
-            self::$_mixins[$strIdentifier] = array();
+        if (!isset($this->_mixins[$strIdentifier]) ) {
+            $this->_mixins[$strIdentifier] = array();
         }
 
-        self::$_mixins[$strIdentifier] = array_unique(array_merge(self::$_mixins[$strIdentifier], $mixins));
+        $this->_mixins[$strIdentifier] = array_unique(array_merge($this->_mixins[$strIdentifier], $mixins));
 
-        if(self::$_objects->offsetExists($strIdentifier))
+        if($this->_objects->offsetExists($strIdentifier))
         {
-            $instance = self::$_objects->offsetGet($strIdentifier);
+            $instance = $this->_objects->offsetGet($strIdentifier);
             self::_mixin($strIdentifier, $instance);
         }
     }
@@ -206,14 +225,14 @@ class KObjectManager implements KObjectManagerInterface
 	 * 					            or valid identifier string
      * @return array 	An array of mixins
      */
-    public static function getMixins($identifier)
+    public function getMixins($identifier)
     {
         $objIdentifier = self::getIdentifier($identifier);
         $strIdentifier = (string) $objIdentifier;
 
         $result = array();
-        if(isset(self::$_mixins[$strIdentifier])) {
-            $result = self::$_mixins[$strIdentifier];
+        if(isset($this->_mixins[$strIdentifier])) {
+            $result = $this->_mixins[$strIdentifier];
         }
 
         return $result;
@@ -230,7 +249,7 @@ class KObjectManager implements KObjectManagerInterface
 	 * 					            or valid identifier string
 	 * @return KObjectIdentifier
 	 */
-	public static function getIdentifier($identifier)
+	public function getIdentifier($identifier)
 	{
 	    if(!is_string($identifier))
 		{
@@ -240,19 +259,19 @@ class KObjectManager implements KObjectManagerInterface
 		}
 
 	    $alias = (string) $identifier;
-	    if(array_key_exists($alias, self::$_aliases)) {
-	        $identifier = self::$_aliases[$alias];
+	    if(array_key_exists($alias, $this->_aliases)) {
+	        $identifier = $this->_aliases[$alias];
 		}
 
-	    if(!self::$_identifiers->offsetExists((string) $identifier))
+	    if(!$this->_identifiers->offsetExists((string) $identifier))
         {
 		    if(is_string($identifier)) {
 		        $identifier = new KObjectIdentifier($identifier);
 		    }
 
-		    self::$_identifiers->offsetSet((string) $identifier, $identifier);
+		    $this->_identifiers->offsetSet((string) $identifier, $identifier);
         }
-        else $identifier = self::$_identifiers->offsetGet((string)$identifier);
+        else $identifier = $this->_identifiers->offsetGet((string)$identifier);
 
 		return $identifier;
 	}
@@ -264,11 +283,11 @@ class KObjectManager implements KObjectManagerInterface
 	 * @param mixed	  $identifier   An object that implements KObjectInterface, KObjectIdentifier object
 	 * 				                or valid identifier string
 	 */
-	public static function registerAlias($alias, $identifier)
+	public function registerAlias($alias, $identifier)
 	{
 		$identifier = self::getIdentifier($identifier);
 
-		self::$_aliases[$alias] = $identifier;
+		$this->_aliases[$alias] = $identifier;
 	}
 
 	/**
@@ -277,9 +296,9 @@ class KObjectManager implements KObjectManagerInterface
 	 * @param  string  $alias The alias
 	 * @return mixed   The class identifier or identifier object, or NULL if no alias was found.
 	 */
-	public static function getAlias($alias)
+	public function getAlias($alias)
 	{
-		return isset(self::$_aliases[$alias])  ? self::$_aliases[$alias] : null;
+		return isset($this->_aliases[$alias])  ? $this->_aliases[$alias] : null;
 	}
 
 	/**
@@ -287,9 +306,32 @@ class KObjectManager implements KObjectManagerInterface
      *
      * @return array
      */
-    public static function getAliases()
+    public function getAliases()
     {
-        return self::$_aliases;
+        return $this->_aliases;
+    }
+
+    /**
+     * Get the class loader
+     *
+     * @return KClassLoaderInterface
+     */
+    public function getClassLoader()
+    {
+        return $this->_loader;
+    }
+
+    /**
+     * Set the class loader
+     *
+     * @param  KClassLoaderInterface $loader
+     * @return KObjectManagerInterface
+     */
+    public function setClassLoader(KClassLoaderInterface $loader)
+    {
+        $this->_loader = $loader;
+
+        return $this;
     }
 
 	/**
@@ -299,15 +341,15 @@ class KObjectManager implements KObjectManagerInterface
 	 * 				              or valid identifier string
 	 * @param array	  $config     An associative array of configuration options
 	 */
-	public static function setConfig($identifier, array $config)
+	public function setConfig($identifier, array $config)
 	{
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
-		if(isset(self::$_configs[$strIdentifier])) {
-		    self::$_configs[$strIdentifier] =  array_merge_recursive(self::$_configs[$strIdentifier], $config);
+		if(isset($this->_configs[$strIdentifier])) {
+		    $this->_configs[$strIdentifier] =  array_merge_recursive($this->_configs[$strIdentifier], $config);
 		} else {
-		    self::$_configs[$strIdentifier] = $config;
+		    $this->_configs[$strIdentifier] = $config;
 		}
 	}
 
@@ -318,12 +360,12 @@ class KObjectManager implements KObjectManagerInterface
 	 * 				             or valid identifier string
 	 * @return array  An associative array of configuration options
 	 */
-	public static function getConfig($identifier)
+	public function getConfig($identifier)
 	{
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
-	    return isset(self::$_configs[$strIdentifier])  ? self::$_configs[$strIdentifier] : array();
+	    return isset($this->_configs[$strIdentifier])  ? $this->_configs[$strIdentifier] : array();
 	}
 
 	/**
@@ -331,9 +373,9 @@ class KObjectManager implements KObjectManagerInterface
      *
      * @return array  An associative array of configuration options
      */
-    public static function getConfigs()
+    public function getConfigs()
     {
-        return self::$_configs;
+        return $this->_configs;
     }
 
     /**
@@ -344,11 +386,11 @@ class KObjectManager implements KObjectManagerInterface
      * @param   object  $instance   A KObject instance to used as the mixer
      * @return void
      */
-    protected static function _mixin($identifier, $instance)
+    protected function _mixin($identifier, $instance)
     {
-        if(isset(self::$_mixins[$identifier]) && $instance instanceof KObject)
+        if(isset($this->_mixins[$identifier]) && $instance instanceof KObject)
         {
-            $mixins = self::$_mixins[$identifier];
+            $mixins = $this->_mixins[$identifier];
             foreach($mixins as $mixin)
             {
                 $mixin = self::getObject($mixin, array('mixer'=> $instance));
@@ -365,12 +407,12 @@ class KObjectManager implements KObjectManagerInterface
      * @return  object  Return object on success, throws exception on failure
      * @throws  UnexpectedValueException
      */
-    protected static function _instantiate(KObjectIdentifier $identifier, array $config = array())
+    protected function _instantiate(KObjectIdentifier $identifier, array $config = array())
     {
         $result = null;
 
         //Load the class manually using the basepath
-        if(self::getObject('koowa:class.loader')->loadClass($identifier->classname, $identifier->basepath))
+        if($this->getClassLoader()->loadClass($identifier->classname, $identifier->basepath))
         {
             if(array_key_exists('KObjectInterface', class_implements($identifier->classname)))
             {

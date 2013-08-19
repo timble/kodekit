@@ -381,7 +381,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
                 $this->model = 'com://admin/'.$this->package.'.model.'.$this->model;
             }
 
-            $this->model = KObjectManager::getObject($this->model);
+            $this->model = KObjectManager::getInstance()->getObject($this->model);
         }
 
         return $this->model;
@@ -400,7 +400,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
                 $this->category_model = 'com://admin/'.$this->package.'.model.'.$this->category_model;
             }
 
-            $this->category_model = KObjectManager::getObject($this->category_model);
+            $this->category_model = KObjectManager::getInstance()->getObject($this->category_model);
         }
 
         return $this->category_model;
