@@ -8,8 +8,6 @@
  */
 
 /**
- * Config
- *
  * KObjectConfig provides a property based interface to an array
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
