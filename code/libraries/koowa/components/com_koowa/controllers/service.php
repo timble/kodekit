@@ -26,9 +26,9 @@ class ComKoowaControllerService extends KControllerService
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -50,10 +50,10 @@ class ComKoowaControllerService extends KControllerService
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         //Disable controller persistency on non-HTTP requests,
         //e.g. AJAX, and requests containing the tmpl variable set to component (modal boxes)

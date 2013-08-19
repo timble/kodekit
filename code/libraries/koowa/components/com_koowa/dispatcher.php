@@ -13,17 +13,17 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantiatable
+class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiatable
 {
  	/**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         /*
          * Joomla 3.x Compat
@@ -58,11 +58,11 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfigInterface $config        Configuration options
-     * @param 	KServiceInterface $container	A KServiceInterface object
+     * @param   KObjectConfigInterface $config        Configuration options
+     * @param 	KObjectInterface $container	A KObjectInterface object
      * @return KDispatcherDefault
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

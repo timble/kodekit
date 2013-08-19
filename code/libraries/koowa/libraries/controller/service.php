@@ -20,10 +20,10 @@ abstract class KControllerService extends KControllerResource
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'behaviors'  => array('discoverable', 'editable'),
@@ -36,7 +36,7 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @return	KControllerAbstract
 	 */
@@ -99,7 +99,7 @@ abstract class KControllerService extends KControllerResource
 
 	    if(count($data))
 	    {
-	        $data->setData(KConfig::unbox($context->data));
+	        $data->setData(KObjectConfig::unbox($context->data));
 
 	        //Only set the reset content status if the action explicitly succeeded
 	        if($data->save() === true) {
@@ -125,7 +125,7 @@ abstract class KControllerService extends KControllerResource
 
 		if($data->isNew())
 		{
-		    $data->setData(KConfig::unbox($context->data));
+		    $data->setData(KObjectConfig::unbox($context->data));
 
 		    //Only throw an error if the action explicitly failed.
 		    if($data->save() === false)
@@ -155,7 +155,7 @@ abstract class KControllerService extends KControllerResource
 
 		if(count($data))
 	    {
-            $data->setData(KConfig::unbox($context->data));
+            $data->setData(KObjectConfig::unbox($context->data));
 
             //Only throw an error if the action explicitly failed.
 	        if($data->delete() === false)

@@ -12,7 +12,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-class KServiceLocatorModule extends KServiceLocatorAbstract
+class KObjectLocatorModule extends KObjectLocatorAbstract
 {
 	/**
 	 * The type
@@ -34,10 +34,10 @@ class KServiceLocatorModule extends KServiceLocatorAbstract
 	 *                     -> Framework Specific
 	 *                     -> Framework Default
 	 *
-	 * @param KServiceIdentifier $identifier  An identifier object - mod:[//application/]module.[.path].name
+	 * @param KObjectIdentifier $identifier  An identifier object - mod:[//application/]module.[.path].name
 	 * @return string|boolean  Return object on success, returns FALSE on failure
 	 */
-	public function findClass(KServiceIdentifier $identifier)
+	public function findClass(KObjectIdentifier $identifier)
 	{
 	    $path = KStringInflector::camelize(implode('_', $identifier->path));
 		$classname = 'Mod'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
@@ -92,10 +92,10 @@ class KServiceLocatorModule extends KServiceLocatorAbstract
 	/**
 	 * Get the path based on an identifier
 	 *
-	 * @param  KServiceIdentifier $identifier An identifier object - mod:[//application/]module.[.path].name
+	 * @param  KObjectIdentifier $identifier An identifier object - mod:[//application/]module.[.path].name
 	 * @return string	Returns the path
 	 */
-	public function findPath(KServiceIdentifier $identifier)
+	public function findPath(KObjectIdentifier $identifier)
 	{
 		$path  = '';
 	    $parts = $identifier->path;

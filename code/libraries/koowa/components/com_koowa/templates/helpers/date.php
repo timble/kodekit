@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
      */
     public function format($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'date'     => 'now',
             'timezone'   => true,
@@ -42,7 +42,7 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
      */
     public function humanize($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'date'              => null,
             'gmt_offset'        => 0,

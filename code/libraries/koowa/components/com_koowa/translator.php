@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
+class ComKoowaTranslator extends KTranslator implements KObjectInstantiatable
 {
     /**
      * A reference to Joomla translator
@@ -68,9 +68,9 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     protected static $_loaded_files = array();
 
     /**
-     * @param KConfig $config
+     * @param KObjectConfig $config
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -96,10 +96,10 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'prefix'     => 'KLS_',
@@ -116,11 +116,11 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Force creation of a singleton
      *
-     * @param KConfigInterface  $config optional KConfig object with configuration options
-     * @param KServiceInterface $container
+     * @param KObjectConfigInterface  $config optional KObjectConfig object with configuration options
+     * @param KObjectInterface $container
      * @return ComKoowaTranslator
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
     {
         if (!$container->has($config->service_identifier))
         {
@@ -234,14 +234,14 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Load the extension language files.
      *
-     * @param string|KServiceIdentifier $extension Extension identifier or name (e.g. com_docman)
+     * @param string|KObjectIdentifier $extension Extension identifier or name (e.g. com_docman)
      * @param string $app Application. Leave blank for current one.
      *
      * @return boolean
      */
     public function loadLanguageFiles($extension, $app = null)
     {
-        if ($extension instanceof KServiceIdentifier) {
+        if ($extension instanceof KObjectIdentifier) {
             $extension = $extension->type.'_'.$extension->package;
         }
 
@@ -271,7 +271,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         $type    = substr($extension, 0, 3);
         $package = substr($extension, 4);
 
-        if ($override = KServiceIdentifier::getPackage($package)) {
+        if ($override = KObjectIdentifier::getPackage($package)) {
             $base = $override;
         }
         else

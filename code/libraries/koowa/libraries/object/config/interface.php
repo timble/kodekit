@@ -10,12 +10,12 @@
 /**
  * Config Interface
  *
- * KConfig provides a property based interface to an array
+ * KObjectConfig provides a property based interface to an array
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
  */
-interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
+interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countable
 {
     /**
      * Retrieve a configuration item and return $default if there is no element set.
@@ -47,7 +47,7 @@ interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
      * Remove a configuration item
      *
      * @param   string $name The configuration item name.
-     * @return  KConfigInterface
+     * @return  KObjectConfigInterface
      */
     public function remove( $name );
 
@@ -57,17 +57,17 @@ interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
      * @param  mixed    $config A value of an or array of values to be appended
-     * @return KConfig
+     * @return KObjectConfig
      */
     public function append($config);
 
     /**
      * Return the data
      *
-     * If the data being passed is an instance of KConfig the data will be transformed
+     * If the data being passed is an instance of KObjectConfig the data will be transformed
      * to an associative array.
      *
-     * @param mixed|KConfig $data
+     * @param mixed|KObjectConfig $data
      * @return mixed|array
      */
     public static function unbox($data);

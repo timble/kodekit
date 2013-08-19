@@ -23,7 +23,7 @@ class KViewRss extends KViewTemplate
      * @param KObject $config	An optional KObject object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'layout'   => 'rss',

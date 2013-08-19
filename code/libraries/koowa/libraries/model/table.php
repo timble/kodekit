@@ -28,9 +28,9 @@ class KModelTable extends KModelAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -61,10 +61,10 @@ class KModelTable extends KModelAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'table' => $this->getIdentifier()->name,
@@ -109,7 +109,7 @@ class KModelTable extends KModelAbstract
             if(!($this->_table instanceof KDatabaseTableAbstract))
 		    {
 		        //Make sure we have a table identifier
-		        if(!($this->_table instanceof KServiceIdentifier)) {
+		        if(!($this->_table instanceof KObjectIdentifier)) {
 		            $this->setTable($this->_table);
 			    }
 
@@ -127,7 +127,7 @@ class KModelTable extends KModelAbstract
     /**
      * Method to set a table object attached to the model
      *
-     * @param	mixed	$table An object that implements KObjectInterface, KServiceIdentifier object
+     * @param	mixed	$table An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					       or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KModelTable

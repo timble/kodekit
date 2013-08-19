@@ -18,9 +18,9 @@ interface KObjectInterface
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    //public function __construct(KConfig $config);
+    //public function __construct(KObjectConfig $config);
 
 	/**
 	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
@@ -31,16 +31,16 @@ interface KObjectInterface
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	public function getService($identifier, array $config = array());
+	//public function getService($identifier, array $config = array());
 
 	/**
 	 * Gets the service identifier.
 	 *
-     * @param   null|KServiceIdentifier|string $identifier Identifier
-	 * @return	KServiceIdentifier
+     * @param   null|KObjectIdentifier|string $identifier Identifier
+	 * @return	KObjectIdentifier
      *
 	 * @see 	KObjectInterface
      * @throws	RuntimeException if the service container has not been defined.
 	 */
-    public function getIdentifier($identifier = null);
+    //public function getIdentifier($identifier = null);
 }

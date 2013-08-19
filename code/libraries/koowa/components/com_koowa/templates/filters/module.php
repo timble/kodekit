@@ -29,10 +29,10 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'priority' => KTemplateFilter::PRIORITY_LOW,
@@ -78,18 +78,24 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
                 );
 
                 $attributes = array_merge($attributes, $this->parseAttributes($matches[1][$key]));
+                $content    = trim($matches[2][$key]);
+
+                //Skip empty modules
+                if (empty($content)) {
+                    continue;
+                }
 
                 //Create module object
                 $module   	       = new stdClass();
                 $module->id        = uniqid();
-                $module->content   = $matches[2][$key];
+                $module->content   = $content;
                 $module->position  = $attributes['position'];
                 $module->params    = $attributes['params'];
                 $module->showtitle = !empty($attributes['title']);
                 $module->title     = $attributes['title'];
                 $module->attribs   = $attributes;
                 $module->user      = 0;
-                $module->module    = 'mod_dynamic';
+                $module->module    = 'mod_koowa_injector';
 
                 $modules = &ComKoowaModuleHelper::getModules();
 
@@ -115,8 +121,6 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
         $replace = array();
         $matches = array();
 
-        $replace = array();
-        $matches = array();
         // <ktml:modules position="[position]"></khtml:modules>
         if(preg_match_all('#<ktml:modules\s+position="([^"]+)"(.*)>(.*)</ktml:modules>#siU', $text, $matches))
         {

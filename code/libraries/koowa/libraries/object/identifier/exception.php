@@ -8,19 +8,9 @@
  */
 
 /**
- * Service Instantiatable Interface
+ * Service Identifier Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KServiceInstantiatable
-{
-    /**
-     * Get the object identifier
-     *
-     * @param   KConfigInterface $config        Configuration options
-     * @param 	KServiceInterface $container	A KServiceInterface object
-     * @return  object
-     */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container);
-}
+class KObjectIdentifierException extends Exception {}

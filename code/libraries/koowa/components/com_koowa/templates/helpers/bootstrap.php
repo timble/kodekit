@@ -19,12 +19,12 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
     /**
      * Load Bootstrap JavaScript files, from Joomla if possible
      *
-     * @param array|KConfig $config
+     * @param array|KObjectConfig $config
      * @return string
      */
     public function javascript($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'debug' => JFactory::getApplication()->getCfg('debug')
         ));
@@ -52,14 +52,14 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
     /**
      * Loads necessary Bootstrap files
      *
-     * @param array|KConfig $config
+     * @param array|KObjectConfig $config
      * @return string
      */
     public function load($config = array())
     {
         $identifier = $this->getTemplate()->getIdentifier();
 
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'debug'        => JFactory::getApplication()->getCfg('debug'),
             'javascript'   => false,
@@ -127,7 +127,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      */
     public function wrapper($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'wrapper' => null
         ));

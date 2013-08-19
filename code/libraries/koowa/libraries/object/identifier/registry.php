@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-class KServiceIdentifierRegistry extends ArrayObject
+class KObjectIdentifierRegistry extends ArrayObject
 {
  	/**
  	 * Cache

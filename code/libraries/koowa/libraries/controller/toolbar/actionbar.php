@@ -19,9 +19,9 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -34,10 +34,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'type'  => 'actionbar',
@@ -203,11 +203,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         if($controller->canAdd())
         {
             $identifier = $context->caller->getIdentifier();
-            $config     = array('attribs' => array(
-                'href' => JRoute::_( 'index.php?option=com_'.$identifier->package.'&view='.$identifier->name)
-            ));
 
-            $this->addCommand('new', $config);
+            $this->addCommand('new', array(
+                'href' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name)
+            ));
         }
 
         if($controller->canDelete()) {

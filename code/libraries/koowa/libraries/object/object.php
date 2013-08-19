@@ -34,7 +34,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     /**
      * The service identifier
      *
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     private $__service_identifier;
 
@@ -48,9 +48,9 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         //Set the service container
         if(isset($config->service_container)) {
@@ -73,10 +73,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         //do nothing
     }
@@ -255,8 +255,8 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	/**
 	 * Gets the service identifier.
 	 *
-     * @param   null|KServiceIdentifier|string $identifier Identifier
-	 * @return	KServiceIdentifier
+     * @param   null|KObjectIdentifier|string $identifier Identifier
+	 * @return	KObjectIdentifier
      *
 	 * @see 	KObjectInterface
      * @throws	RuntimeException if the service container has not been defined.

@@ -18,7 +18,7 @@
  *
  * @property string $name object name
  */
-class KServiceIdentifier implements KServiceIdentifierInterface
+class KObjectIdentifier implements KObjectIdentifierInterface
 {
     /**
      * An associative array of application paths
@@ -108,18 +108,18 @@ class KServiceIdentifier implements KServiceIdentifierInterface
      * Constructor
      *
      * @param   string  $identifier Identifier string or object in [application::]type.package.[.path].name format
-     * @throws  KServiceIdentifierException if the identifier is not valid
+     * @throws  KObjectIdentifierException if the identifier is not valid
      */
     public function __construct($identifier)
     {
         //Check if the identifier is valid
         if(strpos($identifier, ':') === FALSE) {
-            throw new KServiceIdentifierException('Malformed identifier : '.$identifier);
+            throw new KObjectIdentifierException('Malformed identifier : '.$identifier);
         }
 
         //Get the parts
         if(false === $parts = parse_url($identifier)) {
-            throw new KServiceIdentifierException('Malformed identifier : '.$identifier);
+            throw new KObjectIdentifierException('Malformed identifier : '.$identifier);
         }
 
         // Set the type
@@ -251,10 +251,10 @@ class KServiceIdentifier implements KServiceIdentifierInterface
 	/**
      * Add a identifier adapter
      *
-     * @param KServiceLocatorInterface $locator A KServiceLocator
+     * @param KObjectLocatorInterface $locator A KObjectLocator
      * @return void
      */
-    public static function addLocator(KServiceLocatorInterface $locator)
+    public static function addLocator(KObjectLocatorInterface $locator)
     {
         self::$_locators[$locator->getType()] = $locator;
     }
@@ -276,7 +276,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
      *
      * @param   string $property The virtual property to set.
      * @param   string $value    Set the virtual property to this value.
-     * @throws KServiceIdentifierException
+     * @throws KObjectIdentifierException
      */
     public function __set($property, $value)
     {
@@ -294,7 +294,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
             if($property == 'application')
             {
                if(!isset(self::$_applications[$value])) {
-                    throw new KServiceIdentifierException('Unknown application: '.$value);
+                    throw new KObjectIdentifierException('Unknown application: '.$value);
                }
 
                $this->_basepath = self::$_applications[$value];
@@ -312,7 +312,7 @@ class KServiceIdentifier implements KServiceIdentifierInterface
             {
                 //Check the type
                 if(!isset(self::$_locators[$value]))  {
-                    throw new KServiceIdentifierException('Unknown type: '.$value);
+                    throw new KObjectIdentifierException('Unknown type: '.$value);
                 }
             }
 

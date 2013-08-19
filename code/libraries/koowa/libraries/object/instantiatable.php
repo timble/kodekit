@@ -8,20 +8,19 @@
  */
 
 /**
- * Service Identifier Interface
- *
- * Wraps identifiers of the form [application::]type.component.[.path].name in an object, providing public accessors
- * and methods for derived formats
+ * Object Instantiatable Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KServiceIdentifierInterface extends Serializable
+interface KObjectInstantiatable
 {
     /**
-     * Formats the identifier as a [application::]type.component.[.path].name string
+     * Get the object identifier
      *
-     * @return string
+     * @param   KObjectConfigInterface $config        Configuration options
+     * @param 	KObjectInterface $container	A KObjectInterface object
+     * @return  object
      */
-    public function __toString();
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container);
 }

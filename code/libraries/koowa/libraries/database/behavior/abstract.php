@@ -25,23 +25,23 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	/**
      * The service identifier
      *
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     private $__service_identifier;
 
     /**
      * The service container
      *
-     * @var KServiceInterface
+     * @var KObjectInterface
      */
     private $__service_container;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct( KConfig $config = null)
+	public function __construct( KObjectConfig $config = null)
 	{
 	    //Set the service container
         if(isset($config->service_container)) {
@@ -68,10 +68,10 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
 			'priority'   => KCommand::PRIORITY_NORMAL,
@@ -213,7 +213,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	 * Gets the service identifier.
 	 *
      * @param	string|object	$identifier The class identifier or identifier object
-	 * @return	KServiceIdentifier
+	 * @return	KObjectIdentifier
 	 * @see 	KObjectInterface
 	 */
 	final public function getIdentifier($identifier = null)

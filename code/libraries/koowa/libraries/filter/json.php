@@ -18,9 +18,9 @@ class KFilterJson extends KFilterAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -49,8 +49,8 @@ class KFilterJson extends KFilterAbstract
      */
     protected function _sanitize($value)
     {
-        // If instance of KConfig casting to string will make it encode itself to JSON
-        if($value instanceof KConfig) {
+        // If instance of KObjectConfig casting to string will make it encode itself to JSON
+        if($value instanceof KObjectConfig) {
             $result = (string) $value;
         }
         else

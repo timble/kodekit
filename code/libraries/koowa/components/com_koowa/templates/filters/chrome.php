@@ -52,16 +52,16 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
  	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 
         $this->_title   = $config->title;
         $this->_class   = $config->class;
-        $this->_styles  = KConfig::unbox($config->styles);
-        $this->_attribs = KConfig::unbox($config->attribs);
+        $this->_styles  = KObjectConfig::unbox($config->styles);
+        $this->_attribs = KObjectConfig::unbox($config->attribs);
     }
 
 	/**
@@ -69,10 +69,10 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'priority' => KTemplateFilter::PRIORITY_LOW,

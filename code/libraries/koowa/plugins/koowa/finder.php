@@ -38,13 +38,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 
     /**
      * Model identifier/model object
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     protected $model;
 
     /**
      * Model identifier/model object
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     protected $category_model;
 
@@ -64,12 +64,12 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     {
         if ($this->bootFramework())
         {
-            $configuration = new KConfig();
+            $configuration = new KObjectConfig();
 
             $this->_initialize($configuration);
 
             foreach ($configuration as $key => $value) {
-                $this->$key = KConfig::unbox($value);
+                $this->$key = KObjectConfig::unbox($value);
             }
         }
 
@@ -83,10 +83,10 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'package' => strtolower(substr(get_class($this), 9)) // Remove plgFinder from class name

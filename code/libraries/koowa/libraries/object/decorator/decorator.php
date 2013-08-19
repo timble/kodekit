@@ -32,9 +32,9 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 

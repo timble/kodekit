@@ -33,9 +33,9 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
 	/**
 	 * Constructor
 	 *
-	 * @param 	KConfig $config	An optional KConfig object with configuration options
+	 * @param 	KObjectConfig $config	An optional KObjectConfig object with configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -46,11 +46,11 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
     /**
      * Force creation of a singleton
      *
-     * @param   KConfigInterface  $config    Configuration options
-     * @param 	KServiceInterface $container A KServiceInterface object
+     * @param   KObjectConfigInterface  $config    Configuration options
+     * @param 	KObjectInterface $container A KObjectInterface object
      * @return KFilterInterface
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectInterface $container)
     {
        // Check if an instance with this identifier already exists or not
         if (!$container->has($config->service_identifier))

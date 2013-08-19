@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function enabled( $config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -57,7 +57,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function published($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -90,7 +90,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function access($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'access',
             'attribs'   => array(),
@@ -126,7 +126,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     protected function _render($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'autocomplete' => false
         ));
@@ -152,13 +152,13 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'text'  option is specified the 'value' option will be used instead.
      *
-     * @param 	array|KConfig 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      * @see __call()
      */
     protected function _listbox($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'		  => '',
             'attribs'	  => array(),
@@ -207,12 +207,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      *
      * @see    KTemplateHelperBehavior::autocomplete
      *
-     * @param  array|KConfig    $config
+     * @param  array|KObjectConfig    $config
      * @return string	The html output
      */
     protected function _autocomplete($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'		 => '',
             'attribs'	 => array(),

@@ -12,7 +12,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-abstract class KServiceLocatorAbstract extends KObject implements KServiceLocatorInterface
+abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
 {
 	/**
 	 * The type

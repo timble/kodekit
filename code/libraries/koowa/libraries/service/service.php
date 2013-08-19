@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-class KService implements KServiceInterface
+class KService implements KObjectInterface
 {
 	/**
      * The identifier registry
@@ -55,10 +55,10 @@ class KService implements KServiceInterface
 	 *
 	 * Prevent creating instances of this class by making the constructor private
 	 */
-	final private function __construct(KConfig $config)
+	final private function __construct(KObjectConfig $config)
 	{
 	    //Create the identifier registry
-        self::$_identifiers = new KServiceIdentifierRegistry();
+        self::$_identifiers = new KObjectIdentifierRegistry();
 
 	    if(isset($config['cache_prefix'])) {
             self::$_identifiers->setCachePrefix($config['cache_prefix']);
@@ -69,10 +69,10 @@ class KService implements KServiceInterface
         }
 
         //Create the service container
-	    self::$_services = new KServiceContainer();
+	    self::$_services = new ArrayObject();
 
 	    //Auto-load the koowa adapter
-        KServiceIdentifier::addLocator(new KServiceLocatorKoowa());
+        KObjectIdentifier::addLocator(new KObjectLocatorKoowa());
 	}
 
 	/**
@@ -94,8 +94,8 @@ class KService implements KServiceInterface
 
 		if ($instance === NULL)
 		{
-			if(!$config instanceof KConfig) {
-				$config = new KConfig($config);
+			if(!$config instanceof KObjectConfig) {
+				$config = new KObjectConfig($config);
 			}
 
 			$instance = new self($config);
@@ -108,7 +108,7 @@ class KService implements KServiceInterface
 	 * Get an instance of a class based on a class identifier only creating it
 	 * if it doesn't exist yet.
 	 *
-	 * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
 	 * @param	array   $config     An optional associative array of configuration settings.
 	 * @return	object  Return object on success, throws exception on failure
@@ -134,7 +134,7 @@ class KService implements KServiceInterface
 	/**
 	 * Insert the object instance using the identifier
 	 *
-	 * @param mixed $identifier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param mixed $identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					        or valid identifier string
 	 * @param object $object    The object instance to store
 	 */
@@ -149,7 +149,7 @@ class KService implements KServiceInterface
 	/**
 	 * Check if the object instance exists based on the identifier
 	 *
-	 * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
 	 * @return boolean Returns TRUE on success or FALSE on failure.
 	 */
@@ -161,7 +161,7 @@ class KService implements KServiceInterface
 	        $strIdentifier = (string) $objIdentifier;
 	        $result = (bool) self::$_services->offsetExists($strIdentifier);
 
-		} catch (KServiceIdentifierException $e) {
+		} catch (KObjectIdentifierException $e) {
 		    $result = false;
 		}
 
@@ -174,7 +174,7 @@ class KService implements KServiceInterface
      * The mixins are mixed when the identified object is first instantiated see {@link get} Mixins are also added to
      * objects that already exist in the service container.
      *
-     * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
+     * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
      * @param  string|array $mixins A mixin identifier or a array of mixin identifiers
      * @see KObject::mixin
@@ -202,7 +202,7 @@ class KService implements KServiceInterface
     /**
      * Get the mixins for an identifier
      *
-     * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
+     * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
      * @return array 	An array of mixins
      */
@@ -223,12 +223,12 @@ class KService implements KServiceInterface
 	 * Returns an identifier object.
 	 *
 	 * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
-	 * object that implements KObjectInterface, or a KServiceIdentifier object, or valid identifier
+	 * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
 	 * string. Function will also check for identifier mappings and return the mapped identifier.
 	 *
-	 * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
-	 * @return KServiceIdentifier
+	 * @return KObjectIdentifier
 	 */
 	public static function getIdentifier($identifier)
 	{
@@ -247,7 +247,7 @@ class KService implements KServiceInterface
 	    if(!self::$_identifiers->offsetExists((string) $identifier))
         {
 		    if(is_string($identifier)) {
-		        $identifier = new KServiceIdentifier($identifier);
+		        $identifier = new KObjectIdentifier($identifier);
 		    }
 
 		    self::$_identifiers->offsetSet((string) $identifier, $identifier);
@@ -261,7 +261,7 @@ class KService implements KServiceInterface
 	 * Set an alias for an identifier
 	 *
 	 * @param string  $alias        The alias
-	 * @param mixed	  $identifier   An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param mixed	  $identifier   An object that implements KObjectInterface, KObjectIdentifier object
 	 * 				                or valid identifier string
 	 */
 	public static function setAlias($alias, $identifier)
@@ -295,7 +295,7 @@ class KService implements KServiceInterface
 	/**
 	 * Set the configuration options for an identifier
 	 *
-	 * @param mixed	  $identifier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param mixed	  $identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 				              or valid identifier string
 	 * @param array	  $config     An associative array of configuration options
 	 */
@@ -314,7 +314,7 @@ class KService implements KServiceInterface
 	/**
 	 * Get the configuration options for an identifier
 	 *
-	 * @param mixed	  $identifier An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param mixed	  $identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 				             or valid identifier string
 	 * @return array  An associative array of configuration options
 	 */
@@ -339,7 +339,7 @@ class KService implements KServiceInterface
     /**
      * Perform the actual mixin of all registered mixins with an object
      *
-     * @param	mixed	$identifier An object that implements KObjectInterface, KServiceIdentifier object
+     * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
      * @param   object  $instance   A KObject instance to used as the mixer
      * @return void
@@ -360,12 +360,12 @@ class KService implements KServiceInterface
     /**
      * Get an instance of a class based on a class identifier
      *
-     * @param   KServiceIdentifier $identifier	A KServiceIdentifier object
+     * @param   KObjectIdentifier $identifier	A KObjectIdentifier object
      * @param   array              $config      An optional associative array of configuration settings.
      * @return  object  Return object on success, throws exception on failure
      * @throws  UnexpectedValueException
      */
-    protected static function _instantiate(KServiceIdentifier $identifier, array $config = array())
+    protected static function _instantiate(KObjectIdentifier $identifier, array $config = array())
     {
         $result = null;
 
@@ -375,14 +375,14 @@ class KService implements KServiceInterface
             if(array_key_exists('KObjectInterface', class_implements($identifier->classname)))
             {
                 //Create the configuration object
-                $config = new KConfig(array_merge(self::getConfig($identifier), $config));
+                $config = new KObjectConfig(array_merge(self::getConfig($identifier), $config));
 
                 //Set the service container and identifier
                 $config->service_container  = self::getInstance();
                 $config->service_identifier = $identifier;
 
                 // If the class has an instantiate method call it
-                if(array_key_exists('KServiceInstantiatable', class_implements($identifier->classname))) {
+                if(array_key_exists('KObjectInstantiatable', class_implements($identifier->classname))) {
                     $result = call_user_func(array($identifier->classname, 'getInstance'), $config, self::getInstance());
                 } else {
                     $result = new $identifier->classname($config);

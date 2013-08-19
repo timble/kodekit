@@ -32,9 +32,9 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -50,10 +50,10 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'priority' => KTemplateFilter::PRIORITY_NORMAL,
@@ -167,8 +167,8 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     {
         $output = array();
 
-        if ($array instanceof KConfig) {
-            $array = KConfig::unbox($array);
+        if ($array instanceof KObjectConfig) {
+            $array = KObjectConfig::unbox($array);
         }
 
         if (is_array($array))

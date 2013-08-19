@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
      */
     public function option($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'value' 	=> null,
             'text'   	=> '',
@@ -44,12 +44,12 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML select list
      *
-     * @param 	array|KConfig 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      */
     public function optionlist($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'options' 	=> array(),
             'name'   	=> 'id',
@@ -80,7 +80,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 
             if(!is_null($config->selected))
             {
-                if ($config->selected instanceof KConfig)
+                if ($config->selected instanceof KObjectConfig)
                 {
                     foreach ($config->selected as $selected)
                     {
@@ -106,12 +106,12 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 	/**
 	 * Generates an HTML boolean radio list
 	 *
-	 * @param 	array|KConfig 	$config An optional array with configuration options
+	 * @param 	array|KObjectConfig 	$config An optional array with configuration options
 	 * @return	string	Html
 	 */
     public function booleanlist($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'   	=> '',
             'attribs'	=> array(),
@@ -146,12 +146,12 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML check list
      *
-     * @param 	array|KConfig 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      */    
     public function checklist( $config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
                 'list' 		=> null,
                 'name'   	=> 'id',
@@ -173,7 +173,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 
             $extra = '';
 
-            if ($config->selected instanceof KConfig)
+            if ($config->selected instanceof KObjectConfig)
             {
                 foreach ($config->selected as $value)
                 {
@@ -197,12 +197,12 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML radio list
      *
-     * @param 	array|KConfig 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      */
     public function radiolist($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'list' 		=> null,
             'name'   	=> 'id',
@@ -225,7 +225,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 
             $extra = '';
 
-            if ($config->selected instanceof KConfig)
+            if ($config->selected instanceof KObjectConfig)
             {
                 foreach ($config->selected as $value)
                 {

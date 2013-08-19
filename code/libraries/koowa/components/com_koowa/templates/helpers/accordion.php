@@ -19,12 +19,12 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	/**
 	 * Creates a pane and creates the javascript object for it
 	 *
-	 * @param 	array|KConfig $config An optional array with configuration options
+	 * @param 	array|KObjectConfig $config An optional array with configuration options
 	 * @return 	string	Html
 	 */
 	public function startPane($config = array())
 	{
-		$config = new KConfig($config);
+		$config = new KObjectConfig($config);
 
 		$config->append(array(
 			'id'	=> 'sliders',
@@ -36,13 +36,13 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 			)
 		));
 
-        return JHtml::_('sliders.start', $config->id, KConfig::unbox($config->options));
+        return JHtml::_('sliders.start', $config->id, KObjectConfig::unbox($config->options));
 	}
 
 	/**
 	 * Ends the pane
 	 *
-     * @param 	array|KConfig $config An optional array with configuration options
+     * @param 	array|KObjectConfig $config An optional array with configuration options
 	 * @return 	string	Html
 	 */
 	public function endPane($config = array())
@@ -53,12 +53,12 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	/**
 	 * Creates a tab panel with title and starts that panel
 	 *
-     * @param 	array|KConfig $config An optional array with configuration options
+     * @param 	array|KObjectConfig $config An optional array with configuration options
      * @return 	string	Html
 	 */
 	public function startPanel($config = array())
 	{
-		$config = new KConfig($config);
+		$config = new KObjectConfig($config);
 
 		$config->append(array(
 			'title'		=> 'Slide',
@@ -68,13 +68,13 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 
 		$title = $config->translate ? $this->translate($config->title) : $config->title;
 
-        return JHtml::_('sliders.panel', $title, KConfig::unbox($config->attribs));
+        return JHtml::_('sliders.panel', $title, KObjectConfig::unbox($config->attribs));
 	}
 
 	/**
 	 * Ends a tab page
 	 *
-     * @param 	array|KConfig $config An optional array with configuration options
+     * @param 	array|KObjectConfig $config An optional array with configuration options
 	 * @return 	string	Html
 	 */
 	public function endPanel($config = array())
