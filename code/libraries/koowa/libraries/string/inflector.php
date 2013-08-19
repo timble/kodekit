@@ -151,9 +151,6 @@ class KStringInflector
 	 */
 	public static function pluralize($word)
 	{
-		//Make sure we have the singular
-		$word = self::singularize($word);
-
 	    //Get the cached noun of it exists
  	   	if(isset(self::$_cache['pluralized'][$word])) {
 			return self::$_cache['pluralized'][$word];
