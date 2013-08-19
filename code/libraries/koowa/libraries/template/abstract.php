@@ -61,6 +61,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_view;
 
     /**
+     * The filter chain
+     *
+     * @var	KTemplateFilterChain
+     */
+    protected $_chain = null;
+
+    /**
      * Counter
      *
      * Used to track recursive calls during template evaluation
@@ -87,8 +94,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         // Set the template data
         $this->_data = $config->data;
 
-		 // Mixin a command chain
-        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
+        //Set the filter chain
+        $this->_chain = $config->filter_chain;
 
         //Attach the filters
         $filters = (array) KConfig::unbox($config->filters);
@@ -121,11 +128,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     	$config->append(array(
             'translator'       => null,
             'data'             => array(),
-            'filters'          => array(),
             'view'             => null,
-            'command_chain' 	=> $this->getService('koowa:command.chain'),
-    		'dispatch_events'   => false,
-    		'enable_callbacks' 	=> false,
+            'filter_chain' 	=> $this->getService('koowa:template.filter.chain'),
+            'filters'          => array(),
         ));
 
         parent::_initialize($config);
@@ -319,7 +324,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
         //Load the contents
         $this->loadString($contents, $data);
-        
+
 		return $this;
 	}
 
@@ -402,7 +407,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 		}
 
 		//Enqueue the filter in the command chain
-		$this->getCommandChain()->enqueue($filter);
+		$this->_chain->enqueue($filter);
 
 		return $this;
  	}
@@ -571,11 +576,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     protected function _parse(&$content)
     {
-        $context = $this->getCommandContext();
-
-        $context->data = $content;
-        $this->getCommandChain()->run(KTemplateFilter::MODE_READ, $context);
-        $content = $context->data;
+        $this->_chain->read($content);
     }
 
     /**
@@ -621,11 +622,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     protected function _process(&$content)
     {
-        $context = $this->getCommandContext();
-
-        $context->data = $content;
-        $this->getCommandChain()->run(KTemplateFilter::MODE_WRITE, $context);
-        $content = $context->data;
+        $this->_chain->write($content);
     }
 
     /**
