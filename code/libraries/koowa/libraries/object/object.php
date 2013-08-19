@@ -43,7 +43,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * @var KObjectManager
      */
-    private $__service_container;
+    private $__object_manager;
 
     /**
      * Constructor.
@@ -54,7 +54,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     {
         //Set the service container
         if(isset($config->service_container)) {
-            $this->__service_container = $config->service_container;
+            $this->__object_manager = $config->service_container;
         }
 
         //Set the service identifier
@@ -245,11 +245,11 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	 */
 	final public function getObject($identifier, array $config = array())
 	{
-	    if(!isset($this->__service_container)) {
+	    if(!isset($this->__object_manager)) {
 	        throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No service_container object defined.");
 	    }
 
-	    return $this->__service_container->getObject($identifier, $config);
+	    return $this->__object_manager->getObject($identifier, $config);
 	}
 
 	/**
@@ -265,11 +265,11 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	{
 		if(isset($identifier))
 		{
-		    if(!isset($this->__service_container)) {
+		    if(!isset($this->__object_manager)) {
 	            throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No service_container object defined.");
 	        }
 
-		    $result = $this->__service_container->getIdentifier($identifier);
+		    $result = $this->__object_manager->getIdentifier($identifier);
 		}
 		else  $result = $this->__service_identifier;
 
