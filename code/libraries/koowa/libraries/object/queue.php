@@ -15,7 +15,7 @@
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
- * @see 		http://www.php.net/manual/en/class.splpriorityqueue.php
+ * @see     http://www.php.net/manual/en/class.splpriorityqueue.php
  */
 class KObjectQueue extends KObject implements Iterator, Countable
 {
