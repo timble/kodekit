@@ -28,7 +28,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_LOW,
+            'priority'   => KTemplateFilter::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);

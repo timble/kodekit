@@ -40,7 +40,7 @@ class KTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplat
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'priority'  => KCommand::PRIORITY_LOWEST,
+            'priority'  => KTemplateFilter::PRIORITY_LOWEST,
             'wrapper' => null
         ));
 

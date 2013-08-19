@@ -35,7 +35,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'priority' => KCommand::PRIORITY_LOW,
+            'priority' => KTemplateFilter::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);
