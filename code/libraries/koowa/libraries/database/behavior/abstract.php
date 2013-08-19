@@ -23,11 +23,11 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	protected $_priority;
 
 	/**
-     * The service identifier
+     * The object identifier
      *
      * @var KObjectIdentifier
      */
-    private $__service_identifier;
+    private $__object_identifier;
 
     /**
      * The service container
@@ -48,9 +48,9 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
             $this->__object_manager = $config->object_manager;
         }
 
-        //Set the service identifier
-        if(isset($config->service_identifier)) {
-            $this->__service_identifier = $config->service_identifier;
+        //Set the object identifier
+        if(isset($config->object_identifier)) {
+            $this->__object_identifier = $config->object_identifier;
         }
 
 		parent::__construct($config);
@@ -210,7 +210,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	}
 
 	/**
-	 * Gets the service identifier.
+	 * Gets the object identifier.
 	 *
      * @param	string|object	$identifier The class identifier or identifier object
 	 * @return	KObjectIdentifier
@@ -221,7 +221,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 		if(isset($identifier)) {
 		    $result = $this->__object_manager->getIdentifier($identifier);
 		} else {
-		    $result = $this->__service_identifier;
+		    $result = $this->__object_identifier;
 		}
 
 	    return $result;

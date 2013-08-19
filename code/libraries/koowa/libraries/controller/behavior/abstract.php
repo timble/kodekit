@@ -22,11 +22,11 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	protected $_priority;
 
 	/**
-     * The service identifier
+     * The object identifier
      *
      * @var KObjectIdentifier
      */
-    private $__service_identifier;
+    private $__object_identifier;
 
     /**
      * The service container
@@ -42,14 +42,14 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	 */
 	public function __construct( KObjectConfig $config = null)
 	{
-	    //Set the service container
+	    //Set the object manager
         if(isset($config->object_manager)) {
             $this->__object_manager = $config->object_manager;
         }
 
-        //Set the service identifier
-        if(isset($config->service_identifier)) {
-            $this->__service_identifier = $config->service_identifier;
+        //Set the object identifier
+        if(isset($config->object_identifier)) {
+            $this->__object_identifier = $config->object_identifier;
         }
 
 	    parent::__construct($config);
@@ -175,7 +175,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	}
 
     /**
-     * Gets the service identifier.
+     * Gets the object identifier.
      *
      * @param mixed $identifier
      * @return KObjectIdentifier
@@ -186,7 +186,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 		if(isset($identifier)) {
 		    $result = $this->__object_manager->getIdentifier($identifier);
 		} else {
-		    $result = $this->__service_identifier;
+		    $result = $this->__object_identifier;
 		}
 
 	    return $result;

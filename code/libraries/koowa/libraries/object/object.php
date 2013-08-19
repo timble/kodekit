@@ -32,11 +32,11 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     protected $_mixed_methods = array();
 
     /**
-     * The service identifier
+     * The object identifier
      *
      * @var KObjectIdentifier
      */
-    private $__service_identifier;
+    private $__object_identifier;
 
     /**
      * The object manager
@@ -57,9 +57,9 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
             $this->__object_manager = $config->object_manager;
         }
 
-        //Set the service identifier
-        if(isset($config->service_identifier)) {
-            $this->__service_identifier = $config->service_identifier;
+        //Set the object identifier
+        if(isset($config->object_identifier)) {
+            $this->__object_identifier = $config->object_identifier;
         }
 
         //Initialise the object
@@ -253,7 +253,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	}
 
 	/**
-	 * Gets the service identifier.
+	 * Gets the object identifier.
 	 *
      * @param   null|KObjectIdentifier|string $identifier Identifier
 	 * @return	KObjectIdentifier
@@ -271,7 +271,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 
 		    $result = $this->__object_manager->getIdentifier($identifier);
 		}
-		else  $result = $this->__service_identifier;
+		else  $result = $this->__object_identifier;
 
 	    return $result;
 	}

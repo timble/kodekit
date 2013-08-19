@@ -34,7 +34,7 @@ interface KObjectInterface
 	public function getObject($identifier, array $config = array());
 
 	/**
-	 * Gets the service identifier.
+	 * Gets the object identifier.
 	 *
      * @param   null|KObjectIdentifier|string $identifier Identifier
 	 * @return	KObjectIdentifier

@@ -8,7 +8,7 @@
  */
 
 /**
- * Service Identifier Exception
+ * Object Identifier Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service

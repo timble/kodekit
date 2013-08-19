@@ -379,7 +379,7 @@ class KObjectManager implements KObjectManagerInterface
 
                 //Set the service container and identifier
                 $config->object_manager  = self::getInstance();
-                $config->service_identifier = $identifier;
+                $config->object_identifier = $identifier;
 
                 // If the class has an instantiate method call it
                 if(array_key_exists('KObjectInstantiatable', class_implements($identifier->classname))) {

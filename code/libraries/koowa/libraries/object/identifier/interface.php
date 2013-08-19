@@ -8,7 +8,7 @@
  */
 
 /**
- * Service Identifier Interface
+ * Object Identifier Interface
  *
  * Wraps identifiers of the form [application::]type.component.[.path].name in an object, providing public accessors
  * and methods for derived formats

@@ -53,15 +53,15 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
        // Check if an instance with this identifier already exists or not
-        if (!$manager->isRegistered($config->service_identifier))
+        if (!$manager->isRegistered($config->object_identifier))
         {
             //Create the singleton
-            $classname = $config->service_identifier->classname;
+            $classname = $config->object_identifier->classname;
             $instance  = new $classname($config);
-            $manager->setObject($config->service_identifier, $instance);
+            $manager->setObject($config->object_identifier, $instance);
         }
 
-        return $manager->getObject($config->service_identifier);
+        return $manager->getObject($config->object_identifier);
     }
 
 	/**

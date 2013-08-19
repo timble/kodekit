@@ -8,7 +8,7 @@
  */
 
 /**
- * Service Identifier
+ * Object Identifier
  *
  * Wraps identifiers of the form [application::]type.package.[.path].name in an object, providing public accessors and
  * methods for derived formats.

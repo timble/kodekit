@@ -8,7 +8,7 @@
  */
 
 /**
- * Service Identifier Registry
+ * Object Identifier Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
