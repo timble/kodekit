@@ -27,7 +27,7 @@ interface KObjectInterface
 	 *
 	 * @param	string|object	$identifier The class identifier or identifier object
 	 * @param	array  			$config     An optional associative array of configuration settings.
-	 * @throws	RuntimeException if the service container has not been defined.
+	 * @throws	RuntimeException if the object manager has not been defined.
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
@@ -40,7 +40,7 @@ interface KObjectInterface
 	 * @return	KObjectIdentifier
      *
 	 * @see 	KObjectInterface
-     * @throws	RuntimeException if the service container has not been defined.
+     * @throws	RuntimeException if the object manager has not been defined.
 	 */
     public function getIdentifier($identifier = null);
 }

@@ -56,8 +56,8 @@ class Koowa
         $loader = KClassLoader::getInstance($config);
 
         //Setup the factory
-        $service = KObjectManager::getInstance($config);
-        $service->setObject('koowa:class.loader', $loader);
+        $manager = KObjectManager::getInstance($config);
+        $manager->setObject('koowa:class.loader', $loader);
     }
 
 	/**

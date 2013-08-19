@@ -8,10 +8,10 @@
  */
 
 /**
- * Service
+ * Object manager
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Service
+ * @package Koowa\Library\Object
  */
 class KObjectManager implements KObjectManagerInterface
 {
@@ -68,7 +68,7 @@ class KObjectManager implements KObjectManagerInterface
             self::$_identifiers->enableCache($config['cache_enabled']);
         }
 
-        //Create the service container
+        //Create the object container
 	    self::$_services = new ArrayObject();
 
 	    //Auto-load the koowa adapter
@@ -172,7 +172,7 @@ class KObjectManager implements KObjectManagerInterface
      * Add a mixin or an array of mixins for an identifier
      *
      * The mixins are mixed when the identified object is first instantiated see {@link get} Mixins are also added to
-     * objects that already exist in the service container.
+     * objects that already exist in the object manager.
      *
      * @param	mixed	$identifier An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					            or valid identifier string
@@ -377,7 +377,7 @@ class KObjectManager implements KObjectManagerInterface
                 //Create the configuration object
                 $config = new KObjectConfig(array_merge(self::getConfig($identifier), $config));
 
-                //Set the service container and identifier
+                //Set the object manager and identifier
                 $config->object_manager  = self::getInstance();
                 $config->object_identifier = $identifier;
 

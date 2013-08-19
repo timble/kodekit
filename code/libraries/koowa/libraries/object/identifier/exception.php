@@ -11,6 +11,6 @@
  * Object Identifier Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Service
+ * @package Koowa\Library\Object
  */
 class KObjectIdentifierException extends Exception {}

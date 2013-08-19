@@ -14,7 +14,7 @@
  * methods for derived formats.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Service
+ * @package Koowa\Library\Object
  *
  * @property string $name object name
  */

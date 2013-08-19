@@ -30,7 +30,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     private $__object_identifier;
 
     /**
-     * The service container
+     * The object manager
      *
      * @var KObjectManagerInterface
      */
@@ -43,7 +43,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	 */
 	public function __construct( KObjectConfig $config = null)
 	{
-	    //Set the service container
+	    //Set the object manager
         if(isset($config->object_manager)) {
             $this->__object_manager = $config->object_manager;
         }

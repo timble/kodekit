@@ -52,7 +52,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      */
     public function __construct( KObjectConfig $config = null)
     {
-        //Set the service container
+        //Set the object manager
         if(isset($config->object_manager)) {
             $this->__object_manager = $config->object_manager;
         }
@@ -239,7 +239,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	 *
 	 * @param	string|object	$identifier The class identifier or identifier object
 	 * @param	array  			$config     An optional associative array of configuration settings.
-	 * @throws	RuntimeException if the service container has not been defined.
+	 * @throws	RuntimeException if the object manager has not been defined.
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
@@ -259,7 +259,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	 * @return	KObjectIdentifier
      *
 	 * @see 	KObjectInterface
-     * @throws	RuntimeException if the service container has not been defined.
+     * @throws	RuntimeException if the object manager has not been defined.
 	 */
 	final public function getIdentifier($identifier = null)
 	{

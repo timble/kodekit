@@ -11,7 +11,7 @@
  * Object Instantiatable Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Service
+ * @package Koowa\Library\Object
  */
 interface KObjectInstantiatable
 {
