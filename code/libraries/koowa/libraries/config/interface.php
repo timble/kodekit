@@ -27,6 +27,31 @@ interface KConfigInterface extends IteratorAggregate, ArrayAccess, Countable
     public function get($name, $default = null);
 
     /**
+     * Set a configuration item
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function set($name, $value);
+
+    /**
+     * Check if a configuration item exists
+     *
+     * @param  	string 	$name The configuration item name.
+     * @return  boolean
+     */
+    public function has($name);
+
+    /**
+     * Remove a configuration item
+     *
+     * @param   string $name The configuration item name.
+     * @return  KConfigInterface
+     */
+    public function remove( $name );
+
+    /**
      * Append values
      *
      * This function only adds keys that don't exist and it filters out any duplicate values

@@ -41,7 +41,7 @@ class KConfig implements KConfigInterface
         if (is_array($data))
         {
             foreach ($data as $key => $value) {
-                $this->__set($key, $value);
+                $this->set($key, $value);
             }
         }
     }
@@ -63,17 +63,43 @@ class KConfig implements KConfigInterface
         return $result;
     }
 
-	/**
-     * Return the data
+    /**
+     * Set a configuration item
      *
-     * If the data being passed is an instance of KConfig the data will be transformed to an associative array.
-     *
-     * @param mixed|KConfig $data
-     * @return mixed|array
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
      */
-    public static function unbox($data)
+    public function set($name, $value)
     {
-        return ($data instanceof KConfig) ? $data->toArray() : $data;
+        if (is_array($value)) {
+            $this->_data[$name] = new self($value);
+        } else {
+            $this->_data[$name] = $value;
+        }
+    }
+
+    /**
+     * Check if a configuration item exists
+     *
+     * @param  	string 	$name The configuration item name.
+     * @return  boolean
+     */
+    public function has($name)
+    {
+        return isset($this->_data[$name]);
+    }
+
+    /**
+     * Remove a configuration item
+     *
+     * @param   string $name The configuration item name.
+     * @return  KConfig
+     */
+    public function remove( $name )
+    {
+        unset($this->_data[$name]);
+        return $this;
     }
 
     /**
@@ -110,60 +136,24 @@ class KConfig implements KConfigInterface
                     if (!in_array($value, $this->_data, true)) {
                         $this->_data[] = $value;
                     }
-                 }
+                }
             }
         }
 
         return $this;
     }
 
-    /**
-     * Retrieve a configuration element
+	/**
+     * Return the data
      *
-     * @param string
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        return $this->get($name);
-    }
-
-    /**
-     * Set a configuration element
+     * If the data being passed is an instance of KConfig the data will be transformed to an associative array.
      *
-     * @param  string
-     * @param  mixed
-     * @return void
+     * @param mixed|KConfig $data
+     * @return mixed|array
      */
-    public function __set($name, $value)
+    public static function unbox($data)
     {
-        if (is_array($value)) {
-            $this->_data[$name] = new self($value);
-        } else {
-            $this->_data[$name] = $value;
-        }
-    }
-
-    /**
-     * Test existence of a configuration element
-     *
-     * @param string
-     * @return boolean
-     */
-    public function __isset($name)
-    {
-        return isset($this->_data[$name]);
-    }
-
-    /**
-     * Unset a configuration element
-     *
-     * @param  string
-     * @return void
-     */
-    public function __unset($name)
-    {
-        unset($this->_data[$name]);
+        return ($data instanceof KConfig) ? $data->toArray() : $data;
     }
 
     /**
@@ -173,7 +163,7 @@ class KConfig implements KConfigInterface
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->_data);
+        return new RecursiveArrayIterator($this->_data);
     }
 
     /**
@@ -286,6 +276,51 @@ class KConfig implements KConfigInterface
     public function toJson()
     {
         return json_encode($this->toArray());
+    }
+
+    /**
+     * Retrieve a configuration element
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * Set a configuration element
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function __set($name, $value)
+    {
+        $this->set($name, $value);
+    }
+
+    /**
+     * Test existence of a configuration element
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return $this->has($name);
+    }
+
+    /**
+     * Unset a configuration element
+     *
+     * @param  string $name
+     * @return void
+     */
+    public function __unset($name)
+    {
+        $this->remove($name);
     }
 
  	/**
