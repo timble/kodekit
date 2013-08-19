@@ -276,7 +276,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         }
         else
         {
-            switch ($app) {
+            switch ($app)
+            {
                 case 'admin':
                     $base = JPATH_ADMINISTRATOR;
                     break;
@@ -330,7 +331,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      */
     public function createCatalogue($identifier = null)
     {
-        if (strpos($identifier, '.') === false) {
+        if (strpos($identifier, '.') === false)
+        {
             $old = clone $this->getIdentifier();
 
             if ($identifier) {
@@ -366,7 +368,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     public function setAliasCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
         $this->_alias_catalogue = $catalogue;
-
         return $this;
     }
 
