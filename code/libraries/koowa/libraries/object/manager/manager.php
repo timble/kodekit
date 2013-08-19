@@ -113,7 +113,7 @@ class KObjectManager implements KObjectManagerInterface
 	 * @param	array   $config     An optional associative array of configuration settings.
 	 * @return	object  Return object on success, throws exception on failure
 	 */
-	public static function get($identifier, array $config = array())
+	public static function getObject($identifier, array $config = array())
 	{
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
@@ -138,7 +138,7 @@ class KObjectManager implements KObjectManagerInterface
 	 * 					        or valid identifier string
 	 * @param object $object    The object instance to store
 	 */
-	public static function set($identifier, $object)
+	public static function setObject($identifier, $object)
 	{
 		$objIdentifier = self::getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
@@ -153,7 +153,7 @@ class KObjectManager implements KObjectManagerInterface
 	 * 					            or valid identifier string
 	 * @return boolean Returns TRUE on success or FALSE on failure.
 	 */
-	public static function has($identifier)
+	public static function isRegistered($identifier)
 	{
 		try
 		{
@@ -351,7 +351,7 @@ class KObjectManager implements KObjectManagerInterface
             $mixins = self::$_mixins[$identifier];
             foreach($mixins as $mixin)
             {
-                $mixin = self::get($mixin, array('mixer'=> $instance));
+                $mixin = self::getObject($mixin, array('mixer'=> $instance));
                 $instance->mixin($mixin);
             }
         }
@@ -370,7 +370,7 @@ class KObjectManager implements KObjectManagerInterface
         $result = null;
 
         //Load the class manually using the basepath
-        if(self::get('koowa:class.loader')->loadClass($identifier->classname, $identifier->basepath))
+        if(self::getObject('koowa:class.loader')->loadClass($identifier->classname, $identifier->basepath))
         {
             if(array_key_exists('KObjectInterface', class_implements($identifier->classname)))
             {

@@ -39,7 +39,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     private $__service_identifier;
 
     /**
-     * The service container
+     * The object manager
      *
      * @var KObjectManager
      */
@@ -249,7 +249,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	        throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No service_container object defined.");
 	    }
 
-	    return $this->__service_container->get($identifier, $config);
+	    return $this->__service_container->getObject($identifier, $config);
 	}
 
 	/**

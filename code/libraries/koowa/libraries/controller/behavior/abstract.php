@@ -171,7 +171,7 @@ abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implemen
 	 */
 	final public function getObject($identifier, array $config = array())
 	{
-	    return $this->__service_container->get($identifier, $config);
+	    return $this->__service_container->getObject($identifier, $config);
 	}
 
     /**

@@ -69,7 +69,7 @@ class PlgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            $loader = KObjectManager::get('koowa:class.loader');
+            $loader = KObjectManager::getObject('koowa:class.loader');
 
             $loader->registerLocator(new KClassLocatorModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
@@ -88,9 +88,9 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            KObjectIdentifier::addLocator(KObjectManager::get('koowa:object.locator.module'));
-            KObjectIdentifier::addLocator(KObjectManager::get('koowa:object.locator.plugin'));
-            KObjectIdentifier::addLocator(KObjectManager::get('koowa:object.locator.component'));
+            KObjectIdentifier::addLocator(KObjectManager::getObject('koowa:object.locator.module'));
+            KObjectIdentifier::addLocator(KObjectManager::getObject('koowa:object.locator.plugin'));
+            KObjectIdentifier::addLocator(KObjectManager::getObject('koowa:object.locator.component'));
 
             KObjectIdentifier::registerApplication('site' , JPATH_SITE);
             KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
@@ -165,7 +165,7 @@ class PlgSystemKoowa extends JPlugin
             $data = array('exception' => $exception);
             $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
-            $template = KObjectManager::get('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
+            $template = KObjectManager::getObject('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
             $template->loadFile($file, $data);
 
             while (@ob_end_clean());

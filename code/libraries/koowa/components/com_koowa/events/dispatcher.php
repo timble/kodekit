@@ -26,17 +26,17 @@ class ComKoowaEventDispatcher extends KEventDispatcher implements KObjectInstant
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
        // Check if an instance with this identifier already exists or not
-        if (!$manager->has($config->service_identifier))
+        if (!$manager->isRegistered($config->service_identifier))
         {
             //Create the singleton
             $classname = $config->service_identifier->classname;
             $instance  = new $classname($config);
-            $manager->set($config->service_identifier, $instance);
+            $manager->setObject($config->service_identifier, $instance);
 
             //Add the factory map to allow easy access to the singleton
             $manager->setAlias('koowa:event.dispatcher', $config->service_identifier);
         }
 
-        return $manager->get($config->service_identifier);
+        return $manager->getObject($config->service_identifier);
     }
 }

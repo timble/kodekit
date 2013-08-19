@@ -121,7 +121,7 @@ class ComKoowaDate extends KDate
     {
         if (!$translator instanceof KTranslator)
         {
-            $translator = KObjectManager::get($translator);
+            $translator = KObjectManager::getObject($translator);
 
             if (!$translator instanceof KTranslator) {
                 throw new UnexpectedValueException('Passed identifier is not a translator');
