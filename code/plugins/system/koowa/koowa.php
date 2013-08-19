@@ -162,16 +162,11 @@ class PlgSystemKoowa extends JPlugin
                 throw new Exception('');
             }
 
-            $data = array(
-                'exception' => $exception
-            );
+            $data = array('exception' => $exception);
+            $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
-            $template = KService::get('com:koowa.template.default');
-            $template->addFilter(array('alias', 'shorttag', 'variable'));
-            $template->loadFile(
-                JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php',
-                $data
-            );
+            $template = KService::get('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
+            $template->loadFile($file, $data);
 
             while (@ob_end_clean());
 
@@ -211,7 +206,7 @@ class PlgSystemKoowa extends JPlugin
                 $header = array(
                     'version' => '4.1.0',
                     'columns' => array('log', 'backtrace', 'type'),
-                    'rows' => array($row)
+                    'rows'    => array($row)
                 );
 
                 header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));
