@@ -40,6 +40,12 @@ class ComKoowaViewHtml extends KViewDefault
      */
     protected function _initialize(KConfig $config)
     {
+        //Add the module template filter
+        $config->append(array(
+            'template_filters'	=> array('module'),
+        ));
+
+        //Set the default layout to form for singular admin views
         if ($this->getIdentifier()->application === 'admin' && KStringInflector::isSingular($this->getName()))
         {
             $config->append(array(
