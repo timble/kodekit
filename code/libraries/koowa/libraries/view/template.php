@@ -66,24 +66,31 @@ abstract class KViewTemplate extends KViewAbstract
     {
         parent::__construct($config);
 
-        // set the auto assign state
+        //Set the auto assign state
         $this->_auto_assign = $config->auto_assign;
 
-        //set the data
+        //Set the data
         $this->_data = KConfig::unbox($config->data);
 
-         // user-defined escaping callback
+         //User-defined escaping callback
         $this->setEscape($config->escape);
 
-        // set the template object
+        //Set the template object
         $this->_template = $config->template;
 
-        //Set the template filters
-        if(!empty($config->template_filters)) {
-            $this->getTemplate()->addFilter($config->template_filters);
+        //Add the template filters
+        $filters = (array) KConfig::unbox($config->template_filters);
+
+        foreach ($filters as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->getTemplate()->addFilter($value);
+            } else {
+                $this->getTemplate()->addFilter($key, $value);
+            }
         }
 
-        // Set base and media urls for use by the view
+        //Set base and media urls for use by the view
         $this->assign('baseurl' , $config->base_url)
              ->assign('mediaurl', $config->media_url);
 
@@ -112,7 +119,7 @@ abstract class KViewTemplate extends KViewAbstract
             'data'			   => array(),
             'escape'           => 'htmlspecialchars',
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template', 'toolbar'),
+            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template'),
             'auto_assign'      => true,
             'base_url'         => KRequest::base(),
             'media_url'        => KRequest::root().'/media',

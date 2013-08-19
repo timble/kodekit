@@ -103,17 +103,20 @@ interface KTemplateInterface
      *
      * @param   mixed    $filter    An object that implements KObjectInterface, KServiceIdentifier object
                                     or valid identifier string
+     * @param   array    $config    An optional associative array of configuration settings
      * @return KTemplateFilterInterface
      */
-    public function getFilter($filter);
+    public function getFilter($filter, $config = array());
 
     /**
-     * Attach one or more filters for template transformation
+     * Attach ar filters for template transformation
      *
-     * @param array $filters Array of one or more behaviors to add.
+     * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
+     *                         or valid identifier string
+     * @param   array $config  An optional associative array of configuration settings
      * @return KTemplateAbstract
      */
-    public function addFilter($filters);
+    public function addFilter($filter, $config = array());
 
     /**
      * Get a template helper
