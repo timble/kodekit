@@ -72,7 +72,7 @@ class KService implements KServiceInterface
 	    self::$_services = new KServiceContainer();
 
 	    //Auto-load the koowa adapter
-        KObjectIdentifier::addLocator(new KServiceLocatorKoowa());
+        KObjectIdentifier::addLocator(new KObjectLocatorKoowa());
 	}
 
 	/**

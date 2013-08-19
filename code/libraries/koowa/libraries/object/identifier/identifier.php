@@ -251,10 +251,10 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	/**
      * Add a identifier adapter
      *
-     * @param KServiceLocatorInterface $locator A KServiceLocator
+     * @param KObjectLocatorInterface $locator A KObjectLocator
      * @return void
      */
-    public static function addLocator(KServiceLocatorInterface $locator)
+    public static function addLocator(KObjectLocatorInterface $locator)
     {
         self::$_locators[$locator->getType()] = $locator;
     }

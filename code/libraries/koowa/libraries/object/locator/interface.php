@@ -12,7 +12,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Service
  */
-interface KServiceLocatorInterface
+interface KObjectLocatorInterface
 {
 	/**
 	 * Get the classname based on an identifier

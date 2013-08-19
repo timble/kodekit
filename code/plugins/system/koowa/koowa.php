@@ -88,9 +88,9 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            KObjectIdentifier::addLocator(KService::get('koowa:service.locator.module'));
-            KObjectIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
-            KObjectIdentifier::addLocator(KService::get('koowa:service.locator.component'));
+            KObjectIdentifier::addLocator(KService::get('koowa:object.locator.module'));
+            KObjectIdentifier::addLocator(KService::get('koowa:object.locator.plugin'));
+            KObjectIdentifier::addLocator(KService::get('koowa:object.locator.component'));
 
             KObjectIdentifier::registerApplication('site' , JPATH_SITE);
             KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
