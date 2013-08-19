@@ -134,16 +134,16 @@ class KObjectManager implements KObjectManagerInterface
 	 */
 	public function getObject($identifier, array $config = array())
 	{
-		$objIdentifier = self::getIdentifier($identifier);
+		$objIdentifier = $this->getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
 		if(!$this->_objects->offsetExists($strIdentifier))
 		{
 		    //Instantiate the identifier
-			$instance = self::_instantiate($objIdentifier, $config);
+			$instance = $this->_instantiate($objIdentifier, $config);
 
 			//Perform the mixin
-			self::_mixin($strIdentifier, $instance);
+			$this->_mixin($strIdentifier, $instance);
 		}
 		else $instance = $this->_objects->offsetGet($strIdentifier);
 
@@ -159,7 +159,7 @@ class KObjectManager implements KObjectManagerInterface
 	 */
 	public function setObject($identifier, $object)
 	{
-		$objIdentifier = self::getIdentifier($identifier);
+		$objIdentifier = $this->getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
 		$this->_objects->offsetSet($strIdentifier, $object);
@@ -176,7 +176,7 @@ class KObjectManager implements KObjectManagerInterface
 	{
 		try
 		{
-	        $objIdentifier = self::getIdentifier($identifier);
+	        $objIdentifier = $this->getIdentifier($identifier);
 	        $strIdentifier = (string) $objIdentifier;
 	        $result = (bool) $this->_objects->offsetExists($strIdentifier);
 
@@ -202,7 +202,7 @@ class KObjectManager implements KObjectManagerInterface
     {
         settype($mixins, 'array');
 
-        $objIdentifier = self::getIdentifier($identifier);
+        $objIdentifier = $this->getIdentifier($identifier);
         $strIdentifier = (string) $objIdentifier;
 
         if (!isset($this->_mixins[$strIdentifier]) ) {
@@ -214,7 +214,7 @@ class KObjectManager implements KObjectManagerInterface
         if($this->_objects->offsetExists($strIdentifier))
         {
             $instance = $this->_objects->offsetGet($strIdentifier);
-            self::_mixin($strIdentifier, $instance);
+            $this->_mixin($strIdentifier, $instance);
         }
     }
 
@@ -227,7 +227,7 @@ class KObjectManager implements KObjectManagerInterface
      */
     public function getMixins($identifier)
     {
-        $objIdentifier = self::getIdentifier($identifier);
+        $objIdentifier = $this->getIdentifier($identifier);
         $strIdentifier = (string) $objIdentifier;
 
         $result = array();
@@ -285,7 +285,7 @@ class KObjectManager implements KObjectManagerInterface
 	 */
 	public function registerAlias($alias, $identifier)
 	{
-		$identifier = self::getIdentifier($identifier);
+		$identifier = $this->getIdentifier($identifier);
 
 		$this->_aliases[$alias] = $identifier;
 	}
@@ -343,7 +343,7 @@ class KObjectManager implements KObjectManagerInterface
 	 */
 	public function setConfig($identifier, array $config)
 	{
-		$objIdentifier = self::getIdentifier($identifier);
+		$objIdentifier = $this->getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
 		if(isset($this->_configs[$strIdentifier])) {
@@ -362,7 +362,7 @@ class KObjectManager implements KObjectManagerInterface
 	 */
 	public function getConfig($identifier)
 	{
-		$objIdentifier = self::getIdentifier($identifier);
+		$objIdentifier = $this->getIdentifier($identifier);
 		$strIdentifier = (string) $objIdentifier;
 
 	    return isset($this->_configs[$strIdentifier])  ? $this->_configs[$strIdentifier] : array();
@@ -393,7 +393,7 @@ class KObjectManager implements KObjectManagerInterface
             $mixins = $this->_mixins[$identifier];
             foreach($mixins as $mixin)
             {
-                $mixin = self::getObject($mixin, array('mixer'=> $instance));
+                $mixin = $this->getObject($mixin, array('mixer'=> $instance));
                 $instance->mixin($mixin);
             }
         }
@@ -417,15 +417,15 @@ class KObjectManager implements KObjectManagerInterface
             if(array_key_exists('KObjectInterface', class_implements($identifier->classname)))
             {
                 //Create the configuration object
-                $config = new KObjectConfig(array_merge(self::getConfig($identifier), $config));
+                $config = new KObjectConfig(array_merge($this->getConfig($identifier), $config));
 
                 //Set the object manager and identifier
-                $config->object_manager  = self::getInstance();
+                $config->object_manager    = $this;
                 $config->object_identifier = $identifier;
 
                 // If the class has an instantiate method call it
                 if(array_key_exists('KObjectInstantiatable', class_implements($identifier->classname))) {
-                    $result = call_user_func(array($identifier->classname, 'getInstance'), $config, self::getInstance());
+                    $result = call_user_func(array($identifier->classname, 'getInstance'), $config, $this);
                 } else {
                     $result = new $identifier->classname($config);
                 }
