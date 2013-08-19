@@ -118,6 +118,7 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
                     'type'  => 'actionbar',
                 ));
 
+                $html = '';
                 if($toolbar = $this->getToolbar($config->type))
                 {
                     $config->toolbar = $toolbar; //set the toolbar in the config
@@ -125,10 +126,10 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
                     $html = $this->getTemplate()
                                  ->getHelper($config->type)
                                  ->render($config);
-
-                    //Remove placeholder
-                    $text = str_replace($match, $html, $text);
                 }
+
+                //Remove placeholder
+                $text = str_replace($match, $html, $text);
             }
         }
 
