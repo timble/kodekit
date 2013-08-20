@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
+class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KObjectDecoratable
 {
     /**
      * Class methods
@@ -196,6 +196,52 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
         $mixin->onMixin($this);
 
         return $mixin;
+    }
+
+    /**
+     * Decorate the object
+     *
+     * When using decorate(), the object will be decorated by the decorator. The decorator needs to extend from
+     * KObjectDecorator.
+     *
+     * @@param   mixed  $decorator  An object that implements KObjectDecorator, KObjectIdentifier object
+     *                              or valid identifier string
+     * @param   array $config  An optional associative array of configuration options
+     * @return  KObjectDecoratorInterface
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  UnexpectedValueException If the decorator does not extend from KObjectDecorator
+     */
+    public function decorate($decorator, $config = array())
+    {
+        if (!($decorator instanceof KObjectDecoratorInterface))
+        {
+            if (!($decorator instanceof KObjectIdentifier)) {
+                $identifier = $this->getIdentifier($decorator);
+            } else {
+                $identifier = $decorator;
+            }
+
+            $config = new KObjectConfig($config);
+            $config->delegate = $this;
+
+            $decorator = new $identifier->classname($config);
+
+            /*
+             * Check if the decorator extends from KObjectDecorator to ensure it's implementing the
+             * KObjectInterface, KObjectHandable, ObjectMixable and KObjectDecoratable interfaces.
+             */
+            if(!$decorator instanceof KObjectDecorator)
+            {
+                throw new UnexpectedValueException(
+                    'Decorator: '.get_class($decorator).' does not extend from KObjectDecorator'
+                );
+            }
+        }
+
+        //Notify the decorator
+        $decorator->onDecorate($this);
+
+        return $decorator;
     }
 
     /**
