@@ -103,7 +103,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         //Create the href
         $command->attribs->append(array('href' => '#'));
         if(!empty($command->href)) {
-            $command->attribs['href'] = $this->getTemplate()->getView()->createRoute($command->href);
+            $command->attribs['href'] = $command->href;
         }
 
         //Create the id
@@ -121,7 +121,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
             $attribs = clone $command->attribs;
             $attribs->class = implode(" ", KObjectConfig::unbox($attribs->class));
-        	
+
         	$html = '<div class="btn-group" id="'.$id.'">';
         	$html .= '<a '.$this->buildAttributes($attribs).'>';
         	$html .= '<i class="'.$icon.'"></i> ';
