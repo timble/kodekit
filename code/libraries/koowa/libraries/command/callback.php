@@ -103,10 +103,10 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
 	 * This functions overloads KObjectMixinAbstract::getMixableMethods and excludes the execute() function from the list
      * of available mixable methods.
 	 *
-     * @param  KObject $mixer Mixer object
+     * @param  KObjectMixable $mixer A mixer object
 	 * @return array An array of methods
 	 */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
         return array_diff(parent::getMixableMethods(), array('execute', 'getPriority'));
 	}
