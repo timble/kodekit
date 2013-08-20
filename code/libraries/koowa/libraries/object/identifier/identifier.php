@@ -10,7 +10,7 @@
 /**
  * Object Identifier
  *
- * Wraps identifiers of the form [application::]type.package.[.path].name in an object, providing public accessors and
+ * Wraps identifiers of the form type:[//application/]package.[.path].name in an object, providing public accessors and
  * methods for derived formats.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
@@ -259,8 +259,23 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         self::$_locators[$locator->getType()] = $locator;
     }
 
+    /**
+     * Get the object locator
+     *
+     * @return KObjectLocatorInterface|null  Returns the object locator or NULL if the locator can not be found.
+     */
+    public function getLocator()
+    {
+        $result = null;
+        if(isset(self::$_locators[$this->_type])) {
+            $result = self::$_locators[$this->_type];
+        }
+
+        return $result;
+    }
+
 	/**
-     * Get the registered adapters
+     * Get the registered locators
      *
      * @return array
      */
@@ -270,13 +285,48 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
+     * Formats the identifier as a type:[//application/]package.[.path].name string
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        if($this->_identifier == '')
+        {
+            if(!empty($this->_type)) {
+                $this->_identifier .= $this->_type;
+            }
+
+            if(!empty($this->_application)) {
+                $this->_identifier .= '://'.$this->_application.'/';
+            } else {
+                $this->_identifier .= ':';
+            }
+
+            if(!empty($this->_package)) {
+                $this->_identifier .= $this->_package;
+            }
+
+            if(count($this->_path)) {
+                $this->_identifier .= '.'.implode('.',$this->_path);
+            }
+
+            if(!empty($this->_name)) {
+                $this->_identifier .= '.'.$this->_name;
+            }
+        }
+
+        return $this->_identifier;
+    }
+
+    /**
      * Implements the virtual class properties
      *
      * This function creates a string representation of the identifier.
      *
      * @param   string $property The virtual property to set.
      * @param   string $value    Set the virtual property to this value.
-     * @throws KObjectIdentifierException
+     * @throws  KObjectExceptionInvalidIdentifier If the application or type are unknown
      */
     public function __set($property, $value)
     {
@@ -286,15 +336,16 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             if($property == 'path')
             {
                 if(is_scalar($value)) {
-                     $value = (array) $value;
+                    $value = (array) $value;
                 }
             }
 
-            //Set the basepath
+            //Set the base path based on the application path
             if($property == 'application')
             {
-               if(!isset(self::$_applications[$value])) {
-                    throw new KObjectIdentifierException('Unknown application: '.$value);
+                //Check if the application is registered
+                if(!isset(self::$_applications[$value])) {
+                    throw new KObjectExceptionInvalidIdentifier('Unknown application: '.$value);
                }
 
                $this->_basepath = self::$_applications[$value];
@@ -307,12 +358,12 @@ class KObjectIdentifier implements KObjectIdentifierInterface
                 }
             }
 
-            //Set the type
+            //Set the type and make sure it's
             if($property == 'type')
             {
-                //Check the type
+                //Check if the type is registered
                 if(!isset(self::$_locators[$value]))  {
-                    throw new KObjectIdentifierException('Unknown type: '.$value);
+                    throw new KObjectExceptionInvalidIdentifier('Unknown type: '.$value);
                 }
             }
 
@@ -327,8 +378,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
-     * Implements access to virtual properties by reference so that it appears to be
-     * a public property.
+     * Implements access to virtual properties by reference so that it appears to be a public property.
      *
      * @param   string  $property The virtual property to return.
      * @return  array   The value of the virtual property.
@@ -367,37 +417,12 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
-     * Formats the identifier as a [application::]type.package.[.path].name string
+     * Allow casting of the identfiier to a string
      *
      * @return string
      */
     public function __toString()
     {
-        if($this->_identifier == '')
-        {
-            if(!empty($this->_type)) {
-                $this->_identifier .= $this->_type;
-            }
-
-            if(!empty($this->_application)) {
-                $this->_identifier .= '://'.$this->_application.'/';
-            } else {
-                $this->_identifier .= ':';
-            }
-
-            if(!empty($this->_package)) {
-                $this->_identifier .= $this->_package;
-            }
-
-            if(count($this->_path)) {
-                $this->_identifier .= '.'.implode('.',$this->_path);
-            }
-
-            if(!empty($this->_name)) {
-                $this->_identifier .= '.'.$this->_name;
-            }
-        }
-
-        return $this->_identifier;
+        return $this->toString();
     }
 }
