@@ -46,12 +46,13 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function __construct(KObjectConfig $config)
     {
-        if(!empty($config)) {
-            $this->_initialize($config);
-        }
+        //Initialise
+        $this->_initialize($config);
 
         //Set the mixer
-        $this->_mixer = $config->mixer;
+        if(isset($config->mixer)) {
+            $this->setMixer($config->mixer);
+        }
     }
 
     /**
@@ -65,7 +66,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'mixer' =>  $this,
+            'mixer' => null,
         ));
     }
 
@@ -82,13 +83,26 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
     /**
      * Set the mixer object
      *
-     * @param KObject $mixer The mixer object
+     * @param  KObjectMixable $mixer The mixer object
      * @return KObjectMixinInterface
      */
-    public function setMixer($mixer)
+    public function setMixer(KObjectMixable $mixer)
     {
         $this->_mixer = $mixer;
         return $this;
+    }
+
+    /**
+     * Mixin Notifier
+     *
+     * This function is called when the mixin is being mixed. It will get the mixer passed in.
+     *
+     * @param KObjectMixable $mixer The mixer object
+     * @return void
+     */
+    public function onMixin(KObjectMixable $mixer)
+    {
+        $this->setMixer($mixer);
     }
 
     /**
@@ -133,10 +147,10 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * Only public methods can be mixed
      *
-     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @param KObjectMixable $mixer The mixer requesting the mixable methods.
      * @return array An array of public methods
      */
-    public function getMixableMethods(KObject $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null)
     {
         if(!$this->__mixable_methods)
         {
