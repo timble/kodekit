@@ -20,9 +20,8 @@ interface KObjectMixable
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @@param  mixed  $identifier  An object that implements KObjectMixinInterface, KObjectIdentifier object
-     *                              or valid identifier string
-     * @param   array $config  An optional associative array of configuration options
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param   array $config     An optional associative array of configuration options
      * @return  KObjectMixinInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws  UnexpectedValueException If the mixin does not implement the KObjectMixinInterface

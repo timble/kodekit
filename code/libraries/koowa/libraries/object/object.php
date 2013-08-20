@@ -155,8 +155,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @@param  mixed  $mixin  An object that implements KObjectMixinInterface, KObjectIdentifier object
-     *                         or valid identifier string
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
      * @param   array $config  An optional associative array of configuration options
      * @return  KObjectMixinInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
@@ -204,8 +203,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * When using decorate(), the object will be decorated by the decorator. The decorator needs to extend from
      * KObjectDecorator.
      *
-     * @@param   mixed  $decorator  An object that implements KObjectDecorator, KObjectIdentifier object
-     *                              or valid identifier string
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectDecorator
      * @param   array $config  An optional associative array of configuration options
      * @return  KObjectDecoratorInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
@@ -213,7 +211,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      */
     public function decorate($decorator, $config = array())
     {
-        if (!($decorator instanceof KObjectDecoratorInterface))
+        if (!($decorator instanceof KObjectDecorator))
         {
             if (!($decorator instanceof KObjectIdentifier)) {
                 $identifier = $this->getIdentifier($decorator);
@@ -308,10 +306,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 	/**
 	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
 	 *
-	 * @param	string|object	$identifier The class identifier or identifier object
-	 * @param	array  			$config     An optional associative array of configuration settings.
-	 * @throws	RuntimeException if the object manager has not been defined.
-	 * @return	object  		Return object on success, throws exception on failure
+	 * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+	 * @param	array $config     An optional associative array of configuration settings.
+	 * @return	KObjectInterface Return object on success, throws exception on failure
+     * @throws	RuntimeException if the object manager has not been defined.
 	 * @see 	KObjectInterface
 	 */
 	final public function getObject($identifier, array $config = array())
@@ -326,11 +324,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 	/**
 	 * Gets the object identifier.
 	 *
-     * @param   null|KObjectIdentifier|string $identifier Identifier
-	 * @return	KObjectIdentifier
-     *
-	 * @see 	KObjectInterface
+     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+	 * @return KObjectIdentifier
      * @throws	RuntimeException if the object manager has not been defined.
+     * @see 	KObjectInterface
 	 */
 	final public function getIdentifier($identifier = null)
 	{
@@ -364,8 +361,8 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      *
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
-     * @throws BadMethodCallException   If method could not be found
      * @return mixed The result of the function
+     * @throws BadMethodCallException   If method could not be found
      */
     public function __call($method, $arguments)
     {

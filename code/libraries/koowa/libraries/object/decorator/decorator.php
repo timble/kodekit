@@ -43,8 +43,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @@param   mixed  $mixin  An object that implements KObjectMixinInterface, KObjectIdentifier object
-     *                          or valid identifier string
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
      * @param   array $config  An optional associative array of configuration options
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @return  KObjectInterface
@@ -61,8 +60,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      * When using decorate(), the decorator will be re-decorated. The decorator needs to extend from
      * ObjectDecorator.
      *
-     * @@param  mixed  $decorator  An object that implements KObjectDecorator, KObjectIdentifier object
-     *                             or valid identifier string
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectDecorator
      * @param   array $config  An optional associative array of configuration options
      * @return  KObjectDecoratorInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
@@ -97,8 +95,8 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
     /**
      * Get an instance of a class based on a class identifier only creating it if it does not exist yet.
      *
-     * @param	string|object	$identifier The class identifier or identifier object
-     * @param	array  			$config     An optional associative array of configuration settings.
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @param  array $config     An optional associative array of configuration settings.
      * @return	Object Return object on success, throws exception on failure
      */
     public function getObject($identifier = null, array $config = array())
@@ -109,8 +107,8 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
     /**
      * Get an object identifier.
      *
-     * @param	string|object	$identifier A valid identifier string or object implementing KObjectInterface
-     * @return	KObjectIdentifier
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectIdentifier
      */
     public function getIdentifier($identifier = null)
     {

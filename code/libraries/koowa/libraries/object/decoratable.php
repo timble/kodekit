@@ -21,10 +21,9 @@ interface KObjectDecoratable
      * When using decorate(), the object will be decorated by the decorator. The decorator needs to extend from
      * ObjectDecorator.
      *
-     * @@param  mixed  $decorator  An object that implements KObjectDecorator, KObjectIdentifier object
-     *                             or valid identifier string
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectDecorator
      * @param   array $config  An optional associative array of configuration options
-     * @return  KObjectDecoratorInterface
+     * @return  KObjectDecorator
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws  UnexpectedValueException If the decorator does not extend from KObjectDecorator
      */
