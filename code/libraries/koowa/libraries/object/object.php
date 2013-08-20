@@ -25,13 +25,6 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     private $__methods = array();
 
     /**
-     * Mixed in methods
-     *
-     * @var array
-     */
-    protected $_mixed_methods = array();
-
-    /**
      * The object identifier
      *
      * @var KObjectIdentifier
@@ -44,6 +37,13 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      * @var KObjectManager
      */
     private $__object_manager;
+
+    /**
+     * Mixed in methods
+     *
+     * @var array
+     */
+    protected $_mixed_methods = array();
 
     /**
      * Constructor.
@@ -155,22 +155,47 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   KObjectMixinInterface $object  An object that implements KMinxInterface
-     * @param   array           $config  An optional associative array of configuration options
-     * @return  KObject
+     * @@param  mixed  $mixin  An object that implements KObjectMixinInterface, KObjectIdentifier object
+     *                         or valid identifier string
+     * @param   array $config  An optional associative array of configuration options
+     * @return  KObjectMixinInterface
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  UnexpectedValueException If the mixin does not implement the KObjectMixinInterface
      */
-    public function mixin(KObjectMixinInterface $object, $config = array())
+    public function mixin($mixin, $config = array())
     {
-        $methods = $object->getMixableMethods($this);
+        if (!($mixin instanceof KObjectMixinInterface))
+        {
+            if (!($mixin instanceof KObjectIdentifier)) {
+               $identifier = $this->getIdentifier($mixin);
+            } else {
+                $identifier = $mixin;
+            }
 
-        foreach($methods as $method) {
-            $this->_mixed_methods[$method] = $object;
+            $config = new KObjectConfig($config);
+            $config->mixer = $this;
+
+            $mixin = new $identifier->classname($config);
+
+            if(!$mixin instanceof KObjectMixinInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Mixin: '.get_class($mixin).' does not implement KObjectMixinInterface'
+                );
+            }
         }
 
-        //Set the mixer
-        $object->setMixer($this);
+        $methods = $mixin->getMixableMethods($this);
+        foreach($methods as $method) {
+            $this->_mixed_methods[$method] = $mixin;
+        }
 
-        return $this;
+        $this->__methods = array_merge($this->getMethods(), array_keys($this->_mixed_methods));
+
+        //Notify the mixin
+        $mixin->onMixin($this);
+
+        return $mixin;
     }
 
     /**
@@ -219,16 +244,16 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      */
     public function getMethods()
     {
-        if(!$this->__methods)
+        if (!$this->__methods)
         {
             $methods = array();
 
-            $reflection = new ReflectionClass($this);
-            foreach($reflection->getMethods() as $method) {
+            $reflection = new \ReflectionClass($this);
+            foreach ($reflection->getMethods() as $method) {
                 $methods[] = $method->name;
             }
 
-            $this->__methods = array_merge($methods, array_keys($this->_mixed_methods));
+            $this->__methods = $methods;
         }
 
         return $this->__methods;
@@ -300,30 +325,30 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     {
         if(isset($this->_mixed_methods[$method]))
         {
-            $object = $this->_mixed_methods[$method];
+            $mixin = $this->_mixed_methods[$method];
             $result = null;
 
             //Switch the mixin's attached mixer
-            $object->setMixer($this);
+            $mixin->setMixer($this);
 
             // Call_user_func_array is ~3 times slower than direct method calls.
             switch(count($arguments))
             {
                 case 0 :
-                    $result = $object->$method();
+                    $result = $mixin->$method();
                     break;
                 case 1 :
-                    $result = $object->$method($arguments[0]);
+                    $result = $mixin->$method($arguments[0]);
                     break;
                 case 2:
-                    $result = $object->$method($arguments[0], $arguments[1]);
+                    $result = $mixin->$method($arguments[0], $arguments[1]);
                     break;
                 case 3:
-                    $result = $object->$method($arguments[0], $arguments[1], $arguments[2]);
+                    $result = $mixin->$method($arguments[0], $arguments[1], $arguments[2]);
                     break;
                 default:
                     // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($object, $method), $arguments);
+                    $result = call_user_func_array(array($mixin, $method), $arguments);
              }
 
             return $result;
