@@ -10,17 +10,20 @@
 /**
  * Object Instantiatable Interface
  *
+ * The interface signals the ObjectManager to delegate object instantiation.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
+ * @see     KObjectManager::getObject()
  */
 interface KObjectInstantiatable
 {
     /**
      * Get the object identifier
      *
-     * @param   KObjectConfigInterface $config        Configuration options
+     * @param   KObjectConfigInterface $config      Configuration options
      * @param 	KObjectManagerInterface $manager	A KObjectManagerInterface object
-     * @return  object
+     * @return  KObjectInterface
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager);
 }
