@@ -15,18 +15,39 @@
  */
 interface KObjectDecoratorInterface
 {
-	/**
-	 * Get the decorated object
-	 *
-	 * @return	object The decorated object
-	 */
-	//public function getObject();
+    /**
+     * Get the decorated object
+     *
+     * @return object The decorated object
+     */
+    public function getDelegate();
 
-	/**
-	 * Set the decorated object
-	 *
-	 * @param 	object
-	 * @return 	$this
-	 */
-	public function setObject($object);
+    /**
+     * Set the decorated object
+     *
+     * @param   object $delegate The object to decorate
+     * @return  KObjectDecoratorInterface
+     * @throws  InvalidArgumentException If the delegate is not an object
+     */
+    public function setDelegate($delegate);
+
+    /**
+     * Get a list of all the available methods
+     *
+     * This function returns an array of all the public methods, both native and mixed.
+     *
+     * @return array An array
+     */
+    public function getMethods();
+
+    /**
+     * Decorate Notifier
+     *
+     * This function is called when an object is being decorated. It will get the delegate passed in.
+     *
+     * @param  object $delegate The object being decorated
+     * @throws InvalidArgumentException If the delegate is not an object
+     * @return void
+     */
+    public function onDecorate($delegate);
 }
