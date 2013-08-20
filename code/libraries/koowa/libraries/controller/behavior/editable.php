@@ -69,9 +69,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function getReferrer()
 	{
-	    $referrer = $this->getObject('koowa:http.url',
-	        array('url' => KRequest::get('cookie.referrer', 'url'))
-	    );
+        $referrer = KRequest::get('cookie.referrer', 'url');
+
+        if ($referrer)
+        {
+            $referrer = $this->getObject('koowa:http.url',
+                array('url' => $referrer)
+            );
+        }
+
 
 	    return $referrer;
 	}

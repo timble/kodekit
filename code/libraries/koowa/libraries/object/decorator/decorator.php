@@ -46,7 +46,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	 *
 	 * @return	object The decorated object
 	 */
-	public function getObject()
+	public function getObject2()
 	{
 		return $this->_object;
 	}
@@ -76,7 +76,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 		if(!$this->__methods)
 		{
 			$methods = array();
-			$object  = $this->getObject();
+			$object  = $this->getObject2();
 
 			if(!($object instanceof KObject))
 			{
@@ -101,7 +101,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
      */
 	public function inherits($class)
     {
-    	$object = $this->getObject();
+    	$object = $this->getObject2();
 
         if($object instanceof KObject) {
           	$result = $object->inherits($class);
@@ -121,7 +121,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	 */
 	public function __set($key, $value)
 	{
-		$this->getObject()->$key = $value;
+		$this->getObject2()->$key = $value;
 	}
 
 	/**
@@ -132,7 +132,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	 */
 	public function __get($key)
 	{
-		return $this->getObject()->$key;
+		return $this->getObject2()->$key;
 	}
 
 	/**
@@ -145,7 +145,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	 */
 	public function __isset($key)
 	{
-		return isset($this->getObject()->$key);
+		return isset($this->getObject2()->$key);
 	}
 
 	/**
@@ -158,8 +158,8 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	 */
 	public function __unset($key)
 	{
-		if (isset($this->getObject()->$key)) {
-            unset($this->getObject()->$key);
+		if (isset($this->getObject2()->$key)) {
+            unset($this->getObject2()->$key);
         }
 	}
 
@@ -173,7 +173,7 @@ class KObjectDecorator extends KObject implements KObjectDecoratorInterface
 	 */
 	public function __call($method, $arguments)
 	{
-		$object = $this->getObject();
+		$object = $this->getObject2();
 
 		//Check if the method exists
 		if($object instanceof KObjectMixable)

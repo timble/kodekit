@@ -20,7 +20,7 @@ interface KObjectDecoratorInterface
 	 *
 	 * @return	object The decorated object
 	 */
-	public function getObject();
+	//public function getObject();
 
 	/**
 	 * Set the decorated object
