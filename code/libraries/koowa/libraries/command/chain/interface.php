@@ -27,8 +27,8 @@ interface KCommandChainInterface
      * @param   integer            $priority The command priority, usually between 1 (high priority) and 5 (lowest),
      *                                        default is 3. If no priority is set, the command priority will be used
      *                                        instead.
-     * @return KCommandChain
-     * @throws \InvalidArgumentException if the object does not implement KCommandInterface
+     * @return KCommandChainInterface
+     * @throws InvalidArgumentException if the object does not implement KCommandInterface
      */
     public function enqueue(KObjectHandlable $command, $priority = null);
 
@@ -46,7 +46,7 @@ interface KCommandChainInterface
      *
      * @param  KObjectHandlable $command
      * @return bool
-     * @throws  \InvalidArgumentException if the object does not implement KCommandInterface
+     * @throws  InvalidArgumentException if the object does not implement KCommandInterface
      */
     public function contains(KObjectHandlable $command);
 
@@ -64,7 +64,7 @@ interface KCommandChainInterface
     /**
      * Enable the chain
      *
-     * @return  KCommandChain
+     * @return  KCommandChainInterface
      */
     public function enable();
 
@@ -73,7 +73,7 @@ interface KCommandChainInterface
      *
      * If the chain is disabled running the chain will always return TRUE
      *
-     * @return  KCommandChain
+     * @return  KCommandChainInterface
      */
     public function disable();
 
@@ -82,8 +82,8 @@ interface KCommandChainInterface
      *
      * @param KObjectHandlable  $command
      * @param integer           $priority
-     * @return KCommandChain
-     * @throws \InvalidArgumentException if the object doesn't implement KCommandInterface
+     * @return KCommandChainInterface
+     * @throws InvalidArgumentException if the object doesn't implement KCommandInterface
      */
     public function setPriority(KObjectHandlable $command, $priority);
 
@@ -92,7 +92,7 @@ interface KCommandChainInterface
      *
      * @param  KObjectHandlable $command
      * @return integer The command priority
-     * @throws \InvalidArgumentException if the object doesn't implement KCommandInterface
+     * @throws InvalidArgumentException if the object doesn't implement KCommandInterface
      */
     public function getPriority(KObjectHandlable $command);
 
@@ -106,7 +106,7 @@ interface KCommandChainInterface
     /**
      * Get the chain object stack
      *
-     * @return     KObjectStack
+     * @return KObjectStack
      */
     public function getStack();
 }

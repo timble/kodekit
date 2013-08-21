@@ -12,9 +12,6 @@
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
   * @package Koowa\Library\Template
-  *
-  * @method KCommandContext getCommandContext() Get the command context
-  * @method KCommandChain   getCommandChain() Get the command chain
   */
 abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 {

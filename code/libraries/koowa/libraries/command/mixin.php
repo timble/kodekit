@@ -92,7 +92,7 @@ class KCommandMixin extends KObjectMixinAbstract
     /**
      * Get the chain of command object
      *
-     * @return  KCommandChain
+     * @return  KCommandChainInterface
      */
     public function getCommandChain()
     {
@@ -105,7 +105,7 @@ class KCommandMixin extends KObjectMixinAbstract
      * @param   KCommandChain $chain A command chain object
      * @return  KObject The mixer object
      */
-    public function setCommandChain(KCommandChain $chain)
+    public function setCommandChain(KCommandChainInterface $chain)
     {
         $this->_command_chain = $chain;
         return $this->getMixer();

@@ -102,7 +102,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      *
      * @param KObjectHandlable $object    A KCommand object
      * @param integer          $priority  The priority
-     * @return KCommandChain
+     * @return KObjectQueue
      */
     public function setPriority(KObjectHandlable $object, $priority)
     {

@@ -18,8 +18,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
     /**
 	 * An associative array of event listeners queues
 	 *
-	 * The keys are holding the event name and the value is
-	 * an KObjectQueue object.
+	 * The keys are holding the event name and the value in an KObjectQueue object.
 	 *
 	 * @var array
 	 */
@@ -59,7 +58,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
             $event = new KEvent($name, $event);
         }
 
-        //Nofity the listeners
+        //Notify the listeners
         if(isset($this->_listeners[$name]))
         {
             foreach($this->_listeners[$name] as $listener)
@@ -156,7 +155,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
      * @param  string            $name     The event name
      * @param  KObjectHandlable  $listener  An object implementing the KObjectHandlable interface
      * @param  integer           $priority The event priority
-     * @return KCommandChain
+     * @return KEventDispatcher
      */
     public function setEventPriority($name, KObjectHandlable $listener, $priority)
     {
