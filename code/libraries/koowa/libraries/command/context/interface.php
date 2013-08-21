@@ -16,17 +16,17 @@
 interface KCommandContextInterface
 {
     /**
-     * Set the error
+     * Get the command subject
      *
-     * @param string $error
-     * @return  KCommandContext
+     * @return KObjectInterface The command subject
      */
-    public function setError($error);
+    public function getSubject();
 
     /**
-     * Get the error
+     * Set the command subject
      *
-     * @return  string|Exception  The error
+     * @param  KObjectInterface $subject The command subject
+     * @return KCommandContextInterface
      */
-    public function getError();
+    public function setSubject(KObjectInterface $subject);
 }

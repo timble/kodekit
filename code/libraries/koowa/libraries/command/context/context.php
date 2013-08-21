@@ -46,6 +46,28 @@ class KCommandContext extends KObjectConfig implements KCommandContextInterface
     }
 
     /**
+     * Get the command subject
+     *
+     * @return object	The command subject
+     */
+    public function getSubject()
+    {
+        return $this->caller;
+    }
+
+    /**
+     * Set the command subject
+     *
+     * @param KObjectInterface $subject The command subject
+     * @return KCommandContext
+     */
+    public function setSubject(KObjectInterface $subject)
+    {
+        $this->caller = $subject;
+        return $this;
+    }
+
+    /**
      * Set a command property
      *
      * @param  string $name
