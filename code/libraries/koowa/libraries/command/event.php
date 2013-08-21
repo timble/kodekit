@@ -80,9 +80,9 @@ class KCommandEvent extends KCommand
         $package = '';
         $subject = '';
 
-        if ($context->caller)
+        if ($context->getSubject())
         {
-            $identifier = clone $context->caller->getIdentifier();
+            $identifier = clone $context->getSubject()->getIdentifier();
             $package = $identifier->package;
 
             if ($identifier->path)
@@ -103,6 +103,8 @@ class KCommandEvent extends KCommand
 
         // Create event object to check for propagation
         $event = new KEvent($event_specific, $context);
+        $event->setTarget($context->getSubject());
+
         $this->getEventDispatcher()->dispatchEvent($event_specific, $event);
 
         // Ensure event can be propagated and event name is different
