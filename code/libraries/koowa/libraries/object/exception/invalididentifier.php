@@ -14,4 +14,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObjectExceptionInvalidIdentifier extends InvalidArgumentException implements KObjectException {}
+class KObjectExceptionInvalidIdentifier extends DomainException implements KObjectException {}
