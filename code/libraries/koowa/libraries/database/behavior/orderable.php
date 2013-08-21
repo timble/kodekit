@@ -24,7 +24,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
      */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
@@ -105,7 +105,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$this->reorder();
 		}
 
-		return $this->_mixer;
+		return $this->getMixer();
 	}
 
 	 /**
