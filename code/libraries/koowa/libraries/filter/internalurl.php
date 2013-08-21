@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterInternalurl extends KFilterAbstract
+class KFilterInternalurl extends KFilterAbstract implements KFilterTraversable
 {
     /**
      * Validate a value
@@ -24,7 +24,7 @@ class KFilterInternalurl extends KFilterAbstract
      * @param   mixed $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         if(!is_string($value)) {
             return false;
@@ -43,7 +43,7 @@ class KFilterInternalurl extends KFilterAbstract
      * @param   mixed $value Value to be sanitized
      * @return  string
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         //TODO : internal URLs should not only have path and query information
         return filter_var($value, FILTER_SANITIZE_URL);

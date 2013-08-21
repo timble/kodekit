@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterBoolean extends KFilterAbstract
+class KFilterBoolean extends KFilterAbstract implements KFilterTraversable
 {
 	/**
 	 * Validate a value
@@ -24,7 +24,7 @@ class KFilterBoolean extends KFilterAbstract
 	 * @param	mixed	$value Value to be validated
 	 * @return	bool	True when the variable is valid
 	 */
-	protected function _validate($value)
+	public function validate($value)
 	{
 		return (null !== filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) );
 	}
@@ -37,7 +37,7 @@ class KFilterBoolean extends KFilterAbstract
 	 * @param	mixed	$value Value to be sanitized
 	 * @return	bool
 	 */
-	protected function _sanitize($value)
+	public function sanitize($value)
 	{
 		return (bool) filter_var($value, FILTER_VALIDATE_BOOLEAN);
 	}

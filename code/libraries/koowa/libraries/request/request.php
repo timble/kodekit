@@ -170,7 +170,6 @@ class KRequest
             }
         }
 
-
         // If the value is null return the default
         if(is_null($result)) {
             return $default;
@@ -182,7 +181,7 @@ class KRequest
         }
 
         if(!($filter instanceof KFilterInterface)) {
-            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->instantiate($filter);
+            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->getFilter($filter);
         }
 
         return $filter->sanitize($result);

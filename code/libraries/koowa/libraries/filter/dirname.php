@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterDirname extends KFilterAbstract
+class KFilterDirname extends KFilterAbstract implements KFilterTraversable
 {
 	/**
 	 * Validate a value
@@ -23,7 +23,7 @@ class KFilterDirname extends KFilterAbstract
 	 * @param	mixed	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
-	protected function _validate($value)
+	public function validate($value)
 	{
 		$value = trim($value);
 	   	return ((string) $value === $this->sanitize($value));
@@ -35,7 +35,7 @@ class KFilterDirname extends KFilterAbstract
 	 * @param	mixed	$value Variable to be sanitized
 	 * @return	string
 	 */
-	protected function _sanitize($value)
+	public function sanitize($value)
 	{
 		$value = trim($value);
     	return dirname($value);

@@ -134,7 +134,7 @@ class KModelState extends KObjectConfig implements KModelStateInterface
                     if($value !== '')
                     {
                         if(!($filter instanceof KFilterInterface)) {
-                            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->instantiate($filter);
+                            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->getFilter($filter);
                         }
 
                         $value = $filter->sanitize($value);

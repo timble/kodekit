@@ -8,9 +8,13 @@
  */
 
 /**
- * Object Identifier Exception
+ * Filter Traversable Interface
+ *
+ * This interface signals KFilterAbstract::getInstance() to decorate the Filter with a KFilterIterator. The iterator
+ * will traverse the data if it's traversable and filter each value separately.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Filter
+ * @see KFilterAbstract::getInstance()
  */
-class KObjectIdentifierException extends Exception {}
+interface KFilterTraversable { }

@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterMd5 extends KFilterAbstract
+class KFilterMd5 extends KFilterAbstract implements KFilterTraversable
 {
     /**
      * Validate a value
@@ -23,7 +23,7 @@ class KFilterMd5 extends KFilterAbstract
      * @param   mixed  $value Variable to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         $value = trim($value);
         $pattern = '/^[a-f0-9]{32}$/';
@@ -36,7 +36,7 @@ class KFilterMd5 extends KFilterAbstract
      * @param   mixed  $value Variable to be sanitized
      * @return  string
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         $value      = trim(strtolower($value));
         $pattern    = '/[^a-f0-9]*/';

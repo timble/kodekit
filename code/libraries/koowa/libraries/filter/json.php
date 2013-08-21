@@ -16,25 +16,12 @@
 class KFilterJson extends KFilterAbstract
 {
     /**
-     * Constructor
-     *
-     * @param   KObjectConfig $config Configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        //Don't walk the incoming data array or object
-        $this->_walk = false;
-    }
-
-    /**
      * Validate a value
      *
      * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         return is_string($value) && !is_null(json_decode($value));
     }
@@ -47,7 +34,7 @@ class KFilterJson extends KFilterAbstract
      * @param   mixed  $value Value to be sanitized
      * @return  string
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         // If instance of KObjectConfig casting to string will make it encode itself to JSON
         if($value instanceof KObjectConfig) {

@@ -15,7 +15,7 @@
  */
 class KFilterFactory extends KObject implements KObjectInstantiatable
 {
-	/**
+    /**
      * Force creation of a singleton
      *
      * @param   KObjectConfigInterface  $config     Configuration options
@@ -24,7 +24,7 @@ class KFilterFactory extends KObject implements KObjectInstantiatable
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-       // Check if an instance with this identifier already exists or not
+        // Check if an instance with this identifier already exists or not
         if (!$manager->isRegistered($config->object_identifier))
         {
             //Create the singleton
@@ -36,62 +36,61 @@ class KFilterFactory extends KObject implements KObjectInstantiatable
         return $manager->getObject($config->object_identifier);
     }
 
-	/**
-	 * Factory method for KFilterInterface classes.
-	 *
-	 * @param string $identifier Filter indentifier
-	 * @param array  $config Configuration options
-	 * @return KFilterAbstract
-	 */
-	public function instantiate($identifier, $config = array())
-	{
-		//Get the filter(s) we need to create
-		$filters = (array) $identifier;
+    /**
+     * Factory method for KFilterInterface classes.
+     *
+     * Method accepts an array of filter names, or filter service identifiers and will create a chained filter
+     * using a FIFO approach.
+     *
+     * @param	string|array $identifier Filter identifier(s)
+     * @param 	object|array $config     An optional KObjectConfig object with configuration options
+     * @return  KFilterInterface
+     */
+    public function getFilter($identifier, $config = array())
+    {
+        //Get the filter(s) we need to create
+        $filters = (array) $identifier;
 
-		//Create the filter chain
-		$filter = array_shift($filters);
-		$filter = $this->_createFilter($filter, $config);
+        //Create a filter chain
+        if(count($filters) > 1)
+        {
+            $filter = $this->getObject('lib:filter.chain');
 
-		foreach($filters as $name) {
-			$filter->addFilter(self::_createFilter($name, $config));
-		}
+            foreach($filters as $name)
+            {
+                $instance = $this->_createFilter($name, $config);
+                $filter->addFilter($instance);
+            }
+        }
+        else $filter = $this->_createFilter($filters[0], $config);
 
-		return $filter;
-	}
+        return $filter;
+    }
 
-	/**
-	 * Create a filter based on it's name
-	 *
-	 * If the filter is not an identifier this function will create it directly
-	 * instead of going through the KObjectManager identification process.
-	 *
-	 * @param  string$filter Filter identifier
-     * @param  array   $config Configuration options
-     * @throws	\InvalidArgumentException	When the filter could not be found
-     * @throws	\UnexpectedValueException	When the filter does not implement FilterInterface
-	 * @return  KFilterInterface
-	 */
-	protected function _createFilter($filter, $config)
-	{
-		try
-		{
-			if(is_string($filter) && strpos($filter, '.') === false ) {
-				$filter = 'com:koowa.filter.'.trim($filter);
-			}
+    /**
+     * Create a filter based on it's name
+     *
+     * If the filter is not an identifier this function will create it directly instead of going through the KObject
+     * identification process.
+     *
+     * @param 	string	$filter Filter identifier
+     * @param   array   $config An array of configuration options.
+     * @throws	UnexpectedValueException	When the filter does not implement FilterInterface
+     * @return  KFilterInterface
+     */
+    protected function _createFilter($filter, $config)
+    {
+        if(is_string($filter) && strpos($filter, '.') === false ) {
+            $filter = 'koowa:filter.'.trim($filter);
+        }
 
-			$filter = $this->getObject($filter, $config);
+        $filter = $this->getObject($filter, $config);
 
-		} catch(UnexpectedValueException $e) {
-			throw new InvalidArgumentException('Invalid filter: '.$filter);
-		}
+        //Check the filter interface
+        if(!($filter instanceof KFilterInterface)) {
+            throw new UnexpectedValueException('Filter:'.get_class($filter).' does not implement FilterInterface');
+        }
 
-	    //Check the filter interface
-		if(!($filter instanceof KFilterInterface))
-		{
-			$identifier = $filter->getIdentifier();
-			throw new UnexpectedValueException("Filter $identifier does not implement KFilterInterface");
-		}
-
-		return $filter;
-	}
+        return $filter;
+    }
 }
