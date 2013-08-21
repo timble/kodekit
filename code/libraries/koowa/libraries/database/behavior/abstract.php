@@ -133,10 +133,10 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     public function save()
     {
         $this->getTable()->getCommandChain()->disable();
-        $this->_mixer->save();
+        $this->getMixer()->save();
         $this->getTable()->getCommandChain()->enable();
 
-        return $this->_mixer;
+        return $this->getMixer();
     }
 
     /**
@@ -150,10 +150,10 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     public function delete()
     {
         $this->getTable()->getCommandChain()->disable();
-        $this->_mixer->delete();
+        $this->getMixer()->delete();
         $this->getTable()->getCommandChain()->enable();
 
-        return $this->_mixer;
+        return $this->getMixer();
     }
 
     /**
@@ -188,7 +188,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
      * @param KObject $mixer  The mixer requesting the mixable methods.
      * @return array  An array of methods
      */
-    public function getMixableMethods(KObject $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods   = parent::getMixableMethods($mixer);
         $methods[] = 'is'.ucfirst($this->getIdentifier()->name);

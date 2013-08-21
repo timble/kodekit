@@ -23,7 +23,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * @var object
      */
-    protected $_mixer;
+    private $__mixer;
 
     /**
      * Class methods
@@ -77,7 +77,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function getMixer()
     {
-        return $this->_mixer;
+        return $this->__mixer;
     }
 
     /**
@@ -88,7 +88,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function setMixer(KObjectMixable $mixer)
     {
-        $this->_mixer = $mixer;
+        $this->__mixer = $mixer;
         return $this;
     }
 
@@ -186,7 +186,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function __set($key, $value)
     {
-        $this->_mixer->$key = $value;
+        $this->getMixer()->$key = $value;
     }
 
     /**
@@ -197,7 +197,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function __get($key)
     {
-        return $this->_mixer->$key;
+        return $this->getMixer()->$key;
     }
 
     /**
@@ -210,7 +210,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function __isset($key)
     {
-        return isset($this->_mixer->$key);
+        return isset($this->getMixer()->$key);
     }
 
     /**
@@ -223,8 +223,8 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function __unset($key)
     {
-        if (isset($this->_mixer->$key)) {
-            unset($this->_mixer->$key);
+        if (isset($this->getMixer()->$key)) {
+            unset($this->getMixer()->$key);
         }
     }
 
@@ -238,27 +238,29 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      */
     public function __call($method, $arguments)
     {
+        $mixer = $this->getMixer();
+
         //Make sure we don't end up in a recursive loop
-        if(isset($this->_mixer) && !($this->_mixer instanceof $this))
+        if(isset($mixer) && !($mixer instanceof $this))
         {
             // Call_user_func_array is ~3 times slower than direct method calls.
             switch(count($arguments))
             {
                 case 0 :
-                    $result = $this->_mixer->$method();
+                    $result = $mixer->$method();
                     break;
                 case 1 :
-                    $result = $this->_mixer->$method($arguments[0]);
+                    $result = $mixer->$method($arguments[0]);
                     break;
                 case 2:
-                    $result = $this->_mixer->$method($arguments[0], $arguments[1]);
+                    $result = $mixer->$method($arguments[0], $arguments[1]);
                     break;
                 case 3:
-                    $result = $this->_mixer->$method($arguments[0], $arguments[1], $arguments[2]);
+                    $result = $mixer->$method($arguments[0], $arguments[1], $arguments[2]);
                     break;
                 default:
                     // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($this->_mixer, $method), $arguments);
+                    $result = call_user_func_array(array($mixer, $method), $arguments);
              }
 
             return $result;

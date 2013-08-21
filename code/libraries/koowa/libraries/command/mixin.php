@@ -39,8 +39,8 @@ class KCommandMixin extends KObjectMixinAbstract
         //Mixin the callback mixer if callbacks have been enabled
         if($config->enable_callbacks)
         {
-            $this->_mixer->mixin(new KCommandCallback(new KObjectConfig(array(
-                'mixer'           => $this->_mixer,
+            $this->getMixer()->mixin(new KCommandCallback(new KObjectConfig(array(
+                'mixer'           => $this->getMixer(),
                 'priority'        => $config->callback_priority,
                 'command_chain'   => $this->_command_chain,
             ))));
