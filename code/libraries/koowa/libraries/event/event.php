@@ -41,6 +41,13 @@ class KEvent extends KObjectConfig implements KEventInterface
     protected $_name;
 
     /**
+     * Target of the event
+     *
+     * @var KObjectInterface
+     */
+    protected $_target;
+
+    /**
      * Constructor.
      *
      * @param	string 			$name   The event name
@@ -68,6 +75,28 @@ class KEvent extends KObjectConfig implements KEventInterface
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Get the event target
+     *
+     * @return object	The event target
+     */
+    public function getTarget()
+    {
+        return $this->_target;
+    }
+
+    /**
+     * Set the event target
+     *
+     * @param object $target The event target
+     * @return KEventInterface
+     */
+    public function setTarget(KObjectInterface $target)
+    {
+        $this->_target = $target;
+        return $this;
     }
 
     /**
