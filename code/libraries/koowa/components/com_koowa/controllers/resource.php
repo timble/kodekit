@@ -28,28 +28,51 @@ class ComKoowaControllerResource extends KControllerResource
         $this->_limit = $config->limit;
 
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin($config->append(array('mixer' => $this))));
+        $this->mixin(new KControllerToolbarMixin(array('mixer' => $this)));
 
         //Attach the toolbars
-        $this->registerCallback('before.get' , array($this, 'attachToolbars'));
+        $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
+    }
+
+    /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return void
+     */
+    protected function _initialize(ObjectConfig $config)
+    {
+        $toolbars = array();
+        if($config->dispatched() && !JFactory::getUser()->guest)
+        {
+            $toolbars[] = $this->getView()->getName();
+
+            if($this->getIdentifier()->application === 'admin') {
+                $toolbars[] = 'menubar';
+            };
+        }
+
+        $config->append(array(
+            'toolbars'  => $toolbars
+        ));
+
+        parent::_initialize($config);
     }
 
     /**
      * Attach the toolbars to the controller
      *
-     * void
+     * @param array $toolbars A list of toolbars
+     * @return ComKoowaControllerResource
      */
-    public function attachToolbars()
+    public function attachToolbars($toolbars)
     {
         if($this->getView() instanceof KViewHtml)
         {
-            if($this->isDispatched() && !JFactory::getUser()->guest)
-            {
-                $this->attachToolbar($this->getView()->getName());
-
-                if($this->getIdentifier()->application === 'admin') {
-                    $this->attachToolbar('menubar');
-                };
+            foreach($toolbars as $toolbar) {
+                $this->attachToolbar($toolbar);
             }
 
             if($toolbars = $this->getToolbars())
@@ -59,6 +82,8 @@ class ComKoowaControllerResource extends KControllerResource
                     ->addFilter('toolbar', array('toolbars' => $toolbars));
             };
         }
+
+        return $this;
     }
 
     /**
