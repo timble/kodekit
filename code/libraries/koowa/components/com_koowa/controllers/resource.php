@@ -45,13 +45,13 @@ class ComKoowaControllerResource extends KControllerResource
     protected function _initialize(KObjectConfig $config)
     {
         $toolbars = array();
-        if($this->isDispatched() && !JFactory::getUser()->guest)
+        if($config->dispatched && !JFactory::getUser()->guest)
         {
             $toolbars[] = $this->getIdentifier()->name;
 
             if($this->getIdentifier()->application === 'admin') {
                 $toolbars[] = 'menubar';
-            };
+            }
         }
 
         $config->append(array(

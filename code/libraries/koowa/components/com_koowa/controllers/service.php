@@ -67,7 +67,7 @@ class ComKoowaControllerService extends KControllerService
 
         //Add default toolbars only if the controller is being dispatched and the user is logged in.
         $toolbars = array();
-        if($config->dispatched() && !JFactory::getUser()->guest)
+        if($config->dispatched && !JFactory::getUser()->guest)
         {
             $toolbars[] = $this->getIdentifier()->name;
 
