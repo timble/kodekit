@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Database Query Interface
  *
- * @author      Gergo Erdosi <gergo@timble.net>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Gergo Erdosi <https://github.com/gergoerdosi>
+ * @package Koowa\Library\Database
  */
 interface KDatabaseQueryInterface
 {
@@ -20,7 +19,7 @@ interface KDatabaseQueryInterface
      * Bind values to a corresponding named placeholders in the query.
      *
      * @param  array $params Associative array of parameters.
-     * @return \KDatabaseQueryInterface
+     * @return KDatabaseQueryInterface
      */
     public function bind(array $params);
 
@@ -35,7 +34,7 @@ interface KDatabaseQueryInterface
      * Set the query parameters
      *
      * @param KObjectArray $params  The query parameters
-     * @return \KDatabaseQueryInterface
+     * @return KDatabaseQueryInterface
      */
     public function setParams(KObjectArray $params);
 
@@ -49,8 +48,8 @@ interface KDatabaseQueryInterface
     /**
      * Set the database adapter
      *
-     * @param  \KDatabaseAdapterInterface $adapter A KDatabaseAdapterInterface object
-     * @return \KDatabaseQueryInterface
+     * @param  KDatabaseAdapterInterface $adapter A KDatabaseAdapterInterface object
+     * @return KDatabaseQueryInterface
      */
     public function setAdapter(KDatabaseAdapterInterface $adapter);
 }

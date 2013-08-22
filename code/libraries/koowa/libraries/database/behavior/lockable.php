@@ -1,17 +1,17 @@
 <?php
 /**
- * @package		Koowa_Database
- * @subpackage 	Behavior
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Database Lockable Behavior
+ * Lockable Database Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 {
@@ -27,10 +27,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
 			'priority'   => KCommand::PRIORITY_HIGH,
@@ -42,16 +42,16 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
     	parent::_initialize($config);
    	}
 
-	/**
-	 * Get the methods that are available for mixin based
-	 *
-	 * This function conditionaly mixies the behavior. Only if the mixer
-	 * has a 'locked_by' property the behavior will be mixed in.
-	 *
-	 * @param object The mixer requesting the mixable methods.
-	 * @return array An array of methods
-	 */
-	public function getMixableMethods(KObject $mixer = null)
+    /**
+     * Get the methods that are available for mixin based
+     *
+     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
+     * the behavior will be mixed in.
+     *
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
+     */
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
@@ -67,7 +67,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires an 'locked_on' and 'locked_by' column
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function lock()
 	{
@@ -87,7 +87,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires an locked_on and locked_by column to be present in the table
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function unlock()
 	{
@@ -146,9 +146,9 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 		if($this->locked())
 		{
 	        $user = JFactory::getUser($this->locked_by);
-			$date = $this->getService('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
+			$date = $this->getObject('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
 			
-			$message = $this->getService('translator')->translate(
+			$message = $this->getObject('translator')->translate(
 			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
 			);
 		}
@@ -159,11 +159,11 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	/**
 	 * Checks if a row can be updated
 	 *
-	 * This function determines if a row can be updated based on it's locked_by information.
-	 * If a row is locked, and not by the logged in user, the function will return false,
-	 * otherwise it will return true
+	 * This function determines if a row can be updated based on it's locked_by information. If a row is locked, and
+     * not by the logged in user, the function will return false, otherwise it will return true
 	 *
-	 * @return boolean True if row can be updated, false otherwise
+     * @param  KCommandContext $context
+	 * @return boolean         True if row can be updated, false otherwise
 	 */
 	protected function _beforeTableUpdate(KCommandContext $context)
 	{
@@ -173,12 +173,12 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	/**
 	 * Checks if a row can be deleted
 	 *
-	 * This function determines if a row can be deleted based on it's locked_by information.
-	 * If a row is locked, and not by the logged in user, the function will return false,
-	 * otherwise it will return true
+	 * This function determines if a row can be deleted based on it's locked_by information. If a row is locked, and
+     * not by the logged in user, the function will return false, otherwise it will return true
 	 *
-	 * @return boolean True if row can be deleted, false otherwise
-	 */
+     * @param  KCommandContext $context
+     * @return boolean         True if row can be deleted, false otherwise
+     */
 	protected function _beforeTableDelete(KCommandContext $context)
 	{
 		return (bool) !$this->locked();

@@ -1,33 +1,77 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Default View Controller
+ * Resource Controller
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerResource extends KControllerResource
 {
     /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_limit = $config->limit;
+
+        // Mixin the toolbar interface
+        $this->mixin(new KControllerToolbarMixin($config->append(array('mixer' => $this))));
+
+        //Attach the toolbars
+        $this->registerCallback('before.get' , array($this, 'attachToolbars'));
+    }
+
+    /**
+     * Attach the toolbars to the controller
+     *
+     * void
+     */
+    public function attachToolbars()
+    {
+        if($this->getView() instanceof KViewHtml)
+        {
+            if($this->isDispatched() && !JFactory::getUser()->guest)
+            {
+                $this->attachToolbar($this->getView()->getName());
+
+                if($this->getIdentifier()->application === 'admin') {
+                    $this->attachToolbar('menubar');
+                };
+            }
+
+            if($toolbars = $this->getToolbars())
+            {
+                $this->getView()
+                    ->getTemplate()
+                    ->addFilter('toolbar', array('toolbars' => $toolbars));
+            };
+        }
+    }
+
+    /**
      * Display action
      *
-     * If the controller was not dispatched manually load the langauges files
+     * If the controller was not dispatched manually load the languages files
      *
-     * @param   KCommandContext A command context object
-     * @return  KDatabaseRow(set)   A row(set) object containing the data to display
+     * @param   KCommandContext $context A command context object
+     * @return 	string|bool 	The rendered output of the view or false if something went wrong
      */
     protected function _actionGet(KCommandContext $context)
     {
-        $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
-
+        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
         return parent::_actionGet($context);
     }
 
@@ -36,8 +80,8 @@ class ComKoowaControllerResource extends KControllerResource
      *
      *  This function translates 'limitstart' to 'offset' for compatibility with Joomla
      *
-     * @param  	string 	The property name.
-     * @param 	mixed 	The property value.
+     * @param  	string 	$property The property name.
+     * @param 	mixed 	$value    The property value.
      */
  	public function __set($property, $value)
     {

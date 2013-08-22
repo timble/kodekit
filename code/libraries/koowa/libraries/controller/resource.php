@@ -1,17 +1,17 @@
 <?php
 /**
- * @package     Koowa_Controller
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract View Controller Class
+ * Abstract View Controller
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @uses        KInflector
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerResource extends KControllerAbstract
 {
@@ -53,9 +53,9 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -79,14 +79,14 @@ abstract class KControllerResource extends KControllerAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
     	    'model'	     => $this->getIdentifier()->name,
-    	    'behaviors'  => array('executable', 'commandable'),
+    	    'behaviors'  => array('executable'),
     	    'readonly'   => true,
     		'request' 	 => array('format' => 'html')
          ))->append(array(
@@ -99,20 +99,18 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Get the view object attached to the controller
 	 *
-	 * This function will check if the view folder exists. If not it will throw
-	 * an exception. This is a security measure to make sure we can only explicitly
-	 * get data from views the have been physically defined.
+	 * This function will check if the view folder exists. If not it will throw an exception. This is a security measure
+     * to make sure we can only explicitly get data from views the have been physically defined.
 	 *
 	 * @throws  KControllerExceptionNotFound if the view cannot be found.
 	 * @return	KViewAbstract
-	 *
 	 */
 	public function getView()
 	{
 	    if(!$this->_view instanceof KViewAbstract)
 		{
 		    //Make sure we have a view identifier
-		    if(!($this->_view instanceof KServiceIdentifier)) {
+		    if(!($this->_view instanceof KObjectIdentifier)) {
 		        $this->setView($this->_view);
 			}
 
@@ -122,7 +120,7 @@ abstract class KControllerResource extends KControllerAbstract
 			    $config['auto_assign'] = !$this->getBehavior('executable')->isReadOnly();
 			}
 
-			$this->_view = $this->getService($this->_view, $config);
+			$this->_view = $this->getObject($this->_view, $config);
 
 			//Set the layout
 			if(isset($this->_request->layout)) {
@@ -141,10 +139,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
-	 * @return	object	A KViewAbstract object or a KServiceIdentifier object
+	 * @return	object	A KViewAbstract object or a KObjectIdentifier object
 	 */
 	public function setView($view)
 	{
@@ -180,16 +178,11 @@ abstract class KControllerResource extends KControllerAbstract
 		if(!$this->_model instanceof KModelAbstract)
 		{
 			//Make sure we have a model identifier
-		    if(!($this->_model instanceof KServiceIdentifier)) {
+		    if(!($this->_model instanceof KObjectIdentifier)) {
 		        $this->setModel($this->_model);
 			}
 
-		    /* @TODO : Pass the state to the model using the options
-		    $options = array(
-				'state' => $this->getRequest()
-            );*/
-
-		    $this->_model = $this->getService($this->_model)->set($this->getRequest());
+		    $this->_model = $this->getObject($this->_model)->set($this->getRequest());
 		}
 
 		return $this->_model;
@@ -198,10 +191,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a model object attached to the controller
 	 *
-	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
-	 * @return	object	A KModelAbstract object or a KServiceIdentifier object
+	 * @return	object	A KModelAbstract object or a KObjectIdentifier object
 	 */
 	public function setModel($model)
 	{
@@ -210,8 +203,8 @@ abstract class KControllerResource extends KControllerAbstract
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {
 			    // Model names are always plural
-			    if(KInflector::isSingular($model)) {
-				    $model = KInflector::pluralize($model);
+			    if(KStringInflector::isSingular($model)) {
+				    $model = KStringInflector::pluralize($model);
 			    }
 
 			    $identifier			= clone $this->getIdentifier();
@@ -237,8 +230,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 * Set a URL for browser redirection.
 	 *
 	 * @param	string  $url URL to redirect to.
-	 * @param	string	$msg Message to display on redirect. Optional, defaults to
-	 * 			value set internally by controller, if any.
+	 * @param	string	$msg Message to display on redirect. Optional, defaults to value set internally by controller, if any.
 	 * @param	string	$type Message type. Optional, defaults to 'message'.
 	 * @return	KControllerAbstract
 	 */
@@ -254,7 +246,7 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Returns an array with the redirect url, the message and the message type
 	 *
-	 * @return array	Named array containing url, message and messageType, or null if no redirect was set
+	 * @return array Named array containing url, message and messageType, or null if no redirect was set
 	 */
 	public function getRedirect()
 	{
@@ -303,22 +295,20 @@ abstract class KControllerResource extends KControllerAbstract
   	}
 
 	/**
-	 * Supports a simple form Fluent Interfaces. Allows you to set the request
-	 * properties by using the request property name as the method name.
+	 * Supports a simple form Fluent Interfaces. Allows you to set the request properties by using the request property
+     * name as the method name.
 	 *
 	 * For example : $controller->view('name')->limit(10)->browse();
 	 *
 	 * @param	string	$method Method name
 	 * @param	array	$args   Array containing all the arguments for the original call
-     *
 	 * @return	mixed
-	 *
 	 * @see http://martinfowler.com/bliki/FluentInterface.html
 	 */
 	public function __call($method, $args)
 	{
 	    //Check first if we are calling a mixed in method.
-	    //This prevents the model being loaded durig object instantiation.
+	    //This prevents the model being loaded during object instantiation.
 		if(!isset($this->_mixed_methods[$method]))
         {
             //Check if the method is a state property

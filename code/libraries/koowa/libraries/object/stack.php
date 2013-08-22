@@ -1,18 +1,19 @@
 <?php
 /**
- * @package     Koowa_Template
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
  /**
-  * Object Stack Class
+  * Object Stack
   * 
   * Implements a simple stack collection (LIFO) 
-  * 
-  * @author     Johan Janssens <johan@nooku.org>
-  * @package    Koowa_Object
+  *
+  * @author  Johan Janssens <https://github.com/johanjanssens>
+  * @package Koowa\Library\Object
   */
 class KObjectStack extends KObject implements Countable
 { 
@@ -26,10 +27,10 @@ class KObjectStack extends KObject implements Countable
     /**
      * Constructor
      *
-     * @param KConfig $config  An optional KConfig object with configuration options
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      * @return KObjectStack
      */
-    public function __construct(KConfig $config) 
+    public function __construct(KObjectConfig $config)
     { 
         parent::__construct($config);
         

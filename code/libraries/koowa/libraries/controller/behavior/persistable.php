@@ -1,26 +1,25 @@
 <?php
 /**
- * @package		Koowa_Controller
- * @subpackage	Command
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Persistable Controller Behavior Class
+ * Persistable Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 {
 	/**
 	 * Load the model state from the request
 	 *
-	 * This functions merges the request information with any model state information
-	 * that was saved in the session and returns the result.
+	 * This functions merges the request information with any model state information that was saved in the session and
+     * returns the result.
 	 *
 	 * @param 	KCommandContext $context The active command context
 	 * @return 	void

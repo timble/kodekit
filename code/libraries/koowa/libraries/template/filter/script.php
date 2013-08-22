@@ -1,18 +1,19 @@
 <?php
 /**
-* @package      Koowa_Template
-* @subpackage	Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Template filter to parse script tags
+ * Script Template Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter to parse script tags
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
@@ -21,13 +22,13 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_LOW,
+            'priority'   => KTemplateFilter::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);
@@ -38,8 +39,8 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	 *
 	 * <script inline></script> can be used for inline scripts
 	 *
-	 * @param string Block of text to parse
-	 * @return KTemplateFilterLink
+	 * @param string $text Block of text to parse
+	 * @return $this
 	 */
 	public function write(&$text)
 	{
@@ -55,7 +56,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	/**
 	 * Parse the text for script tags
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return string
 	 */
 	protected function _parseScripts(&$text)
@@ -68,7 +69,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 		{
 			foreach(array_unique($matches[1]) as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[2][$key]);
+				$attribs = $this->parseAttributes( $matches[2][$key]);
 
                 if (!isset($attribs['type'])) {
                     $attribs['type'] = 'text/javascript';
@@ -89,7 +90,7 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 		{
 			foreach($matches[2] as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[1][$key]);
+				$attribs = $this->parseAttributes( $matches[1][$key]);
 				$scripts .= $this->_renderScript($match, false, $attribs);
 			}
 
@@ -102,14 +103,14 @@ class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplate
 	/**
 	 * Render script information
 	 *
-	 * @param string	The script information
-	 * @param boolean	True, if the script information is a URL.
-	 * @param array		Associative array of attributes
+	 * @param string	$script  The script information
+	 * @param boolean	$link    True, if the script information is a URL.
+	 * @param array		$attribs Associative array of attributes
 	 * @return string
 	 */
 	protected function _renderScript($script, $link, $attribs = array())
 	{
-		$attribs = KHelperArray::toString($attribs);
+		$attribs = $this->buildAttributes($attribs);
 
 		if(!$link)
 		{

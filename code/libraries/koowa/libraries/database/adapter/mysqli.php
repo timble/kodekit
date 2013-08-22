@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Adapter
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Mysqli Database Adapter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Adapter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 {
@@ -31,8 +30,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     protected $_database;
 
 	/**
- 	 * Map of native MySQL types to generic types used when reading
- 	 * table column information.
+ 	 * Map of native MySQL types to generic types used when reading table column information.
  	 *
  	 * @var array
  	 */
@@ -93,10 +91,10 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config  An optional KConfig object with configuration options.
+     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'options'	=> array(
@@ -201,7 +199,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	public function getDatabase()
 	{
 	    if(!isset($this->_database)) {
-	        $query = $this->getService('koowa:database.query.select')
+	        $query = $this->getObject('koowa:database.query.select')
 	        	->columns('DATABASE');
 	        
 	        $this->_database = $this->select($query, KDatabase::FETCH_FIELD);
@@ -351,8 +349,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Fetch all result rows of a result set as an array of associative arrays
 	 *
-	 * If <var>key</var> is not empty then the returned array is indexed by the value
-	 * of the database key.  Returns <var>null</var> if the query fails.
+	 * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
+     * Returns <var>null</var> if the query fails.
 	 *
 	 * @param 	mysqli_result  	$result The result object. A result set identifier returned by the select() function
 	 * @param 	string 			$key    The column name of the index to use
@@ -392,8 +390,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Fetch all rows of a result set as an array of objects
 	 *
-	 * If <var>key</var> is not empty then the returned array is indexed by the value
-	 * of the database key.  Returns <var>null</var> if the query fails.
+	 * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
+     * Returns <var>null</var> if the query fails.
 	 *
 	 * @param	mysqli_result  $result The result object. A result set identifier returned by the select() function
 	 * @param 	string 		   $key    The column name of the index to use
@@ -437,7 +435,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	protected function _fetchTableInfo($table)
 	{
 		$return = null;
-		$query  = $this->getService('koowa:database.query.show')
+		$query  = $this->getObject('koowa:database.query.show')
 			->show('TABLE STATUS')
 			->like(':like')
 			->bind(array('like' => $table));
@@ -458,7 +456,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	protected function _fetchTableColumns($table)
 	{
 		$return = array();
-		$query  = $this->getService('koowa:database.query.show')
+		$query  = $this->getObject('koowa:database.query.show')
 			->show('FULL COLUMNS')
 			->from($table);
 	
@@ -486,7 +484,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     protected function _fetchTableIndexes($table)
     {
         $return = array();
-        $query  = $this->getService('koowa:database.query.show')
+        $query  = $this->getObject('koowa:database.query.show')
             ->show('INDEX')
             ->from($table);
 
@@ -508,7 +506,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 */
 	protected function _parseTableInfo($info)
 	{
-		$table              = $this->getService('koowa:database.schema.table');
+		$table              = $this->getObject('koowa:database.schema.table');
 		$table->name        = $info->Name;
 		$table->engine      = $info->Engine;
 		$table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
@@ -531,7 +529,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     {
         list($type, $length, $scope) = $this->_parseColumnType($info->Type);
 
-        $column = $this->getService('koowa:database.schema.column');
+        $column = $this->getObject('koowa:database.schema.column');
         $column->name     = $info->Field;
         $column->type     = $type;
         $column->length   = $length ? $length : null;
@@ -578,8 +576,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	/**
 	 * Given a raw column specification, parse into datatype, length, and decimal scope.
 	 *
-	 * @param string $spec The column specification; for example,
- 	 * "VARCHAR(255)" or "NUMERIC(10,2)" or "float(6,2) UNSIGNED" or ENUM('yes','no','maybe')
+	 * @param string $spec The column specification; for example, "VARCHAR(255)" or "NUMERIC(10,2)" or "float(6,2)
+     *                     UNSIGNED" or ENUM('yes','no','maybe')
  	 *
  	 * @return array A sequential array of the column type, size, and scope.
  	 */

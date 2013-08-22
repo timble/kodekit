@@ -1,19 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Date Helper
+ * Date Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
 {
@@ -25,7 +24,7 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
      */
     public function format($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'date'     => 'now',
             'timezone'   => true,
@@ -43,7 +42,7 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
      */
     public function humanize($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'date'              => null,
             'gmt_offset'        => 0,

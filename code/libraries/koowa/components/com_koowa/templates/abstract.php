@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Abstract Template
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 {
@@ -31,11 +30,11 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
+	 * Prevent creating instances of this class by making the constructor private
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -50,11 +49,11 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	 * This function tries to get the template from the cache. If it cannot be found
 	 * the template file will be loaded from the file system.
 	 *
-	 * @param   string 	The template path
-	 * @param	array	An associative array of data to be extracted in local template scope
+	 * @param   string 	$path The template path
+	 * @param	array	$data An associative array of data to be extracted in local template scope
 	 * @return KTemplateAbstract
 	 */
-	public function loadFile($path, $data = array(), $process = true)
+	public function loadFile($path, $data = array())
 	{
 	    if(isset($this->_cache))
 	    {
@@ -65,12 +64,12 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 		        // store the path
 		        $this->_path = $path;
 
-	            $this->loadString($template, $data, $process);
+	            $this->loadString($template, $data);
 	            return $this;
 	        }
 	    }
 
-		return parent::loadFile($path, $data, $process);;
+		return parent::loadFile($path, $data);
 	}
 
 	/**
@@ -79,9 +78,8 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	 * This function first tries to find a template override, if no override exists
 	 * it will try to find the default template
 	 *
-	 * @param	string	The file path to look for.
-	 * @return	mixed	The full path and file name for the target file, or FALSE
-	 * 					if the file is not found
+	 * @param	string	$path   The file path to look for.
+	 * @return	mixed	The full path and file name for the target file, or FALSE if the file is not found
 	 */
 	public function findFile($path)
 	{
@@ -112,7 +110,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
      * cache it will be filtered and stored in the cache. Otherwise it will be loaded from the cache and returned
      * directly.
      *
-     * @param string The template content to parse
+     * @param string $content The template content to parse
      * @return void
      */
     protected function _parse(&$content)
@@ -138,7 +136,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
      *
      * Additionally checks for Joomla tmp folder if the system directory is not writable
      *
-     * @throws RuntimeException
+     * @throws RuntimeException If a temporary writable directory cannot be found
      * @return string Folder path
      */
     protected function _getTemporaryDirectory()

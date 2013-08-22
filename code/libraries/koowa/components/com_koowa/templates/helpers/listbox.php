@@ -1,19 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Listbox Helper
+ * Listbox Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
- * @uses        KConfig
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 {    
@@ -25,7 +24,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function enabled( $config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -58,7 +57,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function published($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -91,7 +90,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function access($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'access',
             'attribs'   => array(),
@@ -113,8 +112,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     /**
      * Generates an HTML optionlist based on the distinct data from a model column.
      *
-     * The column used will be defined by the name -> value => column options in
-     * cascading order.
+     * The column used will be defined by the name -> value => column options in cascading order.
      *
      * If no 'model' name is specified the model identifier will be created using
      * the helper identifier. The model name will be the pluralised package name.
@@ -128,7 +126,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     protected function _render($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'autocomplete' => false
         ));
@@ -154,31 +152,31 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'text'  option is specified the 'value' option will be used instead.
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      * @see __call()
      */
     protected function _listbox($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'		  => '',
             'attribs'	  => array(),
-            'model'		  => KInflector::pluralize($this->getIdentifier()->package),
+            'model'		  => KStringInflector::pluralize($this->getIdentifier()->package),
             'deselect'    => true,
             'prompt'      => '- Select -',
             'unique'	  => true
         ))->append(array(
                 'value'		 => $config->name,
                 'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
             ))->append(array(
                 'text'		=> $config->value,
             ))->append(array(
                 'filter' 	=> array('sort' => $config->text),
             ));
 
-        $list = $this->getService($config->identifier)->set($config->filter)->getList();
+        $list = $this->getObject($config->identifier)->set($config->filter)->getList();
 
         //Get the list of items
         $items = $list->getColumn($config->value);
@@ -209,21 +207,21 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      *
      * @see    KTemplateHelperBehavior::autocomplete
      *
-     * @param  array    $config
+     * @param  array|KObjectConfig    $config
      * @return string	The html output
      */
     protected function _autocomplete($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'		 => '',
             'attribs'	 => array(),
-            'model'		 => KInflector::pluralize($this->getIdentifier()->package),
+            'model'		 => KStringInflector::pluralize($this->getIdentifier()->package),
             'validate'   => true,
         ))->append(array(
                 'value'		 => $config->name,
                 'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KInflector::pluralize($config->model)
+                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
             ))->append(array(
                 'text'		=> $config->value,
             ))->append(array(
@@ -242,12 +240,10 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     /**
      * Search the mixin method map and call the method or trigger an error
      *
-     * This function check to see if the method exists in the mixing map if not
-     * it will call the 'listbox' function. The method name will become the 'name'
-     * in the config array.
+     * This function check to see if the method exists in the mixing map if not it will call the 'listbox' function.
+     * The method name will become the 'name' in the config array.
      *
-     * This can be used to auto-magically create select filters based on the
-     * function name.
+     * This can be used to auto-magically create select filters based on the function name.
      *
      * @param  string   $method The function name
      * @param  array    $arguments The function arguments
@@ -259,7 +255,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         if(!in_array($method, $this->getMethods()))
         {
             $config = $arguments[0];
-            $config['name']  = KInflector::singularize(strtolower($method));
+            $config['name']  = KStringInflector::singularize(strtolower($method));
 
             return $this->_render($config);
         }

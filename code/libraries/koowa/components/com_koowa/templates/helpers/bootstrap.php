@@ -1,30 +1,30 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Template Behavior Helper
+ * Bootstrap Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 {
     /**
      * Load Bootstrap JavaScript files, from Joomla if possible
      *
-     * @param array|KConfig $config
+     * @param array|KObjectConfig $config
      * @return string
      */
     public function javascript($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'debug' => JFactory::getApplication()->getCfg('debug')
         ));
@@ -52,21 +52,21 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
     /**
      * Loads necessary Bootstrap files
      *
-     * @param array|KConfig $config
-     *
+     * @param array|KObjectConfig $config
      * @return string
      */
     public function load($config = array())
     {
         $identifier = $this->getTemplate()->getIdentifier();
 
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
-            'debug'       => JFactory::getApplication()->getCfg('debug'),
-            'javascript'  => false,
-            'wrapper'     => sprintf('<div class="%s_%s">%%s</div>', $identifier->type, $identifier->package),
-            'package'     => $identifier->package,
-            'application' => $identifier->application
+            'debug'        => JFactory::getApplication()->getCfg('debug'),
+            'javascript'   => false,
+            'wrapper'      => $identifier->type.'_'.$identifier->package,
+            'package'      => $identifier->package,
+            'file'         => $identifier->type === 'mod' ? 'module' : $identifier->application,
+            'load_default' => version_compare(JVERSION, '3.0', '<')
         ));
 
         $html = '';
@@ -77,38 +77,44 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         // Load the generic files
         // We assume that the template has either loaded Bootstrap or provided styles for it in 3.0+
-        if (empty($config->package) && version_compare(JVERSION, '3.0', '<'))
+        if ($config->load_default && !isset(self::$_loaded['bootstrap-css']))
         {
-            if (!isset(self::$_loaded['bootstrap-css']))
-            {
-                $file  = 'bootstrap'.($config->debug ? '' : '.min').'.css';
-                $html .= '<style src="media://koowa/com_koowa/css/'.$file.'" />';
+            $template = '<style src="media://koowa/com_koowa/css/bootstrap%s.css" />';
+            $html    .= sprintf($template, $config->debug ? '' : '.min');
 
-                self::$_loaded['bootstrap-css'] = true;
-            }
+            self::$_loaded['bootstrap-css'] = true;
         }
-        else
+
+        if (!isset(self::$_loaded[$config->package.'-'.$config->file]))
         {
-            $filename = 'bootstrap'.($config->application ? '-'.$config->application : '');
-            if (version_compare(JVERSION, '3.0', 'ge')) {
-                $filename .= '.j3';
+            $template  = 'com_%s/css/%s.css';
+            $try_files = array(
+                sprintf($template, $config->package, $config->file)
+            );
+
+            if (version_compare(JVERSION, '3.0', '<')) {
+                array_unshift($try_files, sprintf($template, $config->package, $config->file.'-25'));
             }
 
-            if (!isset(self::$_loaded[$config->package.'-'.$filename]))
+            foreach ($try_files as $file)
             {
-                // Load the base bootstrap file too
-                if (substr($filename, -2) !== 'j3') {
-                    $html .= '<style src="media://com_'.$config->package.'/bootstrap/css/bootstrap.css" />';
+                if (file_exists(JPATH_ROOT.'/media/'.$file))
+                {
+                    $html .= sprintf('<style src="media://%s" />', $file);
+
+                    self::$_loaded[$config->package.'-'.$config->file] = true;
+
+                    break;
                 }
-
-                $html .= '<style src="media://com_'.$config->package.'/bootstrap/css/'.$filename.'.css" />';
-
-                self::$_loaded[$config->package.'-'.$filename] = true;
             }
+
         }
 
-        if ($config->wrapper) {
-            $this->wrapper(array('wrapper' => $config->wrapper));
+        if ($config->wrapper)
+        {
+            $this->wrapper(array(
+                'wrapper' => sprintf('<div class="koowa %s">%%s</div>', $config->wrapper)
+            ));
         }
 
         return $html;
@@ -121,7 +127,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      */
     public function wrapper($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'wrapper' => null
         ));

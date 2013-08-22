@@ -1,18 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Default Controller Authorization Command
+ * Executable Controller Behavior
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
 {
@@ -21,8 +21,8 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
      *
      * @param   string          $name    The command name
      * @param   KCommandContext	$context A command context object
-     * @return  boolean     Can return both true or false.
      * @throws  KControllerExceptionForbidden
+     * @return  boolean  Can return both true or false.
      */
     public function execute( $name, KCommandContext $context)
     {
@@ -46,7 +46,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     /**
      * Generic authorize handler for controller add actions
      *
-     * @return  boolean     Can return both true or false.
+     * @return  boolean  Can return both true or false.
      */
     public function canAdd()
     {
@@ -62,7 +62,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     /**
      * Generic authorize handler for controller edit actions
      *
-     * @return  boolean     Can return both true or false.
+     * @return  boolean  Can return both true or false.
      */
     public function canEdit()
     {
@@ -78,7 +78,7 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
     /**
      * Generic authorize handler for controller delete actions
      *
-     * @return  boolean     Can return both true or false.
+     * @return  boolean  Can return both true or false.
      */
     public function canDelete()
     {
@@ -89,6 +89,28 @@ class ComKoowaControllerBehaviorExecutable extends KControllerBehaviorExecutable
         }
 
         return $result;
+    }
+
+    /**
+     * Check if user can perform administrative tasks such as changing configuration options
+     *
+     * @return  boolean  Can return both true or false.
+     */
+    public function canAdmin()
+    {
+        $component = $this->getIdentifier()->package;
+        return JFactory::getUser()->authorise('core.admin', 'com_'.$component) === true;
+    }
+
+    /**
+     * Check if user can can access a component in the administrator backend
+     *
+     * @return  boolean  Can return both true or false.
+     */
+    public function canManage()
+    {
+        $component = $this->getIdentifier()->package;
+        return JFactory::getUser()->authorise('core.manage', 'com_'.$component) === true;
     }
 
 	/**

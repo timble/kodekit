@@ -1,30 +1,30 @@
 <?php
 /**
- * @package		Koowa_Database
- * @subpackage 	Behavior
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Database Identifiable Behavior
+ * Identifiable Database Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 {
 	/**
 	 * Get the methods that are available for mixin based
 	 *
-	 * This function conditionally mixes of the behavior. Only if the mixer
-	 * has a 'uuid' property the behavior will be mixed in.
+	 * This function conditionally mixes of the behavior. Only if the mixer has a 'uuid' property the behavior will be
+     * mixed in.
 	 *
 	 * @param KObject $mixer The mixer requesting the mixable methods.
 	 * @return array An array of methods
 	 */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
@@ -38,8 +38,8 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	/**
 	 * Set uuid information
 	 *
-	 * Requires an 'uuid' column, if the column type is char the uuid will be
-	 * a string, if the column type is binary a hex value will be returned.
+	 * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
+     * hex value will be returned.
 	 *
      * @param KCommandContext $context
 	 * @return void

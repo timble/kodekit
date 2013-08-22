@@ -1,20 +1,19 @@
 <?php
 /**
- * @package		Koowa_Dispatcher
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract controller dispatcher
+ * Abstract Dispatcher
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Dispatcher
- * @uses		KMixinClass
- * @uses        KObject
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Dispatcher
  */
-abstract class KDispatcherAbstract extends KControllerAbstract
+abstract class KDispatcherAbstract extends KControllerAbstract implements KDispatcherInterface
 {
 	/**
 	 * Controller object or identifier (com://APP/COMPONENT.controller.NAME)
@@ -26,9 +25,9 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -47,10 +46,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return 	void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
         	'controller' => $this->getIdentifier()->package,
@@ -72,7 +71,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 		if(!($this->_controller instanceof KControllerAbstract))
 		{
 		    //Make sure we have a controller identifier
-		    if(!($this->_controller instanceof KServiceIdentifier)) {
+		    if(!($this->_controller instanceof KObjectIdentifier)) {
 		        $this->setController($this->_controller);
 			}
 
@@ -81,7 +80,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 			    'dispatched'   => true
         	);
 
-			$this->_controller = $this->getService($this->_controller, $config);
+			$this->_controller = $this->getObject($this->_controller, $config);
 		}
 
 		return $this->_controller;
@@ -90,7 +89,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 	/**
 	 * Method to set a controller object attached to the dispatcher
 	 *
-	 * @param	mixed	$controller An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$controller An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
 	 * @return	KDispatcherAbstract
@@ -102,8 +101,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract
 			if(is_string($controller) && strpos($controller, '.') === false )
 		    {
 		        // Controller names are always singular
-			    if(KInflector::isPlural($controller)) {
-				    $controller = KInflector::singularize($controller);
+			    if(KStringInflector::isPlural($controller)) {
+				    $controller = KStringInflector::singularize($controller);
 			    }
 
 			    $identifier			= clone $this->getIdentifier();

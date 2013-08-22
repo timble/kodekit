@@ -1,17 +1,17 @@
 <?php
 /**
- * @package     Nooku_Plugins
- * @subpackage  Koowa
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Default Koowa plugin
+ * Default Plugin
  *
- * Koowa plugins can handle a number of events that are dynamically generated. The following
- * is a list of available events. This list is not meant to be exclusive.
+ * Koowa plugins can handle a number of events that are dynamically generated. The following is a list of available
+ * events. This list is not meant to be exclusive.
  *
  * onBeforeController[Action]
  * onAfterController[Action]
@@ -42,9 +42,8 @@
  * }
  * </code>
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Plugins
- * @subpackage  Koowa
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Plugin\Koowa
  */
 abstract class PlgKoowaDefault extends KEventListener
 {
@@ -73,7 +72,7 @@ abstract class PlgKoowaDefault extends KEventListener
      * Constructor.
      *
      * @param   object          $dispatcher Event dispatcher
-     * @param   array|KConfig   $config     Configuration options
+     * @param   array|KObjectConfig   $config     Configuration options
      */
 	function __construct($dispatcher, $config = array())
 	{
@@ -96,15 +95,15 @@ abstract class PlgKoowaDefault extends KEventListener
 		}
 
 		//Inject the identifier
-		$config['service_identifier'] = KService::getIdentifier('plg:koowa.'.$this->_name);
+		$config['object_identifier'] = KObjectManager::getInstance()->getIdentifier('plg:koowa.'.$this->_name);
 
-		//Inject the service container
-		$config['service_container'] = KService::getInstance();
+		//Inject the object manager
+		$config['object_manager'] = KObjectManager::getInstance();
 
 		//Inject the dispatcher
-		$config['dispatcher'] = KService::get('com://admin/koowa.event.dispatcher');
+		$config['dispatcher'] = KObjectManager::getInstance()->getObject('com://admin/koowa.event.dispatcher');
 
-		parent::__construct(new KConfig($config));
+		parent::__construct(new KObjectConfig($config));
 	}
 
 	/**

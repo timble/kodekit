@@ -1,31 +1,30 @@
 <?php
 /**
- * @package		Koowa_Database
- * @subpackage 	Behavior
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * FIXME: Fix queries
- * Database Orderable Behavior
+ * Orderable Database Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 {
-	/**
-	 * Get the methods that are available for mixin based
-	 *
-	 * This functions conditionaly mixes the behavior. Only if the mixer
-	 * has a 'ordering' property the behavior will be mixed in.
-	 *
-	 * @param object The mixer requesting the mixable methods.
-	 * @return array An array of methods
-	 */
-	public function getMixableMethods(KObject $mixer = null)
+    /**
+     * Get the methods that are available for mixin based
+     *
+     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
+     * the behavior will be mixed in.
+     *
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
+     */
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
@@ -45,6 +44,8 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 *
 	 * @param 	KDatabaseQuerySelect $query
 	 * @return  void
+     *
+     * @throws InvalidArgumentException
 	 */
 	public function _buildQueryWhere($query)
 	{
@@ -61,7 +62,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires an 'ordering' column
 	 *
-	 * @param	integer	Amount to move up or down
+	 * @param	integer	$change Amount to move up or down
 	 * @return 	KDatabaseRowAbstract
 	 */
 	public function order($change)
@@ -76,8 +77,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$new = $new <= 0 ? 1 : $new;
 
 			$table = $this->getTable();
-			$db    = $table->getDatabase();
-			$query = $this->getService('koowa:database.query.update')
+			$query = $this->getObject('koowa:database.query.update')
 			    ->table($table->getBase());
 
 			//Build the where query
@@ -105,16 +105,15 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$this->reorder();
 		}
 
-		return $this->_mixer;
+		return $this->getMixer();
 	}
 
 	 /**
      * Resets the order of all rows
      *
-     * Resetting starts at $base to allow creating space in sequence for later
-     * record insertion.
+     * Resetting starts at $base to allow creating space in sequence for later record insertion.
      *
-     * @param	integer 	Order at which to start resetting.
+     * @param	integer 	$base Order at which to start resetting.
      * @return	KDatabaseBehaviorOrderable
      */
     public function reorder($base = 0)
@@ -126,7 +125,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $db     = $table->getDatabase();
         $db->execute('SET @order = '.$base);
         
-        $query = $this->getService('koowa:database.query.update')
+        $query = $this->getObject('koowa:database.query.update')
             ->table($table->getBase())
             ->values('ordering = (@order := @order + 1)')
             ->order('ordering', 'ASC');
@@ -153,7 +152,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $table  = $this->getTable();
         $db     = $table->getDatabase();
         
-        $query = $this->getService('koowa:database.query.select')
+        $query = $this->getObject('koowa:database.query.select')
             ->columns('MAX(ordering)')
             ->table($table->getName());
 
@@ -165,9 +164,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
  	/**
      * Saves the row to the database.
      *
-     * This performs an intelligent insert/update and reloads the properties
-     * with fresh data from the table on success.
+     * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
      *
+     * @param   KCommandContext $context
      * @return KDatabaseRowAbstract
      */
     protected function _beforeTableInsert(KCommandContext $context)
@@ -183,10 +182,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     }
 
     /**
-     * Changes the rows ordering if the virtual order field is set. Order is
-     * relative to the row's current position.
+     * Changes the rows ordering if the virtual order field is set. Order is relative to the row's current position.
      *
-     * @param   KCommandContext Context
+     * @param   KCommandContext $context
      */
     protected function _beforeTableUpdate(KCommandContext $context)
     {
@@ -198,7 +196,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Clean up the ordering after an item was deleted
      *
-     * @param   KCommandContext Context
+     * @param   KCommandContext $context
      */
     protected function _afterTableDelete(KCommandContext $context)
     {

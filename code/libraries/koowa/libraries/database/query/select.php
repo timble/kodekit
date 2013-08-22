@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Select Database Query Class
+ * Select Database Query
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseQuerySelect extends KDatabaseQueryAbstract
 {
@@ -93,7 +92,8 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      */
     public function isCountQuery()
     {
-        return $this->columns && current($this->columns) == 'COUNT(*)';
+        $columns = $this->columns;
+        return $columns && current($columns) == 'COUNT(*)';
     }
 
     /**
@@ -109,7 +109,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
     /**
      * Make the query distinct
      *
-     * @return KDatabaseQuery
+     * @return $this
      */
     public function distinct()
     {
@@ -121,7 +121,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build a select query
      *
      * @param  array|string $columns A string or an array of column names
-     * @return \KDatabaseQuerySelect
+     * @return $this
      */
     public function columns($columns = array())
     {
@@ -141,7 +141,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build the from clause 
      *
      * @param  array|string The table string or array name.
-     * @return \KDatabaseQuerySelect
+     * @return $this
      */
     public function table($table)
     {
@@ -153,9 +153,9 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build the join clause
      *
      * @param string $table      The table name to join to.
-     * @param string $condition  The join conditation statement.
+     * @param string $condition  The join condition statement.
      * @param string|array $type The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
-     * @return \KDatabaseQuerySelect
+     * @return $this
      */
     public function join($table, $condition = null, $type = 'LEFT')
     {
@@ -179,9 +179,9 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
     /**
      * Build the where clause
      *
-     * @param   string $condition   The where conditition stateme
+     * @param   string $condition   The where condition statement
      * @param   string $combination The where combination, defaults to 'AND'
-     * @return  \KDatabaseQuerySelect
+     * @return  $this
      */
     public function where($condition, $combination = 'AND')
     {
@@ -197,7 +197,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build the group clause
      *
      * @param   array|string $columns A string or array of ordering columns
-     * @return  \KDatabaseQuerySelect
+     * @return  $this
      */
     public function group($columns)
     {
@@ -209,7 +209,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build the having clause
      *
      * @param   array|string $columns A string or array of ordering columns
-     * @return  \KDatabaseQuerySelect
+     * @return  $this
      */
     public function having($columns)
     {
@@ -222,7 +222,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      *
      * @param   array|string $columns   A string or array of ordering columns
      * @param   string       $direction Either DESC or ASC
-     * @return  \KDatabaseQuerySelect
+     * @return  $this
      */
     public function order($columns, $direction = 'ASC')
     {
@@ -242,7 +242,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      *
      * @param   integer $limit  Number of items to fetch.
      * @param   integer $offset Offset to start fetching at.
-     * @return  \KDatabaseQuerySelect
+     * @return  $this
      */
     public function limit($limit, $offset = 0)
     {

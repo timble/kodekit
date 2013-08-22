@@ -1,27 +1,29 @@
 <?php
 /**
- * @package     Koowa_Date
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Date Class
  *
- * @package Koowa_Date
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaDate extends KDate
 {
     /**
      * Constructor.
      *
-     * @param   array|KConfig An associative array of configuration settings or a ObjectConfig instance.
+     * @param   array|KObjectConfig $config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct($config = array())
     {
-        if (!$config instanceof KConfig) {
-            $config = new KConfig($config);
+        if (!$config instanceof KObjectConfig) {
+            $config = new KObjectConfig($config);
         }
 
         $this->_initialize($config);
@@ -36,10 +38,10 @@ class ComKoowaDate extends KDate
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'translator' => 'com:koowa.translator'
@@ -119,7 +121,7 @@ class ComKoowaDate extends KDate
     {
         if (!$translator instanceof KTranslator)
         {
-            $translator = KService::get($translator);
+            $translator = KObjectManager::getInstance()->getObject($translator);
 
             if (!$translator instanceof KTranslator) {
                 throw new UnexpectedValueException('Passed identifier is not a translator');

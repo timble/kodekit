@@ -1,19 +1,17 @@
 <?php
 /**
- * @package     Koowa_Template
- * @subpackage  Helper
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Template Tabs Behavior Helper
+ * Tabs Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Helper
- * @uses        KArrayHelper
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
 {
@@ -25,13 +23,13 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
      */
     public function startPane($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'id'      => 'tabs',
             'options' => array()
         ));
 
-        return JHtml::_('tabs.start', $config->id, KConfig::unbox($config->options));
+        return JHtml::_('tabs.start', $config->id, KObjectConfig::unbox($config->options));
     }
 
     /**
@@ -53,7 +51,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
      */
     public function startPanel( $config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'title'     => '',
             'class'     => '',
@@ -62,7 +60,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
 
         $title = $config->translate ? $this->translate($config->title) : $config->title;
 
-        $class = KConfig::unbox($config->class);
+        $class = KObjectConfig::unbox($config->class);
 
         if (is_array($class)) {
             $class = implode(' ', $class);

@@ -1,19 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Grid Helper
+ * Grid Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 {
@@ -25,7 +24,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function checkbox($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
         ));
@@ -55,7 +54,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function search($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'search' => null
         ));
@@ -87,7 +86,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function sort($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'title'   	=> '',
             'column'  	=> '',
@@ -143,7 +142,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function enable($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'enabled'
@@ -171,7 +170,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function publish($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'enabled',
@@ -193,9 +192,15 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         return $html;
     }
 
+    /**
+     * Render an order field
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
     public function order($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'total'		=> null,
@@ -234,9 +239,15 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         return $html;
     }
 
+    /**
+     * Render an access field
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
     public function access($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'access'

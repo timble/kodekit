@@ -1,26 +1,29 @@
 <?php
 /**
-* @package      Koowa_Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Filename filter, strips path info
+ * Filename Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * Filter strips path info
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
-class KFilterFilename extends KFilterAbstract
+class KFilterFilename extends KFilterAbstract implements KFilterTraversable
 {
 	/**
 	 * Validate a value
 	 *
-	 * @param	scalar	Value to be validated
+	 * @param	mixed	$value Value to be validated
 	 * @return	bool	True when the variable is valid
 	 */
-	protected function _validate($value)
+	public function validate($value)
 	{
 	   	return ((string) $value === $this->sanitize($value));
 	}
@@ -28,10 +31,10 @@ class KFilterFilename extends KFilterAbstract
 	/**
 	 * Sanitize a value
 	 *
-	 * @param	scalar	Value to be sanitized
+	 * @param	mixed	$value Value to be sanitized
 	 * @return	string
 	 */
-	protected function _sanitize($value)
+	public function sanitize($value)
 	{
     	return basename($value);
 	}

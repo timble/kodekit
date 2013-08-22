@@ -1,9 +1,10 @@
 <?php
 /**
- * @package     Koowa_View
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
@@ -15,7 +16,7 @@
  * {
  *      $this->path = path/to/file');
  *      // OR
- *      $this->output = $file_contents;
+ *      $this->setContent($file_contents);
  *
  *      $this->filename = foobar.pdf';
  *
@@ -27,8 +28,8 @@
  * }
  * </code>
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 class KViewFile extends KViewAbstract
 {
@@ -98,9 +99,9 @@ class KViewFile extends KViewAbstract
     /**
      * Constructor
      *
-     * @param KConfig $config An optional KConfig object with configuration options
+     * @param KObjectConfig $config An optional KObjectConfig object with configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -112,10 +113,10 @@ class KViewFile extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config An optional KConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $count = count($this->getIdentifier()->path);
 
@@ -138,8 +139,8 @@ class KViewFile extends KViewAbstract
      */
     public function display()
     {
-        if (empty($this->path) && empty($this->output)) {
-        	throw new RuntimeException('No output or path supplied');
+        if (empty($this->path) && empty($this->_content)) {
+        	throw new RuntimeException('No content or path supplied');
         }
 
     	// For a certain unmentionable browser
@@ -152,7 +153,7 @@ class KViewFile extends KViewAbstract
     	    apache_setenv('no-gzip', '1');
     	}
 
-    	// Remove php's time limit
+    	// Remove PHP's time limit
     	if(!ini_get('safe_mode')) {
     		@set_time_limit(0);
     	}
@@ -162,7 +163,7 @@ class KViewFile extends KViewAbstract
 
     	$this->filename = basename($this->filename);
 
-    	if (!empty($this->output)) { // File body is passed as string
+    	if (!empty($this->_content)) { // File body is passed as string
     		if (empty($this->filename)) {
     			throw new RuntimeException('No filename supplied');
     		}
@@ -196,7 +197,7 @@ class KViewFile extends KViewAbstract
     protected function _transportPhp()
     {
         if (empty($this->filesize)) {
-            $this->filesize = $this->path ? filesize($this->path) : strlen($this->output);
+            $this->filesize = $this->path ? filesize($this->path) : strlen($this->_content);
         }
     
         $this->start_point = 0;
@@ -231,10 +232,10 @@ class KViewFile extends KViewAbstract
     
         flush();
     
-        if ($this->output)
+        if ($this->_content)
         {
             $this->file = tmpfile();
-            fwrite($this->file, $this->output);
+            fwrite($this->file, $this->_content);
             fseek($this->file, 0);
         }
         else {
@@ -286,7 +287,7 @@ class KViewFile extends KViewAbstract
      */
     protected function _transportApache()
     {
-        if (!empty($this->output)) {
+        if (!empty($this->_content)) {
             $this->_transportPhp();
             return;
         }
@@ -306,7 +307,7 @@ class KViewFile extends KViewAbstract
      */
     protected function _transportNginx()
     {
-        if (!empty($this->output)) {
+        if (!empty($this->_content)) {
             $this->_transportPhp();
             return;
         }
@@ -327,7 +328,7 @@ class KViewFile extends KViewAbstract
      */
     protected function _transportLighttpd()
     {
-        if (!empty($this->output)) {
+        if (!empty($this->_content)) {
             $this->_transportPhp();
             return;
         }
@@ -379,7 +380,6 @@ class KViewFile extends KViewAbstract
         if (!empty($this->filesize)) {
             header('Content-Length: '.$this->filesize);
         }
-    
     }    
 
     /**

@@ -1,18 +1,19 @@
 <?php
 /**
-* @package      Koowa_Template
-* @subpackage   Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link         http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Template read filter for aliases such as @template, @text, @helper, @route etc
+ * Alias Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * Filter for aliases such as @template, @text, @helper, @route etc
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateFilterRead, KTemplateFilterWrite
 {
@@ -23,7 +24,7 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
      */
     protected $_alias_read = array(
         '@helper('      => '$this->renderHelper(',
-    	'@service('     => '$this->getService(',
+    	'@object('      => '$this->getObject(',
         '@date('        => '$this->renderHelper(\'date.format\',',
         '@overlay('     => '$this->renderHelper(\'behavior.overlay\', ',
         '@text('        => '$this->translate(',
@@ -42,8 +43,9 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
     /**
      * Append an alias
      *
-     * @param array     An array of aliases to be appended
-     * @return KTemplateFilterAlias
+     * @param   array   $alias An array of aliases to be appended
+     * @param   integer $mode  Filter mode
+     * @return $this
      */
     public function append(array $alias, $mode = KTemplateFilter::MODE_READ)
     {

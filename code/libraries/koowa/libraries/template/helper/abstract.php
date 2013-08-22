@@ -1,18 +1,17 @@
 <?php
 /**
- * @package		Koowa_Template
- * @subpackage	Helper
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Template Helper Class
+ * Template Helper
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Template
- * @subpackage	Helper
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelperInterface
 {
@@ -26,11 +25,9 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
-	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -55,7 +52,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      */
     public function setTemplate($template)
     {
-        if(!$template instanceof KTemplateAbstract)
+        if(!$template instanceof KTemplateInterface)
         {
             if(empty($template) || (is_string($template) && strpos($template, '.') === false) )
             {
@@ -64,7 +61,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
                 $identifier->name	= $template ? $template : 'default';
             } else $identifier = $this->getIdentifier($template);
 	
-            $template = $this->getService($identifier);
+            $template = $this->getObject($identifier);
         }
     
         $this->_template = $template;
@@ -83,5 +80,34 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     public function translate($string, array $parameters = array())
     {
         return $this->getTemplate()->translate($string, $parameters);
+    }
+
+    /**
+     * Method to build a string with xml style attributes from  an array of key/value pairs
+     *
+     * @param   mixed   $array The array of Key/Value pairs for the attributes
+     * @return  string  String containing xml style attributes
+     */
+    public function buildAttributes($array)
+    {
+        $output = array();
+
+        if($array instanceof KObjectConfig) {
+            $array = KObjectConfig::unbox($array);
+        }
+
+        if(is_array($array))
+        {
+            foreach($array as $key => $item)
+            {
+                if(is_array($item)) {
+                    $item = implode(' ', $item);
+                }
+
+                $output[] = $key.'="'.str_replace('"', '&quot;', $item).'"';
+            }
+        }
+
+        return implode(' ', $output);
     }
 }

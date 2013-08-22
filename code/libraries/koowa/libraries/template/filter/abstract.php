@@ -1,17 +1,17 @@
 <?php
 /**
- * @package     Koowa_Template
- * @subpackage  Filter
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Abstract Template Filter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilterInterface
 {
@@ -32,13 +32,17 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
         $this->_priority = $config->priority;
+
+        if ($config->template) {
+            $this->setTemplate($config->template);
+        }
     }
 
     /**
@@ -46,13 +50,14 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_NORMAL,
+            'priority' => KTemplateFilter::PRIORITY_NORMAL,
+            'template' => null
         ));
 
         parent::_initialize($config);
@@ -79,13 +84,26 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     }
 
     /**
+     * Set the template object
+     *
+     * @param   KTemplateInterface $template The template object
+     * @return  $this
+     */
+    public function setTemplate($template)
+    {
+        $this->_template = $template;
+
+        return $this;
+    }
+
+    /**
      * Command handler
      *
-     * @param   string      The command name
-     * @param   object      The command context
+     * @param   string          $name    The command name
+     * @param   KCommandContext $context The command context
      * @return  boolean     Always returns TRUE
      */
-    final public function execute( $name, KCommandContext $context)
+    final public function execute($name, KCommandContext $context)
     {
         //Set the template
         $this->_template = $context->caller;
@@ -105,7 +123,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         $context->data = $data;
 
         //Reset the template
-        $this->_template = null;
+        //$this->_template = null;
 
         //@TODO : Allows filters to return false and halt the filter chain
         return true;
@@ -117,7 +135,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      * @param   string  String containing xml style attributes
      * @return  array   Key/Value pairs for the attributes
      */
-    protected function _parseAttributes( $string )
+    public function parseAttributes( $string )
     {
         $result = array();
 
@@ -137,5 +155,34 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         }
 
         return $result;
+    }
+
+    /**
+     * Method to build a string with xml style attributes from  an array of key/value pairs
+     *
+     * @param   mixed   $array The array of Key/Value pairs for the attributes
+     * @return  string  String containing xml style attributes
+     */
+    public function buildAttributes($array)
+    {
+        $output = array();
+
+        if ($array instanceof KObjectConfig) {
+            $array = KObjectConfig::unbox($array);
+        }
+
+        if (is_array($array))
+        {
+            foreach ($array as $key => $item)
+            {
+                if (is_array($item)) {
+                    $item = implode(' ', $item);
+                }
+
+                $output[] = $key . '="' . str_replace('"', '&quot;', $item) . '"';
+            }
+        }
+
+        return implode(' ', $output);
     }
 }

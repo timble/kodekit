@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Schema
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Database Schema Column Class
+ * Column Database Schema
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Schema
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseSchemaColumn extends KObject
 {
@@ -73,7 +72,7 @@ class KDatabaseSchemaColumn extends KObject
 	public $autoinc = false;
 
 	/**
-	 * Is the column unqiue
+	 * Is the column unique
 	 *
 	 * @var	bool
 	 */
@@ -91,18 +90,17 @@ class KDatabaseSchemaColumn extends KObject
 	 *
 	 * Public access is allowed via __get() with $filter.
 	 *
-	 * @var	KFilter
+	 * @var	KFilterInterface
 	 */
 	protected $_filter;
 
 	/**
      * Implements the virtual $filter property.
      *
-     * The value can be a KFilter object, a filter name, an array of filter
-     * names or a filter identifier
+     * The value can be a KFilter object, a filter name, an array of filter names or a filter identifier
      *
-     * @param 	string 	The virtual property to set, only accepts 'filter'
-     * @param 	string 	Set the virtual property to this value.
+     * @param 	string  $key	The virtual property to set, only accepts 'filter'
+     * @param 	string 	$value  Set the virtual property to this value.
      */
     public function __set($key, $value)
     {
@@ -112,10 +110,9 @@ class KDatabaseSchemaColumn extends KObject
     }
 
     /**
-     * Implements access to $_filter by reference so that it appears to be
-     * a public $filter property.
+     * Implements access to $_filter by reference so that it appears to be a public $filter property.
      *
-     * @param   string  The virtual property to return, only accepts 'filter'
+     * @param   string  $key The virtual property to return, only accepts 'filter'
      * @return  mixed   The value of the virtual property.
      */
     public function __get($key)
@@ -127,10 +124,12 @@ class KDatabaseSchemaColumn extends KObject
             }
 
             if(!($this->_filter instanceof KFilterInterface)) {
-                $this->_filter = $this->getService('koowa:filter.factory')->instantiate($this->_filter);
+                $this->_filter = $this->getObject('koowa:filter.factory')->getFilter($this->_filter);
             }
 
             return $this->_filter;
         }
+
+        return null;
     }
 }

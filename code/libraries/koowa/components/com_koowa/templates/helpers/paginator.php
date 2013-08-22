@@ -1,20 +1,18 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Default Paginator Helper
+ * Paginator Template Helper
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
- * @uses        KRequest
- * @uses        KConfig
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 {
@@ -23,10 +21,10 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         if($config->total != 0)
         {
@@ -65,12 +63,12 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Render a select box with limit values
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return 	string	Html select box
      */
     public function limit($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'limit'	  	=> 0,
             'attribs'	=> array(),
@@ -104,7 +102,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      */
     public function pagination($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'total'      => 0,
             'display'    => 4,
@@ -148,8 +146,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Render a list of pages links
      *
-     * This function is overriddes the default behavior to render the links in the khepri template
-     * backend style.
+     * This function is overrides the default behavior to render the links in the khepri template backend style.
      *
      * @param   array   $pages An array of page data
      * @return  string  Html
@@ -177,6 +174,13 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         return $html;
     }
 
+    /**
+     * Generates a pagination link
+     *
+     * @param KObject $page Page object
+     * @param string  $title Page title
+     * @return string
+     */
     protected function _link($page, $title)
     {
         $url   = clone KRequest::url();
@@ -199,6 +203,14 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         return $html;
     }
 
+    /**
+     * Render a list of page links using Bootstrap HTML output
+     *
+     * This function is overrides the default behavior to render the links in the khepri template backend style.
+     *
+     * @param   array   $pages An array of page data
+     * @return  string  Html
+     */
     protected function _bootstrap_pages($pages)
     {
         $html  = $pages['previous']->active ? '<li>'.$this->_bootstrap_link($pages['previous'], '&larr;').'</li>' : '';
@@ -214,15 +226,19 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 
         $total = count($pages['pages']);
         $hellip = false;
-        foreach ($pages['pages'] as $i => $page) {
+        foreach ($pages['pages'] as $i => $page)
+        {
             $in_range = $i > ($current - $padding) && $i < ($current + $padding);
 
-            if ($i < $padding || $in_range || $i >= ($total - $padding)) {
+            if ($i < $padding || $in_range || $i >= ($total - $padding))
+            {
                 $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
                 $html .= $this->_bootstrap_link($page, $page->page);
 
                 $hellip = false;
-            } else {
+            }
+            else
+            {
                 if($hellip == true) continue;
 
                 $html .= '<li class="disabled">';
@@ -239,6 +255,13 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         return $html;
     }
 
+    /**
+     * Generates a pagination link using Bootstrap HTML output
+     *
+     * @param KObject $page Page object
+     * @param string  $title Page title
+     * @return string
+     */
     protected function _bootstrap_link($page, $title)
     {
         $url   = clone KRequest::url();
@@ -262,11 +285,11 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Get a list of pages
      *
-     * @param   KConfig $config
+     * @param   KObjectConfig $config
      *
      * @return  array   Returns and array of pages information
      */
-    protected function _items(KConfig $config)
+    protected function _items(KObjectConfig $config)
     {
         $elements  = array();
         $prototype = new KObject();
@@ -317,11 +340,11 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     /**
      * Get the offset for each page, optionally with a range
      *
-     * @param   KConfig $config
+     * @param   KObjectConfig $config
      *
      * @return  array   Page number => offset
      */
-    protected function _offsets(KConfig $config)
+    protected function _offsets(KObjectConfig $config)
     {
         if($display = $config->display)
         {

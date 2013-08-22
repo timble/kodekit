@@ -1,28 +1,30 @@
 <?php
 /**
-* @package      Koowa_Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Language filter for ISO codes like en-GB (lang-COUNTRY)
+ * Language Filter
  *
- * Only checks the format, it doesn't care whether the language or country actually exist
+ * Filter for ISO codes like en-GB (lang-COUNTRY) Only checks the format, it doesn't care whether the language or
+ * country actually exist
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
-class KFilterLang extends KFilterAbstract
+class KFilterLang extends KFilterAbstract implements KFilterTraversable
 {
     /**
      * Validate a value
      *
-     * @param   scalar  Value to be validated
+     * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         $value = trim($value);
         $pattern = '/^[a-z]{2}-[A-Z]{2}$/';
@@ -33,10 +35,10 @@ class KFilterLang extends KFilterAbstract
     /**
      * Sanitize a value
      *
-     * @param   scalar  Value to be sanitized
+     * @param   mixed  $value Value to be sanitized
      * @return  string
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         $value = trim($value);
 
@@ -50,7 +52,7 @@ class KFilterLang extends KFilterAbstract
         $result = implode('-', $parts);
 
         // just making sure :-)
-        if($this->_validate($result)) {
+        if($this->validate($result)) {
             return $result;
         }
 

@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Row
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Database Row Interface
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Row
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 interface KDatabaseRowInterface
 {
@@ -26,7 +25,7 @@ interface KDatabaseRowInterface
 	/**
      * Load the row from the database.
      *
-     * @return object	If successfull returns the row object, otherwise NULL
+     * @return object	If successful returns the row object, otherwise NULL
      */
 	public function load();
 
@@ -64,7 +63,7 @@ interface KDatabaseRowInterface
    /**
     * Returns an associative array of the raw data
     *
-    * @param   boolean  If TRUE, only return the modified data. Default FALSE
+    * @param   boolean  $modified If TRUE, only return the modified data. Default FALSE
     * @return  array
     */
     public function getData($modified = false);
@@ -72,8 +71,8 @@ interface KDatabaseRowInterface
     /**
      * Set the row data
      *
-     * @param   mixed   Either and associative array, an object or a KDatabaseRow
-     * @param   boolean If TRUE, update the modified information for each column being set.
+     * @param   mixed   $data     Either and associative array, an object or a KDatabaseRow
+     * @param   boolean $modified If TRUE, update the modified information for each column being set.
      *                  Default TRUE
      * @return  KDatabaseRowInterface
      */
@@ -89,7 +88,7 @@ interface KDatabaseRowInterface
     /**
      * Check if a column has been modified
      *
-     * @param   string  The column name.
+     * @param   string  $column The column name.
      * @return  boolean
      */
     public function isModified($column);
@@ -107,4 +106,11 @@ interface KDatabaseRowInterface
 	 * @return	bool
 	 */
     public function isConnected();
+
+    /**
+     * Return an associative array of the data.
+     *
+     * @return array
+     */
+    public function toArray();
 }

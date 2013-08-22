@@ -1,56 +1,61 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Behavior
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Database Sluggable Behavior
+ * Sluggable Database Behavior
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
 {
     /**
-     * The column name from where to generate the slug, or a set of column
-     * names to concatenate for generating the slug. Default is 'title'.
+     * The column name from where to generate the slug, or a set of column names to concatenate for generating the slug.
+     *
+     * Default is 'title'.
      *
      * @var array
      */
     protected $_columns;
 
     /**
-     * Separator character / string to use for replacing non alphabetic
-     * characters in generated slug. Default is '-'.
+     * Separator character / string to use for replacing non alphabetic characters in generated slug.
+     *
+     * Default is '-'.
      *
      * @var string
      */
     protected $_separator;
 
     /**
-     * Maximum length the generated slug can have. If this is null the length of
-     * the slug column will be used. Default is NULL.
+     * Maximum length the generated slug can have. If this is null the length of the slug column will be used.
+     *
+     * Default is NULL.
      *
      * @var integer
      */
     protected $_length;
 
     /**
-     * Set to true if slugs should be re-generated when updating an existing
-     * row. Default is true.
+     * Set to true if slugs should be re-generated when updating an existing row.
+     *
+     * Default is true.
      *
      * @var boolean
      */
     protected $_updatable;
 
     /**
-     * Set to true if slugs should be unique. If false and the slug column has
-     * a unique index set this will result in an error being throw that needs
-     * to be recovered. Default is NULL.
+     * Set to true if slugs should be unique. If false and the slug column has a unique index set this will result in
+     * an error being throw that needs to be recovered.
+     *
+     * Default is NULL.
      *
      * @var boolean
      */
@@ -59,9 +64,9 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -78,10 +83,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'columns'   => array('title'),
@@ -97,13 +102,13 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Get the methods that are available for mixin based
      *
-     * This function conditionaly mixes the behavior. Only if the mixer
-     * has a 'slug' property the behavior will be mixed in.
+     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
+     * the behavior will be mixed in.
      *
-     * @param object The mixer requesting the mixable methods.
-     * @return array An array of methods
+     * @param KObject $mixer The mixer requesting the mixable methods.
+     * @return array         An array of methods
      */
-    public function getMixableMethods(KObject $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods = array();
 
@@ -117,11 +122,12 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Insert a slug
      *
-     * If multiple columns are set they will be concatenated and seperated by the
-     * separator in the order they are defined.
+     * If multiple columns are set they will be concatenated and separated by the separator in the order they are
+     * defined.
      *
      * Requires a 'slug' column
      *
+     * @param  KCommandContext $context
      * @return void
      */
     protected function _afterTableInsert(KCommandContext $context)
@@ -133,12 +139,12 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Update the slug
      *
-     * Only works if {@link $updatable} property is TRUE. If the slug is empty
-     * the slug will be regenerated. If the slug has been modified it will be
-     * sanitized.
+     * Only works if {@link $updatable} property is TRUE. If the slug is empty the slug will be regenerated. If the
+     * slug has been modified it will be sanitized.
      *
      * Requires a 'slug' column
      *
+     * @param  KCommandContext $context
      * @return void
      */
     protected function _beforeTableUpdate(KCommandContext $context)
@@ -151,7 +157,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Create a sluggable filter
      *
-     * @return void
+     * @return KFilterSlug
      */
     protected function _createFilter()
     {
@@ -165,7 +171,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         }
 
         //Create the filter
-        $filter = $this->getService('koowa:filter.slug', $config);
+        $filter = $this->getObject('koowa:filter.slug', $config);
         return $filter;
     }
 
@@ -206,9 +212,8 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Make sure the slug is unique
      *
-     * This function checks if the slug already exists and if so appends
-     * a number to the slug to make it unique. The slug will get the form
-     * of slug-x.
+     * This function checks if the slug already exists and if so appends a number to the slug to make it unique.
+     * The slug will get the form of slug-x.
      *
      * @return void
      */
@@ -221,11 +226,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
             $this->_unique = $table->getColumn('slug', true)->unique;
         }
 
-        //If the slug needs to be unique and it already exist make it unqiue
+        //If the slug needs to be unique and it already exists, make it unique
         if($this->_unique && $table->count(array('slug' => $this->slug)))
         {
-            $db    = $table->getDatabase();
-            $query = $this->getService('koowa:database.query.select')
+            $query = $this->getObject('koowa:database.query.select')
                         ->columns('slug')
                         ->where('slug LIKE :slug')
                         ->bind(array('slug' => $this->slug . '-%'));

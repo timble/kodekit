@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Row
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license		GNU GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
- * @link     	http://www.koowa.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Table Row Class
+ * Table Database Row
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Row
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 class KDatabaseRowTable extends KDatabaseRowAbstract
 {
@@ -26,9 +25,9 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
      * Object constructor
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
 		parent::__construct($config);
 
@@ -48,10 +47,10 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * @return void
 	 */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
 	{
 		$config->append(array(
 			'table'	=> $this->getIdentifier()->name
@@ -75,12 +74,12 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
             if(!($this->_table instanceof KDatabaseTableAbstract))
 		    {
 		        //Make sure we have a table identifier
-		        if(!($this->_table instanceof KServiceIdentifier)) {
+		        if(!($this->_table instanceof KObjectIdentifier)) {
 		            $this->setTable($this->_table);
 			    }
 
 		        try {
-		            $this->_table = $this->getService($this->_table);
+		            $this->_table = $this->getObject($this->_table);
                 } catch (RuntimeException $e) {
                     $this->_table = false;
                 }
@@ -93,7 +92,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Method to set a table object attached to the rowset
 	 *
-	 * @param	mixed	An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$table An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KDatabaseRowsetAbstract
@@ -106,7 +105,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 		    {
 		        $identifier         = clone $this->getIdentifier();
 		        $identifier->path   = array('database', 'table');
-		        $identifier->name   = KInflector::tableize($table);
+		        $identifier->name   = KStringInflector::tableize($table);
 		    }
 		    else  $identifier = $this->getIdentifier($table);
 
@@ -135,7 +134,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Load the row from the database using the data in the row
 	 *
-	 * @return object	If successfull returns the row object, otherwise NULL
+	 * @return object	If successful returns the row object, otherwise NULL
 	 */
 	public function load()
 	{
@@ -148,7 +147,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
                 $data  = $this->getTable()->filter($this->getData(true), true);
 		        $row   = $this->getTable()->select($data, KDatabase::FETCH_ROW);
 
-		        // Set the data if the row was loaded succesfully.
+		        // Set the data if the row was loaded successfully.
 		        if(!$row->isNew())
 		        {
 			        $this->setData($row->toArray(), false);
@@ -170,7 +169,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * This performs an intelligent insert/update and reloads the properties
 	 * with fresh data from the table on success.
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function save()
 	{
@@ -199,7 +198,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Deletes the row form the database.
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function delete()
 	{
@@ -266,7 +265,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * This function will reset required column to their default value, not required
 	 * fields will be unset.
 	 *
-	 * @param	string  The column name.
+	 * @param	string  $column The column name.
 	 * @return	void
 	 */
 	public function __unset($column)
@@ -290,8 +289,8 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 * a just in time mixin strategy. Available table behaviors are only mixed
 	 * when needed.
 	 *
-	 * @param  string 	The function name
-	 * @param  array  	The function arguments
+	 * @param  string 	$method    The function name
+	 * @param  array  	$arguments The function arguments
 	 * @throws BadMethodCallException 	If method could not be found
 	 * @return mixed The result of the function
 	 */
@@ -299,7 +298,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	{
 	    if($this->isConnected())
 		{
-		    $parts = KInflector::explode($method);
+		    $parts = KStringInflector::explode($method);
 
 		     //Check if a behavior is mixed
 		    if($parts[0] == 'is' && isset($parts[1]))

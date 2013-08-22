@@ -1,19 +1,17 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Adapter
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
  * Abstract Database Adapter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Adapter
- * @uses 		KPatternCommandChain
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdapterInterface
 {
@@ -76,7 +74,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	/**
 	 * The connection options
 	 *
-	 * @var KConfig
+	 * @var KObjectConfig
 	 */
 	protected $_options = null;
     
@@ -90,11 +88,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * Recognized key values include 'command_chain', 'charset', 'table_prefix',
 	 * (this list is not meant to be comprehensive).
 	 */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
         parent::__construct($config);
 
@@ -118,7 +116,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 		$this->_options = $config->options;
 
 		// Mixin a command chain
-        $this->mixin(new KMixinCommandchain($config->append(array('mixer' => $this))));
+        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 	}
 
 	/**
@@ -136,17 +134,17 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'options'			=> array(),
     		'charset'			=> 'UTF-8',
        	 	'table_prefix'  	=> 'jos_',
     	    'table_needle'		=> '#__',
-    		'command_chain' 	=> $this->getService('koowa:command.chain'),
+    		'command_chain' 	=> $this->getObject('koowa:command.chain'),
     		'dispatch_events'   => true,
     		'enable_callbacks' 	=> false,
     		'connection'		=> null,
@@ -317,7 +315,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             $this->getCommandChain()->run('after.select', $context);
         }
 
-        return KConfig::unbox($context->result);
+        return KObjectConfig::unbox($context->result);
     }
 
     /**
@@ -385,7 +383,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Delete rows from the table.
      *
      * @param  KDatabaseQueryDelete $query The query object.
-     * @return integer     Number of rows affected, or -1 if an error occured.
+     * @return integer     Number of rows affected, or -1 if an error occurred.
      */
     public function delete(KDatabaseQueryDelete $query)
     {
@@ -393,7 +391,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->query     = $query;
 
-        //Excute the delete operation
+        //Execute the delete operation
         if ($this->getCommandChain()->run('before.delete', $context) !== false)
         {
             //Execute the query
@@ -415,7 +413,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      *                     use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
      *                     unless you free the result first.
      * @throws \RuntimeException If the query could not be executed
-     * @return boolean     For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
+     * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                     For other successful queries  return TRUE.
      */
     public function execute($query, $mode = KDatabase::RESULT_STORE)
@@ -429,7 +427,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 
         if ($result === false)
         {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 $this->getConnection()->error . ' of the following query : ' . $query, $this->getConnection()->errno
             );
         }
@@ -497,13 +495,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Safely quotes a value for an SQL statement.
      *
-     * If an array is passed as the value, the array values are quoted
-     * and then returned as a comma-separated string; this is useful
-     * for generating IN() lists.
+     * If an array is passed as the value, the array values are quoted and then returned as a comma-separated string;
+     * this is useful for generating IN() lists.
      *
      * @param   mixed $value The value to quote.
-     * @return string An SQL-safe quoted value (or a string of separated-
-     *                and-quoted values).
+     * @return string An SQL-safe quoted value (or a string of separated-and-quoted values).
      */
     public function quoteValue($value)
     {
@@ -534,14 +530,12 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     } 
     
     /**
-     * Quotes a single identifier name (table, table alias, table column,
-     * index, sequence).  Ignores empty values.
+     * Quotes a single identifier name (table, table alias, table column, index, sequence).  Ignores empty values.
      *
-     * This function requires all SQL statements, operators and functions to be
-     * uppercase.
+     * This function requires all SQL statements, operators and functions to be uppercase.
      *
-     * @param string|array $spec The identifier name to quote.  If an array, quotes
-     *                      each element in the array as an identifier name.
+     * @param string|array $spec The identifier name to quote.  If an array, quotes each element in the array as an
+     *                           identifier name.
      * @return string|array The quoted identifier name (or array of names).
      *
      * @see _quoteIdentifier()
@@ -595,8 +589,8 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Fetch all result rows of a result set as an array of associative arrays
      *
-     * If <var>key</var> is not empty then the returned array is indexed by the value
-     * of the database key.  Returns <var>null</var> if the query fails.
+     * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
+     * Returns <var>null</var> if the query fails.
      *
      * @param   mysqli_result   $result The result object. A result set identifier returned by the select() function
      * @param   string          $key    The column name of the index to use
@@ -615,8 +609,8 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Fetch all rows of a result set as an array of objects
      *
-     * If <var>key</var> is not empty then the returned array is indexed by the value
-     * of the database key.  Returns <var>null</var> if the query fails.
+     * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
+     * Returns <var>null</var> if the query fails.
      *
      * @param   mysqli_result  $result The result object. A result set identifier returned by the select() function
      * @param   string         $key    The column name of the index to use
@@ -643,9 +637,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Given a raw column specification, parse into datatype, size, and decimal scope.
      *
-     * @param string $spec The column specification; for example,
-     * "VARCHAR(255)" or "NUMERIC(10,2)".
-     *
+     * @param string $spec The column specification; for example, "VARCHAR(255)" or "NUMERIC(10,2)".
      * @return array A sequential array of the column type, size, and scope.
      */
     abstract protected function _parseColumnType($spec);
@@ -661,8 +653,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Quotes an identifier name (table, index, etc). Ignores empty values.
      *
-     * If the name contains a dot, this method will separately quote the
-     * parts before and after the dot.
+     * If the name contains a dot, this method will separately quote the parts before and after the dot.
      *
      * @param string    $name The identifier name to quote.
      * @return string   The quoted identifier name.
@@ -670,8 +661,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected function _quoteIdentifier($name)
     {
-    	$result = '';
-    
     	if (is_array($name)) {
     		$name = $name[0];
     	}

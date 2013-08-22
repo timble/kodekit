@@ -1,22 +1,22 @@
 <?php
 /**
-* @package      Koowa_Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
-
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 /**
- * Html XSS Filter
+ * Html Filter
  *
  * Forked from the php input filter library by: Daniel Morris <dan@rootcube.com>
  * Original Contributors: Gianpaolo Racca, Ghislain Picard, Marco Wandschneider,
  * Chris Tobin.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Filter
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Filter
  */
-class KFilterHtml extends KFilterAbstract
+class KFilterHtml extends KFilterAbstract implements KFilterTraversable
 {
     /**
      * List of user-defined tags
@@ -60,9 +60,9 @@ class KFilterHtml extends KFilterAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -95,10 +95,10 @@ class KFilterHtml extends KFilterAbstract
     /**
      * Validate a value
      *
-     * @param   scalar  Value to be validated
+     * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         return (is_string($value)
         // this is too strict, html is usually sanitized
@@ -109,10 +109,10 @@ class KFilterHtml extends KFilterAbstract
     /**
      * Sanitize a value
      *
-     * @param   scalar  Input string/array-of-string to be 'cleaned'
+     * @param   mixed  $value Input string/array-of-string to be 'cleaned'
      * @return  mixed   'Cleaned' version of input parameter
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         $value = (string) $value;
 

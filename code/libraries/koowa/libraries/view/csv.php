@@ -1,16 +1,17 @@
 <?php
 /**
- * @package     Koowa_View
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Export a view as a CSV file
+ * Csv View
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 class KViewCsv extends KViewFile
 {
@@ -40,26 +41,26 @@ class KViewCsv extends KViewFile
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * @return  void
 	 */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
 	{
-		$config->append(array(
-			'mimetype'	  => 'text/csv',
-			'disposition' => 'inline',
-			'quote'		  => '"',
-			'separator'	  => ',',
-			'eol'		  => "\n"
-       	));
+        $config->append(array(
+            'version'     => '1.0',
+            'disposition' => 'inline',
+            'quote'		  => '"',
+            'separator'	  => ',',
+            'eol'		  => "\n"
+        ))->append(array(
+            'mimetype'	  => 'text/csv; version='.$config->version,
+        ));
 
        	parent::_initialize($config);
     }
 
 	/**
-	 * Return the views output
- 	 *
-	 *  @return string 	The output of the view
+	 * Sets the views output
 	 */
 	public function display()
 	{
@@ -91,17 +92,16 @@ class KViewCsv extends KViewFile
 		// Create the header
 		$header = $this->_arrayToString(array_keys($columns)).$this->eol;
 
-		// Set the output
-		$this->output = $header.$rows;
-
-		return parent::display();
+        // Set the content
+        $this->setContent($header.$rows);
+        return parent::display();
 	}
 
 	/**
      * Render
      *
-     * @param	string	Value
-     * return 	boolean
+     * @param	array	$data Value
+     * @return 	boolean
      */
 	protected function _arrayToString($data)
     {
@@ -128,8 +128,8 @@ class KViewCsv extends KViewFile
     /**
      * Check if the value should be quoted
      *
-     * @param	string	Value
-     * return 	boolean
+     * @param	string	$value Value
+     * @return 	boolean
      */
     protected function _quoteValue($value)
     {

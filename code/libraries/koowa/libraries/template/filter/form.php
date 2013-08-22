@@ -1,22 +1,22 @@
 <?php
 /**
-* @package      Koowa_Template
-* @subpackage	Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Template write filter to handle form html elements
+ * Form Template Filter
  *
- * For forms that use a post method this filter adds a token to prevent CSRF. For forms
- * that use a get method this filter adds the action url query params as hidden fields
- * to comply with the html form standard.
+ * Filter to handle form html elements
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage  Filter
+ * For forms that use a post method this filter adds a token to prevent CSRF. For forms that use a get method this
+ * filter adds the action url query params as hidden fields to comply with the html form standard.
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  * @see         http://www.w3.org/TR/html401/interact/forms.html#h-17.13.3.4
  */
 class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFilterWrite
@@ -38,9 +38,9 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
  	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -53,10 +53,10 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'token_value'   => '',

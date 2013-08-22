@@ -1,20 +1,18 @@
 <?php
 /**
- * @package		Koowa_Controller
- * @subpackage 	Behavior
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
-
 /**
  * Abstract Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @category	Koowa
- * @package     Koowa_Controller
- * @subpackage 	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
-abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KControllerBehaviorInterface
+abstract class KControllerBehaviorAbstract extends KObjectMixinAbstract implements KControllerBehaviorInterface
 {
 	/**
 	 * The behavior priority
@@ -24,34 +22,34 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	protected $_priority;
 
 	/**
-     * The service identifier
+     * The object identifier
      *
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
-    private $__service_identifier;
+    private $__object_identifier;
 
     /**
-     * The service container
+     * The object manager
      *
-     * @var KServiceInterface
+     * @var KObjectManagerInterface
      */
-    private $__service_container;
+    private $__object_manager;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct( KConfig $config = null)
+	public function __construct( KObjectConfig $config = null)
 	{
-	    //Set the service container
-        if(isset($config->service_container)) {
-            $this->__service_container = $config->service_container;
+	    //Set the object manager
+        if(isset($config->object_manager)) {
+            $this->__object_manager = $config->object_manager;
         }
 
-        //Set the service identifier
-        if(isset($config->service_identifier)) {
-            $this->__service_identifier = $config->service_identifier;
+        //Set the object identifier
+        if(isset($config->object_identifier)) {
+            $this->__object_identifier = $config->object_identifier;
         }
 
 	    parent::__construct($config);
@@ -69,10 +67,10 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
 			'priority'   => KCommand::PRIORITY_NORMAL,
@@ -95,9 +93,8 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	/**
 	 * Command handler
 	 *
-	 * This function translates the command name to a command handler function of
-	 * the format '_before[Command]' or '_after[Command]. Command handler
-	 * functions should be declared protected.
+	 * This function translates the command name to a command handler function of the format '_before[Command]' or
+     * '_after[Command]. Command handler functions should be declared protected.
 	 *
 	 * @param 	string           $name	    The command name
 	 * @param 	KCommandContext  $context 	The command context
@@ -105,9 +102,6 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
 	 */
 	public function execute($name, KCommandContext $context)
 	{
-		$identifier = clone $context->caller->getIdentifier();
-		$type       = array_pop($identifier->path);
-
 		$parts  = explode('.', $name);
 		$method = '_'.$parts[0].ucfirst($parts[1]);
 
@@ -123,10 +117,8 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
     /**
      * Get an object handle
      *
-     * This function only returns a valid handle if one or more command handler
-     * functions are defined. A commend handler function needs to follow the
-     * following format : '_afterX[Event]' or '_beforeX[Event]' to be
-     * recognised.
+     * This function only returns a valid handle if one or more command handler functions are defined. A commend handler
+     * function needs to follow the following format : '_afterX[Event]' or '_beforeX[Event]' to be recognised.
      *
      * @return string A string that is unique, or NULL
      * @see execute()
@@ -148,13 +140,13 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
     /**
      * Get the methods that are available for mixin based
      *
-     * This function also dynamically adds a function of format is[Behavior]
-     * to allow client code to check if the behavior is callable.
+     * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the behavior
+     * is callable.
      *
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array An array of methods
      */
-    public function getMixableMethods(KObject $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods   = parent::getMixableMethods($mixer);
         $methods[] = 'is'.ucfirst($this->getIdentifier()->name);
@@ -166,37 +158,35 @@ abstract class KControllerBehaviorAbstract extends KMixinAbstract implements KCo
             }
         }
 
-        return array_diff($methods, array('execute', 'getIdentifier', 'getPriority', 'getHandle', 'getService', 'getIdentifier'));
+        return array_diff($methods, array('execute', 'getIdentifier', 'getPriority', 'getHandle', 'getObject', 'getIdentifier'));
     }
 
 	/**
-	 * Get an instance of a class based on a class identifier only creating it
-	 * if it doesn't exist yet.
+	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
 	 *
 	 * @param	string|object	$identifier The class identifier or identifier object
 	 * @param	array  			$config     An optional associative array of configuration settings.
 	 * @return	object  		Return object on success, throws exception on failure
-	 * @see 	KObjectServiceable
+	 * @see 	KObjectInterface
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getObject($identifier, array $config = array())
 	{
-	    return $this->__service_container->get($identifier, $config);
+	    return $this->__object_manager->getObject($identifier, $config);
 	}
 
     /**
-     * Gets the service identifier.
+     * Gets the object identifier.
      *
      * @param mixed $identifier
-     *
-     * @return    KServiceIdentifier
-     * @see    KObjectServiceable
+     * @return KObjectIdentifier
+     * @see    KObjectInterface
      */
 	final public function getIdentifier($identifier = null)
 	{
 		if(isset($identifier)) {
-		    $result = $this->__service_container->getIdentifier($identifier);
+		    $result = $this->__object_manager->getIdentifier($identifier);
 		} else {
-		    $result = $this->__service_identifier;
+		    $result = $this->__object_identifier;
 		}
 
 	    return $result;

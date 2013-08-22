@@ -1,22 +1,20 @@
 <?php
 /**
- * @package    	Koowa_Request
- * @copyright  	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license    	GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link 		http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 //Instantiate the request singleton
 KRequest::getInstance();
 
 /**
- * Request class
+ * Request
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Request
- * @uses        KFilter
- * @uses        KInflector
- * @uses        KService
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  * @static
  */
 class KRequest
@@ -69,7 +67,7 @@ class KRequest
      *
      * Prevent creating instances of this class by making the constructor private
      */
-    final private function __construct(KConfig $config)
+    final private function __construct(KObjectConfig $config)
     {
         $content = self::content();
 
@@ -125,7 +123,7 @@ class KRequest
     /**
      * Force creation of a singleton
      *
-     * @param  array|KConfig $config
+     * @param  array|KObjectConfig $config
      * @return $this
      */
     public static function getInstance($config = array())
@@ -134,8 +132,8 @@ class KRequest
 
         if ($instance === NULL)
         {
-            if(!$config instanceof KConfig) {
-                $config = new KConfig($config);
+            if(!$config instanceof KObjectConfig) {
+                $config = new KObjectConfig($config);
             }
 
             $instance = new self($config);
@@ -172,19 +170,18 @@ class KRequest
             }
         }
 
-
         // If the value is null return the default
         if(is_null($result)) {
             return $default;
         }
 
-        // Handle magic quotes compatability
+        // Handle magic quotes compatibility
         if (get_magic_quotes_gpc() && !in_array($hash, array('FILES', 'SESSION'))) {
             $result = self::_stripSlashes( $result );
         }
 
         if(!($filter instanceof KFilterInterface)) {
-            $filter = KService::get('koowa:filter.factory')->instantiate($filter);
+            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->getFilter($filter);
         }
 
         return $filter->sanitize($result);
@@ -208,7 +205,7 @@ class KRequest
         }
         
         // Store cookies persistently
-        if($hash == 'COOKIE' && strpos(KRequest::protocol(), 'http') !== false)
+        if($hash == 'COOKIE' && strpos(KRequest::scheme(), 'http') !== false)
         {
             // rewrite the $keys as foo[bar][bar]
             $ckeys = $keys; // get a copy
@@ -230,9 +227,9 @@ class KRequest
         // Add the global if it's doesn't exist
         if(!isset($GLOBALS['_'.$hash])) { 
            $GLOBALS['_'.$hash] = array(); 
-        } 
-        
-        $GLOBALS['_'.$hash] = KHelperArray::merge($GLOBALS['_'.$hash], $value);
+        }
+
+        $GLOBALS['_'.$hash] = self::_mergeArrays($GLOBALS['_'.$hash], $value);
     }
 
     /**
@@ -267,8 +264,6 @@ class KRequest
      */
     public static function content($key = null)
     {
-        $result = '';
-
         if (!isset(self::$_content) && isset($_SERVER['CONTENT_TYPE']))
         {
             $type = $_SERVER['CONTENT_TYPE'];
@@ -357,13 +352,13 @@ class KRequest
         {
             if($referrer = KRequest::get('server.HTTP_REFERER', 'url'))
             {
-                self::$_referrer = KService::get('koowa:http.url', array('url' => $referrer));
+                self::$_referrer = KObjectManager::getInstance()->getObject('koowa:http.url', array('url' => $referrer));
             }
         }
 
         if($isInternal)
         {
-        	if(!KService::get('koowa:filter.internalurl')->validate((string)self::$_referrer)) {
+        	if(!KObjectManager::getInstance()->getObject('koowa:filter.internalurl')->validate((string)self::$_referrer)) {
         		return null;
         	}
         }
@@ -380,7 +375,7 @@ class KRequest
     {
         if(!isset(self::$_url))
         {
-            $url = self::protocol().'://';
+            $url = self::scheme().'://';
             
             if (PHP_SAPI !== 'cli') 
         	{
@@ -392,7 +387,7 @@ class KRequest
         	    if (!empty ($_SERVER['PHP_SELF']) && !empty ($_SERVER['REQUEST_URI']))
                 {
                 	/*
-                 	 * To build the entire URI we need to prepend the protocol, and the http host
+                 	 * To build the entire URI we need to prepend the scheme, and the http host
                  	 * to the URI string.
                  	 */
                     $url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -417,10 +412,10 @@ class KRequest
         	else $url .= 'koowa';
             
             // Sanitize the url since we can't trust the server var
-            $url = KService::get('koowa:filter.url')->sanitize($url);
+            $url = KObjectManager::getInstance()->getObject('koowa:filter.url')->sanitize($url);
 
             // Create the URI object
-            self::$_url = KService::get('koowa:http.url', array('url' => $url));
+            self::$_url = KObjectManager::getInstance()->getObject('koowa:http.url', array('url' => $url));
 
         }
 
@@ -430,7 +425,7 @@ class KRequest
     /**
      * Returns the base path of the request.
      *
-     * @return  object  A KHttpUrl object
+     * @return  KHttpUrl  A KHttpUrl object
      */
     public static function base()
     {
@@ -448,9 +443,9 @@ class KRequest
             $path = rtrim(dirname($path), '/\\');
 
             // Sanitize the url since we can't trust the server var
-            $path = KService::get('koowa:filter.url')->sanitize($path);
+            $path = KObjectManager::getInstance()->getObject('koowa:filter.url')->sanitize($path);
 
-            self::$_base = KService::get('koowa:http.url', array('url' => $path));
+            self::$_base = KObjectManager::getInstance()->getObject('koowa:http.url', array('url' => $path));
         }
 
         return self::$_base;
@@ -459,8 +454,8 @@ class KRequest
     /**
      * Returns the root path of the request.
      *
-     * In most case this value will be the same as KRequest::base however it can be
-     * changed by pushing in a different value
+     * In most case this value will be the same as KRequest::base however it can be changed by pushing in a
+     * different value
      *
      * @param   null|KHttpUrl Used to change the stored root path
      * @return  KHttpUrl  A KHttpUrl object
@@ -470,7 +465,7 @@ class KRequest
         if(!is_null($path))
         {
             if(!$path instanceof KHttpUrl) {
-                $path = KService::get('koowa:http.url', array('url' => $path));
+                $path = KObjectManager::getInstance()->getObject('koowa:http.url', array('url' => $path));
             }
 
             self::$_root = $path;
@@ -484,25 +479,34 @@ class KRequest
     }
 
     /**
-     * Returns the current request protocol, based on $_SERVER['https']. In CLI
-     * mode, 'cli' will be returned.
+     * Returns the current request scheme, based on $_SERVER['https']. In CLI mode, 'cli' will be returned.
+     *
+     * @return  string
+     */
+    public static function scheme()
+    {
+        $scheme = 'cli';
+
+        if (PHP_SAPI !== 'cli')
+        {
+            $scheme = 'http';
+
+            if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
+                $scheme = 'https';
+            }
+        }
+
+        return $scheme;
+    }
+
+    /**
+     * Return the protocol based on $_SERVER['SERVER_PROTOCOL']
      *
      * @return  string
      */
     public static function protocol()
     {
-        $protocol = 'cli';
-        
-        if (PHP_SAPI !== 'cli') 
-        {
-            $protocol = 'http';
-            
-            if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-                $protocol = 'https';
-            }
-        } 
-     
-        return $protocol;
+        return $_SERVER['SERVER_PROTOCOL'];
     }
 
     /**
@@ -708,5 +712,38 @@ class KRequest
         }
 
         return $value;
+    }
+
+    /**
+     * Merge two arrays recursively
+     *
+     * Matching keys' values in the second array overwrite those in the first array, as is the
+     * case with array_merge.
+     *
+     * Parameters are passed by reference, though only for performance reasons. They're not
+     * altered by this function and the datatypes of the values in the arrays are unchanged.
+     *
+     * @param array
+     * @param array
+     * @return array    An array of values resulted from merging the arguments together.
+     */
+    protected static function _mergeArrays( array &$array1, array &$array2 )
+    {
+        $args   = func_get_args();
+        $merged = array_shift($args);
+
+        foreach($args as $array)
+        {
+            foreach ( $array as $key => &$value )
+            {
+                if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) ){
+                    $merged [$key] = self::_mergeArrays ( $merged [$key], $value );
+                } else {
+                    $merged [$key] = $value;
+                }
+            }
+        }
+
+        return $merged;
     }
 }

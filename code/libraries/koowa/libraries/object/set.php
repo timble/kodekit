@@ -1,20 +1,21 @@
 <?php
 /**
- * @package		Koowa_Object
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * An Object Set Class
+ * Object Set
  *
- * KObjectSet implements an associative container that stores objects, and in which the object
- * themselves are the keys. Objects are stored in the set in FIFO order.
+ * KObjectSet implements an associative container that stores objects, and in which the object themselves are the keys.
+ * Objects are stored in the set in FIFO order.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Object
- * @see			http://www.php.net/manual/en/class.splobjectstorage.php
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
+ * @see		http://www.php.net/manual/en/class.splobjectstorage.php
  */
 class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Serializable
 {
@@ -28,12 +29,12 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KObjectConfig $config = null)
     {
         //If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
+        if(!isset($config)) $config = new KObjectConfig();
 
         parent::__construct($config);
 
@@ -43,7 +44,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
   	/**
      * Inserts an object in the set
      *
-     * @param   object	The object to insert
+     * @param   KObjectHandlable $object	The object to insert
      * @return  boolean	TRUE on success FALSE on failure
      */
     public function insert( KObjectHandlable $object)
@@ -65,7 +66,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      * All numerical array keys will be modified to start counting from zero while
      * literal keys won't be touched.
      *
-     * @param   object      The object to remove
+     * @param   KObjectHandlable $object The object to remove
      * @return  KObjectQueue
      */
     public function extract( KObjectHandlable $object)
@@ -82,7 +83,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
 	/**
      * Checks if the set contains a specific object
      *
-     * @param   object      The object to look for.
+     * @param   KObjectHandlable $object  The object to look for.
      * @return  bool		Returns TRUE if the object is in the set, FALSE otherwise.
      */
     public function contains( KObjectHandlable $object)
@@ -93,7 +94,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
 	/**
      * Merge-in another set
      *
-     * @param   object      The object set to merge
+     * @param   KObjectSet $set The object set to merge
      * @return  KObjectQueue
      */
     public function merge( KObjectSet $set)
@@ -110,7 +111,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object 	The object to look for.
+     * @param   KObjectHandlable $object The object to look for.
      * @return  bool	Returns TRUE if the object exists in the storage, and FALSE otherwise
      */
     public function offsetExists($object)
@@ -118,6 +119,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
         if($object instanceof KObjectHandlable) {
             return $this->contains($object);
         }
+
+        return false;
     }
 
     /**
@@ -125,14 +128,16 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object  The object to look for.
-     * @return  mixed   The object
+     * @param   KObjectHandlable  $object The object to look for.
+     * @return  mixed The object
      */
     public function offsetGet($object)
     {
         if($object instanceof KObjectHandlable) {
             return $this->_object_set->offsetGet($object->getHandle());
         }
+
+        return null;
     }
 
     /**
@@ -140,8 +145,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object  The object to store
-     * @param   mixed   The data to associate with the object. [UNUSED]
+     * @param   KObjectHandlable  $object The object to store
+     * @param   mixed              $data  The data to associate with the object. [UNUSED]
      * @return  object  KObjectSet
      */
     public function offsetSet($object, $data)
@@ -157,8 +162,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object  The object to remove.
-     * @return  object 	KObjectSet
+     * @param   object $object The object to remove.
+     * @return  KObjectSet
      */
     public function offsetUnset($object)
     {
@@ -186,7 +191,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface Serializable
      *
-     * @param   string  An serialized data
+     * @param   string $serialized The serialized data
      */
     public function unserialize($serialized)
     {
@@ -256,7 +261,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
     /**
      * Return the key of the current element
      *
-     * @return  scalar
+     * @return  mixed
      */
     public function key()
     {
@@ -276,7 +281,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
 	/**
      * Move forward to next element
      *
-     * @return  void
+     * @return  mixed
      */
     public function next()
     {
@@ -296,7 +301,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
     /**
      * Preform a deep clone of the object
      *
-     * @retun void
+     * @return void
      */
     public function __clone()
     {

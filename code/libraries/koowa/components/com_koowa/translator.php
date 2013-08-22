@@ -1,51 +1,58 @@
 <?php
 /**
- * @package		Koowa_Translator
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Translator Class
+ * Translator
  *
- * @author		Ercan Ozkaya <ercan@timble.net>
- * @package		Koowa_Translator
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
+class ComKoowaTranslator extends KTranslator implements KObjectInstantiatable
 {
     /**
      * A reference to Joomla translator
+     *
      * @var object
      */
     protected $_translation_helper;
 
     /**
      * A prefix attached to every generated key
+     *
      * @var string
      */
     protected $_prefix;
 
     /**
      * Catalogue to map common Joomla keys
+     *
      * @var KTranslatorCatalogueInterface
      */
     protected $_alias_catalogue;
 
     /**
      * Default catalogue that generates the keys
+     *
      * @var KTranslatorCatalogueInterface
      */
     protected $_catalogue;
 
     /**
      * Fallback locale to always load the language files from
+     *
      * @var string
      */
     protected $_fallback_locale;
 
     /**
      * Maps identifier types to words
+     *
      * @var array
      */
     protected static $_type_map = array(
@@ -61,9 +68,9 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     protected static $_loaded_files = array();
 
     /**
-     * @param KConfig $config
+     * @param KObjectConfig $config
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -80,7 +87,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         if (!in_array('koowa', self::$_loaded_files))
         {
             $this->loadLanguageFiles('com_koowa');
-
             self::$_loaded_files[] = 'koowa';
         }
     }
@@ -90,10 +96,10 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'prefix'     => 'KLS_',
@@ -105,6 +111,25 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Force creation of a singleton
+     *
+     * @param KObjectConfigInterface  $config optional KObjectConfig object with configuration options
+     * @param KObjectManagerInterface $manager
+     * @return ComKoowaTranslator
+     */
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    {
+        if (!$manager->isRegistered($config->object_identifier))
+        {
+            $classname = $config->object_identifier->classname;
+            $instance  = new $classname($config);
+            $manager->setObject($config->object_identifier, $instance);
+        }
+
+        return $manager->getObject($config->object_identifier);
     }
 
     /**
@@ -125,7 +150,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         elseif (isset($this->_alias_catalogue[$result])) {
             $result = $this->_translation_helper->_($this->_alias_catalogue[$result]);
         }
-        else {
+        else
+        {
             if (substr($string, 0, strlen($this->_prefix)) === $this->_prefix) {
                 $key = $string;
             } else {
@@ -162,7 +188,9 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
 
         $key = $this->getKey($strings[1]);
         $found = null;
-        while ($choice > 0) {
+
+        while ($choice > 0)
+        {
             $looking_for = $key.($choice === 1 ? '' : '_'.$choice);
             if ($this->isTranslatable($looking_for)) {
                 $found = $looking_for;
@@ -190,7 +218,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Gets a key from the catalogue and prefixes it
      *
      * @param string $string Language key
-     *
      * @return string Translated string
      */
     public function getKey($string)
@@ -207,14 +234,14 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Load the extension language files.
      *
-     * @param string|KServiceIdentifier $extension Extension identifier or name (e.g. com_docman)
+     * @param string|KObjectIdentifier $extension Extension identifier or name (e.g. com_docman)
      * @param string $app Application. Leave blank for current one.
      *
      * @return boolean
      */
     public function loadLanguageFiles($extension, $app = null)
     {
-        if ($extension instanceof KServiceIdentifier) {
+        if ($extension instanceof KObjectIdentifier) {
             $extension = $extension->type.'_'.$extension->package;
         }
 
@@ -237,7 +264,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      *
      * @param string $extension Extension
      * @param string $app       Application. Leave blank for current one.
-     *
      * @return string
      */
     protected function _getExtensionFolder($extension, $app = null)
@@ -245,14 +271,15 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         $type    = substr($extension, 0, 3);
         $package = substr($extension, 4);
 
-        if ($override = KServiceIdentifier::getPackage($package)) {
+        if ($override = KObjectIdentifier::getPackage($package)) {
             $base = $override;
         }
         else
         {
-            switch ($app) {
+            switch ($app)
+            {
                 case 'admin':
-                    $base = JPATH_ADMIN;
+                    $base = JPATH_ADMINISTRATOR;
                     break;
                 case 'site':
                     $base = JPATH_SITE;
@@ -277,7 +304,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * @param string $extension
      * @param string $locale Locale name
      * @param string $base   Base path
-     *
      * @return bool
      */
     protected function _loadLanguageFile($extension, $locale, $base)
@@ -301,12 +327,12 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Creates and returns a catalogue from the passed identifier
      *
      * @param string|null $identifier Full identifier or just the name part
-     *
      * @return KTranslatorCatalogue
      */
     public function createCatalogue($identifier = null)
     {
-        if (strpos($identifier, '.') === false) {
+        if (strpos($identifier, '.') === false)
+        {
             $old = clone $this->getIdentifier();
 
             if ($identifier) {
@@ -320,7 +346,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
             $identifier = $old;
         }
 
-        return $this->getService($identifier);
+        return $this->getObject($identifier);
     }
 
     /**
@@ -336,14 +362,12 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
     /**
      * Set the alias catalogue
      *
-     * @param $catalogue
-     *
-     * @return $this
+     * @param KTranslatorCatalogueInterface $catalogue
+     * @return ComKoowaTranslator
      */
     public function setAliasCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
         $this->_alias_catalogue = $catalogue;
-
         return $this;
     }
 
@@ -361,8 +385,7 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Set the default catalogue
      *
      * @param KTranslatorCatalogueInterface $catalogue
-     *
-     * @return $this
+     * @return ComKoowaTranslator
      */
     public function setDefaultCatalogue(KTranslatorCatalogueInterface $catalogue)
     {
@@ -385,9 +408,8 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Set the translation helper
      *
      * @param object $translator
-     *
-     * @return $this
      * @throws InvalidArgumentException
+     * @return ComKoowaTranslator
      */
     public function setTranslationHelper($translator)
     {
@@ -396,7 +418,6 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
         }
 
         $this->_translation_helper = $translator;
-
         return $this;
     }
 
@@ -414,33 +435,11 @@ class ComKoowaTranslator extends KTranslator implements KServiceInstantiatable
      * Set the language key prefix
      *
      * @param string $prefix
-     *
-     * @return $this
+     * @return ComKoowaTranslator
      */
     public function setPrefix($prefix)
     {
         $this->_prefix = $prefix;
-
         return $this;
-    }
-
-    /**
-     * Force creation of a singleton
-     *
-     * @param KConfigInterface  $config optional KConfig object with configuration options
-     * @param KServiceInterface $container
-     *
-     * @return  KTranslator
-     */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
-    {
-        if (!$container->has($config->service_identifier))
-        {
-            $classname = $config->service_identifier->classname;
-            $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
-        }
-
-        return $container->get($config->service_identifier);
     }
 }

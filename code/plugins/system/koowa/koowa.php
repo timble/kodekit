@@ -1,22 +1,21 @@
 <?php
 /**
- * @package     Nooku_Plugins
- * @subpackage  System
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
-/**
- * Koowa System plugin
- *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Plugins
- * @subpackage  System
- */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class plgSystemKoowa extends JPlugin
+/**
+ * Koowa System Plugin
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Plugin\System\Koowa
+ */
+class PlgSystemKoowa extends JPlugin
 {
     /**
      * Boots Koowa framework and applies some bug fixes for certain environments
@@ -70,15 +69,18 @@ class plgSystemKoowa extends JPlugin
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            KLoader::addAdapter(new KLoaderAdapterModule(array(
+            $manager = KObjectManager::getInstance();
+            $loader  = $manager->getClassLoader();
+
+            $loader->registerLocator(new KClassLocatorModule(array(
                 'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KLoader::addAdapter(new KLoaderAdapterPlugin(array(
+            $loader->registerLocator(new KClassLocatorPlugin(array(
                 'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
             )));
 
-            KLoader::addAdapter(new KLoaderAdapterComponent(array(
+            $loader->registerLocator(new KClassLocatorComponent(array(
                 'basepaths' => array(
                     '*'          => JPATH_BASE,
                     'koowa'      => JPATH_LIBRARIES.'/koowa',
@@ -87,19 +89,19 @@ class plgSystemKoowa extends JPlugin
                 )
             )));
 
-            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.module'));
-            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
-            KServiceIdentifier::addLocator(KService::get('koowa:service.locator.component'));
+            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.module'));
+            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.plugin'));
+            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.component'));
 
-            KServiceIdentifier::registerApplication('site' , JPATH_SITE);
-            KServiceIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
+            KObjectIdentifier::registerApplication('site' , JPATH_SITE);
+            KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
 
-            KServiceIdentifier::registerPackage('koowa'     , JPATH_LIBRARIES.'/koowa');
-            KServiceIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
-            KServiceIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
+            KObjectIdentifier::registerPackage('koowa'     , JPATH_LIBRARIES.'/koowa');
+            KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
+            KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
-            KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-            KService::setAlias('translator', 'com:koowa.translator');
+            $manager->registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
+            $manager->registerAlias('translator', 'com:koowa.translator');
 
             //Setup the request
             if (JFactory::getApplication()->getName() !== 'site') {
@@ -131,7 +133,7 @@ class plgSystemKoowa extends JPlugin
 		}
 		
 		$headers = JResponse::getHeaders();
-		foreach ($headers as $key => $header)
+		foreach ($headers as $header)
 		{
 			if ($header['name'] === 'Content-disposition')
 			{
@@ -157,24 +159,22 @@ class plgSystemKoowa extends JPlugin
         try
         {
             // If Koowa does not exist let Joomla handle the exception
-            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateError')) {
+            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateDefault')) {
                 throw new Exception('');
             }
 
-            $data = array(
-                'exception' => $exception
-            );
+            $data = array('exception' => $exception);
+            $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
-            $template = KService::get('com:koowa.template.error');
-            $template->addFilter(array('shorttag', 'variable'));
-            $template->loadFile(
-                JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/error/tmpl/default.php',
-                $data
-            );
+            $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
+            $template->loadFile($file, $data);
 
             while (@ob_end_clean());
 
-            header('Content-Type: text/html');
+            if (!headers_sent()) {
+                header('Content-Type: text/html');
+            }
+
             echo $template->render();
 
             exit;
@@ -207,7 +207,7 @@ class plgSystemKoowa extends JPlugin
                 $header = array(
                     'version' => '4.1.0',
                     'columns' => array('log', 'backtrace', 'type'),
-                    'rows' => array($row)
+                    'rows'    => array($row)
                 );
 
                 header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));

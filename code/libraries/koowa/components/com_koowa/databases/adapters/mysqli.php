@@ -1,22 +1,20 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 
 /**
- * Default Database MySQLi Adapter
+ * MySQLi Database Adapter
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
-class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KServiceInstantiatable
+class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KObjectInstantiatable
 {
     /**
 	 * The cache object
@@ -28,11 +26,11 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
 	 * Constructor
 	 *
-	 * Prevent creating instances of this class by making the contructor private
+	 * Prevent creating instances of this class by making the constructor private
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -44,20 +42,20 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
-     * @return KDatabaseTableInterface
+     * @param  KObjectConfigInterface  $config     Configuration options
+     * @param  KObjectManagerInterface $manager  A KObjectManagerInterface object
+     * @return KDatabaseAdapterInterface
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        if (!$container->has($config->service_identifier))
+        if (!$manager->isRegistered($config->object_identifier))
         {
-            $classname = $config->service_identifier->classname;
+            $classname = $config->object_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+            $manager->setObject($config->object_identifier, $instance);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->getObject($config->object_identifier);
     }
 
     /**
@@ -65,10 +63,10 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $db = JFactory::getDBO();
 
@@ -86,10 +84,10 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KS
 	/**
 	 * Retrieves the table schema information about the given table
 	 *
-	 * This function try to get the table schema from the cache. If it cannot be found
-	 * the table schema will be retrieved from the database and stored in the cache.
+	 * This function try to get the table schema from the cache. If it cannot be found the table schema will be
+     * retrieved from the database and stored in the cache.
 	 *
-	 * @param 	string 	A table name or a list of table names
+	 * @param 	string 	$table A table name or a list of table names
 	 * @return	KDatabaseSchemaTable
 	 */
 	public function getTableSchema($table)

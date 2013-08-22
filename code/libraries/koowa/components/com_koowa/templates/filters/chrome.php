@@ -1,28 +1,28 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
+
 
 /**
  * Chrome Template Filter
  *
  * This filter allows to apply module chrome to a template
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
 	/**
      * The module title
      *
-     * If set this will be passed to the module chrome rendered. If the renderer support
-     * rendering of a title it will be displayed.
+     * If set this will be passed to the module chrome rendered. If the renderer support rendering of a title it
+     * will be displayed.
      *
      * @var string
      */
@@ -52,16 +52,16 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
  	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 
         $this->_title   = $config->title;
         $this->_class   = $config->class;
-        $this->_styles  = KConfig::unbox($config->styles);
-        $this->_attribs = KConfig::unbox($config->attribs);
+        $this->_styles  = KObjectConfig::unbox($config->styles);
+        $this->_attribs = KObjectConfig::unbox($config->attribs);
     }
 
 	/**
@@ -69,13 +69,13 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KCommand::PRIORITY_LOW,
+            'priority' => KTemplateFilter::PRIORITY_LOW,
         	'title'    => '',
             'class'    => '',
             'styles'   => array(),
@@ -92,7 +92,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
     /**
 	 * Apply module chrome to the template output
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterChrome
 	 */
     public function write(&$text)
@@ -110,7 +110,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 		$module->title     = $this->_title;
 		$module->user      = 0;
 
-		$text = $this->getService('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->display();
+		$text = $this->getObject('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->display();
 
         return $this;
     }

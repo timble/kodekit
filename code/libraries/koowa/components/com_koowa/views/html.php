@@ -1,34 +1,33 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Default Html View
+ * Error Html View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaViewHtml extends KViewDefault
 {
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
         //Add alias filter for editor helper
         $this->getTemplate()->getFilter('alias')->append(array(
-            '@editor(' => '$this->renderHelper(\'com://admin/koowa.template.helper.editor.display\', ')
-        );
+            '@editor('  => '$this->renderHelper(\'editor.display\', '
+        ));
     }
 
     /**
@@ -36,18 +35,23 @@ class ComKoowaViewHtml extends KViewDefault
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
-        if ($this->getIdentifier()->application === 'admin' && KInflector::isSingular($this->getName()))
+        //Add the module template filter
+        $config->append(array(
+            'template_filters'	=> array('module'),
+        ));
+
+        //Set the default layout to form for singular admin views
+        if ($this->getIdentifier()->application === 'admin' && KStringInflector::isSingular($this->getName()))
         {
             $config->append(array(
                 'layout' => 'form'
             ));
         }
-
 
         parent::_initialize($config);
     }

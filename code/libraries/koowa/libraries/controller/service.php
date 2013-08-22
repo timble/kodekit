@@ -1,16 +1,17 @@
 <?php
 /**
- * @package		Koowa_Controller
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract Bread Controller Class
+ * Abstract Service Controller
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_Controller
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 abstract class KControllerService extends KControllerResource
 {
@@ -19,10 +20,10 @@ abstract class KControllerService extends KControllerResource
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'behaviors'  => array('discoverable', 'editable'),
@@ -35,7 +36,7 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectServiceable, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @return	KControllerAbstract
 	 */
@@ -46,9 +47,9 @@ abstract class KControllerService extends KControllerResource
 		    if(!isset($this->_request->view))
 		    {
 		        if($this->getModel()->getState()->isUnique()) {
-			        $view = KInflector::singularize($view);
+			        $view = KStringInflector::singularize($view);
 		        } else {
-			        $view = KInflector::pluralize($view);
+			        $view = KStringInflector::pluralize($view);
 	    	    }
 		    }
 		}
@@ -98,7 +99,7 @@ abstract class KControllerService extends KControllerResource
 
 	    if(count($data))
 	    {
-	        $data->setData(KConfig::unbox($context->data));
+	        $data->setData(KObjectConfig::unbox($context->data));
 
 	        //Only set the reset content status if the action explicitly succeeded
 	        if($data->save() === true) {
@@ -124,7 +125,7 @@ abstract class KControllerService extends KControllerResource
 
 		if($data->isNew())
 		{
-		    $data->setData(KConfig::unbox($context->data));
+		    $data->setData(KObjectConfig::unbox($context->data));
 
 		    //Only throw an error if the action explicitly failed.
 		    if($data->save() === false)
@@ -154,7 +155,7 @@ abstract class KControllerService extends KControllerResource
 
 		if(count($data))
 	    {
-            $data->setData(KConfig::unbox($context->data));
+            $data->setData(KObjectConfig::unbox($context->data));
 
             //Only throw an error if the action explicitly failed.
 	        if($data->delete() === false)
@@ -174,11 +175,11 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Get action
 	 *
-	 * This function translates a GET request into a read or browse action. If the view name is
-	 * singular a read action will be executed, if plural a browse action will be executed.
+	 * This function translates a GET request into a read or browse action. If the view name is singular a read action
+     * will be executed, if plural a browse action will be executed.
 	 *
-	 * If the result of the read or browse action is not a row or rowset object the function will
-	 * pass through the result, request the attached view to render itself.
+	 * If the result of the read or browse action is not a row or rowset object the function will pass through the
+     * result, request the attached view to render itself.
 	 *
 	 * @param	KCommandContext	$context A command context object
 	 * @return 	string|bool 	The rendered output of the view or FALSE if something went wrong
@@ -186,7 +187,7 @@ abstract class KControllerService extends KControllerResource
 	protected function _actionGet(KCommandContext $context)
 	{
 		//Check if we are reading or browsing
-	    $action = KInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
+	    $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
 
 	    //Execute the action
 		$result = $this->execute($action, $context);
@@ -202,9 +203,8 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Post action
 	 *
-	 * This function translated a POST request action into an edit or add action. If the model
-	 * state is unique a edit action will be executed, if not unique an add action will
-	 * be executed.
+	 * This function translated a POST request action into an edit or add action. If the model state is unique a edit
+     * action will be executed, if not unique an add action will be executed.
 	 *
 	 * @param	KCommandContext	 $context	A command context object
 	 * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
@@ -218,17 +218,15 @@ abstract class KControllerService extends KControllerResource
 	/**
 	 * Put action
 	 *
-	 * This function translates a PUT request into an edit or add action. Only if the model
-	 * state is unique and the item exists an edit action will be executed, if the resources
-	 * doesn't exist and the state is unique an add action will be executed.
+	 * This function translates a PUT request into an edit or add action. Only if the model state is unique and the
+     * item exists an edit action will be executed, if the resources doesn't exist and the state is unique an add
+     * action will be executed.
 	 *
-	 * If the resource already exists it will be completely replaced based on the data
-	 * available in the request.
+	 * If the resource already exists it will be completely replaced based on the data available in the request.
 	 *
-     * @param	KCommandContext	 $context	A command context object
-     * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
-     *
-	 * @throws  KControllerExceptionNotFound 	If the model state is not unique
+     * @param	KCommandContext	 $context A command context object
+     * @throws  KControllerExceptionNotFound If the model state is not unique
+     * @return 	KDatabaseRowsetInterface     A row(set) object containing the modified data
 	 */
 	protected function _actionPut(KCommandContext $context)
 	{

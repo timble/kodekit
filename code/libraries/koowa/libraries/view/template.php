@@ -1,19 +1,17 @@
 <?php
 /**
- * @package     Koowa_View
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract Template View Class
+ * Abstract Template View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_View
- * @uses        KMixinClass
- * @uses        KTemplate
- * @uses        KService
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
 abstract class KViewTemplate extends KViewAbstract
 {
@@ -62,30 +60,37 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        // set the auto assign state
+        //Set the auto assign state
         $this->_auto_assign = $config->auto_assign;
 
-        //set the data
-        $this->_data = KConfig::unbox($config->data);
+        //Set the data
+        $this->_data = KObjectConfig::unbox($config->data);
 
-         // user-defined escaping callback
+         //User-defined escaping callback
         $this->setEscape($config->escape);
 
-        // set the template object
+        //Set the template object
         $this->_template = $config->template;
 
-        //Set the template filters
-        if(!empty($config->template_filters)) {
-            $this->getTemplate()->addFilter($config->template_filters);
+        //Add the template filters
+        $filters = (array) KObjectConfig::unbox($config->template_filters);
+
+        foreach ($filters as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->getTemplate()->addFilter($value);
+            } else {
+                $this->getTemplate()->addFilter($key, $value);
+            }
         }
 
-        // Set base and media urls for use by the view
+        //Set base and media urls for use by the view
         $this->assign('baseurl' , $config->base_url)
              ->assign('mediaurl', $config->media_url);
 
@@ -105,14 +110,11 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
-        //Clone the identifier
-        $identifier = clone $this->getIdentifier();
-
         $config->append(array(
             'data'			   => array(),
             'escape'           => 'htmlspecialchars',
@@ -129,8 +131,8 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Set a view properties
      *
-     * @param   string  The property name.
-     * @param   mixed   The property value.
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
      */
     public function __set($property, $value)
     {
@@ -140,7 +142,7 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Get a view property
      *
-     * @param   string  The property name.
+     * @param   string  $property The property name.
      * @return  string  The property value.
      */
     public function __get($property)
@@ -156,12 +158,11 @@ abstract class KViewTemplate extends KViewAbstract
     /**
     * Assigns variables to the view script via differing strategies.
     *
-    * This method is overloaded; you can assign all the properties of
-    * an object, an associative array, or a single value by name.
+    * This method is overloaded; you can assign all the properties of an object, an associative array, or a single value
+     * by name.
     *
-    * You are not allowed to set variables that begin with an underscore;
-    * these are either private properties for KView or private variables
-    * within the template script itself.
+    * You are not allowed to set variables that begin with an underscore; these are either private properties for KView
+     * or private variables within the template script itself.
     *
     * <code>
     * $view = new KViewDefault();
@@ -225,12 +226,9 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
-        if(empty($this->output))
-		{
-		    $this->output = $this->getTemplate()
-                                 ->loadIdentifier($this->_layout, $this->_data)
-                                 ->render();
-		}
+        $this->_content = $this->getTemplate()
+            ->loadIdentifier($this->_layout, $this->_data)
+            ->render();
 
         return parent::display();
     }
@@ -238,7 +236,7 @@ abstract class KViewTemplate extends KViewAbstract
      /**
      * Sets the _escape() callback.
      *
-     * @param   mixed The callback for _escape() to use.
+     * @param   mixed $spec The callback for _escape() to use.
      * @return  KViewAbstract
      */
     public function setEscape($spec)
@@ -247,10 +245,32 @@ abstract class KViewTemplate extends KViewAbstract
         return $this;
     }
 
+    /**
+     * Sets the view data
+     *
+     * @param   array $data The view data
+     * @return  KViewTemplate
+     */
+    public function setData(array $data)
+    {
+        $this->_data = $data;
+        return $this;
+    }
+
+    /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData()
+    {
+        return $this->_data;
+    }
+
 	/**
      * Sets the layout name
      *
-     * @param    string  The template name.
+     * @param    string  $layout The template name.
      * @return   KViewAbstract
      */
     public function setLayout($layout)
@@ -286,7 +306,7 @@ abstract class KViewTemplate extends KViewAbstract
         if(!$this->_template instanceof KTemplateInterface)
         {
             //Make sure we have a template identifier
-            if(!($this->_template instanceof KServiceIdentifier)) {
+            if(!($this->_template instanceof KObjectIdentifier)) {
                 $this->setTemplate($this->_template);
             }
 
@@ -295,7 +315,7 @@ abstract class KViewTemplate extends KViewAbstract
                 'translator' => $this->getTranslator()
             );
 
-            $this->_template = $this->getService($this->_template, $options);
+            $this->_template = $this->getObject($this->_template, $options);
         }
 
         return $this->_template;
@@ -304,14 +324,14 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Method to set a template object attached to the view
      *
-     * @param   mixed   An object that implements KObjectServiceable, an object that
-     *                  implements KServiceIdentifierInterface or valid identifier string
+     * @param   mixed   $template An object that implements KObjectInterface, an object that
+     *                  implements KObjectIdentifierInterface or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KViewAbstract
      */
     public function setTemplate($template)
     {
-        if(!($template instanceof KTemplateAbstract))
+        if(!($template instanceof KTemplateInterface))
         {
             if(is_string($template) && strpos($template, '.') === false )
 		    {
@@ -344,14 +364,13 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
-     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view
-     * by using the variable name as the method name. If the method name is a setter method the
-     * setter will be called instead.
+     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
+     * name as the method name. If the method name is a setter method the setter will be called instead.
      *
      * For example : $view->layout('foo')->title('name')->display().
      *
-     * @param   string  Method name
-     * @param   array   Array containing all the arguments for the original call
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
      * @return  KViewAbstract
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html

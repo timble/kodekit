@@ -1,25 +1,26 @@
 <?php
 /**
-* @package      Koowa_Template
-* @subpackage	Filter
-* @copyright    Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
-* @license      GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
-* @link 		http://www.nooku.org
-*/
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
 
 /**
- * Template filter to parse link tags
+ * Link Template Filter
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Template
- * @subpackage	Filter
+ * Filter to parse link tags
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Template
  */
 class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
 	/**
 	 * Find any <link /> elements and render them
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return KTemplateFilterLink
 	 */
 	public function write(&$text)
@@ -36,7 +37,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	/**
 	 * Parse the text for script tags
 	 *
-	 * @param string Block of text to parse
+	 * @param string $text Block of text to parse
 	 * @return string
 	 */
 	protected function _parseLinks(&$text)
@@ -48,7 +49,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 		{
 			foreach(array_unique($matches[1]) as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[2][$key]);
+				$attribs = $this->parseAttributes( $matches[2][$key]);
 				$scripts .= $this->_renderScript($match, $attribs);
 			}
 
@@ -61,13 +62,13 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	/**
 	 * Render script information
 	 *
-	 * @param string	The script information
-	 * @param array		Associative array of attributes
+	 * @param string	$link       The script information
+	 * @param array		$attribs    Associative array of attributes
 	 * @return string
 	 */
 	protected function _renderLink($link, $attribs = array())
 	{
-		$attribs = KHelperArray::toString($attribs);
+		$attribs = $this->buildAttributes($attribs);
 
 		$html = '<link href="'.$link.'" '.$attribs.'/>'."\n";
 		return $html;

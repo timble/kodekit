@@ -1,32 +1,33 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Default Dispatcher
+ * Dispatcher
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantiatable
+class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiatable
 {
  	/**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         /*
+         * Joomla 3.x Compat
+         *
          * Re-run the routing and add returned keys to the $_GET request
          * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
          */
@@ -57,39 +58,34 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfig $config Configuration options
-     * @param 	object	A KServiceInterface object
+     * @param   KObjectConfigInterface $config        Configuration options
+     * @param 	KObjectManagerInterface $manager	A KObjectManagerInterface object
      * @return KDispatcherDefault
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
        // Check if an instance with this identifier already exists or not
-        if (!$container->has($config->service_identifier))
+        if (!$manager->isRegistered($config->object_identifier))
         {
             //Create the singleton
-            $classname = $config->service_identifier->classname;
+            $classname = $config->object_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+            $manager->setObject($config->object_identifier, $instance);
 
             //Add the factory map to allow easy access to the singleton
-            $container->setAlias('dispatcher', $config->service_identifier);
+            $manager->registerAlias('dispatcher', $config->object_identifier);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->getObject($config->object_identifier);
     }
 
     /**
      * Dispatch the controller and redirect
      *
-     * This function divert the standard behavior and will redirect if no view
-     * information can be found in the request.
+     * This function divert the standard behavior and will redirect if no view information can be found in the request.
      *
-     * @param   string      The view to dispatch. If null, it will default to
-     *                      retrieve the controller information from the request or
-     *                      default to the component name if no controller info can
-     *                      be found.
-     *
-     * @return  KDispatcherDefault
+     * @param   KCommandContext	$context A command context object
+     * @return  ComKoowaDispatcher
      */
     protected function _actionDispatch(KCommandContext $context)
     {
@@ -108,10 +104,10 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
     /**
      * Push the controller data into the document
      *
-     * This function divert the standard behavior and will push specific controller data
-     * into the document
+     * This function divert the standard behavior and will push specific controller data into the document
      *
-     * @return  KDispatcherDefault
+     * @param   KCommandContext	$context A command context object
+     * @return  ComKoowaDispatcher
      */
     protected function _actionRender(KCommandContext $context)
     {
@@ -120,7 +116,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
         JFactory::getDocument()->setMimeEncoding($view->mimetype);
 
         //Disabled the application menubar
-        if(JFactory::getApplication()->isAdmin() && $this->getController()->isEditable() && KInflector::isSingular($view->getName())) {
+        if($this->getIdentifier()->application === 'admin' && $this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
             KRequest::set('get.hidemainmenu', 1);
         }
 

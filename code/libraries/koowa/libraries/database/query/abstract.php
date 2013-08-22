@@ -1,18 +1,16 @@
 <?php
 /**
- * @package     Koowa_Database
- * @subpackage  Query
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
- */
-
-/**
- * Abstract Database Query Class
+ * Koowa Framework - http://developer.joomlatools.com/koowa
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Database
- * @subpackage  Query
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ */
+/**
+ * Abstract Database Query
+ *
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Database
  */
 abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
 {
@@ -33,10 +31,9 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Constructor
      *
-     * @param KConfig|null $config  An optional KConfig object with configuration options
-     * @return \KObjectDecorator
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -49,10 +46,10 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $object An optional KConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'adapter' => 'koowa:database.adapter.mysqli',
@@ -85,7 +82,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         if(!$this->_params instanceof KObjectArray)
         {
-            $this->_params = $this->getService($this->_params);
+            $this->_params = $this->getObject($this->_params);
 
             if(!$this->_params instanceof KObjectArray)
             {
@@ -114,13 +111,13 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      * Gets the database adapter
      *
      * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
-     * @return \KDatabaseAdapterInterface
+     * @return KDatabaseAdapterInterface
      */
     public function getAdapter()
     {
         if(!$this->_adapter instanceof KDatabaseAdapterInterface)
         {
-            $this->_adapter = $this->getService($this->_adapter);
+            $this->_adapter = $this->getObject($this->_adapter);
 
             if(!$this->_adapter instanceof KDatabaseAdapterInterface)
             {
@@ -136,8 +133,8 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Set the database adapter
      *
-     * @param \KDatabaseAdpaterInterface $adapter
-     * @return \KDatabaseQueryInterface
+     * @param KDatabaseAdapterInterface $adapter
+     * @return KDatabaseQueryInterface
      */
     public function setAdapter(KDatabaseAdapterInterface $adapter)
     {

@@ -1,20 +1,20 @@
 <?php
 /**
- * @package		Koowa_Object
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * An Object Array Class
+ * Object Array
  *
  * The KObjectArray class provides provides the main functionality of an array and at the same time implement the
  * features of KObject
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Koowa
- * @package     Koowa_Object
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Serializable, Countable
 {
@@ -28,14 +28,14 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     /**
      * Constructor
      *
-     * @param KConfig $config  An optional KConfig object with configuration options
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      * @return KObjectArray
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->_data = KConfig::unbox($config->data);
+        $this->_data = KObjectConfig::unbox($config->data);
     }
 
     /**
@@ -43,10 +43,10 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config An optional KConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'data' => array(),
@@ -68,13 +68,12 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     	if ($key === null) {
     		throw new InvalidArgumentException('Empty key passed');
     	}
-    	$result = null;
+
+        $result = null;
     	if (isset($this->_data[$key])) {
     		$result = $this->_data[$key];
-    	} //else {
-    	//throw new \InvalidArgumentException('Not a valid key in this array: '. $key);
-    	//}
-    
+    	}
+
     	return $result;
     }
     

@@ -1,18 +1,17 @@
 <?php
 /**
- * @package		Koowa_Controller
- * @subpackage	Command
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Controller Executable Behavior Class
+ * Executable Controller Behavior
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package     Koowa_Controller
- * @subpackage	Behavior
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Controller
  */
 class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
 {
@@ -26,9 +25,9 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct( KConfig $config)
+	public function __construct( KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -40,10 +39,10 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'priority'   => KCommand::PRIORITY_HIGH,
@@ -61,11 +60,9 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      *
      * @param   string          $name       The command name
      * @param   KCommandContext $context    The command context
-     *
-     * @return  boolean
-     *
      * @throws  KControllerExceptionForbidden
      * @throws  KControllerExceptionNotImplemented
+     * @return  boolean
      */
     public function execute( $name, KCommandContext $context)
     {
@@ -120,7 +117,7 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
      */
     public function getHandle()
     {
-        return KMixinAbstract::getHandle();
+        return KObjectMixinAbstract::getHandle();
     }
 
     /**

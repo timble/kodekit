@@ -1,18 +1,17 @@
 <?php
 /**
- * @package     Nooku_Modules
- * @subpackage  Default
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Default Module View
+ * Html View
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Modules
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Module\Koowa
  */
 class ModKoowaHtml extends KViewHtml
 {
@@ -21,10 +20,10 @@ class ModKoowaHtml extends KViewHtml
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
         	'template_filters' => array('chrome'),
@@ -59,23 +58,23 @@ class ModKoowaHtml extends KViewHtml
 		    $identifier = clone $this->getIdentifier();
 		    $identifier->package = substr($this->module->module, 4);
 
-            $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
+            $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
 		}
 
         if(empty($this->module->content))
 		{
-            $this->output = $this->getTemplate()
+            $this->_content = $this->getTemplate()
                 ->loadIdentifier($this->_layout, $this->_data)
                 ->render();
 		}
 		else
 		{
-		     $this->output = $this->getTemplate()
+		     $this->_content = $this->getTemplate()
                 ->loadString($this->module->content, $this->_data, false)
                 ->render();
 		}
 
-        return $this->output;
+        return $this->_content;
     }
 
     /**
@@ -104,8 +103,7 @@ class ModKoowaHtml extends KViewHtml
      */
     protected function _parseParams( $string )
     {
-        $params = new KConfig((array) json_decode($string));
-
+        $params = new KObjectConfig((array) json_decode($string));
         return $params;
     }
 }

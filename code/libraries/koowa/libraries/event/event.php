@@ -1,21 +1,21 @@
 <?php
 /**
- * @package     Koowa_Event
- * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Event Class
+ * Event
  *
- * You can call the method stopPropagation() to abort the execution of
- * further listeners in your event listener.
+ * You can call the method stopPropagation() to abort the execution of further listeners in your event listener.
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Koowa_Event
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\Event
  */
-class KEvent extends KConfig
+class KEvent extends KObjectConfig implements KEventInterface
 {
  	/**
      * Priority levels
@@ -41,10 +41,17 @@ class KEvent extends KConfig
     protected $_name;
 
     /**
+     * Target of the event
+     *
+     * @var KObjectInterface
+     */
+    protected $_target;
+
+    /**
      * Constructor.
      *
-     * @param	string 			The event name
-     * @param   array|KConfig 	An associative array of configuration settings or a KConfig instance.
+     * @param	string 			$name   The event name
+     * @param   array|KObjectConfig 	$config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
@@ -68,6 +75,28 @@ class KEvent extends KConfig
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Get the event target
+     *
+     * @return object	The event target
+     */
+    public function getTarget()
+    {
+        return $this->_target;
+    }
+
+    /**
+     * Set the event target
+     *
+     * @param object $target The event target
+     * @return KEventInterface
+     */
+    public function setTarget(KObjectInterface $target)
+    {
+        $this->_target = $target;
+        return $this;
     }
 
     /**

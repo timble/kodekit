@@ -1,20 +1,19 @@
 <?php
 /**
- * @package		Koowa_View
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
 /**
- * Abstract View Class
+ * Abstract View
  *
- * @author		Johan Janssens <johan@nooku.org>
- * @package		Koowa_View
- * @uses		KMixinClass
- * @uses 		KTemplate
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Library\View
  */
-abstract class KViewAbstract extends KObject
+abstract class KViewAbstract extends KObject implements KViewInterface
 {
     /**
      * Translator object
@@ -30,14 +29,21 @@ abstract class KViewAbstract extends KObject
 	 */
 	protected $_model;
 
-	/**
-	 * The output of the view
-	 *
-	 * @var string
-	 */
-	public $output = '';
+    /**
+     * The content of the view
+     *
+     * @var string
+     */
+    protected $_content;
 
-	/**
+    /**
+     * Layout name
+     *
+     * @var     string
+     */
+    protected $_layout;
+
+    /**
 	 * The mimetype
 	 *
 	 * @var string
@@ -45,26 +51,19 @@ abstract class KViewAbstract extends KObject
 	public $mimetype = '';
 
 	/**
-     * Layout name
-     *
-     * @var     string
-     */
-    protected $_layout;
-
-	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
 		//If no config is passed create it
-		if(!isset($config)) $config = new KConfig();
+		if(!isset($config)) $config = new KObjectConfig();
 
 		parent::__construct($config);
 
 		//Set the output if defined in the config
-		$this->output = $config->output;
+        $this->setContent($config->content);
 
 		//Set the mimetype of defined in the config
 		$this->mimetype = $config->mimetype;
@@ -82,15 +81,15 @@ abstract class KViewAbstract extends KObject
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-			'model'   	 => $this->getName(),
+            'model'      => 'koowa:model.empty',
             'translator' => null,
-	    	'output'	 => '',
+	    	'content'	 => '',
     		'mimetype'	 => '',
             'layout'     => 'default',
 	  	));
@@ -98,7 +97,31 @@ abstract class KViewAbstract extends KObject
         parent::_initialize($config);
     }
 
-	/**
+    /**
+     * Return the views output
+     *
+     * @return string 	The  of the view
+     */
+    public function display()
+    {
+        $content = $this->getContent();
+        return trim($content);
+    }
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTranslator()->translate($string, $parameters);
+    }
+
+    /**
 	 * Get the name
 	 *
 	 * @return 	string 	The name of the object
@@ -119,18 +142,30 @@ abstract class KViewAbstract extends KObject
 		return $this->getIdentifier()->name;
 	}
 
-	/**
-	 * Return the views output
- 	 *
-	 * @return string 	The output of the view
-	 */
-	public function display()
-	{
-		return $this->output;
-	}
+    /**
+     * Get the content
+     *
+     * @return  string The content of the view
+     */
+    public function getContent()
+    {
+        return $this->_content;
+    }
+
+    /**
+     * Get the contents
+     *
+     * @param  string $contents The contents of the view
+     * @return KViewAbstract
+     */
+    public function setContent($content)
+    {
+        $this->_content = $content;
+        return $this;
+    }
 
 	/**
-	 * Get the model object attached to the contoller
+	 * Get the model object attached to the controller
 	 *
 	 * @return	KModelAbstract
 	 */
@@ -139,11 +174,11 @@ abstract class KViewAbstract extends KObject
 		if(!$this->_model instanceof KModelAbstract)
 		{
 			//Make sure we have a model identifier
-		    if(!($this->_model instanceof KServiceIdentifier)) {
+		    if(!($this->_model instanceof KObjectIdentifier)) {
 		        $this->setModel($this->_model);
 			}
 
-		    $this->_model = $this->getService($this->_model);
+		    $this->_model = $this->getObject($this->_model);
 		}
 
 		return $this->_model;
@@ -152,9 +187,8 @@ abstract class KViewAbstract extends KObject
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	$model An object that implements KObjectServiceable, KServiceIdentifier object
-	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
+	 * 					       or valid identifier string
 	 * @return	KViewAbstract
 	 */
     public function setModel($model)
@@ -164,8 +198,8 @@ abstract class KViewAbstract extends KObject
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {
 			    // Model names are always plural
-			    if(KInflector::isSingular($model)) {
-				    $model = KInflector::pluralize($model);
+			    if(KStringInflector::isSingular($model)) {
+				    $model = KStringInflector::pluralize($model);
 			    }
 
 			    $identifier			= clone $this->getIdentifier();
@@ -173,10 +207,6 @@ abstract class KViewAbstract extends KObject
 			    $identifier->name	= $model;
 			}
 			else $identifier = $this->getIdentifier($model);
-
-			if($identifier->path[0] != 'model') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a model identifier');
-			}
 
 			$model = $identifier;
 		}
@@ -213,25 +243,12 @@ abstract class KViewAbstract extends KObject
                 $identifier->name = 'translator';
             } else $identifier = $this->getIdentifier($translator);
 
-            $translator = $this->getService($identifier);
+            $translator = $this->getObject($identifier);
         }
 
         $this->_translator = $translator;
 
         return $this;
-    }
-
-    /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     *
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTranslator()->translate($string, $parameters);
     }
 
  	/**
@@ -259,34 +276,29 @@ abstract class KViewAbstract extends KObject
 	/**
 	 * Create a route based on a full or partial query string
 	 *
-	 * index.php, option, view and layout can be ommitted. The following variations
-	 * will all result in the same route
+     * index.php? will be automatically added.
+	 * option, view and layout can be omitted. The following variations will result in the same route:
 	 *
 	 * - foo=bar
+     * - view=myview&foo=bar
 	 * - option=com_mycomp&view=myview&foo=bar
-	 * - index.php?option=com_mycomp&view=myview&foo=bar
 	 *
-	 * If the route starts '&' the information will be appended to the current URL.
+	 * If the route starts with '&' the query string will be appended to the current URL.
 	 *
 	 * In templates, use @route()
 	 *
-	 * @param	string	$route The query string used to create the route
-	 * @return 	string 	The route
+     * @param   string|array $route  The query string or array used to create the route
+     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to FALSE.
+     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
+     * @return  string The route
 	 */
-	public function createRoute( $route = '')
+	public function createRoute($route = '', $fqr = true, $escape = true)
 	{
-		$route = trim($route);
-
-		// Special cases
-		if($route == 'index.php' || $route == 'index.php?')
-		{
-			$result = $route;
-		}
-		else if (substr($route, 0, 1) == '&')
+        if (is_string($route) && substr($route, 0, 1) === '&')
 		{
 			$url   = clone KRequest::url();
 			$vars  = array();
-			parse_str($route, $vars);
+			parse_str(trim($route), $vars);
 
 			$url->setQuery(array_merge($url->getQuery(true), $vars));
 
@@ -294,41 +306,43 @@ abstract class KViewAbstract extends KObject
 		}
 		else
 		{
-			// Strip 'index.php?'
-			if(substr($route, 0, 10) == 'index.php?') {
-				$route = substr($route, 10);
-			}
+            $parts = array();
 
-			// Parse route
-			$parts = array();
-			parse_str($route, $parts);
-			$result = array();
+            if (is_string($route)) {
+                parse_str(trim($route), $parts);
+            } else {
+                $parts = $route;
+            }
 
-			// Check to see if there is component information in the route if not add it
-			if(!isset($parts['option'])) {
-				$result[] = 'option=com_'.$this->getIdentifier()->package;
-			}
+            if (!isset($parts['option'])) {
+                $parts['option'] = 'com_'.$this->getIdentifier()->package;
+            }
 
-			// Add the layout information to the route only if it's not 'default'
-			if(!isset($parts['view'])) {
-				$result[] = 'view='.$this->getName();
-			}
+            if (!isset($parts['view'])) {
+                $parts['view'] = $this->getName();
+            }
 
-			// Add the format information to the URL only if it's not 'html'
-			if(!isset($parts['format']) && $this->getIdentifier()->name != 'html') {
-				$result[] = 'format='.$this->getIdentifier()->name;
-			}
+            // Add the layout information to the route only if there is no layout information
+            // in the menu item and the current layout is not default
+            if (!isset($parts['layout']) && $this->getLayout() !== 'default') {
+                $parts['layout'] = $this->getLayout();
+            }
 
-			// Reconstruct the route
-			if(!empty($route)) {
-				$result[] = $route;
-			}
+            // Add the format information to the URL only if it's not 'html'
+            if (!isset($parts['format']) && $this->getIdentifier()->name !== 'html') {
+                $parts['format'] = $this->getIdentifier()->name;
+            }
 
-			$result = 'index.php?'.implode('&', $result);
-
+            $result = 'index.php?'.http_build_query($parts, '', '&');
 		}
 
-		return JRoute::_($result);
+		$result = JRoute::_($result, $escape);
+
+        if ($fqr) {
+            $result = KRequest::url()->toString(KHttpUrl::AUTHORITY).$result;
+        }
+
+        return $result;
 	}
 
 	/**

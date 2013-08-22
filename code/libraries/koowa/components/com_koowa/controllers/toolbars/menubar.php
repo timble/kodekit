@@ -1,38 +1,55 @@
 <?php
 /**
- * @package     Nooku_Components
- * @subpackage  Default
- * @copyright  	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
- * @license   	GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        http://www.nooku.org
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+
 /**
- * Default Menubar
+ * Menu Controller Toolbar
  *
- * @author      Johan Janssens <johan@nooku.org>
- * @package     Nooku_Components
- * @subpackage  Default
+ * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
+class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
 {
- 	/**
+    /**
+     * Initializes the config for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'type'  => 'menubar',
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Add a command
      *
      * Disable the menubar only for singular views that are editable.
      *
-     * @param   string	The command name
-     * @param	mixed	Parameters to be passed to the command
+     * @param   string	$name   The command name
+     * @param	mixed	$config Parameters to be passed to the command
      * @return  KControllerToolbarInterface
      */
     public function addCommand($name, $config = array())
     {
-        parent::addCommand($name, $config);
+        $command = parent::addCommand($name, $config);
 
         $controller = $this->getController();
 
-        if($controller->isEditable() && KInflector::isSingular($controller->getView()->getName())) {
-            $this->_commands[$name]->disabled = true;
+        if($controller->isEditable() && KStringInflector::isSingular($controller->getView()->getName())) {
+            $command->disabled = true;
         }
 
         return $this;
@@ -49,7 +66,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
 	{
 	    $name     = $this->getController()->getIdentifier()->name;
 	    $package  = $this->getIdentifier()->package;
-	    $manifest = JPATH_ADMINISTRATOR.'/components/com_'.$package.'/manifest.xml';
+	    $manifest = JPATH_ADMINISTRATOR.'/components/com_'.$package.'/'.$package.'.xml';
 
 	    if(file_exists($manifest))
 	    {
@@ -63,7 +80,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
 
 	                $this->addCommand((string)$menu, array(
 	            		'href'   => JRoute::_('index.php?option=com_'.$package.'&view='.$view),
-	            		'active' => ($name == KInflector::singularize($view))
+	            		'active' => ($name == KStringInflector::singularize($view))
 	                ));
 	            }
 	        }

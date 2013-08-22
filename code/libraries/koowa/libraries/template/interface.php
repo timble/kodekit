@@ -1,16 +1,17 @@
 <?php
 /**
- * @package		Koowa_Template
- * @copyright	Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
+ * Koowa Framework - http://developer.joomlatools.com/koowa
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link     	http://www.nooku.org
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
  /**
   * Template Interface
-  * 
-  * @author		Johan Janssens <johan@nooku.org>
-  * @package	Koowa_Template
+  *
+  * @author  Johan Janssens <https://github.com/johanjanssens>
+  * @package Koowa\Library\Template
   */
 interface KTemplateInterface
 {
@@ -52,14 +53,14 @@ interface KTemplateInterface
     /**
      * Get the view object attached to the template
      *
-     * @return  KViewInterface
+     * @return  KViewAbstract
      */
 	public function getView();
 
     /**
      * Method to set a view object attached to the template
      *
-     * @param mixed  $view An object that implements KObjectServiceable, KServiceIdentifier object
+     * @param mixed  $view An object that implements KObjectInterface, KObjectIdentifier object
      *                     or valid identifier string
      * @throws \UnexpectedValueException    If the identifier is not a view identifier
      * @return KTemplateAbstract
@@ -100,26 +101,27 @@ interface KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed    $filter    An object that implements KObjectServiceable, KServiceIdentifier object
+     * @param   mixed    $filter    An object that implements KObjectInterface, KObjectIdentifier object
                                     or valid identifier string
      * @param   array    $config    An optional associative array of configuration settings
      * @return KTemplateFilterInterface
      */
-    public function getFilter($filter);
+    public function getFilter($filter, $config = array());
 
     /**
-     * Attach one or more filters for template transformation
+     * Attach ar filters for template transformation
      *
-     * @param array $filters Array of one or more behaviors to add.
+     * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
+     *                         or valid identifier string
+     * @param   array $config  An optional associative array of configuration settings
      * @return KTemplateAbstract
      */
-    public function addFilter($filters);
+    public function addFilter($filter, $config = array());
 
     /**
      * Get a template helper
      *
-     * @param    mixed    $helper KServiceIdentifierInterface
-     * @param    array    $config An optional associative array of configuration settings
+     * @param    mixed    $helper KObjectIdentifierInterface
      * @return  KTemplateHelperInterface
      */
     public function getHelper($helper);
@@ -131,7 +133,7 @@ interface KTemplateInterface
      * full identifier will be created using the template identifier.
      *
      * @param    string   $identifier Name of the helper, dot separated including the helper function to call
-     * @param    array    $params     An optional associative array of functions parameters to be passed to the helper
+     * @param    array    $config     An optional associative array of functions parameters to be passed to the helper
      * @return   string   Helper output
      * @throws   \BadMethodCallException If the helper function cannot be called.
      */
