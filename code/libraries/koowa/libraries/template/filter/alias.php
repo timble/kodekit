@@ -10,7 +10,7 @@
 /**
  * Alias Template Filter
  *
- * Filter for aliases such as @template, @text, @helper, @route etc
+ * Filter for aliases such as @template, @translate, @helper, @route etc
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
@@ -27,7 +27,7 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
     	'@object('      => '$this->getObject(',
         '@date('        => '$this->renderHelper(\'date.format\',',
         '@overlay('     => '$this->renderHelper(\'behavior.overlay\', ',
-        '@text('        => '$this->translate(',
+        '@translate('   => '$this->translate(',
         '@template('    => '$this->loadIdentifier(',
         '@route('       => '$this->getView()->createRoute(',
         '@escape('      => '$this->getView()->escape(',
