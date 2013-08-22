@@ -36,8 +36,8 @@ interface KObjectManagerInterface
      * If the object implements the ObjectInstantiable interface the manager will delegate object instantiation
      * to the object itself.
      *
-     * @@param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param	array$config     An optional associative array of configuration settings.
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param	array $config     An optional associative array of configuration settings.
      * @return	KObjectInterface  Return object on success, throws exception on failure
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws	KObjectExceptionInvalidObject	  If the object doesn't implement the KObjectInterface
