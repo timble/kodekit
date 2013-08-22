@@ -11,6 +11,9 @@
 /**
  * Toolbar Template Filter
  *
+ * Filter will parse <ktml:toolbar type="[type]'> tags and replace them with the actual toolbar html by rendering
+ * the toolbar helper for the specific toolbar type.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
