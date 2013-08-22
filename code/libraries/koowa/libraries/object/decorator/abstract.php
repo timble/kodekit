@@ -35,8 +35,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig  $config  A KObjectConfig object with optional configuration options
-     * @return KObjectDecorator
+     * @param  KObjectConfig  $config  A KObjectConfig object with optional configuration options
      */
     public function __construct(KObjectConfig $config)
     {
@@ -54,7 +53,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional KObjectConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
@@ -67,7 +66,6 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
     /**
      * Set the decorated object
      *
-     * @param   object $delegate The object to decorate
      * @return  KObjectDecoratorAbstract
      */
     public function getDelegate()
@@ -118,7 +116,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
     {
         $delegate = $this->getDelegate();
 
-        if($delegate instanceof KObjectHandable) {
+        if($delegate instanceof KObjectHandlable) {
             $handle = $delegate->getHandle();
         } else {
             $handle = spl_object_hash($this);

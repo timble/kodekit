@@ -28,7 +28,7 @@ class ComKoowaControllerResource extends KControllerResource
         $this->_limit = $config->limit;
 
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin(array('mixer' => $this)));
+        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
 
         //Attach the toolbars
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
@@ -39,13 +39,13 @@ class ComKoowaControllerResource extends KControllerResource
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param ObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(ObjectConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $toolbars = array();
-        if($config->dispatched() && !JFactory::getUser()->guest)
+        if($this->isDispatched() && !JFactory::getUser()->guest)
         {
             $toolbars[] = $this->getIdentifier()->name;
 

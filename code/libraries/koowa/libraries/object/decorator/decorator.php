@@ -26,7 +26,6 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      */
     public function inherits($class)
     {
-        $result   = false;
         $delegate = $this->getDelegate();
 
         if ($delegate instanceof KObjectMixable) {
@@ -43,10 +42,9 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param   mixed $mixin   A KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
      * @param   array $config  An optional associative array of configuration options
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @return  KObjectInterface
+     * @return  KObjectDecorator
      */
     public function mixin($mixin, $config = array())
     {
@@ -60,8 +58,8 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      * When using decorate(), the decorator will be re-decorated. The decorator needs to extend from
      * ObjectDecorator.
      *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectDecorator
-     * @param   array $config  An optional associative array of configuration options
+     * @param   mixed $decorator An KObjectIdentifier, identifier string or object implementing KObjectDecorator
+     * @param   array $config    An optional associative array of configuration options
      * @return  KObjectDecoratorInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws  UnexpectedValueException If the decorator does not extend from ObjectDecorator
