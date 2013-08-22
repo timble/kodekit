@@ -47,7 +47,7 @@ class ComKoowaControllerResource extends KControllerResource
         $toolbars = array();
         if($config->dispatched() && !JFactory::getUser()->guest)
         {
-            $toolbars[] = $this->getView()->getName();
+            $toolbars[] = $this->getIdentifier()->name;
 
             if($this->getIdentifier()->application === 'admin') {
                 $toolbars[] = 'menubar';

@@ -65,9 +65,21 @@ class ComKoowaControllerService extends KControllerService
             ));
         }
 
+        //Add default toolbars only if the controller is being dispatched and the user is logged in.
+        $toolbars = array();
+        if($config->dispatched() && !JFactory::getUser()->guest)
+        {
+            $toolbars[] = $this->getIdentifier()->name;
+
+            if($this->getIdentifier()->application === 'admin') {
+                $toolbars[] = 'menubar';
+            };
+        }
+
         //Set the maximum list limit to 100
         $config->append(array(
-            'limit' => array('max' => 100, 'default' => JFactory::getApplication()->getCfg('list_limit'))
+            'limit'     => array('max' => 100, 'default' => JFactory::getApplication()->getCfg('list_limit')),
+            'toolbars'  => $toolbars
         ));
 
         parent::_initialize($config);
@@ -76,19 +88,15 @@ class ComKoowaControllerService extends KControllerService
     /**
      * Attach the toolbars to the controller
      *
-     * void
+     * @param array $toolbars A list of toolbars
+     * @return ComKoowaControllerResource
      */
-    public function attachToolbars()
+    public function attachToolbars($toolbars)
     {
         if($this->getView() instanceof KViewHtml)
         {
-            if($this->isDispatched() && !JFactory::getUser()->guest)
-            {
-                $this->attachToolbar($this->getView()->getName());
-
-                if($this->getIdentifier()->application === 'admin') {
-                    $this->attachToolbar('menubar');
-                };
+            foreach($toolbars as $toolbar) {
+                $this->attachToolbar($toolbar);
             }
 
             if($toolbars = $this->getToolbars())
@@ -98,6 +106,8 @@ class ComKoowaControllerService extends KControllerService
                     ->addFilter('toolbar', array('toolbars' => $toolbars));
             };
         }
+
+        return $this;
     }
 
     /**
