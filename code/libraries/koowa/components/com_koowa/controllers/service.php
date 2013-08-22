@@ -35,10 +35,10 @@ class ComKoowaControllerService extends KControllerService
 		$this->_limit = $config->limit;
 
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin($config->append(array('mixer' => $this))));
+        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
 
         //Attach the toolbars
-        $this->registerCallback('before.get' , array($this, 'attachToolbars'));
+        $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
 
         if($this->isDispatched() && $config->persistable) {
             $this->addBehavior('persistable');
