@@ -9,7 +9,9 @@
  requires:
  - Select2
 
- license: @TODO
+ license: GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+
+ copyright: Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
 
  ...
  */
@@ -86,7 +88,7 @@
                     value: options.selected,
                     onchange: element.attr('onchange')
                 });
-                var replaced = element.replaceWith(newElement);
+                element.replaceWith(newElement);
                 element = newElement;
             }
 
