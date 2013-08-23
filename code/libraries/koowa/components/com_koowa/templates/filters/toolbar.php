@@ -11,33 +11,53 @@
 /**
  * Toolbar Template Filter
  *
+ * Filter will parse <ktml:toolbar type="[type]'> tags and replace them with the actual toolbar html by rendering
+ * the toolbar helper for the specific toolbar type.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements KTemplateFilterWrite
 {
     /**
-     * Toolbars to render such as toolbar, menubar, title
+     * Toolbars to render such as actionbar, menubar, ...
+     *
      * @var array
      */
-    protected $_toolbars = array();
+    protected $_toolbars;
 
     /**
-     * Toolbar
+     * Constructor
      *
-     * @var KControllerToolbarInterface
+     * @param   KObjectConfig $config Configuration options
      */
-    protected $_toolbar;
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->setToolbars(KObjectConfig::unbox($config->toolbars));
+    }
 
     /**
-     * Toolbar
+     * Initializes the options for the object
      *
-     * @var KControllerToolbarInterface
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return  void
      */
-    protected $_menubar;
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'toolbars' => array(),
+        ));
 
+        parent::_initialize($config);
+    }
 
     /**
+     * Get the list of toolbars to be rendered
+     *
      * @return array
      */
     public function getToolbars()
@@ -54,159 +74,68 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
     public function setToolbars(array $toolbars)
     {
         $this->_toolbars = $toolbars;
-
-        return $this;
-    }
-    /**
-     * Returns the menubar instance
-     *
-     * @return KControllerToolbarInterface
-     */
-    public function getMenubar()
-    {
-        return $this->_menubar;
-    }
-
-    /**
-     * Sets the menubar instance
-     *
-     * @param KControllerToolbarInterface $menubar
-     * @return $this
-     */
-    public function setMenubar(KControllerToolbarInterface $menubar)
-    {
-        $this->_menubar = $menubar;
-
         return $this;
     }
 
     /**
-     * Returns the toolbar instance
+     * Returns the menu bar instance
      *
      * @return KControllerToolbarInterface
      */
-    public function getToolbar()
+    public function getToolbar($type = 'actionbar')
     {
-        return $this->_toolbar;
+        return isset($this->_toolbars[$type]) ? $this->_toolbars[$type] : null;
     }
 
     /**
-     * Sets the toolbar instance
+     * Sets the menu bar instance
      *
      * @param KControllerToolbarInterface $toolbar
-     * @return $this
+     * @return ComKoowaTemplateFilterToolbar
      */
     public function setToolbar(KControllerToolbarInterface $toolbar)
     {
-        $this->_toolbar = $toolbar;
-
+        $this->_toolbars[$toolbar->getType()] = $toolbar;
         return $this;
     }
 
     /**
-     * Replace/push toolbar
+     * Replace/push the toolbars
      *
      * @param string $text Block of text to parse
-     * @return $this
+     * @return ComKoowaTemplateFilterToolbar
      */
     public function write(&$text)
     {
-        $toolbars = $this->getToolbars();
+        $matches = array();
 
-        if (in_array('toolbar', $toolbars) && $this->getToolbar()) {
-            $this->_renderToolbar($text);
-        }
+        if(preg_match_all('#<ktml:toolbar([^>]*)>#siU', $text, $matches))
+        {
+            foreach($matches[0] as $key => $match)
+            {
+                $attributes = $this->parseAttributes($matches[1][$key]);
 
-        if (in_array('menubar', $toolbars) && $this->getMenubar()) {
-            $this->_renderMenubar($text);
-        }
+                //Create attributes array
+                $config = new KObjectConfig($attributes);
+                $config->append(array(
+                    'type'  => 'actionbar',
+                ));
 
-        if (in_array('title', $toolbars) && $this->getToolbar()) {
-            $this->_renderTitle($text);
+                $html = '';
+                if($toolbar = $this->getToolbar($config->type))
+                {
+                    $config->toolbar = $toolbar; //set the toolbar in the config
+
+                    $html = $this->getTemplate()
+                                 ->getHelper($config->type)
+                                 ->render($config);
+                }
+
+                //Remove placeholder
+                $text = str_replace($match, $html, $text);
+            }
         }
 
         return $this;
-    }
-
-    /**
-     * Renders the title
-     *
-     * @param string $text Block of text to parse
-     * @return void
-     */
-    protected function _renderTitle(&$text)
-    {
-        $title = $this->getTemplate()->getHelper('toolbar')->title(array(
-            'toolbar' => $this->getToolbar()
-        ));
-
-        if (JFactory::getApplication()->isAdmin()) {
-            JFactory::getDocument()->setBuffer($title, 'modules', 'title');
-        }
-        else
-        {
-            $needle = '<ktml:title>';
-
-            if ($this->getToolbar() && strpos($text, $needle) !== false) {
-                $text = str_replace($needle, $title, $text);
-            }
-        }
-    }
-
-    /**
-     * Renders the toolbar
-     *
-     * @param string $text Block of text to parse
-     * @return void
-     */
-    protected function _renderToolbar(&$text)
-    {
-        // Load the language strings for toolbar button labels
-        JFactory::getLanguage()->load('joomla', JPATH_ADMINISTRATOR);
-
-        $toolbar = $this->getTemplate()->getHelper('toolbar')->render(array(
-            'toolbar' => $this->getToolbar()
-        ));
-
-        if (JFactory::getApplication()->isAdmin()) {
-            JFactory::getDocument()->setBuffer($toolbar, 'modules', 'toolbar');
-        }
-        else
-        {
-            $needle = '<ktml:toolbar>';
-
-            if ($this->getToolbar() && strpos($text, $needle) !== false) {
-                $text = str_replace($needle, $toolbar, $text);
-            }
-        }
-    }
-
-    /**
-     * Renders the menubar
-     *
-     * @param string $text Block of text to parse
-     * @return void
-     */
-    protected function _renderMenubar(&$text)
-    {
-        if ($this->getMenubar())
-        {
-            $menubar = $this->getTemplate()->getHelper('menubar')->render(array(
-                'menubar' => $this->getMenubar()
-            ));
-
-            if (JFactory::getApplication()->isAdmin()) {
-                JFactory::getDocument()->setBuffer($menubar, 'modules', 'submenu');
-            }
-            else
-            {
-                $needle = '<ktml:menubar>';
-
-                if (strpos($text, $needle) !== false) {
-                    $text = str_replace($needle, $menubar, $text);
-                }
-            }
-        }
-
     }
 }

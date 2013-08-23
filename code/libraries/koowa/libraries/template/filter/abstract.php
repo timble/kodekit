@@ -32,9 +32,9 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -50,13 +50,13 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KCommand::PRIORITY_NORMAL,
+            'priority' => KTemplateFilter::PRIORITY_NORMAL,
             'template' => null
         ));
 
@@ -135,7 +135,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      * @param   string  String containing xml style attributes
      * @return  array   Key/Value pairs for the attributes
      */
-    protected function _parseAttributes( $string )
+    public function parseAttributes( $string )
     {
         $result = array();
 
@@ -155,5 +155,34 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         }
 
         return $result;
+    }
+
+    /**
+     * Method to build a string with xml style attributes from  an array of key/value pairs
+     *
+     * @param   mixed   $array The array of Key/Value pairs for the attributes
+     * @return  string  String containing xml style attributes
+     */
+    public function buildAttributes($array)
+    {
+        $output = array();
+
+        if ($array instanceof KObjectConfig) {
+            $array = KObjectConfig::unbox($array);
+        }
+
+        if (is_array($array))
+        {
+            foreach ($array as $key => $item)
+            {
+                if (is_array($item)) {
+                    $item = implode(' ', $item);
+                }
+
+                $output[] = $key . '="' . str_replace('"', '&quot;', $item) . '"';
+            }
+        }
+
+        return implode(' ', $output);
     }
 }

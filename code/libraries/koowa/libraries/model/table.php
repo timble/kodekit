@@ -28,9 +28,9 @@ class KModelTable extends KModelAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -61,10 +61,10 @@ class KModelTable extends KModelAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'table' => $this->getIdentifier()->name,
@@ -109,12 +109,12 @@ class KModelTable extends KModelAbstract
             if(!($this->_table instanceof KDatabaseTableAbstract))
 		    {
 		        //Make sure we have a table identifier
-		        if(!($this->_table instanceof KServiceIdentifier)) {
+		        if(!($this->_table instanceof KObjectIdentifier)) {
 		            $this->setTable($this->_table);
 			    }
 
 		        try {
-		            $this->_table = $this->getService($this->_table);
+		            $this->_table = $this->getObject($this->_table);
                 } catch (RuntimeException $e) {
                     $this->_table = false;
                 }
@@ -127,7 +127,7 @@ class KModelTable extends KModelAbstract
     /**
      * Method to set a table object attached to the model
      *
-     * @param	mixed	$table An object that implements KObjectInterface, KServiceIdentifier object
+     * @param	mixed	$table An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					       or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KModelTable
@@ -140,7 +140,7 @@ class KModelTable extends KModelAbstract
 		    {
 		        $identifier         = clone $this->getIdentifier();
 		        $identifier->path   = array('database', 'table');
-		        $identifier->name   = KInflector::tableize($table);
+		        $identifier->name   = KStringInflector::tableize($table);
 		    }
 		    else  $identifier = $this->getIdentifier($table);
 
@@ -184,7 +184,7 @@ class KModelTable extends KModelAbstract
 
                 if($this->_state->isUnique())
                 {
-                	$query = $this->getService('koowa:database.query.select');
+                	$query = $this->getObject('koowa:database.query.select');
 
                 	$this->_buildQueryColumns($query);
                 	$this->_buildQueryTable($query);
@@ -217,7 +217,7 @@ class KModelTable extends KModelAbstract
 
                 if(!$this->_state->isEmpty())
                 {
-                	$query = $this->getService('koowa:database.query.select');
+                	$query = $this->getObject('koowa:database.query.select');
 
                 	$this->_buildQueryColumns($query);
                 	$this->_buildQueryTable($query);
@@ -248,7 +248,7 @@ class KModelTable extends KModelAbstract
         {
             if($this->isConnected())
             {
-	            $query = $this->getService('koowa:database.query.select');
+	            $query = $this->getObject('koowa:database.query.select');
 	            $query->columns('COUNT(*)');
 
 	            $this->_buildQueryTable($query);

@@ -28,12 +28,12 @@ class KCommandEvent extends KCommand
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         //If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
+        if(!isset($config)) $config = new KObjectConfig();
 
         parent::__construct($config);
 
@@ -45,13 +45,13 @@ class KCommandEvent extends KCommand
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'event_dispatcher' => $this->getService('koowa:event.dispatcher')
+            'event_dispatcher' => $this->getObject('koowa:event.dispatcher')
         ));
 
         parent::_initialize($config);
@@ -80,9 +80,9 @@ class KCommandEvent extends KCommand
         $package = '';
         $subject = '';
 
-        if ($context->caller)
+        if ($context->getSubject())
         {
-            $identifier = clone $context->caller->getIdentifier();
+            $identifier = clone $context->getSubject()->getIdentifier();
             $package = $identifier->package;
 
             if ($identifier->path)
@@ -95,7 +95,7 @@ class KCommandEvent extends KCommand
 
         $parts  = explode('.', $name);
         $when   = array_shift($parts);         // Before or After
-        $name   = KInflector::implode($parts); // Read Dispatch Select etc.
+        $name   = KStringInflector::implode($parts); // Read Dispatch Select etc.
 
         // Create Specific and Generic event names
         $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;
@@ -103,6 +103,8 @@ class KCommandEvent extends KCommand
 
         // Create event object to check for propagation
         $event = new KEvent($event_specific, $context);
+        $event->setTarget($context->getSubject());
+
         $this->getEventDispatcher()->dispatchEvent($event_specific, $event);
 
         // Ensure event can be propagated and event name is different

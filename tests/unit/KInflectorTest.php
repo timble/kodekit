@@ -8,12 +8,12 @@
  */
 
 /**
- * KInflectorTest
+ * KStringInflectorTest
  *
  * @author      Mathias Verraes <mathias@joomlatools.org>
  * @package     Koowa_Tests
  */
-class KInflectorTest extends PHPUnit_Framework_TestCase
+class KStringInflectorTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Provides data for the test
@@ -104,7 +104,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testUnderscoredToCamelize($classified, $separator, $split, $exploded, $camelized, $underscored)
     {
-    	$this->assertEquals(KInflector::camelize($underscored), $camelized);
+    	$this->assertEquals(KStringInflector::camelize($underscored), $camelized);
     }
 
     /**
@@ -112,7 +112,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testCamelizeToUnderscored($classified, $separator, $split, $exploded, $camelized, $underscored)
     {
-        $this->assertEquals(KInflector::underscore($camelized), $underscored);
+        $this->assertEquals(KStringInflector::underscore($camelized), $underscored);
     }
 
     /**
@@ -120,7 +120,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testUnderscoreToClassify($classified, $separator, $split, $exploded, $camelized, $underscored)
     {
-        $this->assertEquals(KInflector::classify($underscored), $classified);
+        $this->assertEquals(KStringInflector::classify($underscored), $classified);
     }
 
     /**
@@ -128,7 +128,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testClassifyToUnderscore($classified, $separator, $split, $exploded, $camelized, $underscored)
     {
-        $this->assertEquals(KInflector::underscore($classified), $underscored);
+        $this->assertEquals(KStringInflector::underscore($classified), $underscored);
     }
 
     /**
@@ -136,7 +136,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testExplode($classified, $separator, $split, $exploded)
     {
-        $this->assertEquals( KInflector::explode($classified), $exploded);
+        $this->assertEquals( KStringInflector::explode($classified), $exploded);
     }
 
     public function testgetPart()
@@ -154,7 +154,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testIsPlural($singular, $plural)
     {
-        $this->assertTrue(KInflector::isPlural($plural));
+        $this->assertTrue(KStringInflector::isPlural($plural));
     }
 
     /**
@@ -162,7 +162,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testIsSingular($singular, $plural)
     {
-        $this->assertTrue(KInflector::isSingular($singular));
+        $this->assertTrue(KStringInflector::isSingular($singular));
     }
 
     /**
@@ -170,7 +170,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testPluralize($singular, $plural)
     {
-        $this->assertEquals(KInflector::pluralize($singular), $plural);
+        $this->assertEquals(KStringInflector::pluralize($singular), $plural);
     }
 
     /**
@@ -178,7 +178,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testSingularize($singular, $plural)
     {
-        $this->assertEquals(KInflector::singularize($plural), $singular);
+        $this->assertEquals(KStringInflector::singularize($plural), $singular);
     }
 
     /**
@@ -186,7 +186,7 @@ class KInflectorTest extends PHPUnit_Framework_TestCase
      */
     public function testSplit($classified, $separator, $split, $exploded)
     {
-        $this->assertEquals( KInflector::split($separator, $classified), $split);
+        $this->assertEquals( KStringInflector::split($separator, $classified), $split);
     }
 
     public function testTableize()

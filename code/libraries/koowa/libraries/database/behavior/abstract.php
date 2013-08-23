@@ -23,34 +23,34 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	protected $_priority;
 
 	/**
-     * The service identifier
+     * The object identifier
      *
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
-    private $__service_identifier;
+    private $__object_identifier;
 
     /**
-     * The service container
+     * The object manager
      *
-     * @var KServiceInterface
+     * @var KObjectManagerInterface
      */
-    private $__service_container;
+    private $__object_manager;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct( KConfig $config = null)
+	public function __construct( KObjectConfig $config = null)
 	{
-	    //Set the service container
-        if(isset($config->service_container)) {
-            $this->__service_container = $config->service_container;
+	    //Set the object manager
+        if(isset($config->object_manager)) {
+            $this->__object_manager = $config->object_manager;
         }
 
-        //Set the service identifier
-        if(isset($config->service_identifier)) {
-            $this->__service_identifier = $config->service_identifier;
+        //Set the object identifier
+        if(isset($config->object_identifier)) {
+            $this->__object_identifier = $config->object_identifier;
         }
 
 		parent::__construct($config);
@@ -68,10 +68,10 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
 			'priority'   => KCommand::PRIORITY_NORMAL,
@@ -133,10 +133,10 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     public function save()
     {
         $this->getTable()->getCommandChain()->disable();
-        $this->_mixer->save();
+        $this->getMixer()->save();
         $this->getTable()->getCommandChain()->enable();
 
-        return $this->_mixer;
+        return $this->getMixer();
     }
 
     /**
@@ -150,10 +150,10 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     public function delete()
     {
         $this->getTable()->getCommandChain()->disable();
-        $this->_mixer->delete();
+        $this->getMixer()->delete();
         $this->getTable()->getCommandChain()->enable();
 
-        return $this->_mixer;
+        return $this->getMixer();
     }
 
     /**
@@ -188,12 +188,12 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
      * @param KObject $mixer  The mixer requesting the mixable methods.
      * @return array  An array of methods
      */
-    public function getMixableMethods(KObject $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods   = parent::getMixableMethods($mixer);
         $methods[] = 'is'.ucfirst($this->getIdentifier()->name);
 
-        return array_diff($methods, array('execute', 'save', 'delete', 'getHandle', 'getPriority', 'getIdentifier', 'getService'));
+        return array_diff($methods, array('execute', 'save', 'delete', 'getHandle', 'getPriority', 'getIdentifier', 'getObject'));
     }
 
 	/**
@@ -204,24 +204,24 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectInterface
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getObject($identifier, array $config = array())
 	{
-	    return $this->__service_container->get($identifier, $config);
+	    return $this->__object_manager->getObject($identifier, $config);
 	}
 
 	/**
-	 * Gets the service identifier.
+	 * Gets the object identifier.
 	 *
      * @param	string|object	$identifier The class identifier or identifier object
-	 * @return	KServiceIdentifier
+	 * @return	KObjectIdentifier
 	 * @see 	KObjectInterface
 	 */
 	final public function getIdentifier($identifier = null)
 	{
 		if(isset($identifier)) {
-		    $result = $this->__service_container->getIdentifier($identifier);
+		    $result = $this->__object_manager->getIdentifier($identifier);
 		} else {
-		    $result = $this->__service_identifier;
+		    $result = $this->__object_identifier;
 		}
 
 	    return $result;

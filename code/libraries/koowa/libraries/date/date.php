@@ -18,12 +18,12 @@ class KDate extends DateTime implements KDateInterface
     /**
      * Constructor.
      *
-     * @param   array|KConfig An associative array of configuration settings or a ObjectConfig instance.
+     * @param   array|KObjectConfig An associative array of configuration settings or a ObjectConfig instance.
      */
     public function __construct($config = array())
     {
-        if (!$config instanceof KConfig) {
-            $config = new KConfig($config);
+        if (!$config instanceof KObjectConfig) {
+            $config = new KObjectConfig($config);
         }
 
         $this->_initialize($config);
@@ -40,10 +40,10 @@ class KDate extends DateTime implements KDateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'date'       => 'now',

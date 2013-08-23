@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterSlug extends KFilterAbstract
+class KFilterSlug extends KFilterAbstract implements KFilterTraversable
 {
 	/**
 	 * Separator character / string to use for replacing non alphabetic characters in generated slug
@@ -32,9 +32,9 @@ class KFilterSlug extends KFilterAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param KConfig $config	An optional KConfig object with configuration options
+	 * @param KObjectConfig $config	An optional KObjectConfig object with configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -47,10 +47,10 @@ class KFilterSlug extends KFilterAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'separator' => '-',
@@ -69,9 +69,9 @@ class KFilterSlug extends KFilterAbstract
 	 * @param	mixed	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
-	protected function _validate($value)
+	public function validate($value)
 	{
-		return $this->getService('koowa:filter.cmd')->validate($value);
+		return $this->getObject('koowa:filter.cmd')->validate($value);
 	}
 
 	/**
@@ -83,13 +83,13 @@ class KFilterSlug extends KFilterAbstract
 	 * @param	mixed	$value Variable to be sanitized
 	 * @return	mixed
 	 */
-	protected function _sanitize($value)
+	public function sanitize($value)
 	{
 		//remove any '-' from the string they will be used as concatenator
 		$value = str_replace($this->_separator, ' ', $value);
 
 		//convert to ascii characters
-		$value = $this->getService('koowa:filter.ascii')->sanitize($value);
+		$value = $this->getObject('koowa:filter.ascii')->sanitize($value);
 
 		//lowercase and trim
 		$value = trim(strtolower($value));

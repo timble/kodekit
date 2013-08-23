@@ -31,9 +31,9 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Constructor
      *
-     * @param KConfig $config  An optional KConfig object with configuration options
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -46,10 +46,10 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config An optional KConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'adapter' => 'koowa:database.adapter.mysqli',
@@ -82,7 +82,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         if(!$this->_params instanceof KObjectArray)
         {
-            $this->_params = $this->getService($this->_params);
+            $this->_params = $this->getObject($this->_params);
 
             if(!$this->_params instanceof KObjectArray)
             {
@@ -117,7 +117,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         if(!$this->_adapter instanceof KDatabaseAdapterInterface)
         {
-            $this->_adapter = $this->getService($this->_adapter);
+            $this->_adapter = $this->getObject($this->_adapter);
 
             if(!$this->_adapter instanceof KDatabaseAdapterInterface)
             {

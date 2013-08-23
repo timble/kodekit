@@ -10,7 +10,7 @@
 /**
  * Json View
  *
- * The JSON view implements supports for JSONP through the model's callback state. If a callback is present the output
+ * The JSON view implements supports for JSONP through the model's callback state. If a callback is present the content
  * will be padded.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
@@ -33,9 +33,9 @@ class KViewJson extends KViewAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -50,14 +50,12 @@ class KViewJson extends KViewAbstract
         }
 
         $this->_padding = $config->padding;
-
         $this->_version = $config->version;
 
         $this->_item_name = $config->item_name;
         $this->_list_name = $config->list_name;
 
-        $this->_text_fields = KConfig::unbox($config->text_fields);
-
+        $this->_text_fields = KObjectConfig::unbox($config->text_fields);
     }
 
     /**
@@ -65,67 +63,85 @@ class KViewJson extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'mimetype'	  => 'application/json',
             'padding'	  => '',
             'version'     => '1.0',
             'text_fields' => array('description'), // Links are converted to absolute in these fields
-            'item_name'   => KInflector::singularize($this->getName()),
-            'list_name'   => KInflector::pluralize($this->getName())
+            'item_name'   => KStringInflector::singularize($this->getName()),
+            'list_name'   => KStringInflector::pluralize($this->getName())
+        ))->append(array(
+            'mimetype' => 'application/json; version=' . $config->version,
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Return the views output
+     * Return the views content
      *
-     * If the view 'output' variable is empty the output will be generated based on the
-     * model data, if it set it will be returned instead.
+     * If the view 'content'  is empty the content will be generated based on the model data, if it set it will
+     * be returned instead.
      *
-     * If the model contains a callback state, the callback value will be used to apply
-     * padding to the JSON output.
+     * If the model contains a callback state, the callback value will be used to apply padding to the JSON output.
      *
-     *  @return string 	The output of the view
+     *  @return string A RFC4627-compliant JSON string, which may also be embedded into HTML.
      */
     public function display()
     {
-        if (empty($this->output))
+        if (empty($this->_content))
         {
-            $this->output = array_merge(array(
-                'version' => $this->_version
-            ), $this->_getData());
-
-            $this->_processLinks($this->output);
+            $this->_content = array_merge(array('version' => $this->_version), $this->_getData());
+            $this->_processLinks($this->_content);
         }
 
-        if (!is_string($this->output)) {
-            $this->output = json_encode($this->output);
+        //Serialise
+        if (!is_string($this->_content))
+        {
+            // Root should be JSON object, not array
+            if (is_array($this->_content) && 0 === count($this->_content)) {
+                $this->_content = new \ArrayObject();
+            }
+
+            // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
+            $this->_content = json_encode($this->_content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
         }
 
         //Handle JSONP
         if (!empty($this->_padding)) {
-            $this->output = $this->_padding.'('.$this->output.');';
+            $this->_content = $this->_padding.'('.$this->_content.');';
         }
 
         return parent::display();
     }
 
     /**
-     * Returns the JSON output
+     * Force the route to fully qualified and not escaped by default
      *
-     * It converts relative URLs in the output to relative before returning the result
+     * @param   string  $route   The query string used to create the route
+     * @param   boolean $fqr     If TRUE create a fully qualified route. Default TRUE.
+     * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default FALSE.
+     * @return  string  The route
+     */
+    public function createRoute($route = '', $fqr = true, $escape = false)
+    {
+        return parent::createRoute($route, $fqr, $escape);
+    }
+
+    /**
+     * Returns the JSON data
+     *
+     * It converts relative URLs in the content to relative before returning the result
      *
      * @return array
      */
     protected function _getData()
     {
-        if (KInflector::isPlural($this->getName())) {
+        if (KStringInflector::isPlural($this->getName())) {
             $result = $this->_renderList($this->getModel()->getList());
         } else {
             $result = $this->_renderItem($this->getModel()->getItem());
@@ -135,7 +151,7 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Returns the JSON output for lists
+     * Returns the JSON data for a list
      *
      * @param  KDatabaseRowsetInterface $rowset
      * @return array
@@ -146,7 +162,7 @@ class KViewJson extends KViewAbstract
         $key     = $this->_list_name;
         $data    = $this->_getList($rowset);
 
-        $output  = array(
+        $json  = array(
             'links' => array(
                 'self' => array(
                     'href' => $this->_getListLink($rowset),
@@ -166,8 +182,9 @@ class KViewJson extends KViewAbstract
         $limit  = (int) $model->limit;
         $offset = (int) $model->offset;
 
-        if ($limit && $total-($limit + $offset) > 0) {
-            $output['links']['next'] = array(
+        if ($limit && $total-($limit + $offset) > 0)
+        {
+            $json['links']['next'] = array(
                 'href' => $this->_getListLink($rowset, array('offset' => $limit+$offset)),
                 'type' => 'application/json'
             );
@@ -175,17 +192,17 @@ class KViewJson extends KViewAbstract
 
         if ($limit && $offset && $offset >= $limit)
         {
-            $output['links']['previous'] = array(
+            $json['links']['previous'] = array(
                 'href' => $this->_getListLink($rowset, array('offset' => max($offset-$limit, 0))),
                 'type' => 'application/json'
             );
         }
 
-        return $output;
+        return $json;
     }
 
     /**
-     * Get the list link for JSON output
+     * Get the list link
      *
      * @param KDatabaseRowsetInterface  $rowset
      * @param array                     $query Additional query parameters to merge
@@ -195,7 +212,8 @@ class KViewJson extends KViewAbstract
     {
         $url = KRequest::url();
 
-        if ($query) {
+        if ($query)
+        {
             $previous = $url->getQuery(true);
             $url->setQuery(array_merge($previous, $query));
         }
@@ -222,7 +240,8 @@ class KViewJson extends KViewAbstract
             'data'  => array()
         );
 
-        foreach ($rowset as $row) {
+        foreach ($rowset as $row)
+        {
             $clone = $tmpl;
             $clone['links']['self']['href'] = $this->_getItemLink($row);
             $clone['data'] = $this->_getItem($row);
@@ -256,7 +275,7 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Get the item data for JSON output
+     * Get the item data
      *
      * @param KDatabaseRowInterface  $row   Document row
      * @return array The array with data to be encoded to json
@@ -273,7 +292,7 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Get the item link for JSON output
+     * Get the item link
      *
      * @param KDatabaseRowInterface  $row
      * @return string
@@ -300,7 +319,8 @@ class KViewJson extends KViewAbstract
             if (is_array($value)) {
                 $this->_processLinks($value);
             }
-            elseif ($key === 'href') {
+            elseif ($key === 'href')
+            {
                 if (substr($value, 0, 4) !== 'http') {
                     $array[$key] = trim($base, '/').$value;
                 }
@@ -315,10 +335,7 @@ class KViewJson extends KViewAbstract
      * Convert links in a text from relative to absolute and runs them through JRoute
      *
      * @param string $text The text processed
-     *
      * @return string Text with converted links
-     *
-     * @since   11.1
      */
     protected function _processText($text)
     {
@@ -332,52 +349,5 @@ class KViewJson extends KViewAbstract
         }
 
         return $text;
-    }
-
-    /**
-     * Create a route based on a query string or a row.
-     *
-     * option, view and layout will automatically be added if they are omitted.
-     *
-     * In templates, use @route()
-     *
-     * @param string|KDatabaseRowInterface $route      The query string or a row
-     * @param string                       $parameters A query string for extra parameters.
-     *
-     * @return string The route
-     */
-    public function createRoute($route = '', $parameters = '')
-    {
-        $parts = array();
-
-        // Convert parameters to an array
-        if (!empty($parameters)) {
-            parse_str($parameters, $parts);
-        }
-
-        // $parameters elements always take precedence
-        parse_str($route, $tmp);
-        $parts = array_merge($tmp, $parts);
-
-        if (!isset($parts['option'])) {
-            $parts['option'] = 'com_'.$this->getIdentifier()->package;
-        }
-
-        if (!isset($parts['view'])) {
-            $parts['view'] = $this->getName();
-        }
-
-        if (!isset($parts['layout']) && $this->getLayout() !== 'default') {
-            $parts['layout'] = $this->getLayout();
-        }
-
-        // Add the format information to the URL only if it's not 'html'
-        if (!isset($parts['format']) && $this->getIdentifier()->name !== 'html') {
-            $parts['format'] = $this->getIdentifier()->name;
-        }
-
-        $result = 'index.php?'.http_build_query($parts, '', '&');
-
-        return JRoute::_($result, false);
     }
 }

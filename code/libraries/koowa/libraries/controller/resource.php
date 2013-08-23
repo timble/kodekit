@@ -53,9 +53,9 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -79,14 +79,14 @@ abstract class KControllerResource extends KControllerAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
     	    'model'	     => $this->getIdentifier()->name,
-    	    'behaviors'  => array('executable', 'commandable'),
+    	    'behaviors'  => array('executable'),
     	    'readonly'   => true,
     		'request' 	 => array('format' => 'html')
          ))->append(array(
@@ -110,7 +110,7 @@ abstract class KControllerResource extends KControllerAbstract
 	    if(!$this->_view instanceof KViewAbstract)
 		{
 		    //Make sure we have a view identifier
-		    if(!($this->_view instanceof KServiceIdentifier)) {
+		    if(!($this->_view instanceof KObjectIdentifier)) {
 		        $this->setView($this->_view);
 			}
 
@@ -120,7 +120,7 @@ abstract class KControllerResource extends KControllerAbstract
 			    $config['auto_assign'] = !$this->getBehavior('executable')->isReadOnly();
 			}
 
-			$this->_view = $this->getService($this->_view, $config);
+			$this->_view = $this->getObject($this->_view, $config);
 
 			//Set the layout
 			if(isset($this->_request->layout)) {
@@ -139,10 +139,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
-	 * @return	object	A KViewAbstract object or a KServiceIdentifier object
+	 * @return	object	A KViewAbstract object or a KObjectIdentifier object
 	 */
 	public function setView($view)
 	{
@@ -178,16 +178,11 @@ abstract class KControllerResource extends KControllerAbstract
 		if(!$this->_model instanceof KModelAbstract)
 		{
 			//Make sure we have a model identifier
-		    if(!($this->_model instanceof KServiceIdentifier)) {
+		    if(!($this->_model instanceof KObjectIdentifier)) {
 		        $this->setModel($this->_model);
 			}
 
-		    /* @TODO : Pass the state to the model using the options
-		    $options = array(
-				'state' => $this->getRequest()
-            );*/
-
-		    $this->_model = $this->getService($this->_model)->set($this->getRequest());
+		    $this->_model = $this->getObject($this->_model)->set($this->getRequest());
 		}
 
 		return $this->_model;
@@ -196,10 +191,10 @@ abstract class KControllerResource extends KControllerAbstract
 	/**
 	 * Method to set a model object attached to the controller
 	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
-	 * @return	object	A KModelAbstract object or a KServiceIdentifier object
+	 * @return	object	A KModelAbstract object or a KObjectIdentifier object
 	 */
 	public function setModel($model)
 	{
@@ -208,8 +203,8 @@ abstract class KControllerResource extends KControllerAbstract
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {
 			    // Model names are always plural
-			    if(KInflector::isSingular($model)) {
-				    $model = KInflector::pluralize($model);
+			    if(KStringInflector::isSingular($model)) {
+				    $model = KStringInflector::pluralize($model);
 			    }
 
 			    $identifier			= clone $this->getIdentifier();

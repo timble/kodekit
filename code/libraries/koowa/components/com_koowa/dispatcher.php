@@ -13,17 +13,17 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantiatable
+class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiatable
 {
  	/**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         /*
          * Joomla 3.x Compat
@@ -58,32 +58,31 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfigInterface $config        Configuration options
-     * @param 	KServiceInterface $container	A KServiceInterface object
+     * @param   KObjectConfigInterface $config        Configuration options
+     * @param 	KObjectManagerInterface $manager	A KObjectManagerInterface object
      * @return KDispatcherDefault
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
        // Check if an instance with this identifier already exists or not
-        if (!$container->has($config->service_identifier))
+        if (!$manager->isRegistered($config->object_identifier))
         {
             //Create the singleton
-            $classname = $config->service_identifier->classname;
+            $classname = $config->object_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+            $manager->setObject($config->object_identifier, $instance);
 
             //Add the factory map to allow easy access to the singleton
-            $container->setAlias('dispatcher', $config->service_identifier);
+            $manager->registerAlias('dispatcher', $config->object_identifier);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->getObject($config->object_identifier);
     }
 
     /**
      * Dispatch the controller and redirect
      *
-     * This function divert the standard behavior and will redirect if no view
-     * information can be found in the request.
+     * This function divert the standard behavior and will redirect if no view information can be found in the request.
      *
      * @param   KCommandContext	$context A command context object
      * @return  ComKoowaDispatcher
@@ -117,7 +116,7 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KServiceInstantia
         JFactory::getDocument()->setMimeEncoding($view->mimetype);
 
         //Disabled the application menubar
-        if(JFactory::getApplication()->isAdmin() && $this->getController()->isEditable() && KInflector::isSingular($view->getName())) {
+        if($this->getIdentifier()->application === 'admin' && $this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
             KRequest::set('get.hidemainmenu', 1);
         }
 

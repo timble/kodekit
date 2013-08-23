@@ -22,10 +22,10 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config An optional KConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $defaults = array(
             'all' => 'JALL',
@@ -84,7 +84,7 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
             'end' => 'JLIB_HTML_END'
         );
 
-        if (JFactory::getApplication()->isAdmin())
+        if ($this->getIdentifier()->application === 'admin')
         {
             $config->append(array(
                 'data'  => $defaults

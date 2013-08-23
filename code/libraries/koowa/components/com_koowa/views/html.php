@@ -18,9 +18,9 @@ class ComKoowaViewHtml extends KViewDefault
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -35,12 +35,18 @@ class ComKoowaViewHtml extends KViewDefault
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
-        if ($this->getIdentifier()->application === 'admin' && KInflector::isSingular($this->getName()))
+        //Add the module template filter
+        $config->append(array(
+            'template_filters'	=> array('module'),
+        ));
+
+        //Set the default layout to form for singular admin views
+        if ($this->getIdentifier()->application === 'admin' && KStringInflector::isSingular($this->getName()))
         {
             $config->append(array(
                 'layout' => 'form'

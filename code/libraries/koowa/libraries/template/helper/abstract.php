@@ -25,9 +25,9 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -52,7 +52,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      */
     public function setTemplate($template)
     {
-        if(!$template instanceof KTemplateAbstract)
+        if(!$template instanceof KTemplateInterface)
         {
             if(empty($template) || (is_string($template) && strpos($template, '.') === false) )
             {
@@ -61,7 +61,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
                 $identifier->name	= $template ? $template : 'default';
             } else $identifier = $this->getIdentifier($template);
 	
-            $template = $this->getService($identifier);
+            $template = $this->getObject($identifier);
         }
     
         $this->_template = $template;
@@ -80,5 +80,34 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     public function translate($string, array $parameters = array())
     {
         return $this->getTemplate()->translate($string, $parameters);
+    }
+
+    /**
+     * Method to build a string with xml style attributes from  an array of key/value pairs
+     *
+     * @param   mixed   $array The array of Key/Value pairs for the attributes
+     * @return  string  String containing xml style attributes
+     */
+    public function buildAttributes($array)
+    {
+        $output = array();
+
+        if($array instanceof KObjectConfig) {
+            $array = KObjectConfig::unbox($array);
+        }
+
+        if(is_array($array))
+        {
+            foreach($array as $key => $item)
+            {
+                if(is_array($item)) {
+                    $item = implode(' ', $item);
+                }
+
+                $output[] = $key.'="'.str_replace('"', '&quot;', $item).'"';
+            }
+        }
+
+        return implode(' ', $output);
     }
 }

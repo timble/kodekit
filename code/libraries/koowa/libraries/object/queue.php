@@ -15,7 +15,7 @@
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
- * @see 		http://www.php.net/manual/en/class.splpriorityqueue.php
+ * @see     http://www.php.net/manual/en/class.splpriorityqueue.php
  */
 class KObjectQueue extends KObject implements Iterator, Countable
 {
@@ -37,10 +37,10 @@ class KObjectQueue extends KObject implements Iterator, Countable
      * Constructor
      *
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KObjectConfig $config = null)
     {
          //If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
+        if(!isset($config)) $config = new KObjectConfig();
 
         parent::__construct($config);
 
@@ -102,7 +102,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      *
      * @param KObjectHandlable $object    A KCommand object
      * @param integer          $priority  The priority
-     * @return KCommandChain
+     * @return KObjectQueue
      */
     public function setPriority(KObjectHandlable $object, $priority)
     {

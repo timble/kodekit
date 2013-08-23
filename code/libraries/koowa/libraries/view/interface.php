@@ -45,6 +45,21 @@ interface KViewInterface
 	 */
 	public function getFormat();
 
+    /**
+     * Get the content
+     *
+     * @return  string The content of the view
+     */
+    public function getContent();
+
+    /**
+     * Get the content
+     *
+     * @param  string $content The content of the view
+     * @return KViewInterface
+     */
+    public function setContent($content);
+
 	/**
 	 * Get the model object attached to the controller
 	 *
@@ -55,7 +70,7 @@ interface KViewInterface
 	/**
 	 * Method to set a model object attached to the view
 	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					       or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
 	 * @return	KViewInterface
@@ -77,37 +92,24 @@ interface KViewInterface
      */
     public function setTranslator($translator);
 
- 	/**
-     * Get the layout.
+    /**
+     * Create a route based on a full or partial query string
      *
-     * @return string The layout name
-     */
-    public function getLayout();
-
-   /**
-     * Sets the layout name to use
+     * index.php? will be automatically added.
+     * option, view and layout can be omitted. The following variations will result in the same route:
      *
-     * @param    string  $layout The template name.
-     * @return   KViewAbstract
+     * - foo=bar
+     * - view=myview&foo=bar
+     * - option=com_mycomp&view=myview&foo=bar
+     *
+     * If the route starts with '&' the query string will be appended to the current URL.
+     *
+     * In templates, use @route()
+     *
+     * @param   string|array $route  The query string or array used to create the route
+     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to FALSE.
+     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
+     * @return  string The route
      */
-    public function setLayout($layout);
-
-	/**
-	 * Create a route based on a full or partial query string
-	 *
-	 * index.php, option, view and layout can be omitted. The following variations
-	 * will all result in the same route
-	 *
-	 * - foo=bar
-	 * - option=com_mycomp&view=myview&foo=bar
-	 * - index.php?option=com_mycomp&view=myview&foo=bar
-	 *
-	 * If the route starts '&' the information will be appended to the current URL.
-	 *
-	 * In templates, use @route()
-	 *
-	 * @param	string	$route The query string used to create the route
-	 * @return 	string 	The route
-	 */
-	public function createRoute( $route = '');
+    public function createRoute($route, $fqr = null, $escape = null);
 }

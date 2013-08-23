@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterLang extends KFilterAbstract
+class KFilterLang extends KFilterAbstract implements KFilterTraversable
 {
     /**
      * Validate a value
@@ -24,7 +24,7 @@ class KFilterLang extends KFilterAbstract
      * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         $value = trim($value);
         $pattern = '/^[a-z]{2}-[A-Z]{2}$/';
@@ -38,7 +38,7 @@ class KFilterLang extends KFilterAbstract
      * @param   mixed  $value Value to be sanitized
      * @return  string
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         $value = trim($value);
 
@@ -52,7 +52,7 @@ class KFilterLang extends KFilterAbstract
         $result = implode('-', $parts);
 
         // just making sure :-)
-        if($this->_validate($result)) {
+        if($this->validate($result)) {
             return $result;
         }
 

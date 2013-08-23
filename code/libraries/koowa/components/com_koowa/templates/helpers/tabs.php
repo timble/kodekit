@@ -23,13 +23,13 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
      */
     public function startPane($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'id'      => 'tabs',
             'options' => array()
         ));
 
-        return JHtml::_('tabs.start', $config->id, KConfig::unbox($config->options));
+        return JHtml::_('tabs.start', $config->id, KObjectConfig::unbox($config->options));
     }
 
     /**
@@ -51,7 +51,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
      */
     public function startPanel( $config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'title'     => '',
             'class'     => '',
@@ -60,7 +60,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
 
         $title = $config->translate ? $this->translate($config->title) : $config->title;
 
-        $class = KConfig::unbox($config->class);
+        $class = KObjectConfig::unbox($config->class);
 
         if (is_array($class)) {
             $class = implode(' ', $class);

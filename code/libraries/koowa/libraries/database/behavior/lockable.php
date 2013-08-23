@@ -27,10 +27,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
 			'priority'   => KCommand::PRIORITY_HIGH,
@@ -51,7 +51,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
      */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
@@ -146,9 +146,9 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 		if($this->locked())
 		{
 	        $user = JFactory::getUser($this->locked_by);
-			$date = $this->getService('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
+			$date = $this->getObject('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
 			
-			$message = $this->getService('translator')->translate(
+			$message = $this->getObject('translator')->translate(
 			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
 			);
 		}

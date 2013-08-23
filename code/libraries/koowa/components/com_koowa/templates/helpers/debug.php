@@ -31,11 +31,11 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
      */
     public function dump($config = array())
     {
-        // Have to do this to avoid array to KConfig conversion
+        // Have to do this to avoid array to KObjectConfig conversion
         $value = $config['value'];
         unset($config['value']);
 
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'length'          => 128,
             'level_recursion' => 5
@@ -54,7 +54,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
      */
     public function path($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'file'    => '',
         ));
@@ -75,7 +75,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
      */
     public function source($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'padding' => 5,
             'file'    => '',
@@ -145,7 +145,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
      */
     public function trace($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'trace' => null
         ));

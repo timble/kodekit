@@ -24,7 +24,7 @@
  *     // Create a url object;
  *
  *     $url = 'http://anonymous:guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor'
- *     $url = KService::get('koowa:http.url', array('url' => $url) );
+ *     $url = KObjectManager::getInstance()->get('koowa:http.url', array('url' => $url) );
  *
  *     // the $url properties are ...
  *     //
@@ -203,9 +203,9 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     /**
      * Constructor
      *
-     * @param KConfig $config  An optional KConfig object with configuration options
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -221,10 +221,10 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KConfig $config  An optional KConfig object with configuration options
+     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'url'    => '',
@@ -247,7 +247,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public function setUrl($url)
     {
-        $url = KConfig::unbox($url);
+        $url = KObjectConfig::unbox($url);
 
         if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')) && !is_array($url))
         {
@@ -539,7 +539,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = KService::get('koowa:http.url', array('url' => $parts));
+        $url = KObjectManager::getInstance()->getObject('koowa:http.url', array('url' => $parts));
         return $url;
     }
 

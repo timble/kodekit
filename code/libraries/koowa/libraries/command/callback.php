@@ -25,10 +25,10 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
     /**
      * Object constructor
      *
-     * @param KConfig $config Configuration options
+     * @param KObjectConfig $config Configuration options
      * @throws InvalidArgumentException
      */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
@@ -48,10 +48,10 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
             'priority'      => KCommand::PRIORITY_NORMAL,
@@ -64,7 +64,7 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
 	/**
 	 * Command handler
      *
-     * If params are passed as a associative array or as a KConfig object they will be merged with the context of the
+     * If params are passed as a associative array or as a KObjectConfig object they will be merged with the context of the
      * command chain and passed along. If they are passed as an indexed array they will be passed to the callback
      * directly.
 	 *
@@ -103,10 +103,10 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
 	 * This functions overloads KObjectMixinAbstract::getMixableMethods and excludes the execute() function from the list
      * of available mixable methods.
 	 *
-     * @param  KObject $mixer Mixer object
+     * @param  KObjectMixable $mixer A mixer object
 	 * @return array An array of methods
 	 */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
         return array_diff(parent::getMixableMethods(), array('execute', 'getPriority'));
 	}

@@ -91,10 +91,10 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config  An optional KConfig object with configuration options.
+     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
     		'options'	=> array(
@@ -199,7 +199,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	public function getDatabase()
 	{
 	    if(!isset($this->_database)) {
-	        $query = $this->getService('koowa:database.query.select')
+	        $query = $this->getObject('koowa:database.query.select')
 	        	->columns('DATABASE');
 	        
 	        $this->_database = $this->select($query, KDatabase::FETCH_FIELD);
@@ -435,7 +435,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	protected function _fetchTableInfo($table)
 	{
 		$return = null;
-		$query  = $this->getService('koowa:database.query.show')
+		$query  = $this->getObject('koowa:database.query.show')
 			->show('TABLE STATUS')
 			->like(':like')
 			->bind(array('like' => $table));
@@ -456,7 +456,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	protected function _fetchTableColumns($table)
 	{
 		$return = array();
-		$query  = $this->getService('koowa:database.query.show')
+		$query  = $this->getObject('koowa:database.query.show')
 			->show('FULL COLUMNS')
 			->from($table);
 	
@@ -484,7 +484,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     protected function _fetchTableIndexes($table)
     {
         $return = array();
-        $query  = $this->getService('koowa:database.query.show')
+        $query  = $this->getObject('koowa:database.query.show')
             ->show('INDEX')
             ->from($table);
 
@@ -506,7 +506,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 */
 	protected function _parseTableInfo($info)
 	{
-		$table              = $this->getService('koowa:database.schema.table');
+		$table              = $this->getObject('koowa:database.schema.table');
 		$table->name        = $info->Name;
 		$table->engine      = $info->Engine;
 		$table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
@@ -529,7 +529,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     {
         list($type, $length, $scope) = $this->_parseColumnType($info->Type);
 
-        $column = $this->getService('koowa:database.schema.column');
+        $column = $this->getObject('koowa:database.schema.column');
         $column->name     = $info->Field;
         $column->type     = $type;
         $column->length   = $length ? $length : null;

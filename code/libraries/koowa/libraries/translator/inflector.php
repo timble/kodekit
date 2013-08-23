@@ -16,7 +16,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Translator
  */
-class KTranslatorInflector extends KInflector
+class KTranslatorInflector extends KStringInflector
 {
     private static $position_rules = array();
 

@@ -22,13 +22,13 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_LOW,
+            'priority'   => KTemplateFilter::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);
@@ -66,7 +66,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
 		{
 			foreach(array_unique($matches[1]) as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[2][$key]);
+				$attribs = $this->parseAttributes( $matches[2][$key]);
 				$styles .= $this->_renderStyle($match, true, $attribs);
 			}
 
@@ -78,7 +78,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
 		{
 			foreach($matches[2] as $key => $match)
 			{
-				$attribs = $this->_parseAttributes( $matches[1][$key]);
+				$attribs = $this->parseAttributes( $matches[1][$key]);
 				$styles .= $this->_renderStyle($match, false, $attribs);
 			}
 
@@ -98,7 +98,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
      */
 	protected function _renderStyle($style, $link, $attribs = array())
 	{
-		$attribs = KHelperArray::toString($attribs);
+		$attribs = $this->buildAttributes($attribs);
 
 		if(!$link)
 		{

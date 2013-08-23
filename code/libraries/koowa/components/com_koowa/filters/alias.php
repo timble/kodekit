@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaFilterAlias extends KFilterAbstract
+class ComKoowaFilterAlias extends KFilterAbstract implements KFilterTraversable
 {
 	/**
 	 * Validate a value
@@ -22,7 +22,7 @@ class ComKoowaFilterAlias extends KFilterAbstract
 	 * @param	string	$value Variable to be validated
 	 * @return	bool	True when the variable is valid
 	 */
-	protected function _validate($value)
+	public function validate($value)
 	{
 		return true;
 	}
@@ -33,7 +33,7 @@ class ComKoowaFilterAlias extends KFilterAbstract
 	 * @param	string $value Variable to be sanitized
 	 * @return	string
 	 */
-	protected function _sanitize($value)
+	public function sanitize($value)
 	{
 		if (JFactory::getApplication()->getCfg('unicodeslugs') == 1) {
             $value = JFilterOutput::stringURLUnicodeSlug($value);

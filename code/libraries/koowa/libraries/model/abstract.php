@@ -53,12 +53,12 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
         //If no config is passed create it
-		if(!isset($config)) $config = new KConfig();
+		if(!isset($config)) $config = new KObjectConfig();
 
 		parent::__construct($config);
 
@@ -70,10 +70,10 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 * @return  void
 	 */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
 	{
 		$config->append(array(
             'state' => new KModelState(),
@@ -107,7 +107,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
     	$changed = false;
 
         if(is_object($property)) {
-    		$property = (array) KConfig::unbox($property);
+    		$property = (array) KObjectConfig::unbox($property);
     	}
 
         if(is_array($property))

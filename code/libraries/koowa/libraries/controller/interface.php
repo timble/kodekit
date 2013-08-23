@@ -45,7 +45,7 @@ interface KControllerInterface
 	/**
 	 * Get the request information
 	 *
-	 * @return KConfig A KConfig object with request information
+	 * @return KObjectConfig A KObjectConfig object with request information
 	 */
 	public function getRequest();
 
@@ -77,7 +77,7 @@ interface KControllerInterface
      * Get a behavior by identifier
      *
      * @param  string        $behavior The name of the behavior
-     * @param  KConfig|array $config Configuration of the behavior
+     * @param  KObjectConfig|array $config Configuration of the behavior
      * @throws UnexpectedValueException
      * @return KControllerBehaviorAbstract
      */

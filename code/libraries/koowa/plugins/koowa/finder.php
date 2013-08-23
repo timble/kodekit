@@ -38,13 +38,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 
     /**
      * Model identifier/model object
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     protected $model;
 
     /**
      * Model identifier/model object
-     * @var KServiceIdentifier
+     * @var KObjectIdentifier
      */
     protected $category_model;
 
@@ -64,12 +64,12 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     {
         if ($this->bootFramework())
         {
-            $configuration = new KConfig();
+            $configuration = new KObjectConfig();
 
             $this->_initialize($configuration);
 
             foreach ($configuration as $key => $value) {
-                $this->$key = KConfig::unbox($value);
+                $this->$key = KObjectConfig::unbox($value);
             }
         }
 
@@ -83,10 +83,10 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'package' => strtolower(substr(get_class($this), 9)) // Remove plgFinder from class name
@@ -94,7 +94,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
                 'resource' => $config->package,
         ))->append(array(
             'layout'     => $config->resource,
-            'model'      => KInflector::pluralize($config->resource),
+            'model'      => KStringInflector::pluralize($config->resource),
             'category_model' => 'categories',
             'context'    => $config->package,
             'extension'  => 'com_'.$config->package,
@@ -381,7 +381,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
                 $this->model = 'com://admin/'.$this->package.'.model.'.$this->model;
             }
 
-            $this->model = KService::get($this->model);
+            $this->model = KObjectManager::getInstance()->getObject($this->model);
         }
 
         return $this->model;
@@ -400,7 +400,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
                 $this->category_model = 'com://admin/'.$this->package.'.model.'.$this->category_model;
             }
 
-            $this->category_model = KService::get($this->category_model);
+            $this->category_model = KObjectManager::getInstance()->getObject($this->category_model);
         }
 
         return $this->category_model;

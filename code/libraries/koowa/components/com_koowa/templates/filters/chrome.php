@@ -52,16 +52,16 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
  	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 
         $this->_title   = $config->title;
         $this->_class   = $config->class;
-        $this->_styles  = KConfig::unbox($config->styles);
-        $this->_attribs = KConfig::unbox($config->attribs);
+        $this->_styles  = KObjectConfig::unbox($config->styles);
+        $this->_attribs = KObjectConfig::unbox($config->attribs);
     }
 
 	/**
@@ -69,13 +69,13 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KCommand::PRIORITY_LOW,
+            'priority' => KTemplateFilter::PRIORITY_LOW,
         	'title'    => '',
             'class'    => '',
             'styles'   => array(),
@@ -110,7 +110,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 		$module->title     = $this->_title;
 		$module->user      = 0;
 
-		$text = $this->getService('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->display();
+		$text = $this->getObject('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->display();
 
         return $this;
     }

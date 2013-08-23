@@ -15,19 +15,17 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterDate extends KFilterTimestamp
+class KFilterDate extends KFilterTimestamp implements KFilterTraversable
 {
     /**
      * Validates that a value is an ISO 8601 date string
      *
-     * The format is "yyyy-mm-dd".  Also checks to see that the date
-     * itself is valid (for example, no Feb 30).
-     *
+     * The format is "yyyy-mm-dd".  Also checks to see that the date itself is valid (for example, no Feb 30).
      *
      * @param   mixed   $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         // Look for Ymd keys?
         if (is_array($value)) {
@@ -47,7 +45,7 @@ class KFilterDate extends KFilterTimestamp
      *                      otherwise, converted to a Unix timestamp using [[php::strtotime() | ]].
      * @return  string The sanitized value.
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
          // Look for Ymd keys?
         if (is_array($value)) {

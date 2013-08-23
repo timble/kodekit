@@ -57,12 +57,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         //If no config is passed create it
-        if(!isset($config)) $config = new KConfig();
+        if(!isset($config)) $config = new KObjectConfig();
 
         parent::__construct($config);
 
@@ -73,7 +73,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
 
         //Set the request
-        $this->setRequest((array) KConfig::unbox($config->request));
+        $this->setRequest((array) KObjectConfig::unbox($config->request));
 
         // Set the table behaviors
         if(!empty($config->behaviors)) {
@@ -86,13 +86,13 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => $this->getService('koowa:command.chain'),
+            'command_chain'     => $this->getObject('koowa:command.chain'),
             'dispatch_events'   => true,
             'enable_callbacks'  => true,
             'dispatched'		=> false,
@@ -217,7 +217,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	/**
 	 * Get the request information
 	 *
-	 * @return KConfig	A KConfig object with request information
+	 * @return KObjectConfig	A KObjectConfig object with request information
 	 */
 	public function getRequest()
 	{
@@ -232,7 +232,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	 */
 	public function setRequest(array $request)
 	{
-		$this->_request = new KConfig();
+		$this->_request = new KObjectConfig();
 		foreach($request as $key => $value) {
 		    $this->$key = $value;
 		}
@@ -259,7 +259,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      */
     public function addBehavior($behaviors)
     {
-        $behaviors = (array) KConfig::unbox($behaviors);
+        $behaviors = (array) KObjectConfig::unbox($behaviors);
 
         foreach($behaviors as $behavior)
         {
@@ -284,14 +284,14 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Get a behavior by identifier
      *
      * @param  string        $behavior The name of the behavior
-     * @param  KConfig|array $config Configuration of the behavior
+     * @param  KObjectConfig|array $config Configuration of the behavior
      * @return KControllerBehaviorAbstract
      *
      * @throws UnexpectedValueException
      */
     public function getBehavior($behavior, $config = array())
     {
-       if(!($behavior instanceof KServiceIdentifier))
+       if(!($behavior instanceof KObjectIdentifier))
        {
             //Create the complete identifier if a partial identifier was passed
            if(is_string($behavior) && strpos($behavior, '.') === false )
@@ -305,7 +305,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
        if(!isset($this->_behaviors[$identifier->name]))
        {
-           $behavior = $this->getService($identifier, array_merge($config, array('mixer' => $this)));
+           $behavior = $this->getObject($identifier, array_merge($config, array('mixer' => $this)));
 
            //Check the behavior interface
 		   if(!($behavior instanceof KControllerBehaviorInterface)) {
@@ -409,7 +409,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         //Check if a behavior is mixed
-		$parts = KInflector::explode($method);
+		$parts = KStringInflector::explode($method);
 
 		if($parts[0] == 'is' && isset($parts[1]))
 		{

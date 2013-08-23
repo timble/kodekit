@@ -10,197 +10,93 @@
 /**
  * Abstract Filter
  *
+ * If the filter implements KFilterTraversable it will be decorated with KFilterIterator to allow iterating over the data
+ * being filtered in case of an array of a Traversable object. If a filter does not implement KFilterTraversable the data
+ * will be passed directly to the filter.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-abstract class KFilterAbstract extends KObject implements KFilterInterface
+abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiatable
 {
-	/**
-	 * The filter chain
-	 *
-	 * @var	object
-	 */
-	protected $_chain = null;
-
-	/**
-	 * If the data to be sanitized or validated if an object or array, walk over each individual property or element.
-     * Default TRUE.
-	 *
-	 * @var	boolean
-	 */
-	protected $_walk = true;
-
-	/**
-	 * Constructor
-	 *
-	 * @param 	KConfig $config	An optional KConfig object with configuration options
-	 */
-	public function __construct(KConfig $config)
-	{
-		parent::__construct($config);
-
-		$this->_chain = $this->getService('koowa:filter.chain');
-		$this->addFilter($this);
-	}
+    /**
+     * The filter errors
+     *
+     * @var	array
+     */
+    protected $_errors = array();
 
     /**
      * Force creation of a singleton
      *
-     * @param   KConfigInterface  $config    Configuration options
-     * @param 	KServiceInterface $container A KServiceInterface object
+     * Function also decorates the filter with KFilterIterator if the filter implements KFilterTraversable
+     *
+     * @param   KObjectConfigInterface  $config    Configuration options
+     * @param 	KObjectManagerInterface $manager A KObjectManagerInterface object
      * @return KFilterInterface
+     * @see KFilterTraversable
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-       // Check if an instance with this identifier already exists or not
-        if (!$container->has($config->service_identifier))
+        // Check if an instance with this identifier already exists or not
+        if (!$manager->isRegistered($config->object_identifier))
         {
             //Create the singleton
-            $classname = $config->service_identifier->classname;
+            $classname = $config->object_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+
+            if($instance instanceof KFilterTraversable) {
+                $instance = $instance->decorate('koowa:filter.iterator');
+            }
+
+            $manager->setObject($config->object_identifier, $instance);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->getObject($config->object_identifier);
     }
 
-	/**
-	 * Command handler
-	 *
-	 * @param string          $name The command name
-	 * @param KCommandContext $context  The command context
-	 *
-	 * @return object
-	 */
-	final public function execute($name, KCommandContext $context)
-	{
-		$function = '_'.$name;
-		return $this->$function($context->data);
-	}
+    /**
+     * Validate a scalar or traversable value
+     *
+     * NOTE: This should always be a simple yes/no question (is $value valid?), so only true or false should be returned
+     *
+     * @param   mixed   $value Value to be validated
+     * @return  bool    True when the value is valid. False otherwise.
+     */
+    public function validate($value)
+    {
+        return false;
+    }
 
-	/**
-	 * Validate a variable or data collection
-	 *
-	 * @param	mixed $data Data to be validated
-	 * @return	bool  True when the data is valid
-	 */
-	final public function validate($data)
-	{
-		if($this->_walk && (is_array($data) || is_object($data)))
-		{
-			$arr = (array)$data;
+    /**
+     * Sanitize a scalar or traversable value
+     *
+     * @param   mixed   $value Value to be sanitized
+     * @return  mixed   The sanitized value
+     */
+    public function sanitize($value)
+    {
+        return $value;
+    }
 
-			foreach($arr as $value)
-			{
-				if($this->validate($value) ===  false) {
-					return false;
-				}
-			}
-		}
-		else
-		{
-			$context = $this->_chain->getContext();
-			$context->data = $data;
+    /**
+     * Get a list of error that occurred during sanitize or validate
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return (array) $this->_errors;
+    }
 
-			$result = $this->_chain->run('validate', $context);
-
-			if($result ===  false) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Sanitize a variable or data collection
-	 *
-	 * @param	mixed	$data Data to be sanitized
-	 * @return	mixed	The sanitized data
-	 */
-	public final function sanitize($data)
-	{
-		if($this->_walk && (is_array($data) || is_object($data)))
-		{
-			$arr = (array)$data;
-
-			foreach($arr as $key => $value)
-			{
-				if(is_array($data)) {
-					$data[$key] = $this->sanitize($value);
-				}
-
-				if(is_object($data)) {
-					$data->$key = $this->sanitize($value);
-				}
-			}
-		}
-		else
-		{
-			$context = $this->_chain->getContext();
-			$context->data = $data;
-
-			$data = $this->_chain->run('sanitize', $context);
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Add a filter based on priority
-	 *
-	 * @param KFilterInterface $filter	A KFilter
-	 * @param integer $priority The command priority, usually between 1 (high priority) and 5 (lowest),
-     *                          default is 3. If no priority is set, the command priority will be used
-     *                          instead.
-	 * @return KFilterAbstract
-	 */
-	public function addFilter(KFilterInterface $filter, $priority = null)
-	{
-		$this->_chain->enqueue($filter, $priority);
-		return $this;
-	}
-
-	/**
-	 * Get a handle for this object
-	 *
-	 * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
-     * or for identifying an object
-	 *
-	 * @return string A string that is unique
-	 */
-	public function getHandle()
-	{
-		return spl_object_hash( $this );
-	}
-
-	/**
-	 * Get the priority of the filter
-	 *
-	 * @return	integer The command priority
-	 */
-  	public function getPriority()
-  	{
-  		return KCommand::PRIORITY_NORMAL;
-  	}
-
-	/**
-	 * Validate a variable
-	 *
-	 * Variable passed to this function will always be a scalar
-	 *
-	 * @param	mixed	$value Value to be validated
-	 * @return	bool	True when the variable is valid
-	 */
-	abstract protected function _validate($value);
-
-	/**
-	 * Sanitize a variable only
-	 *
-	 * Variable passed to this function will always be a scalar
-	 *
-	 * @param	mixed	$value Value to be sanitized
-	 * @return	mixed
-	 */
-	abstract protected function _sanitize($value);
+    /**
+     * Add an error message
+     *
+     * @param $message
+     */
+    protected function _error($message)
+    {
+        $this->_errors[] = $message;
+        return false;
+    }
 }

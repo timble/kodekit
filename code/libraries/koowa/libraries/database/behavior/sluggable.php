@@ -64,9 +64,9 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -83,10 +83,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'columns'   => array('title'),
@@ -108,7 +108,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
      */
-    public function getMixableMethods(KObject $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods = array();
 
@@ -171,7 +171,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         }
 
         //Create the filter
-        $filter = $this->getService('koowa:filter.slug', $config);
+        $filter = $this->getObject('koowa:filter.slug', $config);
         return $filter;
     }
 
@@ -229,7 +229,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         //If the slug needs to be unique and it already exists, make it unique
         if($this->_unique && $table->count(array('slug' => $this->slug)))
         {
-            $query = $this->getService('koowa:database.query.select')
+            $query = $this->getObject('koowa:database.query.select')
                         ->columns('slug')
                         ->where('slug LIKE :slug')
                         ->bind(array('slug' => $this->slug . '-%'));

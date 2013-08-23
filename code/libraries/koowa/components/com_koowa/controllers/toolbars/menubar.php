@@ -9,14 +9,31 @@
 
 
 /**
- * Menubar Controller Toolbar
+ * Menu Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
+class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
 {
- 	/**
+    /**
+     * Initializes the config for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'type'  => 'menubar',
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Add a command
      *
      * Disable the menubar only for singular views that are editable.
@@ -27,12 +44,12 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
      */
     public function addCommand($name, $config = array())
     {
-        parent::addCommand($name, $config);
+        $command = parent::addCommand($name, $config);
 
         $controller = $this->getController();
 
-        if($controller->isEditable() && KInflector::isSingular($controller->getView()->getName())) {
-            $this->_commands[$name]->disabled = true;
+        if($controller->isEditable() && KStringInflector::isSingular($controller->getView()->getName())) {
+            $command->disabled = true;
         }
 
         return $this;
@@ -63,7 +80,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarDefault
 
 	                $this->addCommand((string)$menu, array(
 	            		'href'   => JRoute::_('index.php?option=com_'.$package.'&view='.$view),
-	            		'active' => ($name == KInflector::singularize($view))
+	            		'active' => ($name == KStringInflector::singularize($view))
 	                ));
 	            }
 	        }

@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterTime extends KFilterTimestamp
+class KFilterTime extends KFilterTimestamp implements KFilterTraversable
 {
     /**
      * Validates that the value is an ISO 8601 time string (hh:ii::ss format).
@@ -26,7 +26,7 @@ class KFilterTime extends KFilterTimestamp
      * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
          // look for His keys?
         if (is_array($value)) {
@@ -45,7 +45,7 @@ class KFilterTime extends KFilterTimestamp
      *                      converted to a Unix timestamp using [[php::strtotime() | ]].
      * @return string The sanitized value
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         // look for His keys?
         if (is_array($value)) {

@@ -56,9 +56,9 @@ class KObjectMixinCallback extends KObjectMixinAbstract
  	 *
  	 * If the callback has already been registered. It will not be re-registered.
  	 *
- 	 * @param  	string    $name       The callback name to register the callback for
- 	 * @param 	callable		$callback   The callback function to register
- 	 * @param   array|object    An associative array of config parameters or a KConfig object
+ 	 * @param  	string      $name       The callback name to register the callback for
+ 	 * @param 	callable    $callback   The callback function to register
+ 	 * @param   array|object    An associative array of config parameters or a KObjectConfig object
      * @throws  InvalidArgumentException If the callback is not a callable
  	 * @return  KObject	The mixer object
  	 */
@@ -71,7 +71,7 @@ class KObjectMixinCallback extends KObjectMixinAbstract
             );
         }
 
-		$params = (array) KConfig::unbox($params);
+		$params = (array) KObjectConfig::unbox($params);
         $name   = strtolower($name);
 
         if (!isset($this->_callbacks[$name]) )

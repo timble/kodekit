@@ -10,7 +10,7 @@
 /**
  * Template Template Filter
  *
- * Filter for the @template alias. To load templates inline
+ * Filter for the @include alias. To load templates inline
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
@@ -22,13 +22,13 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_HIGH,
+            'priority'   => KTemplateFilter::PRIORITY_HIGH,
         ));
 
         parent::_initialize($config);
@@ -44,7 +44,7 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
      */
     public function read(&$text)
     {
-        if(preg_match_all('#@template\(\'(.*)\'#siU', $text, $matches))
+        if(preg_match_all('#@include\(\'(.*)\'#siU', $text, $matches))
 		{
 			foreach($matches[1] as $key => $match)
 			{

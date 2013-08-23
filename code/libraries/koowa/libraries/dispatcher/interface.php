@@ -25,7 +25,7 @@ interface KDispatcherInterface extends KControllerInterface
 	/**
 	 * Method to set a controller object attached to the dispatcher
 	 *
-	 * @param	mixed	$controller An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$controller An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
 	 * @return	KDispatcherAbstract

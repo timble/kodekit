@@ -13,15 +13,8 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-interface KControllerToolbarInterface
+interface KControllerToolbarInterface extends IteratorAggregate, Countable
 {
-    /**
-     * Get the controller object
-     *
-     * @return  KControllerInterface
-     */
-    public function getController();
-
     /**
      * Get the toolbar's name
      *
@@ -30,15 +23,32 @@ interface KControllerToolbarInterface
     public function getName();
 
     /**
-     * Add a command
+     * Add a command by name
      *
-     * @param   string	$name   The command name
-     * @param	mixed	$config Parameters to be passed to the command
-     * @return  KControllerToolbarInterface
+     * @param   string	$name    The command name
+     * @param	array   $config  An optional associative array of configuration settings
+     * @return  KControllerToolbarCommandInterface  The command object that was added
      */
     public function addCommand($name, $config = array());
 
- 	/**
+    /**
+     * Get a command by name
+     *
+     * @param string $name  The command name
+     * @param array $config  An optional associative array of configuration settings
+     * @return KControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
+     */
+    public function getCommand($name, $config = array()) ;
+
+    /**
+     * Check if a command exists
+     *
+     * @param string $name  The command name
+     * @return boolean True if the command exists, false otherwise.
+     */
+    public function hasCommand($name);
+
+    /**
      * Get the list of commands
      *
      * @return  array

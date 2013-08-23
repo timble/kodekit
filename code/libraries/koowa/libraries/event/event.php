@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEvent extends KConfig implements KEventInterface
+class KEvent extends KObjectConfig implements KEventInterface
 {
  	/**
      * Priority levels
@@ -41,10 +41,17 @@ class KEvent extends KConfig implements KEventInterface
     protected $_name;
 
     /**
+     * Target of the event
+     *
+     * @var KObjectInterface
+     */
+    protected $_target;
+
+    /**
      * Constructor.
      *
      * @param	string 			$name   The event name
-     * @param   array|KConfig 	$config An associative array of configuration settings or a KConfig instance.
+     * @param   array|KObjectConfig 	$config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
@@ -68,6 +75,28 @@ class KEvent extends KConfig implements KEventInterface
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Get the event target
+     *
+     * @return object	The event target
+     */
+    public function getTarget()
+    {
+        return $this->_target;
+    }
+
+    /**
+     * Set the event target
+     *
+     * @param object $target The event target
+     * @return KEventInterface
+     */
+    public function setTarget(KObjectInterface $target)
+    {
+        $this->_target = $target;
+        return $this;
     }
 
     /**

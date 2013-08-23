@@ -25,6 +25,21 @@ interface KEventInterface
     public function getName();
 
     /**
+     * Get the event target
+     *
+     * @return object	The event target
+     */
+    public function getTarget();
+
+    /**
+     * Set the event target
+     *
+     * @param KObjectInterface $target	The event target
+     * @return KEvent
+     */
+    public function setTarget(KObjectInterface $target);
+
+    /**
      * Returns whether further event listeners should be triggered.
      *
      * @return boolean 	TRUE if the event can propagate. Otherwise FALSE

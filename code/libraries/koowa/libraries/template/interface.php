@@ -60,7 +60,7 @@ interface KTemplateInterface
     /**
      * Method to set a view object attached to the template
      *
-     * @param mixed  $view An object that implements KObjectInterface, KServiceIdentifier object
+     * @param mixed  $view An object that implements KObjectInterface, KObjectIdentifier object
      *                     or valid identifier string
      * @throws \UnexpectedValueException    If the identifier is not a view identifier
      * @return KTemplateAbstract
@@ -101,24 +101,27 @@ interface KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed    $filter    An object that implements KObjectInterface, KServiceIdentifier object
+     * @param   mixed    $filter    An object that implements KObjectInterface, KObjectIdentifier object
                                     or valid identifier string
+     * @param   array    $config    An optional associative array of configuration settings
      * @return KTemplateFilterInterface
      */
-    public function getFilter($filter);
+    public function getFilter($filter, $config = array());
 
     /**
-     * Attach one or more filters for template transformation
+     * Attach ar filters for template transformation
      *
-     * @param array $filters Array of one or more behaviors to add.
+     * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
+     *                         or valid identifier string
+     * @param   array $config  An optional associative array of configuration settings
      * @return KTemplateAbstract
      */
-    public function addFilter($filters);
+    public function addFilter($filter, $config = array());
 
     /**
      * Get a template helper
      *
-     * @param    mixed    $helper KServiceIdentifierInterface
+     * @param    mixed    $helper KObjectIdentifierInterface
      * @return  KTemplateHelperInterface
      */
     public function getHelper($helper);

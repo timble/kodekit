@@ -17,6 +17,76 @@
 class ComKoowaControllerResource extends KControllerResource
 {
     /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_limit = $config->limit;
+
+        // Mixin the toolbar interface
+        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
+
+        //Attach the toolbars
+        $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
+    }
+
+    /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $toolbars = array();
+        if($config->dispatched && !JFactory::getUser()->guest)
+        {
+            $toolbars[] = $this->getIdentifier()->name;
+
+            if($this->getIdentifier()->application === 'admin') {
+                $toolbars[] = 'menubar';
+            }
+        }
+
+        $config->append(array(
+            'toolbars'  => $toolbars
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
+     * Attach the toolbars to the controller
+     *
+     * @param array $toolbars A list of toolbars
+     * @return ComKoowaControllerResource
+     */
+    public function attachToolbars($toolbars)
+    {
+        if($this->getView() instanceof KViewHtml)
+        {
+            foreach($toolbars as $toolbar) {
+                $this->attachToolbar($toolbar);
+            }
+
+            if($toolbars = $this->getToolbars())
+            {
+                $this->getView()
+                    ->getTemplate()
+                    ->addFilter('toolbar', array('toolbars' => $toolbars));
+            };
+        }
+
+        return $this;
+    }
+
+    /**
      * Display action
      *
      * If the controller was not dispatched manually load the languages files
@@ -26,8 +96,7 @@ class ComKoowaControllerResource extends KControllerResource
      */
     protected function _actionGet(KCommandContext $context)
     {
-        $this->getService('translator')->loadLanguageFiles($this->getIdentifier());
-
+        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
         return parent::_actionGet($context);
     }
 

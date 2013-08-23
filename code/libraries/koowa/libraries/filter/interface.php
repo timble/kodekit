@@ -15,23 +15,30 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-interface KFilterInterface extends KCommandInterface, KServiceInstantiatable
+interface KFilterInterface extends KObjectHandlable
 {
     /**
-     * Validate a value or data collection
+     * Validate a scalar or traversable value
      *
      * NOTE: This should always be a simple yes/no question (is $value valid?), so only true or false should be returned
      *
-     * @param   mixed   $value Data to be validated
-     * @return  bool    True when the variable is valid
+     * @param   mixed   $value Value to be validated
+     * @return  bool    True when the value is valid. False otherwise.
      */
     public function validate($value);
 
     /**
-     * Sanitize a value or data collection
+     * Sanitize a scalar or traversable value
      *
-     * @param   mixed   $value Data to be sanitized
-     * @return  mixed
+     * @param   mixed   $value Value to be sanitized
+     * @return  mixed   The sanitized value
      */
     public function sanitize($value);
+
+    /**
+     * Get a list of error that occurred during sanitize or validate
+     *
+     * @return array
+     */
+    public function getErrors();
 }

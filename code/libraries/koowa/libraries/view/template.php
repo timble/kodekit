@@ -60,30 +60,37 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        // set the auto assign state
+        //Set the auto assign state
         $this->_auto_assign = $config->auto_assign;
 
-        //set the data
-        $this->_data = KConfig::unbox($config->data);
+        //Set the data
+        $this->_data = KObjectConfig::unbox($config->data);
 
-         // user-defined escaping callback
+         //User-defined escaping callback
         $this->setEscape($config->escape);
 
-        // set the template object
+        //Set the template object
         $this->_template = $config->template;
 
-        //Set the template filters
-        if(!empty($config->template_filters)) {
-            $this->getTemplate()->addFilter($config->template_filters);
+        //Add the template filters
+        $filters = (array) KObjectConfig::unbox($config->template_filters);
+
+        foreach ($filters as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->getTemplate()->addFilter($value);
+            } else {
+                $this->getTemplate()->addFilter($key, $value);
+            }
         }
 
-        // Set base and media urls for use by the view
+        //Set base and media urls for use by the view
         $this->assign('baseurl' , $config->base_url)
              ->assign('mediaurl', $config->media_url);
 
@@ -103,16 +110,16 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'data'			   => array(),
             'escape'           => 'htmlspecialchars',
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template', 'toolbar'),
+            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template'),
             'auto_assign'      => true,
             'base_url'         => KRequest::base(),
             'media_url'        => KRequest::root().'/media',
@@ -219,12 +226,9 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
-        if(empty($this->output))
-		{
-		    $this->output = $this->getTemplate()
-                                 ->loadIdentifier($this->_layout, $this->_data)
-                                 ->render();
-		}
+        $this->_content = $this->getTemplate()
+            ->loadIdentifier($this->_layout, $this->_data)
+            ->render();
 
         return parent::display();
     }
@@ -239,6 +243,28 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $this->_escape = $spec;
         return $this;
+    }
+
+    /**
+     * Sets the view data
+     *
+     * @param   array $data The view data
+     * @return  KViewTemplate
+     */
+    public function setData(array $data)
+    {
+        $this->_data = $data;
+        return $this;
+    }
+
+    /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData()
+    {
+        return $this->_data;
     }
 
 	/**
@@ -280,7 +306,7 @@ abstract class KViewTemplate extends KViewAbstract
         if(!$this->_template instanceof KTemplateInterface)
         {
             //Make sure we have a template identifier
-            if(!($this->_template instanceof KServiceIdentifier)) {
+            if(!($this->_template instanceof KObjectIdentifier)) {
                 $this->setTemplate($this->_template);
             }
 
@@ -289,7 +315,7 @@ abstract class KViewTemplate extends KViewAbstract
                 'translator' => $this->getTranslator()
             );
 
-            $this->_template = $this->getService($this->_template, $options);
+            $this->_template = $this->getObject($this->_template, $options);
         }
 
         return $this->_template;
@@ -299,13 +325,13 @@ abstract class KViewTemplate extends KViewAbstract
      * Method to set a template object attached to the view
      *
      * @param   mixed   $template An object that implements KObjectInterface, an object that
-     *                  implements KServiceIdentifierInterface or valid identifier string
+     *                  implements KObjectIdentifierInterface or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KViewAbstract
      */
     public function setTemplate($template)
     {
-        if(!($template instanceof KTemplateAbstract))
+        if(!($template instanceof KTemplateInterface))
         {
             if(is_string($template) && strpos($template, '.') === false )
 		    {

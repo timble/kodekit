@@ -32,14 +32,14 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Constructor
 	 *
-	 * @param   KConfig $config Configuration options
+	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KConfig $config)
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
 		// Set the view identifier
-		$this->_modules = KConfig::unbox($config->modules);
+		$this->_modules = KObjectConfig::unbox($config->modules);
 	}
 
 	/**
@@ -47,10 +47,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'modules'	=> array('toolbar', 'title', 'submenu')
@@ -241,7 +241,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 */
 	protected function _getGroup()
 	{
-	    $group = $this->_mixer->getIdentifier();
+	    $group = $this->getMixer()->getIdentifier();
 	    return $group;
 	}
 }

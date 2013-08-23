@@ -25,12 +25,12 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
 	/**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config = null)
+    public function __construct(KObjectConfig $config = null)
     {
   		//If no config is passed create it
-		if(!isset($config)) $config = new KConfig();
+		if(!isset($config)) $config = new KObjectConfig();
 
     	parent::__construct($config);
 
@@ -53,10 +53,10 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'data'              => null,
@@ -352,12 +352,12 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     {
         $identifier         = clone $this->getIdentifier();
         $identifier->path   = array('database', 'row');
-        $identifier->name   = KInflector::singularize($this->getIdentifier()->name);
+        $identifier->name   = KStringInflector::singularize($this->getIdentifier()->name);
 
         //The row default options
         $options['identity_column'] = $this->getIdentityColumn();
 
-        return $this->getService($identifier, $options);
+        return $this->getObject($identifier, $options);
     }
 
 	/**
@@ -388,7 +388,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     public function __call($method, $arguments)
     {
         //If the method is of the format is[Behavior] handle it
-        $parts = KInflector::explode($method);
+        $parts = KStringInflector::explode($method);
 
         if($parts[0] == 'is' && isset($parts[1]))
         {

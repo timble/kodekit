@@ -18,8 +18,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
     /**
 	 * An associative array of event listeners queues
 	 *
-	 * The keys are holding the event name and the value is
-	 * an KObjectQueue object.
+	 * The keys are holding the event name and the value in an KObjectQueue object.
 	 *
 	 * @var array
 	 */
@@ -35,9 +34,9 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
 	/**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-	public function __construct(KConfig $config = null)
+	public function __construct(KObjectConfig $config = null)
 	{
 		parent::__construct($config);
 
@@ -49,7 +48,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
      * their return values.
      *
      * @param   string  $name  The event name
-     * @param   KEvent|array   An array, a KConfig or a KEvent object
+     * @param   KEvent|array   An array, a KObjectConfig or a KEvent object
      * @return  KEventDispatcher
      */
     public function dispatchEvent($name, $event = array())
@@ -59,7 +58,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
             $event = new KEvent($name, $event);
         }
 
-        //Nofity the listeners
+        //Notify the listeners
         if(isset($this->_listeners[$name]))
         {
             foreach($this->_listeners[$name] as $listener)
@@ -156,7 +155,7 @@ class KEventDispatcher extends KObject implements KEventDispatcherInterface
      * @param  string            $name     The event name
      * @param  KObjectHandlable  $listener  An object implementing the KObjectHandlable interface
      * @param  integer           $priority The event priority
-     * @return KCommandChain
+     * @return KEventDispatcher
      */
     public function setEventPriority($name, KObjectHandlable $listener, $priority)
     {

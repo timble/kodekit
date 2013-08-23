@@ -72,7 +72,7 @@ abstract class PlgKoowaDefault extends KEventListener
      * Constructor.
      *
      * @param   object          $dispatcher Event dispatcher
-     * @param   array|KConfig   $config     Configuration options
+     * @param   array|KObjectConfig   $config     Configuration options
      */
 	function __construct($dispatcher, $config = array())
 	{
@@ -95,15 +95,15 @@ abstract class PlgKoowaDefault extends KEventListener
 		}
 
 		//Inject the identifier
-		$config['service_identifier'] = KService::getIdentifier('plg:koowa.'.$this->_name);
+		$config['object_identifier'] = KObjectManager::getInstance()->getIdentifier('plg:koowa.'.$this->_name);
 
-		//Inject the service container
-		$config['service_container'] = KService::getInstance();
+		//Inject the object manager
+		$config['object_manager'] = KObjectManager::getInstance();
 
 		//Inject the dispatcher
-		$config['dispatcher'] = KService::get('com://admin/koowa.event.dispatcher');
+		$config['dispatcher'] = KObjectManager::getInstance()->getObject('com://admin/koowa.event.dispatcher');
 
-		parent::__construct(new KConfig($config));
+		parent::__construct(new KObjectConfig($config));
 	}
 
 	/**

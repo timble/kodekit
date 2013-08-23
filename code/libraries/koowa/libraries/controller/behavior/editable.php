@@ -18,9 +18,9 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -69,9 +69,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function getReferrer()
 	{
-	    $referrer = $this->getService('koowa:http.url',
-	        array('url' => KRequest::get('cookie.referrer', 'url'))
-	    );
+        $referrer = KRequest::get('cookie.referrer', 'url');
+
+        if ($referrer)
+        {
+            $referrer = $this->getObject('koowa:http.url',
+                array('url' => $referrer)
+            );
+        }
+
 
 	    return $referrer;
 	}
@@ -94,10 +100,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	        if(!isset($referrer) || ((string) $referrer == (string) $request))
 	        {
 	            $option = 'com_'.$identifier->package;
-	            $view   = KInflector::pluralize($identifier->name);
+	            $view   = KStringInflector::pluralize($identifier->name);
 	            $url    = 'index.php?option='.$option.'&view='.$view;
 
-	            $referrer = $this->getService('koowa:http.url',array('url' => $url));
+	            $referrer = $this->getObject('koowa:http.url',array('url' => $url));
 	        }
 
 	        KRequest::set('cookie.referrer', (string) $referrer);

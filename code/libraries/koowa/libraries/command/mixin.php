@@ -27,9 +27,9 @@ class KCommandMixin extends KObjectMixinAbstract
     /**
      * Object constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -39,8 +39,8 @@ class KCommandMixin extends KObjectMixinAbstract
         //Mixin the callback mixer if callbacks have been enabled
         if($config->enable_callbacks)
         {
-            $this->_mixer->mixin(new KCommandCallback(new KConfig(array(
-                'mixer'           => $this->_mixer,
+            $this->getMixer()->mixin(new KCommandCallback(new KObjectConfig(array(
+                'mixer'           => $this->getMixer(),
                 'priority'        => $config->callback_priority,
                 'command_chain'   => $this->_command_chain,
             ))));
@@ -57,14 +57,14 @@ class KCommandMixin extends KObjectMixinAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => KService::get('koowa:command.chain'),
-            'event'				=> KService::get('koowa:command.event'),
+            'command_chain'     => KObjectManager::getInstance()->getObject('koowa:command.chain'),
+            'event'				=> KObjectManager::getInstance()->getObject('koowa:command.event'),
             'dispatch_events'   => true,
             'event_priority'    => KCommand::PRIORITY_LOWEST,
             'enable_callbacks'  => false,
@@ -92,7 +92,7 @@ class KCommandMixin extends KObjectMixinAbstract
     /**
      * Get the chain of command object
      *
-     * @return  KCommandChain
+     * @return  KCommandChainInterface
      */
     public function getCommandChain()
     {
@@ -105,7 +105,7 @@ class KCommandMixin extends KObjectMixinAbstract
      * @param   KCommandChain $chain A command chain object
      * @return  KObject The mixer object
      */
-    public function setCommandChain(KCommandChain $chain)
+    public function setCommandChain(KCommandChainInterface $chain)
     {
         $this->_command_chain = $chain;
         return $this->getMixer();

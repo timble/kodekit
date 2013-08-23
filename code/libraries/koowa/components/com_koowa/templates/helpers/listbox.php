@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function enabled( $config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -57,7 +57,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function published($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -90,7 +90,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function access($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'      => 'access',
             'attribs'   => array(),
@@ -142,21 +142,20 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'text'  option is specified the 'value' option will be used instead.
      *
-     * @param 	array|KConfig 	$config An optional array with configuration options
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      * @see __call()
      */
     protected function _listbox($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
-            'name'		      => '',
-            'attribs'	      => array(),
-            'model'		      => KInflector::pluralize($this->getIdentifier()->package),
-            'deselect'        => true,
-            'prompt'          => '- Select -',
-            'unique'	      => true,
-            'autocomplete'    => false
+            'name'		  => '',
+            'attribs'	  => array(),
+            'model'		  => KStringInflector::pluralize($this->getIdentifier()->package),
+            'deselect'    => true,
+            'prompt'      => '- Select -',
+            'unique'	  => true
         ))->append(array(
             'select2'         => false,
             'select2_options' => array('element' => 'select[name='.$config->name.']'),
@@ -169,7 +168,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'filter' 	      => array('sort' => $config->text),
         ));
 
-        $list = $this->getService($config->identifier)->set($config->filter)->getList();
+        $list = $this->getObject($config->identifier)->set($config->filter)->getList();
 
         //Get the list of items
         $items = $list->getColumn($config->value);
@@ -211,16 +210,16 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      *
      * @see    KTemplateHelperBehavior::autocomplete
      *
-     * @param  array|KConfig    $config
+     * @param  array|KObjectConfig    $config
      * @return string	The html output
      */
     protected function _autocomplete($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'name'                 => '',
             'attribs'              => array(),
-            'model'                => KInflector::pluralize($this->getIdentifier()->package),
+            'model'                => KStringInflector::pluralize($this->getIdentifier()->package),
             'validate'             => true,
             'deselect'             => false,
             'prompt'               => false
@@ -269,7 +268,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         if(!in_array($method, $this->getMethods()))
         {
             $config = $arguments[0];
-            $config['name']  = KInflector::singularize(strtolower($method));
+            $config['name']  = KStringInflector::singularize(strtolower($method));
 
             return $this->_render($config);
         }

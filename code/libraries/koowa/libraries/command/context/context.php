@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandContext extends KConfig implements KCommandContextInterface
+class KCommandContext extends KObjectConfig implements KCommandContextInterface
 {
     /**
      * Error
@@ -46,6 +46,28 @@ class KCommandContext extends KConfig implements KCommandContextInterface
     }
 
     /**
+     * Get the command subject
+     *
+     * @return object	The command subject
+     */
+    public function getSubject()
+    {
+        return $this->caller;
+    }
+
+    /**
+     * Set the command subject
+     *
+     * @param KObjectInterface $subject The command subject
+     * @return KCommandContext
+     */
+    public function setSubject(KObjectInterface $subject)
+    {
+        $this->caller = $subject;
+        return $this;
+    }
+
+    /**
      * Set a command property
      *
      * @param  string $name
@@ -55,7 +77,7 @@ class KCommandContext extends KConfig implements KCommandContextInterface
     public function set($name, $value)
     {
         if (is_array($value)) {
-            $this->_data[$name] = new KConfig($value);
+            $this->_data[$name] = new KObjectConfig($value);
         } else {
             $this->_data[$name] = $value;
         }

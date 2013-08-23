@@ -15,7 +15,17 @@
  */
 interface KTemplateHelperInterface
 {
- 	/**
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array());
+
+    /**
      * Get the template object
      *
      * @return  object	The template object
@@ -29,4 +39,12 @@ interface KTemplateHelperInterface
      * @return $this
      */
     public function setTemplate($template);
+
+    /**
+     * Method to build a string with xml style attributes from  an array of key/value pairs
+     *
+     * @param   mixed   $array The array of Key/Value pairs for the attributes
+     * @return  string  String containing xml style attributes
+     */
+    public function buildAttributes($array);
 }

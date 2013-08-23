@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelState extends KConfig implements KModelStateInterface
+class KModelState extends KObjectConfig implements KModelStateInterface
 {
     /**
      * Insert a new state
@@ -134,7 +134,7 @@ class KModelState extends KConfig implements KModelStateInterface
                     if($value !== '')
                     {
                         if(!($filter instanceof KFilterInterface)) {
-                            $filter = KService::get('koowa:filter.factory')->instantiate($filter);
+                            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->getFilter($filter);
                         }
 
                         $value = $filter->sanitize($value);

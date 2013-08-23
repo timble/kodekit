@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
+class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KObjectDecoratable
 {
     /**
      * Class methods
@@ -25,6 +25,20 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     private $__methods = array();
 
     /**
+     * The object identifier
+     *
+     * @var KObjectIdentifier
+     */
+    private $__object_identifier;
+
+    /**
+     * The object manager
+     *
+     * @var KObjectManager
+     */
+    private $__object_manager;
+
+    /**
      * Mixed in methods
      *
      * @var array
@@ -32,34 +46,20 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
     protected $_mixed_methods = array();
 
     /**
-     * The service identifier
-     *
-     * @var KServiceIdentifier
-     */
-    private $__service_identifier;
-
-    /**
-     * The service container
-     *
-     * @var KService
-     */
-    private $__service_container;
-
-    /**
      * Constructor.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KConfig $config = null)
+    public function __construct( KObjectConfig $config = null)
     {
-        //Set the service container
-        if(isset($config->service_container)) {
-            $this->__service_container = $config->service_container;
+        //Set the object manager
+        if(isset($config->object_manager)) {
+            $this->__object_manager = $config->object_manager;
         }
 
-        //Set the service identifier
-        if(isset($config->service_identifier)) {
-            $this->__service_identifier = $config->service_identifier;
+        //Set the object identifier
+        if(isset($config->object_identifier)) {
+            $this->__object_identifier = $config->object_identifier;
         }
 
         //Initialise the object
@@ -73,10 +73,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options.
+     * @param   KObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         //do nothing
     }
@@ -155,22 +155,91 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   KObjectMixinInterface $object  An object that implements KMinxInterface
-     * @param   array           $config  An optional associative array of configuration options
-     * @return  KObject
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param   array $config  An optional associative array of configuration options
+     * @return  KObjectMixinInterface
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  UnexpectedValueException If the mixin does not implement the KObjectMixinInterface
      */
-    public function mixin(KObjectMixinInterface $object, $config = array())
+    public function mixin($mixin, $config = array())
     {
-        $methods = $object->getMixableMethods($this);
+        if (!($mixin instanceof KObjectMixinInterface))
+        {
+            if (!($mixin instanceof KObjectIdentifier)) {
+               $identifier = $this->getIdentifier($mixin);
+            } else {
+                $identifier = $mixin;
+            }
 
-        foreach($methods as $method) {
-            $this->_mixed_methods[$method] = $object;
+            $config = new KObjectConfig($config);
+            $config->mixer = $this;
+
+            $mixin = new $identifier->classname($config);
+
+            if(!$mixin instanceof KObjectMixinInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Mixin: '.get_class($mixin).' does not implement KObjectMixinInterface'
+                );
+            }
         }
 
-        //Set the mixer
-        $object->setMixer($this);
+        $methods = $mixin->getMixableMethods($this);
+        foreach($methods as $method) {
+            $this->_mixed_methods[$method] = $mixin;
+        }
 
-        return $this;
+        $this->__methods = array_merge($this->getMethods(), array_keys($this->_mixed_methods));
+
+        //Notify the mixin
+        $mixin->onMixin($this);
+
+        return $mixin;
+    }
+
+    /**
+     * Decorate the object
+     *
+     * When using decorate(), the object will be decorated by the decorator. The decorator needs to extend from
+     * KObjectDecorator.
+     *
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectDecorator
+     * @param   array $config  An optional associative array of configuration options
+     * @return  KObjectDecoratorInterface
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  UnexpectedValueException If the decorator does not extend from KObjectDecorator
+     */
+    public function decorate($decorator, $config = array())
+    {
+        if (!($decorator instanceof KObjectDecorator))
+        {
+            if (!($decorator instanceof KObjectIdentifier)) {
+                $identifier = $this->getIdentifier($decorator);
+            } else {
+                $identifier = $decorator;
+            }
+
+            $config = new KObjectConfig($config);
+            $config->delegate = $this;
+
+            $decorator = new $identifier->classname($config);
+
+            /*
+             * Check if the decorator extends from KObjectDecorator to ensure it's implementing the
+             * KObjectInterface, KObjectHandable, ObjectMixable and KObjectDecoratable interfaces.
+             */
+            if(!$decorator instanceof KObjectDecorator)
+            {
+                throw new UnexpectedValueException(
+                    'Decorator: '.get_class($decorator).' does not extend from KObjectDecorator'
+                );
+            }
+        }
+
+        //Notify the decorator
+        $decorator->onDecorate($this);
+
+        return $decorator;
     }
 
     /**
@@ -219,16 +288,16 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      */
     public function getMethods()
     {
-        if(!$this->__methods)
+        if (!$this->__methods)
         {
             $methods = array();
 
-            $reflection = new ReflectionClass($this);
-            foreach($reflection->getMethods() as $method) {
+            $reflection = new \ReflectionClass($this);
+            foreach ($reflection->getMethods() as $method) {
                 $methods[] = $method->name;
             }
 
-            $this->__methods = array_merge($methods, array_keys($this->_mixed_methods));
+            $this->__methods = $methods;
         }
 
         return $this->__methods;
@@ -237,41 +306,40 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
 	/**
 	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
 	 *
-	 * @param	string|object	$identifier The class identifier or identifier object
-	 * @param	array  			$config     An optional associative array of configuration settings.
-	 * @throws	RuntimeException if the service container has not been defined.
-	 * @return	object  		Return object on success, throws exception on failure
+	 * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+	 * @param	array $config     An optional associative array of configuration settings.
+	 * @return	KObjectInterface Return object on success, throws exception on failure
+     * @throws	RuntimeException if the object manager has not been defined.
 	 * @see 	KObjectInterface
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getObject($identifier, array $config = array())
 	{
-	    if(!isset($this->__service_container)) {
-	        throw new RuntimeException("Failed to call ".get_class($this)."::getService(). No service_container object defined.");
+	    if(!isset($this->__object_manager)) {
+	        throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No object_manager object defined.");
 	    }
 
-	    return $this->__service_container->get($identifier, $config);
+	    return $this->__object_manager->getObject($identifier, $config);
 	}
 
 	/**
-	 * Gets the service identifier.
+	 * Gets the object identifier.
 	 *
-     * @param   null|KServiceIdentifier|string $identifier Identifier
-	 * @return	KServiceIdentifier
-     *
-	 * @see 	KObjectInterface
-     * @throws	RuntimeException if the service container has not been defined.
+     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+	 * @return KObjectIdentifier
+     * @throws	RuntimeException if the object manager has not been defined.
+     * @see 	KObjectInterface
 	 */
 	final public function getIdentifier($identifier = null)
 	{
 		if(isset($identifier))
 		{
-		    if(!isset($this->__service_container)) {
-	            throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No service_container object defined.");
+		    if(!isset($this->__object_manager)) {
+	            throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No object_manager object defined.");
 	        }
 
-		    $result = $this->__service_container->getIdentifier($identifier);
+		    $result = $this->__object_manager->getIdentifier($identifier);
 		}
-		else  $result = $this->__service_identifier;
+		else  $result = $this->__object_identifier;
 
 	    return $result;
 	}
@@ -293,37 +361,37 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable
      *
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
-     * @throws BadMethodCallException   If method could not be found
      * @return mixed The result of the function
+     * @throws BadMethodCallException   If method could not be found
      */
     public function __call($method, $arguments)
     {
         if(isset($this->_mixed_methods[$method]))
         {
-            $object = $this->_mixed_methods[$method];
+            $mixin = $this->_mixed_methods[$method];
             $result = null;
 
             //Switch the mixin's attached mixer
-            $object->setMixer($this);
+            $mixin->setMixer($this);
 
             // Call_user_func_array is ~3 times slower than direct method calls.
             switch(count($arguments))
             {
                 case 0 :
-                    $result = $object->$method();
+                    $result = $mixin->$method();
                     break;
                 case 1 :
-                    $result = $object->$method($arguments[0]);
+                    $result = $mixin->$method($arguments[0]);
                     break;
                 case 2:
-                    $result = $object->$method($arguments[0], $arguments[1]);
+                    $result = $mixin->$method($arguments[0], $arguments[1]);
                     break;
                 case 3:
-                    $result = $object->$method($arguments[0], $arguments[1], $arguments[2]);
+                    $result = $mixin->$method($arguments[0], $arguments[1], $arguments[2]);
                     break;
                 default:
                     // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($object, $method), $arguments);
+                    $result = call_user_func_array(array($mixin, $method), $arguments);
              }
 
             return $result;

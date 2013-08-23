@@ -20,8 +20,8 @@ interface KEventDispatcherInterface
      * their return values.
      *
      * @param   string  $name  The event name
-     * @param   KEvent|array   $event An array, a KConfig or a KEvent object
-     * @return  KEventDispatcher
+     * @param   KEvent|array   $event An array, a KObjectConfig or a KEvent object
+     * @return  KEventDispatcherInterface
      */
     public function dispatchEvent($name, $event = array());
 
@@ -42,7 +42,7 @@ interface KEventDispatcherInterface
      *
      * @param   string           $name      The event name
      * @param   KObjectHandlable $listener  An object implementing the KObjectHandlable interface
-     * @return  KEventDispatcher
+     * @return  KEventDispatcherInterface
      */
     public function removeEventListener($name, KObjectHandlable $listener);
 
@@ -68,7 +68,7 @@ interface KEventDispatcherInterface
      * @param  string            $name     The event name
      * @param  KObjectHandlable  $listener  An object implementing the KObjectHandlable interface
      * @param  integer           $priority The event priority
-     * @return KCommandChain
+     * @return KEventDispatcherInterface
      */
     public function setEventPriority($name, KObjectHandlable $listener, $priority);
 

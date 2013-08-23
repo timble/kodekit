@@ -13,26 +13,26 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseTableDefault extends KDatabaseTableAbstract implements KServiceInstantiatable
+class KDatabaseTableDefault extends KDatabaseTableAbstract implements KObjectInstantiatable
 {
 	/**
      * Force creation of a singleton
      *
-     * @param   KConfigInterface    $config    Configuration options
-     * @param 	KServiceInterface	$container A KServiceInterface object
+     * @param   KObjectConfigInterface    $config    Configuration options
+     * @param 	KObjectManagerInterface	$manager A KObjectManagerInterface object
      * @return KDatabaseTableDefault
      */
-    public static function getInstance(KConfigInterface $config, KServiceInterface $container)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
         // Check if an instance with this identifier already exists or not
-        if (!$container->has($config->service_identifier))
+        if (!$manager->isRegistered($config->object_identifier))
         {
             //Create the singleton
-            $classname = $config->service_identifier->classname;
+            $classname = $config->object_identifier->classname;
             $instance  = new $classname($config);
-            $container->set($config->service_identifier, $instance);
+            $manager->setObject($config->object_identifier, $instance);
         }
 
-        return $container->get($config->service_identifier);
+        return $manager->getObject($config->object_identifier);
     }
 }

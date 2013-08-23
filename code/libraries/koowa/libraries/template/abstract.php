@@ -12,9 +12,6 @@
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
   * @package Koowa\Library\Template
-  *
-  * @method KCommandContext getCommandContext() Get the command context
-  * @method KCommandChain   getCommandChain() Get the command chain
   */
 abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 {
@@ -61,6 +58,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_view;
 
     /**
+     * The filter chain
+     *
+     * @var	KTemplateFilterChain
+     */
+    protected $_chain = null;
+
+    /**
      * Counter
      *
      * Used to track recursive calls during template evaluation
@@ -75,9 +79,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * Prevent creating instances of this class by making the constructor private
      *
-     * @param KConfig $config   An optional KConfig object with configuration options
+     * @param KObjectConfig $config   An optional KObjectConfig object with configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -87,11 +91,20 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         // Set the template data
         $this->_data = $config->data;
 
-		 // Mixin a command chain
-        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
+        //Set the filter chain
+        $this->_chain = $config->filter_chain;
 
         //Attach the filters
-        $this->addFilter($config->filters);
+        $filters = (array) KObjectConfig::unbox($config->filters);
+
+        foreach ($filters as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->addFilter($value);
+            } else {
+                $this->addFilter($key, $value);
+            }
+        }
 
         $this->setTranslator($config->translator);
 
@@ -104,19 +117,17 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KConfig $config  An optional KConfig object with configuration options.
+     * @param  KObjectConfig $config  An optional KObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
             'translator'       => null,
             'data'             => array(),
-            'filters'          => array(),
             'view'             => null,
-            'command_chain' 	=> $this->getService('koowa:command.chain'),
-    		'dispatch_events'   => false,
-    		'enable_callbacks' 	=> false,
+            'filter_chain' 	   => $this->getObject('koowa:template.filter.chain'),
+            'filters'          => array(),
         ));
 
         parent::_initialize($config);
@@ -163,11 +174,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         if(!$this->_view instanceof KViewAbstract)
         {
             //Make sure we have a view identifier
-            if(!($this->_view instanceof KServiceIdentifier)) {
+            if(!($this->_view instanceof KObjectIdentifier)) {
                 $this->setView($this->_view);
             }
 
-            $this->_view = $this->getService($this->_view);
+            $this->_view = $this->getObject($this->_view);
 
             //Make sure the view implements KViewAbstract
             if(!$this->_view instanceof KViewAbstract)
@@ -184,7 +195,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	/**
 	 * Method to set a view object attached to the controller
 	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KServiceIdentifier object
+	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
 	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
 	 * @return	KTemplateAbstract
@@ -243,7 +254,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
                 $identifier->name = 'translator';
             } else $identifier = $this->getIdentifier($translator);
 
-            $translator = $this->getService($identifier);
+            $translator = $this->getObject($identifier);
         }
 
         $this->_translator = $translator;
@@ -310,7 +321,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
         //Load the contents
         $this->loadString($contents, $data);
-        
+
 		return $this;
 	}
 
@@ -378,28 +389,22 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	    return isset($this->_filters[$filter]);
 	}
 
-	/**
-	 * Adds one or more filters for template transformation
-	 *
-	 * @param array 	Array of one or more behaviors to add.
-	 * @return $this
-	 */
-	public function addFilter($filters)
+    /**
+     * Attach ar filters for template transformation
+     *
+     * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
+     *                         or valid identifier string
+     * @param   array $config  An optional associative array of configuration settings
+     * @return KTemplateAbstract
+     */
+	public function addFilter($filter, $config = array())
  	{
- 		$filters =  (array) KConfig::unbox($filters);
-
- 	    foreach($filters as $filter)
-		{
-			if(!($filter instanceof KTemplateFilterInterface)) {
-				$filter = $this->getFilter($filter);
-			}
-
-			//Enqueue the filter in the command chain
-			$this->getCommandChain()->enqueue($filter);
-
-			//Store the filter
-			$this->_filters[$filter->getIdentifier()->name] = $filter;
+ 	    if(!($filter instanceof KTemplateFilterInterface)) {
+			$filter = $this->getFilter($filter, $config);
 		}
+
+		//Enqueue the filter in the command chain
+		$this->_chain->enqueue($filter);
 
 		return $this;
  	}
@@ -407,13 +412,12 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed $filter    An object that implements KObjectInterface, KServiceIdentifier object
-    or valid identifier string
-     *
-     * @throws UnexpectedValueException
+     * @param   mixed    $filter    An object that implements ObjectInterface, ObjectIdentifier object
+     *                              or valid identifier string
+     * @param   array    $config    An optional associative array of configuration settings
      * @return KTemplateFilterInterface
      */
- 	 public function getFilter($filter)
+ 	 public function getFilter($filter, $config = array())
  	 {
          //Create the complete identifier if a partial identifier was passed
         if(is_string($filter) && strpos($filter, '.') === false )
@@ -422,15 +426,20 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             $identifier->path = array('template', 'filter');
             $identifier->name = $filter;
         }
-        else $identifier = KService::getIdentifier($filter);
+        else $identifier = $this->getIdentifier($filter);
 
         if (!isset($this->_filters[$identifier->name]))
         {
-            $filter = $this->getService($identifier, array('template' => $this));
+            $filter = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
-            if(!($filter instanceof KTemplateFilterInterface)) {
-			    throw new UnexpectedValueException("Template filter $identifier does not implement KTemplateFilterInterface");
+            if(!($filter instanceof KTemplateFilterInterface))
+            {
+			    throw new UnexpectedValueException(
+                    "Template filter $identifier does not implement KTemplateFilterInterface"
+                );
 		    }
+
+            $this->_filters[$filter->getIdentifier()->name] = $filter;
         }
         else $filter = $this->_filters[$identifier->name];
 
@@ -440,7 +449,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a template helper
      *
-     * @param mixed $helper KServiceIdentifierInterface
+     * @param mixed $helper KObjectIdentifierInterface
      * @throws UnexpectedValueException
      * @return KTemplateHelperInterface
      */
@@ -456,7 +465,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 		else $identifier = $this->getIdentifier($helper);
 
 		//Create the template helper
-		$helper = $this->getService($identifier, array('template' => $this));
+		$helper = $this->getObject($identifier, array('template' => $this));
 
 	    //Check the helper interface
         if(!($helper instanceof KTemplateHelperInterface)) {
@@ -564,11 +573,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     protected function _parse(&$content)
     {
-        $context = $this->getCommandContext();
-
-        $context->data = $content;
-        $this->getCommandChain()->run(KTemplateFilter::MODE_READ, $context);
-        $content = $context->data;
+        $this->_chain->read($content);
     }
 
     /**
@@ -614,11 +619,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     protected function _process(&$content)
     {
-        $context = $this->getCommandContext();
-
-        $context->data = $content;
-        $this->getCommandChain()->run(KTemplateFilter::MODE_WRITE, $context);
-        $content = $context->data;
+        $this->_chain->write($content);
     }
 
     /**

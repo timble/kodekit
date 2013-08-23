@@ -24,7 +24,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
      */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
@@ -77,7 +77,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$new = $new <= 0 ? 1 : $new;
 
 			$table = $this->getTable();
-			$query = $this->getService('koowa:database.query.update')
+			$query = $this->getObject('koowa:database.query.update')
 			    ->table($table->getBase());
 
 			//Build the where query
@@ -105,7 +105,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$this->reorder();
 		}
 
-		return $this->_mixer;
+		return $this->getMixer();
 	}
 
 	 /**
@@ -125,7 +125,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $db     = $table->getDatabase();
         $db->execute('SET @order = '.$base);
         
-        $query = $this->getService('koowa:database.query.update')
+        $query = $this->getObject('koowa:database.query.update')
             ->table($table->getBase())
             ->values('ordering = (@order := @order + 1)')
             ->order('ordering', 'ASC');
@@ -152,7 +152,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $table  = $this->getTable();
         $db     = $table->getDatabase();
         
-        $query = $this->getService('koowa:database.query.select')
+        $query = $this->getObject('koowa:database.query.select')
             ->columns('MAX(ordering)')
             ->table($table->getName());
 

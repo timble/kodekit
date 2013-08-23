@@ -13,8 +13,11 @@
  *
  * This filter allow to dynamically inject data into module position.
  *
- * Filter will parse elements of the form <modules position="[position]">[content]</modules> and prepend or append
- * the content to the module position.
+ * Filter will parse elements of the form <ktml:module position="[position]">[content]</ktml:module> and prepend or
+ * append the content to the module position.
+ *
+ * Filter will parse elements of the form <html:module position="[position]">[content]</module> and inject the
+ * content into the module position.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
@@ -26,113 +29,208 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KCommand::PRIORITY_LOW,
+            'priority' => KTemplateFilter::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);
     }
 
     /**
-	 * Find any <module></module> elements and inject them into the JDocument object
+	 * Find tags
 	 *
 	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterModule
 	 */
     public function write(&$text)
     {
-		$matches = array();
-
-		if(preg_match_all('#<module([^>]*)>(.*)</module>#siU', $text, $matches))
-		{
-		    foreach($matches[0] as $key => $match)
-			{
-			    //Remove placeholder
-			    $text = str_replace($match, '', $text);
-
-			    //Create attributes array
-				$attributes = array(
-					'style' 	=> 'component',
-					'params'	=> '',
-					'title'		=> '',
-					'class'		=> '',
-					'prepend'   => true
-				);
-
-		        $attributes = array_merge($attributes, $this->_parseAttributes($matches[1][$key]));
-
-		        //Create module object
-			    $module   	       = new KObject();
-			    $module->id        = uniqid();
-				$module->content   = $matches[2][$key];
-				$module->position  = $attributes['position'];
-				$module->params    = $attributes['params'];
-				$module->showtitle = !empty($attributes['title']);
-				$module->title     = $attributes['title'];
-				$module->attribs   = $attributes;
-				$module->user      = 0;
-				$module->module    = 'mod_dynamic';
-
-			    JFactory::getDocument()->modules[$attributes['position']][] = $module;
-			}
-		}
+        $this->_parseModuleTags($text);
+        $this->_parseModulesTags($text);
 
 		return $this;
+    }
+
+    /**
+     * Parse <ktml:module position="..."></ktml:module> tags
+     *
+     * @param string $text Block of text to parse
+     */
+    protected function _parseModuleTags(&$text)
+    {
+        $matches = array();
+
+        if(preg_match_all('#<ktml:module([^>]*)>(.*)</ktml:module>#siU', $text, $matches))
+        {
+            foreach($matches[0] as $key => $match)
+            {
+                //Create attributes array
+                $attributes = array(
+                    'style' 	=> 'component',
+                    'params'	=> '',
+                    'title'		=> '',
+                    'class'		=> '',
+                    'prepend'   => true
+                );
+
+                $attributes = array_merge($attributes, $this->parseAttributes($matches[1][$key]));
+                $content    = trim($matches[2][$key]);
+
+                //Skip empty modules
+                if (empty($content)) {
+                    continue;
+                }
+
+                //Create module object
+                $module   	       = new stdClass();
+                $module->id        = uniqid();
+                $module->content   = $content;
+                $module->position  = $attributes['position'];
+                $module->params    = $attributes['params'];
+                $module->showtitle = !empty($attributes['title']);
+                $module->title     = $attributes['title'];
+                $module->attribs   = $attributes;
+                $module->user      = 0;
+                $module->module    = 'mod_koowa_injector';
+
+                $modules = &ComKoowaModuleHelper::getModules();
+
+                if($module->attribs['prepend']) {
+                    array_push($modules, $module);
+                } else {
+                    array_unshift($modules, $module);
+                }
+            }
+
+            //Remove the <khtml:module></khtml:module> tags
+            $text = str_replace($matches[0], '', $text);
+        }
+    }
+
+    /**
+     * Parse <ktml:modules position="..."> and <ktml:modules position="..."></ktml:modules> tags
+     *
+     * @param string $text Block of text to parse
+     */
+    protected function _parseModulesTags(&$text)
+    {
+        $replace = array();
+        $matches = array();
+
+        // <ktml:modules position="[position]"></khtml:modules>
+        if(preg_match_all('#<ktml:modules\s+position="([^"]+)"(.*)>(.*)</ktml:modules>#siU', $text, $matches))
+        {
+            $count = count($matches[1]);
+
+            for($i = 0; $i < $count; $i++)
+            {
+                $position    = $matches[1][$i];
+                $attribs     = $this->parseAttributes( $matches[2][$i] );
+
+                $modules = &ComKoowaModuleHelper::getModules($position);
+                $replace[$i] = $this->_renderModules($modules, $attribs);
+
+                if(!empty($replace[$i])) {
+                    $replace[$i] = str_replace('<ktml:modules:content>', $replace[$i], $matches[3][$i]);
+                }
+            }
+
+            $text = str_replace($matches[0], $replace, $text);
+        }
+
+        // <ktml:modules position="[position]">
+        if(preg_match_all('#<ktml:modules\s+position="([^"]+)"(.*)>#iU', $text, $matches))
+        {
+            $count = count($matches[1]);
+
+            for($i = 0; $i < $count; $i++)
+            {
+                $position    = $matches[1][$i];
+                $attribs     = $this->parseAttributes( $matches[2][$i] );
+
+                $modules = &ComKoowaModuleHelper::getModules($position);
+                $replace[$i] = $this->_renderModules($modules, $attribs);
+            }
+
+            $text = str_replace($matches[0], $replace, $text);
+        }
+    }
+
+    /**
+     * Render the modules
+     *
+     * @param object $module    The module object
+     * @param array  $attribs   Module attributes
+     * @return string  The rendered modules
+     */
+    public function _renderModules($modules, $attribs = array())
+    {
+        $html  = '';
+        $count = 1;
+        foreach($modules as $module)
+        {
+            //Set the chrome styles
+            if(isset($attribs['style'])) {
+                $module->chrome  = explode(' ', $attribs['style']);
+            }
+
+            //Set the module attributes
+            if($count == 1) {
+                $attribs['rel']['first'] = 'first';
+            }
+
+            if($count == count($modules)) {
+                $attribs['rel']['last'] = 'last';
+            }
+
+            if(!isset($module->attribs)) {
+                $module->attribs = $attribs;
+            } else {
+                $module->attribs = array_merge($module->attribs, $attribs);
+            }
+
+            //Render the module
+            $content = ComKoowaModuleHelper::renderModule($module, $attribs);
+
+            //Prepend or append the module
+            if(isset($module->attribs['prepend']) && $module->attribs['prepend']) {
+                $html = $content.$html;
+            } else {
+                $html = $html.$content;
+            }
+
+            $count++;
+        }
+
+        return $html;
     }
 }
 
 /**
- * Modules Renderer
+ * Modules Helper
  *
- * This is a specialised modules renderer which prepends or appends the dynamically created modules
- * to the list of modules before rendering them.
+ * This is a specialised modules helper which gives access to the Joomla modules by reference
 .*
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class JDocumentRendererModules extends JDocumentRenderer
+class ComKoowaModuleHelper extends JModuleHelper
 {
-    /**
-     * Renders a script and returns the results as a string
-     *
-     * @param   string  $position The name of the element to render
-     * @param   array   $params   Array of values
-     * @param   string  $content  Override the output of the renderer
-     *
-     * @return  string  The output of the script
-     *
-     * @since   11.1
-     */
-	public function render( $position, $params = array(), $content = null )
-	{
-        //Get the modules
-		$modules = JModuleHelper::getModules($position);
+    public static function &getModules($position = null)
+    {
+        if($position) {
+            $modules =& JModuleHelper::getModules($position);
+        } else {
+            $modules =& JModuleHelper::_load();
+        }
 
-		if(isset($this->_doc->modules[$position]))
-		{
-		    foreach($this->_doc->modules[$position] as $module)
-		    {
-		        if($module->attribs['prepend']) {
-		            array_push($modules, $module);
-		        } else {
-		            array_unshift($modules, $module);
-		        }
-		    }
-		}
-
-		//Render the modules
-		$renderer = $this->_doc->loadRenderer('module');
-
-		$contents = '';
-		foreach ($modules as $module)  {
-			$contents .= $renderer->render($module, $params, $content);
-		}
-
-		return $contents;
-	}
+        return $modules;
+    }
 }
+
+
+

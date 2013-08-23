@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterHtml extends KFilterAbstract
+class KFilterHtml extends KFilterAbstract implements KFilterTraversable
 {
     /**
      * List of user-defined tags
@@ -60,9 +60,9 @@ class KFilterHtml extends KFilterAbstract
     /**
      * Constructor
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -98,7 +98,7 @@ class KFilterHtml extends KFilterAbstract
      * @param   mixed  $value Value to be validated
      * @return  bool    True when the variable is valid
      */
-    protected function _validate($value)
+    public function validate($value)
     {
         return (is_string($value)
         // this is too strict, html is usually sanitized
@@ -112,7 +112,7 @@ class KFilterHtml extends KFilterAbstract
      * @param   mixed  $value Input string/array-of-string to be 'cleaned'
      * @return  mixed   'Cleaned' version of input parameter
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         $value = (string) $value;
 

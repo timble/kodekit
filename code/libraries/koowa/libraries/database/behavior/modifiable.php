@@ -20,10 +20,10 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KConfig $config Configuration options
+     * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
 			'priority'   => KCommand::PRIORITY_LOW,
@@ -41,7 +41,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      * @param KObject $mixer The mixer requesting the mixable methods.
      * @return array         An array of methods
      */
-	public function getMixableMethods(KObject $mixer = null)
+	public function getMixableMethods(KObjectMixable $mixer = null)
 	{
 		$methods = array();
 
