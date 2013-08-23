@@ -147,39 +147,41 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'filter' 	      => array('sort' => $config->text),
         ));
 
-        $list = $this->getObject($config->identifier)->set($config->filter)->getList();
-
-        //Get the list of items
-        $items = $list->getColumn($config->value);
-        if($config->unique) {
-            $items = array_unique($items);
-        }
-
-        //Compose the options array
-        $options   = array();
-        if($config->deselect) {
-            $options[] = $this->option(array('text' => $this->translate($config->prompt)));
-        }
-
-        foreach($items as $key => $value)
-        {
-            $item      = $list->find($key);
-            $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
-        }
-
-        //Add the options to the config object
-        $config->options = $options;
-
         $html = '';
 
         if ($config->autocomplete) {
             $html .= $this->_autocomplete($config);
         }
-        elseif ($config->select2) {
-            $html .= $this->_listboxSelect2($config);
-        }
+        else
+        {
+            $options = array();
+            if ($config->deselect) {
+                $options[] = $this->option(array('text' => $this->translate($config->prompt)));
+            }
 
-        $html .= $this->optionlist($config);
+            $list = $this->getObject($config->identifier)->set($config->filter)->getList();
+
+            //Get the list of items
+            $items = $list->getColumn($config->value);
+            if ($config->unique) {
+                $items = array_unique($items);
+            }
+
+            foreach ($items as $key => $value)
+            {
+                $item      = $list->find($key);
+                $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+            }
+
+            //Add the options to the config object
+            $config->options = $options;
+
+            if ($config->select2) {
+                $html .= $this->_listboxSelect2($config);
+            }
+
+            $html .= $this->optionlist($config);
+        }
 
         return $html;
     }
@@ -241,35 +243,32 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'name'                 => '',
-            'attribs'              => array(),
-            'model'                => KStringInflector::pluralize($this->getIdentifier()->package),
-            'validate'             => true,
-            'deselect'             => false,
-            'prompt'               => false
-        ))->append(array(
-            'value'                => $config->name,
-            'selected'             => $config->{$config->name},
-            'identifier'           => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
-        ))->append(array(
-            'text'                 => $config->value,
-        ))->append(array(
-            'filter'               => array(),
-            'autocomplete_options' => array(
-                'element' => 'select[name='.$config->name.']',
-                'url'     => JRoute::_('index.php?option=com_'.$this->getIdentifier($config->identifier)->package.'&view='.$config->model.'&format=json', false),
-                'options' => array()
-            )
+            'attribs'  => array(),
+            'validate' => true,
+            'filter'   => array(),
+            'element' => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
+            'options' => array()
         ));
 
-        //For the autocomplete behavior
-        $options = new KObjectConfig($config->autocomplete_options);
-        $shortcuts = array('name', 'model', 'validate', 'deselect', 'prompt', 'value', 'selected', 'text', 'filter');
-        foreach($shortcuts as $key) {
-            $options->append(array($key => $config->{$key}));
+        if (!$config->url)
+        {
+            $identifier = $this->getIdentifier($config->identifier);
+            $parts      = array(
+                'option' => 'com_'.$identifier->package,
+                'view'   => $identifier->name,
+                'format' => 'json'
+            );
+            $config->url = $this->getTemplate()->getView()->createRoute($parts, false, false);
         }
 
-        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($options);
+        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+
+        $config->attribs->value = $config->selected;
+        $config->attribs->name  = $config->name;
+
+        $attribs = $this->buildAttributes($config->attribs);
+
+        $html .= "<input $attribs />";
 
         return $html;
     }
