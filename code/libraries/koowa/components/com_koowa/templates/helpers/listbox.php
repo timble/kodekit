@@ -258,6 +258,11 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 'view'   => $identifier->name,
                 'format' => 'json'
             );
+
+            if ($config->filter) {
+                $parts = array_merge($parts, KObjectConfig::unbox($config->filter));
+            }
+
             $config->url = $this->getTemplate()->getView()->createRoute($parts, false, false);
         }
 
