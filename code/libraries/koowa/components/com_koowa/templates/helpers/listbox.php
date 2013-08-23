@@ -138,10 +138,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'unique'	  => true
         ))->append(array(
             'select2'         => false,
-            'select2_options' => array('element' => 'select[name='.$config->name.']'),
             'value'		      => $config->name,
             'selected'        => $config->{$config->name},
-            'identifier'      => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
+            'identifier'      => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
             'text'		      => $config->value,
         ))->append(array(
@@ -165,7 +164,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         foreach($items as $key => $value)
         {
             $item      = $list->find($key);
-            $options[] =  $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+            $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
         }
 
         //Add the options to the config object
@@ -173,32 +172,11 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $html = '';
 
-        if($config->autocomplete) {
+        if ($config->autocomplete) {
             $html .= $this->_autocomplete($config);
         }
-        elseif ($config->select2)
-        {
-            if ($config->deselect)
-            {
-                if (!$config->attribs->multiple && !$config->select2_options->multiple)
-                {
-                    // select2 needs the first option empty for placeholders to work on single select boxes
-                    $config->options[0]->text = '';
-                }
-                else
-                {
-                    // get rid of the deselect option as we set the placeholder property below
-                    $options =& $config->options;
-                    unset($options[0]);
-                }
-
-                $config->select2_options->append(array('options' => array(
-                    'placeholder' => $config->prompt,
-                    'allowClear'  => true
-                )));
-            }
-
-            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+        elseif ($config->select2) {
+            $html .= $this->_listboxSelect2($config);
         }
 
         $html .= $this->optionlist($config);
@@ -207,9 +185,53 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     }
 
     /**
+     * Enhances a select box using Select2
+     *
+     * @param array|KObjectConfig $config
+     * @return string
+     */
+    protected function _listboxSelect2($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'attribs'         => array(),
+            'select2_options' => array(
+                'element' => $config->id ? $config->id : 'select[name='.$config->name.']',
+                'options' => array()
+            )
+        ));
+
+        $html = '';
+
+        if ($config->deselect)
+        {
+            if (!$config->attribs->multiple && !$config->select2_options->options->multiple)
+            {
+                // select2 needs the first option empty for placeholders to work on single select boxes
+                $config->options[0]->text = '';
+            }
+            else
+            {
+                // get rid of the deselect option as we set the placeholder property below
+                $options =& $config->options;
+                unset($options[0]);
+            }
+
+            $config->select2_options->append(array('options' => array(
+                'placeholder' => $config->prompt,
+                'allowClear'  => true
+            )));
+        }
+
+        $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+
+        return $html;
+    }
+
+    /**
      * Renders a listbox with autocomplete behavior
      *
-     * @see    KTemplateHelperBehavior::autocomplete
+     * @see    ComKoowaTemplateHelperBehavior::_listbox
      *
      * @param  array|KObjectConfig    $config
      * @return string	The html output
