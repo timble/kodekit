@@ -293,11 +293,13 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * Loads the select2 behavior and attaches it to a specified element
      *
      * @see    http://ivaynberg.github.io/select2/select-2.1.html
+     *
+     * @param  array|KObjectConfig $config
      * @return string	The html output
      */
     public function select2($config = array())
     {
-        $config = new KConfig($config);
+        $config = new KObjectConfig($config);
         $config->append(array(
             'element' => '.select2-listbox',
             'options' => array(
@@ -312,15 +314,15 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->jquery();
         }
 
-        if (!isset(self::$_loaded['select2'])) {
-
+        if (!isset(self::$_loaded['select2']))
+        {
             $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
 
             $html .= '<script>jQuery(function($){
                 $("'.$config->element.'").select2('.$config->options.');
             });</script>';
 
-            if(isset(self::$_loaded['validator']))
+            if (isset(self::$_loaded['validator']))
             {
                 $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
 
