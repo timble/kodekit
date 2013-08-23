@@ -308,31 +308,24 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             )
         ));
 
-        $html ='';
-
-        if (!isset(self::$_loaded['jquery'])) {
-            $html .= $this->jquery();
-        }
+        $html = '';
 
         if (!isset(self::$_loaded['select2']))
         {
+            $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
 
-            $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").select2('.$config->options.');
-            });</script>';
-
-            if (isset(self::$_loaded['validator']))
-            {
+            if (isset(self::$_loaded['validator'])) {
                 $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
-
-                $html .= '<script>jQuery(function($){
-                    $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
-                });</script>';
             }
 
             self::$_loaded['select2'] = true;
         }
+
+        $html .= '<script>jQuery(function($){
+                $("'.$config->element.'").select2('.$config->options.');
+                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+            });</script>';
 
         return $html;
     }
