@@ -194,9 +194,10 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'attribs'         => array(),
+            'attribs' => array()
+        ))->append(array(
             'select2_options' => array(
-                'element' => $config->id ? $config->id : 'select[name='.$config->name.']',
+                'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
                 'options' => array()
             )
         ));
