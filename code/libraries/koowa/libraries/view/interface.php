@@ -23,6 +23,31 @@ interface KViewInterface
     public function display();
 
     /**
+     * Set a view property
+     *
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
+     * @return  KViewAbstract
+     */
+    public function set($property, $value);
+
+    /**
+     * Get a view property
+     *
+     * @param   string  $property   The property name.
+     * @return  string  The property value.
+     */
+    public function get($property);
+
+    /**
+     * Check if a view property exists
+     *
+     * @param   string  $property   The property name.
+     * @return  boolean TRUE if the property exists, FALSE otherwise
+     */
+    public function has($property);
+
+    /**
      * Translates a string and handles parameter replacements
      *
      * @param string $string String to translate
@@ -37,6 +62,13 @@ interface KViewInterface
 	 * @return 	string 	The name of the object
 	 */
 	public function getName();
+
+    /**
+     * Get the title
+     *
+     * @return 	string 	The title of the view
+     */
+    public function getTitle();
 
 	/**
 	 * Get the format

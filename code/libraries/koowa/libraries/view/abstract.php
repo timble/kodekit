@@ -122,6 +122,41 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     }
 
     /**
+     * Set a view property
+     *
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
+     * @return KViewAbstract
+     */
+    public function set($property, $value)
+    {
+        $this->$property = $value;
+        return $this;
+    }
+
+    /**
+     * Get a view property
+     *
+     * @param   string  $property The property name.
+     * @return  string  The property value.
+     */
+    public function get($property)
+    {
+        return isset($this->$property) ? $this->$property : null;
+    }
+
+    /**
+     * Check if a view property exists
+     *
+     * @param   string  $property   The property name.
+     * @return  boolean TRUE if the property exists, FALSE otherwise
+     */
+    public function has($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
 	 * Get the name
 	 *
 	 * @return 	string 	The name of the object
@@ -131,6 +166,16 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		$total = count($this->getIdentifier()->path);
 		return $this->getIdentifier()->path[$total - 1];
 	}
+
+    /**
+     * Get the title
+     *
+     * @return 	string 	The title of the view
+     */
+    public function getTitle()
+    {
+        return ucfirst($this->getName());
+    }
 
 	/**
 	 * Get the format
