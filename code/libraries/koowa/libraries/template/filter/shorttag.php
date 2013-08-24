@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTemplateFilterRead
+class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {
 	/**
 	 * Convert <?= ?> to long-form <?php echo ?> when needed
@@ -23,7 +23,7 @@ class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTempla
 	 * @param string
 	 * @return KTemplateFilterShorttag
 	 */
-	public function read(&$text)
+	public function compile(&$text)
 	{
         if (!ini_get('short_open_tag'))
         {

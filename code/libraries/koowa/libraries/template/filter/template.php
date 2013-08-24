@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTemplateFilterRead
+class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {
     /**
      * Initializes the options for the object
@@ -42,7 +42,7 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
      * @param string $text
      * @return KTemplateFilterAlias
      */
-    public function read(&$text)
+    public function compile(&$text)
     {
         if(preg_match_all('#@include\(\'(.*)\'#siU', $text, $matches))
 		{

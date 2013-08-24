@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
 	/**
 	 * Find any <link /> elements and render them
@@ -23,7 +23,7 @@ class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFi
 	 * @param string $text Block of text to parse
 	 * @return KTemplateFilterLink
 	 */
-	public function write(&$text)
+	public function render(&$text)
 	{
 		//Parse the script information
 		$scripts = $this->_parseLinks($text);

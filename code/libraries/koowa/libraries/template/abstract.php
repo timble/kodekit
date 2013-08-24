@@ -355,14 +355,14 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     public function render()
     {
         //Parse the template
-        $this->_parse($this->_content);
+        $this->_compile($this->_content);
 
         //Evaluate the template
         $this->_evaluate($this->_content);
 
         //Process the template only at the end of the render cycle.
         if($this->__counter == 0) {
-            $this->_process($this->_content);
+            $this->_render($this->_content);
         }
 
         return $this->_content;
@@ -571,9 +571,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param  string $content Data to parse
      */
-    protected function _parse(&$content)
+    protected function _compile(&$content)
     {
-        $this->_chain->read($content);
+        $this->_chain->compile($content);
     }
 
     /**
@@ -617,9 +617,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param string $content Data to render
      */
-    protected function _process(&$content)
+    protected function _render(&$content)
     {
-        $this->_chain->write($content);
+        $this->_chain->render($content);
     }
 
     /**

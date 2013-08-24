@@ -17,7 +17,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
     /**
      * Toolbars to render such as actionbar, menubar, ...
@@ -105,7 +105,7 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
      * @param string $text Block of text to parse
      * @return ComKoowaTemplateFilterToolbar
      */
-    public function write(&$text)
+    public function render(&$text)
     {
         $matches = array();
 

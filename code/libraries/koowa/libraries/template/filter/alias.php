@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateFilterRead, KTemplateFilterWrite
+class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateFilterCompiler, KTemplateFilterRenderer
 {
     /**
      * The alias read map
@@ -48,13 +48,13 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
      * @param   integer $mode  Filter mode
      * @return $this
      */
-    public function append(array $alias, $mode = KTemplateFilter::MODE_READ)
+    public function append(array $alias, $mode = KTemplateFilter::MODE_COMPILE)
     {
-        if($mode & KTemplateFilter::MODE_READ) {
+        if($mode & KTemplateFilter::MODE_COMPILE) {
             $this->_alias_read = array_merge($this->_alias_read, $alias);
         }
 
-        if($mode & KTemplateFilter::MODE_WRITE) {
+        if($mode & KTemplateFilter::MODE_RENDER) {
             $this->_alias_write = array_merge($this->_alias_write, $alias);
         }
 
@@ -67,7 +67,7 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
      * @param string
      * @return KTemplateFilterAlias
      */
-    public function read(&$text)
+    public function compile(&$text)
     {
         $text = str_replace(
             array_keys($this->_alias_read),
@@ -83,7 +83,7 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
      * @param string
      * @return KTemplateFilterAlias
      */
-    public function write(&$text)
+    public function render(&$text)
     {
         $text = str_replace(
             array_keys($this->_alias_write),

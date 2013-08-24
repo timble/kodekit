@@ -13,36 +13,36 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterChain extends KObjectQueue implements KTemplateFilterRead, KTemplateFilterWrite
+class KTemplateFilterChain extends KObjectQueue implements KTemplateFilterCompiler, KTemplateFilterRenderer
 {
     /**
-     * Parse the text and compile it
+     * Parse the text and compile it to PHP code
      *
      * @param string $text  The text string to parse
      * @return void
      */
-    public function read(&$text)
+    public function compile(&$text)
     {
         foreach($this as $filter)
         {
-            if($filter instanceof KTemplateFilterRead) {
-                $filter->read($text);
+            if($filter instanceof KTemplateFilterCompiler) {
+                $filter->compile($text);
             }
         }
     }
 
     /**
-     * Parse the text and render it
+     * Parse the text and render it to html
      *
      * @param string $text  The text string to parse
      * @return void
      */
-    public function write(&$text)
+    public function render(&$text)
     {
         foreach($this as $filter)
         {
-            if($filter instanceof KTemplateFilterWrite) {
-                $filter->write($text);
+            if($filter instanceof KTemplateFilterRenderer) {
+                $filter->render($text);
             }
         }
     }

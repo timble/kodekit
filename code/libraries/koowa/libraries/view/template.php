@@ -96,12 +96,12 @@ abstract class KViewTemplate extends KViewAbstract
 
         //Add alias filter for media:// namespace
         $this->getTemplate()->getFilter('alias')->append(
-            array('media://' => $config->media_url.'/'), KTemplateFilter::MODE_READ | KTemplateFilter::MODE_WRITE
+            array('media://' => $config->media_url.'/'), KTemplateFilter::MODE_COMPILE | KTemplateFilter::MODE_RENDER
         );
 
         //Add alias filter for base:// namespace
         $this->getTemplate()->getFilter('alias')->append(
-            array('base://' => $config->base_url.'/'), KTemplateFilter::MODE_READ | KTemplateFilter::MODE_WRITE
+            array('base://' => $config->base_url.'/'), KTemplateFilter::MODE_COMPILE | KTemplateFilter::MODE_RENDER
         );
     }
 
