@@ -28,9 +28,10 @@ class KTemplateFilterAlias extends KTemplateFilterAbstract implements KTemplateF
         '@date('        => '$this->renderHelper(\'date.format\',',
         '@overlay('     => '$this->renderHelper(\'behavior.overlay\', ',
         '@translate('   => '$this->translate(',
-        '@include('    => '$this->loadIdentifier(',
+        '@include('     => '$this->loadIdentifier(',
         '@route('       => '$this->getView()->createRoute(',
         '@escape('      => '$this->getView()->escape(',
+        '@title('       => '$this->getView()->getTitle(',
     );
 
     /**
