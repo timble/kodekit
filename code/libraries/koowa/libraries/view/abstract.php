@@ -128,11 +128,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * @param   mixed   $value    The property value.
      * @return KViewAbstract
      */
-    public function set($property, $value)
+    /*public function set($property, $value)
     {
         $this->$property = $value;
         return $this;
-    }
+    }*/
 
     /**
      * Get a view property
@@ -140,10 +140,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * @param   string  $property The property name.
      * @return  string  The property value.
      */
-    public function get($property)
+    /*public function get($property)
     {
         return isset($this->$property) ? $this->$property : null;
-    }
+    }*/
 
     /**
      * Check if a view property exists

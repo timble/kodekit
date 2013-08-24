@@ -29,7 +29,7 @@ interface KViewInterface
      * @param   mixed   $value    The property value.
      * @return  KViewAbstract
      */
-    public function set($property, $value);
+    //public function set($property, $value);
 
     /**
      * Get a view property
@@ -37,7 +37,7 @@ interface KViewInterface
      * @param   string  $property   The property name.
      * @return  string  The property value.
      */
-    public function get($property);
+    //public function get($property);
 
     /**
      * Check if a view property exists
