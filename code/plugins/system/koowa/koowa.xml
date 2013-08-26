@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="3.0" type="plugin" group="system" method="upgrade" overwrite="true">
-    <name>System - Joomlatools Framework</name>
+    <name>plg_system_koowa</name>
     <author>Joomlatools</author>
     <creationDate>June 2013</creationDate>
     <copyright>Copyright (C) 2011 - 2013 Timble CVBA (http://www.timble.net)</copyright>
