@@ -10,7 +10,7 @@
 /**
  * Template Template Filter
  *
- * Filter for the @include alias. To load templates inline
+ * Filter for the @import alias. To load templates inline
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
@@ -44,7 +44,7 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
      */
     public function read(&$text)
     {
-        if(preg_match_all('#@include\(\'(.*)\'#siU', $text, $matches))
+        if(preg_match_all('#@import\(\'(.*)\'#siU', $text, $matches))
 		{
 			foreach($matches[1] as $key => $match)
 			{
