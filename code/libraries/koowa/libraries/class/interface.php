@@ -62,6 +62,14 @@ interface KClassLoaderInterface
     public function loadClass($class);
 
     /**
+     * Load a class based on an identifier
+     *
+     * @param string|object The identifier or identifier object
+     * @return boolean      Returns TRUE on success throws exception on failure
+     */
+    public function loadIdentifier($identifier);
+
+    /**
      * Load a class based on a path
      *
      * @param string	$path The file path
