@@ -68,7 +68,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	 */
 	public function getController()
 	{
-		if(!($this->_controller instanceof KControllerAbstract))
+		if(!($this->_controller instanceof KControllerInterface))
 		{
 		    //Make sure we have a controller identifier
 		    if(!($this->_controller instanceof KObjectIdentifier)) {
@@ -96,7 +96,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	 */
 	public function setController($controller)
 	{
-		if(!($controller instanceof KControllerAbstract))
+		if(!($controller instanceof KControllerInterface))
 		{
 			if(is_string($controller) && strpos($controller, '.') === false )
 		    {

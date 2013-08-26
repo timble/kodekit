@@ -178,22 +178,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
     /**
-     * Method to update the item link information when the item category is changed. This is fired when the item
-     * category is published or unpublished from the list view.
-     *
-     * @param   string   $extension  The extension whose category has been updated.
-     * @param   array    $pks        A list of primary key ids of the content that has changed state.
-     * @param   integer  $value      The value of the state that the content has been changed to.
-     * @return  void
-     */
-    public function onFinderCategoryChangeState($extension, $pks, $value)
-    {
-        if ($extension == $this->extension) {
-            $this->categoryStateChange($pks, $value);
-        }
-    }
-
-    /**
      * Main index function run when indexing happens
      *
      * @param FinderIndexerResult $item
@@ -264,60 +248,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
     /**
-     * Method to update index data on category access level changes
-     *
-     * @param   JTable  $category  A JTable object
-     * @return  void
-     */
-    protected function categoryAccessChange($category)
-    {
-        $rowset = $this->getModel()->category($category->id)->getList();
-
-        // Adjust the access level for each item within the category.
-        foreach ($rowset as $row)
-        {
-            // Set the access level.
-            $temp = max($row->access, $category->new_access);
-
-            // Update the item.
-            $this->change((int) $row->id, 'access', $temp);
-
-            // Reindex the item
-            $this->reindex($row->id);
-        }
-    }
-
-    /**
-     * Method to update index data on category access level changes
-     *
-     * @param   array    $pks    A list of primary key ids of the content that has changed state.
-     * @param   integer  $value  The value of the state that the content has been changed to.
-     * @return  void
-     */
-    protected function categoryStateChange($pks, $value)
-    {
-        // The item's published state is tied to the category
-        // published state so we need to look up all published states
-        // before we change anything.
-        foreach ($pks as $pk)
-        {
-            $rowset = $this->getModel()->category($pk)->getList();
-
-            // Adjust the state for each item within the category.
-            foreach ($rowset as $row)
-            {
-                $temp = $value;
-
-                // Update the item.
-                $this->change($row->id, 'state', $temp);
-
-                // Reindex the item
-                $this->reindex($row->id);
-            }
-        }
-    }
-
-    /**
      * Method to get the number of content items available to index.
      *
      * @throws  Exception on database error.
@@ -373,7 +303,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getModel()
     {
-        if (!$this->model instanceof KModelAbstract)
+        if (!$this->model instanceof KModelInterface)
         {
             if (strpos($this->model, '.') === false) {
                 $this->model = 'com://admin/'.$this->package.'.model.'.$this->model;
@@ -383,25 +313,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         }
 
         return $this->model;
-    }
-
-    /**
-     * Returns the category model
-     *
-     * @return KModelAbstract
-     */
-    protected function getCategoryModel()
-    {
-        if (!$this->category_model instanceof KModelAbstract)
-        {
-            if (strpos($this->category_model, '.') === false) {
-                $this->category_model = 'com://admin/'.$this->package.'.model.'.$this->category_model;
-            }
-
-            $this->category_model = KObjectManager::getInstance()->getObject($this->category_model);
-        }
-
-        return $this->category_model;
     }
 
     /**
@@ -421,13 +332,15 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         $item->route = $this->getLink($row);
         $item->path = FinderIndexerHelper::getContentPath($item->route);
 
+        // Trigger the onContentPrepare event.
         if ($item->description) {
-            // Trigger the onContentPrepare event.
             $item->summary = FinderIndexerHelper::prepareContent($item->description, $item->params);
         }
 
         // Translate the state. Articles should only be published if the category is published.
         $item->state = min($item->enabled, $item->category_enabled);
+
+        $item->access = max($item->access, $item->category_access);
 
         // Set the item type.
         $item->type_id = $this->type_id;
@@ -444,6 +357,17 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         }
 
         return $item;
+    }
+
+    protected function getAccess(KDatabaseRowInterface $row)
+    {
+        $result = $row->access;
+
+        if ($row instanceof ComDocmanDatabaseRowDocument) {
+            $result = max($row->access, $row->category->access);
+        }
+
+        return (bool) $result;
     }
 
     /**

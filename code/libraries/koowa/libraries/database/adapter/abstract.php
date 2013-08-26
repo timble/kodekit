@@ -419,7 +419,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function execute($query, $mode = KDatabase::RESULT_STORE)
     {
         // Add or replace the database table prefix.
-        if (!($query instanceof KDatabaseQueryAbstract)) {
+        if (!($query instanceof KDatabaseQueryInterface)) {
             $query = $this->replaceTableNeedle($query);
         }
 

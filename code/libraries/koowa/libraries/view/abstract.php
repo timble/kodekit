@@ -222,7 +222,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 */
 	public function getModel()
 	{
-		if(!$this->_model instanceof KModelAbstract)
+		if(!$this->_model instanceof KModelInterface)
 		{
 			//Make sure we have a model identifier
 		    if(!($this->_model instanceof KObjectIdentifier)) {
@@ -244,7 +244,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 */
     public function setModel($model)
 	{
-		if(!($model instanceof KModelAbstract))
+		if(!($model instanceof KModelInterface))
 		{
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {
