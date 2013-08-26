@@ -109,36 +109,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     
         return $html;
     }
-    /**
-     * Generates an HTML optionlist based on the distinct data from a model column.
-     *
-     * The column used will be defined by the name -> value => column options in cascading order.
-     *
-     * If no 'model' name is specified the model identifier will be created using
-     * the helper identifier. The model name will be the pluralised package name.
-     *
-     * If no 'value' option is specified the 'name' option will be used instead.
-     * If no 'text'  option is specified the 'value' option will be used instead.
-     *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
-     * @see __call()
-     */
-    protected function _render($config = array())
-    {
-        $config = new KObjectConfig($config);
-        $config->append(array(
-            'autocomplete' => false
-        ));
-
-        if($config->autocomplete) {
-            $result = $this->_autocomplete($config);
-        } else {
-            $result = $this->_listbox($config);
-        }
-
-        return $result;
-    }
 
     /**
      * Generates an HTML optionlist based on the distinct data from a model column.
@@ -167,45 +137,104 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'prompt'      => '- Select -',
             'unique'	  => true
         ))->append(array(
-                'value'		 => $config->name,
-                'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
-            ))->append(array(
-                'text'		=> $config->value,
-            ))->append(array(
-                'filter' 	=> array('sort' => $config->text),
-            ));
+            'select2'         => false,
+            'value'		      => $config->name,
+            'selected'        => $config->{$config->name},
+            'identifier'      => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.$config->model
+        ))->append(array(
+            'text'		      => $config->value,
+        ))->append(array(
+            'filter' 	      => array('sort' => $config->text),
+        ));
 
-        $list = $this->getObject($config->identifier)->set($config->filter)->getList();
+        $html = '';
 
-        //Get the list of items
-        $items = $list->getColumn($config->value);
-        if($config->unique) {
-            $items = array_unique($items);
+        if ($config->autocomplete) {
+            $html .= $this->_autocomplete($config);
         }
-
-        //Compose the options array
-        $options   = array();
-        if($config->deselect) {
-            $options[] = $this->option(array('text' => $this->translate($config->prompt)));
-        }
-
-        foreach($items as $key => $value)
+        else
         {
-            $item      = $list->find($key);
-            $options[] =  $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+            $options = array();
+            if ($config->deselect) {
+                $options[] = $this->option(array('text' => $this->translate($config->prompt)));
+            }
+
+            $list = $this->getObject($config->identifier)->set($config->filter)->getList();
+
+            //Get the list of items
+            $items = $list->getColumn($config->value);
+            if ($config->unique) {
+                $items = array_unique($items);
+            }
+
+            foreach ($items as $key => $value)
+            {
+                $item      = $list->find($key);
+                $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+            }
+
+            //Add the options to the config object
+            $config->options = $options;
+
+            if ($config->select2) {
+                $html .= $this->_listboxSelect2($config);
+            }
+
+            $html .= $this->optionlist($config);
         }
 
-        //Add the options to the config object
-        $config->options = $options;
+        return $html;
+    }
 
-        return $this->optionlist($config);
+    /**
+     * Enhances a select box using Select2
+     *
+     * @param array|KObjectConfig $config
+     * @return string
+     */
+    protected function _listboxSelect2($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'attribs' => array()
+        ))->append(array(
+            'select2_options' => array(
+                'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
+                'options' => array()
+            )
+        ));
+
+        $html = '';
+
+        if ($config->deselect)
+        {
+            if (!$config->attribs->multiple && !$config->select2_options->options->multiple)
+            {
+                // select2 needs the first option empty for placeholders to work on single select boxes
+                $config->options[0]->text = '';
+            }
+            else
+            {
+                // get rid of the deselect option as we set the placeholder property below
+                $options =& $config->options;
+                unset($options[0]);
+            }
+
+            $config->select2_options->append(array('options' => array(
+                'placeholder' => $config->prompt,
+                'allowClear'  => true
+            )));
+        }
+
+        $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+
+        return $html;
     }
 
     /**
      * Renders a listbox with autocomplete behavior
      *
-     * @see    KTemplateHelperBehavior::autocomplete
+     * @see    ComKoowaTemplateHelperBehavior::_listbox
      *
      * @param  array|KObjectConfig    $config
      * @return string	The html output
@@ -214,25 +243,37 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'name'		 => '',
-            'attribs'	 => array(),
-            'model'		 => KStringInflector::pluralize($this->getIdentifier()->package),
-            'validate'   => true,
-        ))->append(array(
-                'value'		 => $config->name,
-                'selected'   => $config->{$config->name},
-                'identifier' => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model)
-            ))->append(array(
-                'text'		=> $config->value,
-            ))->append(array(
-                'filter' 	=> array(),
-            ));
+            'attribs'  => array(),
+            'validate' => true,
+            'filter'   => array(),
+            'element' => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
+            'options' => array()
+        ));
 
-        //For the autocomplete behavior
-        $config->element = $config->value;
-        $config->path    = $config->text;
+        if (!$config->url)
+        {
+            $identifier = $this->getIdentifier($config->identifier);
+            $parts      = array(
+                'option' => 'com_'.$identifier->package,
+                'view'   => $identifier->name,
+                'format' => 'json'
+            );
+
+            if ($config->filter) {
+                $parts = array_merge($parts, KObjectConfig::unbox($config->filter));
+            }
+
+            $config->url = $this->getTemplate()->getView()->createRoute($parts, false, false);
+        }
 
         $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+
+        $config->attribs->value = $config->selected;
+        $config->attribs->name  = $config->name;
+
+        $attribs = $this->buildAttributes($config->attribs);
+
+        $html .= "<input $attribs />";
 
         return $html;
     }
@@ -257,7 +298,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             $config = $arguments[0];
             $config['name']  = KStringInflector::singularize(strtolower($method));
 
-            return $this->_render($config);
+            return $this->_listbox($config);
         }
 
         return parent::__call($method, $arguments);
