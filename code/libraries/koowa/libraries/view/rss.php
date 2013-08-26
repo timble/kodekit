@@ -20,7 +20,7 @@ class KViewRss extends KViewTemplate
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObject $config	An optional KObject object with configuration options
+     * @param KObjectConfig $config	An optional KObject object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)

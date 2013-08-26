@@ -109,7 +109,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
@@ -237,6 +237,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
 	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
 	 * @param object $object    The object instance to store
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @return void
 	 */
 	public function setObject($identifier, $object)
 	{
@@ -255,6 +256,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
      * @param mixed $mixin      An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param array $config     Configuration for the mixin
      * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @see KObjectMixable::mixin()
@@ -307,6 +309,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
      * @param mixed $decorator  An KObjectIdentifier, identifier string or object implementing KObjectDecoratorInterface
+     * @param array $config     Configuration for the decorator
      * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @see KObjectDecoratable::decorate()

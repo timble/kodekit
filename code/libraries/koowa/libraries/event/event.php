@@ -90,7 +90,7 @@ class KEvent extends KObjectConfig implements KEventInterface
     /**
      * Set the event target
      *
-     * @param object $target The event target
+     * @param KObjectInterface $target The event target
      * @return KEventInterface
      */
     public function setTarget(KObjectInterface $target)

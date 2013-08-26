@@ -206,7 +206,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     /**
      * Get the contents
      *
-     * @param  string $contents The contents of the view
+     * @param  string $content The contents of the view
      * @return KViewAbstract
      */
     public function setContent($content)

@@ -163,7 +163,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     /**
      * Render the modules
      *
-     * @param object $module    The module object
+     * @param object $modules   The module object
      * @param array  $attribs   Module attributes
      * @return string  The rendered modules
      */
@@ -220,6 +220,12 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  */
 class ComKoowaModuleHelper extends JModuleHelper
 {
+    /**
+     * Return modules, optionally filtered by position
+     *
+     * @param  string|null $position Module position
+     * @return array
+     */
     public static function &getModules($position = null)
     {
         if($position) {

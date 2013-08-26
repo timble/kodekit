@@ -412,9 +412,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed    $filter    An object that implements ObjectInterface, ObjectIdentifier object
+     * @param   mixed $filter    An object that implements ObjectInterface, ObjectIdentifier object
      *                              or valid identifier string
-     * @param   array    $config    An optional associative array of configuration settings
+     * @param   array $config    An optional associative array of configuration settings
+     * @throws UnexpectedValueException
      * @return KTemplateFilterInterface
      */
  	 public function getFilter($filter, $config = array())
