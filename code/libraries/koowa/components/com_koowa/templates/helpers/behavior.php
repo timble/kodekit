@@ -316,10 +316,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
             $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
 
-            if (isset(self::$_loaded['validator'])) {
-                $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
-            }
-
             self::$_loaded['select2'] = true;
         }
 
@@ -367,10 +363,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= $this->select2(array('element' => false));
             $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
-
-            if(isset(self::$_loaded['validator'])) {
-                $html .= '<script src="media://koowa/com_koowa/js/select2.validator.js" />';
-            }
         }
 
         $html .= '<script>jQuery(function($){
