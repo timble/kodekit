@@ -301,6 +301,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug'),
             'element' => '.select2-listbox',
             'options' => array(
                 'width' => 'resolve',
@@ -313,7 +314,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['select2']))
         {
             $html .= $this->jquery();
-            $html .= '<script src="media://koowa/com_koowa/js/select2.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/select2'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
 
             self::$_loaded['select2'] = true;
