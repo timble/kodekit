@@ -121,7 +121,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
         $replace = array();
         $matches = array();
 
-        // <ktml:modules position="[position]"></khtml:modules>
+        // <ktml:modules position="[position]"></ktml:modules>
         if(preg_match_all('#<ktml:modules\s+position="([^"]+)"(.*)>(.*)</ktml:modules>#siU', $text, $matches))
         {
             $count = count($matches[1]);

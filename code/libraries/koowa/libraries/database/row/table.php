@@ -225,7 +225,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Reset the row data using the defaults
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function reset()
 	{

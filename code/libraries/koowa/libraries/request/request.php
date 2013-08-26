@@ -343,7 +343,7 @@ class KRequest
      * 'referer' a commonly used misspelling word for 'referrer'
      * @see     http://en.wikipedia.org/wiki/HTTP_referrer
      *
-     * @param   boolean     $isInternal Only allow internal url's
+     * @param   boolean     $isInternal Only allow internal URL's
      * @return  KHttpUrl    A KHttpUrl object
      */
     public static function referrer($isInternal = true)

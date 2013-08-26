@@ -243,7 +243,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     }
 
     /**
-     * Checks if the object or one of it's mixins inherits from a class.
+     * Checks if the object or one of its mixins inherits from a class.
      *
      * @param   string|object   The class to check
      * @return  boolean         Returns TRUE if the object inherits from the class
