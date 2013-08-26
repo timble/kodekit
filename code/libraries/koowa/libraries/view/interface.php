@@ -29,15 +29,16 @@ interface KViewInterface
      * @param   mixed   $value    The property value.
      * @return  KViewAbstract
      */
-    public function set($property, $value);
+    public function set($property, $value = null);
 
     /**
      * Get a view property
      *
      * @param   string  $property   The property name.
+     * @param  mixed  $default  Default value to return.
      * @return  string  The property value.
      */
-    public function get($property);
+    public function get($property = null, $default = null);
 
     /**
      * Check if a view property exists

@@ -124,11 +124,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     /**
      * Set a view property
      *
-     * @param   string  $property The property name.
-     * @param   mixed   $value    The property value.
+     * @param  string  $property The property name.
+     * @param  mixed   $value    The property value.
      * @return KViewAbstract
      */
-    public function set($property, $value)
+    public function set($property, $value = null)
     {
         $this->$property = $value;
         return $this;
@@ -137,12 +137,18 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     /**
      * Get a view property
      *
-     * @param   string  $property The property name.
-     * @return  string  The property value.
+     * @param  string $property The property name.
+     * @param  mixed  $default  Default value to return.
+     * @throws InvalidArgumentException
+     * @return string  The property value.
      */
-    public function get($property)
+    public function get($property = null, $default = null)
     {
-        return isset($this->$property) ? $this->$property : null;
+        if (is_null($property)) {
+            throw new InvalidArgumentException('Invalid property name in'.get_class($this).'::get');
+        }
+
+        return isset($this->$property) ? $this->$property : $default;
     }
 
     /**
