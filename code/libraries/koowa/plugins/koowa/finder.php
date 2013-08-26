@@ -172,9 +172,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     public function onFinderChangeState($context, $pks, $value)
     {
         // Handle when the plugin is disabled
-        if ($context == 'com_plugins.plugin' && $value === 0)
-        {
-            // TODO: handle this case
+        if ($context == 'com_plugins.plugin' && $value === 0) {
             $this->pluginDisable($pks);
         }
     }
@@ -407,7 +405,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
     /**
-     * Turns a standard KDatabaseRow into a finder item
+     * Turns a KDatabaseRowInterface object into a finder item
      *
      * @param KDatabaseRowInterface $row
      * @return object
@@ -450,6 +448,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 
     /**
      * Returns a link to a row
+     *
      * @param KDatabaseRowInterface $row
      * @return string
      */
