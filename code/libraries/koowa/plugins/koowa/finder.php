@@ -91,18 +91,16 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         $config->append(array(
             'package' => strtolower(substr(get_class($this), 9)) // Remove plgFinder from class name
         ))->append(array(
-                'resource' => $config->package,
+            'resource' => $config->package,
         ))->append(array(
             'layout'     => $config->resource,
             'model'      => KStringInflector::pluralize($config->resource),
-            'category_model' => 'categories',
             'context'    => $config->package,
             'extension'  => 'com_'.$config->package,
             'type_title' => ucfirst($config->resource),
             'instructions' => array(
-                FinderIndexer::TITLE_CONTEXT => array('meta_title'),
                 FinderIndexer::TEXT_CONTEXT => array('description'),
-                FinderIndexer::META_CONTEXT => array('meta_keywords', 'meta_description'),
+                FinderIndexer::META_CONTEXT => array('created_by_name'),
                 FinderIndexer::PATH_CONTEXT => array('slug')
             )
         ));
@@ -143,18 +141,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     public function onFinderAfterSave($context, $row, $isNew)
     {
-        // We only want to handle articles here
-        if ($context == $this->extension.'.'.$this->resource)
-        {
-            // Reindex the item
+        if ($context == $this->extension.'.'.$this->resource) {
             $this->reindex($row->id);
-        }
-
-        if ($context == $this->extension.'.category')
-        {
-            if (!$isNew && $row->access_changed) {
-                $this->categoryAccessChange($row);
-            }
         }
 
         return true;
@@ -337,10 +325,16 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
             $item->summary = FinderIndexerHelper::prepareContent($item->description, $item->params);
         }
 
-        // Translate the state. Articles should only be published if the category is published.
-        $item->state = min($item->enabled, $item->category_enabled);
+        if ($item->publish_on) {
+            $item->publish_start_date = $item->publish_on;
+        }
 
-        $item->access = max($item->access, $item->category_access);
+        if ($item->unpublish_on) {
+            $item->publish_end_date = $item->unpublish_on;
+        }
+
+        // Translate the state. Articles should only be published if the category is published.
+        $item->state = $item->enabled;
 
         // Set the item type.
         $item->type_id = $this->type_id;
@@ -356,18 +350,24 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
             $item->extension = $row->extension;
         }
 
-        return $item;
-    }
-
-    protected function getAccess(KDatabaseRowInterface $row)
-    {
-        $result = $row->access;
-
-        if ($row instanceof ComDocmanDatabaseRowDocument) {
-            $result = max($row->access, $row->category->access);
+        // Add the author taxonomy data.
+        if (!empty($item->created_by_name)) {
+            $item->addTaxonomy('Author', $item->created_by_name);
         }
 
-        return (bool) $result;
+        // Add the category taxonomy data.
+        if (!empty($item->category_title))
+        {
+            $category_state  = isset($item->category_enabled) ? $item->category_enabled : 1;
+            $category_access = isset($item->category_access) ? $item->category_access   : 1;
+
+            $item->state  = min($item->enabled, $category_state);
+            $item->access = max($item->access,  $category_access);
+
+            $item->addTaxonomy('Category', $item->category_title, $category_state, $category_access);
+        }
+
+        return $item;
     }
 
     /**
