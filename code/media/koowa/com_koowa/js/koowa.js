@@ -29,24 +29,16 @@ $(document).ready(function() {
         new Koowa.Form($.parseJSON(target.attr('rel'))).submit();
     });
 
-    $('.-koowa-grid').each(function(i, grid) { // mootools
-        var toolbar;
-
-        grid = document.id(grid);
-        toolbar = grid.get('data-toolbar') || '.toolbar-list';
-
-        new Koowa.Grid(grid);
-
-        new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
+    $('.-koowa-grid').each(function() {
+        new Koowa.Controller.Grid({
+            form: this
+        });
     });
 
-    $('.-koowa-form').each(function(i, form) { // mootools
-        var toolbar;
-
-        form = document.id(form);
-        toolbar = form.get('data-toolbar') || '.toolbar-list';
-
-        new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
+    $('.-koowa-form').each(function() {
+        new Koowa.Controller.Form({
+            form: this
+        });
     });
 });
 
@@ -161,8 +153,7 @@ Koowa.Grid.getAllSelected = function(context) {
  * @return  array           The items' ids
  */
 Koowa.Grid.getIdQuery = function(context) {
-    // We could do $.param(this.getAllSelected(scope)) but this way is faster since we iterate once not twice
-    return this.getAllSelected(context).serialize();
+    return decodeURIComponent(this.getAllSelected(context).serialize());
 };
 
 /**
@@ -183,66 +174,71 @@ Koowa.Controller = new Class({
     token_value: null,
 
     options: {
-        toolbar: false,
+        toolbar: '.toolbar-list',
         url: window.location.href
     },
     
     initialize: function(options){
-        var self = this;
-        
         this.setOptions(options);
 
         this.form = $(this.options.form);
-        this.toolbar = $(this.options.toolbar);
 
-        this.form.data('controller', this);
+        this.setOptions(this.form.data());
 
-        if (this.form.attr('action') && !this.options.url) {
+        if (this.form.attr('action')) {
             this.options.url = this.form.attr('action');
         }
 
-        //Set options that is coming from data attributes on the form element
-        this.setOptions(this.form.data());
-
+        this.toolbar = $(this.options.toolbar);
         this.form.data('controller', this);
 
-        // TODO does this work?
-        //this.addEvent('execute', this.execute.bind(this));
+        this.addEvent('execute', this.execute.bind(this));
 
-        //Attach toolbar buttons actions
+        this.token_name = this.form.data('token-name');
+        this.token_value = this.form.data('token-value');
+
         if(this.toolbar) {
-            this.buttons = this.toolbar.find('.toolbar').filter(function(){
-                return $(this).data('action');
-            });
-
-            this.token_name = this.form.data('token-name');
-            this.token_value = this.form.data('token-value');
-
-            this.buttons.each(function() {
-                var button = $(this),
-                    data = button.data('data'),
-                    options = button.data(),
-                    action = button.data('action');
-
-                data = (data && $.type(data) === 'string') ? $.parseJSON(data) : {};
-
-                //Set token data
-                if (self.token_name) {
-                    data[self.token_name] = self.token_value;
-                }
-
-                button.on('click', function(event){
-                    event.preventDefault();
-
-                    if(!button.hasClass('disabled')) {
-                        self.setOptions(options);
-                        self.fireEvent('execute', [action, data, button.data('novalidate') === 'novalidate']);
-                    }
-                });
-            });
+            this.setToolbar();
         }
     },
+    setToolbar: function() {
+        var self = this;
 
+        this.buttons = this.toolbar.find('.toolbar[data-action]');
+
+        this.buttons.each(function() {
+            var button = $(this),
+                options = button.data(),
+                data = options.data,
+                action = options.action,
+                novalidate = options.novalidate === 'novalidate',
+                eventAdded = options.eventAdded;
+
+            if (eventAdded) {
+                return;
+            }
+
+            if (typeof data !== 'object') {
+                data = (data && $.type(data) === 'string') ? $.parseJSON(data) : {};
+            }
+
+            //Set token data
+            if (self.token_name) {
+                data[self.token_name] = self.token_value;
+            }
+
+            button.on('click', function(event) {
+                event.preventDefault();
+
+                if (!button.hasClass('disabled')) {
+                    self.setOptions(options);
+                    self.fireEvent('execute', [action, data, novalidate]);
+                }
+            });
+
+            button.data('event-added', true);
+        });
+    },
     execute: function(event, action, data, novalidate){
         var method = '_action' + action[0].toUpperCase() + action.substr(1);
 
@@ -283,9 +279,7 @@ Koowa.Controller = new Class({
         if (this.buttons) {
             this.fireEvent('before.validate');
 
-            buttons = this.buttons.filter(function(){
-                return $(this).data('novalidate') !== 'novalidate';
-            });
+            buttons = this.buttons.filter('[data-novalidate!="novalidate"]');
 
             if (this.fireEvent('validate')) {
                 buttons.removeClass('disabled');
@@ -312,10 +306,12 @@ Koowa.Controller.Grid = new Class({
         inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall'
     },
     initialize: function(options){
-        var thead, checkboxes,
+        var thead,
             self = this;
         
         this.parent(options);
+
+        this.grid = new Koowa.Grid(this.form);
 
         this.addEvent('validate', this.validate);
 
@@ -471,6 +467,7 @@ Koowa.Controller.Grid = new Class({
             url: this.options.url+(idQuery ? append+idQuery : ''),
             params: $.extend({}, {action: action}, data)
         };
+
         new Koowa.Form(options).submit();
     }
 });
