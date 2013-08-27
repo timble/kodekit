@@ -192,7 +192,7 @@ Koowa.Controller = new Class({
         this.toolbar = $(this.options.toolbar);
         this.form.data('controller', this);
 
-        this.addEvent('execute', this.execute.bind(this));
+        this.on('execute', this.execute.bind(this));
 
         this.token_name = this.form.data('token-name');
         this.token_value = this.form.data('token-value');
@@ -232,7 +232,7 @@ Koowa.Controller = new Class({
 
                 if (!button.hasClass('disabled')) {
                     self.setOptions(options);
-                    self.fireEvent('execute', [action, data, novalidate]);
+                    self.trigger('execute', [action, data, novalidate]);
                 }
             });
 
@@ -243,33 +243,29 @@ Koowa.Controller = new Class({
         var method = '_action' + action[0].toUpperCase() + action.substr(1);
 
         this.options.action = action;
-        if(this.fireEvent('before.'+action, [data, novalidate])) {
+        if(this.trigger('before.'+action, [data, novalidate])) {
             if(this[method]) {
                 this[method].call(this, data, novalidate);
             } else {
                 this._action_default.call(this, action, data, novalidate);
             }
 
-            this.fireEvent('after.'+action, [data, novalidate]);
+            this.trigger('after.'+action, [data, novalidate]);
         }
 
         return this;
     },
 
-    /* @TODO refactor to use jQuery.fn.on, but keep addEvent for legacy */
-    addEvent: function(type, fn){
-        // @TODO test if this.form.on(type, fn) works just as good as this code
-        return this.form.on.apply(this.form, [type, fn]);
+    on: function(type, fn){
+        return this.form.on('koowa.'+type, fn);
     },
 
-    /* @TODO refactor to use jQuery.fn.on, but keep addEvent for legacy */
-    removeEvent: function(type, fn){
-        // @TODO test if this.form.on(type, fn) works just as good as this code
-        return this.form.off.apply(this.form, [type, fn]);
+    off: function(type, fn){
+        return this.form.off('koowa.'+type, fn);
     },
 
-    fireEvent: function(type, args){
-        var event = jQuery.Event(type);
+    trigger: function(type, args){
+        var event = jQuery.Event('koowa.'+type);
         this.form.trigger(event, args);
         return !event.isDefaultPrevented();
     },
@@ -278,17 +274,17 @@ Koowa.Controller = new Class({
         var buttons;
 
         if (this.buttons) {
-            this.fireEvent('before.validate');
+            this.trigger('before.validate');
 
             buttons = this.buttons.filter('[data-novalidate!="novalidate"]');
 
-            if (this.fireEvent('validate')) {
+            if (this.trigger('validate')) {
                 buttons.removeClass('disabled');
             } else {
                 buttons.addClass('disabled');
             }
 
-            this.fireEvent('after.validate');
+            this.trigger('after.validate');
         }
     }
 });
@@ -314,7 +310,7 @@ Koowa.Controller.Grid = new Class({
 
         this.grid = new Koowa.Grid(this.form);
 
-        this.addEvent('validate', this.validate);
+        this.on('validate', this.validate);
 
         if (this.options.inputs && this.buttons) {
             this.checkValidity();
@@ -447,7 +443,7 @@ Koowa.Controller.Grid = new Class({
                     checkboxes.trigger('change', true);
 
                     self.setOptions(options);
-                    self.fireEvent('execute', [actionName, data, true]);
+                    self.trigger('execute', [actionName, data, true]);
                 });
             });
         });
@@ -459,7 +455,7 @@ Koowa.Controller.Grid = new Class({
     _action_default: function(action, data, novalidate){
         var idQuery, append, options;
 
-        if(!novalidate && !this.fireEvent('validate')) {
+        if(!novalidate && !this.trigger('validate')) {
             return false;
         }
 
@@ -470,7 +466,7 @@ Koowa.Controller.Grid = new Class({
             url: this.options.url+(idQuery ? append+idQuery : ''),
             params: $.extend({}, {action: action}, data)
         };
-
+console.log(options);return;
         new Koowa.Form(options).submit();
     }
 });
@@ -486,7 +482,7 @@ Koowa.Controller.Form = new Class({
     Extends: Koowa.Controller,
 
     _action_default: function(action, data, novalidate){
-        if(!novalidate && !this.fireEvent('validate')) {
+        if(!novalidate && !this.trigger('validate')) {
             return false;
         }
 
