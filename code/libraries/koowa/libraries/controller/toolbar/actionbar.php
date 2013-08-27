@@ -88,7 +88,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         $command->append(array(
             'attribs' => array(
                 'data-action' => 'edit',
-                'data-data'   => '{enabled:1}'
+                'data-data'   => '{"enabled":1}'
             )
         ));
     }
@@ -106,7 +106,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         $command->append(array(
             'attribs' => array(
                 'data-action' => 'edit',
-                'data-data'   => '{enabled:0}'
+                'data-data'   => '{"enabled":0}'
             )
         ));
     }
