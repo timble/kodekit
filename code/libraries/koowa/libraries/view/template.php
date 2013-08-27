@@ -82,7 +82,6 @@ abstract class KViewTemplate extends KViewAbstract
             'template'         => $this->getName(),
             'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'template', 'url'),
             'auto_assign'      => true,
-
         ));
 
         parent::_initialize($config);
