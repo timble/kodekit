@@ -712,35 +712,3 @@ Koowa.Overlay = new Class({
         return this.parent(text);
 	}
 });
-
-
-/**
- * String class
- *
- * @package     Koowa_Media
- * @subpackage  Javascript
- */
-String.extend({
-    get : function(key, defaultValue) {
-        if(!key) {
-            return;
-        }
-    
-        var uri   = this.parseUri(), query;
-        if(typeof uri.query !== 'undefined') {
-            query = uri.query.parseQueryString();
-            if(typeof query[key] !== 'undefined') {
-                return query[key];
-            }
-        }
-        
-        return defaultValue;
-    },
-
-    parseUri: function() {
-        var bits = this.match(/^(?:([^:\/?#.]+):)?(?:\/\/)?(([^:\/?#]*)(?::(\d*))?)((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[\?#]|$)))*\/?)?([^?#\/]*))?(?:\?([^#]*))?(?:#(.*))?/);
-        return (bits)
-            ? bits.associate(['uri', 'scheme', 'authority', 'domain', 'port', 'path', 'directory', 'file', 'query', 'fragment'])
-            : null;
-    }
-});
