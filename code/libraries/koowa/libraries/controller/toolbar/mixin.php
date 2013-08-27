@@ -88,6 +88,26 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     }
 
     /**
+     * Detach a toolbar
+     *
+     * @param   KControllerToolbarInterface $toolbar A toolbar instance
+     * @return  Object The mixer object
+     */
+    public function detachToolbar(KControllerToolbarInterface $toolbar)
+    {
+        if($this->hasToolbar($toolbar->getType()))
+        {
+            unset($this->_toolbars[$toolbar->getType()]);
+
+            if ($this->inherits('KCommandMixin')) {
+                $this->getCommandChain()->dequeue($toolbar);
+            }
+        }
+
+        return $this->getMixer();
+    }
+
+    /**
      * Check if a toolbar exists
      *
      * @param   string   $type The name of the toolbar
