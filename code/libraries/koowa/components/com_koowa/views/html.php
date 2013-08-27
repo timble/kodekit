@@ -25,9 +25,7 @@ class ComKoowaViewHtml extends KViewDefault
         parent::__construct($config);
 
         //Add alias filter for editor helper
-        $this->getTemplate()->getFilter('alias')->append(array(
-            '@editor('  => '$this->renderHelper(\'editor.display\', '
-        ));
+        $this->getTemplate()->getFilter('function')->addFunction('@editor', '$this->renderHelper(\'editor.display\', ');
     }
 
     /**
