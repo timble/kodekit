@@ -157,7 +157,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
 
         $data = $config->data->toArray();
-        $data = json_encode($data);
+        $data = htmlentities(json_encode($data));
 
         $html = '<img src="media://koowa/com_koowa/images/'. $img .'" border="0" alt="'. $alt .'" data-action="edit" data-data="'.$data.'" title='.$text.' />';
 
@@ -217,12 +217,12 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config->data->order = -1;
 
         $updata = $config->data->toArray();
-        $updata = json_encode($updata);
+        $updata = htmlentities(json_encode($updata));
 
         $config->data->order = +1;
 
         $downdata = $config->data->toArray();
-        $downdata = json_encode($downdata);
+        $downdata = htmlentities(json_encode($downdata));
 
         $tmpl = '
             <span>
