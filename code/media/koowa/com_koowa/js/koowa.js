@@ -21,12 +21,10 @@ if(!Koowa) {
 (function($){
 
 $(document).ready(function() {
-    $('.submitable').on('click', function(event){
-        var target = $(event.target);
-
+    $('.submittable').on('click', function(event){
         event.preventDefault();
 
-        new Koowa.Form($.parseJSON(target.attr('rel'))).submit();
+        new Koowa.Form($(event.target).data('config')).submit();
     });
 
     $('.-koowa-grid').each(function() {
@@ -58,7 +56,7 @@ Koowa.Form = new Class({
         else {
             this.form = $('<form/>', {
                 name: 'dynamicform',
-                method: this.config.method,
+                method: this.config.method || 'POST',
                 action: this.config.url
             });
             $(document.body).append(this.form);
@@ -76,9 +74,11 @@ Koowa.Form = new Class({
     },
 
     submit: function() {
-        $.each(this.config.params, function(name, value){
-            this.addField(name, value);
-        }.bind(this));
+        if (this.config.params) {
+            $.each(this.config.params, function(name, value){
+                this.addField(name, value);
+            }.bind(this));
+        }
 
         this.form.submit();
     }
@@ -249,6 +249,7 @@ Koowa.Controller = new Class({
             } else {
                 this._action_default.call(this, action, data, novalidate);
             }
+
             this.fireEvent('after.'+action, [data, novalidate]);
         }
 
@@ -337,7 +338,6 @@ Koowa.Controller.Grid = new Class({
 
     },
 
-
     setTableHeaders: function() {
         //Make the table headers "clickable"
         this.form.find('thead tr > *').each(function() {
@@ -384,7 +384,8 @@ Koowa.Controller.Grid = new Class({
         });
     },
     setTableRows: function() {
-        var checkboxes = this.form.find('tbody tr .-koowa-grid-checkbox');
+        var self = this,
+            checkboxes = this.form.find('tbody tr .-koowa-grid-checkbox');
 
         this.form.find('tbody tr').each(function(){
             var tr = $(this),
@@ -427,7 +428,9 @@ Koowa.Controller.Grid = new Class({
                     actionName = action.data('action'),
                     eventType = action.data('event-type');
 
-                data = (data && $.type(data) === 'string') ? $.parseJSON(data) : {};
+                if (typeof data !== 'object') {
+                    data = (data && $.type(data) === 'string') ? $.parseJSON(data) : {};
+                }
 
                 //Set token data
                 if(self.token_name) {
