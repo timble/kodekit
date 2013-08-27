@@ -104,9 +104,7 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
         
         $command->icon = sprintf('icon-32-%s', $icon);
 
-        $command->append(array(
-            'href' => JRoute::_($link)
-        ));
+        $command->href = JRoute::_($link);
 
         if ($type === 'modal') {
         	$this->_commandModal($command);

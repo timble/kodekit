@@ -290,9 +290,49 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * Loads the autocomplete behavior and attaches it to a specified element
+     * Loads the select2 behavior and attaches it to a specified element
      *
-     * @see    http://mootools.net/forge/p/meio_autocomplete
+     * @see    http://ivaynberg.github.io/select2/select-2.1.html
+     *
+     * @param  array|KObjectConfig $config
+     * @return string	The html output
+     */
+    public function select2($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug'),
+            'element' => '.select2-listbox',
+            'options' => array(
+                'width' => 'resolve',
+                'dropdownCssClass' => 'koowa'
+            )
+        ));
+
+        $html = '';
+
+        if (!isset(self::$_loaded['select2']))
+        {
+            $html .= $this->jquery();
+            $html .= '<script src="media://koowa/com_koowa/js/select2'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
+
+            self::$_loaded['select2'] = true;
+        }
+
+        if ($config->element)
+        {
+            $html .= '<script>jQuery(function($){
+                $("'.$config->element.'").select2('.$config->options.');
+                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+            });</script>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Loads the autocomplete behavior and attaches it to a specified element
      *
      * @param  array|KObjectConfig $config
      * @return string	The html output
@@ -301,72 +341,35 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'identifier'    => null,
-            'element'       => null,
-            'path'          => 'name',
-            'filter'		=> array(),
-            'validate'		=> true,
-            'selected'		=> null
-        ))->append(array(
-                'value_element' => $config->element.'-value',
-                'attribs' => array(
-                    'id'    => $config->element,
-                    'type'  => 'text',
-                    'class' => 'inputbox value',
-                    'size'	=> 60
-                ),
-            ))->append(array(
-                'options' => array(
-                    'valueField'     => $config->value_element,
-                    'filter'         => array('path' => $config->path),
-                    'requestOptions' => array('method' => 'get'),
-                    'urlOptions'	 => array(
-                        'queryVarName' => 'search',
-                        'extraParams'  => KObjectConfig::unbox($config->filter)
-                    )
-                )
-            ));
+            'element'  => null,
+            'options'  => array(
+                'dropdownCssClass' => 'koowa',
+                'validate'      => false, //Toggle if the forms validation helper is loaded
+                'queryVarName'  => 'search',
+                'width'         => 'resolve',
+                'model'		    => $config->model,
+                'placeholder'   => $config->prompt,
+                'allowClear'    => $config->deselect,
+                'value'         => $config->value,
+                'text'          => $config->text,
+                'selected'      => $config->selected,
+                'url'           => $config->url
+            )
+        ));
 
-        if($config->validate)
-        {
-            $config->attribs['data-value']  = $config->value_element;
-            $config->attribs['data-value'] .= ' ma-required';
-        }
-
-        if(!isset($config->url))
-        {
-            $identifier = $this->getIdentifier($config->identifier);
-            $config->url = JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name.'&format=json', false);
-        }
-
-        $html = '';
+        $html ='';
 
         // Load the necessary files if they haven't yet been loaded
         if(!isset(self::$_loaded['autocomplete']))
         {
-            if(version_compare(JVERSION, '3.0', 'ge')) {
-                $html .= '<script src="media://koowa/com_koowa/js/autocomplete-2.0.js" />';
-            } else {
-                $html .= '<script src="media://koowa/com_koowa/js/autocomplete-1.0.js" />';
-            }
-            $html .= '<script src="media://koowa/com_koowa/js/patch.autocomplete.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/autocomplete.css" />';
+            $html .= $this->select2(array('element' => false));
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
         }
 
-        $html .= "
-		<script>
-			window.addEvent('domready', function(){
-				new Koowa.Autocomplete(document.id('".$config->element."'), ".json_encode($config->url).", ".json_encode(KObjectConfig::unbox($config->options)).");
-			});
-		</script>";
-
-        $html .= '<input '.$this->buildAttributes($config->attribs).' />';
-        $html .= '<input '.$this->buildAttributes(array(
-                'type'  => 'hidden',
-                'name'  => $config->name,
-                'id'    => $config->element.'-value',
-                'value' => $config->selected
-            )).' />';
+        $html .= '<script>jQuery(function($){
+                $("'.$config->element.'").koowaSelect2('.$config->options.');
+                $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
+            });</script>';
 
         return $html;
     }

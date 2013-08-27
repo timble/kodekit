@@ -94,7 +94,8 @@ class KViewCsv extends KViewFile
 
         // Set the content
         $this->setContent($header.$rows);
-        return parent::display();
+
+        parent::display();
 	}
 
 	/**

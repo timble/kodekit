@@ -71,7 +71,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
     {
         if($this->_table !== false)
         {
-            if(!($this->_table instanceof KDatabaseTableAbstract))
+            if(!($this->_table instanceof KDatabaseTableInterface))
 		    {
 		        //Make sure we have a table identifier
 		        if(!($this->_table instanceof KObjectIdentifier)) {
@@ -99,7 +99,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 */
     public function setTable($table)
 	{
-		if(!($table instanceof KDatabaseTableAbstract))
+		if(!($table instanceof KDatabaseTableInterface))
 		{
 			if(is_string($table) && strpos($table, '.') === false )
 		    {
@@ -225,7 +225,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Reset the row data using the defaults
 	 *
-	 * @return boolean	If successfull return TRUE, otherwise FALSE
+	 * @return boolean	If successful return TRUE, otherwise FALSE
 	 */
 	public function reset()
 	{

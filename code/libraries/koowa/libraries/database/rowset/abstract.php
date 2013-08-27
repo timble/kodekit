@@ -237,7 +237,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     }
 
     /**
-     * Gets the identitiy column of the rowset
+     * Gets the identity column of the rowset
      *
      * @return string
      */

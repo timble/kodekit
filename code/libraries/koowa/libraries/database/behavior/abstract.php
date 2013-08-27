@@ -185,7 +185,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
      * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the behavior
      * is callable.
      *
-     * @param KObject $mixer  The mixer requesting the mixable methods.
+     * @param KObjectMixable $mixer  The mixer requesting the mixable methods.
      * @return array  An array of methods
      */
     public function getMixableMethods(KObjectMixable $mixer = null)

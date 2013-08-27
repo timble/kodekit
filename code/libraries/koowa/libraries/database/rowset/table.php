@@ -71,7 +71,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
     {
         if($this->_table !== false)
         {
-            if(!($this->_table instanceof KDatabaseTableAbstract))
+            if(!($this->_table instanceof KDatabaseTableInterface))
 		    {
 		        //Make sure we have a table identifier
 		        if(!($this->_table instanceof KObjectIdentifier)) {
@@ -99,7 +99,7 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	 */
 	public function setTable($table)
 	{
-		if(!($table instanceof KDatabaseTableAbstract))
+		if(!($table instanceof KDatabaseTableInterface))
 		{
 			if(is_string($table) && strpos($table, '.') === false )
 		    {

@@ -8,25 +8,42 @@
  */
 
 /**
- * Controller Toolbar Command
+ * Controller Toolbar Command Iterator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
 class KControllerToolbarCommandIterator extends RecursiveIteratorIterator
 {
+    /**
+     * Constructor
+     *
+     * @param KControllerToolbarInterface $toolbar
+     * @param int                         $mode
+     * @param int                         $flags
+     */
     public function __construct(KControllerToolbarInterface $toolbar, $mode = RecursiveIteratorIterator::SELF_FIRST, $flags = 0)
     {
         parent::__construct($toolbar, $mode, $flags);
     }
 
+    /**
+     * Returns an iterator for element children
+     *
+     * @return RecursiveIterator
+     */
     public function callGetChildren()
     {
         return $this->current()->getIterator();
     }
 
+    /**
+     * Called for each element to test whether it has children.
+     *
+     * @return bool True if element has children
+     */
     public function callHasChildren()
     {
-        return count($this->current());
+        return (boolean) count($this->current());
     }
 }

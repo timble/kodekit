@@ -102,7 +102,7 @@ class KCommandMixin extends KObjectMixinAbstract
     /**
      * Set the chain of command object
      *
-     * @param   KCommandChain $chain A command chain object
+     * @param   KCommandChainInterface $chain A command chain object
      * @return  KObject The mixer object
      */
     public function setCommandChain(KCommandChainInterface $chain)

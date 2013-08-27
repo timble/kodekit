@@ -128,22 +128,28 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * @param   mixed   $value    The property value.
      * @return KViewAbstract
      */
-    /*public function set($property, $value)
+    public function set($property, $value)
     {
         $this->$property = $value;
         return $this;
-    }*/
+    }
 
     /**
      * Get a view property
      *
-     * @param   string  $property The property name.
-     * @return  string  The property value.
+     * @param  string $property The property name.
+     * @param  mixed  $default  Default value to return.
+     * @throws InvalidArgumentException
+     * @return string  The property value.
      */
-    /*public function get($property)
+    public function get($property = null, $default = null)
     {
-        return isset($this->$property) ? $this->$property : null;
-    }*/
+        if (is_null($property)) {
+            throw new InvalidArgumentException('Invalid property name in'.get_class($this).'::get');
+        }
+
+        return isset($this->$property) ? $this->$property : $default;
+    }
 
     /**
      * Check if a view property exists
@@ -200,7 +206,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     /**
      * Get the contents
      *
-     * @param  string $contents The contents of the view
+     * @param  string $content The contents of the view
      * @return KViewAbstract
      */
     public function setContent($content)
@@ -216,7 +222,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 */
 	public function getModel()
 	{
-		if(!$this->_model instanceof KModelAbstract)
+		if(!$this->_model instanceof KModelInterface)
 		{
 			//Make sure we have a model identifier
 		    if(!($this->_model instanceof KObjectIdentifier)) {
@@ -238,7 +244,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 */
     public function setModel($model)
 	{
-		if(!($model instanceof KModelAbstract))
+		if(!($model instanceof KModelInterface))
 		{
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {

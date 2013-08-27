@@ -155,7 +155,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param   mixed $mixin   An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
      * @param   array $config  An optional associative array of configuration options
      * @return  KObjectMixinInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
@@ -203,8 +203,8 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * When using decorate(), the object will be decorated by the decorator. The decorator needs to extend from
      * KObjectDecorator.
      *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectDecorator
-     * @param   array $config  An optional associative array of configuration options
+     * @param   mixed $decorator An KObjectIdentifier, identifier string or object implementing KObjectDecorator
+     * @param   array $config    An optional associative array of configuration options
      * @return  KObjectDecoratorInterface
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws  UnexpectedValueException If the decorator does not extend from KObjectDecorator
@@ -243,7 +243,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     }
 
     /**
-     * Checks if the object or one of it's mixins inherits from a class.
+     * Checks if the object or one of its mixins inherits from a class.
      *
      * @param   string|object   The class to check
      * @return  boolean         Returns TRUE if the object inherits from the class

@@ -197,7 +197,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 		//Create the redirect
 		$url = $this->getReferrer();
 
-		if ($data instanceof KDatabaseRowAbstract)
+		if ($data instanceof KDatabaseRowInterface)
 		{
             $url = clone KRequest::url();
 

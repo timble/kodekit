@@ -107,7 +107,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 */
 	public function getView()
 	{
-	    if(!$this->_view instanceof KViewAbstract)
+	    if(!$this->_view instanceof KViewInterface)
 		{
 		    //Make sure we have a view identifier
 		    if(!($this->_view instanceof KObjectIdentifier)) {
@@ -146,7 +146,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 */
 	public function setView($view)
 	{
-		if(!($view instanceof KViewAbstract))
+		if(!($view instanceof KViewInterface))
 		{
 			if(is_string($view) && strpos($view, '.') === false )
 		    {
@@ -175,7 +175,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 */
 	public function getModel()
 	{
-		if(!$this->_model instanceof KModelAbstract)
+		if(!$this->_model instanceof KModelInterface)
 		{
 			//Make sure we have a model identifier
 		    if(!($this->_model instanceof KObjectIdentifier)) {
@@ -198,7 +198,7 @@ abstract class KControllerResource extends KControllerAbstract
 	 */
 	public function setModel($model)
 	{
-		if(!($model instanceof KModelAbstract))
+		if(!($model instanceof KModelInterface))
 		{
 	        if(is_string($model) && strpos($model, '.') === false )
 		    {
@@ -289,7 +289,7 @@ abstract class KControllerResource extends KControllerAbstract
     	parent::__set($property, $value);
 
     	//Prevent state changes through the parents constructor
-    	if($this->_model instanceof KModelAbstract) {
+    	if($this->_model instanceof KModelInterface) {
     	    $this->getModel()->set($property, $value);
     	}
   	}

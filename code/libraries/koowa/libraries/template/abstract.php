@@ -171,7 +171,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function getView()
     {
-        if(!$this->_view instanceof KViewAbstract)
+        if(!$this->_view instanceof KViewInterface)
         {
             //Make sure we have a view identifier
             if(!($this->_view instanceof KObjectIdentifier)) {
@@ -180,8 +180,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
             $this->_view = $this->getObject($this->_view);
 
-            //Make sure the view implements KViewAbstract
-            if(!$this->_view instanceof KViewAbstract)
+            //Make sure the view implements KViewInterface
+            if(!$this->_view instanceof KViewInterface)
             {
                 throw new UnexpectedValueException(
                     'View: '.get_class($this->_view).' does not implement KViewInterface'
@@ -202,7 +202,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 */
 	public function setView($view)
 	{
-		if(!($view instanceof KViewAbstract))
+		if(!($view instanceof KViewInterface))
 		{
 			if(empty($view) || (is_string($view) && strpos($view, '.') === false))
 		    {
@@ -412,9 +412,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed    $filter    An object that implements ObjectInterface, ObjectIdentifier object
+     * @param   mixed $filter    An object that implements ObjectInterface, ObjectIdentifier object
      *                              or valid identifier string
-     * @param   array    $config    An optional associative array of configuration settings
+     * @param   array $config    An optional associative array of configuration settings
+     * @throws UnexpectedValueException
      * @return KTemplateFilterInterface
      */
  	 public function getFilter($filter, $config = array())

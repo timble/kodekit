@@ -121,7 +121,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
         $replace = array();
         $matches = array();
 
-        // <ktml:modules position="[position]"></khtml:modules>
+        // <ktml:modules position="[position]"></ktml:modules>
         if(preg_match_all('#<ktml:modules\s+position="([^"]+)"(.*)>(.*)</ktml:modules>#siU', $text, $matches))
         {
             $count = count($matches[1]);
@@ -163,7 +163,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     /**
      * Render the modules
      *
-     * @param object $module    The module object
+     * @param object $modules   The module object
      * @param array  $attribs   Module attributes
      * @return string  The rendered modules
      */
@@ -220,6 +220,12 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  */
 class ComKoowaModuleHelper extends JModuleHelper
 {
+    /**
+     * Return modules, optionally filtered by position
+     *
+     * @param  string|null $position Module position
+     * @return array
+     */
     public static function &getModules($position = null)
     {
         if($position) {

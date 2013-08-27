@@ -93,6 +93,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
      * Add an error message
      *
      * @param $message
+     * @return boolean Returns false
      */
     protected function _error($message)
     {

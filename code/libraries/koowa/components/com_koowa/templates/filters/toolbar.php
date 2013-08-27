@@ -78,9 +78,10 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
     }
 
     /**
-     * Returns the menu bar instance
+     * Returns the specified toolbar instance
      *
-     * @return KControllerToolbarInterface
+     * @param  string $type Toolbar type
+     * @return KControllerToolbarInterface|null
      */
     public function getToolbar($type = 'actionbar')
     {
