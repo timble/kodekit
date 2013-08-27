@@ -74,10 +74,12 @@ Koowa.Form = new Class({
     },
 
     submit: function() {
+        var self = this;
+
         if (this.config.params) {
             $.each(this.config.params, function(name, value){
-                this.addField(name, value);
-            }.bind(this));
+                self.addField(name, value);
+            });
         }
 
         this.form.submit();
@@ -314,9 +316,9 @@ Koowa.Controller.Grid = new Class({
             this.checkValidity();
             this.form.find(this.options.inputs).on('change', function(event, ignore){
                 if (!ignore) {
-                    this.checkValidity();
+                    self.checkValidity();
                 }
-            }.bind(this));
+            });
         }
 
         this.token_name = this.form.data('token-name');
@@ -400,7 +402,8 @@ Koowa.Controller.Grid = new Class({
 
             // Checkbox should add selected and selected-multiple classes to the row
             checkbox.on('change', function(){
-                var selected,
+                var checkbox = $(this),
+                    selected,
                     parent = tr.parent();
 
                 $(this).prop('checked') ? tr.addClass('selected') : tr.removeClass('selected');
@@ -412,7 +415,7 @@ Koowa.Controller.Grid = new Class({
                 } else {
                     parent.removeClass('selected-multiple').addClass('selected-single');
                 }
-            }.bind(checkbox)).trigger('change', true);
+            }).trigger('change', true);
 
             // Set up buttons such as publish/unpublish triggers
             tr.find('[data-action]').each(function() {
@@ -458,7 +461,7 @@ Koowa.Controller.Grid = new Class({
         }
 
         idQuery = Koowa.Grid.getIdQuery();
-        append  = this.options.url.match(/\?/) ? '&' : '?'; // mootools?
+        append  = this.options.url.match(/\?/) ? '&' : '?';
         options = {
             method:'post',
             url: this.options.url+(idQuery ? append+idQuery : ''),
