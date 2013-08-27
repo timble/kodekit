@@ -133,6 +133,53 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         parent::_initialize($config);
     }
 
+    /**
+     * Render the template
+     *
+     * @return string  The rendered data
+     */
+    public function render()
+    {
+        //Parse the template
+        $this->_compile($this->_content);
+
+        //Evaluate the template
+        $this->_evaluate($this->_content);
+
+        //Process the template only at the end of the render cycle.
+        if($this->__counter == 0) {
+            $this->_render($this->_content);
+        }
+
+        return $this->_content;
+    }
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array())
+    {
+        return $this->getTranslator()->translate($string, $parameters);
+    }
+
+    /**
+     * Escape a string
+     *
+     * By default the function uses htmlspecialchars to escape the string
+     *
+     * @param string $string String to to be escape
+     * @return string Escaped string
+     */
+    public function escape($string)
+    {
+        return htmlspecialchars($string);
+    }
+
 	/**
 	 * Get the template path
 	 *
@@ -262,19 +309,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         return $this;
     }
 
-    /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     *
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTranslator()->translate($string, $parameters);
-    }
-
 	/**
 	 * Load a template by identifier
 	 *
@@ -346,27 +380,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
 		return $this;
 	}
-
-    /**
-     * Render the template
-     *
-     * @return string  The rendered data
-     */
-    public function render()
-    {
-        //Parse the template
-        $this->_compile($this->_content);
-
-        //Evaluate the template
-        $this->_evaluate($this->_content);
-
-        //Process the template only at the end of the render cycle.
-        if($this->__counter == 0) {
-            $this->_render($this->_content);
-        }
-
-        return $this->_content;
-    }
 
     /**
      * Check if the template is in a render cycle
