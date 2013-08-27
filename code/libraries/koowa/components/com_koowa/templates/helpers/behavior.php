@@ -185,13 +185,13 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['calendar']))
         {
-            $html .= '<script src="media://com_koowa/js/datepicker.js" />';
-            $html .= '<style src="media://com_koowa/css/datepicker.css" />';
+            $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
 
             self::$_loaded['calendar'] = true;
         }
 
-        $attribs = JArrayHelper::toString(KConfig::unbox($config->attribs));
+        $attribs = $this->buildAttributes($config->attribs);
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled') {
             // Only display the triggers once for each control.
