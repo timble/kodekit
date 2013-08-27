@@ -83,6 +83,19 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     }
 
     /**
+     * Escape a string
+     *
+     * By default the function uses htmlspecialchars to escape the string
+     *
+     * @param string $string String to to be escape
+     * @return string Escaped string
+     */
+    public function escape($string)
+    {
+        return $this->getTemplate()->escape($string);
+    }
+
+    /**
      * Method to build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes
