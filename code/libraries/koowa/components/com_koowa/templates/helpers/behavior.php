@@ -157,8 +157,17 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function calendar($config = array())
     {
+        static $loaded;
+
+        if ($loaded === null)
+        {
+            $loaded = array();
+        }
+
         $config = new KObjectConfig($config);
         $config->append(array(
+            'value'   => '',
+
             'date'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
             'format'  => '%Y-%m-%d %H:%M:%S',
@@ -176,12 +185,49 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['calendar']))
         {
-            JHtml::_('behavior.calendar');
+            $html .= '<script src="media://com_koowa/js/datepicker.js" />';
+            $html .= '<style src="media://com_koowa/css/datepicker.css" />';
 
             self::$_loaded['calendar'] = true;
         }
 
-        $html .= JHtml::_('calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KObjectConfig::unbox($config->attribs));
+        $attribs = JArrayHelper::toString(KConfig::unbox($config->attribs));
+
+        if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled') {
+            // Only display the triggers once for each control.
+            if (!in_array($config->id, $loaded)) {
+                $html .= "<script>
+                    jQuery(function($){
+                        $('#".$config->id."').datepicker({todayHighlight: true, parentEl: $('#".$config->id."').parent()});
+                        /*
+                        Calendar.setup({
+                            inputField     :    '".$config->id."',
+                            ifFormat       :    '".$config->format."',
+                            button         :    '".$config->id."_img',
+                            align          :    'Tl',
+                            singleClick    :    true,
+                            firstDay: '" . JFactory::getLanguage()->getFirstDay() . "'
+                        });*/
+                    });
+                </script>";
+                $loaded[] = $config->id;
+            }
+
+            $html .= '<div class="input-append date" data-date-format="'.$config->format.'" id="'.$config->id.'">';
+            $html .= '<input type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
+            $html .= '<span class="add-on" >';
+            $html .= '<i class="icon-calendar"></i>&zwnj;'; //&zwnj; is a zero width non-joiner, helps the button get the right height without adding to the width (like with &nbsp;)
+            $html .= '</span>';
+            $html .= '</div>';
+        }
+        else
+        {
+            $html = '';
+            $html .= '<div class="input-append">';
+            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$config->value.'" '.$attribs.' />';
+            $html .= '</div>';
+        }
+
 
         return $html;
     }
