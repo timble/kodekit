@@ -15,31 +15,37 @@
  * @subpackage  Javascript
  */
 if(!Koowa) var Koowa = {};
-Koowa.version = 0.7;
 
 //Legacy
 if(typeof window.$each === 'undefined') window.$each = Object.each;
 
 
-/* Section: onDomReady */
-window.addEvent('domready', function() {
-    $$('.submitable').addEvent('click', function(event){
-        event = new Event(event); //@TODO investigate if j3.0 requires using DOMEvent instead
-        new Koowa.Form(JSON.decode(event.target.getProperty('rel'))).submit();
+(function($){
+    $(document).ready(function() {
+        $('.submitable').on('click', function(event){
+            event.preventDefault();
+
+            var target = $(event.target);
+            new Koowa.Form($.parseJSON(target.prop('rel'))).submit();
+        });
+
+        $('.-koowa-grid').each(function(i, grid) { // mootools
+            grid = document.id(grid);
+            var toolbar = grid.get('data-toolbar') || '.toolbar-list';
+
+            new Koowa.Grid(grid);
+
+            new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
+        });
+
+        $('.-koowa-form').each(function(i, form) { // mootools
+            form = document.id(form);
+            var toolbar = form.get('data-toolbar') || '.toolbar-list';
+            new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
+        });
     });
 
-    $$('.-koowa-grid').each(function(grid){
-        new Koowa.Grid(grid);
-        
-        var toolbar = grid.get('data-toolbar') || '.toolbar-list';
-        new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
-    });
-
-    $$('.-koowa-form').each(function(form){
-        var toolbar = form.get('data-toolbar') || '.toolbar-list';
-        new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
-    });
-});
+})(jQuery);
 
 /* Section: Classes */
 
