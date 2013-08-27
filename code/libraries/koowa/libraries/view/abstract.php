@@ -128,7 +128,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * @param   mixed   $value    The property value.
      * @return KViewAbstract
      */
-    public function set($property, $value)
+    public function set($property, $value = null)
     {
         $this->$property = $value;
         return $this;
