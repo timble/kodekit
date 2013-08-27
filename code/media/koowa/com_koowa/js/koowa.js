@@ -23,7 +23,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         var target = $(event.target);
-        new Koowa.Form($.parseJSON(target.prop('rel'))).submit();
+        new Koowa.Form($.parseJSON(target.attr('rel'))).submit();
     });
 
     $('.-koowa-grid').each(function(i, grid) { // mootools
@@ -84,10 +84,6 @@ Koowa.Form = new Class({
     }
 });
 
-})(jQuery);
-
-/* Section: Classes */
-
 /**
  * Grid class
  *
@@ -95,78 +91,68 @@ Koowa.Form = new Class({
  * @subpackage  Javascript
  */
 Koowa.Grid = new Class({
-
     initialize: function(element){
-        
-        this.element    = document.id(element);
-        this.form       = this.element.match('form') ? this.element : this.element.getParent('form');
-        this.toggles    = this.element.getElements('.-koowa-grid-checkall');
-        this.checkboxes = this.element.getElements('.-koowa-grid-checkbox').filter(function(checkbox) {
-        	return !checkbox.disabled;
+        this.element    = $(element);
+        this.form       = this.element.is('form') ? this.element : this.element.closest('form');
+        this.toggles    = this.element.find('.-koowa-grid-checkall');
+        this.checkboxes = this.element.find('.-koowa-grid-checkbox').filter(function(i, checkbox) {
+            return !$(checkbox).prop('disabled');
         });
-        
+
         if(!this.checkboxes.length) {
-        	this.toggles.set('disabled', 'disabled');
+            this.toggles.prop('disabled', true);
         }
-        
+
         var self = this;
-        this.toggles.addEvent('change', function(event){
-            if(event) {
-                self.checkAll(this.get('checked'));
+        this.toggles.on('change', function(event, ignore){
+            if(!ignore) {
+                self.checkAll($(this).prop('checked'));
             }
         });
-        
-        this.checkboxes.addEvent('change', function(event){
-            if(event) {
+
+        this.checkboxes.on('change', function(event, ignore){
+            if(!ignore) {
                 self.uncheckAll();
             }
         });
     },
-    
     checkAll: function(value){
-
-        var changed = this.checkboxes.filter(function(checkbox){
-            return checkbox.get('checked') !== value;
+        var changed = this.checkboxes.filter(function(i, checkbox){
+            return $(checkbox).prop('checked') !== value;
         });
 
-        this.checkboxes.set('checked', value);
-
-        changed.fireEvent('change');
-
+        this.checkboxes.prop('checked', value);
+        changed.trigger('change', true);
     },
-    
-    uncheckAll: function(){
 
-        var total = this.checkboxes.filter(function(checkbox){
-            return checkbox.get('checked') !== false ;
+    uncheckAll: function(){
+        var total = this.checkboxes.filter(function(i, checkbox){
+            return $(checkbox).prop('checked') !== false;
         }).length;
 
-        this.toggles.set('checked', this.checkboxes.length === total);
-        this.toggles.fireEvent('change');
-
+        this.toggles.prop('checked', this.checkboxes.length === total);
+        this.toggles.trigger('change', true);
     }
 });
+
 /**
  * Find all selected checkboxes' ids in the grid
  *
- * @return  array   The items' ids
+ * @param   {string|object} context   A DOM Element, Document, or jQuery to use as context
+ * @return  array           The items' ids
  */
-Koowa.Grid.getAllSelected = function() {
-        var result = [], inputs = $$('input[class^=-koowa-grid-checkbox]'), i;
-        for (i=0; i < inputs.length; i++) {
-           if (inputs[i].checked) {
-              result.include(inputs[i]);
-           }
-        }
-        return result;
+Koowa.Grid.getAllSelected = function(context) {
+    return $('.-koowa-grid-checkbox:checked', context);
 };
-Koowa.Grid.getIdQuery = function() {
-        var result = [];
-        Object.each(this.getAllSelected(), function(selected){
-            result.include(selected.name+'='+selected.value);
-        });
-        return result.join('&');
+
+Koowa.Grid.getIdQuery = function(context) {
+    // We could do $.param(this.getAllSelected(scope)) but this way is faster since we iterate once not twice
+    return this.getAllSelected(context).serialize();
 };
+
+})(jQuery);
+
+/* Section: Classes */
 
 
 
