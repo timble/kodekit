@@ -40,7 +40,7 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
      * This function only replaces relative identifiers to a full path based on the path of the template.
      *
      * @param string $text
-     * @return KTemplateFilterAlias
+     * @return KTemplateFilterTemplate
      */
     public function compile(&$text)
     {
