@@ -30,6 +30,13 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	protected $_model;
 
     /**
+     * The uniform resource locator
+     *
+     * @var KHttpUrl
+     */
+    protected $_url;
+
+    /**
      * The content of the view
      *
      * @var string
@@ -62,6 +69,9 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 
 		parent::__construct($config);
 
+        //Set the view url
+        $this->setUrl($config->url);
+
 		//Set the output if defined in the config
         $this->setContent($config->content);
 
@@ -92,6 +102,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	    	'content'	 => '',
     		'mimetype'	 => '',
             'layout'     => 'default',
+            'url'        =>  clone KRequest::url()
 	  	));
 
         parent::_initialize($config);
@@ -324,6 +335,32 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         return $this;
     }
 
+    /**
+     * Get the view url
+     *
+     * @return  KHttpUrl  A HttpUrl object
+     */
+    public function getUrl()
+    {
+        return $this->_url;
+    }
+
+    /**
+     * Set the view url
+     *
+     * @param KHttpUrl $url   A KHttpUrl object or a string
+     * @return  KViewAbstract
+     */
+    public function setUrl(KHttpUrl $url)
+    {
+        //Remove the user and pass from the view url
+        unset($url->user);
+        unset($url->pass);
+
+        $this->_url = $url;
+        return $this;
+    }
+
 	/**
 	 * Create a route based on a full or partial query string
 	 *
@@ -347,7 +384,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	{
         if (is_string($route) && substr($route, 0, 1) === '&')
 		{
-			$url   = clone KRequest::url();
+            $url   = clone $this->getUrl();
 			$vars  = array();
 			parse_str(trim($route), $vars);
 
@@ -390,7 +427,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 		$result = JRoute::_($result, $escape);
 
         if ($fqr) {
-            $result = KRequest::url()->toString(KHttpUrl::AUTHORITY).$result;
+            $result = $this->getUrl()->toString(KHttpUrl::AUTHORITY).$result;
         }
 
         return $result;
