@@ -244,11 +244,9 @@ Koowa.Controller = new Class({
 
         this.options.action = action;
         if(this.trigger('before.'+action, [data, novalidate])) {
-            if(this[method]) {
-                this[method].call(this, data, novalidate);
-            } else {
-                this._action_default.call(this, action, data, novalidate);
-            }
+            method = this[method] ? method : '_actionDefault';
+
+            this[method].call(this, action, data, novalidate);
 
             this.trigger('after.'+action, [data, novalidate]);
         }
@@ -452,7 +450,7 @@ Koowa.Controller.Grid = new Class({
         return Koowa.Grid.getIdQuery() || false;
     },
 
-    _action_default: function(action, data, novalidate){
+    _actionDefault: function(action, data, novalidate){
         var idQuery, append, options;
 
         if(!novalidate && !this.trigger('validate')) {
@@ -460,13 +458,13 @@ Koowa.Controller.Grid = new Class({
         }
 
         idQuery = Koowa.Grid.getIdQuery();
-        append = this.options.url.match(/\?/) ? '&' : '?'; // mootools?
+        append  = this.options.url.match(/\?/) ? '&' : '?'; // mootools?
         options = {
             method:'post',
             url: this.options.url+(idQuery ? append+idQuery : ''),
             params: $.extend({}, {action: action}, data)
         };
-console.log(options);return;
+
         new Koowa.Form(options).submit();
     }
 });
@@ -481,7 +479,7 @@ Koowa.Controller.Form = new Class({
 
     Extends: Koowa.Controller,
 
-    _action_default: function(action, data, novalidate){
+    _actionDefault: function(action, data, novalidate){
         if(!novalidate && !this.trigger('validate')) {
             return false;
         }
