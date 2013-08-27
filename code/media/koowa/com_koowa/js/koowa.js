@@ -549,35 +549,6 @@ Koowa.Controller.Form = new Class({
 
 });
 
-/**
- * Query class
- *
- * @package     Koowa_Media
- * @subpackage  Javascript
- */
-Koowa.Query = new Class({
-    
-    toString: function() {
-        var result = [], key, subkey;
-        
-        for (key in this) {
-            // make sure it's not a function
-            if (!(this[key] instanceof Function)) {
-                // we only go one level deep for now
-                if(this[key] instanceof Object) {
-                    for (subkey in this[key]) {
-                        result.push(key + '[' + subkey + ']' + '=' + this[key][subkey]);
-                    }
-                } else {
-                    result.push(key + '=' + this[key]);
-                }
-            }
-        }
-        
-        return result.join('&');
-    }
-});
-
 
 /**
  * Overlay class
