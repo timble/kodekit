@@ -16,88 +16,77 @@
  */
 if(!Koowa) var Koowa = {};
 
-//Legacy
-if(typeof window.$each === 'undefined') window.$each = Object.each;
-
-
 (function($){
-    $(document).ready(function() {
-        $('.submitable').on('click', function(event){
-            event.preventDefault();
 
-            var target = $(event.target);
-            new Koowa.Form($.parseJSON(target.prop('rel'))).submit();
-        });
+$(document).ready(function() {
+    $('.submitable').on('click', function(event){
+        event.preventDefault();
 
-        $('.-koowa-grid').each(function(i, grid) { // mootools
-            grid = document.id(grid);
-            var toolbar = grid.get('data-toolbar') || '.toolbar-list';
-
-            new Koowa.Grid(grid);
-
-            new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
-        });
-
-        $('.-koowa-form').each(function(i, form) { // mootools
-            form = document.id(form);
-            var toolbar = form.get('data-toolbar') || '.toolbar-list';
-            new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
-        });
+        var target = $(event.target);
+        new Koowa.Form($.parseJSON(target.prop('rel'))).submit();
     });
 
-})(jQuery);
+    $('.-koowa-grid').each(function(i, grid) { // mootools
+        grid = document.id(grid);
+        var toolbar = grid.get('data-toolbar') || '.toolbar-list';
 
-/* Section: Classes */
+        new Koowa.Grid(grid);
+
+        new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
+    });
+
+    $('.-koowa-form').each(function(i, form) { // mootools
+        form = document.id(form);
+        var toolbar = form.get('data-toolbar') || '.toolbar-list';
+        new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
+    });
+});
 
 /**
  * Creates a 'virtual form'
- * 
+ *
  * @param   json    Configuration:  method, url, params, formelem
  * @example new KForm({method:'post', url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
  */
 Koowa.Form = new Class({
-    
+
     initialize: function(config) {
         this.config = config;
         if(this.config.element) {
-            this.form = document.id(document[this.config.element]);
-        } 
+            this.form = $(document[this.config.element]);
+        }
         else {
-            this.form = new Element('form', {
+            this.form = $('<form/>', {
                 name: 'dynamicform',
                 method: this.config.method,
                 action: this.config.url
             });
-
-            //Legacy
-            if (typeof this.form.injectInside === 'undefined') this.form.injectInside = this.form.inject;
-
-            this.form.injectInside(document.id(document.body));
+            $(document.body).append(this.form);
         }
     },
-    
     addField: function(name, value) {
-        var elem = new Element('input', {
+        var elem = $('<input/>', {
             name: name,
             value: value,
             type: 'hidden'
         });
+        elem.appendTo(this.form);
 
-        //Legacy
-        if (typeof elem.injectInside === 'undefined') elem.injectInside = elem.inject;
-        
-        elem.injectInside(this.form);
         return this;
     },
-    
+
     submit: function() {
-        $each(this.config.params, function(value, name){
+        $.each(this.config.params, function(name, value){
             this.addField(name, value);
         }.bind(this));
+
         this.form.submit();
     }
 });
 
+})(jQuery);
+
+/* Section: Classes */
 
 /**
  * Grid class
@@ -173,7 +162,7 @@ Koowa.Grid.getAllSelected = function() {
 };
 Koowa.Grid.getIdQuery = function() {
         var result = [];
-        $each(this.getAllSelected(), function(selected){
+        Object.each(this.getAllSelected(), function(selected){
             result.include(selected.name+'='+selected.value);
         });
         return result.join('&');
