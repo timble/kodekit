@@ -167,6 +167,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'id'      => 'button-'.$config->name,
             ));
 
+        $html = '';
+
         if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') {
             $config->date = strftime($config->format, strtotime($config->date) /*+ $config->gmt_offset*/);
         }
@@ -179,8 +181,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['calendar'] = true;
         }
 
-        return JHtml::_('calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KObjectConfig::unbox($config->attribs));
+        $html .= JHtml::_('calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KObjectConfig::unbox($config->attribs));
+
+        return $html;
     }
+
 
     /**
      * Renders an overlay
