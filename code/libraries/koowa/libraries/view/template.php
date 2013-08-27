@@ -23,13 +23,6 @@ abstract class KViewTemplate extends KViewAbstract
     protected $_template;
 
     /**
-     * Callback for escaping.
-     *
-     * @var string
-     */
-    protected $_escape;
-
-    /**
      * Auto assign
      *
      * @var boolean
@@ -42,20 +35,6 @@ abstract class KViewTemplate extends KViewAbstract
      * @var boolean
      */
     protected $_data;
-
-    /**
-     * The view scripts
-     *
-     * @var array
-     */
-    protected $_scripts = array();
-
-    /**
-     * The view styles
-     *
-     * @var array
-     */
-    protected $_styles = array();
 
     /**
      * Constructor
@@ -72,9 +51,6 @@ abstract class KViewTemplate extends KViewAbstract
         //Set the data
         $this->_data = KObjectConfig::unbox($config->data);
 
-         //User-defined escaping callback
-        $this->setEscape($config->escape);
-
         //Set the template object
         $this->_template = $config->template;
 
@@ -89,20 +65,6 @@ abstract class KViewTemplate extends KViewAbstract
                 $this->getTemplate()->addFilter($key, $value);
             }
         }
-
-        //Set base and media urls for use by the view
-        $this->assign('baseurl' , $config->base_url)
-             ->assign('mediaurl', $config->media_url);
-
-        //Add alias filter for media:// namespace
-        $this->getTemplate()->getFilter('alias')->append(
-            array('media://' => $config->media_url.'/'), KTemplateFilter::MODE_COMPILE | KTemplateFilter::MODE_RENDER
-        );
-
-        //Add alias filter for base:// namespace
-        $this->getTemplate()->getFilter('alias')->append(
-            array('base://' => $config->base_url.'/'), KTemplateFilter::MODE_COMPILE | KTemplateFilter::MODE_RENDER
-        );
     }
 
     /**
@@ -117,12 +79,10 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $config->append(array(
             'data'			   => array(),
-            'escape'           => 'htmlspecialchars',
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template'),
+            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'template', 'url'),
             'auto_assign'      => true,
-            'base_url'         => KRequest::base(),
-            'media_url'        => KRequest::root().'/media',
+
         ));
 
         parent::_initialize($config);
@@ -209,17 +169,6 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
-     * Escapes a value for output in a view script.
-     *
-     * @param  mixed $var The output to escape.
-     * @return mixed The escaped value.
-     */
-    public function escape($var)
-    {
-        return call_user_func($this->_escape, $var);
-    }
-
-    /**
      * Return the views output
      *
      * @return string 	The output of the view
@@ -231,18 +180,6 @@ abstract class KViewTemplate extends KViewAbstract
             ->render();
 
         return parent::display();
-    }
-
-     /**
-     * Sets the _escape() callback.
-     *
-     * @param   mixed $spec The callback for _escape() to use.
-     * @return  KViewAbstract
-     */
-    public function setEscape($spec)
-    {
-        $this->_escape = $spec;
-        return $this;
     }
 
     /**
