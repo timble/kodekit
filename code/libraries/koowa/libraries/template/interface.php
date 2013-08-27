@@ -23,11 +23,24 @@ interface KTemplateInterface
     public function render();
 
     /**
-     * Check if the template is in a render cycle
+     * Escape a string
      *
-     * @return boolean Return TRUE if the template is being rendered
+     * By default the function uses htmlspecialchars to escape the string
+     *
+     * @param string $string String to to be escape
+     * @return string Escaped string
      */
-    public function isRendering();
+    public function escape($string);
+
+    /**
+     * Translates a string and handles parameter replacements
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     *
+     * @return string Translated string
+     */
+    public function translate($string, array $parameters = array());
 
     /**
      * Get the template file identifier
@@ -66,6 +79,21 @@ interface KTemplateInterface
      * @return KTemplateAbstract
      */
 	public function setView($view);
+
+    /**
+     * Gets the translator object
+     *
+     * @return  KTranslator
+     */
+    public function getTranslator();
+
+    /**
+     * Sets the translator object
+     *
+     * @param string|KTranslator $translator A translator object or identifier
+     * @return $this
+     */
+    public function setTranslator($translator);
 
     /**
      * Load a template by identifier
@@ -140,10 +168,9 @@ interface KTemplateInterface
 	public function renderHelper($identifier, $config = array());
 
     /**
-     * Searches for the file
+     * Check if the template is in a render cycle
      *
-     * @param   string  $file The file path to look for.
-     * @return  mixed   The full path and file name for the target file, or FALSE if the file is not found
+     * @return boolean Return TRUE if the template is being rendered
      */
-    public function findFile($file);
+    public function isRendering();
 }
