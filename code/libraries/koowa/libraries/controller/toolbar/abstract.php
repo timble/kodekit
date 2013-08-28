@@ -93,7 +93,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
         $method = '_'.$parts[0].ucfirst($parts[1]);
 
         if(method_exists($this, $method)) {
-            return $this->$method($context);
+            $this->$method($context);
         }
 
         return true;

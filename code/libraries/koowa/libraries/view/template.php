@@ -23,13 +23,6 @@ abstract class KViewTemplate extends KViewAbstract
     protected $_template;
 
     /**
-     * Callback for escaping.
-     *
-     * @var string
-     */
-    protected $_escape;
-
-    /**
      * Auto assign
      *
      * @var boolean
@@ -42,20 +35,6 @@ abstract class KViewTemplate extends KViewAbstract
      * @var boolean
      */
     protected $_data;
-
-    /**
-     * The view scripts
-     *
-     * @var array
-     */
-    protected $_scripts = array();
-
-    /**
-     * The view styles
-     *
-     * @var array
-     */
-    protected $_styles = array();
 
     /**
      * Constructor
@@ -72,9 +51,6 @@ abstract class KViewTemplate extends KViewAbstract
         //Set the data
         $this->_data = KObjectConfig::unbox($config->data);
 
-         //User-defined escaping callback
-        $this->setEscape($config->escape);
-
         //Set the template object
         $this->_template = $config->template;
 
@@ -89,20 +65,6 @@ abstract class KViewTemplate extends KViewAbstract
                 $this->getTemplate()->addFilter($key, $value);
             }
         }
-
-        //Set base and media urls for use by the view
-        $this->assign('baseurl' , $config->base_url)
-             ->assign('mediaurl', $config->media_url);
-
-        //Add alias filter for media:// namespace
-        $this->getTemplate()->getFilter('alias')->append(
-            array('media://' => $config->media_url.'/'), KTemplateFilter::MODE_READ | KTemplateFilter::MODE_WRITE
-        );
-
-        //Add alias filter for base:// namespace
-        $this->getTemplate()->getFilter('alias')->append(
-            array('base://' => $config->base_url.'/'), KTemplateFilter::MODE_READ | KTemplateFilter::MODE_WRITE
-        );
     }
 
     /**
@@ -117,12 +79,9 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $config->append(array(
             'data'			   => array(),
-            'escape'           => 'htmlspecialchars',
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style', 'link', 'template'),
+            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'template', 'url'),
             'auto_assign'      => true,
-            'base_url'         => KRequest::base(),
-            'media_url'        => KRequest::root().'/media',
         ));
 
         parent::_initialize($config);
@@ -156,70 +115,6 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
-    * Assigns variables to the view script via differing strategies.
-    *
-    * This method is overloaded; you can assign all the properties of an object, an associative array, or a single value
-     * by name.
-    *
-    * You are not allowed to set variables that begin with an underscore; these are either private properties for KView
-     * or private variables within the template script itself.
-    *
-    * <code>
-    * $view = new KViewDefault();
-    *
-    * // assign directly
-    * $view->var1 = 'something';
-    * $view->var2 = 'else';
-    *
-    * // assign by name and value
-    * $view->assign('var1', 'something');
-    * $view->assign('var2', 'else');
-    *
-    * // assign by assoc-array
-    * $ary = array('var1' => 'something', 'var2' => 'else');
-    * $view->assign($obj);
-    *
-    * // assign by object
-    * $obj = new stdClass;
-    * $obj->var1 = 'something';
-    * $obj->var2 = 'else';
-    * $view->assign($obj);
-    *
-    * </code>
-    *
-    * @return KViewAbstract
-    */
-    public function assign()
-    {
-        // get the arguments; there may be 1 or 2.
-        $arg0 = @func_get_arg(0);
-        $arg1 = @func_get_arg(1);
-
-        // assign by object or array
-        if (is_object($arg0) || is_array($arg0)) {
-            $this->set($arg0);
-        }
-
-        // assign by string name and mixed value.
-        elseif (is_string($arg0) && substr($arg0, 0, 1) != '_' && func_num_args() > 1) {
-            $this->set($arg0, $arg1);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Escapes a value for output in a view script.
-     *
-     * @param  mixed $var The output to escape.
-     * @return mixed The escaped value.
-     */
-    public function escape($var)
-    {
-        return call_user_func($this->_escape, $var);
-    }
-
-    /**
      * Return the views output
      *
      * @return string 	The output of the view
@@ -231,18 +126,6 @@ abstract class KViewTemplate extends KViewAbstract
             ->render();
 
         return parent::display();
-    }
-
-     /**
-     * Sets the _escape() callback.
-     *
-     * @param   mixed $spec The callback for _escape() to use.
-     * @return  KViewAbstract
-     */
-    public function setEscape($spec)
-    {
-        $this->_escape = $spec;
-        return $this;
     }
 
     /**

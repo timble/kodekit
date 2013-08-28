@@ -111,12 +111,12 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         //Set the data
         $data = $context->data;
 
-        if(($name & KTemplateFilter::MODE_READ) && $this instanceof KTemplateFilterRead) {
-            $this->read($data);
+        if(($name & KTemplateFilter::MODE_COMPILE) && $this instanceof KTemplateFilterCompiler) {
+            $this->compile($data);
         }
 
-        if(($name & KTemplateFilter::MODE_WRITE) && $this instanceof KTemplateFilterWrite) {
-            $this->write($data);
+        if(($name & KTemplateFilter::MODE_RENDER) && $this instanceof KTemplateFilterRenderer) {
+            $this->render($data);
         }
 
         //Get the data

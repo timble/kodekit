@@ -113,7 +113,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
      * @param string $content The template content to parse
      * @return void
      */
-    protected function _parse(&$content)
+    protected function _compile(&$content)
     {
         if(isset($this->_cache))
         {
@@ -121,14 +121,14 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 
             if (!$this->_cache->get($identifier))
             {
-                parent::_parse($content);
+                parent::_compile($content);
 
                 //Store the object in the cache
                 $this->_cache->store($content, $identifier);
             }
             else $content = $this->_cache->get($identifier);
         }
-        else parent::_parse($content);
+        else parent::_compile($content);
     }
 
     /**

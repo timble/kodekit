@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
 	/**
      * Initializes the options for the object
@@ -40,7 +40,7 @@ class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateF
      * @param string $text Block of text to parse
      * @return $this
      */
-	public function write(&$text)
+	public function render(&$text)
 	{
 		//Parse the script information
 		$styles = $this->_parseStyles($text);

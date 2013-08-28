@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterVariable extends KTemplateFilterAbstract implements KTemplateFilterRead
+class KTemplateFilterVariable extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {
 	/**
 	 * Convert '@' to '$this->', unless when they are escaped '\@'
@@ -23,7 +23,7 @@ class KTemplateFilterVariable extends KTemplateFilterAbstract implements KTempla
 	 * @param string $text
 	 * @return KTemplateFilterVariable
 	 */
-	public function read(&$text)
+	public function compile(&$text)
 	{
         /**
          * We could make a better effort at only finding @ between <?php ?>

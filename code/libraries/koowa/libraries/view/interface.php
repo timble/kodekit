@@ -126,6 +126,21 @@ interface KViewInterface
     public function setTranslator($translator);
 
     /**
+     * Get the view url
+     *
+     * @return  KHttpUrl  A HttpUrl object
+     */
+    public function getUrl();
+
+    /**
+     * Set the view url
+     *
+     * @param KHttpUrl $url   A KHttpUrl object or a string
+     * @return  KViewAbstract
+     */
+    public function setUrl(KHttpUrl $url);
+
+    /**
      * Create a route based on a full or partial query string
      *
      * index.php? will be automatically added.

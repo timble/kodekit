@@ -19,7 +19,7 @@
  * @package Koowa\Library\Template
  * @see         http://www.w3.org/TR/html401/interact/forms.html#h-17.13.3.4
  */
-class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
  	/**
      * The form token value
@@ -72,7 +72,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
      * @param string
      * @return KTemplateFilterForm
      */
-    public function write(&$text)
+    public function render(&$text)
     {
     	// All: Add the action if left empty
     	if (preg_match_all('#<\s*form.*?action=""#im', $text, $matches, PREG_SET_ORDER))
