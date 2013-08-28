@@ -238,70 +238,18 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
 
             $locale = array(
-                'days'  =>  array(
-                    $this->translate('Sunday'),
-                    $this->translate('Monday'),
-                    $this->translate('Tuesday'),
-                    $this->translate('Wednesday'),
-                    $this->translate('Thursday'),
-                    $this->translate('Friday'),
-                    $this->translate('Saturday'),
-                    $this->translate('Sunday')
-                ),
-                'daysShort' => array(
-                    $this->translate('Sun'),
-                    $this->translate('Mon'),
-                    $this->translate('Tue'),
-                    $this->translate('Wed'),
-                    $this->translate('Thu'),
-                    $this->translate('Fri'),
-                    $this->translate('Sat'),
-                    $this->translate('Sun')
-                ),
-                'daysMin' => array(
-                    $this->translate('Su'),
-                    $this->translate('Mo'),
-                    $this->translate('Tu'),
-                    $this->translate('We'),
-                    $this->translate('Th'),
-                    $this->translate('Fr'),
-                    $this->translate('Sa'),
-                    $this->translate('Su')
-                ),
-                'months' => array(
-                    $this->translate('January'),
-                    $this->translate('February'),
-                    $this->translate('March'),
-                    $this->translate('April'),
-                    $this->translate('May'),
-                    $this->translate('June'),
-                    $this->translate('July'),
-                    $this->translate('August'),
-                    $this->translate('September'),
-                    $this->translate('October'),
-                    $this->translate('November'),
-                    $this->translate('December')
-                ),
-                'monthsShort' => array(
-                    $this->translate('January_short'),
-                    $this->translate('February_short'),
-                    $this->translate('March_short'),
-                    $this->translate('April_short'),
-                    $this->translate('May_short'),
-                    $this->translate('June_short'),
-                    $this->translate('July_short'),
-                    $this->translate('August_short'),
-                    $this->translate('September_short'),
-                    $this->translate('October_short'),
-                    $this->translate('November_short'),
-                    $this->translate('December_short')
-                ),
-                'today' => $this->translate('Today')
+                'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
+                'daysShort' => array('Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
+                'daysMin' => array('Su','Mo','Tu','We','Th','Fr','Sa','Su'),
+                'months' => array('January','February','March','April','May','June','July','August','September','October','November','December'),
+                'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
             );
-
-
+            foreach($locale as $key => $item){
+                $locale[$key] = array_map(array($this, 'translate'), $item);
+            }
+            $locale['today']     = $this->translate('Today');
             $locale['weekStart'] = JFactory::getLanguage()->getFirstDay();
-            // Required locale
+
             $html .= '<script>
             (function($){
                 $.fn.datepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
