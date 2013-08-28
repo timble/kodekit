@@ -31,12 +31,12 @@ window.addEvent('domready', function() {
     $$('.-koowa-grid').each(function(grid){
         new Koowa.Grid(grid);
         
-        var toolbar = grid.get('data-toolbar') || '.toolbar-list';
+        var toolbar = grid.get('data-toolbar') || '.koowa-toolbar';
         new Koowa.Controller.Grid({form: grid, toolbar: document.getElement(toolbar)});
     });
 
     $$('.-koowa-form').each(function(form){
-        var toolbar = form.get('data-toolbar') || '.toolbar-list';
+        var toolbar = form.get('data-toolbar') || '.koowa-toolbar';
         new Koowa.Controller.Form({form: form, toolbar: document.getElement(toolbar)});
     });
 });
