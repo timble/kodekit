@@ -155,7 +155,9 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $text 	= $config->row->{$config->field} ? $this->translate( 'Disable Item' ) : $this->translate( 'Enable Item' );
 
         $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
-        $data = str_replace('"', '&quot;', $config->data);
+
+        $data = $config->data->toArray();
+        $data = htmlentities(json_encode($data));
 
         $html = '<img src="media://koowa/com_koowa/images/'. $img .'" border="0" alt="'. $alt .'" data-action="edit" data-data="'.$data.'" title='.$text.' />';
 
@@ -184,7 +186,9 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $text 	= $config->row->{$config->field} ? $this->translate('Unpublish Item') : $this->translate('Publish Item');
 
         $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
-        $data = str_replace('"', '&quot;', $config->data);
+
+        $data = $config->data->toArray();
+        $data = json_encode($data);
 
         $html = '<a class="jgrid" href="#" data-action="edit" data-data="'.$data.'" title="'.$text.'">';
         $html .= '<span class="state '.$class.'"><span class="text">'.$alt.'</span></span></a>';
@@ -211,10 +215,14 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $html = '';
 
         $config->data->order = -1;
-        $updata   = str_replace('"', '&quot;', $config->data);
+
+        $updata = $config->data->toArray();
+        $updata = htmlentities(json_encode($updata));
 
         $config->data->order = +1;
-        $downdata = str_replace('"', '&quot;', $config->data);
+
+        $downdata = $config->data->toArray();
+        $downdata = htmlentities(json_encode($downdata));
 
         $tmpl = '
             <span>

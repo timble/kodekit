@@ -35,7 +35,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['koowa']))
         {
-            $html .= $this->mootools();
+            $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/koowa.js" />';
 
             self::$_loaded['koowa'] = true;
@@ -125,7 +125,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 			'options'  => array('disableFx' => true)
  		));
 
-        JHTML::_('behavior.modal', $config->selector, $config->toArray());
+        //JHTML::_('behavior.modal', $config->selector, $config->toArray());
 		return '';
 	}
 
