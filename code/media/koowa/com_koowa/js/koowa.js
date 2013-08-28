@@ -10,105 +10,105 @@ if(!Koowa) {
 }
 
 (function($){
-    /*!
-     * klass: a classical JS OOP façade
-     * https://github.com/ded/klass
-     * License MIT (c) Dustin Diaz & Jacob Thornton 2012
-     */
+/*!
+ * klass: a classical JS OOP façade
+ * https://github.com/ded/klass
+ * License MIT (c) Dustin Diaz & Jacob Thornton 2012
+ */
 
-    !function (name, context, definition) {
-        if (typeof define == 'function') define(definition)
-        else if (typeof module != 'undefined') module.exports = definition()
-        else context[name] = definition()
-    }('klass', this, function () {
-        var context = this
-            , old = context.klass
-            , f = 'function'
-            , fnTest = /xyz/.test(function () {xyz}) ? /\bsupr\b/ : /.*/
-            , proto = 'prototype'
+!function (name, context, definition) {
+    if (typeof define == 'function') define(definition)
+    else if (typeof module != 'undefined') module.exports = definition()
+    else context[name] = definition()
+}('klass', this, function () {
+    var context = this
+        , old = context.klass
+        , f = 'function'
+        , fnTest = /xyz/.test(function () {xyz}) ? /\bsupr\b/ : /.*/
+        , proto = 'prototype'
 
-        function klass(o) {
-            return extend.call(isFn(o) ? o : function () {}, o, 1)
+    function klass(o) {
+        return extend.call(isFn(o) ? o : function () {}, o, 1)
+    }
+
+    function isFn(o) {
+        return typeof o === f
+    }
+
+    function wrap(k, fn, supr) {
+        return function () {
+            var tmp = this.supr
+            this.supr = supr[proto][k]
+            var undef = {}.fabricatedUndefined
+            var ret = undef
+            try {
+                ret = fn.apply(this, arguments)
+            } finally {
+                this.supr = tmp
+            }
+            return ret
         }
+    }
 
-        function isFn(o) {
-            return typeof o === f
+    function process(what, o, supr) {
+        for (var k in o) {
+            if (o.hasOwnProperty(k)) {
+                what[k] = isFn(o[k])
+                    && isFn(supr[proto][k])
+                    && fnTest.test(o[k])
+                    ? wrap(k, o[k], supr) : o[k]
+            }
         }
+    }
 
-        function wrap(k, fn, supr) {
-            return function () {
-                var tmp = this.supr
-                this.supr = supr[proto][k]
-                var undef = {}.fabricatedUndefined
-                var ret = undef
-                try {
-                    ret = fn.apply(this, arguments)
-                } finally {
-                    this.supr = tmp
-                }
-                return ret
+    function extend(o, fromSub) {
+        // must redefine noop each time so it doesn't inherit from previous arbitrary classes
+        function noop() {}
+        noop[proto] = this[proto]
+        var supr = this
+            , prototype = new noop()
+            , isFunction = isFn(o)
+            , _constructor = isFunction ? o : this
+            , _methods = isFunction ? {} : o
+        function fn() {
+            if (this.initialize) this.initialize.apply(this, arguments)
+            else {
+                fromSub || isFunction && supr.apply(this, arguments)
+                _constructor.apply(this, arguments)
             }
         }
 
-        function process(what, o, supr) {
-            for (var k in o) {
-                if (o.hasOwnProperty(k)) {
-                    what[k] = isFn(o[k])
-                        && isFn(supr[proto][k])
-                        && fnTest.test(o[k])
-                        ? wrap(k, o[k], supr) : o[k]
-                }
-            }
-        }
-
-        function extend(o, fromSub) {
-            // must redefine noop each time so it doesn't inherit from previous arbitrary classes
-            function noop() {}
-            noop[proto] = this[proto]
-            var supr = this
-                , prototype = new noop()
-                , isFunction = isFn(o)
-                , _constructor = isFunction ? o : this
-                , _methods = isFunction ? {} : o
-            function fn() {
-                if (this.initialize) this.initialize.apply(this, arguments)
-                else {
-                    fromSub || isFunction && supr.apply(this, arguments)
-                    _constructor.apply(this, arguments)
-                }
-            }
-
-            fn.methods = function (o) {
-                process(prototype, o, supr)
-                fn[proto] = prototype
-                return this
-            }
-
-            fn.methods.call(fn, _methods).prototype.constructor = fn
-
-            fn.extend = arguments.callee
-            fn[proto].implement = fn.statics = function (o, optFn) {
-                o = typeof o == 'string' ? (function () {
-                    var obj = {}
-                    obj[o] = optFn
-                    return obj
-                }()) : o
-                process(this, o, supr)
-                return this
-            }
-
-            return fn
-        }
-
-        klass.noConflict = function () {
-            context.klass = old
+        fn.methods = function (o) {
+            process(prototype, o, supr)
+            fn[proto] = prototype
             return this
         }
 
-        return klass
-    });
+        fn.methods.call(fn, _methods).prototype.constructor = fn
 
-    $(document).ready(function() {
+        fn.extend = arguments.callee
+        fn[proto].implement = fn.statics = function (o, optFn) {
+            o = typeof o == 'string' ? (function () {
+                var obj = {}
+                obj[o] = optFn
+                return obj
+            }()) : o
+            process(this, o, supr)
+            return this
+        }
+
+        return fn
+    }
+
+    klass.noConflict = function () {
+        context.klass = old
+        return this
+    }
+
+    return klass
+});
+
+$(document).ready(function() {
     $('.submittable').on('click', function(event){
         event.preventDefault();
 
@@ -128,13 +128,31 @@ if(!Koowa) {
     });
 });
 
+Koowa.Class = klass({
+    options: {},
+    /**
+     * @returns {object}
+     */
+    getOptions: function() {
+        return {};
+    },
+    initialize: function() {
+        this.setOptions(this.getOptions());
+    },
+    setOptions: function(options) {
+        if (typeof options === 'object') {
+            this.options = $.extend(this.options, options);
+        }
+    }
+});
+
 /**
  * Creates a 'virtual form'
  *
  * @param   {object} config Configuration object. Accepted keys: method, url, params, element
  * @example new KForm({url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
  */
-Koowa.Form = new Koowa.Class({
+Koowa.Form = Koowa.Class.extend({
     initialize: function(config) {
         this.config = config;
         if(this.config.element) {
@@ -175,11 +193,8 @@ Koowa.Form = new Koowa.Class({
 
 /**
  * Grid class
- *
- * @package     Koowa_Media
- * @subpackage  Javascript
  */
-Koowa.Grid = new Koowa.Class({
+Koowa.Grid = Koowa.Class.extend({
     initialize: function(element){
         var self = this;
 
@@ -247,29 +262,34 @@ Koowa.Grid.getIdQuery = function(context) {
 
 /**
  * Controller class, execute actions complete with command chains
- *
- * @package     Koowa_Media
- * @subpackage  Javascript
  */
-Koowa.Controller = new Koowa.Class({
+Koowa.Controller = Koowa.Class.extend({
     form: null,
     toolbar: null,
     buttons: null,
 
     token_name: null,
     token_value: null,
-
+    /**
+     * @returns {object}
+     */
+    getOptions: function() {
+        return $.extend(this.supr(), {
+            toolbar: '.koowa-toolbar',
+            url: window.location.href
+        });
+    },
     initialize: function(options){
         var self = this;
 
-        this.setOptions(this.getOptions());
+        this.supr();
         this.setOptions(options);
 
         this.form = $(this.options.form);
 
         this.setOptions(this.form.data());
 
-        if (this.form.attr('action')) {
+        if (this.form.prop('action')) {
             this.options.url = this.form.attr('action');
         }
 
@@ -285,20 +305,6 @@ Koowa.Controller = new Koowa.Class({
 
         if(this.toolbar) {
             this.setToolbar();
-        }
-    },
-    /**
-     * @returns {object}
-     */
-    getOptions: function() {
-        return {
-            toolbar: '.toolbar-list',
-            url: window.location.href
-        };
-    },
-    setOptions: function(options) {
-        if (typeof options === 'object') {
-            this.options = $.extend(this.options, options);
         }
     },
     setToolbar: function() {
@@ -396,7 +402,8 @@ Koowa.Controller = new Koowa.Class({
 Koowa.Controller.Grid = Koowa.Controller.extend({
     getOptions: function() {
         return $.extend(this.supr(), {
-            inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall'
+            inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall',
+            ajaxify: false
         });
     },
     initialize: function(options){
@@ -426,6 +433,12 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
 
         //<select> elements in headers and footers are for filters, so they need to submit the form on change
         this.form.find('thead select, tfoot select').on('change', function(){
+            if (self.options.ajaxify) {
+                event.preventDefault();
+
+                self.options.transport(self.options.url, self.form.serialize(), 'get');
+            }
+
             self.form.submit();
         });
 
