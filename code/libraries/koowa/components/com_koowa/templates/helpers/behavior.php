@@ -125,7 +125,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 			'options'  => array('disableFx' => true)
  		));
 
-        //JHTML::_('behavior.modal', $config->selector, $config->toArray());
+        JHTML::_('behavior.modal', $config->selector, $config->toArray());
 		return '';
 	}
 
@@ -246,11 +246,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * Loads the Forms.Validator class and connects it to Koowa.Controller
-     *
-     * This allows you to do easy, CSS class based forms validation. Koowa.Controller.Form automatically works with it.
-     *
-     * @see    http://www.mootools.net/docs/more125/more/Forms/Form.Validator
+     * Loads the Forms.Validator class and connects it to Koowa.Controller.Form
      *
      * @param array|KObjectConfig $config
      * @return string	The html output
@@ -259,34 +255,36 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug'),
             'selector' => '.-koowa-form',
             'options'  => array(
-                'scrollToErrorsOnChange' => false,
-                'scrollToErrorsOnBlur'   => false
+                'ignoreTitle' => true,
+                'onsubmit'    => false // We run the validation ourselves
             )
         ));
 
         $html = '';
-        // Load the necessary files if they haven't yet been loaded
+
         if(!isset(self::$_loaded['validator']))
         {
-            $html .= $this->mootools();
+            $html .= $this->jquery();
             $html .= $this->koowa();
 
-            $html .= '<script src="media://koowa/com_koowa/js/validator.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<script src="media://koowa/com_koowa/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
 
-        //Don't pass an empty array as options
-        $options = $config->options->toArray() ? ', '.$config->options : '';
+        $options = json_encode($config->options->toArray());
+
         $html .= "<script>
-		window.addEvent('domready', function(){
-		    $$('$config->selector').each(function(form){
-		        new Koowa.Validator(form".$options.");
-		        form.addEvent('validate', form.validate.bind(form));
-		    });
+        jQuery(function($){
+		    $('$config->selector').on('koowa.validate', function(event){
+                if(!$(this).valid()) {
+                	event.preventDefault();
+                }
+		    }).validate($options);
 		});
 		</script>";
 
