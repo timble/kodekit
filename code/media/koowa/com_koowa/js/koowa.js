@@ -181,6 +181,8 @@ Koowa.Controller = new Class({
     },
     
     initialize: function(options){
+        var self = this;
+
         this.setOptions(options);
 
         this.form = $(this.options.form);
@@ -194,7 +196,9 @@ Koowa.Controller = new Class({
         this.toolbar = $(this.options.toolbar);
         this.form.data('controller', this);
 
-        this.on('execute', this.execute.bind(this));
+        this.on('execute', function(){
+            return self.execute.apply(self, arguments);
+        });
 
         this.token_name = this.form.data('token-name');
         this.token_value = this.form.data('token-value');
