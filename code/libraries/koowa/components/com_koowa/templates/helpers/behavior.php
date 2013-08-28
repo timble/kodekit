@@ -202,6 +202,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['overlay']))
         {
             $html .= $this->koowa();
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.overlay.js" />';
 
             $html .= '
             <style>
@@ -216,6 +217,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         }
 
         $url = $this->getObject('koowa:http.url', array('url' => $config->url));
+
         if(!isset($url->query['format'])) {
             $url->query['format'] = 'overlay';
         }
@@ -233,9 +235,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             ));
         }
 
+        $config->options->url = (string) $url;
+
         //Don't pass an empty array as options
-        $options = $config->options->toArray() ? ', '.$config->options : '';
-        $html .= "<script>window.addEvent('domready', function(){new Koowa.Overlay('$id'".$options.");});</script>";
+        $options = json_encode($config->options->toArray());
+        $html .= sprintf("<script>jQuery(function(){ new Koowa.Overlay('%s', %s);});</script>", $id, $options);
 
         $html .= '<div data-url="'.$url.'" class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
         return $html;
