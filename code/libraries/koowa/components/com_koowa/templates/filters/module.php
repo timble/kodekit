@@ -7,6 +7,9 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+defined('KOOWA') or die;
+
+jimport('joomla.application.module.helper');
 
 /**
  * Module Template Filter
