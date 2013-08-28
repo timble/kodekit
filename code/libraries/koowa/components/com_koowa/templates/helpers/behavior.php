@@ -170,10 +170,16 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
             'date'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
-            'format'  => '%Y-%m-%d %H:%M:%S',
+            'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
             'attribs' => array('size' => 25, 'maxlength' => 19, 'placeholder' => '') //@TODO placeholder fix for chrome may not be needed anymore
         ))->append(array(
-                'id'      => 'button-'.$config->name,
+             'id'      => 'button-'.$config->name,
+             'options' => array(
+                 'todayBtn' => true,
+                 'todayHighlight' => true,
+                 'language' => JFactory::getLanguage()->getTag(),
+                 'autoclose' => true //Same as singleClick in previous js plugin
+             )
             ));
 
         // Handle the special case for "now".
@@ -191,23 +197,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         else $config->date = '';
 
         // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
-        $config->format = str_replace(array(
-            '%Y',
-            '%y',
-            '%m',
-            '%d',
-            '%H',
-            '%M',
-            '%S'
-        ), array(
-            'yyyy',
-            'yy',
-            'mm',
-            'dd',
-            'h',
-            'i',
-            's'
-        ), $config->format);
+        $config->format = str_replace(
+            array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
+            array('yyyy', 'yy', 'mm', 'dd', 'h', 'i', 's'),
+            $config->format
+        );
 
         switch (strtoupper($config->filter))
         {
@@ -302,13 +296,15 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                     $this->translate('November_short'),
                     $this->translate('December_short')
                 ),
-                'today' => $this->translate('Today'),
-                'weekStart' => JFactory::getLanguage()->getFirstDay()
+                'today' => $this->translate('Today')
             );
+
+
+            $locale['weekStart'] = JFactory::getLanguage()->getFirstDay();
             // Required locale
             $html .= '<script>
             (function($){
-                $.fn.datepicker.dates["en"] = '.json_encode($locale).';
+                $.fn.datepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
             }(jQuery));
             </script>';
 
@@ -322,16 +318,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             if (!in_array($config->id, $loaded)) {
                 $html .= "<script>
                     jQuery(function($){
-                        $('#".$config->id."').datepicker({todayHighlight: true, parentEl: $('#".$config->id."').parent()});
-                        /*
-                        Calendar.setup({
-                            inputField     :    '".$config->id."',
-                            ifFormat       :    '".$config->format."',
-                            button         :    '".$config->id."_img',
-                            align          :    'Tl',
-                            singleClick    :    true,
-                            firstDay: '" . JFactory::getLanguage()->getFirstDay() . "'
-                        });*/
+                        var options = ".$config->options.";
+                        if(!options.hasOwnProperty('parentEl')) {
+                            options.parentEl = $('#".$config->id."').parent();
+                        }
+                        $('#".$config->id."').datepicker(options);
                     });
                 </script>";
                 $loaded[] = $config->id;
