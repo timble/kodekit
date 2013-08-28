@@ -171,22 +171,146 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'date'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
             'format'  => '%Y-%m-%d %H:%M:%S',
-            'attribs' => array('size' => 25, 'maxlength' => 19)
+            'attribs' => array('size' => 25, 'maxlength' => 19, 'placeholder' => '') //@TODO placeholder fix for chrome may not be needed anymore
         ))->append(array(
                 'id'      => 'button-'.$config->name,
             ));
 
+        // Handle the special case for "now".
+        if (strtoupper($config->value) == 'NOW')
+        {
+            $config->value = strftime($config->format);
+        }
+
         $html = '';
+
 
         if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') {
             $config->date = strftime($config->format, strtotime($config->date) /*+ $config->gmt_offset*/);
         }
         else $config->date = '';
 
+        // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
+        $config->format = str_replace(array(
+            '%Y',
+            '%y',
+            '%m',
+            '%d',
+            '%H',
+            '%M',
+            '%S'
+        ), array(
+            'yyyy',
+            'yy',
+            'mm',
+            'dd',
+            'h',
+            'i',
+            's'
+        ), $config->format);
+
+        switch (strtoupper($config->filter))
+        {
+            case 'SERVER_UTC':
+                // Convert a date to UTC based on the server timezone.
+                if (intval($config->value))
+                {
+                    // Get a date object based on the correct timezone.
+                    $date = JFactory::getDate($config->value, 'UTC');
+                    $date->setTimezone(new DateTimeZone(JFactory::getConfig()->get('offset')));
+
+                    // Transform the date string.
+                    $config->value = $date->format('Y-m-d H:i:s', true, false);
+                }
+                break;
+
+            case 'USER_UTC':
+                // Convert a date to UTC based on the user timezone.
+                if (intval($config->value))
+                {
+                    // Get a date object based on the correct timezone.
+                    $date = JFactory::getDate($config->value, 'UTC');
+                    $date->setTimezone(new DateTimeZone(JFactory::getUser()->getParam('timezone', JFactory::getConfig()->get('offset'))));
+
+                    // Transform the date string.
+                    $config->value = $date->format('Y-m-d H:i:s', true, false);
+                }
+                break;
+        }
+
         if (!isset(self::$_loaded['calendar']))
         {
             $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
             $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
+
+            $locale = array(
+                'days'  =>  array(
+                    $this->translate('Sunday'),
+                    $this->translate('Monday'),
+                    $this->translate('Tuesday'),
+                    $this->translate('Wednesday'),
+                    $this->translate('Thursday'),
+                    $this->translate('Friday'),
+                    $this->translate('Saturday'),
+                    $this->translate('Sunday')
+                ),
+                'daysShort' => array(
+                    $this->translate('Sun'),
+                    $this->translate('Mon'),
+                    $this->translate('Tue'),
+                    $this->translate('Wed'),
+                    $this->translate('Thu'),
+                    $this->translate('Fri'),
+                    $this->translate('Sat'),
+                    $this->translate('Sun')
+                ),
+                'daysMin' => array(
+                    $this->translate('Su'),
+                    $this->translate('Mo'),
+                    $this->translate('Tu'),
+                    $this->translate('We'),
+                    $this->translate('Th'),
+                    $this->translate('Fr'),
+                    $this->translate('Sa'),
+                    $this->translate('Su')
+                ),
+                'months' => array(
+                    $this->translate('January'),
+                    $this->translate('February'),
+                    $this->translate('March'),
+                    $this->translate('April'),
+                    $this->translate('May'),
+                    $this->translate('June'),
+                    $this->translate('July'),
+                    $this->translate('August'),
+                    $this->translate('September'),
+                    $this->translate('October'),
+                    $this->translate('November'),
+                    $this->translate('December')
+                ),
+                'monthsShort' => array(
+                    $this->translate('January_short'),
+                    $this->translate('February_short'),
+                    $this->translate('March_short'),
+                    $this->translate('April_short'),
+                    $this->translate('May_short'),
+                    $this->translate('June_short'),
+                    $this->translate('July_short'),
+                    $this->translate('August_short'),
+                    $this->translate('September_short'),
+                    $this->translate('October_short'),
+                    $this->translate('November_short'),
+                    $this->translate('December_short')
+                ),
+                'today' => $this->translate('Today'),
+                'weekStart' => JFactory::getLanguage()->getFirstDay()
+            );
+            // Required locale
+            $html .= '<script>
+            (function($){
+                $.fn.datepicker.dates["en"] = '.json_encode($locale).';
+            }(jQuery));
+            </script>';
 
             self::$_loaded['calendar'] = true;
         }
@@ -227,7 +351,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$config->value.'" '.$attribs.' />';
             $html .= '</div>';
         }
-
 
         return $html;
     }
