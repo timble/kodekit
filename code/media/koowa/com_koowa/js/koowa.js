@@ -5,22 +5,110 @@
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
-
-/**
- * Koowa global namespace
- *
- * @author      Johan Janssens <johan@nooku.org>
- * @category    Nooku
- * @package     Nooku_Media
- * @subpackage  Javascript
- */
 if(!Koowa) {
     var Koowa = {};
 }
 
 (function($){
+    /*!
+     * klass: a classical JS OOP façade
+     * https://github.com/ded/klass
+     * License MIT (c) Dustin Diaz & Jacob Thornton 2012
+     */
 
-$(document).ready(function() {
+    !function (name, context, definition) {
+        if (typeof define == 'function') define(definition)
+        else if (typeof module != 'undefined') module.exports = definition()
+        else context[name] = definition()
+    }('klass', this, function () {
+        var context = this
+            , old = context.klass
+            , f = 'function'
+            , fnTest = /xyz/.test(function () {xyz}) ? /\bsupr\b/ : /.*/
+            , proto = 'prototype'
+
+        function klass(o) {
+            return extend.call(isFn(o) ? o : function () {}, o, 1)
+        }
+
+        function isFn(o) {
+            return typeof o === f
+        }
+
+        function wrap(k, fn, supr) {
+            return function () {
+                var tmp = this.supr
+                this.supr = supr[proto][k]
+                var undef = {}.fabricatedUndefined
+                var ret = undef
+                try {
+                    ret = fn.apply(this, arguments)
+                } finally {
+                    this.supr = tmp
+                }
+                return ret
+            }
+        }
+
+        function process(what, o, supr) {
+            for (var k in o) {
+                if (o.hasOwnProperty(k)) {
+                    what[k] = isFn(o[k])
+                        && isFn(supr[proto][k])
+                        && fnTest.test(o[k])
+                        ? wrap(k, o[k], supr) : o[k]
+                }
+            }
+        }
+
+        function extend(o, fromSub) {
+            // must redefine noop each time so it doesn't inherit from previous arbitrary classes
+            function noop() {}
+            noop[proto] = this[proto]
+            var supr = this
+                , prototype = new noop()
+                , isFunction = isFn(o)
+                , _constructor = isFunction ? o : this
+                , _methods = isFunction ? {} : o
+            function fn() {
+                if (this.initialize) this.initialize.apply(this, arguments)
+                else {
+                    fromSub || isFunction && supr.apply(this, arguments)
+                    _constructor.apply(this, arguments)
+                }
+            }
+
+            fn.methods = function (o) {
+                process(prototype, o, supr)
+                fn[proto] = prototype
+                return this
+            }
+
+            fn.methods.call(fn, _methods).prototype.constructor = fn
+
+            fn.extend = arguments.callee
+            fn[proto].implement = fn.statics = function (o, optFn) {
+                o = typeof o == 'string' ? (function () {
+                    var obj = {}
+                    obj[o] = optFn
+                    return obj
+                }()) : o
+                process(this, o, supr)
+                return this
+            }
+
+            return fn
+        }
+
+        klass.noConflict = function () {
+            context.klass = old
+            return this
+        }
+
+        return klass
+    });
+
+    $(document).ready(function() {
     $('.submittable').on('click', function(event){
         event.preventDefault();
 
@@ -43,11 +131,10 @@ $(document).ready(function() {
 /**
  * Creates a 'virtual form'
  *
- * @param   json    Configuration:  method, url, params, formelem
- * @example new KForm({method:'post', url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
+ * @param   {object} config Configuration object. Accepted keys: method, url, params, element
+ * @example new KForm({url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
  */
-Koowa.Form = new Class({
-
+Koowa.Form = new Koowa.Class({
     initialize: function(config) {
         this.config = config;
         if(this.config.element) {
@@ -92,7 +179,7 @@ Koowa.Form = new Class({
  * @package     Koowa_Media
  * @subpackage  Javascript
  */
-Koowa.Grid = new Class({
+Koowa.Grid = new Koowa.Class({
     initialize: function(element){
         var self = this;
 
@@ -164,10 +251,7 @@ Koowa.Grid.getIdQuery = function(context) {
  * @package     Koowa_Media
  * @subpackage  Javascript
  */
-Koowa.Controller = new Class({
-
-    Implements: [Options, Events],
-    
+Koowa.Controller = new Koowa.Class({
     form: null,
     toolbar: null,
     buttons: null,
@@ -175,14 +259,10 @@ Koowa.Controller = new Class({
     token_name: null,
     token_value: null,
 
-    options: {
-        toolbar: '.toolbar-list',
-        url: window.location.href
-    },
-    
     initialize: function(options){
         var self = this;
 
+        this.setOptions(this.getOptions());
         this.setOptions(options);
 
         this.form = $(this.options.form);
@@ -205,6 +285,20 @@ Koowa.Controller = new Class({
 
         if(this.toolbar) {
             this.setToolbar();
+        }
+    },
+    /**
+     * @returns {object}
+     */
+    getOptions: function() {
+        return {
+            toolbar: '.toolbar-list',
+            url: window.location.href
+        };
+    },
+    setOptions: function(options) {
+        if (typeof options === 'object') {
+            this.options = $.extend(this.options, options);
         }
     },
     setToolbar: function() {
@@ -299,18 +393,17 @@ Koowa.Controller = new Class({
  * @package     Koowa_Media
  * @subpackage  Javascript
  */
-Koowa.Controller.Grid = new Class({
-
-    Extends: Koowa.Controller,
-    
-    options: {
-        inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall'
+Koowa.Controller.Grid = Koowa.Controller.extend({
+    getOptions: function() {
+        return $.extend(this.supr(), {
+            inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall'
+        });
     },
     initialize: function(options){
         var thead,
             self = this;
-        
-        this.parent(options);
+
+        this.supr(options);
 
         this.grid = new Koowa.Grid(this.form);
 
@@ -406,8 +499,7 @@ Koowa.Controller.Grid = new Class({
 
             // Checkbox should add selected and selected-multiple classes to the row
             checkbox.on('change', function(){
-                var checkbox = $(this),
-                    selected,
+                var selected,
                     parent = tr.parent();
 
                 $(this).prop('checked') ? tr.addClass('selected') : tr.removeClass('selected');
@@ -482,10 +574,7 @@ Koowa.Controller.Grid = new Class({
  * @package     Koowa_Media
  * @subpackage  Javascript
  */
-Koowa.Controller.Form = new Class({
-
-    Extends: Koowa.Controller,
-
+Koowa.Controller.Form = Koowa.Controller.extend({
     _actionDefault: function(action, data, novalidate){
         if(!novalidate && !this.trigger('validate')) {
             return false;
