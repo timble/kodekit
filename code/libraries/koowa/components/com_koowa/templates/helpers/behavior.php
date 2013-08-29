@@ -31,6 +31,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function koowa($config = array())
     {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug')
+        ));
+
         $html = '';
 
         if (!isset(self::$_loaded['koowa']))
@@ -170,7 +175,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'options'  => array()
         ));
 
-        JHTML::_('behavior.tooltip', $config->selector, $config->toArray());
+        JHTML::_('behavior.tooltip', $config->selector, $config->options->toArray());
 
         return '';
     }
@@ -362,6 +367,20 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             });</script>';
         }
 
+        $options   = $config->options->toJson();
+        $signature = md5('select2-'.$config->element.$options);
+
+        if($config->element && !isset(self::$_loaded[$signature]))
+        {
+            $html .= '<script>
+            jQuery(function($){
+                $("'.$config->element.'").select2('.$options.');
+                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+            });</script>';
+
+            self::$_loaded[$signature] = true;
+        }
+
         return $html;
     }
 
@@ -400,10 +419,19 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
         }
 
-        $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").koowaSelect2('.$config->options.');
+        $options   = $config->options->toJson();
+        $signature = md5('autocomplete-'.$config->element.$options);
+
+        if($config->element && !isset(self::$_loaded[$signature]))
+        {
+            $html .= '<script>
+            jQuery(function($){
+                $("'.$config->element.'").koowaSelect2('.$options.');
                 $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
             });</script>';
+
+            self::$_loaded[$signature] = true;
+        }
 
         return $html;
     }
