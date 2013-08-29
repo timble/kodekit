@@ -121,12 +121,38 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 	{
 		$config = new KObjectConfig($config);
 		$config->append(array(
-			'selector' => 'a.modal',
-			'options'  => array('disableFx' => true)
+            'debug' => JFactory::getApplication()->getCfg('debug'),
+			'selector' => '.koowa-modal',
+			'options'  => array()
  		));
 
-        JHTML::_('behavior.modal', $config->selector, $config->toArray());
-		return '';
+        $html = '';
+
+        if(!isset(self::$_loaded['modal']))
+        {
+            $html .= $this->jquery();
+
+            $html .= '<script src="media://koowa/com_koowa/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/magnific-popup.css" />';
+
+            self::$_loaded['modal'] = true;
+        }
+
+        $options   = json_encode($config->options->toArray());
+        $signature = md5('modal-'.$config->selector.$options);
+
+        if(!isset(self::$_loaded[$signature]))
+        {
+            $html .= "<script>
+            jQuery(function($){
+                $('$config->selector').magnificPopup($options);
+            });
+            </script>";
+
+            self::$_loaded[$signature] = true;
+        }
+
+        return $html;
 	}
 
 
@@ -276,17 +302,23 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['validator'] = true;
         }
 
-        $options = json_encode($config->options->toArray());
+        $options   = json_encode($config->options->toArray());
+        $signature = md5('validator-'.$config->selector.$options);
 
-        $html .= "<script>
-        jQuery(function($){
-		    $('$config->selector').on('koowa.validate', function(event){
-                if(!$(this).valid()) {
-                	event.preventDefault();
-                }
-		    }).validate($options);
-		});
-		</script>";
+        if(!isset(self::$_loaded[$signature]))
+        {
+            $html .= "<script>
+            jQuery(function($){
+                $('$config->selector').on('koowa.validate', function(event){
+                    if(!$(this).valid()) {
+                        event.preventDefault();
+                    }
+                }).validate($options);
+            });
+            </script>";
+
+            self::$_loaded[$signature] = true;
+        }
 
         return $html;
     }

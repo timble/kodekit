@@ -233,8 +233,9 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         	'command' => NULL
         ));
 
-        $html  = $this->getTemplate()->renderHelper('behavior.modal');
-        $html .= $this->command($config);
+        JHtml::_('behavior.modal');
+
+        $html = $this->command($config);
 
     	return $html;
     }
