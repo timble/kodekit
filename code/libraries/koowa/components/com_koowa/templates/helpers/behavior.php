@@ -168,16 +168,23 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config->append(array(
             'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
-            'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
-            'attribs' => array('size' => 25, 'maxlength' => 19, 'placeholder' => '') //@TODO placeholder fix for chrome may not be needed anymore
+            //'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
+            'format' => 's, ss, i, ii, h, hh, d, dd, D, DD, m, mm, M, MM, yy, yyyy',
+            'attribs' => array(
+                'size' => 25,
+                'maxlength' => 19,
+                'placeholder' => '', //@TODO placeholder fix for chrome may not be needed anymore
+                'oninput' => 'if(jQuery(this).data(\'datepicker\'))jQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
+            )
         ))->append(array(
              'id'      => 'button-'.$config->name,
              'options' => array(
-                 'todayBtn' => true,
+                 'todayBtn' => 'linked',
                  'todayHighlight' => true,
                  'language' => JFactory::getLanguage()->getTag(),
                  'autoclose' => true, //Same as singleClick in previous js plugin,
                  'keyboardNavigation' => false, //To allow editing timestamps,
+                 'calendarWeeks' => true, //Old datepicker used to display these
                  //'orientation' => 'auto right' //popover arrow set to point at the datepicker icon
              )
             ));
@@ -199,7 +206,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
         $config->format = str_replace(
             array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
-            array('yyyy', 'yy', 'mm', 'dd', 'h', 'i', 's'),
+            array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
             $config->format
         );
 

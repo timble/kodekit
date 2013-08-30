@@ -1193,7 +1193,7 @@
 		getDaysInMonth: function (year, month) {
 			return [31, (DPGlobal.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 		},
-		validParts: /dd?|DD?|mm?|MM?|yy(?:yy)?/g,
+		validParts: /ss?|ii?|hh?|dd?|DD?|mm?|MM?|yy(?:yy)?/g,
 		nonpunctuation: /[^ -\/:-@\[\u3400-\u9fff-`{-~\t\n\r]+/g,
 		parseFormat: function(format){
 			// IE treats \0 as a string end in inputs (truncating the value),
@@ -1209,15 +1209,24 @@
 			if (date instanceof Date) return date;
 			if (typeof format === 'string')
 				format = DPGlobal.parseFormat(format);
-			if (/^[\-+]\d+[dmwy]([\s,]+[\-+]\d+[dmwy])*$/.test(date)) {
-				var part_re = /([\-+]\d+)([dmwy])/,
-					parts = date.match(/([\-+]\d+)([dmwy])/g),
+			if (/^[\-+]\d+[sihdmwy]([\s,]+[\-+]\d+[sihdmwy])*$/.test(date)) {
+				var part_re = /([\-+]\d+)([sihdmwy])/,
+					parts = date.match(/([\-+]\d+)([sihdmwy])/g),
 					part, dir;
 				date = new Date();
 				for (var i=0; i<parts.length; i++) {
 					part = part_re.exec(parts[i]);
 					dir = parseInt(part[1]);
 					switch(part[2]){
+                        case 's':
+                            date.setUTCHours(Math.max(0,Math.min(23,dir)));
+                            break;
+                        case 'i':
+                            date.setUTCMinutes(Math.max(0,Math.min(59,dir)));
+                            break;
+                        case 'h':
+                            date.setUTCSeconds(Math.max(0,Math.min(59,dir)));
+                            break;
 						case 'd':
 							date.setUTCDate(date.getUTCDate() + dir);
 							break;
@@ -1232,12 +1241,12 @@
 							break;
 					}
 				}
-				return UTCDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0);
+				return UTCDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
 			}
 			var parts = date && date.match(this.nonpunctuation) || [],
 				date = new Date(),
 				parsed = {},
-				setters_order = ['yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'd', 'dd'],
+				setters_order = ['yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'd', 'dd', 'h', 'hh', 'i', 'ii', 's', 'ss'],
 				setters_map = {
 					yyyy: function(d,v){ return d.setUTCFullYear(v); },
 					yy: function(d,v){ return d.setUTCFullYear(2000+v); },
@@ -1252,12 +1261,18 @@
 							d.setUTCDate(d.getUTCDate()-1);
 						return d;
 					},
-					d: function(d,v){ return d.setUTCDate(v); }
+					d: function(d,v){ return d.setUTCDate(v); },
+                    h: function(d,v){ return d.setUTCHours(Math.max(0,Math.min(23,v))); },
+                    i: function(d,v){ return d.setUTCMinutes(Math.max(0,Math.min(59,v))); },
+                    s: function(d,v){ return d.setUTCSeconds(Math.max(0,Math.min(59,v))); }
 				},
 				val, filtered, part;
 			setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
 			setters_map['dd'] = setters_map['d'];
-			date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+            setters_map['hh'] = setters_map['h'];
+            setters_map['ii'] = setters_map['i'];
+            setters_map['ss'] = setters_map['s'];
+			date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
 			var fparts = format.parts.slice();
 			// Remove noop parts
 			if (parts.length != fparts.length) {
@@ -1308,6 +1323,9 @@
 			if (typeof format === 'string')
 				format = DPGlobal.parseFormat(format);
 			var val = {
+                s: date.getUTCSeconds(),
+                i: date.getUTCMinutes(),
+                h: date.getUTCHours(),
 				d: date.getUTCDate(),
 				D: dates[language].daysShort[date.getUTCDay()],
 				DD: dates[language].days[date.getUTCDay()],
@@ -1317,6 +1335,9 @@
 				yy: date.getUTCFullYear().toString().substring(2),
 				yyyy: date.getUTCFullYear()
 			};
+            val.ss = (val.s < 10 ? '0' : '') + val.s;
+            val.ii = (val.i < 10 ? '0' : '') + val.i;
+            val.hh = (val.h < 10 ? '0' : '') + val.h;
 			val.dd = (val.d < 10 ? '0' : '') + val.d;
 			val.mm = (val.m < 10 ? '0' : '') + val.m;
 			var date = [],
