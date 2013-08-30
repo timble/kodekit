@@ -1221,13 +1221,13 @@
 					dir = parseInt(part[1]);
 					switch(part[2]){
                         case 's':
-                            date.setUTCHours(Math.max(0,Math.min(23,dir)));
+                            date.setUTCSeconds(Math.max(0,Math.min(59,dir)));
                             break;
                         case 'i':
                             date.setUTCMinutes(Math.max(0,Math.min(59,dir)));
                             break;
                         case 'h':
-                            date.setUTCSeconds(Math.max(0,Math.min(59,dir)));
+                            date.setUTCHours(Math.max(0,Math.min(23,dir)));
                             break;
 						case 'd':
 							date.setUTCDate(date.getUTCDate() + dir);
