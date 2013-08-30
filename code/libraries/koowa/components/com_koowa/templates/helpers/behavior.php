@@ -168,8 +168,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config->append(array(
             'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
-            //'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
-            'format' => 's, ss, i, ii, h, hh, d, dd, D, DD, m, mm, M, MM, yy, yyyy',
+            'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
             'attribs' => array(
                 'size' => 25,
                 'maxlength' => 19,

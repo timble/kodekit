@@ -351,10 +351,10 @@
 			return new Date(local.getTime() - (local.getTimezoneOffset()*60000));
 		},
 		_zero_time: function(local){
-			return new Date(local.getFullYear(), local.getMonth(), local.getDate());
+			return new Date(local.getFullYear(), local.getMonth(), local.getDate(), local.getHours(), local.getMinutes(), local.getSeconds());
 		},
 		_zero_utc_time: function(utc){
-			return new Date(Date.UTC(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate()));
+			return new Date(Date.UTC(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate(), utc.getUTCHours(), utc.getUTCMinutes(), utc.getUTCSeconds()));
 		},
 
 		getDate: function() {
@@ -552,7 +552,7 @@
 			var cls = [],
 				year = this.viewDate.getUTCFullYear(),
 				month = this.viewDate.getUTCMonth(),
-				currentDate = this.date.valueOf(),
+				currentDate = this.date,
 				today = new Date();
 			if (date.getUTCFullYear() < year || (date.getUTCFullYear() == year && date.getUTCMonth() < month)) {
 				cls.push('old');
@@ -566,7 +566,9 @@
 				date.getUTCDate() == today.getDate()) {
 				cls.push('today');
 			}
-			if (date.valueOf() == currentDate) {
+			if (date.getUTCFullYear() == currentDate.getUTCFullYear() &&
+                date.getUTCMonth() == currentDate.getUTCMonth() &&
+                date.getUTCDate() == currentDate.getUTCDate()) {
 				cls.push('active');
 			}
 			if (date.valueOf() < this.o.startDate || date.valueOf() > this.o.endDate ||
@@ -758,7 +760,7 @@
 								break;
 							case 'today':
 								var date = new Date();
-								date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+								date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), this.viewDate.getUTCHours(), this.viewDate.getUTCMinutes(), this.viewDate.getUTCSeconds());
 
 								this.showMode(-2);
 								var which = this.o.todayBtn == 'linked' ? null : 'view';
@@ -789,7 +791,7 @@
 								this.viewDate.setUTCMonth(month);
 								this._trigger('changeMonth', this.viewDate);
 								if (this.o.minViewMode === 1) {
-									this._setDate(UTCDate(year, month, day,0,0,0,0));
+									this._setDate(UTCDate(year, month, day,this.viewDate.getUTCHours(),this.viewDate.getUTCMinutes(),this.viewDate.getUTCSeconds(),0));
 								}
 							} else {
 								var year = parseInt(target.text(), 10)||0;
@@ -798,7 +800,7 @@
 								this.viewDate.setUTCFullYear(year);
 								this._trigger('changeYear', this.viewDate);
 								if (this.o.minViewMode === 2) {
-									this._setDate(UTCDate(year, month, day,0,0,0,0));
+									this._setDate(UTCDate(year, month, day,this.viewDate.getUTCHours(),this.viewDate.getUTCMinutes(),this.viewDate.getUTCSeconds(),0));
 								}
 							}
 							this.showMode(-1);
@@ -825,7 +827,7 @@
 									month += 1;
 								}
 							}
-							this._setDate(UTCDate(year, month, day,0,0,0,0));
+							this._setDate(UTCDate(year, month, day,this.viewDate.getUTCHours(),this.viewDate.getUTCMinutes(),this.viewDate.getUTCSeconds(),0));
 						}
 						break;
 				}
