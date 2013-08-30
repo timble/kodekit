@@ -506,7 +506,8 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
 
             // Trigger checkbox when the user clicks anywhere in the row
             tr.on('click', function(event){
-                if($(event.target).is('[type=checkbox]')) {
+                var target = $(event.target);
+                if(target.is('[type=checkbox]') || target.is('[type=radio]')) {
                     return;
                 }
 
@@ -517,6 +518,10 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             checkbox.on('change', function(){
                 var selected,
                     parent = tr.parent();
+
+                if ($(this).is('[type=radio]')) {
+                    parent.find('.selected').removeClass('selected');
+                }
 
                 $(this).prop('checked') ? tr.addClass('selected') : tr.removeClass('selected');
 
