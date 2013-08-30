@@ -567,8 +567,8 @@
 				cls.push('today');
 			}
 			if (date.getUTCFullYear() == currentDate.getUTCFullYear() &&
-                date.getUTCMonth() == currentDate.getUTCMonth() &&
-                date.getUTCDate() == currentDate.getUTCDate()) {
+				date.getUTCMonth() == currentDate.getUTCMonth() &&
+				date.getUTCDate() == currentDate.getUTCDate()) {
 				cls.push('active');
 			}
 			if (date.valueOf() < this.o.startDate || date.valueOf() > this.o.endDate ||
@@ -1224,7 +1224,7 @@
                             date.setUTCSeconds(Math.max(0,Math.min(59,dir)));
                             break;
                         case 'i':
-                            date.setUTCMinutes(Math.max(0,Math.min(59,dir)));
+	                        date.setUTCMinutes(Math.max(0,Math.min(59,dir)));
                             break;
                         case 'h':
                             date.setUTCHours(Math.max(0,Math.min(23,dir)));
@@ -1264,17 +1264,17 @@
 						return d;
 					},
 					d: function(d,v){ return d.setUTCDate(v); },
-                    h: function(d,v){ return d.setUTCHours(Math.max(0,Math.min(23,v))); },
-                    i: function(d,v){ return d.setUTCMinutes(Math.max(0,Math.min(59,v))); },
-                    s: function(d,v){ return d.setUTCSeconds(Math.max(0,Math.min(59,v))); }
+					h: function(d,v){ return d.setUTCHours(Math.max(0,Math.min(23,v))); },
+					i: function(d,v){ return d.setUTCMinutes(Math.max(0,Math.min(59,v))); },
+					s: function(d,v){ return d.setUTCSeconds(Math.max(0,Math.min(59,v))); }
 				},
 				val, filtered, part;
 			setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
 			setters_map['dd'] = setters_map['d'];
-            setters_map['hh'] = setters_map['h'];
-            setters_map['ii'] = setters_map['i'];
-            setters_map['ss'] = setters_map['s'];
-			date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
+			setters_map['hh'] = setters_map['h'];
+			setters_map['ii'] = setters_map['i'];
+			setters_map['ss'] = setters_map['s'];
+			date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 			var fparts = format.parts.slice();
 			// Remove noop parts
 			if (parts.length != fparts.length) {
@@ -1325,9 +1325,9 @@
 			if (typeof format === 'string')
 				format = DPGlobal.parseFormat(format);
 			var val = {
-                s: date.getUTCSeconds(),
-                i: date.getUTCMinutes(),
-                h: date.getUTCHours(),
+				s: date.getUTCSeconds(),
+				i: date.getUTCMinutes(),
+				h: date.getUTCHours(),
 				d: date.getUTCDate(),
 				D: dates[language].daysShort[date.getUTCDay()],
 				DD: dates[language].days[date.getUTCDay()],
@@ -1337,9 +1337,9 @@
 				yy: date.getUTCFullYear().toString().substring(2),
 				yyyy: date.getUTCFullYear()
 			};
-            val.ss = (val.s < 10 ? '0' : '') + val.s;
-            val.ii = (val.i < 10 ? '0' : '') + val.i;
-            val.hh = (val.h < 10 ? '0' : '') + val.h;
+			val.ss = (val.s < 10 ? '0' : '') + val.s;
+			val.ii = (val.i < 10 ? '0' : '') + val.i;
+			val.hh = (val.h < 10 ? '0' : '') + val.h;
 			val.dd = (val.d < 10 ? '0' : '') + val.d;
 			val.mm = (val.m < 10 ? '0' : '') + val.m;
 			var date = [],
