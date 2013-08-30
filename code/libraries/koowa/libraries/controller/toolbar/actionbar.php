@@ -188,7 +188,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
             $this->addCommand('apply');
         }
 
-        $this->addCommand('cancel',  array('attribs' => array('data-novalidate' => 'novalidate')));
+        $this->addCommand('cancel');
     }
 
     /**

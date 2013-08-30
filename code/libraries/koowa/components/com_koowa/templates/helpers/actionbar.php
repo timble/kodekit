@@ -115,7 +115,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         //Create the id
         $id = 'toolbar-'.$command->id;
-        
+
         if ($this->_useBootstrap())
         {
         	$command->attribs->class->append(array('btn', 'btn-small'));

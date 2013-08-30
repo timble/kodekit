@@ -81,6 +81,25 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     }
 
     /**
+     * Cancel Toolbar Command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandCancel(KControllerToolbarCommand $command)
+    {
+        $command->label = 'JTOOLBAR_CANCEL';
+        $command->icon = 'icon-32-cancel';
+
+        $command->append(array(
+            'attribs' => array(
+                'data-action' => 'cancel',
+                'data-novalidate' => 'novalidate',
+            )
+        ));
+    }
+
+    /**
      * Options Toolbar Command
      *
      * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
