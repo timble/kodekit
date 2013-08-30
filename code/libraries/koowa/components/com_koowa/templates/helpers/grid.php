@@ -17,6 +17,35 @@
 class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 {
     /**
+     * Render a radio field
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function radio($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'row'  		=> null,
+        ));
+
+        if($config->row->isLockable() && $config->row->locked())
+        {
+            $html = '<span class="editlinktip hasTip" title="'.$config->row->lockMessage() .'">
+						<img src="media://koowa/com_koowa/images/locked.png"/>
+					</span>';
+        }
+        else
+        {
+            $column = $config->row->getIdentityColumn();
+            $value  = $config->row->{$column};
+
+            $html = '<input type="radio" class="-koowa-grid-checkbox" name="'.$column.'[]" value="'.$value.'" />';
+        }
+
+        return $html;
+    }
+    /**
      * Render a checkbox field
      *
      * @param 	array 	$config An optional array with configuration options
