@@ -314,13 +314,11 @@ Koowa.Controller = Koowa.Class.extend({
 
         this.buttons.each(function() {
             var button = $(this),
+                context = {},
                 options = button.data(),
-                data = options.data,
-                action = options.action,
-                novalidate = options.novalidate === 'novalidate',
-                eventAdded = options.eventAdded;
+                data = options.data;
 
-            if (eventAdded) {
+            if (options.eventAdded) {
                 return;
             }
 
@@ -333,33 +331,38 @@ Koowa.Controller = Koowa.Class.extend({
                 data[self.token_name] = self.token_value;
             }
 
+            context.validate = options.novalidate || true;
+            context.data   = data;
+            context.action = options.action;
+
             button.on('click', function(event) {
                 event.preventDefault();
 
                 if (!button.hasClass('disabled')) {
                     self.setOptions(options);
-                    self.trigger('execute', [action, data, novalidate]);
+                    self.trigger('execute', [context]);
                 }
             });
 
             button.data('event-added', true);
         });
     },
-    execute: function(event, action, data, novalidate){
-        var method = '_action' + action[0].toUpperCase() + action.substr(1);
+    execute: function(event, context){
+        var action   = context.action,
+            method = '_action' + action[0].toUpperCase() + action.substr(1);
 
-        this.options.action = action;
-        if(this.trigger('before.'+action, [data, novalidate])) {
+        context.validate = context.validate || true;
+
+        if (this.trigger('before.'+action, context)) {
             method = this[method] ? method : '_actionDefault';
 
-            this[method].call(this, action, data, novalidate);
+            this[method].call(this, context);
 
-            this.trigger('after.'+action, [data, novalidate]);
+            this.trigger('after.'+action, context);
         }
 
         return this;
     },
-
     on: function(type, fn){
         return this.form.on('koowa.'+type, fn);
     },
@@ -529,9 +532,9 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             // Set up buttons such as publish/unpublish triggers
             tr.find('[data-action]').each(function() {
                 var action = $(this),
+                    context = {},
                     data = action.data('data'),
                     options = action.data(),
-                    actionName = action.data('action'),
                     eventType = action.data('event-type');
 
                 if (typeof data !== 'object') {
@@ -547,13 +550,17 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                     eventType = action.is('[type="radio"],[type="checkbox"],select') ? 'change' : 'click';
                 }
 
+                context.validate = options.novalidate || true;
+                context.data   = data;
+                context.action = options.action;
+
                 action.on(eventType, function(){
                     checkboxes.prop('checked', '');
                     checkbox.prop('checked', 'checked');
                     checkboxes.trigger('change', true);
 
                     self.setOptions(options);
-                    self.trigger('execute', [actionName, data, true]);
+                    self.trigger('execute', [context]);
                 });
             });
         });
@@ -562,19 +569,19 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
         return Koowa.Grid.getIdQuery() || false;
     },
 
-    _actionDefault: function(action, data, novalidate){
-        var idQuery, append, options;
+    _actionDefault: function(context) {
+        var idQuery = Koowa.Grid.getIdQuery(),
+            append  = this.options.url.match(/\?/) ? '&' : '?',
+            options;
 
-        if(!novalidate && !this.trigger('validate')) {
+        if (context.validate && !this.trigger('validate', [context])) {
             return false;
         }
 
-        idQuery = Koowa.Grid.getIdQuery();
-        append  = this.options.url.match(/\?/) ? '&' : '?';
         options = {
             method:'post',
             url: this.options.url+(idQuery ? append+idQuery : ''),
-            params: $.extend({}, {action: action}, data)
+            params: $.extend({}, {action: context.action}, context.data)
         };
 
         new Koowa.Form(options).submit();
@@ -583,17 +590,14 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
 
 /**
  * Controller class specialized for forms, extends Koowa.Controller
- *
- * @package     Koowa_Media
- * @subpackage  Javascript
  */
 Koowa.Controller.Form = Koowa.Controller.extend({
-    _actionDefault: function(action, data, novalidate){
-        if(!novalidate && !this.trigger('validate')) {
+    _actionDefault: function(context){
+        if (context.validate && !this.trigger('validate', [context])) {
             return false;
         }
 
-        this.form.append($('<input/>', {name: 'action', type: 'hidden', value: action}));
+        this.form.append($('<input/>', {name: 'action', type: 'hidden', value: context.action}));
         this.form.submit();
     }
 
