@@ -166,9 +166,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $config = new KObjectConfig($config);
         $config->append(array(
-            'value'   => '',
-
-            'date'	  => gmdate("M d Y H:i:s"),
+            'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
             'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
             'attribs' => array('size' => 25, 'maxlength' => 19, 'placeholder' => '') //@TODO placeholder fix for chrome may not be needed anymore
@@ -178,7 +176,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                  'todayBtn' => true,
                  'todayHighlight' => true,
                  'language' => JFactory::getLanguage()->getTag(),
-                 'autoclose' => true //Same as singleClick in previous js plugin
+                 'autoclose' => true, //Same as singleClick in previous js plugin,
+                 'keyboardNavigation' => false, //To allow editing timestamps,
+                 //'orientation' => 'auto right' //popover arrow set to point at the datepicker icon
              )
             ));
 
@@ -191,10 +191,10 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $html = '';
 
 
-        if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') {
-            $config->date = strftime($config->format, strtotime($config->date) /*+ $config->gmt_offset*/);
+        if($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00') {
+            $config->value = strftime($config->format, strtotime($config->value) /*+ $config->gmt_offset*/);
         }
-        else $config->date = '';
+        else $config->value = '';
 
         // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
         $config->format = str_replace(
@@ -276,10 +276,10 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $loaded[] = $config->id;
             }
 
-            $html .= '<div class="input-append date" data-date-format="'.$config->format.'" id="'.$config->id.'">';
+            $html .= '<div class="input-append date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
             $html .= '<input type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
-            $html .= '<span class="add-on" >';
-            $html .= '<i class="icon-calendar"></i>&zwnj;'; //&zwnj; is a zero width non-joiner, helps the button get the right height without adding to the width (like with &nbsp;)
+            $html .= '<span class="add-on btn" >';
+            $html .= '<i class="icon-calendar icon-th"></i>&zwnj;'; //&zwnj; is a zero width non-joiner, helps the button get the right height without adding to the width (like with &nbsp;)
             $html .= '</span>';
             $html .= '</div>';
         }
