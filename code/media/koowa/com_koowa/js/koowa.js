@@ -338,6 +338,8 @@ Koowa.Controller = Koowa.Class.extend({
             button.on('click', function(event) {
                 event.preventDefault();
 
+                context.trigger = button;
+
                 if (!button.hasClass('disabled')) {
                     self.setOptions(options);
                     self.trigger('execute', [context]);
@@ -563,6 +565,8 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                     checkboxes.prop('checked', '');
                     checkbox.prop('checked', 'checked');
                     checkboxes.trigger('change', true);
+
+                    context.trigger = action;
 
                     self.setOptions(options);
                     self.trigger('execute', [context]);
