@@ -75,9 +75,9 @@ class plgSystemKoowa extends JPlugin
         KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
 		KService::setAlias('translator', 'com:default.translator');
 
-	    //Setup the request
+	    //Setup the request, this is case insensitive since Windows servers allow folder names like /Administrator
 	    if (JFactory::getApplication()->getName() !== 'site') {
-	    	KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
+	    	KRequest::root(str_ireplace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
 	    }
 
 		//Load the koowa plugins
