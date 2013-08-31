@@ -8,20 +8,20 @@
  */
 
 /**
- * Template Read Filter Interface
+ *  Compiler Template Filter Interface
  *
- * Processes the template on input
+ * Filter will compile to the template to executable PHP code.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-interface KTemplateFilterRead
+interface KTemplateFilterCompiler
 {
     /**
-     * Parse the text and filter it
+     * Parse the text and compile it to PHP
      *
-     * @param string $text Block of text to parse
-     * @return KTemplateFilterRead
+     * @param string $text  The text to parse
+     * @return void
      */
-    public function read(&$text);
+    public function compile(&$text);
 }

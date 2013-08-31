@@ -17,6 +17,35 @@
 class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 {
     /**
+     * Render a radio field
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function radio($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'row'  		=> null,
+        ));
+
+        if($config->row->isLockable() && $config->row->locked())
+        {
+            $html = '<span class="editlinktip hasTip" title="'.$config->row->lockMessage() .'">
+						<img src="media://koowa/com_koowa/images/locked.png"/>
+					</span>';
+        }
+        else
+        {
+            $column = $config->row->getIdentityColumn();
+            $value  = $config->row->{$column};
+
+            $html = '<input type="radio" class="-koowa-grid-checkbox" name="'.$column.'[]" value="'.$value.'" />';
+        }
+
+        return $html;
+    }
+    /**
      * Render a checkbox field
      *
      * @param 	array 	$config An optional array with configuration options
@@ -59,7 +88,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             'search' => null
         ));
 
-        $html = '<input name="search" id="search" value="'.$this->getTemplate()->getView()->escape($config->search).'" />';
+        $html = '<input name="search" id="search" value="'.$this->escape($config->search).'" />';
         $html .= '<button>'.$this->translate('Go').'</button>';
         $html .= '<button onclick="document.getElementById(\'search\').value=\'\';this.form.submit();">'.$this->translate('Reset').'</button>';
 
@@ -155,7 +184,9 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $text 	= $config->row->{$config->field} ? $this->translate( 'Disable Item' ) : $this->translate( 'Enable Item' );
 
         $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
-        $data = str_replace('"', '&quot;', $config->data);
+
+        $data = $config->data->toArray();
+        $data = htmlentities(json_encode($data));
 
         $html = '<img src="media://koowa/com_koowa/images/'. $img .'" border="0" alt="'. $alt .'" data-action="edit" data-data="'.$data.'" title='.$text.' />';
 
@@ -184,7 +215,9 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $text 	= $config->row->{$config->field} ? $this->translate('Unpublish Item') : $this->translate('Publish Item');
 
         $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
-        $data = str_replace('"', '&quot;', $config->data);
+
+        $data = $config->data->toArray();
+        $data = json_encode($data);
 
         $html = '<a class="jgrid" href="#" data-action="edit" data-data="'.$data.'" title="'.$text.'">';
         $html .= '<span class="state '.$class.'"><span class="text">'.$alt.'</span></span></a>';
@@ -211,10 +244,14 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $html = '';
 
         $config->data->order = -1;
-        $updata   = str_replace('"', '&quot;', $config->data);
+
+        $updata = $config->data->toArray();
+        $updata = htmlentities(json_encode($updata));
 
         $config->data->order = +1;
-        $downdata = str_replace('"', '&quot;', $config->data);
+
+        $downdata = $config->data->toArray();
+        $downdata = htmlentities(json_encode($downdata));
 
         $tmpl = '
             <span>

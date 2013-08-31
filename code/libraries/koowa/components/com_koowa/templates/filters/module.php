@@ -7,6 +7,9 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+defined('KOOWA') or die;
+
+jimport('joomla.application.module.helper');
 
 /**
  * Module Template Filter
@@ -22,7 +25,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterWrite
+class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
     /**
      * Initializes the options for the object
@@ -47,7 +50,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
 	 * @param string $text Block of text to parse
 	 * @return ComKoowaTemplateFilterModule
 	 */
-    public function write(&$text)
+    public function render(&$text)
     {
         $this->_parseModuleTags($text);
         $this->_parseModulesTags($text);

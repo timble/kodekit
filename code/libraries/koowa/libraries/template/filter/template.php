@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTemplateFilterRead
+class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {
     /**
      * Initializes the options for the object
@@ -40,9 +40,9 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
      * This function only replaces relative identifiers to a full path based on the path of the template.
      *
      * @param string $text
-     * @return KTemplateFilterAlias
+     * @return KTemplateFilterTemplate
      */
-    public function read(&$text)
+    public function compile(&$text)
     {
         if(preg_match_all('#@import\(\'(.*)\'#siU', $text, $matches))
 		{

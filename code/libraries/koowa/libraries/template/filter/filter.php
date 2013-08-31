@@ -18,8 +18,8 @@ class KTemplateFilter
 	/**
 	 * Filter modes
 	 */
-	const MODE_READ  = 1;
-	const MODE_WRITE = 2;
+	const MODE_COMPILE = 1;
+	const MODE_RENDER  = 2;
 
     /**
      * Priority levels

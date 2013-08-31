@@ -31,11 +31,16 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function koowa($config = array())
     {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug')
+        ));
+
         $html = '';
 
         if (!isset(self::$_loaded['koowa']))
         {
-            $html .= $this->mootools();
+            $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/koowa.js" />';
 
             self::$_loaded['koowa'] = true;
@@ -121,12 +126,38 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 	{
 		$config = new KObjectConfig($config);
 		$config->append(array(
-			'selector' => 'a.modal',
-			'options'  => array('disableFx' => true)
+            'debug' => JFactory::getApplication()->getCfg('debug'),
+			'selector' => '.koowa-modal',
+			'options'  => array()
  		));
 
-        JHTML::_('behavior.modal', $config->selector, $config->toArray());
-		return '';
+        $html = '';
+
+        if(!isset(self::$_loaded['modal']))
+        {
+            $html .= $this->jquery();
+
+            $html .= '<script src="media://koowa/com_koowa/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/magnific-popup.css" />';
+
+            self::$_loaded['modal'] = true;
+        }
+
+        $options   = json_encode($config->options->toArray());
+        $signature = md5('modal-'.$config->selector.$options);
+
+        if(!isset(self::$_loaded[$signature]))
+        {
+            $html .= "<script>
+            jQuery(function($){
+                $('$config->selector').magnificPopup($options);
+            });
+            </script>";
+
+            self::$_loaded[$signature] = true;
+        }
+
+        return $html;
 	}
 
 
@@ -144,7 +175,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'options'  => array()
         ));
 
-        JHTML::_('behavior.tooltip', $config->selector, $config->toArray());
+        JHTML::_('behavior.tooltip', $config->selector, $config->options->toArray());
 
         return '';
     }
@@ -321,6 +352,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['overlay']))
         {
             $html .= $this->koowa();
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.overlay.js" />';
 
             $html .= '
             <style>
@@ -335,6 +367,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         }
 
         $url = $this->getObject('koowa:http.url', array('url' => $config->url));
+
         if(!isset($url->query['format'])) {
             $url->query['format'] = 'overlay';
         }
@@ -352,20 +385,18 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             ));
         }
 
+        $config->options->url = (string) $url;
+
         //Don't pass an empty array as options
-        $options = $config->options->toArray() ? ', '.$config->options : '';
-        $html .= "<script>window.addEvent('domready', function(){new Koowa.Overlay('$id'".$options.");});</script>";
+        $options = json_encode($config->options->toArray());
+        $html .= sprintf("<script>jQuery(function(){ new Koowa.Overlay('%s', %s);});</script>", $id, $options);
 
         $html .= '<div data-url="'.$url.'" class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
         return $html;
     }
 
     /**
-     * Loads the Forms.Validator class and connects it to Koowa.Controller
-     *
-     * This allows you to do easy, CSS class based forms validation. Koowa.Controller.Form automatically works with it.
-     *
-     * @see    http://www.mootools.net/docs/more125/more/Forms/Form.Validator
+     * Loads the Forms.Validator class and connects it to Koowa.Controller.Form
      *
      * @param array|KObjectConfig $config
      * @return string	The html output
@@ -374,36 +405,44 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug'),
             'selector' => '.-koowa-form',
             'options'  => array(
-                'scrollToErrorsOnChange' => false,
-                'scrollToErrorsOnBlur'   => false
+                'ignoreTitle' => true,
+                'onsubmit'    => false // We run the validation ourselves
             )
         ));
 
         $html = '';
-        // Load the necessary files if they haven't yet been loaded
+
         if(!isset(self::$_loaded['validator']))
         {
-            $html .= $this->mootools();
+            $html .= $this->jquery();
             $html .= $this->koowa();
 
-            $html .= '<script src="media://koowa/com_koowa/js/validator.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<script src="media://koowa/com_koowa/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
 
-        //Don't pass an empty array as options
-        $options = $config->options->toArray() ? ', '.$config->options : '';
-        $html .= "<script>
-		window.addEvent('domready', function(){
-		    $$('$config->selector').each(function(form){
-		        new Koowa.Validator(form".$options.");
-		        form.addEvent('validate', form.validate.bind(form));
-		    });
-		});
-		</script>";
+        $options   = json_encode($config->options->toArray());
+        $signature = md5('validator-'.$config->selector.$options);
+
+        if(!isset(self::$_loaded[$signature]))
+        {
+            $html .= "<script>
+            jQuery(function($){
+                $('$config->selector').on('koowa.validate', function(event){
+                    if(!$(this).valid()) {
+                        event.preventDefault();
+                    }
+                }).validate($options);
+            });
+            </script>";
+
+            self::$_loaded[$signature] = true;
+        }
 
         return $html;
     }
@@ -447,6 +486,20 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             });</script>';
         }
 
+        $options   = $config->options->toJson();
+        $signature = md5('select2-'.$config->element.$options);
+
+        if($config->element && !isset(self::$_loaded[$signature]))
+        {
+            $html .= '<script>
+            jQuery(function($){
+                $("'.$config->element.'").select2('.$options.');
+                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
+            });</script>';
+
+            self::$_loaded[$signature] = true;
+        }
+
         return $html;
     }
 
@@ -485,10 +538,19 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
         }
 
-        $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").koowaSelect2('.$config->options.');
+        $options   = $config->options->toJson();
+        $signature = md5('autocomplete-'.$config->element.$options);
+
+        if($config->element && !isset(self::$_loaded[$signature]))
+        {
+            $html .= '<script>
+            jQuery(function($){
+                $("'.$config->element.'").koowaSelect2('.$options.');
                 $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
             });</script>';
+
+            self::$_loaded[$signature] = true;
+        }
 
         return $html;
     }

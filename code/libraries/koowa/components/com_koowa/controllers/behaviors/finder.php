@@ -128,7 +128,7 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
             if (strpos($this->_resource_model, '.') === false) {
                 $this->_resource_model = 'com://admin/'.$this->_package.'.model.'.$this->_resource_model;
             }
-            var_dump($this->_resource_model);
+
             $this->_resource_model = $this->getObject($this->_resource_model);
         }
 
