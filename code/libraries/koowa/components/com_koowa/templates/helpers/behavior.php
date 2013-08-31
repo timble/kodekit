@@ -285,6 +285,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $locale[$key] = array_map(array($this, 'translate'), $item);
             }
             $locale['today']     = $this->translate('Today');
+            $locale['clear']     = $this->translate('Clear');
             $locale['weekStart'] = JFactory::getLanguage()->getFirstDay();
 
             $html .= '<script>
