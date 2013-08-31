@@ -207,7 +207,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'oninput' => 'if(jQuery(this).data(\'datepicker\'))jQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
             )
         ))->append(array(
-             'id'      => 'button-'.$config->name,
+             'id'      => 'datepicker-'.$config->name,
              'options' => array(
                  'todayBtn' => 'linked',
                  'todayHighlight' => true,
@@ -217,7 +217,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                  'calendarWeeks' => true, //Old datepicker used to display these
                  //'orientation' => 'auto right' //popover arrow set to point at the datepicker icon
              )
-            ));
+        ))->append(array(
+            'options' => array(
+                'parentEl' => '#'.$config->id
+            )
+        ));
 
         // Handle the special case for "now".
         if (strtoupper($config->value) == 'NOW')
