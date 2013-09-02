@@ -50,13 +50,13 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         //Render the buttons
         if ($this->_useBootstrap())
         {
-        	$html = '<div class="btn-toolbar koowa-toolbar" id="toolbar">';
+        	$html = '<div class="btn-toolbar toolbar-list" id="toolbar">';
         	$html .= '%s';
 		    $html .= '</div>';
         }
         else
         {
-		    $html  = '<div class="toolbar-list koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+		    $html  = '<div class="toolbar-list" id="toolbar-'.$config->toolbar->getName().'">';
 		    $html .= '<ul>';
 		    $html .= '%s';
 		    $html .= '</ul>';
@@ -115,13 +115,15 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         //Create the id
         $id = 'toolbar-'.$command->id;
-
+        
         if ($this->_useBootstrap())
         {
         	$command->attribs->class->append(array('btn', 'btn-small'));
 			
+        	$icon = $this->_getIconClass($command->icon);
         	if ($command->id === 'new' || $command->id === 'apply') {
         		$command->attribs->class->append(array('btn-success'));
+        		$icon .= ' icon-white';
         	}
 
             $attribs = clone $command->attribs;
@@ -129,6 +131,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         	$html = '<div class="btn-group" id="'.$id.'">';
         	$html .= '<a '.$this->buildAttributes($attribs).'>';
+        	$html .= '<i class="'.$icon.'"></i> ';
         	$html .= $this->translate($command->label);
         	$html .= '</a>';
         	$html .= '</div>';
@@ -141,6 +144,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             $html = '<li class="button" id="'.$id.'">';
 
             $html .= '<a '.$this->buildAttributes($attribs).'>';
+            $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
             $html .= $this->translate($command->label);
             $html .= '</a>';
 
@@ -229,9 +233,8 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         	'command' => NULL
         ));
 
-        JHtml::_('behavior.modal');
-
-        $html = $this->command($config);
+        $html  = $this->getTemplate()->renderHelper('behavior.modal');
+        $html .= $this->command($config);
 
     	return $html;
     }
