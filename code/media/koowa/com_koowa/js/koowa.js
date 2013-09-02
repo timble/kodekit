@@ -350,31 +350,31 @@ Koowa.Controller = Koowa.Class.extend({
         });
     },
     execute: function(event, context){
-        var action   = context.action,
-            method = '_action' + action[0].toUpperCase() + action.substr(1);
+        var action   = context.action[0].toUpperCase() + context.action.substr(1),
+            method = '_action' + action;
 
         context.validate = context.validate || true;
 
-        if (this.trigger('before.'+action, context)) {
+        if (this.trigger('before'+action, context)) {
             method = this[method] ? method : '_actionDefault';
 
             this[method].call(this, context);
 
-            this.trigger('after.'+action, context);
+            this.trigger('after'+action, context);
         }
 
         return this;
     },
     on: function(type, fn){
-        return this.form.on('koowa.'+type, fn);
+        return this.form.on('koowa:'+type, fn);
     },
 
     off: function(type, fn){
-        return this.form.off('koowa.'+type, fn);
+        return this.form.off('koowa:'+type, fn);
     },
 
     trigger: function(type, args){
-        var event = jQuery.Event('koowa.'+type);
+        var event = jQuery.Event('koowa:'+type);
         this.form.trigger(event, args);
         return !event.isDefaultPrevented();
     },
@@ -383,7 +383,7 @@ Koowa.Controller = Koowa.Class.extend({
         var buttons;
 
         if (this.buttons) {
-            this.trigger('before.validate');
+            this.trigger('beforeValidate');
 
             buttons = this.buttons.filter('[data-novalidate!="novalidate"]');
 
@@ -393,7 +393,7 @@ Koowa.Controller = Koowa.Class.extend({
                 buttons.addClass('disabled');
             }
 
-            this.trigger('after.validate');
+            this.trigger('afterValidate');
         }
     }
 });
