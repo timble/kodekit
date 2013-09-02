@@ -188,30 +188,154 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function calendar($config = array())
     {
+        static $loaded;
+
+        if ($loaded === null)
+        {
+            $loaded = array();
+        }
+
         $config = new KObjectConfig($config);
         $config->append(array(
-            'date'	  => gmdate("M d Y H:i:s"),
+            'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
-            'format'  => '%Y-%m-%d %H:%M:%S',
-            'attribs' => array('size' => 25, 'maxlength' => 19)
+            'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
+            'attribs' => array(
+                'size' => 25,
+                'maxlength' => 19,
+                'placeholder' => '', //@TODO placeholder fix for chrome may not be needed anymore
+                'oninput' => 'if(jQuery(this).data(\'datepicker\'))jQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
+            )
         ))->append(array(
-                'id'      => 'button-'.$config->name,
-            ));
+             'id'      => 'datepicker-'.$config->name,
+             'options' => array(
+                 'todayBtn' => 'linked',
+                 'todayHighlight' => true,
+                 'language' => JFactory::getLanguage()->getTag(),
+                 'autoclose' => true, //Same as singleClick in previous js plugin,
+                 'keyboardNavigation' => false, //To allow editing timestamps,
+                 'calendarWeeks' => true, //Old datepicker used to display these
+                 //'orientation' => 'auto right' //popover arrow set to point at the datepicker icon
+             )
+        ))->append(array(
+            'options' => array(
+                'parentEl' => '#'.$config->id
+            )
+        ));
 
-        if($config->date && $config->date != '0000-00-00 00:00:00' && $config->date != '0000-00-00') {
-            $config->date = strftime($config->format, strtotime($config->date) /*+ $config->gmt_offset*/);
+        // Handle the special case for "now".
+        if (strtoupper($config->value) == 'NOW')
+        {
+            $config->value = strftime($config->format);
         }
-        else $config->date = '';
+
+        $html = '';
+
+
+        if($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00') {
+            $config->value = strftime($config->format, strtotime($config->value) /*+ $config->gmt_offset*/);
+        }
+        else $config->value = '';
+
+        // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
+        $config->format = str_replace(
+            array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
+            array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
+            $config->format
+        );
+
+        switch (strtoupper($config->filter))
+        {
+            case 'SERVER_UTC':
+                // Convert a date to UTC based on the server timezone.
+                if (intval($config->value))
+                {
+                    // Get a date object based on the correct timezone.
+                    $date = JFactory::getDate($config->value, 'UTC');
+                    $date->setTimezone(new DateTimeZone(JFactory::getConfig()->get('offset')));
+
+                    // Transform the date string.
+                    $config->value = $date->format('Y-m-d H:i:s', true, false);
+                }
+                break;
+
+            case 'USER_UTC':
+                // Convert a date to UTC based on the user timezone.
+                if (intval($config->value))
+                {
+                    // Get a date object based on the correct timezone.
+                    $date = JFactory::getDate($config->value, 'UTC');
+                    $date->setTimezone(new DateTimeZone(JFactory::getUser()->getParam('timezone', JFactory::getConfig()->get('offset'))));
+
+                    // Transform the date string.
+                    $config->value = $date->format('Y-m-d H:i:s', true, false);
+                }
+                break;
+        }
 
         if (!isset(self::$_loaded['calendar']))
         {
-            JHtml::_('behavior.calendar');
+            $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
+            $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
+
+            $locale = array(
+                'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
+                'daysShort' => array('Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
+                'daysMin' => array('Su','Mo','Tu','We','Th','Fr','Sa','Su'),
+                'months' => array('January','February','March','April','May','June','July','August','September','October','November','December'),
+                'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
+            );
+            foreach($locale as $key => $item){
+                $locale[$key] = array_map(array($this, 'translate'), $item);
+            }
+            $locale['today']     = $this->translate('Today');
+            $locale['clear']     = $this->translate('Clear');
+            $locale['weekStart'] = JFactory::getLanguage()->getFirstDay();
+
+            $html .= '<script>
+            (function($){
+                $.fn.datepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
+            }(jQuery));
+            </script>';
 
             self::$_loaded['calendar'] = true;
         }
 
-        return JHtml::_('calendar', $config->date, $config->name, $config->id, $config->format = '%Y-%m-%d', KObjectConfig::unbox($config->attribs));
+        $attribs = $this->buildAttributes($config->attribs);
+
+        if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled') {
+            // Only display the triggers once for each control.
+            if (!in_array($config->id, $loaded)) {
+                $html .= "<script>
+                    jQuery(function($){
+                        var options = ".$config->options.";
+                        if(!options.hasOwnProperty('parentEl')) {
+                            options.parentEl = $('#".$config->id."').parent();
+                        }
+                        $('#".$config->id."').datepicker(options);
+                    });
+                </script>";
+                $loaded[] = $config->id;
+            }
+
+            $html .= '<div class="input-append date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
+            $html .= '<input type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
+            $html .= '<span class="add-on btn" >';
+            $html .= '<i class="icon-calendar icon-th"></i>&zwnj;'; //&zwnj; is a zero width non-joiner, helps the button get the right height without adding to the width (like with &nbsp;)
+            $html .= '</span>';
+            $html .= '</div>';
+        }
+        else
+        {
+            $html = '';
+            $html .= '<div class="input-append">';
+            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$config->value.'" '.$attribs.' />';
+            $html .= '</div>';
+        }
+
+        return $html;
     }
+
 
     /**
      * Renders an overlay
