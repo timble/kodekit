@@ -141,7 +141,7 @@ Koowa.Class = klass({
     },
     setOptions: function(options) {
         if (typeof options === 'object') {
-            this.options = $.extend(true, this.options, options);
+            this.options = $.extend(true, {}, this.options, options);
         }
     }
 });
