@@ -120,10 +120,8 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         {
         	$command->attribs->class->append(array('btn', 'btn-small'));
 			
-        	$icon = $this->_getIconClass($command->icon);
         	if ($command->id === 'new' || $command->id === 'apply') {
         		$command->attribs->class->append(array('btn-success'));
-        		$icon .= ' icon-white';
         	}
 
             $attribs = clone $command->attribs;
@@ -131,7 +129,6 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         	$html = '<div class="btn-group" id="'.$id.'">';
         	$html .= '<a '.$this->buildAttributes($attribs).'>';
-        	$html .= '<i class="'.$icon.'"></i> ';
         	$html .= $this->translate($command->label);
         	$html .= '</a>';
         	$html .= '</div>';
@@ -144,7 +141,6 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             $html = '<li class="button" id="'.$id.'">';
 
             $html .= '<a '.$this->buildAttributes($attribs).'>';
-            $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
             $html .= $this->translate($command->label);
             $html .= '</a>';
 
