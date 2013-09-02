@@ -109,7 +109,7 @@ if(!Koowa) {
 });
 
 $(document).ready(function() {
-    $('.submittable').on('click', function(event){
+    $('.submittable').on('click.koowa', function(event){
         event.preventDefault();
 
         new Koowa.Form($(event.target).data('config')).submit();
@@ -209,13 +209,13 @@ Koowa.Grid = Koowa.Class.extend({
             this.toggles.prop('disabled', true);
         }
 
-        this.toggles.on('change', function(event, ignore){
+        this.toggles.on('change.koowa', function(event, ignore){
             if(!ignore) {
                 self.checkAll($(this).prop('checked'));
             }
         });
 
-        this.checkboxes.on('change', function(event, ignore){
+        this.checkboxes.on('change.koowa', function(event, ignore){
             if(!ignore) {
                 self.uncheckAll();
             }
@@ -335,7 +335,7 @@ Koowa.Controller = Koowa.Class.extend({
             context.data   = data;
             context.action = options.action;
 
-            button.on('click', function(event) {
+            button.on('click.koowa', function(event) {
                 event.preventDefault();
 
                 context.trigger = button;
@@ -423,7 +423,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
 
         if (this.options.inputs && this.buttons) {
             this.checkValidity();
-            this.form.find(this.options.inputs).on('change', function(event, ignore){
+            this.form.find(this.options.inputs).on('change.koowa', function(event, ignore){
                 if (!ignore) {
                     self.checkValidity();
                 }
@@ -437,7 +437,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
         this.setTableRows();
 
         //<select> elements in headers and footers are for filters, so they need to submit the form on change
-        this.form.find('thead select, tfoot select').on('change', function(){
+        this.form.find('thead select, tfoot select').on('change.koowa', function(){
             if (self.options.ajaxify) {
                 event.preventDefault();
 
@@ -457,7 +457,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                 checkall = element.find('.-koowa-grid-checkall');
 
             if (link.length) {
-                element.on('click', function(event){
+                element.on('click.koowa', function(event){
                     //Don't do anything if the event target is the same as the element
                     if($(event.target)[0] != element[0]) {
                         return;
@@ -480,7 +480,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                 return this;
             } else if(checkall.length) {
                 //Making the <td> or <th> element that's the parent of a checkall checkbox toggle the checkbox when clicked
-                element.on('click', function(event){
+                element.on('click.koowa', function(event){
                     //Don't do anything if the event target is the same as the element
                     if($(event.target)[0] != element[0]) {
                         return true;
@@ -507,7 +507,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             }
 
             // Trigger checkbox when the user clicks anywhere in the row
-            tr.on('click', function(event){
+            tr.on('click.koowa', function(event){
                 var target = $(event.target);
                 if(target.is('[type=checkbox]') || target.is('[type=radio]')) {
                     return;
@@ -517,7 +517,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             });
 
             // Checkbox should add selected and selected-multiple classes to the row
-            checkbox.on('change', function(){
+            checkbox.on('change.koowa', function(){
                 var selected,
                     parent = tr.parent();
 
@@ -561,7 +561,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                 context.data   = data;
                 context.action = options.action;
 
-                action.on(eventType, function(){
+                action.on(eventType+'.koowa', function(){
                     checkboxes.prop('checked', '');
                     checkbox.prop('checked', 'checked');
                     checkboxes.trigger('change', true);
