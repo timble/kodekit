@@ -459,7 +459,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             if (link.length) {
                 element.on('click.koowa', function(event){
                     //Don't do anything if the event target is the same as the element
-                    if($(event.target)[0] != element[0]) {
+                    if(event.target != element[0]) {
                         return;
                     }
 
@@ -482,7 +482,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                 //Making the <td> or <th> element that's the parent of a checkall checkbox toggle the checkbox when clicked
                 element.on('click.koowa', function(event){
                     //Don't do anything if the event target is the same as the element
-                    if($(event.target)[0] != element[0]) {
+                    if(event.target != element[0]) {
                         return true;
                     }
 
