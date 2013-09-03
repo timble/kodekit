@@ -366,6 +366,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 background-color:#FFFFDD;
                 padding: 5px;
             }
+            </style>
             ';
 
             self::$_loaded['overlay'] = true;
