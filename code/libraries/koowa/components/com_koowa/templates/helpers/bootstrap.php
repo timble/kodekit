@@ -61,12 +61,14 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         $config = new KObjectConfig($config);
         $config->append(array(
-            'debug'        => JFactory::getApplication()->getCfg('debug'),
-            'javascript'   => false,
-            'wrapper'      => $identifier->type.'_'.$identifier->package,
-            'package'      => $identifier->package,
-            'file'         => $identifier->type === 'mod' ? 'module' : $identifier->application,
-            'load_default' => version_compare(JVERSION, '3.0', '<')
+            'debug'         => JFactory::getApplication()->getCfg('debug'),
+            'javascript'    => false,
+            'wrapper_class' => $identifier->type.'_'.$identifier->package,
+            'package'       => $identifier->package,
+            'file'          => $identifier->type === 'mod' ? 'module' : $identifier->application,
+            'load_default'  => version_compare(JVERSION, '3.0', '<')
+        ))->append(array(
+            'wrapper'       => sprintf('<div class="koowa %s">%%s</div>', $config->wrapper_class)
         ));
 
         $html = '';
@@ -110,11 +112,8 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         }
 
-        if ($config->wrapper)
-        {
-            $this->wrapper(array(
-                'wrapper' => sprintf('<div class="koowa %s">%%s</div>', $config->wrapper)
-            ));
+        if ($config->wrapper) {
+            $this->wrapper($config);
         }
 
         return $html;
@@ -123,7 +122,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
     /**
      * Wrap the output of the template with a filter
      *
-     * @param array $config
+     * @param array|KObjectConfig $config
      */
     public function wrapper($config = array())
     {
