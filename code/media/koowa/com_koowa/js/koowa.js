@@ -109,7 +109,6 @@ if(!Koowa) {
 });
 
 $(function() {
-    console.log('koowa.js domready');
     $('.submittable').on('click.koowa', function(event){
         event.preventDefault();
 
@@ -117,7 +116,6 @@ $(function() {
     });
 
     $('.-koowa-grid').each(function() {
-        console.log('.-koowa-grid', this);
         new Koowa.Controller.Grid({
             form: this
         });
@@ -145,6 +143,8 @@ Koowa.Class = klass({
         if (typeof options === 'object') {
             this.options = $.extend(true, {}, this.options, options);
         }
+
+        return this;
     }
 });
 
@@ -296,7 +296,6 @@ Koowa.Controller = Koowa.Class.extend({
         }
 
         this.toolbar = $(this.options.toolbar);
-        console.log('controller init called', options);
         this.form.data('controller', this);
 
         this.on('execute', function(){
