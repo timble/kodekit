@@ -438,7 +438,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= "<script>
             jQuery(function($){
-                $('$config->selector').on('koowa.validate', function(event){
+                $('$config->selector').on('koowa:validate', function(event){
                     if(!$(this).valid()) {
                         event.preventDefault();
                     }
