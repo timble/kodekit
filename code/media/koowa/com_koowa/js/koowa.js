@@ -108,7 +108,8 @@ if(!Koowa) {
     return klass
 });
 
-$(document).ready(function() {
+$(function() {
+    console.log('koowa.js domready');
     $('.submittable').on('click.koowa', function(event){
         event.preventDefault();
 
@@ -116,6 +117,7 @@ $(document).ready(function() {
     });
 
     $('.-koowa-grid').each(function() {
+        console.log('.-koowa-grid', this);
         new Koowa.Controller.Grid({
             form: this
         });
@@ -294,6 +296,7 @@ Koowa.Controller = Koowa.Class.extend({
         }
 
         this.toolbar = $(this.options.toolbar);
+        console.log('controller init called', options);
         this.form.data('controller', this);
 
         this.on('execute', function(){

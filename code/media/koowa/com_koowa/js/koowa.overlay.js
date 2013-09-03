@@ -10,7 +10,7 @@ if(!Koowa) {
 }
 
 (function($){
-
+console.log('kooaw.overlay.js');
 /**
  * Overlay class
  */
@@ -32,7 +32,7 @@ Koowa.Overlay = Koowa.Class.extend({
     },
     initialize: function(element, options) {
         var self = this;
-
+console.log('Koowa.Overlay.init');
         this.supr();
 
         this.element = $(element);
