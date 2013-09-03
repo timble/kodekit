@@ -125,11 +125,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 	public function modal($config = array())
 	{
 		$config = new KObjectConfig($config);
-		$config->append(array(
-            'debug' => JFactory::getApplication()->getCfg('debug'),
-			'selector' => '.koowa-modal',
-			'options'  => array()
- 		));
+        $config->append(array(
+            'debug'    => JFactory::getApplication()->getCfg('debug'),
+            'selector' => '.koowa-modal',
+            'data'     => 'koowa-modal',
+            'options'  => array('type' => 'image')
+        ));
 
         $html = '';
 
@@ -150,7 +151,15 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= "<script>
             jQuery(function($){
-                $('$config->selector').magnificPopup($options);
+                $('$config->selector').each(function(idx, el) {
+                    var el = $(el);
+                    var data = el.data('$config->data');
+                    var options = $options;
+                    if (data) {
+                        $.extend(true, options, data);
+                    }
+                    el.magnificPopup(options);
+                });
             });
             </script>";
 
