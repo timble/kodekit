@@ -10,7 +10,6 @@ if(!Koowa) {
 }
 
 (function($){
-console.log('kooaw.overlay.js');
 /**
  * Overlay class
  */
@@ -32,14 +31,12 @@ Koowa.Overlay = Koowa.Class.extend({
     },
     initialize: function(element, options) {
         var self = this;
-console.log('Koowa.Overlay.init');
+
         this.supr();
 
         this.element = $(element);
 
-        if (!this.options.url) {
-            this.options.url = this.element.data('url');
-        }
+        this.setOptions(options).setOptions(this.element.data());
 
         this.options.complete = function(jqXHR) {
             // FIXME: jQuery cannot parse <body> tags inside $ function
@@ -104,7 +101,6 @@ console.log('Koowa.Overlay.init');
                 });
             }
         };
-        this.setOptions(options);
 
         $.ajax(this.options);
     },
