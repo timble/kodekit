@@ -375,6 +375,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 background-color:#FFFFDD;
                 padding: 5px;
             }
+            </style>
             ';
 
             self::$_loaded['overlay'] = true;
@@ -403,9 +404,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         //Don't pass an empty array as options
         $options = json_encode($config->options->toArray());
-        $html .= sprintf("<script>jQuery(function(){ new Koowa.Overlay('%s', %s);});</script>", $id, $options);
+        $html .= sprintf("<script>jQuery(function(){ new Koowa.Overlay('#%s', %s);});</script>", $id, $options);
 
-        $html .= '<div data-url="'.$url.'" class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
+        $html .= '<div class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
         return $html;
     }
 
@@ -447,7 +448,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= "<script>
             jQuery(function($){
-                $('$config->selector').on('koowa.validate', function(event){
+                $('$config->selector').on('koowa:validate', function(event){
                     if(!$(this).valid()) {
                         event.preventDefault();
                     }

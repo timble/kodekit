@@ -108,7 +108,7 @@ if(!Koowa) {
     return klass
 });
 
-$(document).ready(function() {
+$(function() {
     $('.submittable').on('click.koowa', function(event){
         event.preventDefault();
 
@@ -143,6 +143,8 @@ Koowa.Class = klass({
         if (typeof options === 'object') {
             this.options = $.extend(true, {}, this.options, options);
         }
+
+        return this;
     }
 });
 
@@ -331,7 +333,7 @@ Koowa.Controller = Koowa.Class.extend({
                 data[self.token_name] = self.token_value;
             }
 
-            context.validate = options.novalidate || true;
+            context.validate = options.novalidate !== 'novalidate';
             context.data   = data;
             context.action = options.action;
 
@@ -353,7 +355,9 @@ Koowa.Controller = Koowa.Class.extend({
         var action   = context.action[0].toUpperCase() + context.action.substr(1),
             method = '_action' + action;
 
-        context.validate = context.validate || true;
+        if (typeof context.validate === 'undefined') {
+            context.validate = true;
+        }
 
         if (this.trigger('before'+action, context)) {
             method = this[method] ? method : '_actionDefault';
@@ -557,7 +561,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
                     eventType = action.is('[type="radio"],[type="checkbox"],select') ? 'change' : 'click';
                 }
 
-                context.validate = options.novalidate || true;
+                context.validate = options.novalidate !== 'novalidate';
                 context.data   = data;
                 context.action = options.action;
 

@@ -10,7 +10,6 @@ if(!Koowa) {
 }
 
 (function($){
-
 /**
  * Overlay class
  */
@@ -37,9 +36,7 @@ Koowa.Overlay = Koowa.Class.extend({
 
         this.element = $(element);
 
-        if (!this.options.url) {
-            this.options.url = this.element.data('url');
-        }
+        this.setOptions(options).setOptions(this.element.data());
 
         this.options.complete = function(jqXHR) {
             // FIXME: jQuery cannot parse <body> tags inside $ function
@@ -104,7 +101,6 @@ Koowa.Overlay = Koowa.Class.extend({
                 });
             }
         };
-        this.setOptions(options);
 
         $.ajax(this.options);
     },
