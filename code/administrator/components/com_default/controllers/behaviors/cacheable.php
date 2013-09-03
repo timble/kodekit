@@ -232,7 +232,7 @@ class ComDefaultControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	    $view  = $this->getView();
 	    $state = $this->getModel()->getState()->toArray();
 
-	    $key = $view->getLayout().'-'.$view->getFormat().':'.md5(http_build_query($state));
+	    $key = $view->getLayout().'-'.$view->getFormat().':'.md5(http_build_query($state), '', '&');
 	    return $key;
 	}
 
