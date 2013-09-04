@@ -148,16 +148,16 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     protected function _commandModal(KControllerToolbarCommand $command)
     {
         $command->append(array(
-            'width'   => '640',
-            'height'  => '480',
             'href'	  => ''
         ))->append(array(
                 'attribs' => array(
-                    'class' => array('modal'),
+                    'class' => array('koowa-modal'),
                     'href'  => $command->href,
-                    'rel'   => '{handler: \'iframe\', size: {x: '.$command->width.', y: '.$command->height.'}}'
+                    'data-koowa-modal'   => array('type' => 'iframe')
                 )
             ));
+
+        $command->attribs['data-koowa-modal'] = json_encode($command->attribs['data-koowa-modal']);
     }
 
     /**
