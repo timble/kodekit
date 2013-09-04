@@ -39,7 +39,7 @@ Koowa.Overlay = Koowa.Class.extend({
         this.setOptions(options).setOptions(this.element.data());
 
         this.options.complete = function(jqXHR) {
-            var parsed = $.parseHTML(jqXHR.responseText, document, true),
+            var parsed = $.parseHTML(jqXHR.responseText, document, self.options.evalScripts),
                 element = $(parsed),
                 body = element.find(self.options.selector).length ? element.find(self.options.selector) : element;
             self.element.empty().append(body);
