@@ -3,8 +3,13 @@ module('Requests', {
     teardown: function(){}
 });
 
-test('Simple requests', function(){
-    var overlay = createOverlay({selector: '[id=main]', url: 'samples/Home.html'}, {id: 'test'});
-    
-    ok(1, 'OK');
+asyncTest('Simple [id=?] requests', function(){
+    expect(1);
+
+    var selector = '[id=main]', overlay = createOverlay({selector: selector, url: 'samples/Home.html'}, {id: 'test'});
+
+    setTimeout(function() {
+        ok(overlay.element.children(selector).length, "Overlay contains div#main element from request." );
+        start();
+    }, 500 );
 });

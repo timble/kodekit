@@ -19,7 +19,7 @@ Koowa.Overlay = Koowa.Class.extend({
      * @returns {object}
      */
     getOptions: function() {
-        return $.extend(this.supr(), {
+        return $.extend(true, this.supr(), {
             selector: 'body',
             ajaxify: true,
             method: 'get',
@@ -39,10 +39,9 @@ Koowa.Overlay = Koowa.Class.extend({
         this.setOptions(options).setOptions(this.element.data());
 
         this.options.complete = function(jqXHR) {
-            // FIXME: jQuery cannot parse <body> tags inside $ function
-            var element = $(jqXHR.responseText),
+            var parsed = $.parseHTML(jqXHR.responseText, document, true),
+                element = $(parsed),
                 body = element.find(self.options.selector).length ? element.find(self.options.selector) : element;
-            console.log(body, element.find(self.options.selector));
             self.element.empty().append(body);
 
             if (self.options.evalScripts) {
@@ -105,7 +104,7 @@ Koowa.Overlay = Koowa.Class.extend({
         $.ajax(this.options);
     },
     send: function(options){
-        options = $.extend({}, this.options, options);
+        options = $.extend(true, {}, this.options, options);
 
         $.ajax(options);
     },
