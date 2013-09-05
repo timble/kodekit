@@ -5,14 +5,8 @@
     <title>HTML5 sample site</title>
     <script src="samples/html5alt/script.js"></script>
     <script>
-        var elements = document.querySelectorAll('#section time');
-        for (key in elements)
-        {
-            if(elements.hasOwnProperty(key)) break;
-
-            elements[key].style.position = 'absolute';
-        }
-
+        $('#section2 time').css('position', 'absolute');
+        alert('#section2 time');
     </script>
     <link rel="stylesheet" href="samples/html5alt/stylesheet.css" type="text/css" />
     <style>
@@ -22,7 +16,7 @@
     </style>
 </head>
 <body>
-<header id="header">
+<header id="header2">
     <nav>
         <ul>
             <li>Your menu</li>
@@ -30,7 +24,7 @@
     </nav>
 </header>
 
-<section id="section">
+<section id="section2">
 
     <article>
         <header>

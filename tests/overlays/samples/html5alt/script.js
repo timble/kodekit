@@ -1,7 +1,2 @@
-var elements = document.querySelectorAll('#section a');
-for (key in elements)
-{
-    if(elements.hasOwnProperty(key)) break;
-
-    elements[key].style.position = 'absolute';
-}
+$('#section2 a').css('position', 'absolute');
+alert('#section2 a');
