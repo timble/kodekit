@@ -40,17 +40,19 @@ Koowa.Overlay = Koowa.Class.extend({
         this.setOptions(options).setOptions(this.element.data());
 
         this.options.complete = function(jqXHR) {
-            var parsed = $.parseHTML(jqXHR.responseText, document, self.options.evalScripts),
-                element = $(parsed),
+            var element = $('<div>'+jqXHR.responseText+'</div>'),
+                scripts = element.find('script').detach(),
+                styles = element.find('link[type=text\\/css],style').detach(),
                 body = element.find(self.options.selector).length ? element.find(self.options.selector) : element;
+
             self.element.empty().append(body);
 
             if (self.options.evalScripts) {
-                self.evaluateScripts(element.find('script[type=text/javascript]'));
+                self.evaluateScripts(scripts);
             }
 
             if (self.options.evalStyles) {
-                self.evaulateStyles(element.find('link[type=text/css]'));
+                self.evaulateStyles(styles);
             }
 
             if (self.options.ajaxify) {
@@ -110,9 +112,17 @@ Koowa.Overlay = Koowa.Class.extend({
         $.ajax(options);
     },
     evaulateStyles: function(styles) {
-        styles.each(function(style) {
-            $(style).appendTo($('head'));
+
+        /*
+        //@TODO
+        var url = this.options.url;
+        styles.map(function(){
+            if($(this).is('style')) return this;
+            return $(this).attr('href', url + $(this).attr('href'));
         });
+        //*/
+
+        styles.appendTo('head');
     },
     evaluateScripts: function(scripts) {
         var script,
