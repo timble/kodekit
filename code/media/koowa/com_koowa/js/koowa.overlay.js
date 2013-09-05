@@ -26,7 +26,8 @@ Koowa.Overlay = Koowa.Class.extend({
             cache: false,
             dataType: 'text',
             evalScripts: false,
-            evalStyles: false
+            evalStyles: false,
+            transport: $.ajax
         });
     },
     initialize: function(element, options) {
