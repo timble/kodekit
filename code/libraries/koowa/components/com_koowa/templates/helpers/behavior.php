@@ -154,7 +154,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $('$config->selector').each(function(idx, el) {
                     var el = $(el);
                     var data = el.data('$config->data');
-                    var options = $options;
+                    var options = $.parseJSON('$options');
                     if (data) {
                         $.extend(true, options, data);
                     }
@@ -169,7 +169,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         return $html;
 	}
 
-
     /**
      * Render a tooltip
      *
@@ -180,13 +179,42 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'selector' => '.hasTip',
+            'selector' => '.koowa-tooltip',
+            'data'     => 'koowa-tooltip',
             'options'  => array()
         ));
 
-        JHTML::_('behavior.tooltip', $config->selector, $config->options->toArray());
+        $html = '';
 
-        return '';
+        if(!isset(self::$_loaded['tooltip']))
+        {
+            $html .= $this->jquery();
+            self::$_loaded['tooltip'] = true;
+        }
+
+        $options = json_encode($config->options->toArray());
+
+        $signature = md5('tooltip-'.$config->selector.$options);
+
+        if(!isset(self::$_loaded[$signature]))
+        {
+            $html .= "<script>
+                jQuery(function($) {
+                    $('$config->selector').each(function(idx, el) {
+                        var el = $(el);
+                        var data = el.data('$config->data');
+                        var options = $.parseJSON('$options');
+                        if (data) {
+                            $.extend(true, options, data);
+                        }
+                        el.tooltip(options);
+                        });
+                });
+            </script>";
+
+        }
+
+        return $html;
     }
 
     /**
