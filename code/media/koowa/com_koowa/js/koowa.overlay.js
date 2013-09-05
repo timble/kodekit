@@ -48,7 +48,8 @@ Koowa.Overlay = Koowa.Class.extend({
             self.element.empty().append(body);
 
             if (self.options.evalScripts) {
-                self.evaluateScripts(scripts);
+                scripts.appendTo('head');
+                //self.evaluateScripts(scripts);
             }
 
             if (self.options.evalStyles) {
@@ -139,8 +140,19 @@ Koowa.Overlay = Koowa.Class.extend({
                         $(document).ready();
                     }
                 };
+
+                var el = script[0];
                 if(script.attr('src')) {
-                    new $.getScript(script.attr('src'), callback);
+                    $.ajax({
+                        url: script.attr('src'),
+                        complete: function(){
+                            //ready state stuff load check to continue the queue
+                            document.head.appendChild(el);
+                            callback.call();
+                        }
+                    });
+                    //script.on('load', callback).appendTo('head');
+                    //new $.getScript(script.attr('src'), callback);
 
                 } else {
                     script.appendTo('head');
