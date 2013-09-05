@@ -27,25 +27,26 @@ asyncTest('evalStyles: false, evalScripts: false', function(){
 
     var selector = '#section', overlay = createOverlay({selector: selector, url: 'samples/html5.html', evalStyles: false, evalScripts: false}, {id: 'test3'});
     setTimeout(function() {
-        notEqual(overlay.element.find('article').css('position'), 'absolute', "<article> position: static, inline style tag not applied" );
-        notEqual(overlay.element.find('footer').css('position'), 'absolute', "<footer> position: static, external stylesheet not applied" );
-        notEqual(overlay.element.find('#section header').css('position'), 'absolute', "#section <header> position: static, inline script tag did not run" );
-        notEqual(overlay.element.find('#section h2').css('position'), 'absolute', "#section <h2> position: static, external script did not run" );
+        notEqual(overlay.element.find('article').css('position'), 'absolute', "inline style tag not applied" );
+        notEqual(overlay.element.find('footer').css('position'), 'absolute', "external stylesheet not applied" );
+        notEqual(overlay.element.find('#section header').css('position'), 'absolute', "inline script tag did not run" );
+        notEqual(overlay.element.find('#section h2').css('position'), 'absolute', "external script did not run" );
         start();
     }, 500 );
 });
 
 asyncTest('evalStyles: true, evalScripts: true', function(){
-    expect(4);
+    expect(5);
 
     var selector = '#section2';
 
     var overlay = createOverlay({selector: selector, url: 'samples/html5alt.html', evalStyles: true, evalScripts: true}, {id: 'test4'});
     setTimeout(function() {
-        equal(overlay.element.find('article > p').css('position'), 'absolute', "<article> > <p> position: absolute, inline style tag applied" );
-        equal(overlay.element.find('header > p').css('position'), 'absolute', "<header> > <p> position: absolute, external stylesheet applied" );
-        equal(overlay.element.find('#section time').css('position'), 'absolute', "#section <time> position: absolute, inline script tag ran" );
-        equal(overlay.element.find('#section a').css('position'), 'absolute', "#section <a> position: absolute, external script ran" );
+        equal(overlay.element.find('article > p').css('position'), 'absolute', "inline style tag applied" );
+        equal(overlay.element.find('header > p').css('position'), 'absolute', "external stylesheet applied" );
+        equal(overlay.element.find('#section2 time').css('position'), 'absolute', "inline script tag ran" );
+        equal(overlay.element.find('#section2 a').css('position'), 'absolute', "external script ran" );
+        equal(overlay.element.find('#section2 footer').css('float'), 'right', "domready fired" );
         start();
     }, 500 );
 });

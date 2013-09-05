@@ -49,11 +49,10 @@ Koowa.Overlay = Koowa.Class.extend({
 
             if (self.options.evalScripts) {
                 scripts.appendTo('head');
-                //self.evaluateScripts(scripts);
             }
 
             if (self.options.evalStyles) {
-                self.evaulateStyles(styles);
+                styles.appendTo('head');
             }
 
             if (self.options.ajaxify) {
@@ -105,77 +104,12 @@ Koowa.Overlay = Koowa.Class.extend({
             }
         };
 
-        $.ajax(this.options);
+        this.options.transport(this.options);
     },
     send: function(options){
         options = $.extend(true, {}, this.options, options);
 
-        $.ajax(options);
-    },
-    evaulateStyles: function(styles) {
-
-        /*
-        //@TODO
-        var url = this.options.url;
-        styles.map(function(){
-            if($(this).is('style')) return this;
-            return $(this).attr('href', url + $(this).attr('href'));
-        });
-        //*/
-
-        styles.appendTo('head');
-    },
-    evaluateScripts: function(scripts) {
-        var script,
-            loadScript = function(script){
-                var callback = function() {
-                    if(scripts.length) {
-                        var script = scripts.last();
-                        scripts = scripts.not(script);
-                        loadScript(script);
-                    } else {
-                        //Remove existing domready events as they've fired by now anyway
-                        $(document).off('ready');
-
-                        $(document).ready();
-                    }
-                };
-
-                var el = script[0];
-                if(script.attr('src')) {
-                    $.ajax({
-                        url: script.attr('src'),
-                        complete: function(){
-                            //ready state stuff load check to continue the queue
-                            document.head.appendChild(el);
-                            callback.call();
-                        }
-                    });
-                    //script.on('load', callback).appendTo('head');
-                    //new $.getScript(script.attr('src'), callback);
-
-                } else {
-                    script.appendTo('head');
-                    callback.call();
-                }
-
-            };
-
-        scripts = scripts.filter(function(i, el) {
-            var script = $(el);
-
-            if(script.attr('src')) {
-                return $('script[src$="' + script.attr('src').replace(location.origin, '') + '"]').length < 1;
-            }
-
-            return true;
-        });
-
-        if(scripts.length) {
-            var script = scripts.last();
-            scripts = scripts.not(script);
-            loadScript(scripts);
-        }
+        this.options.transport(options);
     }
 });
 
