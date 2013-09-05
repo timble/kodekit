@@ -1,1 +1,1 @@
-console.log('external script');
+$('#section h2').css('position', 'absolute');

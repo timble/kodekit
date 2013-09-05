@@ -23,20 +23,20 @@ asyncTest('Simple selector requests', function(){
 });
 
 asyncTest('eval Style and Script options', function(){
-    //expect(4);
-    //stop(3);
+    expect(8);
+    stop(3);
 
     var selector = '#section', overlay1 = createOverlay({selector: selector, url: 'samples/html5.html', evalStyles: false});
     setTimeout(function() {
         ok(overlay1.element.find('article').css('position') != 'absolute', "<article> position: absolute" );
         ok(overlay1.element.find('footer').css('position') != 'absolute', "<footer> position: absolute" );
-        console.log(overlay1.element.find('article').css('position'), overlay1.element);
         start();
     }, 500 );
-return;
+
     var overlay2 = createOverlay({selector: selector, url: 'samples/html5.html', evalStyles: true});
     setTimeout(function() {
-        ok(overlay2.element.children(selector).length, "Overlay contains footer element from request." );
+        ok(overlay2.element.find('article').css('position') != 'absolute', "<article> position: absolute" );
+        ok(overlay2.element.find('footer').css('position') != 'absolute', "<footer> position: absolute" );
         start();
     }, 500 );
 
