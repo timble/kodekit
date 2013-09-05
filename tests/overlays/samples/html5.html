@@ -5,7 +5,14 @@
     <title>HTML5 sample site</title>
     <script src="html5/script.js"></script>
     <script>
-        $('#section header').css('position', 'absolute');
+        var elements = document.querySelectorAll('#section header');
+        for (key in elements)
+        {
+            if(elements.hasOwnProperty(key)) break;
+
+            elements[key].style.position = 'absolute';
+        }
+
     </script>
     <link href="html5/stylesheet.css" />
     <style>
@@ -41,6 +48,10 @@
         <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
     </article>
 
+    <footer>
+        <p>Copyright 2009 Your name</p>
+    </footer>
+
 </section>
 
 <aside>
@@ -48,8 +59,5 @@
     <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
 </aside>
 
-<footer>
-    <p>Copyright 2009 Your name</p>
-</footer>
 </body>
 </html>
