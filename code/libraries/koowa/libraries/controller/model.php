@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerModel extends KControllerView
+abstract class KControllerModel extends KControllerView implements KControllerModellable
 {
  	/**
      * Initializes the default configuration for the object

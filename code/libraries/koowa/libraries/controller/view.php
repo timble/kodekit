@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerView extends KControllerAbstract
+abstract class KControllerView extends KControllerAbstract implements KControllerViewable
 {
 	/**
 	 * URL for redirection.
