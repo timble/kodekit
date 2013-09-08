@@ -28,10 +28,9 @@ interface KControllerInterface
     /**
      * Gets the available actions in the controller.
      *
-     * @param  bool $reload Reload the actions again
      * @return array Actions
      */
-    public function getActions($reload = false);
+    public function getActions();
 
     /**
      * Register (map) an action to a method in the class.
@@ -56,39 +55,6 @@ interface KControllerInterface
 	 * @return KControllerInterface
 	 */
 	public function setRequest(array $request);
-
-    /**
-     * Check if a behavior exists
-     *
-     * @param 	string	$behavior The name of the behavior
-     * @return  boolean	TRUE if the behavior exists, FALSE otherwise
-     */
-    public function hasBehavior($behavior);
-
-    /**
-     * Add one or more behaviors to the controller
-     *
-     * @param   array   $behaviors Array of one or more behaviors to add.
-     * @return  KControllerAbstract
-     */
-    public function addBehavior($behaviors);
-
-    /**
-     * Get a behavior by identifier
-     *
-     * @param  string        $behavior The name of the behavior
-     * @param  KObjectConfig|array $config Configuration of the behavior
-     * @throws UnexpectedValueException
-     * @return KControllerBehaviorAbstract
-     */
-    public function getBehavior($behavior, $config = array());
-
-    /**
-     * Gets the behaviors of the table
-     *
-     * @return array An associate array of table behaviors, keys are the behavior names
-     */
-    public function getBehaviors();
 
     /**
      * Has the controller been dispatched

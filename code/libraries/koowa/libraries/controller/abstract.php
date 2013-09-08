@@ -18,18 +18,18 @@
 abstract class KControllerAbstract extends KObject implements KControllerInterface
 {
     /**
+     * The class actions
+     *
+     * @var array
+     */
+    protected $_actions = array();
+
+    /**
      * Array of class methods to call for a given action.
      *
      * @var array
      */
     protected $_action_map = array();
-
-    /**
-     * The class actions
-     *
-     * @var array
-     */
-    protected $_actions;
 
     /**
      * Has the controller been dispatched
@@ -45,14 +45,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	 */
 	protected $_request = null;
 
-	/**
-	 * List of behaviors
-	 *
-	 * Associative array of behaviors, where key holds the behavior identifier string and the value is an identifier object.
+    /**
+     * Chain of command object
      *
-	 * @var	array
-	 */
-	protected $_behaviors = array();
+     * @var KCommandChain
+     */
+    protected $_command_chain;
 
     /**
      * Constructor.
@@ -69,16 +67,11 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
          //Set the dispatched state
         $this->_dispatched = $config->dispatched;
 
-        // Mixin the command chain
-        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
-
         //Set the request
         $this->setRequest((array) KObjectConfig::unbox($config->request));
 
-        // Set the table behaviors
-        if(!empty($config->behaviors)) {
-            $this->addBehavior($config->behaviors);
-        }
+        // Mixin the behavior interface
+        $this->mixin('koowa:behavior.mixin', $config);
     }
 
     /**
@@ -92,8 +85,9 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => $this->getObject('koowa:command.chain'),
+            'command_chain'     => 'koowa:command.chain',
             'dispatch_events'   => true,
+            'event_dispatcher'  => 'koowa:event.dispatcher',
             'enable_callbacks'  => true,
             'dispatched'		=> false,
             'request'		    => null,
@@ -140,22 +134,14 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         //Execute the action
         if($this->getCommandChain()->run('before.'.$command, $context) !== false)
         {
-            $method = '_action'.ucfirst($command);
+            $method = '_action' . ucfirst($command);
 
-            if(!method_exists($this, $method))
+            if (!method_exists($this, $method))
             {
-                //Lazy mix behaviors
-                if(!isset($this->_mixed_methods[$method]))
-		        {
-			        foreach($this->getBehaviors() as $behavior) {
-				        $this->mixin($behavior);
-			        }
-		        }
-
-                if(isset($this->_mixed_methods[$command])) {
-                    $context->result = $this->_mixed_methods[$command]->execute('action.'.$command, $context);
+                if (isset($this->_mixed_methods[$command])) {
+                    $context->result = $this->_mixed_methods[$command]->execute('action.' . $command, $context);
                 } else {
-                    throw new BadMethodCallException("Can't execute '$command', method: '$method' does not exist");
+                    throw new KControllerExceptionNotImplemented("Can't execute '$command', method: '$method' does not exist");
                 }
             }
             else  $context->result = $this->$method($context);
@@ -180,31 +166,47 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     }
 
     /**
-     * Gets the available actions in the controller.
+     * Mixin an object
      *
-     * @param  bool $reload Reload the actions again
-     * @return array Actions
+     * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
+     *
+     * @@param   mixed  $mixin  An object that implements KObjectMixinInterface, KObjectIdentifier object
+     *                          or valid identifier string
+     * @param    array $config  An optional associative array of configuration options
+     * @return  KObject
      */
-    public function getActions($reload = false)
+    public function mixin($mixin, $config = array())
     {
-        if(!$this->_actions || $reload)
+        if ($mixin instanceof KControllerBehaviorAbstract)
         {
-            $this->_actions = array();
-
-            foreach($this->getMethods() as $method)
+            foreach ($mixin->getMethods() as $method)
             {
-                if(substr($method, 0, 7) == '_action') {
+                if (substr($method, 0, 7) == '_action') {
                     $this->_actions[] = strtolower(substr($method, 7));
                 }
             }
 
-            foreach($this->_behaviors as $behavior)
+            $this->_actions = array_unique(array_merge($this->_actions, array_keys($this->_action_map)));
+        }
+
+        return parent::mixin($mixin, $config);
+    }
+
+    /**
+     * Gets the available actions in the controller.
+     *
+     * @return  array Array[i] of action names.
+     */
+    public function getActions()
+    {
+        if (!$this->_actions)
+        {
+            $this->_actions = array();
+
+            foreach ($this->getMethods() as $method)
             {
-                foreach($behavior->getMethods() as $method)
-                {
-                    if(substr($method, 0, 7) == '_action') {
-                        $this->_actions[] = strtolower(substr($method, 7));
-                    }
+                if (substr($method, 0, 7) == '_action') {
+                    $this->_actions[] = strtolower(substr($method, 7));
                 }
             }
 
@@ -240,91 +242,48 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 		return $this;
 	}
 
-	/**
-     * Check if a behavior exists
+    /**
+     * Get the chain of command object
      *
-     * @param 	string	$behavior The name of the behavior
-     * @return  boolean	TRUE if the behavior exists, FALSE otherwise
-     */
-	public function hasBehavior($behavior)
-	{
-	    return isset($this->_behaviors[$behavior]);
-	}
-
-	/**
-     * Add one or more behaviors to the controller
+     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
+     * to the KCommandChain mixin.
      *
-     * @param   array   $behaviors Array of one or more behaviors to add.
-     * @return  KControllerAbstract
+     * @return  KCommandChainInterface
      */
-    public function addBehavior($behaviors)
+    public function getCommandChain()
     {
-        $behaviors = (array) KObjectConfig::unbox($behaviors);
-
-        foreach($behaviors as $behavior)
+        if(!$this->_command_chain instanceof KCommandChainInterface)
         {
-            if (!($behavior instanceof KControllerBehaviorInterface)) {
-                $behavior = $this->getBehavior($behavior);
-            } else {
-            	$behavior->setMixer($this);
-            }
+            //Ask the parent the relay the call to the mixin
+            $this->_command_chain = parent::getCommandChain();
 
-            //Add the behaviors
-            $this->_behaviors[$behavior->getIdentifier()->name] = $behavior;
-
-            if($this->getCommandChain()->enqueue($behavior)) {
-                $this->_actions = null; //reset the actions
+            if(!$this->_command_chain instanceof KCommandChainInterface)
+            {
+                throw new UnexpectedValueException(
+                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
+                );
             }
         }
 
-        return $this;
-    }
-
-	/**
-     * Get a behavior by identifier
-     *
-     * @param  string        $behavior The name of the behavior
-     * @param  KObjectConfig|array $config Configuration of the behavior
-     * @return KControllerBehaviorAbstract
-     *
-     * @throws UnexpectedValueException
-     */
-    public function getBehavior($behavior, $config = array())
-    {
-       if(!($behavior instanceof KObjectIdentifier))
-       {
-            //Create the complete identifier if a partial identifier was passed
-           if(is_string($behavior) && strpos($behavior, '.') === false )
-           {
-               $identifier = clone $this->getIdentifier();
-               $identifier->path = array('controller', 'behavior');
-               $identifier->name = $behavior;
-           }
-           else $identifier = $this->getIdentifier($behavior);
-       }
-
-       if(!isset($this->_behaviors[$identifier->name]))
-       {
-           $behavior = $this->getObject($identifier, array_merge($config, array('mixer' => $this)));
-
-           //Check the behavior interface
-		   if(!($behavior instanceof KControllerBehaviorInterface)) {
-			   throw new UnexpectedValueException("Controller behavior $identifier does not implement KControllerBehaviorInterface");
-		   }
-       }
-       else $behavior = $this->_behaviors[$identifier->name];
-
-       return $behavior;
+        return $this->_command_chain;
     }
 
     /**
-     * Gets the behaviors of the table
+     * Get the command chain context
      *
-     * @return array    An associate array of table behaviors, keys are the behavior names
+     * Overrides CommandMixin::getCommandContext() to insert the request and response objects into the controller
+     * command context.
+     *
+     * @return  KCommandContext
+     * @see KCommandMixin::getCommandContext
      */
-    public function getBehaviors()
+    public function getCommandContext()
     {
-        return $this->_behaviors;
+        $context = parent::getCommandContext();
+
+        //$context->request = $this->getRequest();
+
+        return $context;
     }
 
     /**
@@ -335,16 +294,16 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * @return  KControllerAbstract
      */
-    public function registerActionAlias( $alias, $action )
+    public function registerActionAlias($alias, $action)
     {
-        $alias = strtolower( $alias );
+        $alias = strtolower($alias);
 
-        if ( !in_array($alias, $this->getActions()) )  {
+        if (!in_array($alias, $this->getActions())) {
             $this->_action_map[$alias] = $action;
         }
 
         //Force reload of the actions
-        $this->getActions(true);
+        $this->_actions = array_unique(array_merge($this->_actions, array_keys($this->_action_map)));
 
         return $this;
     }

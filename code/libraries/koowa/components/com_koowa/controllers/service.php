@@ -41,7 +41,7 @@ class ComKoowaControllerService extends KControllerService
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
 
         if($this->isDispatched() && $config->persistable) {
-            $this->addBehavior('persistable');
+            $this->attachBehavior('persistable');
         }
 	}
 

@@ -60,6 +60,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     protected $_defaults;
 
     /**
+     * Chain of command object
+     *
+     * @var KCommandChain
+     */
+    protected $_command_chain;
+
+    /**
      * Object constructor
      *
      * @param   KObjectConfig $config Configuration options.
@@ -108,13 +115,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             }
         }
 
-        // Mixin a command chain
-         $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
-
-        // Set the table behaviors
-        if(!empty($config->behaviors)) {
-            $this->addBehavior($config->behaviors);
-        }
+        // Mixin the behavior interface
+        $this->mixin('koowa:behavior.mixin', $config);
     }
 
     /**
@@ -137,7 +139,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             'filters'           => array(),
             'behaviors'         => array(),
             'identity_column'   => null,
-            'command_chain'     => $this->getObject('koowa:command.chain'),
+            'command_chain'     => 'koowa:command.chain',
             'dispatch_events'   => false,
             'enable_callbacks'  => false,
         ))->append(
@@ -242,87 +244,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         }
 
         return $keys;
-    }
-
-	/**
-     * Check if a behavior exists
-     *
-     * @param 	string	$behavior The name of the behavior
-     * @return  boolean	TRUE if the behavior exists, FALSE otherwise
-     */
-	public function hasBehavior($behavior)
-	{
-	    return isset($this->getSchema()->behaviors[$behavior]);
-	}
-
-	/**
-     * Register one or more behaviors to the table
-     *
-     * @param   array  $behaviors Array of one or more behaviors to add.
-     * @return  KDatabaseTableAbstract
-     */
-    public function addBehavior($behaviors)
-    {
-        $behaviors = (array) KObjectConfig::unbox($behaviors);
-
-        foreach($behaviors as $behavior)
-        {
-            if (!($behavior instanceof KDatabaseBehaviorInterface)) {
-                $behavior   = $this->getBehavior($behavior);
-            }
-
-		    //Add the behavior
-            $this->getSchema()->behaviors[$behavior->getIdentifier()->name] = $behavior;
-            $this->getCommandChain()->enqueue($behavior);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get a behavior by identifier
-     *
-     * @param  string        $behavior The name of the behavior
-     * @param  KObjectConfig|array $config Configuration of the behavior
-     * @throws UnexpectedValueException
-     * @return KDatabaseBehaviorInterface
-     */
-    public function getBehavior($behavior, $config = array())
-    {
-       if(!($behavior instanceof KObjectIdentifier))
-       {
-            //Create the complete identifier if a partial identifier was passed
-           if(is_string($behavior) && strpos($behavior, '.') === false )
-           {
-               $identifier = clone $this->getIdentifier();
-               $identifier->path = array('database', 'behavior');
-               $identifier->name = $behavior;
-           }
-           else $identifier = $this->getIdentifier($behavior);
-       }
-
-       if(!isset($this->getSchema()->behaviors[$identifier->name]))
-       {
-           $behavior = $this->getObject($identifier, array_merge($config, array('mixer' => $this)));
-
-           //Check the behavior interface
-		   if(!($behavior instanceof KDatabaseBehaviorInterface)) {
-			   throw new UnexpectedValueException("Database behavior $identifier does not implement KDatabaseBehaviorInterface");
-		   }
-       }
-       else $behavior = $this->getSchema()->behaviors[$identifier->name];
-
-       return $behavior;
-    }
-
-	/**
-     * Gets the behaviors of the table
-     *
-     * @return array An associative array of table behaviors, keys are the behavior names
-     */
-    public function getBehaviors()
-    {
-        return $this->getSchema()->behaviors;
     }
 
     /**
@@ -553,6 +474,32 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     	}
     
     	return $this->getObject($identifier, $options);
+    }
+
+    /**
+     * Get the chain of command object
+     *
+     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
+     * to the KCommandChain mixin.
+     *
+     * @return  KCommandChainInterface
+     */
+    public function getCommandChain()
+    {
+        if(!$this->_command_chain instanceof KCommandChainInterface)
+        {
+            //Ask the parent the relay the call to the mixin
+            $this->_command_chain = parent::getCommandChain();
+
+            if(!$this->_command_chain instanceof KCommandChainInterface)
+            {
+                throw new UnexpectedValueException(
+                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
+                );
+            }
+        }
+
+        return $this->_command_chain;
     }
     
     /**
