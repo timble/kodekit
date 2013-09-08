@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerService extends KControllerResource
+abstract class KControllerService extends KControllerView
 {
  	/**
      * Initializes the default configuration for the object
