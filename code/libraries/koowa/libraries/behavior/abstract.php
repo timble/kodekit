@@ -184,7 +184,7 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods   = parent::getMixableMethods($mixer);
-        $methods[] = 'is'.ucfirst($this->getIdentifier()->name);
+        $methods['is'.ucfirst($this->getIdentifier()->name)] = 'is'.ucfirst($this->getIdentifier()->name);
 
         return array_diff($methods, array('execute', 'getIdentifier', 'getPriority', 'getHandle', 'getObject', 'getIdentifier'));
     }
