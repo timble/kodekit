@@ -72,35 +72,15 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
         {
             $action = $parts[1];
 
-            //Check if the action exists
-            if(!in_array($action, $context->caller->getActions()))
+            if($this->canExecute($action) === false)
             {
-                $context->setError(new KControllerExceptionNotImplemented(
-            		'Action '.ucfirst($action).' Not Implemented', KHttpResponse::NOT_IMPLEMENTED
-                ));
+                if(!JFactory::getUser()->guest) {
+                    $context->setError(new KControllerExceptionForbidden('Action '.ucfirst($action).' Not Allowed'));
+                } else {
+                    $context->setError(new KControllerExceptionUnauthorized('Action '.ucfirst($action).' Not Allowed'));
+                }
 
-                $context->header = array('Allow' =>  $context->caller->execute('options', $context));
                 return false;
-            }
-
-            //Check if the action can be executed
-            $method = 'can'.ucfirst($action);
-
-            if(method_exists($this, $method))
-            {
-		        if($this->$method() === false)
-		        {
-		            if($context->action != 'options')
-		            {
-		                $context->setError(new KControllerExceptionForbidden(
-		        			'Action '.ucfirst($action).' Not Allowed', KHttpResponse::FORBIDDEN
-		                ));
-
-		                $context->header = array('Allow' =>  $context->caller->execute('options', $context));
-		            }
-
-		            return false;
-		        }
             }
         }
 
@@ -140,6 +120,29 @@ class KControllerBehaviorExecutable extends KControllerBehaviorAbstract
     public function isReadOnly()
     {
         return $this->_readonly;
+    }
+
+    /**
+     * Check if an action can be executed
+     *
+     * @param   string  $action Action name
+     * @return  boolean True if the action can be executed, otherwise FALSE.
+     */
+    public function canExecute($action)
+    {
+        //Check if the action is allowed
+        $method = 'can'.ucfirst($action);
+
+        if(!in_array($method, $this->getMixer()->getMethods()))
+        {
+            $actions = $this->getActions();
+            $actions = array_flip($actions);
+
+            $result = isset($actions[$action]);
+        }
+        else $result = $this->$method();
+
+        return $result;
     }
 
 	/**
