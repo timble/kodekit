@@ -562,7 +562,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
             $config = $this->_configure($identifier, $config);
 
             // Delegate object instantiation.
-            if (array_key_exists('KObjectInstantiatable', class_implements($identifier->classname, false))) {
+            if (array_key_exists('KObjectInstantiable', class_implements($identifier->classname, false))) {
                 $result = call_user_func(array($identifier->classname, 'getInstance'), $config, $this);
             } else {
                 $result = new $identifier->classname($config);
