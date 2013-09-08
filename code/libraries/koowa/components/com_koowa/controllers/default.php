@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerDefault extends ComKoowaControllerService
+class ComKoowaControllerDefault extends ComKoowaControllerModel
 {
 
 }
