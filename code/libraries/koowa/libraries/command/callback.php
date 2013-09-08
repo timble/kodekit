@@ -11,7 +11,7 @@
  * Callback Mixin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Mixin
+ * @package Koowa\Library\Command
  */
 class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
 {
@@ -32,15 +32,8 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
 	{
 		parent::__construct($config);
 
-		if(is_null($config->command_chain)) {
-			throw new InvalidArgumentException('command_chain [KCommandChain] option is required');
-		}
-
 		//Set the command priority
 		$this->_priority = $config->priority;
-
-		//Enqueue the command in the mixer's command chain
-		$config->command_chain->enqueue($this);
 	}
 
 	/**
@@ -55,7 +48,6 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
     {
     	$config->append(array(
             'priority'      => KCommand::PRIORITY_NORMAL,
-    		'command_chain'	=> null,
     	));
 
     	parent::_initialize($config);
