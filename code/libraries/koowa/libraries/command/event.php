@@ -16,28 +16,40 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandEvent extends KCommand
+class KCommandEvent extends KObjectMixinAbstract implements KCommandInterface
 {
     /**
-     * The event dispatcher object
+     * Event dispatcher object
      *
-     * @var KEventDispatcher
+     * @var KEventDispatcherInterface
      */
     protected $_event_dispatcher;
 
     /**
-     * Constructor.
+     * The command priority
      *
-     * @param   KObjectConfig $config Configuration options
+     * @var integer
      */
-    public function __construct( KObjectConfig $config = null)
-    {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
+    protected $_priority;
 
+    /**
+     * Object constructor
+     *
+     * @param KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
         parent::__construct($config);
 
+        if (is_null($config->event_dispatcher)) {
+            throw new InvalidArgumentException('event_dispatcher [KEventDispatcherInterface] config option is required');
+        }
+
+        //Set the event dispatcher
         $this->_event_dispatcher = $config->event_dispatcher;
+
+        //Set the command priority
+        $this->_priority = $config->priority;
     }
 
     /**
@@ -45,26 +57,16 @@ class KCommandEvent extends KCommand
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'event_dispatcher' => $this->getObject('koowa:event.dispatcher')
+            'event_dispatcher'  => 'koowa:event.dispatcher',
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Get the event dispatcher
-     *
-     * @return  KEventDispatcherInterface
-     */
-    public function getEventDispatcher()
-    {
-        return $this->_event_dispatcher;
     }
 
     /**
@@ -113,5 +115,63 @@ class KCommandEvent extends KCommand
         }
 
         return true;
+    }
+
+    /**
+     * Get the event dispatcher
+     *
+     * @return  KEventDispatcherInterface
+     */
+    public function getEventDispatcher()
+    {
+        if(!$this->_event_dispatcher instanceof KEventDispatcherInterface)
+        {
+            $this->_event_dispatcher = $this->getObject($this->_event_dispatcher);
+
+            //Make sure the request implements ControllerRequestInterface
+            if(!$this->_event_dispatcher instanceof KEventDispatcherInterface)
+            {
+                throw new UnexpectedValueException(
+                    'EventDispatcher: '.get_class($this->_event_dispatcher).' does not implement KEventDispatcherInterface'
+                );
+            }
+        }
+
+        return $this->_event_dispatcher;
+    }
+
+    /**
+     * Set the event dispatcher
+     *
+     * @param   KEventDispatcherInterface  $dispatcher An event dispatcher object
+     * @return  KObject  The mixer object
+     */
+    public function setEventDispatcher(KEventDispatcherInterface $dispatcher)
+    {
+        $this->_event_dispatcher = $dispatcher;
+        return $this->getMixer();
+    }
+
+    /**
+     * Get the methods that are available for mixin.
+     *
+     * @param  Object $mixer Mixer object
+     * @return array An array of methods
+     */
+    public function getMixableMethods(KObjectMixable $mixer = null)
+    {
+        $methods = parent::getMixableMethods();
+
+        return array_diff($methods, array('execute', 'getPriority'));
+    }
+
+    /**
+     * Get the priority of a behavior
+     *
+     * @return	integer The command priority
+     */
+    public function getPriority()
+    {
+        return $this->_priority;
     }
 }
