@@ -184,12 +184,21 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
             }
         }
 
-        $methods = $mixin->getMixableMethods($this);
-        foreach($methods as $method) {
-            $this->_mixed_methods[$method] = $mixin;
-        }
+        //Set the mixed methods
+        $mixed_methods = $mixin->getMixableMethods($this);
 
-        $this->__methods = array_merge($this->getMethods(), array_keys($this->_mixed_methods));
+        if(!empty($mixed_methods))
+        {
+            foreach($mixed_methods as $name => $method) {
+                $this->_mixed_methods[$name] = $mixin;
+            }
+
+            //Set the object methods, native methods have precedence over mixed methods
+            $mixed_methods = array_keys($mixed_methods);
+            $mixed_methods = array_combine($mixed_methods, $mixed_methods);
+
+            $this->__methods = array_merge($mixed_methods, $this->getMethods());
+        }
 
         //Notify the mixin
         $mixin->onMixin($this);
@@ -294,7 +303,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 
             $reflection = new \ReflectionClass($this);
             foreach ($reflection->getMethods() as $method) {
-                $methods[] = $method->name;
+                $methods[$method->name] = $method->name;
             }
 
             $this->__methods = $methods;
