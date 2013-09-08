@@ -33,22 +33,25 @@ class KCommandMixin extends KObjectMixinAbstract
     {
         parent::__construct($config);
 
+        if(is_null($config->command_chain)) {
+            throw new InvalidArgumentException('command_chain [KCommandChainInterface] config option is required');
+        }
+
         //Create a command chain object
         $this->_command_chain = $config->command_chain;
 
-        //Mixin the callback mixer if callbacks have been enabled
+        //Enqueue the callback command
         if($config->enable_callbacks)
         {
-            $this->getMixer()->mixin(new KCommandCallback(new KObjectConfig(array(
-                'mixer'           => $this->getMixer(),
-                'priority'        => $config->callback_priority,
-                'command_chain'   => $this->_command_chain,
-            ))));
+            $command = $this->getMixer()->mixin('koowa:command.callback', $config);
+            $this->getCommandChain()->enqueue($command, $config->callback_priority);
         }
 
-        //Enqueue the event command with a lowest priority to make sure it runs last
-        if($config->dispatch_events) {
-            $this->_command_chain->enqueue($config->event, $config->event_priority);
+        //Enqueue the event command
+        if($config->dispatch_events)
+        {
+            $command = $this->getMixer()->mixin('koowa:command.event', $config);
+            $this->getCommandChain()->enqueue($command, $config->event_priority);
         }
     }
 
@@ -63,8 +66,8 @@ class KCommandMixin extends KObjectMixinAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => KObjectManager::getInstance()->getObject('koowa:command.chain'),
-            'event'				=> KObjectManager::getInstance()->getObject('koowa:command.event'),
+            'command_chain'     => 'koowa:command.chain',
+            'event_dispatcher'  => null,
             'dispatch_events'   => true,
             'event_priority'    => KCommand::PRIORITY_LOWEST,
             'enable_callbacks'  => false,
@@ -83,7 +86,7 @@ class KCommandMixin extends KObjectMixinAbstract
      */
     public function getCommandContext()
     {
-        $context = $this->_command_chain->getContext();
+        $context = $this->getCommandChain()->getContext();
         $context->caller = $this->getMixer();
 
         return $context;
@@ -96,6 +99,18 @@ class KCommandMixin extends KObjectMixinAbstract
      */
     public function getCommandChain()
     {
+        if(!$this->_command_chain instanceof KCommandChainInterface)
+        {
+            $this->_command_chain = $this->getObject($this->_command_chain);
+
+            if(!$this->_command_chain instanceof KCommandChainInterface)
+            {
+                throw new UnexpectedValueException(
+                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
+                );
+            }
+        }
+
         return $this->_command_chain;
     }
 
