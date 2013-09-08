@@ -8,7 +8,7 @@
  */
 
 /**
- * Abstract Service Controller
+ * Abstract Model Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller

@@ -23,14 +23,14 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     protected $_priority;
 
     /**
-     * The service identifier
+     * The object identifier
      *
      * @var KObjectIdentifier
      */
     private $__object_identifier;
 
     /**
-     * The service manager
+     * The object manager
      *
      * @var KObjectManager
      */

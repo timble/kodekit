@@ -39,7 +39,7 @@ class KFilterFactory extends KObject implements KObjectInstantiable
     /**
      * Factory method for KFilterInterface classes.
      *
-     * Method accepts an array of filter names, or filter service identifiers and will create a chained filter
+     * Method accepts an array of filter names, or filter object identifiers and will create a chained filter
      * using a FIFO approach.
      *
      * @param	string|array $identifier Filter identifier(s)
