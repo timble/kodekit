@@ -123,7 +123,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         }
 
         // Set the type
-        $this->type = $parts['scheme'];
+        $this->type = isset($parts['scheme']) ? $parts['scheme'] : 'koowa';
 
         //Set the application
         if(isset($parts['host'])) {
@@ -362,7 +362,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             if($property == 'type')
             {
                 //Check if the type is registered
-                if(!isset(self::$_locators[$value]))  {
+                if($value != 'koowa' && !isset(self::$_locators[$value]))  {
                     throw new KObjectExceptionInvalidIdentifier('Unknown type: '.$value);
                 }
             }
