@@ -56,7 +56,7 @@ abstract class KControllerBehaviorAbstract extends KBehaviorAbstract
         foreach($this->getMethods() as $method)
         {
             if(substr($method, 0, 7) == '_action') {
-                $methods[] = strtolower(substr($method, 7));
+                $methods[strtolower(substr($method, 7))] = strtolower(substr($method, 7));
             }
         }
 
