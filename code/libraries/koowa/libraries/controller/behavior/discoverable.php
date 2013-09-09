@@ -37,7 +37,7 @@ class KControllerBehaviorDiscoverable extends KControllerBehaviorAbstract
             }
 
             //Check if the action can be executed
-            if($this->getBehavior('executable')->execute('before.'.$action, $context) === false) {
+            if ($this->getBehavior('permissible')->execute('before.'.$action, $context) === false) {
                 unset($actions[$key]);
             }
         }

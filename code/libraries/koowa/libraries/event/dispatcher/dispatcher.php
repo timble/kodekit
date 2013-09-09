@@ -30,7 +30,7 @@ class KEventDispatcher extends KEventDispatcherAbstract implements KObjectInstan
             $instance  = new $classname($config);
             $manager->setObject($config->object_identifier, $instance);
 
-            //Add the service alias to allow easy access to the singleton
+            //Add the object alias to allow easy access to the singleton
             $manager->registerAlias('event.dispatcher', $config->object_identifier);
         }
 

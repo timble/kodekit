@@ -8,9 +8,9 @@
  */
 
 /**
- * Default Controller
+ * Default Controller Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerDefault extends KControllerModel {}
+final class ComKoowaControllerPermissionDefault extends ComKoowaControllerPermissionAbstract { }
