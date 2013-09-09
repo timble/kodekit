@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionForbidden extends Exception implements KControllerException {}
+class KControllerExceptionForbidden extends KHttpExceptionForbidden implements KControllerException {}

@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionNotImplemented extends Exception implements KControllerException {}
+class KControllerExceptionNotImplemented extends KHttpExceptionNotImplemented implements KControllerException {}

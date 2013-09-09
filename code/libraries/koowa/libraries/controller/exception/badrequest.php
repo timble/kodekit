@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionBadRequest extends Exception implements KControllerException {}
+class KControllerExceptionBadRequest extends KHttpExceptionBadRequest implements KControllerException {}
