@@ -81,7 +81,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      * Constructor
      *
      * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
-     * @return HttpCookie
+     * @return KHttpCookie
      */
     public function __construct(KObjectConfig $config)
     {
@@ -121,7 +121,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * @param string $name The name of the cookie
      * @throws \InvalidArgumentException    If the cookie name is not valid or is empty
-     * @return HttpCookie
+     * @return KHttpCookie
      */
     public function setName($name)
     {
@@ -144,7 +144,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * @param integer|string|\DateTime $expire The expiration time of the cookie
      * @throws \InvalidArgumentException    If the cookie expiration time is not valid
-     * @return HttpCookie
+     * @return KHttpCookie
      */
     public function setExpire($expire)
     {
