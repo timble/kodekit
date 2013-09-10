@@ -81,9 +81,9 @@
     <target name="build" depends="prepare">
         <mkdir dir="tmp/packages" />
 
-        <move todir="tmp/files_koowa">
+        <copy todir="tmp/files_koowa">
             <fileset dir="tmp/clone/code" />
-        </move>
+        </copy>
 
         <if>
             <equals arg1="${file.compression}" arg2="gzip" />
