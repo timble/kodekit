@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Http
  */
-class HttpMessageParameters extends KObjectArray
+class KHttpMessageParameters extends KObjectArray
 {
     /**
      * Constructor
