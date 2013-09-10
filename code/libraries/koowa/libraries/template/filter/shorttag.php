@@ -28,7 +28,7 @@ class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTempla
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KTemplateFilter::PRIORITY_HIGH,
+            'priority' => self::PRIORITY_HIGH,
         ));
 
         parent::_initialize($config);

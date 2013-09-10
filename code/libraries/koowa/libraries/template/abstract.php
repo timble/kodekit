@@ -58,11 +58,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_view;
 
     /**
-     * The filter chain
+     * Filter queue
      *
-     * @var	KTemplateFilterChain
+     * @var	KObjectQueue
      */
-    protected $_chain = null;
+    protected $_queue;
 
     /**
      * Counter
@@ -91,8 +91,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         // Set the template data
         $this->_data = $config->data;
 
-        //Set the filter chain
-        $this->_chain = $config->filter_chain;
+        //Set the filter queue
+        $this->_queue = $this->getObject('koowa:object.queue');
 
         //Attach the filters
         $filters = (array) KObjectConfig::unbox($config->filters);
@@ -123,11 +123,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'translator'       => null,
-            'data'             => array(),
-            'view'             => null,
-            'filter_chain' 	   => $this->getObject('koowa:template.filter.chain'),
-            'filters'          => array(),
+            'translator' => null,
+            'data'       => array(),
+            'view'       => null,
+            'filters'    => array(),
         ));
 
         parent::_initialize($config);
@@ -388,7 +387,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function isRendering()
     {
-        return (bool) $this->_counter;
+        return (bool) $this->__counter;
     }
 
 	/**
@@ -416,8 +415,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 			$filter = $this->getFilter($filter, $config);
 		}
 
-		//Enqueue the filter in the command chain
-		$this->_chain->enqueue($filter);
+		//Enqueue the filter
+		$this->_queue->enqueue($filter, $filter->getPriority());
 
 		return $this;
  	}
@@ -581,13 +580,18 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Parse and compile the template to PHP code
      *
-     * This function passes the template through read filter chain and returns the result.
+     * This function passes the template through compile filters and returns the result.
      *
      * @param  string $content Data to parse
      */
     protected function _compile(&$content)
     {
-        $this->_chain->compile($content);
+        foreach($this->_queue as $filter)
+        {
+            if($filter instanceof KTemplateFilterCompiler) {
+                $filter->compile($content);
+            }
+        }
     }
 
     /**
@@ -627,13 +631,18 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Process the template
      *
-     * This function passes the template through write filter chain and returns the result.
+     * This function passes the template through render filter and returns the result.
      *
      * @param string $content Data to render
      */
     protected function _render(&$content)
     {
-        $this->_chain->render($content);
+        foreach($this->_queue as $filter)
+        {
+            if($filter instanceof KTemplateFilterRenderer) {
+                $filter->render($content);
+            }
+        }
     }
 
     /**
