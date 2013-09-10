@@ -139,7 +139,7 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
         $type = array_pop($identifier->path);
 
         $parts = explode('.', $name);
-        $method = '_' . $parts[0] . ucfirst($type) . ucfirst($parts[1]);
+        $method = '_' . $parts[0]  . ucfirst($parts[1]);
 
         //If the method exists call the method and return the result
         if (method_exists($this, $method)) {
