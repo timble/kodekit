@@ -27,6 +27,42 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     protected $_errors = array();
 
     /**
+     * The filter priority
+     *
+     * @var integer
+     */
+    protected $_priority;
+
+    /**
+     * Constructor.
+     *
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_priority = $config->priority;
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'priority' => self::PRIORITY_NORMAL,
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Force creation of a singleton
      *
      * Function also decorates the filter with KFilterIterator if the filter implements KFilterTraversable
@@ -87,6 +123,16 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     public function getErrors()
     {
         return (array) $this->_errors;
+    }
+
+    /**
+     * Get the priority of the filter
+     *
+     * @return  integer The priority level
+     */
+    public function getPriority()
+    {
+        return $this->_priority;
     }
 
     /**

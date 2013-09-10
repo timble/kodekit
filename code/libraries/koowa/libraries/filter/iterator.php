@@ -68,12 +68,22 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     }
 
     /**
+     * Get the priority of the filter
+     *
+     * @return  integer The priority level
+     */
+    public function getPriority()
+    {
+        return $$this->getDelegate()->getPriority();
+    }
+
+    /**
      * Get a list of error that occurred during sanitize or validate
      *
      * @return array
      */
     public function getErrors()
     {
-        return $this->getObject()->getErrors();
+        return $this->getDelegate()->getErrors();
     }
 }

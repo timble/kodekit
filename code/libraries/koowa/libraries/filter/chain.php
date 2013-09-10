@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterChain extends KObjectQueue implements KFilterInterface
+class KFilterChain extends KFilterAbstract
 {
     /**
      * The filter queue
