@@ -363,8 +363,12 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
 	 */
 	public function registerAlias($alias, $identifier)
 	{
-		$identifier = $this->getIdentifier($identifier);
-		$this->_aliases[$alias] = $identifier;
+		//Don't register an alias if alias and identifier are the same
+        if($alias != $identifier)
+        {
+            $identifier = $this->getIdentifier($identifier);
+            $this->_aliases[$alias] = $identifier;
+        }
 
         return $this;
 	}
