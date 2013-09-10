@@ -7,11 +7,12 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
-require_once dirname(__FILE__) . '/locator/interface.php';
-require_once dirname(__FILE__) . '/locator/abstract.php';
-require_once dirname(__FILE__) . '/locator/koowa.php';
-require_once dirname(__FILE__) . '/registry.php';
-require_once dirname(__FILE__) . '/interface.php';
+require_once dirname(__FILE__).'/interface.php';
+require_once dirname(__FILE__).'/locator/interface.php';
+require_once dirname(__FILE__).'/locator/abstract.php';
+require_once dirname(__FILE__).'/locator/koowa.php';
+require_once dirname(__FILE__).'/registry/interface.php';
+require_once dirname(__FILE__).'/registry/registry.php';
 
 /**
  * Loader
@@ -50,15 +51,15 @@ class KClassLoader implements KClassLoaderInterface
     final private function __construct($config = array())
     {
         //Create the class registry
-        $this->_registry = new KClassRegistry();
+        if(isset($config['cache_enabled']) && $config['cache_enabled'])
+        {
+            $this->_registry = new KClassRegistryCache();
 
-        if(isset($config['cache_prefix'])) {
-            $this->_registry->setCachePrefix($config['cache_prefix']);
+            if(isset($config['cache_prefix'])) {
+                $this->_registry->setCachePrefix($config['cache_prefix']);
+            }
         }
-
-        if(isset($config['cache_enabled'])) {
-            $this->_registry->enableCache($config['cache_enabled']);
-        }
+        else $this->_registry = new KClassRegistry();
 
         //Add the koowa class loader
         $this->registerLocator(new KClassLocatorKoowa(

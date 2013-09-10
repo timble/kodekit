@@ -8,7 +8,7 @@
  */
 
 /**
- * Object Instantiatable Interface
+ * Object Instantiable Interface
  *
  * The interface signals the ObjectManager to delegate object instantiation.
  *
@@ -16,7 +16,7 @@
  * @package Koowa\Library\Object
  * @see     KObjectManager::getObject()
  */
-interface KObjectInstantiatable
+interface KObjectInstantiable
 {
     /**
      * Get the object identifier

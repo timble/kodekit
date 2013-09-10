@@ -133,7 +133,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
 
             $reflection = new ReflectionClass($this);
             foreach($reflection->getMethods() as $method) {
-                $methods[] = $method->name;
+                $methods[$method->name] = $method->name;
             }
 
             $this->__methods = $methods;

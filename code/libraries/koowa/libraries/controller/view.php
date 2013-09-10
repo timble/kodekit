@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerResource extends KControllerAbstract
+abstract class KControllerView extends KControllerAbstract implements KControllerViewable
 {
 	/**
 	 * URL for redirection.
@@ -67,11 +67,6 @@ abstract class KControllerResource extends KControllerAbstract
 
 		//Register display as alias for get
 		$this->registerActionAlias('display', 'get');
-
-		//Made the executable behavior read-only
-		if($this->isExecutable()) {
-		    $this->getBehavior('executable')->setReadOnly($config->readonly);
-		}
 	}
 
 	/**
@@ -86,8 +81,7 @@ abstract class KControllerResource extends KControllerAbstract
     {
         $config->append(array(
     	    'model'	     => $this->getIdentifier()->name,
-    	    'behaviors'  => array('executable'),
-    	    'readonly'   => true,
+    	    'behaviors'  => array('permissible'),
     		'request' 	 => array('format' => 'html')
          ))->append(array(
             'view' 		=> $config->request->view ? $config->request->view : $this->getIdentifier()->name
@@ -115,10 +109,10 @@ abstract class KControllerResource extends KControllerAbstract
 			}
 
 			//Create the view
-			$config = array('model' => $this->getModel());
-			if($this->isExecutable()) {
-			    $config['auto_assign'] = !$this->getBehavior('executable')->isReadOnly();
-			}
+			$config = array(
+                'model' => $this->getModel(),
+                'auto_assign' => $this instanceof KControllerModellable
+            );
 
 			$this->_view = $this->getObject($this->_view, $config);
 

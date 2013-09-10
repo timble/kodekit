@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterFactory extends KObject implements KObjectInstantiatable
+class KFilterFactory extends KObject implements KObjectInstantiable
 {
     /**
      * Force creation of a singleton
@@ -39,7 +39,7 @@ class KFilterFactory extends KObject implements KObjectInstantiatable
     /**
      * Factory method for KFilterInterface classes.
      *
-     * Method accepts an array of filter names, or filter service identifiers and will create a chained filter
+     * Method accepts an array of filter names, or filter object identifiers and will create a chained filter
      * using a FIFO approach.
      *
      * @param	string|array $identifier Filter identifier(s)
@@ -54,7 +54,7 @@ class KFilterFactory extends KObject implements KObjectInstantiatable
         //Create a filter chain
         if(count($filters) > 1)
         {
-            $filter = $this->getObject('lib:filter.chain');
+            $filter = $this->getObject('koowa:filter.chain');
 
             foreach($filters as $name)
             {

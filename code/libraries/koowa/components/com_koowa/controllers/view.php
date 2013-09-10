@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerResource extends KControllerResource
+class ComKoowaControllerView extends KControllerView
 {
     /**
      * Constructor
@@ -65,7 +65,7 @@ class ComKoowaControllerResource extends KControllerResource
      * Attach the toolbars to the controller
      *
      * @param array $toolbars A list of toolbars
-     * @return ComKoowaControllerResource
+     * @return ComKoowaControllerView
      */
     public function attachToolbars($toolbars)
     {

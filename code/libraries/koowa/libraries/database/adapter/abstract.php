@@ -85,6 +85,13 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected $_charset;
 
+    /**
+     * Chain of command object
+     *
+     * @var KCommandChain
+     */
+    protected $_command_chain;
+
 	/**
 	 * Constructor.
 	 *
@@ -115,8 +122,8 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 		// Set the connection options
 		$this->_options = $config->options;
 
-		// Mixin a command chain
-        $this->mixin(new KCommandMixin($config->append(array('mixer' => $this))));
+        // Mixin the command interface
+        $this->mixin('koowa:command.mixin', $config);
 	}
 
 	/**
@@ -144,8 +151,9 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     		'charset'			=> 'UTF-8',
        	 	'table_prefix'  	=> 'jos_',
     	    'table_needle'		=> '#__',
-    		'command_chain' 	=> $this->getObject('koowa:command.chain'),
+    		'command_chain' 	=> 'koowa:command.chain',
     		'dispatch_events'   => true,
+            'event_dispatcher'  => 'event.dispatcher',
     		'enable_callbacks' 	=> false,
     		'connection'		=> null,
         ));
@@ -472,6 +480,32 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	{
 		return $this->_table_needle;
 	}
+
+    /**
+     * Get the chain of command object
+     *
+     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
+     * to the KCommandChain mixin.
+     *
+     * @return  KCommandChainInterface
+     */
+    public function getCommandChain()
+    {
+        if(!$this->_command_chain instanceof KCommandChainInterface)
+        {
+            //Ask the parent the relay the call to the mixin
+            $this->_command_chain = parent::getCommandChain();
+
+            if(!$this->_command_chain instanceof KCommandChainInterface)
+            {
+                throw new UnexpectedValueException(
+                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
+                );
+            }
+        }
+
+        return $this->_command_chain;
+    }
 
     /**
      * This function replaces the table needles in a query string with the actual table prefix.

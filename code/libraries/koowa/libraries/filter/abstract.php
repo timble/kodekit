@@ -17,7 +17,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiatable
+abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiable
 {
     /**
      * The filter errors

@@ -19,14 +19,15 @@ Koowa.Overlay = Koowa.Class.extend({
      * @returns {object}
      */
     getOptions: function() {
-        return $.extend(this.supr(), {
+        return $.extend(true, this.supr(), {
             selector: 'body',
             ajaxify: true,
             method: 'get',
             cache: false,
             dataType: 'text',
             evalScripts: false,
-            evalStyles: false
+            evalStyles: false,
+            transport: $.ajax
         });
     },
     initialize: function(element, options) {
@@ -39,18 +40,19 @@ Koowa.Overlay = Koowa.Class.extend({
         this.setOptions(options).setOptions(this.element.data());
 
         this.options.complete = function(jqXHR) {
-            // FIXME: jQuery cannot parse <body> tags inside $ function
-            var element = $(jqXHR.responseText),
+            var element = $('<div>'+jqXHR.responseText+'</div>'),
+                scripts = element.find('script').detach(),
+                styles = element.find('link[type=text\\/css],style').detach(),
                 body = element.find(self.options.selector).length ? element.find(self.options.selector) : element;
-            console.log(body, element.find(self.options.selector));
+
             self.element.empty().append(body);
 
             if (self.options.evalScripts) {
-                self.evaluateScripts(element.find('script[type=text/javascript]'));
+                scripts.appendTo('head');
             }
 
             if (self.options.evalStyles) {
-                self.evaulateStyles(element.find('link[type=text/css]'));
+                styles.appendTo('head');
             }
 
             if (self.options.ajaxify) {
@@ -102,44 +104,12 @@ Koowa.Overlay = Koowa.Class.extend({
             }
         };
 
-        $.ajax(this.options);
+        this.options.transport(this.options);
     },
     send: function(options){
-        options = $.extend({}, this.options, options);
+        options = $.extend(true, {}, this.options, options);
 
-        $.ajax(options);
-    },
-    evaulateStyles: function(styles) {
-        styles.each(function(style) {
-            $(style).appendTo($('head'));
-        });
-    },
-    evaluateScripts: function(scripts) {
-        var script,
-            loadScript = function(script){
-                new $.getScript(script.src, function() {
-                    if(scripts.length) {
-                        loadScript(scripts.shift());
-                    } else {
-                        //Remove existing domready events as they've fired by now anyway
-                        $(document).off('ready');
-
-                        $(document).ready();
-                    }
-                });
-            };
-
-        scripts = scripts.filter(function(script) {
-            if(!script.src) {
-                return false;
-            }
-
-            return !$('head').getElement('script[src$=' + script.src.replace(location.origin, '') + ']');
-        });
-
-        if(scripts.length) {
-            loadScript(scripts.shift());
-        }
+        this.options.transport(options);
     }
 });
 

@@ -79,39 +79,6 @@ interface KDatabaseTableInterface
      */
     public function getPrimaryKey();
 
-	/**
-     * Check if a behavior exists
-     *
-     * @param 	string	$behavior The name of the behavior
-     * @return  boolean	TRUE if the behavior exists, FALSE otherwise
-     */
-	public function hasBehavior($behavior);
-
-	/**
-     * Register one or more behaviors to the table
-     *
-     * @param   array $behaviors Array of one or more behaviors to add.
-     * @return  KDatabaseTableAbstract
-     */
-    public function addBehavior($behaviors);
-
-    /**
-     * Get a behavior by identifier
-     *
-     * @param  string        $behavior The name of the behavior
-     * @param  KObjectConfig|array $config Configuration of the behavior
-     * @throws UnexpectedValueException
-     * @return KDatabaseBehaviorInterface
-     */
-    public function getBehavior($behavior, $config = array());
-
-	/**
-     * Gets the behaviors of the table
-     *
-     * @return array An associate array of table behaviors, keys are the behavior names
-     */
-    public function getBehaviors();
-
     /**
      * Gets the schema of the table
      *

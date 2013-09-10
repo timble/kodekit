@@ -166,7 +166,7 @@ class PlgSystemKoowa extends JPlugin
             $data = array('exception' => $exception);
             $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
-            $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array('filters' => array('alias', 'shorttag', 'variable')));
+            $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array('filters' => array('function', 'shorttag', 'variable')));
             $template->loadFile($file, $data);
 
             while (@ob_end_clean());

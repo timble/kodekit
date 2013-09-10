@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseTableDefault extends KDatabaseTableAbstract implements KObjectInstantiatable
+class KDatabaseTableDefault extends KDatabaseTableAbstract implements KObjectInstantiable
 {
 	/**
      * Force creation of a singleton

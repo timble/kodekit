@@ -13,113 +13,53 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements KDatabaseBehaviorInterface
+abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract
 {
-	/**
-	 * The behavior priority
-	 *
-	 * @var integer
-	 */
-	protected $_priority;
-
-	/**
-     * The object identifier
+    /**
+     * Instantiate the object
      *
-     * @var KObjectIdentifier
+     * If the behavior is auto mixed also lazy mix it into related row objects.
+     *
+     * @param 	KObjectConfig           $config	  A KObjectConfig object with configuration options
+     * @param 	KObjectManagerInterface	$manager  A KObjectInterface object
+     * @return  KDatabaseBehaviorAbstract
      */
-    private $__object_identifier;
+    public static function getInstance(KObjectConfig $config, KObjectManagerInterface $manager)
+    {
+        $classname = $config->object_identifier->classname;
+        $instance  = new $classname($config);
+
+        //If the behavior is auto mixed also lazy mix it into related row objects.
+        if ($config->auto_mixin)
+        {
+            $identifier = clone $instance->getMixer()->getIdentifier();
+            $identifier->path = array('database', 'row');
+            $identifier->name = KStringInflector::singularize($identifier->name);
+
+            $manager->registerMixin($identifier, $instance);
+        }
+
+        return $instance;
+    }
 
     /**
-     * The object manager
+     * Command handler
      *
-     * @var KObjectManagerInterface
+     * This function translates the command name to a command handler function of the format '_before[Command]' or
+     * '_after[Command]. Command handler functions should be declared protected.
+     *
+     * @param     string            $name  The command name
+     * @param     KCommandContext    $context The command context
+     * @return    boolean   Can return both true or false.
      */
-    private $__object_manager;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 */
-	public function __construct( KObjectConfig $config = null)
-	{
-	    //Set the object manager
-        if(isset($config->object_manager)) {
-            $this->__object_manager = $config->object_manager;
-        }
-
-        //Set the object identifier
-        if(isset($config->object_identifier)) {
-            $this->__object_identifier = $config->object_identifier;
-        }
-
-		parent::__construct($config);
-
-		$this->_priority = $config->priority;
-
-	    //Automatically mixin the behavior with the mixer (table object)
-		if($config->auto_mixin) {
-		    $this->mixin($this);
-		}
-	}
-
-	/**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KObjectConfig $config Configuration options
-     * @return void
-     */
-	protected function _initialize(KObjectConfig $config)
+    public function execute($name, KCommandContext $context)
     {
-    	$config->append(array(
-			'priority'   => KCommand::PRIORITY_NORMAL,
-    	    'auto_mixin' => false
-	  	));
+        if ($context->data instanceof KDatabaseRowInterface) {
+            $this->setMixer($context->data);
+        }
 
-    	parent::_initialize($config);
-   	}
-
-	/**
-	 * Get the priority of a behavior
-	 *
-	 * @return	integer The command priority
-	 */
-  	public function getPriority()
-  	{
-  		return $this->_priority;
-  	}
-
-	/**
-	 * Command handler
-	 *
-	 * This function translated the command name to a command handler function of the format '_beforeX[Command]' or
-     * '_afterX[Command]. Command handler functions should be declared protected.
-	 *
-	 * @param 	string  	    $name    The command name
-	 * @param 	KCommandContext $context The command context
-	 * @return 	boolean		Can return both true or false.
-	 */
-	final public function execute($name, KCommandContext $context)
-	{
-		$identifier = clone $context->caller->getIdentifier();
-		$type       = array_pop($identifier->path);
-
-		$parts  = explode('.', $name);
-		$method = '_'.$parts[0].ucfirst($type).ucfirst($parts[1]);
-
-		if(method_exists($this, $method))
-		{
-			if($context->data instanceof KDatabaseRowInterface) {
-			     $this->setMixer($context->data);
-			}
-
-			return $this->$method($context);
-		}
-
-		return true;
-	}
+        return parent::execute($name, $context);
+    }
 
 	/**
      * Saves the row or rowset in the database.
@@ -157,29 +97,6 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     }
 
     /**
-     * Get an object handle
-     *
-     * This function only returns a valid handle if one or more command handler functions are defined. A commend handler
-     * function needs to follow the following format : '_afterX[Event]' or '_beforeX[Event]' to be recognised.
-     *
-     * @return string A string that is unique, or NULL
-     * @see execute()
-     */
-    public function getHandle()
-    {
-        $methods = $this->getMethods();
-
-        foreach($methods as $method)
-        {
-            if(substr($method, 0, 7) == '_before' || substr($method, 0, 6) == '_after') {
-                return parent::getHandle();
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get the methods that are available for mixin based
      *
      * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the behavior
@@ -191,39 +108,7 @@ abstract class KDatabaseBehaviorAbstract extends KObjectMixinAbstract implements
     public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods   = parent::getMixableMethods($mixer);
-        $methods[] = 'is'.ucfirst($this->getIdentifier()->name);
 
-        return array_diff($methods, array('execute', 'save', 'delete', 'getHandle', 'getPriority', 'getIdentifier', 'getObject'));
+        return array_diff($methods, array('save', 'delete', 'getInstance'));
     }
-
-	/**
-	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
-	 *
-	 * @param	string|object	$identifier The class identifier or identifier object
-	 * @param	array  			$config     An optional associative array of configuration settings.
-	 * @return	object  		Return object on success, throws exception on failure
-	 * @see 	KObjectInterface
-	 */
-	final public function getObject($identifier, array $config = array())
-	{
-	    return $this->__object_manager->getObject($identifier, $config);
-	}
-
-	/**
-	 * Gets the object identifier.
-	 *
-     * @param	string|object	$identifier The class identifier or identifier object
-	 * @return	KObjectIdentifier
-	 * @see 	KObjectInterface
-	 */
-	final public function getIdentifier($identifier = null)
-	{
-		if(isset($identifier)) {
-		    $result = $this->__object_manager->getIdentifier($identifier);
-		} else {
-		    $result = $this->__object_identifier;
-		}
-
-	    return $result;
-	}
 }

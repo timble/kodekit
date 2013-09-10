@@ -8,12 +8,12 @@
  */
 
 /**
- * Abstract Service Controller
+ * Abstract Model Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerService extends KControllerResource
+abstract class KControllerModel extends KControllerView implements KControllerModellable
 {
  	/**
      * Initializes the default configuration for the object
@@ -26,8 +26,7 @@ abstract class KControllerService extends KControllerResource
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-    		'behaviors'  => array('discoverable', 'editable'),
-    	    'readonly'   => false,
+    		'behaviors'  => array('discoverable', 'editable')
         ));
 
         parent::_initialize($config);

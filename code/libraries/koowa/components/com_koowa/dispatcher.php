@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiatable
+class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiable
 {
  	/**
      * Initializes the options for the object

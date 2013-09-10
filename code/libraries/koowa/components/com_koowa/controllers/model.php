@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerService extends KControllerService
+class ComKoowaControllerModel extends KControllerModel
 {
 	/**
 	 * The limit information
@@ -41,7 +41,7 @@ class ComKoowaControllerService extends KControllerService
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
 
         if($this->isDispatched() && $config->persistable) {
-            $this->addBehavior('persistable');
+            $this->attachBehavior('persistable');
         }
 	}
 
@@ -89,7 +89,7 @@ class ComKoowaControllerService extends KControllerService
      * Attach the toolbars to the controller
      *
      * @param array $toolbars A list of toolbars
-     * @return ComKoowaControllerResource
+     * @return ComKoowaControllerView
      */
     public function attachToolbars($toolbars)
     {
