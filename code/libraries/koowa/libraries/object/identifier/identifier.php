@@ -107,16 +107,11 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     /**
      * Constructor
      *
-     * @param   string  $identifier Identifier string or object in [application::]type.package.[.path].name format
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not fully qualified or cannot be parsed
+     * @param   string $identifier Identifier string or object in type://namespace/package.[.path].name format
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
      */
     public function __construct($identifier)
     {
-        //Check if the identifier is valid
-        if(strpos($identifier, ':') === FALSE) {
-            throw new KObjectExceptionInvalidIdentifier('Identifier is not fully qualified : '.$identifier);
-        }
-
         //Get the parts
         if(false === $parts = parse_url($identifier)) {
             throw new KObjectExceptionInvalidIdentifier('Identifier cannot be parsed : '.$identifier);
