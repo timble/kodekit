@@ -169,7 +169,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * @param   KCommandContext $context
      * @return KDatabaseRowAbstract
      */
-    protected function _beforeTableInsert(KCommandContext $context)
+    protected function _beforeInsert(KCommandContext $context)
     {
         if(isset($this->ordering))
         {
@@ -186,7 +186,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      *
      * @param   KCommandContext $context
      */
-    protected function _beforeTableUpdate(KCommandContext $context)
+    protected function _beforeUpdate(KCommandContext $context)
     {
         if(isset($this->order) && isset($this->ordering)) {
             $this->order($this->order);
@@ -198,7 +198,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      *
      * @param   KCommandContext $context
      */
-    protected function _afterTableDelete(KCommandContext $context)
+    protected function _afterDelete(KCommandContext $context)
     {
         $this->reorder();
     }

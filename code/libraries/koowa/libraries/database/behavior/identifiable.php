@@ -44,7 +44,7 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
      * @param KCommandContext $context
 	 * @return void
 	 */
-	protected function _beforeTableInsert(KCommandContext $context)
+	protected function _beforeInsert(KCommandContext $context)
 	{
 		if(isset($this->uuid))
 		{
