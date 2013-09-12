@@ -21,7 +21,6 @@ class KHttpMessageParameters extends KObjectArray
      * Constructor
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KObjectArray
      */
     public function __construct(KObjectConfig $config)
     {
@@ -36,7 +35,7 @@ class KHttpMessageParameters extends KObjectArray
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
@@ -128,7 +127,7 @@ class KHttpMessageParameters extends KObjectArray
      * @param   mixed   $value     Parameter value
      * @param   boolean $replace    Whether to replace the actual value or not (true by default)
      * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
-     * @return HttpMessageParameters
+     * @return KHttpMessageParameters
      */
     public function set($identifier, $value, $replace = true)
     {
@@ -180,7 +179,7 @@ class KHttpMessageParameters extends KObjectArray
      * This function will not add parameters that already exist.
      *
      * @param array $parameters An array of HTTP headers
-     * @return HttpMessageParameters
+     * @return KHttpMessageParameters
      */
     public function add(array $parameters)
     {
@@ -195,7 +194,7 @@ class KHttpMessageParameters extends KObjectArray
      * Removes a parameter.
      *
      * @param string $identifier The parameter name
-     * @return HttpMessageParameters
+     * @return KHttpMessageParameters
      */
     public function remove($identifier)
     {
@@ -216,7 +215,7 @@ class KHttpMessageParameters extends KObjectArray
     /**
      * Clear the current parameters
      *
-     * @return HttpMessageParameters
+     * @return KHttpMessageParameters
      */
     public function clear()
     {
