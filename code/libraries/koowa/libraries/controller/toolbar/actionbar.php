@@ -68,7 +68,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
      */
     public function addTitle($title, $icon = '')
     {
-        $this->_commands[] = new KControllerToolbarCommand('title', array(
+        $this->_commands['title'] = new KControllerToolbarCommand('title', array(
             'title' => $title,
             'icon'  => $icon
         ));
