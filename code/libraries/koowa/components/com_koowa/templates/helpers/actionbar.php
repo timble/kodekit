@@ -169,8 +169,9 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         $title = $this->translate($config->command->title);
         $icon  = $config->command->icon;
+        $html  = '';
 
-        if($this->getIdentifier()->application == 'admin' && !empty($title))
+        if (!empty($title))
         {
             if ($this->_useBootstrap())
             {
@@ -189,13 +190,18 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
                 $html .= '</div>';
             }
 
-            $app = JFactory::getApplication();
-            $app->JComponentTitle = $html;
+            if (JFactory::getApplication()->isAdmin())
+            {
+                $app = JFactory::getApplication();
+                $app->JComponentTitle = $html;
 
-            JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $config->title);
+                $html = '';
+
+                JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $config->title);
+            }
         }
 
-        return;
+        return $html;
     }
 
 	/**
