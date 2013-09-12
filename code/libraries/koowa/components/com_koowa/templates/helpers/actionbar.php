@@ -39,10 +39,9 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         {
             if($config->toolbar->hasCommand('title'))
             {
-                $config->toolbar->getCommand('title')->set(array(
-                    'title' => $config->title,
-                    'icon'  => $config->icon
-                ));
+                $command = $config->toolbar->getCommand('title');
+                $command->set('title', $config->title);
+                $command->set('icon', $config->icon);
             }
             else $config->toolbar->addTitle($config->title, $config->icon);
         }
