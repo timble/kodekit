@@ -32,7 +32,10 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         ));
 
         //Set a custom title
-        if($config->title)
+        if ($config->title === 'false' || $config->title === false) {
+            $config->toolbar->removeCommand('title');
+        }
+        elseif($config->title)
         {
             if($config->toolbar->hasCommand('title'))
             {
