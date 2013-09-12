@@ -23,7 +23,6 @@ class KHttpMessageHeaders extends KObjectArray
      * Constructor
      *
      * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
-     * @return KObjectArray
      */
     public function __construct(KObjectConfig $config)
     {
@@ -40,7 +39,7 @@ class KHttpMessageHeaders extends KObjectArray
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional KObjectConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
@@ -203,9 +202,9 @@ class KHttpMessageHeaders extends KObjectArray
                 $value = implode($results, '; ');
             }
 
+            // FIXME: check if value is defined
             $content .= sprintf("%s %s\r\n", $name.':', $value);
         }
-
 
         return $content;
     }
