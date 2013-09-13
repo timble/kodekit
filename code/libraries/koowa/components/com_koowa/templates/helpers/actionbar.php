@@ -180,7 +180,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
                 // Strip the extension.
                 $icons = explode(' ', $icon);
                 foreach ($icons as &$icon) {
-                    $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
+                    $icon = 'pagetitle--' . preg_replace('#\.[^.]*$#', '', $icon);
                 }
 
                 $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
