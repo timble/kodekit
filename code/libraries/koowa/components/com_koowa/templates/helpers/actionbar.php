@@ -58,7 +58,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         //Render the buttons
         if ($this->_useBootstrap())
         {
-        	$html = '<div class="btn-toolbar koowa-toolbar" id="toolbar">';
+        	$html = '<div class="btn-toolbar koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
         	$html .= '%s';
 		    $html .= '</div>';
         }
