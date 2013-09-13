@@ -271,7 +271,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     protected function _useBootstrap()
     {
-        return version_compare(JVERSION, '3.0', '>=') || $this->getIdentifier()->application == 'site';
+        return version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite();
     }
 
     /**
