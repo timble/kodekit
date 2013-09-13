@@ -35,13 +35,19 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         if ($config->title === 'false' || $config->title === false) {
             $config->toolbar->removeCommand('title');
         }
-        elseif($config->title)
+        elseif($config->title || $config->icon)
         {
             if($config->toolbar->hasCommand('title'))
             {
                 $command = $config->toolbar->getCommand('title');
-                $command->set('title', $config->title);
-                $command->set('icon', $config->icon);
+
+                if ($config->title) {
+                    $command->set('title', $config->title);
+                }
+
+                if ($config->icon) {
+                    $command->set('icon', $config->icon);
+                }
             }
             else $config->toolbar->addTitle($config->title, $config->icon);
         }
@@ -67,20 +73,19 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         }
 
         $buttons = '';
-	    foreach ($config->toolbar->getCommands() as $command)
-	    {
+        foreach ($config->toolbar->getCommands() as $command)
+        {
             $name = $command->getName();
 
-	        if(method_exists($this, $name)) {
+            if(method_exists($this, $name)) {
                 $buttons .= $this->$name(array('command' => $command));
             } else {
                 $buttons .= $this->command(array('command' => $command));
             }
-       	}
-
+        }
 
        	$html = sprintf($html, $buttons);
-       	 
+
 		return $html;
     }
 
