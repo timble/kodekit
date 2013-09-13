@@ -26,8 +26,9 @@ class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 
         include_once JPATH_THEMES . '/system/html/modules.php';
 
-        if(file_exists(JPATH_THEMES.'/'.$config->template.'/html/modules.php')) {
-		    include_once JPATH_THEMES.'/'.$config->template.'/html/modules.php';
+        $template = JFactory::getApplication()->getTemplate();
+        if(file_exists(JPATH_THEMES.'/'.$template.'/html/modules.php')) {
+		    include_once JPATH_THEMES.'/'.$template.'/html/modules.php';
         }
     }
 
