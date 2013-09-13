@@ -25,6 +25,8 @@ class ComKoowaControllerView extends KControllerView
     {
         parent::__construct($config);
 
+        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+
         $this->_limit = $config->limit;
 
         // Mixin the toolbar interface
@@ -84,20 +86,6 @@ class ComKoowaControllerView extends KControllerView
         }
 
         return $this;
-    }
-
-    /**
-     * Display action
-     *
-     * If the controller was not dispatched manually load the languages files
-     *
-     * @param   KCommandContext $context A command context object
-     * @return 	string|bool 	The rendered output of the view or false if something went wrong
-     */
-    protected function _actionGet(KCommandContext $context)
-    {
-        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
-        return parent::_actionGet($context);
     }
 
 	/**
