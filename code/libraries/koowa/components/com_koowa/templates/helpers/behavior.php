@@ -527,14 +527,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['select2'] = true;
         }
 
-        if ($config->element)
-        {
-            $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").select2('.$config->options.');
-                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
-            });</script>';
-        }
-
         $options   = $config->options->toJson();
         $signature = md5('select2-'.$config->element.$options);
 
