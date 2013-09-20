@@ -104,7 +104,7 @@ class KViewJson extends KViewAbstract
         {
             // Root should be JSON object, not array
             if (is_array($this->_content) && 0 === count($this->_content)) {
-                $this->_content = new \ArrayObject();
+                $this->_content = new ArrayObject();
             }
 
             // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.

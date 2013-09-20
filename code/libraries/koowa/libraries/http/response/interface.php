@@ -80,7 +80,7 @@ interface KHttpResponseInterface extends KHttpMessageInterface
      * @param  DateTime $date A \DateTime instance
      * @return HttpResponse
      */
-    public function setDate(\DateTime $date);
+    public function setDate(DateTime $date);
 
     /**
      * Returns the Last-Modified HTTP header as a DateTime instance.
@@ -101,7 +101,7 @@ interface KHttpResponseInterface extends KHttpMessageInterface
      * @param  DateTime $date A \DateTime instance
      * @return KHttpResponseInterface
      */
-    public function setLastModified(\DateTime $date = null);
+    public function setLastModified(DateTime $date = null);
 
     /**
      * Returns the value of the Expires header as a DateTime instance.
@@ -122,7 +122,7 @@ interface KHttpResponseInterface extends KHttpMessageInterface
      * @param  DateTime $date A \DateTime instance
      * @return HttpResponse
      */
-    public function setExpires(\DateTime $date = null);
+    public function setExpires(DateTime $date = null);
 
     /**
      * Returns the literal value of the ETag HTTP header.

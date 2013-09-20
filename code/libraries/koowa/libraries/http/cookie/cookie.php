@@ -127,12 +127,12 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
     {
         //Check for invalid cookie name (from PHP source code)
         if (preg_match("/[=,; \t\r\n\013\014]/", $name)) {
-            throw new \InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $name));
+            throw new InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $name));
         }
 
         //Check for empty cookie name
         if (empty($name)) {
-            throw new \InvalidArgumentException('The cookie name cannot be empty.');
+            throw new InvalidArgumentException('The cookie name cannot be empty.');
         }
 
         $this->_name = $name;
@@ -149,7 +149,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
     public function setExpire($expire)
     {
         // Convert expiration time to a Unix timestamp
-        if ($expire instanceof \DateTime) {
+        if ($expire instanceof DateTime) {
             $expire = $expire->format('U');
         }
 
@@ -158,7 +158,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
             $expire = strtotime($expire);
 
             if ($expire === false || $expire === -1) {
-                throw new \InvalidArgumentException('The cookie expiration time is not valid.');
+                throw new InvalidArgumentException('The cookie expiration time is not valid.');
             }
         }
 
@@ -210,10 +210,10 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
             $str .= urlencode($this->value);
 
             if ($this->expire !== 0) {
-                $str .= '; expires=' . gmdate(\DateTime::COOKIE, $this->expire);
+                $str .= '; expires=' . gmdate(DateTime::COOKIE, $this->expire);
             }
         }
-        else $str .= 'deleted; expires=' . gmdate(\DateTime::COOKIE, time() - 31536001);
+        else $str .= 'deleted; expires=' . gmdate(DateTime::COOKIE, time() - 31536001);
 
         if ($this->path !== '/') {
             $str .= '; path=' . $this->path;

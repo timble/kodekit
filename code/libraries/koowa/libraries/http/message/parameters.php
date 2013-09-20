@@ -133,7 +133,7 @@ class KHttpMessageParameters extends KObjectArray
     {
         if (!is_null($value) && !is_scalar($value) && !is_array($value) && !is_callable(array($value, '__toString')))
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'The http parameter value must be a string or object implementing __toString(), "'.gettype($value).'" given.'
             );
         }

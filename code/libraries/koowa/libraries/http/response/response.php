@@ -347,7 +347,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if ($date !== null)
         {
             $date = clone $date;
-            $date->setTimezone(new \DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone('UTC'));
             $this->_headers->set('Last-Modified', $date->format('D, d M Y H:i:s').' GMT');
         }
         else $this->_headers->remove('Last-Modified');
@@ -393,7 +393,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if (null !== $date)
         {
             $date = clone $date;
-            $date->setTimezone(new \DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone('UTC'));
             $this->_headers->set('Expires', $date->format('D, d M Y H:i:s').' GMT');
 
         } else $this->_headers->remove('Expires');
