@@ -27,8 +27,26 @@ class KViewJson extends KViewAbstract
 
     /**
      * JSON API version
+     *
+     * @var string
      */
     protected $_version;
+
+    /**
+     * A list of text fields in the row
+     *
+     * URLs will be converted to fully qualified ones in these fields.
+     *
+     * @var string
+     */
+    protected $_text_fields;
+
+    /**
+     * True if the view is for a plural resource
+     *
+     * @var boolean
+     */
+    protected $_plural;
 
     /**
      * Constructor
@@ -51,9 +69,7 @@ class KViewJson extends KViewAbstract
 
         $this->_padding = $config->padding;
         $this->_version = $config->version;
-
-        $this->_item_name = $config->item_name;
-        $this->_list_name = $config->list_name;
+        $this->_plural  = $config->plural;
 
         $this->_text_fields = KObjectConfig::unbox($config->text_fields);
     }
@@ -72,8 +88,7 @@ class KViewJson extends KViewAbstract
             'padding'	  => '',
             'version'     => '1.0',
             'text_fields' => array('description'), // Links are converted to absolute in these fields
-            'item_name'   => KStringInflector::singularize($this->getName()),
-            'list_name'   => KStringInflector::pluralize($this->getName())
+            'plural'      => KStringInflector::isPlural($this->getName())
         ))->append(array(
             'mimetype' => 'application/json; version=' . $config->version,
         ));
@@ -95,7 +110,7 @@ class KViewJson extends KViewAbstract
     {
         if (empty($this->_content))
         {
-            $this->_content = array_merge(array('version' => $this->_version), $this->_getData());
+            $this->_content = $this->_renderData();
             $this->_processLinks($this->_content);
         }
 
@@ -103,7 +118,7 @@ class KViewJson extends KViewAbstract
         if (!is_string($this->_content))
         {
             // Root should be JSON object, not array
-            if (is_array($this->_content) && 0 === count($this->_content)) {
+            if (is_array($this->_content) && count($this->_content) === 0) {
                 $this->_content = new ArrayObject();
             }
 
@@ -139,86 +154,51 @@ class KViewJson extends KViewAbstract
      *
      * @return array
      */
-    protected function _getData()
+    protected function _renderData()
     {
-        if (KStringInflector::isPlural($this->getName())) {
-            $result = $this->_renderList($this->getModel()->getList());
-        } else {
-            $result = $this->_renderItem($this->getModel()->getItem());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the JSON data for a list
-     *
-     * @param  KDatabaseRowsetInterface $rowset
-     * @return array
-     */
-    protected function _renderList(KDatabaseRowsetInterface $rowset)
-    {
-        $model   = $this->getModel();
-        $key     = $this->_list_name;
-        $data    = $this->_getList($rowset);
-
-        $json  = array(
+        $model  = $this->getModel();
+        $data   = $this->_getList($model->getList());
+        $output = array(
+            'version' => $this->_version,
             'links' => array(
                 'self' => array(
-                    'href' => $this->_getListLink($rowset),
-                    'type' => 'application/json'
+                    'href' => $this->_getPageLink(),
+                    'type' => $this->mimetype
                 )
             ),
-            $key => array(
-                'offset'   => (int) $model->offset,
-                'limit'    => (int) $model->limit,
-                'total'	   => $model->getTotal(),
-                'data'     => $data
-            )
+            'entities' => $data
         );
 
-        $model  = $this->getModel();
-        $total  = $model->getTotal();
-        $limit  = (int) $model->limit;
-        $offset = (int) $model->offset;
-
-        if ($limit && $total-($limit + $offset) > 0)
+        if ($this->_plural)
         {
-            $json['links']['next'] = array(
-                'href' => $this->_getListLink($rowset, array('offset' => $limit+$offset)),
-                'type' => 'application/json'
+            $total  = $model->getTotal();
+            $limit  = (int) $model->limit;
+            $offset = (int) $model->offset;
+
+            $output['meta'] = array(
+                'offset'   => $offset,
+                'limit'    => $limit,
+                'total'	   => $total
             );
+
+            if ($limit && $total-($limit + $offset) > 0)
+            {
+                $output['links']['next'] = array(
+                    'href' => $this->_getPageLink(array('offset' => $limit+$offset)),
+                    'type' => $this->mimetype
+                );
+            }
+
+            if ($limit && $offset && $offset >= $limit)
+            {
+                $output['links']['previous'] = array(
+                    'href' => $this->_getPageLink(array('offset' => max($offset-$limit, 0))),
+                    'type' => $this->mimetype
+                );
+            }
         }
 
-        if ($limit && $offset && $offset >= $limit)
-        {
-            $json['links']['previous'] = array(
-                'href' => $this->_getListLink($rowset, array('offset' => max($offset-$limit, 0))),
-                'type' => 'application/json'
-            );
-        }
-
-        return $json;
-    }
-
-    /**
-     * Get the list link
-     *
-     * @param KDatabaseRowsetInterface  $rowset
-     * @param array                     $query Additional query parameters to merge
-     * @return string
-     */
-    protected function _getListLink(KDatabaseRowsetInterface $rowset, array $query = array())
-    {
-        $url = KRequest::url();
-
-        if ($query)
-        {
-            $previous = $url->getQuery(true);
-            $url->setQuery(array_merge($previous, $query));
-        }
-
-        return (string) $url;
+        return $output;
     }
 
     /**
@@ -230,46 +210,10 @@ class KViewJson extends KViewAbstract
     protected function _getList(KDatabaseRowsetInterface $rowset)
     {
         $result = array();
-        $tmpl   = array(
-            'links' => array(
-                'self' => array(
-                    'href' => null,
-                    'type' => 'application/json'
-                )
-            ),
-            'data'  => array()
-        );
 
-        foreach ($rowset as $row)
-        {
-            $clone = $tmpl;
-            $clone['links']['self']['href'] = $this->_getItemLink($row);
-            $clone['data'] = $this->_getItem($row);
-
-            $result[] = $clone;
+        foreach ($rowset as $row) {
+            $result[] = $this->_getItem($row);
         }
-
-        return $result;
-    }
-
-    /**
-     * Returns an array representing an item
-     *
-     * @param KDatabaseRowInterface  $row
-     *
-     * @return array
-     */
-    protected function _renderItem(KDatabaseRowInterface $row)
-    {
-        $result = array(
-            'links' => array(
-                'self' => array(
-                    'href' => $this->_getItemLink($row),
-                    'type' => 'application/json'
-                )
-            ),
-            'data' => $this->_getItem($row)
-        );
 
         return $result;
     }
@@ -285,10 +229,24 @@ class KViewJson extends KViewAbstract
         $method = '_get'.ucfirst($row->getIdentifier()->name);
 
         if ($method !== '_getItem' && method_exists($this, $method)) {
-            return $this->$method($row);
+            $data = $this->$method($row);
+        } else {
+            $data = $row->toArray();
         }
 
-        return $row->toArray();
+        if (!isset($data['links'])) {
+            $data['links'] = array();
+        }
+
+        if (!isset($data['links']['self']))
+        {
+            $data['links']['self'] = array(
+                'href' => $this->_getItemLink($row),
+                'type' => $this->mimetype
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -303,6 +261,23 @@ class KViewJson extends KViewAbstract
         $view    = $row->getIdentifier()->name;
 
         return $this->createRoute(sprintf('option=com_%s&view=%s&slug=%s&format=json', $package, $view, $row->slug));
+    }
+
+    /**
+     * Get the page link
+     *
+     * @param  array  $query Additional query parameters to merge
+     * @return string
+     */
+    protected function _getPageLink(array $query = array())
+    {
+        $url = KRequest::url();
+
+        if ($query) {
+            $url->setQuery(array_merge($url->getQuery(true), $query));
+        }
+
+        return (string) $url;
     }
 
     /**
