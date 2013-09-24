@@ -43,10 +43,10 @@
                     },
                     results: function (data, page) {
                         var results = [],
-                            more = (page * 10) < data[options.model].total; // whether or not there are more results available
+                            more = (page * 10) < data.meta.total; // whether or not there are more results available
 
-                        $.each(data[options.model].data, function(i, item) {
-                            results.push(item.data);
+                        $.each(data.entities, function(i, item) {
+                            results.push(item);
                         });
 
                         // notice we return the value of more so Select2 knows if more results can be loaded
@@ -61,7 +61,7 @@
                         $.ajax(options.url, {
                             data: data
                         }).done(function(data) {
-                            callback(data[options.model].data[0].data);
+                            callback(data.entities[0]);
                         });
                     }
                 },
