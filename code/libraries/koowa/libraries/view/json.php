@@ -57,7 +57,6 @@ class KViewJson extends KViewAbstract
     {
         parent::__construct($config);
 
-        //Padding can explicitly be turned off by setting to FALSE
         if(empty($config->padding) && $config->padding !== false)
         {
             $state = $this->getModel()->getState();
@@ -85,9 +84,9 @@ class KViewJson extends KViewAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'padding'	  => '',
+            'padding'	  => '', // Can be turned off by setting this to false
             'version'     => '1.0',
-            'text_fields' => array('description'), // Links are converted to absolute in these fields
+            'text_fields' => array('description'), // Links are converted to absolute ones in these fields
             'plural'      => KStringInflector::isPlural($this->getName())
         ))->append(array(
             'mimetype' => 'application/json; version=' . $config->version,
@@ -297,7 +296,7 @@ class KViewJson extends KViewAbstract
             elseif ($key === 'href')
             {
                 if (substr($value, 0, 4) !== 'http') {
-                    $array[$key] = trim($base, '/').$value;
+                    $array[$key] = $base.$value;
                 }
             }
             elseif (in_array($key, $this->_text_fields)) {
@@ -314,7 +313,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _processText($text)
     {
-        $base    = trim(JURI::base(), '/');
+        $base    = KRequest::url()->toString(KHttpUrl::AUTHORITY);
         $matches = array();
 
         preg_match_all("/(href|src)=\"(?!http|ftp|https|mailto|data)([^\"]*)\"/", $text, $matches, PREG_SET_ORDER);
