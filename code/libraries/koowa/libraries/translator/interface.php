@@ -49,10 +49,10 @@ interface KTranslatorInterface
     public function choose(array $strings, $number, array $parameters = array());
 
     /**
-     * Checks if the translator can translate a string
+     * Checks if a given string is translatable.
      *
-     * @param $string String to check
-     * @return bool
+     * @param $string The string to check.
+     * @return bool True if it is, false otherwise.
      */
     public function isTranslatable($string);
 
