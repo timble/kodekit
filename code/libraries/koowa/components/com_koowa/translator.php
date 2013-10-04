@@ -306,7 +306,15 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
             throw new BadMethodCallException(sprintf('Invalid extension type: %s', $type));
         }
 
-        return sprintf('%s/%ss/%s', $base, $type_folder, $extension);
+        if ($type == 'plg') {
+            $parts = explode('_', $package);
+            if (count($parts) != 2) throw new BadMethodCallException(sprintf('Invalid plugin: %s', $extension));
+            $folder = sprintf('%s/%ss/%s/%s', JPATH_ROOT, $type_folder, $parts[0], $parts[1]);
+        } else {
+            $folder = sprintf('%s/%ss/%s', $base, $type_folder, $extension);
+        }
+
+        return $folder;
     }
 
     /**
