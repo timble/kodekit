@@ -216,7 +216,26 @@
          */
         _attachHandlers: function(){
 
-            //@TODO move reused event handlers here
+            this.element.bind({
+                'tree.select': // The select event happens when a node is clicked
+                    function(event) {
+                        if(event.node) { // When event.node is null, it's actually a deselect event
+                            //Style the clicked element
+                            $(this).find('.active').removeClass('active').find('[class^=icon-folder]').removeClass('icon-white');
+                            $(this).find('.jqtree-selected').addClass('active').find('[class^=icon-folder]').addClass('icon-white');
+                        }
+                    },
+                'tree.init':
+                    function() {
+                        // .sidebar-nav needed for bootstrap styling to apply
+                        $(this).find('ul.jqtree-tree').addClass('sidebar-nav');
+                    },
+                'tree.refresh': //Refreshes reset the html, and happen on events like setState
+                    function() {
+                        $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
+                        $(this).find('.jqtree-selected').addClass('active').find('[class^=icon-folder]').addClass('icon-white');
+                    }
+            });
 
         },
 
@@ -227,69 +246,7 @@
          */
         attachHandlers: function(){
 
-            var options = this.options, self = this, query_data = self.unserialize(window.location.search);
-
-            this.element.bind({
-                'tree.select': // The select event happens when a node is clicked
-                function(event) {
-                    if(event.node) { // When event.node is null, it's actually a deselect event
-                        //Style the clicked element
-                        $(this).find('.active').removeClass('active').find('[class^=icon-folder]').removeClass('icon-white');
-                        $(this).find('.jqtree-selected').addClass('active').find('[class^=icon-folder]').addClass('icon-white');
-
-                        var node = event.node, id = node.id > 0 ? node.id : ''; //The root node id is -1, but should be '' in the url
-
-                        $.extend(query_data, {category: id}); // setting the query_data.category value to the new id
-
-                        window.location.search = $.param(query_data); //We're only changing the search query part of the url
-                    }
-                },
-                'tree.open': // Animate a scroll to the node being opened so child elements scroll into view
-                function(event) {
-                    var node = event.node,
-                        element = $(node.element),
-                        viewport = self.element.height(),
-                        offsetTop = element[0].offsetTop,
-                        height = element.height(),
-                        scrollTo = Math.min(offsetTop, (offsetTop - viewport) + height);
-
-                    if(scrollTo > self.element.scrollTop()){ //Only scroll if there's overflow
-                        self.element.stop().animate({scrollTop: scrollTo }, 300);
-                    }
-                },
-                'tree.init':
-                function() {
-                    $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
-
-                    // If no category is set, then we don't need to open the root node manually
-                    if(options.selected) {
-                        self.selectNode($(this).tree('getNodeById', options.selected), $(this));
-                    }
-
-                    /**
-                     * Sidebar.js will fire a resize event when it sets the height on load, we want our animated scroll
-                     * to happen after that, but not on future resize events as it would confuse the user experience
-                     */
-
-                    self.element.one('resize', function(){
-                        if(self.tree('getSelectedNode')) {
-                            var node = self.tree('getSelectedNode'),
-                                element = $(node.element),
-                                viewport = self.element.height(),
-                                offsetTop = element[0].offsetTop,
-                                height = element.height(),
-                                scrollTo = Math.min(offsetTop, (offsetTop - viewport) + height);
-
-                            self.element.stop().animate({scrollTop: scrollTo }, 900);
-                        }
-                    });
-                },
-                'tree.refresh': //Refreshes reset the html, and happen on events like setState
-                function() {
-                    $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
-                    $(this).find('.jqtree-selected').addClass('active').find('[class^=icon-folder]').addClass('icon-white');
-                }
-            });
+            this._attachHandlers(); // @NOTE Attach needed events, remember to call this if you customize this method
 
         }
     });
