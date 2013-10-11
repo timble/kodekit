@@ -1,21 +1,18 @@
 /**
- * DOCman Categories Tree
+ * Koowa jqTree wrapper
  *
  * Customized instance of jqTree to render a list of categories in a tree structure.
  * It deals with turning a flat list into a hierarchy structure that jqTree understands.
- * And it changes the default styling and behavior to match the general DOCman GUI.
  *
  * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		http://github.com/joomlatools/koowa for the canonical source repository
  * @requires    Koowa.Class, jqTree plugin
  */
 
-var DOCman = DOCman || {};
-if(!DOCman.hasOwnProperty('Tree')) DOCman.Tree = {};
-
 (function($){
 
-    DOCman.Tree.Categories = Koowa.Class.extend({
+    Koowa.Tree = Koowa.Class.extend({
 
         initialize: function(element, options){
 
