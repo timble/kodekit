@@ -209,6 +209,14 @@
             return params;
         },
 
+        /* DO NOT Customize this method to add your own events, use attachHandlers instead */
+        _attachHandlers: function(){
+
+            //@TODO move reused event handlers here
+
+        },
+
+        /* Customize this method to add your own events */
         attachHandlers: function(){
 
             var options = this.options, self = this, query_data = self.unserialize(window.location.search);
