@@ -31,28 +31,28 @@ class ComDefaultControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 */
 	protected $_output = '';
 
-	/**
-	 * Constructor
-	 *
-	 * @param 	object 	An optional KConfig object with configuration options.
-	 */
-	public function __construct(KConfig $config)
+    /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+	public function __construct(KObjectConfig $config)
 	{
 		parent::__construct($config);
 
 		// Set the view identifier
-		$this->_modules = KConfig::unbox($config->modules);
+		$this->_modules = KObjectConfig ::unbox($config->modules);
 	}
 
-	/**
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param 	object 	An optional KConfig object with configuration options
+     * @param  KObjectConfig $config A ObjectConfig object with configuration options
      * @return void
      */
-	protected function _initialize(KConfig $config)
+	protected function _initialize(KObjectConfig  $config)
     {
         $config->append(array(
             'modules'	=> array('toolbar', 'title', 'submenu')
