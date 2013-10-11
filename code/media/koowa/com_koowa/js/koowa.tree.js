@@ -140,15 +140,29 @@
             element.tree('setState', state);
         },
 
-        /* Wraps the parsed data into a root node with the label 'All Categories' */
+        /**
+         * Customizable parse data method
+         *
+         * Customize this method if the structure is a bit non-standard, like DOClink in DOCman
+         * or if you need to wrap all nodes in a root node, like the DOCman documents view categories sidebar tree.
+         *
+         * The following code sample shows how to create a root node like seen in DOCman:
+         * return [{
+         *      label: 'All Categories',
+         *      id: -1, //negative 1 used as jqTree isn't optimized to deal with zero integer ids, methods like selectNode fail
+         *      children: this._parseData(list)
+         *  }];
+         */
         parseData: function(list){
-            return [{
-                label: this.options.lang.root,
-                id: -1, //negative 1 used as 0 doesn't work with this.selectNode
-                children: this._parseData(list)
-            }];
+            return this._parseData(list);
         },
 
+        /**
+         * Internal parse data method
+         *
+         * Only customize this method if you know what you're doing and if it's impossible to control the data format
+         * that's passed to the script during initialization.
+         */
         /* Parses a flat list with parent ids into an hierarchial object structure, reused by Doclink.Tree in doclink.js */
         _parseData: function(list){
 
@@ -229,7 +243,7 @@
                 },
                 'tree.init':
                 function() {
-
+                    console.log('tree.init', 'koowa.tree.js');
                     $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
 
                     // If no category is set, then we don't need to open the root node manually
