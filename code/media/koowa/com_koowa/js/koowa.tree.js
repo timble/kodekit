@@ -38,9 +38,6 @@
 
             var self = this,
                 defaults = {
-                    lang: { //l18n strings
-                        root: 'All Categories'
-                    },
                     data: [], //Default empty value to avoid errors when there are no items yet
                     autoOpen: 0, //Auto open just "All Categories" by default, this value is the nesting level not the node id
                     useContextMenu: false, //This allows us to right-click menu items again
@@ -127,7 +124,7 @@
             return this;
         },
 
-        /* Selects a node while opening all parent nodes */
+        /* Selects a node while opening all parent nodes, requiring the node to have a 'path' property in its data */
         selectNode: function(node, element){
 
             // the -1 value is the root node
