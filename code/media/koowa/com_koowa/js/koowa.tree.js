@@ -209,14 +209,22 @@
             return params;
         },
 
-        /* DO NOT Customize this method to add your own events, use attachHandlers instead */
+        /**
+         * Internal event handlers for customizing the jqTree markup and behavior to integrate better with bootstrap.
+         *
+         * DO NOT Customize this method to add your own events, use attachHandlers instead
+         */
         _attachHandlers: function(){
 
             //@TODO move reused event handlers here
 
         },
 
-        /* Customize this method to add your own events */
+        /**
+         * Attach event handlers for jQtree events for behaviors and interactivity
+         *
+         * @link http://mbraak.github.io/jqTree/#events
+         */
         attachHandlers: function(){
 
             var options = this.options, self = this, query_data = self.unserialize(window.location.search);
@@ -251,7 +259,6 @@
                 },
                 'tree.init':
                 function() {
-                    console.log('tree.init', 'koowa.tree.js');
                     $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
 
                     // If no category is set, then we don't need to open the root node manually
