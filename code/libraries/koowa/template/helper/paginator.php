@@ -116,7 +116,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
 		$html = '';
 
 		$selected = '';
-		foreach(array(10 => 10, 20 => 20, 50 => 50, 100 => 100) as $value => $text)
+		foreach(array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 50 => 50, 100 => 100) as $value => $text)
 		{
 			if($value == $config->limit) {
 				$selected = $value;
