@@ -162,8 +162,40 @@
          *
          * Only customize this method if you know what you're doing and if it's impossible to control the data format
          * that's passed to the script during initialization.
+         *
+         * @param array list
+         *
+         * The data objects in the list are required to have the following properties:
+         * @property string|integer id          Required to be unique, integer or string is optional
+         * @property integer        level       Needed for styling, indendation is calculated based on this value
+         * @property string|integer parent      Integer or string is optional, zero when no parent
+         * @property string         path        Containing parent ids descending left to right separated by '/'
+         * @property string         label       The text to be displayed
+         *
+         * Nodes can contain any custom data properties passed to it, except the following reserved properties:
+         * @property array      children
+         * @property Element    element
+         * @property string     name
+         * @property Node       tree
+         *
+         * Simple data sample with unique ids:
+         *  [
+         *      {id: 1, level: 0, parent: 0, path: '', label: 'Blog'},
+         *      {id: 2, level: 1, parent: 1, path: '1', label: 'News'},
+         *      {id: 3, level: 2, parent: 2, path: '1/2', label: 'Nooku Code Jam'},
+         *      {id: 4, level: 2, parent: 2, path: '1/2', label: 'Nooku Framework'},
+         *      {id: 5, level 0, parent: 0, path: '', label: 'Tutorials'}
+         *  ]
+         *
+         *  Advanced data sample with non-unique ids:
+         *  [
+         *      {id: 's1', section_id: 1, level: 0, parent: 0, path: '', label: 'Blog'},
+         *      {id: 's1c1', section_id: 1, category_id: 1, level: 1, parent: 's1', path: 's1', label: 'News'},
+         *      {id: 's1c2', section_id: 1, category_id: 2, level: 2, parent: 's1c1', path: 's1/s1c1', label: 'Nooku Code Jam'},
+         *      {id: 's1c3', section_id: 1, category_id: 3, level: 2, parent: 's1c1', path: 's1/s1c1', label: 'Nooku Framework'},
+         *      {id: 's2', section_id: 2, level 0, parent: 0, path: '', label: 'Tutorials'}
+         *  ]
          */
-        /* Parses a flat list with parent ids into an hierarchial object structure, reused by Doclink.Tree in doclink.js */
         _parseData: function(list){
 
             var data = [], index = {}, // 'data' is an hierarchial list while 'index' is flat and used to lookup parents
@@ -172,7 +204,6 @@
             $.each(list, function(key,item){
 
                 index[item.id] = item; // always add the item to the lookup index
-                var parent = item.parent_node || item.parent; // complex trees have non-integer ids stored in parent_node
 
                 //Get the offset from the first node, most of the time the offset is zero
                 if(offset === false) {
@@ -183,12 +214,12 @@
                     item.level = Math.max(item.level - offset, 0);
                 }
 
-                if(item.parent == 0 || !index.hasOwnProperty(parent)) {
+                if(item.parent == 0 || !index.hasOwnProperty(item.parent)) {
                     data.push(item); // top level items are added directly to the new list or if orphan
                 } else {
-                    if(!index[parent].hasOwnProperty('children')) index[parent].children = [];
+                    if(!index[item.parent].hasOwnProperty('children')) index[item.parent].children = [];
                     // changing items in 'index' changes the items in 'data' as they're not deep cloned
-                    index[parent].children.push(item);
+                    index[item.parent].children.push(item);
                 }
             });
 
