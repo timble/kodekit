@@ -585,27 +585,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if($config->element && !isset(self::$_loaded[$signature]))
         {
-            if ($config->options->multiple)
-            {
-                // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices
-                // as an array (presumably for v4).
-                $html .= '<script>
-                jQuery(function($){
-                    document.formvalidator.setHandler("users", function(value) {
-                        var el = $("'.$config->element.'");
-                        if (el.val()) {
-                            var form = el.closest("form");
-                            var values = el.val().split(",");
-                            $.each(values, function(idx, value) {
-                                form.append(el.clone().val(value));
-                            });
-                            el.remove();
-                        }
-                        return true;
-                    });
-                });</script>';
-            }
-
             $html .= '<script>
             jQuery(function($){
                 $("'.$config->element.'").koowaSelect2('.$options.');
