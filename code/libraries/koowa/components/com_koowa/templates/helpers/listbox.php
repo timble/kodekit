@@ -276,7 +276,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'validate' => true,
             'filter'   => array(),
             'element' => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
-            'options' => array()
+            'options' => array('multiple' => (bool) $config->attribs->multiple)
         ));
 
         if (!$config->url)
