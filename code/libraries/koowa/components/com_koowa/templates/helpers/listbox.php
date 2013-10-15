@@ -297,8 +297,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
 
-        $config->attribs->value = $config->selected;
         $config->attribs->name  = $config->name;
+
+        if ($config->selected)
+        {
+            $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
+        }
 
         $attribs = $this->buildAttributes($config->attribs);
 
