@@ -230,7 +230,7 @@ class KHttpMessageParameters extends KObjectArray
      */
     public function toString()
     {
-        return http_build_query($this->_data);
+        return http_build_query($this->_data, '', '&');
     }
 
     /**
