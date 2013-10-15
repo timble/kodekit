@@ -65,8 +65,12 @@
                         });
                     }
                 },
-                formatResult: function (item) { return item[options.text]; },
-                formatSelection: function (item) { return item[options.text]; },
+                formatResult: function (item) {
+                    return item[options.text];
+                },
+                formatSelection: function (item) {
+                    return item[options.text];
+                },
                 id: options.value
             }, options);
         }
