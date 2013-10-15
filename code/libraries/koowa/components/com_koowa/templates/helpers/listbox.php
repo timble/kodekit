@@ -304,6 +304,32 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
         }
 
+        // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices
+        // as an array (presumably for v4).
+        if ($config->attribs->multiple)
+        {
+            // Add Joomla! validation handler for properly formatting selections.
+            $class                  = explode(' ', $config->attribs->class);
+            $class[]                = 'validate-koowa-autocomplete';
+            $config->attribs->class = implode(' ', $class);
+
+            $html .= '<script>
+            jQuery(function($){
+                document.formvalidator.setHandler("koowa-autocomplete", function(value) {
+                    var el = $("'.$config->element.'");
+                    if (el.val()) {
+                        var form = el.closest("form");
+                        var values = el.val().split(",");
+                        $.each(values, function(idx, value) {
+                            form.append(el.clone().val(value));
+                        });
+                        el.remove();
+                    }
+                    return true;
+                });
+            });</script>';
+        }
+
         $attribs = $this->buildAttributes($config->attribs);
 
         $html .= "<input type=\"hidden\" {$attribs} />";
