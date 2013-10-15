@@ -567,7 +567,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'text'          => $config->text,
                 'selected'      => $config->selected,
                 'url'           => $config->url,
-                'multiple'      => (bool) $config->attribs->multiple
+                'multiple'      => false
             )
         ));
 
