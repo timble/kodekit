@@ -308,24 +308,18 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         // as an array (presumably for v4).
         if ($config->attribs->multiple)
         {
-            // Add Joomla! validation handler for properly formatting selections.
-            $class                  = explode(' ', $config->attribs->class);
-            $class[]                = 'validate-koowa-autocomplete';
-            $config->attribs->class = implode(' ', $class);
-
             $html .= '<script>
-            jQuery(function($){
-                document.formvalidator.setHandler("koowa-autocomplete", function(value) {
-                    var el = $("'.$config->element.'");
+            window.addEvent("domready", function() {
+                var el = jQuery("' . $config->element . '");
+                var form = jQuery(el.get(0).form);
+                $(form.get(0)).addEvent("submit", function() {
                     if (el.val()) {
-                        var form = el.closest("form");
                         var values = el.val().split(",");
-                        $.each(values, function(idx, value) {
+                        jQuery.each(values, function(idx, value) {
                             form.append(el.clone().val(value));
                         });
                         el.remove();
                     }
-                    return true;
                 });
             });</script>';
         }
