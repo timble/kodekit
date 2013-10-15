@@ -306,7 +306,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $attribs = $this->buildAttributes($config->attribs);
 
-        $html .= "<input $attribs />";
+        $html .= "<input type=\"hidden\" {$attribs} />";
 
         return $html;
     }
