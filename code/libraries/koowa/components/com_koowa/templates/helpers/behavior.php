@@ -622,9 +622,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     protected function _disableSelect2($element)
     {
         return '<script>
-            window.addEvent("domready", function() {
-                var el = jQuery("' . $element . '");
-                $(el.get(0).form).addEvent("submit", function(e) {
+            jQuery(function($) {
+                var el = $("' . $element . '");
+                el.get(0).form.addEvent("submit", function(e) {
                     if (!el.select2("val").length) {
                         el.select2("enable", "false");
                         // The above call does not work with AJAX boxes, so we actually need to remove it all.
