@@ -156,7 +156,7 @@ class KViewJson extends KViewAbstract
     protected function _renderData()
     {
         $model  = $this->getModel();
-        $data   = $this->_getList($model->getList());
+        $data   = $this->_getList($this->_plural ? $model->getList() : array($model->getItem()));
         $output = array(
             'version' => $this->_version,
             'links' => array(
@@ -203,10 +203,10 @@ class KViewJson extends KViewAbstract
     /**
      * Returns the JSON representation of a rowset
      *
-     * @param  KDatabaseRowsetInterface $rowset
+     * @param  KDatabaseRowsetInterface|array $rowset
      * @return array
      */
-    protected function _getList(KDatabaseRowsetInterface $rowset)
+    protected function _getList($rowset)
     {
         $result = array();
 
