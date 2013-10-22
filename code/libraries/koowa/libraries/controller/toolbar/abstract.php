@@ -41,11 +41,8 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
      *
      * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(KObjectConfig $config)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
         //Create the commands array
@@ -71,7 +68,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
         $config->append(array(
             'type'       => 'toolbar',
             'controller' => null,
-            'priority'   => KCommand::PRIORITY_HIGH
+            'priority'   => self::PRIORITY_HIGH
         ));
 
         parent::_initialize($config);
