@@ -37,11 +37,8 @@ class KObjectQueue extends KObject implements Iterator, Countable
      * Constructor
      *
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(KObjectConfig $config)
     {
-         //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
         $this->_object_list   = new ArrayObject();
