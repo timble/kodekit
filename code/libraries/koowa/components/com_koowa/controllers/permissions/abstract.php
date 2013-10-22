@@ -47,7 +47,6 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
     public function canAdmin()
     {
         $component = $this->getIdentifier()->package;
-
         return JFactory::getUser()->authorise('core.admin', 'com_'.$component) === true;
     }
 
