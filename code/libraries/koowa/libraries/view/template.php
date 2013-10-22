@@ -37,6 +37,13 @@ abstract class KViewTemplate extends KViewAbstract
     protected $_data;
 
     /**
+     * Layout name
+     *
+     * @var string
+     */
+    protected $_layout;
+
+    /**
      * Constructor
      *
      * @param   KObjectConfig $config Configuration options
@@ -121,8 +128,15 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
+        $layout     = $this->getLayout();
+        $format     = $this->getFormat();
+
+        $identifier = clone $this->getIdentifier();
+        //$identifier->name = $layout.'.'.$format;
+        $identifier->name = $layout;
+
         $this->_content = $this->getTemplate()
-            ->loadIdentifier($this->_layout, $this->_data)
+            ->loadIdentifier($identifier, $this->_data)
             ->render();
 
         return parent::display();
@@ -150,55 +164,33 @@ abstract class KViewTemplate extends KViewAbstract
         return $this->_data;
     }
 
-	/**
-     * Sets the layout name
-     *
-     * @param    string  $layout The template name.
-     * @return   KViewAbstract
-     */
-    public function setLayout($layout)
-    {
-        if(is_string($layout) && strpos($layout, '.') === false )
-		{
-            $identifier = clone $this->getIdentifier();
-            $identifier->name = $layout;
-	    }
-		else $identifier = $this->getIdentifier($layout);
-
-        $this->_layout = $identifier;
-        return $this;
-    }
-
-	/**
-     * Get the layout.
-     *
-     * @return string The layout name
-     */
-    public function getLayout()
-    {
-        return $this->_layout->name;
-    }
-
     /**
-     * Get the identifier for the template with the same name
+     * Get the template object attached to the view
      *
+     *  @throws	UnexpectedValueException	If the template doesn't implement the TemplateInterface
      * @return  KTemplateInterface
      */
     public function getTemplate()
     {
-        if(!$this->_template instanceof KTemplateInterface)
+        if (!$this->_template instanceof KTemplateInterface)
         {
             //Make sure we have a template identifier
-            if(!($this->_template instanceof KObjectIdentifier)) {
+            if (!($this->_template instanceof KObjectIdentifier)) {
                 $this->setTemplate($this->_template);
             }
 
             $options = array(
-            	'view' => $this,
-                'translator' => $this->getTranslator()
+                'view' => $this
             );
 
             $this->_template = $this->getObject($this->_template, $options);
+
+            if(!$this->_template instanceof KTemplateInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Template: '.get_class($this->_template).' does not implement KTemplateInterface'
+                );
+            }
         }
 
         return $this->_template;
@@ -207,26 +199,22 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Method to set a template object attached to the view
      *
-     * @param   mixed   $template An object that implements KObjectInterface, an object that
-     *                  implements KObjectIdentifierInterface or valid identifier string
+     * @param   mixed   $template An object that implements KObjectInterface, an object that implements
+     *                            KObjectIdentifierInterface or valid identifier string
      * @throws  UnexpectedValueException    If the identifier is not a table identifier
      * @return  KViewAbstract
      */
     public function setTemplate($template)
     {
-        if(!($template instanceof KTemplateInterface))
+        if (!($template instanceof KTemplateInterface))
         {
-            if(is_string($template) && strpos($template, '.') === false )
-		    {
-			    $identifier = clone $this->getIdentifier();
+            if (is_string($template) && strpos($template, '.') === false)
+            {
+                $identifier = clone $this->getIdentifier();
                 $identifier->path = array('template');
                 $identifier->name = $template;
-			}
-			else $identifier = $this->getIdentifier($template);
-
-            if($identifier->path[0] != 'template') {
-                throw new UnexpectedValueException('Identifier: '.$identifier.' is not a template identifier');
             }
+            else $identifier = $this->getIdentifier($template);
 
             $template = $identifier;
         }
