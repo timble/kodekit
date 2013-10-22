@@ -62,11 +62,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	 *
 	 * @param   KObjectConfig $config Configuration options
 	 */
-	public function __construct(KObjectConfig $config = null)
+	public function __construct(KObjectConfig $config)
 	{
-		//If no config is passed create it
-		if(!isset($config)) $config = new KObjectConfig();
-
 		parent::__construct($config);
 
         //Set the view url
@@ -101,8 +98,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface
             'translator' => null,
 	    	'content'	 => '',
     		'mimetype'	 => '',
-            'layout'     => 'default',
-            'url'        =>  clone KRequest::url()
+            'layout'     => '',
+            'url'        =>  $this->getObject('koowa:http.url')
 	  	));
 
         parent::_initialize($config);
@@ -320,21 +317,21 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         return $this;
     }
 
- 	/**
-     * Get the layout.
+    /**
+     * Get the layout
      *
      * @return string The layout name
      */
     public function getLayout()
     {
-        return $this->_layout;
+        return empty($this->_layout) ? 'default' : $this->_layout;
     }
 
-   /**
+    /**
      * Sets the layout name to use
      *
      * @param    string  $layout The template name.
-     * @return   KViewAbstract
+     * @return   ViewAbstract
      */
     public function setLayout($layout)
     {
