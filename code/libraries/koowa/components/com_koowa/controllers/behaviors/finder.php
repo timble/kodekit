@@ -94,7 +94,7 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KCommand::PRIORITY_LOW,
+            'priority' => self::PRIORITY_LOW,
             'package'  => null,
             'resource' => null,
             'category_resource' => 'category'
@@ -142,9 +142,9 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
      */
     protected function _getDispatcher()
     {
-        if (!self::$_dispatcher) {
+        if (!self::$_dispatcher)
+        {
             JPluginHelper::importPlugin('finder');
-
             self::$_dispatcher = JDispatcher::getInstance();
         }
 
