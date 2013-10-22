@@ -31,11 +31,8 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(KObjectConfig $config)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
          $this->_object_set = new ArrayObject();
