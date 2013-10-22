@@ -33,7 +33,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_HIGH,
+            'priority'   => self::PRIORITY_HIGH,
         ));
 
         parent::_initialize($config);

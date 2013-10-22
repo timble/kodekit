@@ -47,7 +47,7 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'priority'      => KCommand::PRIORITY_NORMAL,
+            'priority'  => self::PRIORITY_NORMAL,
     	));
 
     	parent::_initialize($config);
