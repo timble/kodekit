@@ -32,14 +32,22 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         ));
 
         //Set a custom title
-        if($config->title)
+        if ($config->title === 'false' || $config->title === false) {
+            $config->toolbar->removeCommand('title');
+        }
+        elseif($config->title || $config->icon)
         {
             if($config->toolbar->hasCommand('title'))
             {
-                $config->toolbar->getCommand('title')->set(array(
-                    'title' => $config->title,
-                    'icon'  => $config->icon
-                ));
+                $command = $config->toolbar->getCommand('title');
+
+                if ($config->title) {
+                    $command->set('title', $config->title);
+                }
+
+                if ($config->icon) {
+                    $command->set('icon', $config->icon);
+                }
             }
             else $config->toolbar->addTitle($config->title, $config->icon);
         }
@@ -50,7 +58,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         //Render the buttons
         if ($this->_useBootstrap())
         {
-        	$html = '<div class="btn-toolbar koowa-toolbar" id="toolbar">';
+        	$html = '<div class="btn-toolbar koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
         	$html .= '%s';
 		    $html .= '</div>';
         }
@@ -65,20 +73,19 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         }
 
         $buttons = '';
-	    foreach ($config->toolbar->getCommands() as $command)
-	    {
+        foreach ($config->toolbar->getCommands() as $command)
+        {
             $name = $command->getName();
 
-	        if(method_exists($this, $name)) {
+            if(method_exists($this, $name)) {
                 $buttons .= $this->$name(array('command' => $command));
             } else {
                 $buttons .= $this->command(array('command' => $command));
             }
-       	}
-
+        }
 
        	$html = sprintf($html, $buttons);
-       	 
+
 		return $html;
     }
 
@@ -169,15 +176,16 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         $title = $this->translate($config->command->title);
         $icon  = $config->command->icon;
+        $html  = '';
 
-        if($this->getIdentifier()->application == 'admin' && !empty($title))
+        if (!empty($title))
         {
             if ($this->_useBootstrap())
             {
                 // Strip the extension.
                 $icons = explode(' ', $icon);
                 foreach ($icons as &$icon) {
-                    $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
+                    $icon = 'pagetitle--' . preg_replace('#\.[^.]*$#', '', $icon);
                 }
 
                 $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
@@ -189,13 +197,18 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
                 $html .= '</div>';
             }
 
-            $app = JFactory::getApplication();
-            $app->JComponentTitle = $html;
+            if (JFactory::getApplication()->isAdmin())
+            {
+                $app = JFactory::getApplication();
+                $app->JComponentTitle = $html;
 
-            JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $config->title);
+                $html = '';
+
+                JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $config->title);
+            }
         }
 
-        return;
+        return $html;
     }
 
 	/**
@@ -258,7 +271,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     protected function _useBootstrap()
     {
-        return version_compare(JVERSION, '3.0', '>=') || $this->getIdentifier()->application == 'site';
+        return version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite();
     }
 
     /**

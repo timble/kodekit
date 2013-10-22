@@ -13,18 +13,18 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract
+abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KObjectInstantiable
 {
     /**
      * Instantiate the object
      *
      * If the behavior is auto mixed also lazy mix it into related row objects.
      *
-     * @param 	KObjectConfig           $config	  A KObjectConfig object with configuration options
+     * @param 	KObjectConfigInterface  $config	  A KObjectConfig object with configuration options
      * @param 	KObjectManagerInterface	$manager  A KObjectInterface object
      * @return  KDatabaseBehaviorAbstract
      */
-    public static function getInstance(KObjectConfig $config, KObjectManagerInterface $manager)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
         $classname = $config->object_identifier->classname;
         $instance  = new $classname($config);

@@ -464,7 +464,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
 
         // Make sure host does not contain forbidden characters (see RFC 952 and RFC 2181)
         if ($host && !preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host)) {
-            throw new \UnexpectedValueException('Invalid Host');
+            throw new UnexpectedValueException('Invalid Host');
         }
 
         return $host;

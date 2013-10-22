@@ -190,7 +190,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
 	    //Status
         if($context->status) {
-           header(KHttpResponse::getHeader($context->status));
+            // FIXME: Replace with proper method call
+            header('HTTP/1.1 '.$context->status.' '.KHttpResponse::$status_messages[$context->status]);
         }
 
 	    if(is_string($context->result)) {

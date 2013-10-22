@@ -211,6 +211,19 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
     }
 
     /**
+     * Removes a command if exists
+     *
+     * @param string $name  The command name
+     * @return $this
+     */
+    public function removeCommand($name)
+    {
+        unset($this->_commands[$name]);
+
+        return $this;
+    }
+
+    /**
      * Get the list of commands
      *
      * @return  array

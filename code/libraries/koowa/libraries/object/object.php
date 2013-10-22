@@ -301,7 +301,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         {
             $methods = array();
 
-            $reflection = new \ReflectionClass($this);
+            $reflection = new ReflectionClass($this);
             foreach ($reflection->getMethods() as $method) {
                 $methods[$method->name] = $method->name;
             }

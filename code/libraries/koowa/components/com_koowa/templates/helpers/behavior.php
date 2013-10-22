@@ -508,6 +508,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
+            'disable' => false,
             'debug' => JFactory::getApplication()->getCfg('debug'),
             'element' => '.select2-listbox',
             'options' => array(
@@ -527,14 +528,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['select2'] = true;
         }
 
-        if ($config->element)
-        {
-            $html .= '<script>jQuery(function($){
-                $("'.$config->element.'").select2('.$config->options.');
-                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
-            });</script>';
-        }
-
         $options   = $config->options->toJson();
         $signature = md5('select2-'.$config->element.$options);
 
@@ -545,6 +538,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $("'.$config->element.'").select2('.$options.');
                 $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
             });</script>';
+
+            if ($config->disable)
+            {
+                $html .= $this->_disableSelect2($config->element);
+            }
 
             self::$_loaded[$signature] = true;
         }
@@ -563,6 +561,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'element'  => null,
+            'disable'  => false,
             'options'  => array(
                 'dropdownCssClass' => 'koowa',
                 'validate'      => false, //Toggle if the forms validation helper is loaded
@@ -574,7 +573,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'value'         => $config->value,
                 'text'          => $config->text,
                 'selected'      => $config->selected,
-                'url'           => $config->url
+                'url'           => $config->url,
+                'multiple'      => false
             )
         ));
 
@@ -598,9 +598,40 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
             });</script>';
 
+            if ($config->disable)
+            {
+                $html .= $this->_disableSelect2($config->element);
+            }
+
             self::$_loaded[$signature] = true;
         }
 
         return $html;
+    }
+
+    /**
+     * Disables/removes a select2 box if the selection list is empty so that no data is sent within the
+     * request.
+     *
+     * This mimics the behavior of chosen JS, which is what Joomla! (at least 3.x) expects.
+     *
+     * @param $element The select2 element selector.
+     *
+     * @return string HTML code.
+     */
+    protected function _disableSelect2($element)
+    {
+        return '<script>
+            jQuery(function($) {
+                var el = $("' . $element . '");
+                el.get(0).form.addEvent("submit", function(e) {
+                    if (!el.select2("val").length) {
+                        el.select2("enable", "false");
+                        // The above call does not work with AJAX boxes, so we actually need to remove it all.
+                        el.remove();
+                    }
+                });
+            });
+            </script>';
     }
 }

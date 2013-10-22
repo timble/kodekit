@@ -158,7 +158,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
                 $key = $this->getKey($string);
             }
 
-            $result = $this->_translation_helper->_($this->isTranslatable($key) ? $key : $string);
+            $result = $this->_translation_helper->_($this->hasKey($key) ? $key : $string);
         }
 
         return parent::translate($result, $parameters);
@@ -168,7 +168,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
      * Translates a string based on the number parameter passed
      *
      * @param array   $strings    Strings to choose from
-     * @param integer $number     The umber of items
+     * @param integer $number     The number of items
      * @param array   $parameters An array of parameters
      *
      * @throws InvalidArgumentException
@@ -192,7 +192,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
         while ($choice > 0)
         {
             $looking_for = $key.($choice === 1 ? '' : '_'.$choice);
-            if ($this->isTranslatable($looking_for)) {
+            if ($this->hasKey($looking_for)) {
                 $found = $looking_for;
                 break;
             }
@@ -204,14 +204,25 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
     }
 
     /**
-     * Checks if the translation helper can translate a string
+     * Checks if a given string is translatable.
      *
-     * @param $string String to check
-     * @return bool
+     * @param $string The string to check.
+     * @return bool True if it is, false otherwise.
      */
     public function isTranslatable($string)
     {
-        return $this->_translation_helper->hasKey($string);
+        return $this->hasKey($this->getKey($string));
+    }
+
+    /**
+     * Checks if the translator handles a given translation key.
+     *
+     * @param $key The translation key.
+     * @return bool True if it does, false otherwise.
+     */
+    public function hasKey($key)
+    {
+        return (bool) $this->_translation_helper->hasKey($key);
     }
 
     /**
@@ -295,7 +306,15 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
             throw new BadMethodCallException(sprintf('Invalid extension type: %s', $type));
         }
 
-        return sprintf('%s/%ss/%s', $base, $type_folder, $extension);
+        if ($type == 'plg') {
+            $parts = explode('_', $package);
+            if (count($parts) != 2) throw new BadMethodCallException(sprintf('Invalid plugin: %s', $extension));
+            $folder = sprintf('%s/%ss/%s/%s', JPATH_ROOT, $type_folder, $parts[0], $parts[1]);
+        } else {
+            $folder = sprintf('%s/%ss/%s', $base, $type_folder, $extension);
+        }
+
+        return $folder;
     }
 
     /**

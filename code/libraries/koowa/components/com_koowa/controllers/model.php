@@ -32,7 +32,9 @@ class ComKoowaControllerModel extends KControllerModel
 	{
 		parent::__construct($config);
 
-		$this->_limit = $config->limit;
+        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+
+        $this->_limit = $config->limit;
 
         // Mixin the toolbar interface
         $this->mixin('koowa:controller.toolbar.mixin');
@@ -108,20 +110,6 @@ class ComKoowaControllerModel extends KControllerModel
         }
 
         return $this;
-    }
-
-    /**
-     * Display action
-     *
-     * If the controller was not dispatched manually load the languages files
-     *
-     * @param   KCommandContext $context A command context object
-     * @return 	string|bool 	The rendered output of the view or FALSE if something went wrong
-     */
-    protected function _actionGet(KCommandContext $context)
-    {
-        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
-        return parent::_actionGet($context);
     }
 
 	/**

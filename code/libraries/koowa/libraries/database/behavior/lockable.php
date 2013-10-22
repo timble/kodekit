@@ -143,7 +143,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      * @param  KCommandContext $context
 	 * @return boolean         True if row can be updated, false otherwise
 	 */
-	protected function _beforeTableUpdate(KCommandContext $context)
+	protected function _beforeUpdate(KCommandContext $context)
 	{
 		return (bool) !$this->locked();
 	}
@@ -157,7 +157,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      * @param  KCommandContext $context
      * @return boolean         True if row can be deleted, false otherwise
      */
-	protected function _beforeTableDelete(KCommandContext $context)
+	protected function _beforeDelete(KCommandContext $context)
 	{
 		return (bool) !$this->locked();
 	}

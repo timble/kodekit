@@ -64,38 +64,53 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
         $html = array();
         $html[] = '<select name="'. $name .'" '. $attribs .'>';
 
-        foreach($config->options as $option)
+        foreach($config->options as $group => $options)
         {
-            $value  = $option->value;
-            $text   = $config->translate ? $this->translate( $option->text ) : $option->text;
-
-            $extra = '';
-            if(isset($option->disable) && $option->disable) {
-                $extra .= 'disabled="disabled"';
-            }
-
-            if(isset($option->attribs)) {
-                $extra .= ' '.$this->buildAttributes($option->attribs);;
-            }
-
-            if(!is_null($config->selected))
+            if (is_numeric($group))
             {
-                if ($config->selected instanceof KObjectConfig)
+                $options = array($options);
+            }
+            else
+            {
+                $html[] = '<optgroup label="' . $this->escape($group) . '">';
+            }
+
+            foreach ($options as $option) {
+                $value  = $option->value;
+                $text   = $config->translate ? $this->translate( $option->text ) : $option->text;
+
+                $extra = '';
+                if(isset($option->disable) && $option->disable) {
+                    $extra .= 'disabled="disabled"';
+                }
+
+                if(isset($option->attribs)) {
+                    $extra .= ' '.$this->buildAttributes($option->attribs);;
+                }
+
+                if(!is_null($config->selected))
                 {
-                    foreach ($config->selected as $selected)
+                    if ($config->selected instanceof KObjectConfig)
                     {
-                        $sel = is_object( $selected ) ? $selected->value : $selected;
-                        if ((string) $value == (string) $sel)
+                        foreach ($config->selected as $selected)
                         {
-                            $extra .= 'selected="selected"';
-                            break;
+                            $sel = is_object( $selected ) ? $selected->value : $selected;
+                            if ((string) $value == (string) $sel)
+                            {
+                                $extra .= 'selected="selected"';
+                                break;
+                            }
                         }
                     }
+                    else $extra .= ((string) $value == (string) $config->selected ? ' selected="selected"' : '');
                 }
-                else $extra .= ((string) $value == (string) $config->selected ? ' selected="selected"' : '');
+
+                $html[] = '<option value="'. $value .'" '. $extra .'>' . $text . '</option>';
             }
 
-            $html[] = '<option value="'. $value .'" '. $extra .'>' . $text . '</option>';
+            if (!is_numeric($group)) {
+                $html[] = '</optgroup>';
+            }
         }
 
         $html[] = '</select>';

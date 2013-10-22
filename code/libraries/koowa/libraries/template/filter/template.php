@@ -10,7 +10,7 @@
 /**
  * Template Template Filter
  *
- * Filter for the @import alias. To load templates inline
+ * Filter for the @import alias for partial template identifiers
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
@@ -35,9 +35,9 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
     }
 
     /**
-     * Replace template alias with loadFile functions.
+     * Replace partial template identifiers with full identifiers relative to the current layout.
      *
-     * This function only replaces relative identifiers to a full path based on the path of the template.
+     * e.g. @import('foo') will be converted to @import('com://app/component.view.current_view.foo')
      *
      * @param string $text
      * @return KTemplateFilterTemplate
@@ -45,16 +45,18 @@ class KTemplateFilterTemplate extends KTemplateFilterAbstract implements KTempla
     public function compile(&$text)
     {
         if(preg_match_all('#@import\(\'(.*)\'#siU', $text, $matches))
-		{
-			foreach($matches[1] as $key => $match)
-			{
-			    if(is_string($match) && strpos($match, '.') === false )
-		        {
-		            $path =  dirname($this->getTemplate()->getPath()).DIRECTORY_SEPARATOR.$match.'.php';
-		            $text = str_replace($matches[0][$key], '$this->loadFile('."'".$path."'", $text);
-		        }
-			}
-		}
+        {
+            foreach($matches[1] as $key => $match)
+            {
+                if (strpos($match, '.') === false)
+                {
+                    $identifier = clone $this->getTemplate()->getView()->getIdentifier();
+                    $identifier->name = $match;
+
+                    $text = str_replace($matches[0][$key], '@import('."'".$identifier."'", $text);
+                }
+            }
+        }
 
         return $this;
     }

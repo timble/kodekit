@@ -130,7 +130,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      * @param  KCommandContext $context
      * @return void
      */
-    protected function _afterTableInsert(KCommandContext $context)
+    protected function _afterInsert(KCommandContext $context)
     {
         $this->_createSlug();
         $this->save();
@@ -147,7 +147,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      * @param  KCommandContext $context
      * @return void
      */
-    protected function _beforeTableUpdate(KCommandContext $context)
+    protected function _beforeUpdate(KCommandContext $context)
     {
         if($this->_updatable) {
             $this->_createSlug();

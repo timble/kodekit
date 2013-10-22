@@ -15,7 +15,32 @@
  * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
-{    
+{
+    /**
+     * Provides a users select box.
+     *
+     * You have to create a user controller to use autocomplete.
+     * Autocomplete is highly recommended since a site with 10k users can make you run into memory limit issues.
+     *
+     * @param  array|KObjectConfig $config An optional configuration array.
+     * @return string The autocomplete users select box.
+     */
+    public function users($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'autocomplete' => true,
+            'model'        => 'users',
+            'name'         => 'user',
+            'value'        => 'id',
+            'text'         => 'name',
+            'sort'         => 'name',
+            'validate'     => false
+        ));
+
+        return $this->_listbox($config);
+    }
+
     /**
      * Generates an HTML enabled listbox
      *
@@ -154,27 +179,31 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         }
         else
         {
-            $options = array();
-            if ($config->deselect) {
-                $options[] = $this->option(array('text' => $this->translate($config->prompt)));
-            }
-
-            $list = $this->getObject($config->identifier)->set($config->filter)->getList();
-
-            //Get the list of items
-            $items = $list->getColumn($config->value);
-            if ($config->unique) {
-                $items = array_unique($items);
-            }
-
-            foreach ($items as $key => $value)
+            if (!$config->options)
             {
-                $item      = $list->find($key);
-                $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
-            }
+                $options = array();
 
-            //Add the options to the config object
-            $config->options = $options;
+                if ($config->deselect) {
+                    $options[] = $this->option(array('text' => $this->translate($config->prompt)));
+                }
+
+                $list = $this->getObject($config->identifier)->set($config->filter)->getList();
+
+                //Get the list of items
+                $items = $list->getColumn($config->value);
+                if ($config->unique) {
+                    $items = array_unique($items);
+                }
+
+                foreach ($items as $key => $value)
+                {
+                    $item      = $list->find($key);
+                    $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+                }
+
+                //Add the options to the config object
+                $config->options = $options;
+            }
 
             if ($config->select2) {
                 $html .= $this->_listboxSelect2($config);
@@ -247,7 +276,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'validate' => true,
             'filter'   => array(),
             'element' => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
-            'options' => array()
+            'options' => array('multiple' => (bool) $config->attribs->multiple)
         ));
 
         if (!$config->url)
@@ -268,12 +297,36 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
 
-        $config->attribs->value = $config->selected;
         $config->attribs->name  = $config->name;
+
+        if ($config->selected)
+        {
+            $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
+        }
+
+        // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices
+        // as an array (presumably for v4).
+        if ($config->attribs->multiple)
+        {
+            $html .= '<script>
+            window.addEvent("domready", function() {
+                var el = jQuery("' . $config->element . '");
+                var form = jQuery(el.get(0).form);
+                $(form.get(0)).addEvent("submit", function() {
+                    if (el.val()) {
+                        var values = el.val().split(",");
+                        jQuery.each(values, function(idx, value) {
+                            form.append(el.clone().val(value));
+                        });
+                        el.remove();
+                    }
+                });
+            });</script>';
+        }
 
         $attribs = $this->buildAttributes($config->attribs);
 
-        $html .= "<input $attribs />";
+        $html .= "<input type=\"hidden\" {$attribs} />";
 
         return $html;
     }

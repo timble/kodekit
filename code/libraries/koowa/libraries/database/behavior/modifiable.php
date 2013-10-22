@@ -60,7 +60,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      * @param KCommandContext $context
 	 * @return void
 	 */
-	protected function _beforeTableUpdate(KCommandContext $context)
+	protected function _beforeUpdate(KCommandContext $context)
 	{
 		//Get the modified columns
 		$modified = $this->getTable()->filter(array_flip($this->getModified()));

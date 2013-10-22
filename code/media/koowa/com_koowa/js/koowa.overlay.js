@@ -5,10 +5,6 @@
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
-if(!Koowa) {
-    var Koowa = {};
-}
-
 (function($){
 /**
  * Overlay class

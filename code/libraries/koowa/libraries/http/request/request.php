@@ -101,8 +101,9 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     public function setMethod($method)
     {
         $method = strtoupper($method);
+        // FIXME: static won't work in PHP 5.2
         if (!defined('static::'.$method)) {
-            throw new \InvalidArgumentException('Invalid HTTP method passed');
+            throw new InvalidArgumentException('Invalid HTTP method passed');
         }
 
         $this->_method = $method;

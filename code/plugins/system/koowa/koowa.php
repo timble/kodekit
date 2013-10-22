@@ -103,9 +103,9 @@ class PlgSystemKoowa extends JPlugin
             $manager->registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
             $manager->registerAlias('translator', 'com:koowa.translator');
 
-            //Setup the request
+            //Setup the request, this is case insensitive since Windows servers allow folder names like /Administrator
             if (JFactory::getApplication()->getName() !== 'site') {
-                KRequest::root(str_replace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
+                KRequest::root(str_ireplace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
             }
 
             //Load the koowa plugins

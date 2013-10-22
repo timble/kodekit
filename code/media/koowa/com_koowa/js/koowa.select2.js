@@ -43,10 +43,10 @@
                     },
                     results: function (data, page) {
                         var results = [],
-                            more = (page * 10) < data[options.model].total; // whether or not there are more results available
+                            more = (page * 10) < data.meta.total; // whether or not there are more results available
 
-                        $.each(data[options.model].data, function(i, item) {
-                            results.push(item.data);
+                        $.each(data.entities, function(i, item) {
+                            results.push(item);
                         });
 
                         // notice we return the value of more so Select2 knows if more results can be loaded
@@ -54,19 +54,25 @@
                     }
                 },
                 initSelection: function(element, callback) {
-                    var id=$(element).val();
-                    if (id!=='') {
+                    var selected= $.parseJSON($(element).val());
+                    if (selected!=='') {
                         var data = {};
-                        data[options.value] = id;
+                        data[options.value] = selected;
+                        // Cleanup up selected. Values will be appended by select2.
+                        $(element).val('');
                         $.ajax(options.url, {
                             data: data
                         }).done(function(data) {
-                            callback(data[options.model].data[0].data);
+                            callback(data.entities);
                         });
                     }
                 },
-                formatResult: function (item) { return item[options.text]; },
-                formatSelection: function (item) { return item[options.text]; },
+                formatResult: function (item) {
+                    return item[options.text];
+                },
+                formatSelection: function (item) {
+                    return item[options.text];
+                },
                 id: options.value
             }, options);
         }
@@ -115,24 +121,5 @@
         });
         return this;
     };
-
-    if(Form && Form.Validator) {
-        Form.Validator.add('select2-container', {
-            errorMsg: function(){
-                return Form.Validator.getMsg('required');
-            },
-            test: function(element){
-                var select = element.getParent().getElement('select');
-
-                if (select.hasClass('required')) {
-                    var value = jQuery(select).select2('val');
-
-                    return value && value != 0;
-                } else {
-                    return true;
-                }
-            }
-        });
-    }
 
 })(jQuery);

@@ -105,12 +105,12 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
         {
             if (!is_string($location) && !is_numeric($location) && !is_callable(array($location, '__toString')))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'The Response location must be a string or object implementing __toString(), "'.gettype($location).'" given.'
                 );
             }
         }
-        else throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
+        else throw new InvalidArgumentException('Cannot redirect to an empty URL.');
 
         //Add the message
         if(!empty($message)) {
@@ -142,7 +142,7 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     {
         if (!is_string($message) && !is_callable(array($message, '__toString')))
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'The flash message must be a string or object implementing __toString(), "'.gettype($message).'" given.'
             );
         }

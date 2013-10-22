@@ -145,7 +145,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
     {
         if (!is_null($content) && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString')))
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'The message content must be a string or object implementing __toString(), "'.gettype($content).'" given.'
             );
         }
