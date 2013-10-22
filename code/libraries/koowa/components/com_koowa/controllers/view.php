@@ -25,10 +25,8 @@ class ComKoowaControllerView extends KControllerView
     {
         parent::__construct($config);
 
-        $this->_limit = $config->limit;
-
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
+        $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
