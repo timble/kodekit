@@ -141,7 +141,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $class = 'class="-koowa-'.$direction.'"';
         }
 
-        $url = clone KRequest::url();
+        $url = clone $this->getTemplate()->getView()->getUrl();
 
         $query 				= $url->getQuery(1);
         $query['sort'] 		= $config->column;
