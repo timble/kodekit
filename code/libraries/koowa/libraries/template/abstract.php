@@ -212,8 +212,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get the view object attached to the template
      *
-     * @throws	\UnexpectedValueException	If the views doesn't implement the KViewInterface
-     * @return  KTemplateInterface
+     * @throws	UnexpectedValueException	If the views doesn't implement the ViewInterface
+     * @return  KViewInterface
      */
     public function getView()
     {
@@ -226,7 +226,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
             $this->_view = $this->getObject($this->_view);
 
-            //Make sure the view implements KViewInterface
+            //Make sure the view implements ViewInterface
             if(!$this->_view instanceof KViewInterface)
             {
                 throw new UnexpectedValueException(
@@ -238,40 +238,32 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         return $this->_view;
     }
 
-	/**
-	 * Method to set a view object attached to the controller
-	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
-	 * @return	KTemplateAbstract
-	 */
-	public function setView($view)
-	{
-		if(!($view instanceof KViewInterface))
-		{
-			if(empty($view) || (is_string($view) && strpos($view, '.') === false))
-		    {
-			    $identifier			= clone $this->getIdentifier();
-			    $identifier->path	= array('view');
-			    if ($view) {
-			        $identifier->path[] = $view;
-			    }
-			    $identifier->name	= KRequest::format() ? KRequest::format() : 'html';
-			}
-			else $identifier = $this->getIdentifier($view);
+    /**
+     * Method to set a view object attached to the controller
+     *
+     * @param	mixed	$view An object that implements ObjectInterface, ObjectIdentifier object
+     * 					      or valid identifier string
+     * @return KTemplateAbstract
+     */
+    public function setView($view)
+    {
+        if(!($view instanceof KViewInterface))
+        {
+            if(is_string($view) && strpos($view, '.') === false )
+            {
+                $identifier			= clone $this->getIdentifier();
+                $identifier->path	= array('view', $view);
+                $identifier->name = 'html';
+            }
+            else $identifier = $this->getIdentifier($view);
 
-			if($identifier->path[0] != 'view') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a view identifier');
-			}
+            $view = $identifier;
+        }
 
-			$view = $identifier;
-		}
+        $this->_view = $view;
 
-		$this->_view = $view;
-
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Gets the translator object
