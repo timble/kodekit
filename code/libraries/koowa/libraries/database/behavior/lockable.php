@@ -33,7 +33,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-			'priority'   => KCommand::PRIORITY_HIGH,
+			'priority'   => self::PRIORITY_HIGH,
     	    'lifetime'	 => '900' //in seconds
 	  	));
 
@@ -132,28 +132,6 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Get the locked information
-	 *
-	 * @return string	The locked information as an internationalised string
-	 */
-	public function lockMessage()
-	{
-		$message = '';
-
-		if($this->locked())
-		{
-	        $user = JFactory::getUser($this->locked_by);
-			$date = $this->getObject('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
-			
-			$message = $this->getObject('translator')->translate(
-			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
-			);
-		}
-
-		return $message;
 	}
 
 	/**
