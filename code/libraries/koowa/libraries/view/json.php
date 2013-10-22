@@ -210,7 +210,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _getListLink(KDatabaseRowsetInterface $rowset, array $query = array())
     {
-        $url = KRequest::url();
+        $url = $this->getUrl();
 
         if ($query)
         {
@@ -312,7 +312,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _processLinks(array &$array)
     {
-        $base = KRequest::url()->toString(KHttpUrl::AUTHORITY);
+        $base = $this->getUrl()->toString(KHttpUrl::AUTHORITY);
 
         foreach ($array as $key => &$value)
         {
