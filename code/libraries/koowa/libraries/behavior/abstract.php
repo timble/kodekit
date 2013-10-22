@@ -93,7 +93,7 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_NORMAL,
+            'priority'   => self::PRIORITY_NORMAL,
             'auto_mixin' => false
         ));
 
