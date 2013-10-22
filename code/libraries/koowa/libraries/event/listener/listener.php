@@ -61,7 +61,7 @@ class KEventListener extends KObject implements KEventListenerInterface
         $config->append(array(
         	'dispatcher'   => 'koowa:event.dispatcher',
     	    'auto_connect' => true,
-    		'priority'     => KCommand::PRIORITY_NORMAL
+    		'priority'     => KEvent::PRIORITY_NORMAL
         ));
 
         parent::_initialize($config);
