@@ -183,10 +183,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             {
                 $options = array();
 
-                if ($config->deselect) {
-                    $options[] = $this->option(array('text' => $this->translate($config->prompt)));
-                }
-
                 $list = $this->getObject($config->identifier)->set($config->filter)->getList();
 
                 //Get the list of items
@@ -203,6 +199,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
                 //Add the options to the config object
                 $config->options = $options;
+            }
+
+            if ($config->deselect)
+            {
+                $config->options = array_merge(array($this->option(array('text' => $this->translate($config->prompt)))),
+                    $config->options->toArray());
             }
 
             if ($config->select2) {
