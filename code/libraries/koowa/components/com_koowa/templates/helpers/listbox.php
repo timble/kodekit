@@ -319,6 +319,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                     }
                 });
             });</script>';
+
+            // Enable auto-cleanup if not disabled.
+            if (!isset($config->cleanup)) $config->cleanup = true;
         }
 
         $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
