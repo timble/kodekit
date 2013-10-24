@@ -209,9 +209,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
             if ($config->select2) {
                 $html .= $this->_listboxSelect2($config);
+            } else {
+                $html .= $this->optionlist($config);
             }
-
-            $html .= $this->optionlist($config);
         }
 
         return $html;
