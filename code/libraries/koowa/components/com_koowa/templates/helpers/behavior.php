@@ -508,7 +508,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'disable' => false,
+            'cleanup' => false,
             'debug' => JFactory::getApplication()->getCfg('debug'),
             'element' => '.select2-listbox',
             'options' => array(
@@ -539,9 +539,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
             });</script>';
 
-            if ($config->disable)
+            if ($config->cleanup)
             {
-                $html .= $this->_disableSelect2($config->element);
+                $html .= $this->_cleanupSelect2($config->element);
             }
 
             self::$_loaded[$signature] = true;
@@ -561,7 +561,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'element'  => null,
-            'disable'  => false,
+            'cleanup'  => false,
             'options'  => array(
                 'dropdownCssClass' => 'koowa',
                 'validate'      => false, //Toggle if the forms validation helper is loaded
@@ -598,9 +598,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
             });</script>';
 
-            if ($config->disable)
+            if ($config->cleanup)
             {
-                $html .= $this->_disableSelect2($config->element);
+                $html .= $this->_cleanupSelect2($config->element);
             }
 
             self::$_loaded[$signature] = true;
@@ -610,24 +610,26 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * Disables/removes a select2 box if the selection list is empty so that no data is sent within the
-     * request.
+     * Removes the select2 element if there's no selection made.
      *
-     * This mimics the behavior of chosen JS, which is what Joomla! (at least 3.x) expects.
+     * This is very important specially with multiple select2 elements represented by an input, on which an empty
+     * string is sent if no selection was made. When saving parameters, Joomla! encodes this as "name":[""] instead
+     * of the expected "name":[]. By enabling this behavior, the element and its value is not included as part
+     * of the form request, which mimics the behavior of a true select box without any selection.
      *
      * @param $element The select2 element selector.
      *
      * @return string HTML code.
      */
-    protected function _disableSelect2($element)
+    protected function _cleanupSelect2($element)
     {
         return '<script>
             jQuery(function($) {
                 var el = $("' . $element . '");
                 el.get(0).form.addEvent("submit", function(e) {
                     if (!el.select2("val").length) {
-                        el.select2("enable", "false");
-                        // The above call does not work with AJAX boxes, so we actually need to remove it all.
+                        // el.select2("enable", "false") does not work with all select2 elements, e.g. AJAX boxes.
+                        // Because of this, we are better removing the element.
                         el.remove();
                     }
                 });
