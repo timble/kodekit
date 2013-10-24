@@ -247,9 +247,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             }
             else
             {
-                // get rid of the deselect option as we set the placeholder property below
-                $options =& $config->options;
-                unset($options[0]);
+                // Remove the prompt option previously added. This is automatically added by select2
+                // for multiple select boxes.
+                unset($config->options[0]);
             }
 
             $config->select2_options->append(array('options' => array(
