@@ -299,33 +299,35 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             $config->url = $this->getTemplate()->getView()->createRoute($parts, false, false);
         }
 
-        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
-
-        $config->attribs->name  = $config->name;
-
-        if ($config->selected)
-        {
-            $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
-        }
+        $html = '';
 
         // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices
         // as an array (presumably for v4).
         if ($config->attribs->multiple)
         {
             $html .= '<script>
-            window.addEvent("domready", function() {
-                var el = jQuery("' . $config->element . '");
-                var form = jQuery(el.get(0).form);
-                $(form.get(0)).addEvent("submit", function() {
+            jQuery(function($) {
+                var el = $("' . $config->element . '");
+                var form = el.closest("form");
+                form.get(0).addEvent("submit", function() {
                     if (el.val()) {
                         var values = el.val().split(",");
-                        jQuery.each(values, function(idx, value) {
+                        $.each(values, function(idx, value) {
                             form.append(el.clone().val(value));
                         });
                         el.remove();
                     }
                 });
             });</script>';
+        }
+
+        $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+
+        $config->attribs->name  = $config->name;
+
+        if ($config->selected)
+        {
+            $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
         }
 
         $attribs = $this->buildAttributes($config->attribs);
