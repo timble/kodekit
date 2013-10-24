@@ -259,6 +259,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         }
 
         $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+        $html .= $this->optionlist($config);
 
         return $html;
     }
