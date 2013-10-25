@@ -242,7 +242,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
             }
 
             //Set the row data based on the unique state information
-	        $state = $this->getModel()->getState()->getData(true);
+	        $state = $this->getModel()->getState()->getValues(true);
 	        $data->setData($state);
 
             $data = parent::execute($action, $context);

@@ -19,15 +19,6 @@
 class KCommand extends KObject implements KCommandInterface
 {
     /**
-     * Priority levels
-     */
-    const PRIORITY_HIGHEST = 1;
-    const PRIORITY_HIGH    = 2;
-    const PRIORITY_NORMAL  = 3;
-    const PRIORITY_LOW     = 4;
-    const PRIORITY_LOWEST  = 5;
-
-    /**
      * The command priority
      *
      * @var integer
@@ -39,11 +30,8 @@ class KCommand extends KObject implements KCommandInterface
      *
      * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config = null)
+    public function __construct( KObjectConfig $config)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
         $this->_priority = $config->priority;
@@ -60,7 +48,7 @@ class KCommand extends KObject implements KCommandInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_NORMAL,
+            'priority'   => self::PRIORITY_NORMAL,
         ));
 
         parent::_initialize($config);

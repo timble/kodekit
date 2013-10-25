@@ -18,25 +18,25 @@ interface KDatabaseQueryInterface
     /**
      * Bind values to a corresponding named placeholders in the query.
      *
-     * @param  array $params Associative array of parameters.
-     * @return KDatabaseQueryInterface
+     * @param  array $parameters Associative array of parameters.
+     * @return $this
      */
-    public function bind(array $params);
+    public function bind(array $parameters);
 
     /**
      * Get the query parameters
      *
      * @return KObjectArray
      */
-    public function getParams();
+    public function getParameters();
 
     /**
      * Set the query parameters
      *
-     * @param KObjectArray $params  The query parameters
+     * @param array $parameters  The query parameters
      * @return KDatabaseQueryInterface
      */
-    public function setParams(KObjectArray $params);
+    public function setParameters(array $parameters);
 
     /**
      * Gets the database adapter

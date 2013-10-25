@@ -13,28 +13,86 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelState extends KObjectConfig implements KModelStateInterface
+class KModelState extends KObjectArray implements KModelStateInterface
 {
+    /**
+     * Model object
+     *
+     * @var string|object
+     */
+    protected $_model;
+
+    /**
+     * Constructor
+     *
+     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        if (empty($config->model))
+        {
+            throw new InvalidArgumentException(
+                'model [ModelInterface] config option is required'
+            );
+        }
+
+        if(!$config->model instanceof KModelInterface)
+        {
+            throw new UnexpectedValueException(
+                'Model: '.get_class($config->model).' does not implement ModelInterface'
+            );
+        }
+
+        $this->_model = $config->model;
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'model' => null,
+        ));
+
+        parent::_initialize($config);
+    }
+
     /**
      * Insert a new state
      *
-     * @param   string      $name     The name of the state
-     * @param   mixed       $filter   Filter(s), can be a KFilterInterface object, a filter name or an array of filter names
-     * @param   mixed       $default  The default value of the state
-     * @param   boolean     $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
-     * @param   array       $required Array of required states to determine if the state is unique. Only applicable if the state is unique.
+     * @param   string   $name     The name of the state
+     * @param   mixed    $filter   Filter(s), can be a FilterInterface object, a filter name or an array of filter names
+     * @param   mixed    $default  The default value of the state
+     * @param   boolean  $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
+     * @param   array    $required Array of required states to determine if the state is unique. Only applicable if the
+     *                             state is unique.
+     *
      * @return  KModelState
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array())
     {
+        //Create the state
         $state = new stdClass();
         $state->name     = $name;
         $state->filter   = $filter;
-        $state->value    = $default;
+        $state->value    = null;
         $state->unique   = $unique;
         $state->required = $required;
         $state->default  = $default;
         $this->_data[$name] = $state;
+
+        //Set the value to default
+        if(isset($default)) {
+            $this->offsetSet($name, $default);
+        }
 
         return $this;
     }
@@ -42,31 +100,39 @@ class KModelState extends KObjectConfig implements KModelStateInterface
     /**
      * Retrieve a configuration item and return $default if there is no element set.
      *
-     * @param string
-     * @param mixed
+     * @param string $name      The state name
+     * @param mixed  $default   The state default value if no state can be found
      * @return mixed
      */
     public function get($name, $default = null)
     {
         $result = $default;
-        if(isset($this->_data[$name])) {
-            $result = $this->_data[$name]->value;
+        if($this->offsetExists($name)) {
+            $result = $this->offsetGet($name);
         }
 
         return $result;
     }
 
     /**
-     * Set state value
+     * Set the a state value
      *
-     * @param  	string 	$name The state name.
+     * This function only acts on existing states, if a state has changed it will call back to the model triggering the
+     * onStateChange notifier.
+     *
+     * @param  	string 	$name  The state name.
      * @param  	mixed  	$value The state value.
-     * @return 	KModelStateInterface
+     *
+     * @return  $this
      */
-    public function set($name, $value)
+    public function set($name, $value = null)
     {
-        if(isset($this->_data[$name])) {
-            $this->_data[$name]->value = $value;
+        if ($this->has($name) && $this->get($name) != $value)
+        {
+            $this->offsetSet($name, $value);
+
+            //Notify the model
+            $this->_model->onStateChange($name);
         }
 
         return $this;
@@ -80,18 +146,18 @@ class KModelState extends KObjectConfig implements KModelStateInterface
      */
     public function has($name)
     {
-        return isset($this->_data[$name]);
+        return $this->offsetExists($name);
     }
 
     /**
      * Remove an existing state
      *
-     * @param   string      $name The name of the state
-     * @return  KModelState
+     * @param   string $name The name of the state
+     * @return  $this
      */
     public function remove( $name )
     {
-        unset($this->_data[$name]);
+        $this->offsetUnset($name);
         return $this;
     }
 
@@ -99,51 +165,30 @@ class KModelState extends KObjectConfig implements KModelStateInterface
      * Reset all state data and revert to the default state
      *
      * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
-     * @return  KModelState
+     * @return $this
      */
     public function reset($default = true)
     {
-        foreach($this->_data as $state) {
+        foreach($this->_data as $state)
+        {
             $state->value = $default ? $state->default : null;
+
+            $this->_model->onStateChange($state->name);
         }
 
         return $this;
     }
 
-     /**
-     * Set the state data
+    /**
+     * Set the state values from an array
      *
-     * This function will only filter values if we have a value. If the value is an empty string it will be filtered
-      * to NULL.
-     *
-     * @param   array|object    An associative array of state values by name
-     * @return  KModelState
+     * @param   array $data An associative array of state values by name
+     * @return  $this
      */
-    public function setData(array $data)
+    public function setValues(array $data)
     {
-        // Filter data
-        foreach($data as $key => $value)
-        {
-            if(isset($this->_data[$key]))
-            {
-                $filter = $this->_data[$key]->filter;
-
-                //Only filter if we have a value
-                if($value !== null)
-                {
-                    if($value !== '')
-                    {
-                        if(!($filter instanceof KFilterInterface)) {
-                            $filter = KObjectManager::getInstance()->getObject('koowa:filter.factory')->getFilter($filter);
-                        }
-
-                        $value = $filter->sanitize($value);
-                    }
-                    else $value = null;
-
-                    $this->_data[$key]->value = $value;
-                }
-            }
+        foreach($data as $key => $value) {
+            $this->set($key, $value);
         }
 
         return $this;
@@ -157,7 +202,7 @@ class KModelState extends KObjectConfig implements KModelStateInterface
      * @param   boolean $unique If TRUE only retrieve unique state values, default FALSE
      * @return  array   An associative array of state values by name
      */
-    public function getData($unique = false)
+    public function getValues($unique = false)
     {
         $data = array();
 
@@ -167,7 +212,7 @@ class KModelState extends KObjectConfig implements KModelStateInterface
             {
                 //Only return unique data
                 if($unique)
-                 {
+                {
                     //Unique values cannot be null or an empty string
                     if($state->unique && $this->_validate($state))
                     {
@@ -211,7 +256,7 @@ class KModelState extends KObjectConfig implements KModelStateInterface
         $unique = false;
 
         //Get the unique states
-        $states = $this->getData(true);
+        $states = $this->getValues(true);
 
         if(!empty($states))
         {
@@ -239,7 +284,7 @@ class KModelState extends KObjectConfig implements KModelStateInterface
      */
     public function isEmpty(array $exclude = array())
     {
-        $states = $this->getData();
+        $states = $this->getValues();
 
         foreach($exclude as $state) {
             unset($states[$state]);
@@ -248,27 +293,68 @@ class KModelState extends KObjectConfig implements KModelStateInterface
         return (bool) (count($states) == 0);
     }
 
-	/**
-     * Return an associative array of the states.
+    /**
+     * Get an state value
      *
-     * @param bool 	$values If TRUE return only as associative array of the state values. Default is TRUE.
-     * @return array
+     * @param   string $name
+     * @return  mixed  The state value
      */
-    public function toArray($values = true)
+    public function offsetGet($name)
     {
-        if($values)
-        {
-            $result = array();
-            foreach($this->_data as $state) {
-                $result[$state->name] = $state->value;
-            }
+        $result = null;
+
+        if (isset($this->_data[$name])) {
+            $result = $this->_data[$name]->value;
         }
-        else $result = $this->_data;
 
         return $result;
     }
 
-	/**
+    /**
+     * Set an state value
+     *
+     * This function only accepts scalar or array values. Values are only filtered if not NULL. If the value is an empty
+     * string it will be filtered to NULL. Values will only be set if the state exists. Function will not create new
+     * states. Use the insert() function instead.
+     *
+     * @param   string $name
+     * @param   mixed  $value
+     * @throws \UnexpectedValueException If the value is not a scalar or an array
+     * @return  void
+     */
+    public function offsetSet($name, $value)
+    {
+        if($this->offsetExists($name))
+        {
+            //Only filter if we have a value
+            if($value !== null)
+            {
+                if($value !== '')
+                {
+                    //Only accepts scalar values
+                    if(!is_scalar($value) && !is_array($value))
+                    {
+                        throw new UnexpectedValueException(
+                            'Value needs to be an array or a scalar, "'.gettype($value).'" given'
+                        );
+                    }
+
+                    $filter = $this->_data[$name]->filter;
+
+                    if(!($filter instanceof KFilterInterface)) {
+                        $filter =  $this->getObject('koowa:filter.factory')->getFilter($filter);
+                    }
+
+                    $value = $filter->sanitize($value);
+                }
+                else $value = null;
+
+                $this->_data[$name]->value = $value;
+            }
+        }
+    }
+
+    /**
      * Validate a unique state.
      *
      * @param  object  $state The state object.
@@ -291,30 +377,5 @@ class KModelState extends KObjectConfig implements KModelStateInterface
         }
 
         return true;
-    }
-
-    /**
-     * Set state value
-     *
-     * @param  	string 	$name The user-specified state name.
-     * @param  	mixed  	$value The user-specified state value.
-     * @return 	void
-     */
-    public function __set($name, $value)
-    {
-        $this->set($name, $value);
-    }
-
-    /**
-     * Unset a state value
-     *
-     * @param   string  $name The column key.
-     * @return  void
-     */
-    public function __unset($name)
-    {
-        if(isset($this->_data[$name])) {
-            $this->_data[$name]->value = $this->_data[$name]->default;
-        }
     }
 }

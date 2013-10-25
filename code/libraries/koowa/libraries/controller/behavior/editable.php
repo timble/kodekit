@@ -223,14 +223,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
 		    if($this->getModel()->getState()->isUnique())
 		    {
-	            $states = $this->getModel()->getState()->getData(true);
+	            $states = $this->getModel()->getState()->getValues(true);
 
 		        foreach($states as $key => $value) {
-		            $url->query[$key] = $data->get($key);
+		            $url->query[$key] = $data->$key;
 		        }
 		    }
 		    elseif ($data->getIdentityColumn()) {
-                $url->query[$data->getIdentityColumn()] = $data->get($data->getIdentityColumn());
+                $column = $data->getIdentityColumn();
+                $url->query[$column] = $data->$column;
             }
         }
 

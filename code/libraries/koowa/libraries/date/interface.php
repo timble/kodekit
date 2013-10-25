@@ -13,4 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Date
  */
-interface KDateInterface extends KObjectHandlable {}
+interface KDateInterface extends KObjectHandlable
+{
+
+}

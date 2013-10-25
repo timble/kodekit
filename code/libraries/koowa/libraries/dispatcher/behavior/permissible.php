@@ -8,17 +8,17 @@
  */
 
 /**
- * Permissible Controller Behavior
+ * Dispatcher Permissible Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Dispatcher
  */
-class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
+class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
 {
     /**
      * The permission object
      *
-     * @var KControllerPermissionInterface
+     * @var KDispatcherPermissionInterface
      */
     protected $_permission;
 
@@ -34,6 +34,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
+            'auto_mixin' => true
         ));
 
         parent::_initialize($config);
@@ -44,13 +45,13 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      *
      * Only handles before.action commands to check authorization rules.
      *
-     * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
+     * @param   string $name     The command name
+     * @param   object $context  The command context
      * @throws  KControllerExceptionForbidden       If the user is authentic and the actions is not allowed.
      * @throws  KControllerExceptionUnauthorized    If the user is not authentic and the action is not allowed.
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function execute($name, KCommandContext $context)
+    public function execute( $name, KCommandContext $context)
     {
         $parts = explode('.', $name);
 
@@ -60,11 +61,13 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
 
             if($this->canExecute($action) === false)
             {
-                if(JFactory::getUser()->guest) {
-                    throw new KControllerExceptionUnauthorized('Action '.ucfirst($action).' Not Allowed');
-                } else {
+                if($context->user->isAuthentic()) {
                     throw new KControllerExceptionForbidden('Action '.ucfirst($action).' Not Allowed');
+                } else {
+                    throw new KControllerExceptionUnauthorized('Action '.ucfirst($action).' Not Allowed');
                 }
+
+                return false;
             }
         }
 
@@ -79,10 +82,10 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      */
     public function canExecute($action)
     {
-        $method  = 'can'.ucfirst($action);
-        $methods = $this->getMixer()->getMethods();
+        //Check if the action is allowed
+        $method = 'can'.ucfirst($action);
 
-        if (!isset($methods[$method]))
+        if(!in_array($method, $this->getMixer()->getMethods()))
         {
             $actions = $this->getActions();
             $actions = array_flip($actions);
@@ -108,7 +111,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
 
         //Mixin the permission
         $permission       = clone $mixer->getIdentifier();
-        $permission->path = array('controller', 'permission');
+        $permission->path = array('dispatcher', 'permission');
 
         if($permission !== $this->getPermission()) {
             $this->setPermission($mixer->mixin($permission));
@@ -118,7 +121,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     /**
      * Get the permission
      *
-     * @return KControllerPermissionInterface
+     * @return KDispatcherPermissionInterface
      */
     public function getPermission()
     {
@@ -128,10 +131,10 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     /**
      * Set the permission
      *
-     * @param  KControllerPermissionInterface $permission The controller permission object
+     * @param  KDispatcherPermissionInterface $permission The dispatcher permission object
      * @return KControllerBehaviorPermissible
      */
-    public function setPermission(KControllerPermissionInterface $permission)
+    public function setPermission(KDispatcherPermissionInterface $permission)
     {
         $this->_permission = $permission;
         return $this;

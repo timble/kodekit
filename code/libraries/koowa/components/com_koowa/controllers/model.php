@@ -37,7 +37,7 @@ class ComKoowaControllerModel extends KControllerModel
         $this->_limit = $config->limit;
 
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
+        $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
@@ -124,7 +124,7 @@ class ComKoowaControllerModel extends KControllerModel
     {
         if($this->isDispatched())
         {
-            $limit = $this->getModel()->get('limit');
+            $limit = $this->getModel()->getState()->limit;
 
             //If limit is empty use default
             if(empty($limit)) {
@@ -136,7 +136,7 @@ class ComKoowaControllerModel extends KControllerModel
                 $limit = $this->_limit->max;
             }
 
-            $this->limit = $limit;
+            $this->getModel()->getState()->limit = $limit;
         }
 
         return parent::_actionBrowse($context);

@@ -292,7 +292,6 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     protected function _items(KObjectConfig $config)
     {
         $elements  = array();
-        $prototype = new KObject();
         $current   = ($config->current - 1) * $config->limit;
 
         // First
@@ -300,15 +299,14 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         $offset  = 0;
         $active  = $offset != $config->offset;
         $props   = array('page' => 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active );
-        $element = clone $prototype;
-        $elements['first'] = $element->set($props);
+
+        $elements['first'] = (object) $props;
 
         // Previous
         $offset  = max(0, ($config->current - 2) * $config->limit);
         $active  = $offset != $config->offset;
         $props   = array('page' => $config->current - 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
-        $element = clone $prototype;
-        $elements['previous'] = $element->set($props);
+        $elements['previous'] = (object) $props;
 
         // Pages
         $elements['pages'] = array();
@@ -316,23 +314,20 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         {
             $current = $offset == $config->offset;
             $props = array('page' => $page, 'offset' => $offset, 'limit' => $config->limit, 'current' => $current, 'active' => !$current);
-            $element    = clone $prototype;
-            $elements['pages'][] = $element->set($props);
+            $elements['pages'][] = (object) $props;
         }
 
         // Next
         $offset  = min(($config->count-1) * $config->limit, ($config->current) * $config->limit);
         $active  = $offset != $config->offset;
         $props   = array('page' => $config->current + 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
-        $element = clone $prototype;
-        $elements['next'] = $element->set($props);
+        $elements['next'] = (object) $props;
 
         // Last
         $offset  = ($config->count - 1) * $config->limit;
         $active  = $offset != $config->offset;
         $props   = array('page' => $config->count, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
-        $element = clone $prototype;
-        $elements['last'] = $element->set($props);
+        $elements['last'] = (object) $props;
 
         return $elements;
     }

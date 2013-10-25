@@ -34,7 +34,7 @@ class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract
         if(KStringInflector::isPlural($view->getName()))
         {
             if($state = $view->getModel()->getState()) {
-                $params = array_merge( $state->getData(), $params);
+                $params = array_merge( $state->getValues(), $params);
             }
         }
         else

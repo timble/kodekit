@@ -34,7 +34,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 		$this->getRequest()->append($state);
 
 		//Push the request in the model
-		$this->getModel()->set($this->getRequest());
+		$this->getModel()->setState($this->getRequest()->toArray());
 	}
 
 	/**
@@ -46,7 +46,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 	protected function _afterBrowse(KCommandContext $context)
 	{
 		$model  = $this->getModel();
-		$state  = $model->get();
+		$state  = $model->getState()->getValues();
 
 		// Built the session identifier based on the action
 		$identifier  = $model->getIdentifier().'.'.$context->action;

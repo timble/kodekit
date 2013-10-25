@@ -236,7 +236,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	{
 		$this->_request = new KObjectConfig();
 		foreach($request as $key => $value) {
-		    $this->$key = $value;
+            $this->_request->$key = $value;
 		}
 
 		return $this;
@@ -306,33 +306,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $this->_actions = array_unique(array_merge($this->_actions, array_keys($this->_action_map)));
 
         return $this;
-    }
-
-	/**
-     * Set a request properties
-     *
-     * @param  	string 	$property The property name.
-     * @param 	mixed 	$value    The property value.
-     */
- 	public function __set($property, $value)
-    {
-    	$this->_request->$property = $value;
-  	}
-
-  	/**
-     * Get a request property
-     *
-     * @param  	string 	$property The property name.
-     * @return 	string 	The property value.
-     */
-    public function __get($property)
-    {
-    	$result = null;
-    	if(isset($this->_request->$property)) {
-    		$result = $this->_request->$property;
-    	}
-
-    	return $result;
     }
 
     /**

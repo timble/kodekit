@@ -132,7 +132,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
             }
         }
 
-        if($this->_params) {
+        if($this->_parameters) {
             $query = $this->_replaceParams($query);
         }
 
@@ -156,8 +156,8 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
             $prefix = $this->getAdapter()->getTablePrefix();
         }
         
-        $replacement = $this->getAdapter()->quoteValue($prefix.$this->_params[$key]);
+        $replacement = $this->getAdapter()->quoteValue($prefix.$this->_parameters[$key]);
         
-        return is_array($this->_params[$key]) ? '('.$replacement.')' : $replacement;
+        return is_array($this->_parameters[$key]) ? '('.$replacement.')' : $replacement;
     }
 }

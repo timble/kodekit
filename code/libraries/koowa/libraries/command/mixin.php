@@ -69,9 +69,9 @@ class KCommandMixin extends KObjectMixinAbstract
             'command_chain'     => 'koowa:command.chain',
             'event_dispatcher'  => null,
             'dispatch_events'   => true,
-            'event_priority'    => KCommand::PRIORITY_LOWEST,
+            'event_priority'    => KCommandInterface::PRIORITY_LOWEST,
             'enable_callbacks'  => false,
-            'callback_priority' => KCommand::PRIORITY_HIGH,
+            'callback_priority' => KCommandInterface::PRIORITY_HIGH,
         ));
 
         parent::_initialize($config);

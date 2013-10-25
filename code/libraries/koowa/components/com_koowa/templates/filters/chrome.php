@@ -75,7 +75,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KTemplateFilter::PRIORITY_LOW,
+            'priority' => self::PRIORITY_LOW,
         	'title'    => '',
             'class'    => '',
             'styles'   => array(),

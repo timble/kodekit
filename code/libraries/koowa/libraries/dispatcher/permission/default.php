@@ -7,14 +7,12 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
+namespace Nooku\Library;
+
 /**
- * Http Request Headers
- *
- * Container class that handles the aggregations of HTTP headers as a collection
- *
- * @link http://tools.ietf.org/html/rfc2616#section-4.2
+ * Default Dispatcher Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Dispatcher
  */
-class KHttpRequestHeaders extends KHttpMessageHeaders {}
+final class KDispatcherPermissionDefault extends KDispatcherPermissionAbstract { }
