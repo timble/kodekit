@@ -124,7 +124,7 @@ class ComKoowaControllerModel extends KControllerModel
     {
         if($this->isDispatched())
         {
-            $limit = $this->getModel()->get('limit');
+            $limit = $this->getModel()->getState()->limit;
 
             //If limit is empty use default
             if(empty($limit)) {
@@ -136,7 +136,7 @@ class ComKoowaControllerModel extends KControllerModel
                 $limit = $this->_limit->max;
             }
 
-            $this->limit = $limit;
+            $this->getModel()->getState()->limit = $limit;
         }
 
         return parent::_actionBrowse($context);

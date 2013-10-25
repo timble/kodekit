@@ -176,7 +176,10 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 		        $this->setModel($this->_model);
 			}
 
-		    $this->_model = $this->getObject($this->_model)->set($this->getRequest());
+            $this->_model = $this->getObject($this->_model);
+
+            //Inject the request into the model state
+            $this->_model->setState($this->getRequest()->toArray());
 		}
 
 		return $this->_model;
@@ -271,24 +274,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	}
 
 	/**
-     * Set a request properties
-     *
-     * This function also pushes any request changes into the model
-     *
-     * @param  	string 	$property The property name.
-     * @param 	mixed 	$value    The property value.
-     */
- 	public function __set($property, $value)
-    {
-    	parent::__set($property, $value);
-
-    	//Prevent state changes through the parents constructor
-    	if($this->_model instanceof KModelInterface) {
-    	    $this->getModel()->set($property, $value);
-    	}
-  	}
-
-	/**
 	 * Supports a simple form Fluent Interfaces. Allows you to set the request properties by using the request property
      * name as the method name.
 	 *
@@ -310,7 +295,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
 			if(isset($state->$method) || in_array($method, array('layout', 'view', 'format')))
 			{
-				$this->$method = $args[0];
+                $this->getRequest()->$method = $args[0];
+                $this->getModel()->getState()->set($method, $args[0]);
 
 				if($method == 'view') {
                    $this->_view = $args[0];

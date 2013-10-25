@@ -371,7 +371,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
             $query .= ' LIMIT '.$this->offset.' , '.$this->limit;
         }
 
-        if($this->_params) {
+        if($this->_parameters) {
             $query = $this->_replaceParams($query);
         }
 

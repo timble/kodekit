@@ -18,7 +18,7 @@
  */
 class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Serializable, Countable
 {
-   /**
+    /**
      * The data for each key in the array (key => value).
      *
      * @var array
@@ -56,87 +56,22 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     }
 
     /**
-     * Get a value by key
-     *
-     * @param   string  $key The key name.
-     * @param   mixed   $default The default value
-     * @throws  \InvalidArgumentException If the key cannot be found in the array
-     * @return  string  The corresponding value.
-     */
-    public function get($key = null, $default = null)
-    {
-    	if ($key === null) {
-    		throw new InvalidArgumentException('Empty key passed');
-    	}
-
-        $result = null;
-    	if (isset($this->_data[$key])) {
-    		$result = $this->_data[$key];
-    	}
-
-    	return $result;
-    }
-    
-    /**
-     * Set a value by key
-     *
-     * @param   string  $key   The key name
-     * @param   mixed   $value The value for the key
-     * @return  KObjectArray
-     */
-    public function set($key, $value = null)
-    {
-    	$this->_data[$key] = $value;
-    	return $this;
-    }
-    
-    /**
-     * Test existence of a key
-     *
-     * @param  string  $key The key name
-     * @return boolean
-     */
-    public function has($key)
-    {
-    	return array_key_exists($key, $this->_data);
-    }
-    
-    /**
-     * Unset a key
-     *
-     * @param   string  $key The key name
-     * @return  KObjectArray
-     */
-    public function remove($key)
-    {
-    	unset($this->_data[$key]);
-    	return $this;
-    }
-    
- 	/**
-     * Check if the offset exists
-     *
-     * Required by interface ArrayAccess
-     *
-     * @param   int   $offset
-     * @return  bool
-     */
-    public function offsetExists($offset)
-    {
-        return $this->__isset($offset);
-    }
-
-    /**
      * Get an item from the array by offset
      *
      * Required by interface ArrayAccess
      *
      * @param   int     $offset
-     * @return  mixed   The item from the array
+     * @return  mixed The item from the array
      */
     public function offsetGet($offset)
     {
-        return $this->__get($offset);
+        $result = null;
+
+        if (isset($this->_data[$offset])) {
+            $result = $this->_data[$offset];
+        }
+
+        return $result;
     }
 
     /**
@@ -146,17 +81,28 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      *
      * @param   int     $offset
      * @param   mixed   $value
-     * @return  KObjectArray
+     * @return  void
      */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
             $this->_data[] = $value;
         } else {
-            $this->__set($offset, $value);
+            $this->_data[$offset] = $value;
         }
+    }
 
-        return $this;
+    /**
+     * Check if the offset exists
+     *
+     * Required by interface ArrayAccess
+     *
+     * @param   int   $offset
+     * @return  bool
+     */
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->_data);
     }
 
     /**
@@ -167,12 +113,11 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * Required by interface ArrayAccess
      *
      * @param   int     $offset
-     * @return  KObjectArray
+     * @return  void
      */
     public function offsetUnset($offset)
     {
-    	$this->__unset($offset);
-    	return $this;
+        unset($this->_data[$offset]);
     }
 
     /**
@@ -185,7 +130,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
         return new ArrayIterator($this->_data);
     }
 
- 	/**
+    /**
      * Serialize
      *
      * Required by interface Serializable
@@ -218,21 +163,20 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function count()
     {
-    	return count($this->_data);
+        return count($this->_data);
     }
-    
+
     /**
      * Set the data from an array
      *
      * @param array $data An associative array of data
-     * @return KObjectArray
+     * @return $this
      */
-    public function fromArray(array $data)
+    public static function fromArray(array $data)
     {
-    	$this->_data = $data;
-    	return $this;
+        return new self(new KObjectConfig(array('data' => $data)));
     }
-    
+
     /**
      * Return an associative array of the data
      *
@@ -240,9 +184,9 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function toArray()
     {
-    	return $this->_data;
+        return $this->_data;
     }
-    
+
     /**
      * Get a value by key
      *
@@ -251,7 +195,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function __get($key)
     {
-        return $this->get($key);
+        return $this->offsetGet($key);
     }
 
     /**
@@ -263,7 +207,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function __set($key, $value)
     {
-        $this->set($key, $value);
+        $this->offsetSet($key, $value);
     }
 
     /**
@@ -274,7 +218,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function __isset($key)
     {
-        return $this->has($key);
+        return $this->offsetExists($key);
     }
 
     /**
@@ -285,6 +229,6 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public function __unset($key)
     {
-        $this->remove($key);
+        $this->offsetUnset($key);
     }
 }

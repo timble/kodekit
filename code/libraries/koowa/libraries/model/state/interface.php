@@ -18,20 +18,20 @@ interface KModelStateInterface
     /**
      * Insert a new state
      *
-     * @param   string      $name     The name of the state
-     * @param   mixed       $filter   Filter(s), can be a KFilterInterface object, a filter name or an array of filter names
-     * @param   mixed       $default  The default value of the state
-     * @param   boolean     $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
-     * @param   array       $required Array of required states to determine if the state is unique. Only applicable if the state is unique.
-     * @return  KModelStateInterface
+     * @param   string   $name     The name of the state
+     * @param   mixed    $filter   Filter(s), can be a FilterInterface object, a filter name or an array of filter names
+     * @param   mixed    $default  The default value of the state
+     * @param   boolean  $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
+     * @param   array    $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
+     * @return  $this
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array());
 
     /**
      * Retrieve a configuration item and return $default if there is no element set.
      *
-     * @param string
-     * @param mixed
+     * @param string $name      The state name
+     * @param mixed  $default   The state default value if no state can be found
      * @return mixed
      */
     public function get($name, $default = null);
@@ -41,7 +41,7 @@ interface KModelStateInterface
      *
      * @param  	string 	$name The state name.
      * @param  	mixed  	$value The state value.
-     * @return 	KModelStateInterface
+     * @return 	$this
      */
     public function set($name, $value);
 
@@ -56,29 +56,28 @@ interface KModelStateInterface
     /**
      * Remove an existing state
      *
-     * @param   string      $name The name of the state
-     * @return  KModelStateInterface
+     * @param   string $name The name of the state
+     * @return  $this
      */
-    public function remove( $name );
+    public function remove($name);
 
     /**
      * Reset all state data and revert to the default state
      *
-     * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
-     * @return  KModelStateInterface
+     * @return $this
      */
-    public function reset($default = true);
+    public function reset();
 
-     /**
+    /**
      * Set the state data
      *
      * This function will only filter values if we have a value. If the value is an empty string it will be filtered
-      * to NULL.
+     * to NULL.
      *
-     * @param   array|object    An associative array of state values by name
-     * @return  KModelStateInterface
+     * @param   array $data An associative array of state values by name
+     * @return  $this
      */
-    public function setData(array $data);
+    public function setValues(array $data);
 
     /**
      * Get the state data
@@ -88,7 +87,7 @@ interface KModelStateInterface
      * @param   boolean $unique If TRUE only retrieve unique state values, default FALSE
      * @return  array   An associative array of state values by name
      */
-    public function getData($unique = false);
+    public function getValues($unique = false);
 
     /**
      * Check if the state information is unique
@@ -104,12 +103,4 @@ interface KModelStateInterface
      * @return  boolean TRUE if the state is empty, otherwise FALSE.
      */
     public function isEmpty(array $exclude = array());
-
-	/**
-     * Return an associative array of the states.
-     *
-     * @param bool 	$values If TRUE return only as associative array of the state values. Default is TRUE.
-     * @return array
-     */
-    public function toArray($values = true);
 }

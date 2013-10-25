@@ -31,6 +31,16 @@ interface KModelInterface
     public function getState();
 
     /**
+     * State Change notifier
+     *
+     * This function is called when the state has changed.
+     *
+     * @param  string 	$name  The state name being changed
+     * @return void
+     */
+    public function onStateChange($name);
+
+    /**
      * Method to get a item
      *
      * @return  KDatabaseRowInterface
