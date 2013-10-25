@@ -249,10 +249,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     {
         if(!($view instanceof KViewInterface))
         {
-            if(is_string($view) && strpos($view, '.') === false )
+            if(is_null($view) || (is_string($view) && strpos($view, '.') === false))
             {
                 $identifier			= clone $this->getIdentifier();
-                $identifier->path	= array('view', $view);
+                $identifier->path	= array('view');
+                if ($view) {
+                    $identifier->path[] = $view;
+                }
                 $identifier->name = 'html';
             }
             else $identifier = $this->getIdentifier($view);
@@ -313,8 +316,16 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 */
 	public function loadIdentifier($template, $data = array())
 	{
+        // Make sure we have a proper identifier
+        if (is_string($template) && strpos($template, '.') === false)
+        {
+            $identifier = clone $this->getView()->getIdentifier();
+            $identifier->name = $template;
+        }
+        else $identifier = $template;
+
 	    //Identify the template
-	    $identifier = $this->getIdentifier($template);
+	    $identifier = $this->getIdentifier($identifier);
 
 	    // Find the template
 		$file = $this->findFile(dirname($identifier->filepath).'/'.$identifier->name.'.php');
