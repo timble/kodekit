@@ -30,11 +30,17 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 		$identifier  = $this->getModel()->getIdentifier().'.'.$context->action;
 		$state       = KRequest::get('session.'.$identifier, 'raw', array());
 
-		//Append the data to the request object
-		$this->getRequest()->append($state);
+    //Append the data to the request object
+    $query = $this->getRequest()->query;
+    foreach ($state as $key => $value)
+    {
+        if (empty($query->$key)) {
+            $query->$key = $value;
+        }
+    }
 
 		//Push the request in the model
-		$this->getModel()->setState($this->getRequest()->toArray());
+		$this->getModel()->setState($this->getRequest()->query->toArray());
 	}
 
 	/**

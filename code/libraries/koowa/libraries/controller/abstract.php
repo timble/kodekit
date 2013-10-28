@@ -41,7 +41,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
 	 * The request information
 	 *
-	 * @var array
+	 * @var KControllerRequest
 	 */
 	protected $_request = null;
 
@@ -234,10 +234,9 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	 */
 	public function setRequest(array $request)
 	{
-		$this->_request = new KObjectConfig();
-		foreach($request as $key => $value) {
-            $this->_request->$key = $value;
-		}
+		$this->_request = $this->getObject('koowa:controller.request', array(
+            'query' => $request
+        ));
 
 		return $this;
 	}
@@ -248,6 +247,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
      * to the KCommandChain mixin.
      *
+     * @throws UnexpectedValueException
      * @return  KCommandChainInterface
      */
     public function getCommandChain()

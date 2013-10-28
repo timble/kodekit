@@ -76,7 +76,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			}
 
 		    $config = array(
-        		'request' 	   => $this->_request,
+        		'request' 	   => $this->_request->query->toArray(),
 			    'dispatched'   => true
         	);
 
