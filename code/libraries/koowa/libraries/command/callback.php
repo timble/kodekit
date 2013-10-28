@@ -61,10 +61,10 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInvokerIn
      * directly.
 	 *
 	 * @param string          $name     The command name
-	 * @param KCommandContext $context  The command context
+	 * @param KCommand $context  The command context
 	 * @return boolean
 	 */
-	public function execute( $name, KCommandContext $context)
+	public function execute( $name, KCommand $context)
 	{
 		$result    = true;
 

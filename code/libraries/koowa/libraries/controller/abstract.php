@@ -111,12 +111,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string          $action  The action to execute
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
      * @throws Exception
      * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
-    public function execute($action, KCommandContext $context)
+    public function execute($action, KCommand $context)
     {
         $action = strtolower($action);
 
@@ -274,7 +274,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Overrides CommandMixin::getCommandContext() to insert the request and response objects into the controller
      * command context.
      *
-     * @return  KCommandContext
+     * @return  KCommand
      * @see KCommandMixin::getCommandContext
      */
     public function getCommandContext()
@@ -328,7 +328,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             $data = !empty($args) ? $args[0] : array();
 
             //Create a context object
-            if(!($data instanceof KCommandContext))
+            if(!($data instanceof KCommand))
             {
                 $context = $this->getCommandContext();
                 $context->data   = $data;

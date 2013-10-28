@@ -36,7 +36,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     /**
      * The command context object
      *
-     * @var KCommandContext
+     * @var KCommand
      */
     protected $_context = null;
 
@@ -75,7 +75,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     {
         $config->append(array(
             'stack'     => $this->getObject('koowa:object.stack'),
-            'context'   => new KCommandContext(),
+            'context'   => new KCommand(),
             'enabled'   => true,
             'break_condition' => false,
         ));
@@ -143,10 +143,10 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      * If a command returns the 'break condition' the executing is halted.
      *
      * @param   string          $name
-     * @param   KCommandContext $context
+     * @param   KCommand $context
      * @return  void|boolean    If the chain breaks, returns the break condition. Default returns void.
      */
-    public function run($name, KCommandContext $context)
+    public function run($name, KCommand $context)
     {
         if ($this->_enabled)
         {
@@ -227,7 +227,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     /**
      * Factory method for a command context.
      *
-     * @return  KCommandContext
+     * @return  KCommand
      */
     public function getContext()
     {

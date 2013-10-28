@@ -82,7 +82,7 @@ class KCommandMixin extends KObjectMixinAbstract
      *
      * This functions inserts a 'caller' variable in the context which contains the mixer object.
      *
-     * @return  KCommandContext
+     * @return  KCommand
      */
     public function getCommandContext()
     {

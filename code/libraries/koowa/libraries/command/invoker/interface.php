@@ -28,10 +28,10 @@ interface KCommandInvokerInterface extends KObjectHandlable
 	 * Generic Command handler
 	 *
 	 * @param 	string 	       $name     The command name
-	 * @param 	KCommandContext $context  The command context
+	 * @param 	KCommand $context  The command context
 	 * @return	boolean
 	 */
-	public function execute($name, KCommandContext $context);
+	public function execute($name, KCommand $context);
 
 	/**
 	 * Get the priority of the command

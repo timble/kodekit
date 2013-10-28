@@ -21,10 +21,10 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 	 * This functions merges the request information with any model state information that was saved in the session and
      * returns the result.
 	 *
-	 * @param 	KCommandContext $context The active command context
+	 * @param 	KCommand $context The active command context
 	 * @return 	void
 	 */
-	protected function _beforeBrowse(KCommandContext $context)
+	protected function _beforeBrowse(KCommand $context)
 	{
 		// Built the session identifier based on the action
 		$identifier  = $this->getModel()->getIdentifier().'.'.$context->action;
@@ -46,10 +46,10 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 	/**
 	 * Saves the model state in the session
 	 *
-	 * @param 	KCommandContext	$context The active command context
+	 * @param 	KCommand	$context The active command context
 	 * @return 	void
 	 */
-	protected function _afterBrowse(KCommandContext $context)
+	protected function _afterBrowse(KCommand $context)
 	{
 		$model  = $this->getModel();
 		$state  = $model->getState()->getValues();

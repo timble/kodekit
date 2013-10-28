@@ -41,10 +41,10 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	 * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
      * hex value will be returned.
 	 *
-     * @param KCommandContext $context
+     * @param KCommand $context
 	 * @return void
 	 */
-	protected function _beforeInsert(KCommandContext $context)
+	protected function _beforeInsert(KCommand $context)
 	{
 		if(isset($this->uuid))
 		{

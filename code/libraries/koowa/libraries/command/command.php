@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandContext extends KObjectConfig implements KCommandContextInterface
+class KCommand extends KObjectConfig implements KCommandInterface
 {
     /**
      * Error
@@ -27,7 +27,7 @@ class KCommandContext extends KObjectConfig implements KCommandContextInterface
      *
      * @param string $error
      *
-     * @return  KCommandContext
+     * @return  KCommand
      */
     public function setError($error)
     {
@@ -59,7 +59,7 @@ class KCommandContext extends KObjectConfig implements KCommandContextInterface
      * Set the command subject
      *
      * @param KObjectInterface $subject The command subject
-     * @return KCommandContext
+     * @return KCommand
      */
     public function setSubject(KObjectInterface $subject)
     {

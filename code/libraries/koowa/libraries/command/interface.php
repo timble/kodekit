@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-interface KCommandContextInterface
+interface KCommandInterface
 {
     /**
      * Get the command subject
@@ -26,7 +26,7 @@ interface KCommandContextInterface
      * Set the command subject
      *
      * @param  KObjectInterface $subject The command subject
-     * @return KCommandContextInterface
+     * @return KCommandInterface
      */
     public function setSubject(KObjectInterface $subject);
 }

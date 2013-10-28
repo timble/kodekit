@@ -117,10 +117,10 @@ class ComKoowaControllerModel extends KControllerModel
      *
      * Use the application default limit if no limit exists in the model and limit the limit to a maximum.
      *
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
      * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
      */
-    protected function _actionBrowse(KCommandContext $context)
+    protected function _actionBrowse(KCommand $context)
     {
         if($this->isDispatched())
         {
@@ -147,10 +147,10 @@ class ComKoowaControllerModel extends KControllerModel
      *
      * This functions implements an extra check to hide the main menu is the view name is singular (item views)
      *
-     * @param  KCommandContext $context A command context object
+     * @param  KCommand $context A command context object
      * @return KDatabaseRowInterface A row object containing the selected row
      */
-    protected function _actionRead(KCommandContext $context)
+    protected function _actionRead(KCommand $context)
     {
         //Perform the read action
         $row = parent::_actionRead($context);

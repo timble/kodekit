@@ -18,10 +18,10 @@ class KControllerBehaviorDiscoverable extends KControllerBehaviorAbstract
     /**
      * Get a list of allowed actions
      *
-     * @param KCommandContext $context
+     * @param KCommand $context
      * @return  string    The allowed actions; e.g., `GET, POST [add, edit, cancel, save], PUT, DELETE`
      */
-	protected function _actionOptions(KCommandContext $context)
+	protected function _actionOptions(KCommand $context)
 	{
 	    $methods = array();
 
