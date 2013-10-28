@@ -172,8 +172,8 @@ class KViewJson extends KViewAbstract
         if ($this->_plural)
         {
             $total  = $model->getTotal();
-            $limit  = (int) $model->limit;
-            $offset = (int) $model->offset;
+            $limit  = (int) $model->getState()->limit;
+            $offset = (int) $model->getState()->offset;
 
             $output['meta'] = array(
                 'offset'   => $offset,
