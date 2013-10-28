@@ -140,10 +140,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 * This function determines if a row can be updated based on it's locked_by information. If a row is locked, and
      * not by the logged in user, the function will return false, otherwise it will return true
 	 *
-     * @param  KCommandContext $context
+     * @param  KCommand $context
 	 * @return boolean         True if row can be updated, false otherwise
 	 */
-	protected function _beforeUpdate(KCommandContext $context)
+	protected function _beforeUpdate(KCommand $context)
 	{
 		return (bool) !$this->locked();
 	}
@@ -154,10 +154,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 * This function determines if a row can be deleted based on it's locked_by information. If a row is locked, and
      * not by the logged in user, the function will return false, otherwise it will return true
 	 *
-     * @param  KCommandContext $context
+     * @param  KCommand $context
      * @return boolean         True if row can be deleted, false otherwise
      */
-	protected function _beforeDelete(KCommandContext $context)
+	protected function _beforeDelete(KCommand $context)
 	{
 		return (bool) !$this->locked();
 	}

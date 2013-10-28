@@ -35,7 +35,7 @@ interface KEventDispatcherInterface
      *                                     instead.
      * @return KEventDispatcher
      */
-    public function addEventListener($name, KObjectHandlable $listener, $priority = KEvent::PRIORITY_NORMAL);
+    public function addEventListener($name, KObjectHandlable $listener, $priority = KEventInterface::PRIORITY_NORMAL);
 
     /**
      * Remove an event listener

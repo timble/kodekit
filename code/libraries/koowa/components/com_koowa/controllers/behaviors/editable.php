@@ -18,10 +18,10 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
     /**
      * Saves the current row and redirects to a new edit form
      *
-     * @param KCommandContext $context
+     * @param KCommand $context
      * @return KDatabaseRowInterface A row object containing the saved data
      */
-    protected function _actionSave2new(KCommandContext $context)
+    protected function _actionSave2new(KCommand $context)
     {
         $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
         $entity = $context->getSubject()->execute($action, $context);

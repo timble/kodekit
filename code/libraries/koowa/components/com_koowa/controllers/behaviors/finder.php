@@ -170,9 +170,9 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
     /**
      * Caches the current state and access for categories before they are changed.
      *
-     * @param KCommandContext $context
+     * @param KCommand $context
      */
-    protected function _beforeEdit(KCommandContext $context)
+    protected function _beforeEdit(KCommand $context)
     {
         if ($this->getMixer()->getIdentifier()->name === $this->_category_resource)
         {
@@ -192,9 +192,9 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
      *
      * Also updates the state and access of items that belong to an edited category
      *
-     * @param KCommandContext $context
+     * @param KCommand $context
      */
-    protected function _afterEdit(KCommandContext $context)
+    protected function _afterEdit(KCommand $context)
     {
         $name   = $this->getMixer()->getIdentifier()->name;
         $result = $context->result instanceof KDatabaseRowInterface ? array($context->result) : $context->result;
@@ -218,9 +218,9 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
     /**
      * Add new items to the index
      *
-     * @param KCommandContext $context
+     * @param KCommand $context
      */
-    protected function _afterAdd(KCommandContext $context)
+    protected function _afterAdd(KCommand $context)
     {
         $name = $this->getMixer()->getIdentifier()->name;
         $row  = $context->result;
@@ -233,9 +233,9 @@ class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
     /**
      * Delete items from the index
      *
-     * @param KCommandContext $context
+     * @param KCommand $context
      */
-    protected function _afterDelete(KCommandContext $context)
+    protected function _afterDelete(KCommand $context)
     {
         $name = $this->getMixer()->getIdentifier()->name;
 

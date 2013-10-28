@@ -21,10 +21,10 @@ abstract class KControllerBehaviorAbstract extends KBehaviorAbstract
      * '_after[Command]. Command handler functions should be declared protected.
 	 *
 	 * @param 	string           $name	    The command name
-	 * @param 	KCommandContext  $context 	The command context
+	 * @param 	KCommand  $context 	The command context
 	 * @return 	boolean
 	 */
-	public function execute($name, KCommandContext $context)
+	public function execute($name, KCommand $context)
 	{
         $this->setMixer($context->getSubject());
 

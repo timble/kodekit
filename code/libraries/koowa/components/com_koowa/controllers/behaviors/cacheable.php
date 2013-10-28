@@ -64,10 +64,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Fetch the unrendered view data from the cache
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KCommand $context A command context object
 	 * @return 	void
 	 */
-	protected function _beforeGet(KCommandContext $context)
+	protected function _beforeGet(KCommand $context)
 	{
 	    $view   = $this->getView();
 	    $cache  = JFactory::getCache($this->_getGroup(), 'output');
@@ -109,7 +109,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * @param   KCommandContext	A command context object
 	 * @return 	void
 	 */
-	protected function _afterGet(KCommandContext $context)
+	protected function _afterGet(KCommand $context)
 	{
 	    if(empty($this->_output))
 	    {
@@ -141,10 +141,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * Only if cached data was found return it but allow the chain to continue to allow
 	 * processing all the read commands
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KCommand $context A command context object
 	 * @return 	void
 	 */
-	protected function _afterRead(KCommandContext $context)
+	protected function _afterRead(KCommand $context)
 	{
 	    if(!empty($this->_output)) {
 	        $context->result = $this->_output;
@@ -160,7 +160,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * @param   KCommandContext	A command context object
 	 * @return 	void
 	 */
-    protected function _beforeBrowse(KCommandContext $context)
+    protected function _beforeBrowse(KCommand $context)
 	{
 	    if(!empty($this->_output))
 	    {
@@ -172,10 +172,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Clean the cache
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KCommand $context A command context object
 	 * @return 	boolean
 	 */
-	protected function _afterAdd(KCommandContext $context)
+	protected function _afterAdd(KCommand $context)
 	{
 	    $status = $context->result->getStatus();
 
@@ -192,7 +192,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * @param   KCommandContext	A command context object
 	 * @return 	boolean
 	 */
-	protected function _afterDelete(KCommandContext $context)
+	protected function _afterDelete(KCommand $context)
 	{
 	    $status = $context->result->getStatus();
 
@@ -206,10 +206,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Clean the cache
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KCommand $context A command context object
 	 * @return 	boolean
 	 */
-	protected function _afterEdit(KCommandContext $context)
+	protected function _afterEdit(KCommand $context)
 	{
 	    $status = $context->result->getStatus();
 

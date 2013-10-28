@@ -91,10 +91,10 @@ class ComKoowaControllerView extends KControllerView
      *
      * If the controller was not dispatched manually load the languages files
      *
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
      * @return 	string|bool 	The rendered output of the view or false if something went wrong
      */
-    protected function _actionGet(KCommandContext $context)
+    protected function _actionGet(KCommand $context)
     {
         $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
         return parent::_actionGet($context);

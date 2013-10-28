@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandEvent extends KObjectMixinAbstract implements KCommandInterface
+class KCommandEvent extends KObjectMixinAbstract implements KCommandInvokerInterface
 {
     /**
      * Event dispatcher object
@@ -73,10 +73,10 @@ class KCommandEvent extends KObjectMixinAbstract implements KCommandInterface
      * Command handler
      *
      * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
+     * @param   KCommand $context  The command context
      * @return  boolean Always returns TRUE
      */
-    public function execute($name, KCommandContext $context)
+    public function execute($name, KCommand $context)
     {
         $type    = '';
         $package = '';

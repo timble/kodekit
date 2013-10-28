@@ -8,35 +8,25 @@
  */
 
 /**
- * Command Interface
+ * Command Context Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-interface KCommandInterface extends KObjectHandlable
+interface KCommandInterface
 {
     /**
-     * Priority levels
+     * Get the command subject
+     *
+     * @return KObjectInterface The command subject
      */
-    const PRIORITY_HIGHEST = 1;
-    const PRIORITY_HIGH    = 2;
-    const PRIORITY_NORMAL  = 3;
-    const PRIORITY_LOW     = 4;
-    const PRIORITY_LOWEST  = 5;
+    public function getSubject();
 
     /**
-     * Command handler
+     * Set the command subject
      *
-     * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
-     * @return  boolean
+     * @param  KObjectInterface $subject The command subject
+     * @return KCommandInterface
      */
-	public function execute( $name, KCommandContext $context);
-
-	/**
-	 * Get the priority of the command
-	 *
-	 * @return	integer The command priority
-	 */
-  	public function getPriority();
+    public function setSubject(KObjectInterface $subject);
 }

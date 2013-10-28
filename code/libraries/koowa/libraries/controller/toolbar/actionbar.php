@@ -163,9 +163,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Add default action commands and set the action bar title
      * .
-     * @param	KCommandContext	$context A command context object
+     *
+*@param    KCommand	$context A command context object
      */
-    protected function _afterRead(KCommandContext $context)
+    protected function _afterRead(KCommand $context)
     {
         $controller = $this->getController();
         $name       = ucfirst($context->caller->getIdentifier()->name);
@@ -194,9 +195,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Add default action commands
      * .
-     * @param	KCommandContext	$context A command context object
+     *
+*@param    KCommand	$context A command context object
      */
-    protected function _afterBrowse(KCommandContext $context)
+    protected function _afterBrowse(KCommand $context)
     {
         $controller = $this->getController();
 
