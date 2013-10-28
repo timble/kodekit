@@ -331,7 +331,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * Sets the layout name to use
      *
      * @param    string  $layout The template name.
-     * @return   ViewAbstract
+     * @return   $this
      */
     public function setLayout($layout)
     {

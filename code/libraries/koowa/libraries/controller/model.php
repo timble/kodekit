@@ -43,7 +43,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	{
 	    if(is_string($view) && strpos($view, '.') === false )
 		{
-		    if(!isset($this->_request->view))
+		    if(!isset($this->getRequest()->query->view))
 		    {
 		        if($this->getModel()->getState()->isUnique()) {
 			        $view = KStringInflector::singularize($view);

@@ -325,7 +325,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function __set($property, $value)
     {
-        if(isset($this->{'_'.$property}))
+        if (property_exists($this, '_'.$property))
         {
             //Force the path to an array
             if($property == 'path')
@@ -397,7 +397,8 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             return $this->{'_'.$property};
         }
 
-        return null;
+        $null = null;
+        return $null;
     }
 
     /**

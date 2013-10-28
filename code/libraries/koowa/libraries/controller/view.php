@@ -117,8 +117,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 			$this->_view = $this->getObject($this->_view, $config);
 
 			//Set the layout
-			if(isset($this->_request->layout)) {
-        	    $this->_view->setLayout($this->_request->layout);
+			if(isset($this->getRequest()->query->layout)) {
+        	    $this->_view->setLayout($this->getRequest()->query->layout);
         	}
 
 			//Make sure the view exists
@@ -146,7 +146,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 		    {
 			    $identifier			= clone $this->getIdentifier();
 			    $identifier->path	= array('view', $view);
-			    $identifier->name	= $this->getRequest()->format;
+			    $identifier->name	= $this->getRequest()->query->format;
 			}
 			else $identifier = $this->getIdentifier($view);
 
@@ -179,7 +179,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             $this->_model = $this->getObject($this->_model);
 
             //Inject the request into the model state
-            $this->_model->setState($this->getRequest()->toArray());
+            $this->_model->setState($this->getRequest()->query->toArray());
 		}
 
 		return $this->_model;
@@ -295,7 +295,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
 			if(isset($state->$method) || in_array($method, array('layout', 'view', 'format')))
 			{
-                $this->getRequest()->$method = $args[0];
+                $this->getRequest()->query->$method = $args[0];
                 $this->getModel()->getState()->set($method, $args[0]);
 
 				if($method == 'view') {
