@@ -8,15 +8,15 @@
  */
 
 /**
- * Command
+ * Command Invoker
  *
- * The command handler will translate the command name into a function format and call it for the object class to
+ * The command invoker will translate the command name to a method name, format and call it for the object class to
  * handle it if the method exists.
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package Nooku\Library\Command
  */
-class KCommand extends KObject implements KCommandInterface
+abstract class KCommandInvokerAbstract extends KObject implements KCommandInvokerInterface
 {
     /**
      * The command priority
@@ -26,14 +26,15 @@ class KCommand extends KObject implements KCommandInterface
     protected $_priority;
 
     /**
-     * Constructor.
+     * Object constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param KObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config)
+    public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
+        //Set the command priority
         $this->_priority = $config->priority;
     }
 
@@ -42,13 +43,13 @@ class KCommand extends KObject implements KCommandInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
-     * @return  void
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
      */
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => self::PRIORITY_NORMAL,
+            'priority' => self::PRIORITY_NORMAL,
         ));
 
         parent::_initialize($config);
@@ -58,11 +59,15 @@ class KCommand extends KObject implements KCommandInterface
      * Command handler
      *
      * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
-     * @return  boolean         Can return both true or false.
+     * @param   KCommandContext  $context  The command context
+     *
+     * @return  mixed  Method result if the method exists, NULL otherwise.
      */
-    public function execute( $name, KCommandContext $context)
+    public function execute($name, KCommandContext $context)
     {
+        $result = null;
+
+
         $type = '';
 
         if($context->caller)
@@ -76,14 +81,15 @@ class KCommand extends KObject implements KCommandInterface
             }
         }
 
-        $parts  = explode('.', $name);
-        $method = !empty($type) ? '_'.$type.ucfirst(KStringInflector::implode($parts)) : '_'.lcfirst(KStringInflector::implode($parts));
+        $parts  = KStringInflector::implode(explode('.', $name));
+        $method = empty($type) ? '_'.lcfirst($parts) : '_'.$type.ucfirst($parts);
 
+        //If the method exists call the method and return the result
         if(in_array($method, $this->getMethods())) {
-            return $this->$method($context);
+            $result = $this->$method($context);
         }
 
-        return true;
+        return $result;
     }
 
     /**

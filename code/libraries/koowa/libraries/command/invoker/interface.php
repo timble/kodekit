@@ -10,10 +10,10 @@
 /**
  * Command Interface
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package Nooku\Library\Command
  */
-interface KCommandInterface extends KObjectHandlable
+interface KCommandInvokerInterface extends KObjectHandlable
 {
     /**
      * Priority levels
@@ -25,13 +25,13 @@ interface KCommandInterface extends KObjectHandlable
     const PRIORITY_LOWEST  = 5;
 
     /**
-     * Command handler
-     *
-     * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
-     * @return  boolean
-     */
-	public function execute( $name, KCommandContext $context);
+	 * Generic Command handler
+	 *
+	 * @param 	string 	       $name     The command name
+	 * @param 	KCommandContext $context  The command context
+	 * @return	boolean
+	 */
+	public function execute($name, KCommandContext $context);
 
 	/**
 	 * Get the priority of the command

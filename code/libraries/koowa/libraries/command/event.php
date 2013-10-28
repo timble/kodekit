@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandEvent extends KObjectMixinAbstract implements KCommandInterface
+class KCommandEvent extends KObjectMixinAbstract implements KCommandInvokerInterface
 {
     /**
      * Event dispatcher object

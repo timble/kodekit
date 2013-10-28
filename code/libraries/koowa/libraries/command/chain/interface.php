@@ -28,7 +28,7 @@ interface KCommandChainInterface
      *                                        default is 3. If no priority is set, the command priority will be used
      *                                        instead.
      * @return KCommandChainInterface
-     * @throws InvalidArgumentException if the object does not implement KCommandInterface
+     * @throws InvalidArgumentException if the object does not implement KCommandInvokerInterface
      */
     public function enqueue(KObjectHandlable $command, $priority = null);
 
@@ -37,7 +37,7 @@ interface KCommandChainInterface
      *
      * @param   KObjectHandlable $command
      * @return  boolean    TRUE on success FALSE on failure
-     * @throws  \InvalidArgumentException if the object does not implement KCommandInterface
+     * @throws  \InvalidArgumentException if the object does not implement KCommandInvokerInterface
      */
     public function dequeue(KObjectHandlable $command);
 
@@ -46,7 +46,7 @@ interface KCommandChainInterface
      *
      * @param  KObjectHandlable $command
      * @return bool
-     * @throws  InvalidArgumentException if the object does not implement KCommandInterface
+     * @throws  InvalidArgumentException if the object does not implement KCommandInvokerInterface
      */
     public function contains(KObjectHandlable $command);
 
@@ -83,7 +83,7 @@ interface KCommandChainInterface
      * @param KObjectHandlable  $command
      * @param integer           $priority
      * @return KCommandChainInterface
-     * @throws InvalidArgumentException if the object doesn't implement KCommandInterface
+     * @throws InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
      */
     public function setPriority(KObjectHandlable $command, $priority);
 
@@ -92,7 +92,7 @@ interface KCommandChainInterface
      *
      * @param  KObjectHandlable $command
      * @return integer The command priority
-     * @throws InvalidArgumentException if the object doesn't implement KCommandInterface
+     * @throws InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
      */
     public function getPriority(KObjectHandlable $command);
 

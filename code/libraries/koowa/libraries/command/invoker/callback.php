@@ -8,35 +8,34 @@
  */
 
 /**
- * Callback Mixin
+ * Callback Command Invoker
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package Nooku\Library\Object
  */
-class KCommandCallback extends KObjectMixinCallback implements KCommandInvokerInterface
+class KCommandInvokerCallback extends KObjectMixinCallback implements KCommandInvokerInterface
 {
-	/**
-	 * The command priority
-	 *
-	 * @var integer
-	 */
-	protected $_priority;
+    /**
+     * The command priority
+     *
+     * @var integer
+     */
+    protected $_priority;
 
     /**
      * Object constructor
      *
      * @param KObjectConfig $config Configuration options
-     * @throws InvalidArgumentException
      */
-	public function __construct(KObjectConfig $config)
-	{
-		parent::__construct($config);
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
 
-		//Set the command priority
-		$this->_priority = $config->priority;
-	}
+        //Set the command priority
+        $this->_priority = $config->priority;
+    }
 
-	/**
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -46,28 +45,27 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInvokerIn
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-            'priority'  => self::PRIORITY_NORMAL,
-    	));
+        $config->append(array(
+            'priority' => self::PRIORITY_NORMAL,
+        ));
 
-    	parent::_initialize($config);
+        parent::_initialize($config);
     }
 
-	/**
-	 * Command handler
+    /**
+     * Command handler
      *
-     * If params are passed as a associative array or as a KObjectConfig object they will be merged with the context of the
+     * If params are passed as a associative array or as a KConfig object they will be merged with the context of the
      * command chain and passed along. If they are passed as an indexed array they will be passed to the callback
      * directly.
-	 *
-	 * @param string          $name     The command name
-	 * @param KCommandContext $context  The command context
-	 * @return boolean
-	 */
-	public function execute( $name, KCommandContext $context)
-	{
-		$result    = true;
-
+     *
+     * @param string         $name     The command name
+     * @param KCommandContext $context  The command context
+     * @return boolean
+     */
+    public function execute($name, KCommandContext $context)
+    {
+        $result    = true;
         $callbacks = $this->getCallbacks($name);
 
         foreach($callbacks as $key => $callback)
@@ -86,22 +84,24 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInvokerIn
             }
         }
 
-		return $result === false ? false : true;
-	}
+        return $result === false ? false : true;
+    }
+    
+    /**
+     * Get the methods that are available for mixin.
+     *
+     * @param  KObjectMixable $mixer Mixer object
+     * @return array An array of methods
+     */
+    public function getMixableMethods(KObjectMixable $mixer = null)
+    {
+        $methods = parent::getMixableMethods();
 
-	/**
-	 * Get the methods that are available for mixin.
-	 *
-	 * This functions overloads KObjectMixinAbstract::getMixableMethods and excludes the execute() function from the list
-     * of available mixable methods.
-	 *
-     * @param  KObjectMixable $mixer A mixer object
-	 * @return array An array of methods
-	 */
-	public function getMixableMethods(KObjectMixable $mixer = null)
-	{
-        return array_diff(parent::getMixableMethods(), array('execute', 'getPriority'));
-	}
+        unset($methods['execute']);
+        unset($methods['getPriority']);
+
+        return $methods;
+    }
 
     /**
      * Get the priority of a behavior
@@ -112,4 +112,5 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInvokerIn
     {
         return $this->_priority;
     }
+
 }
