@@ -248,6 +248,8 @@
          */
         _attachHandlers: function(){
 
+            var options = this.options, self = this;
+
             this.element.bind({
                 'tree.select': // The select event happens when a node is clicked
                     function(event) {

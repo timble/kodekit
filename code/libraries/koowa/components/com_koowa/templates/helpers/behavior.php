@@ -585,6 +585,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= $this->select2(array('element' => false));
             $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
+
+            self::$_loaded['autocomplete'] = true;
         }
 
         $options   = $config->options->toJson();
@@ -637,13 +639,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             </script>';
     }
 
-    //Specialized jqTree instance for rendering a sidebar-nav list of categories
     /**
      * Loads the Koowa customized jQtree behavior and renders a sidebar-nav list useful in split views
      *
      * @see    http://mbraak.github.io/jqTree/
      *
-     * @note   Passing the 'element' option in the config is REQUIRED! Pass css selector string, using id recommended
+     * @note   If no 'element' option is passed, then only assets will be loaded.
      *
      * @param  array|KObjectConfig $config
      * @return string	The html output
@@ -655,12 +656,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'debug'   => JFactory::getApplication()->getCfg('debug'),
             'element' => '', //Required! #categories-tree style selector using id recommended
             'selected'  => '', //Selected node, if any
-            'list'    => array(),
-            'options' => array(
-                'lang' => array(
-                    'root' => $this->translate('All Categories')
-                )
-            )
+
+            /**
+             * @TODO document list format
+             */
+            'list'    => array()
         ))->append(array(
                 'options' => array(
                     'selected' => $config->selected
@@ -684,22 +684,28 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $html = '';
 
-        if (!isset(self::$_loaded['categories_tree']))
+        if (!isset(self::$_loaded['tree']))
         {
             $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<script src="media://koowa/com_koowa/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<script src="media://com_docman/js/categories.tree'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<style src="media://koowa/com_koowa/css/jqtree.css" />';
 
-            $options   = $config->options->toJson();
+            self::$_loaded['tree'] = true;
+        }
+
+        $options   = $config->options->toJson();
+        $signature = md5('tree-'.$config->element.$options);
+        if($config->element && !isset(self::$_loaded[$signature]))
+        {
+
 
             $html .= '<script>
             jQuery(function($){
                 new DOCman.Tree.Categories('.json_encode($config->element).', '.$options.');
             });</script>';
 
-            self::$_loaded['categories_tree'] = true;
+            self::$_loaded[$signature] = true;
         }
 
         return $html;
