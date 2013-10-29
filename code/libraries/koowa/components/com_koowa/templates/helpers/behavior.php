@@ -654,12 +654,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'debug'   => JFactory::getApplication()->getCfg('debug'),
-            'element' => '', //Required! #categories-tree style selector using id recommended
-            'selected'  => '', //Selected node, if any
-
-            /**
-             * @TODO document list format
-             */
+            'element' => '',
+            'selected'  => '',
             'list'    => array()
         ))->append(array(
                 'options' => array(
@@ -711,9 +707,17 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             /**
              * Validate that the data is the right format
              */
-
-            elseif(isset($config->options->data)) {
-                throw new InvalidArgumentException('Data must contain required params');
+            elseif(isset($config->options->data, $config->options->data[0]))
+            {
+                $data     = $config->options->data[0];
+                $required = array('label', 'id', 'level', 'path', 'parent');
+                foreach($required as $key)
+                {
+                    if(!isset($data[$key]))
+                    {
+                        throw new InvalidArgumentException('Data must contain required param: '.$key);
+                    }
+                }
             }
 
             $options = $config->options->toJson();
