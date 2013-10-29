@@ -38,6 +38,7 @@
 
             var self = this,
                 defaults = {
+                    selected: null, //The node id of a selected node on init, if any
                     data: [], //Default empty value to avoid errors when there are no items yet
                     autoOpen: 0, //Auto open just "All Categories" by default, this value is the nesting level not the node id
                     useContextMenu: false, //This allows us to right-click menu items again
@@ -260,6 +261,11 @@
                     function() {
                         // .sidebar-nav needed for bootstrap styling to apply
                         $(this).find('ul.jqtree-tree').addClass('sidebar-nav');
+
+                        // If a node should be preselected on init, select it right away
+                        if(options.selected) {
+                            self.selectNode($(this).tree('getNodeById', options.selected), $(this));
+                        }
                     },
                 'tree.refresh': //Refreshes reset the html, and happen on events like setState
                     function() {
