@@ -10,7 +10,7 @@
 /**
  * Command Invoker Exception
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
 class KCommandExceptionInvoker extends RuntimeException implements KCommandException {}

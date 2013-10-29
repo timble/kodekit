@@ -16,8 +16,8 @@
  * The 'clone_context' config option defines if the context is clone before being passed to the event dispatcher or
  * it passed by reference instead. By default the context is cloned.
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Command
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterface
 {

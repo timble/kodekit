@@ -10,8 +10,8 @@
 /**
  * Command Interface
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Command
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 interface KCommandInvokerInterface extends KObjectHandlable
 {

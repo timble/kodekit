@@ -10,7 +10,7 @@
 /**
  * Command Exception Interface
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
 interface KCommandException {}

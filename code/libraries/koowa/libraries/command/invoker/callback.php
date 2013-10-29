@@ -10,8 +10,8 @@
 /**
  * Callback Command Invoker
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Object
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Object
  */
 class KCommandInvokerCallback extends KObjectMixinCallback implements KCommandInvokerInterface
 {

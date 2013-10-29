@@ -7,8 +7,6 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 
-namespace Nooku\Library;
-
 /**
  * Default Dispatcher Permission
  *
