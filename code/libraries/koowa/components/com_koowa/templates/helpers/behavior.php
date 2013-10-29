@@ -667,23 +667,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 )
             ));
 
-        $data = array();
-        foreach($config->list as $item)
-        {
-            $parts = explode('/', $item->path);
-            array_pop($parts); // remove current id
-            $data[] = array(
-                'label'  => $item->title,
-                'id'     => (int)$item->id,
-                'level'  => (int)$item->level,
-                'path'   => $item->path,
-                'parent' => (int)array_pop($parts)
-            );
-        }
-        $config->options->append(array('data' => $data));
-
         $html = '';
 
+        /**
+         * Loading the assets, if not already loaded
+         */
         if (!isset(self::$_loaded['tree']))
         {
             $html .= $this->jquery();
@@ -694,15 +682,45 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['tree'] = true;
         }
 
-        $options   = $config->options->toJson();
-        $signature = md5('tree-'.$config->element.$options);
+        /**
+         * Parse and validate list data, if any. And load the inline js that initiates the tree on specified html element
+         */
+        $signature = md5('tree-'.$config->element);
         if($config->element && !isset(self::$_loaded[$signature]))
         {
+            /**
+             * If there's a list set, but no 'data' in the js options, parse it
+             */
+            if(isset($config->list) && !isset($config->options->data))
+            {
+                $data = array();
+                foreach($config->list as $item)
+                {
+                    $parts = explode('/', $item->path);
+                    array_pop($parts); // remove current id
+                    $data[] = array(
+                        'label'  => $item->title,
+                        'id'     => (int)$item->id,
+                        'level'  => (int)$item->level,
+                        'path'   => $item->path,
+                        'parent' => (int)array_pop($parts)
+                    );
+                }
+                $config->options->append(array('data' => $data));
+            }
+            /**
+             * Validate that the data is the right format
+             */
 
+            elseif(isset($config->options->data)) {
+                throw new InvalidArgumentException('Data must contain required params');
+            }
+
+            $options = $config->options->toJson();
 
             $html .= '<script>
             jQuery(function($){
-                new DOCman.Tree.Categories('.json_encode($config->element).', '.$options.');
+                new Koowa.Tree('.json_encode($config->element).', '.$options.');
             });</script>';
 
             self::$_loaded[$signature] = true;
