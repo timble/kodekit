@@ -256,7 +256,7 @@
                         if(event.node) { // When event.node is null, it's actually a deselect event
                             //Style the clicked element
                             $(this).find('.active').removeClass('active').find('[class^=icon-folder]').removeClass('icon-white');
-                            $(this).find('.jqtree-selected').addClass('active').find('[class^=icon-folder]').addClass('icon-white');
+                            $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=icon-folder]').addClass('icon-white');
                         }
                     },
                 'tree.init':
@@ -272,7 +272,7 @@
                 'tree.refresh': //Refreshes reset the html, and happen on events like setState
                     function() {
                         $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
-                        $(this).find('.jqtree-selected').addClass('active').find('[class^=icon-folder]').addClass('icon-white');
+                        $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=icon-folder]').addClass('icon-white');
                     }
             });
 
