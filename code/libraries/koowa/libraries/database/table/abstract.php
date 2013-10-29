@@ -548,7 +548,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         }
 
         //Create commandchain context
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_SELECT;
         $context->table     = $this->getBase();
@@ -667,7 +667,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                       ->table($this->getBase());
 
         //Create commandchain context
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_INSERT;
         $context->table     = $this->getBase();
@@ -717,7 +717,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                       ->table($this->getBase());
 
         // Create commandchain context.
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->table     = $this->getBase();
@@ -772,7 +772,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                       ->table($this->getBase());
 
         //Create commandchain context
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->table     = $this->getBase();
@@ -811,7 +811,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     {
         $result = null;
 
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->table = $this->getBase();
 
@@ -836,7 +836,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     {
         $result = null;
 
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->table = $this->getBase();
 

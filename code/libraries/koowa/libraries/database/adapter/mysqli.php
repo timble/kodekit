@@ -256,7 +256,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		$query = 'LOCK TABLES '.$this->quoteIdentifier($this->getTableNeedle().$table).' WRITE';
 	
 		// Create command chain context.
-		$context = $this->getCommandContext();
+		$context = $this->getContext();
 		$context->table = $table;
 		$context->query = $query;
 	
@@ -279,7 +279,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		$query = 'UNLOCK TABLES';
 	
 		// Create command chain context.
-		$context = $this->getCommandContext();
+		$context = $this->getContext();
 		$context->table = null;
 		$context->query = $query;
 	

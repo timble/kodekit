@@ -271,15 +271,15 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Get the command chain context
      *
-     * Overrides CommandMixin::getCommandContext() to insert the request and response objects into the controller
+     * Overrides CommandMixin::getContext() to insert the request and response objects into the controller
      * command context.
      *
      * @return  KCommand
-     * @see KCommandMixin::getCommandContext
+     * @see KCommandMixin::getContext
      */
-    public function getCommandContext()
+    public function getContext()
     {
-        $context = parent::getCommandContext();
+        $context = parent::getContext();
 
         //$context->request = $this->getRequest();
 
@@ -330,7 +330,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             //Create a context object
             if(!($data instanceof KCommand))
             {
-                $context = $this->getCommandContext();
+                $context = $this->getContext();
                 $context->data   = $data;
                 $context->result = false;
             }

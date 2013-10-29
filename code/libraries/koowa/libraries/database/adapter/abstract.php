@@ -279,7 +279,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             throw new InvalidArgumentException('Query must be an instance of KDatabaseQuerySelect or KDatabaseQueryShow');
         }
 
-        $context  = $this->getCommandContext();
+        $context  = $this->getContext();
         $context->setSubject($this);
         $context->query     = $query;
         $context->operation = KDatabase::OPERATION_SELECT;
@@ -336,7 +336,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     public function insert(KDatabaseQueryInsert $query)
     {
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_INSERT;
         $context->query = $query;
@@ -368,7 +368,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     public function update(KDatabaseQueryUpdate $query)
     {
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->query     = $query;
@@ -398,7 +398,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     public function delete(KDatabaseQueryDelete $query)
     {
-        $context = $this->getCommandContext();
+        $context = $this->getContext();
         $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->query     = $query;

@@ -84,7 +84,7 @@ class KCommandMixin extends KObjectMixinAbstract
      *
      * @return  KCommand
      */
-    public function getCommandContext()
+    public function getContext()
     {
         $context = $this->getCommandChain()->getContext();
         $context->caller = $this->getMixer();
