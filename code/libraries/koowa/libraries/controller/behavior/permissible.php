@@ -33,7 +33,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_HIGH,
+            'priority'   => self::PRIORITY_HIGH,
         ));
 
         parent::_initialize($config);
@@ -45,12 +45,12 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      * Only handles before.action commands to check authorization rules.
      *
      * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
+     * @param   KCommand $context  The command context
      * @throws  KControllerExceptionForbidden       If the user is authentic and the actions is not allowed.
      * @throws  KControllerExceptionUnauthorized    If the user is not authentic and the action is not allowed.
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function execute($name, KCommandContext $context)
+    public function execute($name, KCommand $context)
     {
         $parts = explode('.', $name);
 

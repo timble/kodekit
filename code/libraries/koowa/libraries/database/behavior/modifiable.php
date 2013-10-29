@@ -26,7 +26,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-			'priority'   => KCommand::PRIORITY_LOW,
+			'priority'   => self::PRIORITY_LOW,
 	  	));
 
     	parent::_initialize($config);
@@ -57,10 +57,10 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires a 'modified_on' and 'modified_by' column
 	 *
-     * @param KCommandContext $context
+     * @param KCommand $context
 	 * @return void
 	 */
-	protected function _beforeUpdate(KCommandContext $context)
+	protected function _beforeUpdate(KCommand $context)
 	{
 		//Get the modified columns
 		$modified = $this->getTable()->filter(array_flip($this->getModified()));

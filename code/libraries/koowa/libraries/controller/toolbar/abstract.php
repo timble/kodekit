@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerToolbarAbstract extends KCommand implements KControllerToolbarInterface
+abstract class KControllerToolbarAbstract extends KCommandInvokerAbstract implements KControllerToolbarInterface
 {
     /**
      * Controller object
@@ -41,11 +41,8 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
      *
      * @param   KObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(KObjectConfig $config)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
         //Create the commands array
@@ -71,7 +68,7 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
         $config->append(array(
             'type'       => 'toolbar',
             'controller' => null,
-            'priority'   => KCommand::PRIORITY_HIGH
+            'priority'   => self::PRIORITY_HIGH
         ));
 
         parent::_initialize($config);
@@ -84,10 +81,10 @@ abstract class KControllerToolbarAbstract extends KCommand implements KControlle
      * '_after[Command]. Command handler functions should be declared protected.
      *
      * @param 	string           $name	    The command name
-     * @param 	KCommandContext  $context 	The command context
+     * @param 	KCommand  $context 	The command context
      * @return 	boolean Always returns TRUE
      */
-    final public function execute($name, KCommandContext $context)
+    final public function execute($name, KCommand $context)
     {
         $parts  = explode('.', $name);
         $method = '_'.$parts[0].ucfirst($parts[1]);

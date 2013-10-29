@@ -13,9 +13,25 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-interface KTemplateFilterInterface  extends KCommandInterface
+interface KTemplateFilterInterface extends KObjectHandlable
 {
-  	/**
+    /**
+     * Filter modes
+     */
+    const MODE_COMPILE = 1;
+    const MODE_RENDER  = 2;
+
+    /**
+     * Priority levels
+     */
+    const PRIORITY_HIGHEST = 1;
+    const PRIORITY_HIGH    = 2;
+    const PRIORITY_NORMAL  = 3;
+    const PRIORITY_LOW     = 4;
+    const PRIORITY_LOWEST  = 5;
+
+
+    /**
      * Get the template object
      *
      * @return  object	The template object
@@ -29,6 +45,13 @@ interface KTemplateFilterInterface  extends KCommandInterface
      * @return $this
      */
     public function setTemplate($template);
+
+    /**
+     * Get the priority of a behavior
+     *
+     * @return  integer The command priority
+     */
+    public function getPriority();
 
     /**
      * Method to extract key/value pairs out of a string with xml style attributes

@@ -41,7 +41,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
 	 * The request information
 	 *
-	 * @var array
+	 * @var KControllerRequest
 	 */
 	protected $_request = null;
 
@@ -111,12 +111,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string          $action  The action to execute
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
      * @throws Exception
      * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
-    public function execute($action, KCommandContext $context)
+    public function execute($action, KCommand $context)
     {
         $action = strtolower($action);
 
@@ -234,10 +234,9 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	 */
 	public function setRequest(array $request)
 	{
-		$this->_request = new KObjectConfig();
-		foreach($request as $key => $value) {
-		    $this->$key = $value;
-		}
+		$this->_request = $this->getObject('koowa:controller.request', array(
+            'query' => $request
+        ));
 
 		return $this;
 	}
@@ -248,6 +247,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
      * to the KCommandChain mixin.
      *
+     * @throws UnexpectedValueException
      * @return  KCommandChainInterface
      */
     public function getCommandChain()
@@ -274,7 +274,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Overrides CommandMixin::getCommandContext() to insert the request and response objects into the controller
      * command context.
      *
-     * @return  KCommandContext
+     * @return  KCommand
      * @see KCommandMixin::getCommandContext
      */
     public function getCommandContext()
@@ -308,33 +308,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         return $this;
     }
 
-	/**
-     * Set a request properties
-     *
-     * @param  	string 	$property The property name.
-     * @param 	mixed 	$value    The property value.
-     */
- 	public function __set($property, $value)
-    {
-    	$this->_request->$property = $value;
-  	}
-
-  	/**
-     * Get a request property
-     *
-     * @param  	string 	$property The property name.
-     * @return 	string 	The property value.
-     */
-    public function __get($property)
-    {
-    	$result = null;
-    	if(isset($this->_request->$property)) {
-    		$result = $this->_request->$property;
-    	}
-
-    	return $result;
-    }
-
     /**
      * Execute a controller action by it's name.
 	 *
@@ -355,7 +328,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             $data = !empty($args) ? $args[0] : array();
 
             //Create a context object
-            if(!($data instanceof KCommandContext))
+            if(!($data instanceof KCommand))
             {
                 $context = $this->getCommandContext();
                 $context->data   = $data;

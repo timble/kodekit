@@ -15,12 +15,12 @@
  */
 abstract class KModelAbstract extends KObject implements KModelInterface
 {
-	/**
-	 * A state object
-	 *
-	 * @var object
-	 */
-	protected $_state;
+    /**
+     * A state object
+     *
+     * @var KModelStateInterface
+     */
+    private $__state;
 
 	/**
 	 * List total
@@ -44,25 +44,16 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	protected $_item;
 
 	/**
-	 * Model column data
-	 *
-	 * @var mixed
-	 */
-	protected $_column;
-
-	/**
 	 * Constructor
 	 *
 	 * @param   KObjectConfig $config Configuration options
 	 */
 	public function __construct(KObjectConfig $config = null)
 	{
-        //If no config is passed create it
-		if(!isset($config)) $config = new KObjectConfig();
-
 		parent::__construct($config);
 
-		$this->_state = $config->state;
+        // Set the state identifier
+        $this->__state = $config->state;
 	}
 
 	/**
@@ -73,13 +64,13 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	 * @param   KObjectConfig $config Configuration options
 	 * @return  void
 	 */
-	protected function _initialize(KObjectConfig $config)
-	{
-		$config->append(array(
-            'state' => new KModelState(),
-       	));
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'state' => 'koowa:model.state',
+        ));
 
-       	parent::_initialize($config);
+        parent::_initialize($config);
     }
 
 	/**
@@ -91,84 +82,6 @@ abstract class KModelAbstract extends KObject implements KModelInterface
 	{
 	    return true;
 	}
-
-	/**
-     * Set the model state properties
-     *
-     * This function overloads the KObject::set() function and only acts on state properties it will reset (unsets) the
-     * $_list, $_item and $_total model properties when a state changes.
-     *
-     * @param   string|array|object	$property The name of the property, an associative array or an object
-     * @param   mixed  				$value    The value of the property
-     * @return	KModelAbstract
-     */
-    public function set( $property, $value = null )
-    {
-    	$changed = false;
-
-        if(is_object($property)) {
-    		$property = (array) KObjectConfig::unbox($property);
-    	}
-
-        if(is_array($property))
-        {
-            foreach($property as $key => $value)
-            {
-                if(isset($this->_state->$key) && $this->_state->$key != $value)
-                {
-                    $changed = true;
-                    break;
-                }
-            }
-
-        	$this->_state->setData($property);
-        }
-        else
-        {
-            if(isset($this->_state->$property) && $this->_state->$property != $value) {
-                $changed = true;
-            }
-
-            $this->_state->$property = $value;
-        }
-
-        if($changed)
-        {
-            $this->_list  = null;
-            $this->_item  = null;
-            $this->_total = null;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the model state properties
-     *
-     * This function overloads the KObject::get() function and only acts on state properties. If no property name is given
-     * then the function will return an associative array of all properties. If the property does not exist and a  default
-     * value is specified this is returned, otherwise the function return NULL.
-     *
-     * @param   string  $property The name of the property
-     * @param   mixed   $default  The default value
-     * @return  mixed   The value of the property, an associative array or NULL
-     */
-    public function get($property = null, $default = null)
-    {
-        $result = $default;
-
-        if(is_null($property)) {
-            $result = $this->_state->getData();
-        }
-        else
-        {
-            if(isset($this->_state->$property)) {
-                $result = $this->_state->$property;
-            }
-        }
-
-        return $result;
-    }
 
     /**
      * Reset all cached data and reset the model state to it's default
@@ -182,19 +95,59 @@ abstract class KModelAbstract extends KObject implements KModelInterface
         $this->_item  = null;
         $this->_total = null;
 
-        $this->_state->reset($default);
+        $this->getState()->reset($default);
 
         return $this;
     }
 
     /**
-     * Method to get state object
+     * Set the model state values
      *
-     * @return  object  The state object
+     * @param  array $values Set the state values
+     * @return $this
+     */
+    public function setState(array $values)
+    {
+        $this->getState()->setValues($values);
+        return $this;
+    }
+
+    /**
+     * Get the model state object
+     *
+     * @throws UnexpectedValueException
+     * @return  KModelStateInterface  The model state object
      */
     public function getState()
     {
-        return $this->_state;
+        if(!$this->__state instanceof KModelStateInterface)
+        {
+            $this->__state = $this->getObject($this->__state, array('model' => $this));
+
+            if(!$this->__state instanceof KModelStateInterface)
+            {
+                throw new UnexpectedValueException(
+                    'State: '.get_class($this->__state).' does not implement ModelStateInterface'
+                );
+            }
+        }
+
+        return $this->__state;
+    }
+
+    /**
+     * State Change notifier
+     *
+     * This function is called when the state has changed.
+     *
+     * @param  string 	$name  The state name being changed
+     * @return void
+     */
+    public function onStateChange($name)
+    {
+        $this->_rowset = null;
+        $this->_row    = null;
+        $this->_total  = null;
     }
 
     /**
@@ -237,7 +190,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
      */
     public function getData()
     {
-        if($this->_state->isUnique()) {
+        if($this->getState()->isUnique()) {
             $data = $this->getItem();
         } else {
             $data = $this->getList();
@@ -246,58 +199,37 @@ abstract class KModelAbstract extends KObject implements KModelInterface
         return $data;
     }
 
-	/**
-     * Get a model state by name
-     *
-     * @param   string  $key The key name.
-     * @return  string  The corresponding value.
-     */
-    public function __get($key)
-    {
-        return $this->get($key);
-    }
-
-    /**
-     * Set a model state by name
-     *
-     * @param   string  $key   The key name.
-     * @param   mixed   $value The value for the key
-     * @return  void
-     */
-    public function __set($key, $value)
-    {
-        $this->set($key, $value);
-    }
-
     /**
      * Supports a simple form Fluent Interfaces. Allows you to set states by using the state name as the method name.
      *
-     * For example : $model->sort('name')->limit(10)->getList();
+     * For example : $model->sort('name')->limit(10)->getRowset();
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return  KModelAbstract
+     * @return  $this
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */
     public function __call($method, $args)
     {
-        if(isset($this->_state->$method)) {
-            return $this->set($method, $args[0]);
+        if ($this->getState()->has($method))
+        {
+            $this->getState()->set($method, $args[0]);
+            return $this;
         }
 
         return parent::__call($method, $args);
     }
 
-	/**
+    /**
      * Preform a deep clone of the object.
      *
-     * @return void
+     * @retun void
      */
     public function __clone()
     {
         parent::__clone();
 
-        $this->_state = clone $this->_state;
+        $this->__state = clone $this->__state;
     }
 }

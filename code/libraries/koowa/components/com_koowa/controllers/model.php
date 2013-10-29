@@ -37,7 +37,7 @@ class ComKoowaControllerModel extends KControllerModel
         $this->_limit = $config->limit;
 
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
+        $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
@@ -117,14 +117,14 @@ class ComKoowaControllerModel extends KControllerModel
      *
      * Use the application default limit if no limit exists in the model and limit the limit to a maximum.
      *
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
      * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
      */
-    protected function _actionBrowse(KCommandContext $context)
+    protected function _actionBrowse(KCommand $context)
     {
         if($this->isDispatched())
         {
-            $limit = $this->getModel()->get('limit');
+            $limit = $this->getModel()->getState()->limit;
 
             //If limit is empty use default
             if(empty($limit)) {
@@ -136,7 +136,7 @@ class ComKoowaControllerModel extends KControllerModel
                 $limit = $this->_limit->max;
             }
 
-            $this->limit = $limit;
+            $this->getModel()->getState()->limit = $limit;
         }
 
         return parent::_actionBrowse($context);
@@ -147,10 +147,10 @@ class ComKoowaControllerModel extends KControllerModel
      *
      * This functions implements an extra check to hide the main menu is the view name is singular (item views)
      *
-     * @param  KCommandContext $context A command context object
+     * @param  KCommand $context A command context object
      * @return KDatabaseRowInterface A row object containing the selected row
      */
-    protected function _actionRead(KCommandContext $context)
+    protected function _actionRead(KCommand $context)
     {
         //Perform the read action
         $row = parent::_actionRead($context);
@@ -158,7 +158,7 @@ class ComKoowaControllerModel extends KControllerModel
         //Add the notice if the row is locked
         if($this->getIdentifier()->application === 'admin' && isset($row))
         {
-            if(!isset($this->_request->layout) && $row->isLockable() && $row->locked()) {
+            if(!isset($this->getRequest()->query->layout) && $row->isLockable() && $row->locked()) {
                 JFactory::getApplication()->enqueueMessage($row->lockMessage(), 'notice');
             }
         }

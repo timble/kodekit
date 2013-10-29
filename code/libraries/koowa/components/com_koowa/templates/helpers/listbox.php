@@ -179,33 +179,39 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         }
         else
         {
-            $options = array();
-            if ($config->deselect) {
-                $options[] = $this->option(array('text' => $this->translate($config->prompt)));
-            }
-
-            $list = $this->getObject($config->identifier)->set($config->filter)->getList();
-
-            //Get the list of items
-            $items = $list->getColumn($config->value);
-            if ($config->unique) {
-                $items = array_unique($items);
-            }
-
-            foreach ($items as $key => $value)
+            if (!$config->options)
             {
-                $item      = $list->find($key);
-                $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+                $options = array();
+
+                $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->getList();
+
+                //Get the list of items
+                $items = $list->getColumn($config->value);
+                if ($config->unique) {
+                    $items = array_unique($items);
+                }
+
+                foreach ($items as $key => $value)
+                {
+                    $item      = $list->find($key);
+                    $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
+                }
+
+                //Add the options to the config object
+                $config->options = $options;
             }
 
-            //Add the options to the config object
-            $config->options = $options;
+            if ($config->deselect)
+            {
+                $config->options = array_merge(array($this->option(array('text' => $this->translate($config->prompt)))),
+                    $config->options->toArray());
+            }
 
             if ($config->select2) {
                 $html .= $this->_listboxSelect2($config);
+            } else {
+                $html .= $this->optionlist($config);
             }
-
-            $html .= $this->optionlist($config);
         }
 
         return $html;
@@ -224,6 +230,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'attribs' => array()
         ))->append(array(
             'select2_options' => array(
+                'cleanup' => $config->cleanup,
                 'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
                 'options' => array()
             )
@@ -240,9 +247,9 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             }
             else
             {
-                // get rid of the deselect option as we set the placeholder property below
-                $options =& $config->options;
-                unset($options[0]);
+                // Remove the prompt option previously added. This is automatically added by select2
+                // for multiple select boxes.
+                unset($config->options[0]);
             }
 
             $config->select2_options->append(array('options' => array(
@@ -252,6 +259,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         }
 
         $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+        $html .= $this->optionlist($config);
 
         return $html;
     }
@@ -272,7 +280,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'validate' => true,
             'filter'   => array(),
             'element' => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
-            'options' => array()
+            'options' => array('multiple' => (bool) $config->attribs->multiple)
         ));
 
         if (!$config->url)
@@ -291,14 +299,43 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             $config->url = $this->getTemplate()->getView()->createRoute($parts, false, false);
         }
 
-        $html = $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+        $html = '';
 
-        $config->attribs->value = $config->selected;
+        // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices
+        // as an array (presumably for v4).
+        if ($config->attribs->multiple)
+        {
+            $html .= '<script>
+            jQuery(function($) {
+                var el = $("' . $config->element . '");
+                var form = el.closest("form");
+                form.get(0).addEvent("submit", function() {
+                    if (el.val()) {
+                        var values = el.val().split(",");
+                        $.each(values, function(idx, value) {
+                            form.append(el.clone().val(value));
+                        });
+                        el.remove();
+                    }
+                });
+            });</script>';
+
+            // Enable auto-cleanup if not disabled.
+            if (!isset($config->cleanup)) $config->cleanup = true;
+        }
+
+        $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+
         $config->attribs->name  = $config->name;
+
+        if ($config->selected)
+        {
+            $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
+        }
 
         $attribs = $this->buildAttributes($config->attribs);
 
-        $html .= "<input $attribs />";
+        $html .= "<input type=\"hidden\" {$attribs} />";
 
         return $html;
     }

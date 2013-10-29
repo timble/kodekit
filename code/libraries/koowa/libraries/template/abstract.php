@@ -58,11 +58,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_view;
 
     /**
-     * The filter chain
+     * Filter queue
      *
-     * @var	KTemplateFilterChain
+     * @var	KObjectQueue
      */
-    protected $_chain = null;
+    protected $_queue;
 
     /**
      * Counter
@@ -91,8 +91,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         // Set the template data
         $this->_data = $config->data;
 
-        //Set the filter chain
-        $this->_chain = $config->filter_chain;
+        //Set the filter queue
+        $this->_queue = $this->getObject('koowa:object.queue');
 
         //Attach the filters
         $filters = (array) KObjectConfig::unbox($config->filters);
@@ -123,11 +123,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'translator'       => null,
-            'data'             => array(),
-            'view'             => null,
-            'filter_chain' 	   => $this->getObject('koowa:template.filter.chain'),
-            'filters'          => array(),
+            'translator' => null,
+            'data'       => array(),
+            'view'       => null,
+            'filters'    => array(),
         ));
 
         parent::_initialize($config);
@@ -213,8 +212,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get the view object attached to the template
      *
-     * @throws	\UnexpectedValueException	If the views doesn't implement the KViewInterface
-     * @return  KTemplateInterface
+     * @throws	UnexpectedValueException	If the views doesn't implement the ViewInterface
+     * @return  KViewInterface
      */
     public function getView()
     {
@@ -227,7 +226,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
             $this->_view = $this->getObject($this->_view);
 
-            //Make sure the view implements KViewInterface
+            //Make sure the view implements ViewInterface
             if(!$this->_view instanceof KViewInterface)
             {
                 throw new UnexpectedValueException(
@@ -239,40 +238,35 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         return $this->_view;
     }
 
-	/**
-	 * Method to set a view object attached to the controller
-	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
-	 * @return	KTemplateAbstract
-	 */
-	public function setView($view)
-	{
-		if(!($view instanceof KViewInterface))
-		{
-			if(empty($view) || (is_string($view) && strpos($view, '.') === false))
-		    {
-			    $identifier			= clone $this->getIdentifier();
-			    $identifier->path	= array('view');
-			    if ($view) {
-			        $identifier->path[] = $view;
-			    }
-			    $identifier->name	= KRequest::format() ? KRequest::format() : 'html';
-			}
-			else $identifier = $this->getIdentifier($view);
+    /**
+     * Method to set a view object attached to the controller
+     *
+     * @param	mixed	$view An object that implements ObjectInterface, ObjectIdentifier object
+     * 					      or valid identifier string
+     * @return KTemplateAbstract
+     */
+    public function setView($view)
+    {
+        if(!($view instanceof KViewInterface))
+        {
+            if(is_null($view) || (is_string($view) && strpos($view, '.') === false))
+            {
+                $identifier			= clone $this->getIdentifier();
+                $identifier->path	= array('view');
+                if ($view) {
+                    $identifier->path[] = $view;
+                }
+                $identifier->name = 'html';
+            }
+            else $identifier = $this->getIdentifier($view);
 
-			if($identifier->path[0] != 'view') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a view identifier');
-			}
+            $view = $identifier;
+        }
 
-			$view = $identifier;
-		}
+        $this->_view = $view;
 
-		$this->_view = $view;
-
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Gets the translator object
@@ -322,8 +316,16 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 	 */
 	public function loadIdentifier($template, $data = array())
 	{
+        // Make sure we have a proper identifier
+        if (is_string($template) && strpos($template, '.') === false)
+        {
+            $identifier = clone $this->getView()->getIdentifier();
+            $identifier->name = $template;
+        }
+        else $identifier = $template;
+
 	    //Identify the template
-	    $identifier = $this->getIdentifier($template);
+	    $identifier = $this->getIdentifier($identifier);
 
 	    // Find the template
 		$file = $this->findFile(dirname($identifier->filepath).'/'.$identifier->name.'.php');
@@ -388,7 +390,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function isRendering()
     {
-        return (bool) $this->_counter;
+        return (bool) $this->__counter;
     }
 
 	/**
@@ -416,8 +418,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 			$filter = $this->getFilter($filter, $config);
 		}
 
-		//Enqueue the filter in the command chain
-		$this->_chain->enqueue($filter);
+		//Enqueue the filter
+		$this->_queue->enqueue($filter, $filter->getPriority());
 
 		return $this;
  	}
@@ -581,13 +583,18 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Parse and compile the template to PHP code
      *
-     * This function passes the template through read filter chain and returns the result.
+     * This function passes the template through compile filters and returns the result.
      *
      * @param  string $content Data to parse
      */
     protected function _compile(&$content)
     {
-        $this->_chain->compile($content);
+        foreach($this->_queue as $filter)
+        {
+            if($filter instanceof KTemplateFilterCompiler) {
+                $filter->compile($content);
+            }
+        }
     }
 
     /**
@@ -627,13 +634,18 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Process the template
      *
-     * This function passes the template through write filter chain and returns the result.
+     * This function passes the template through render filter and returns the result.
      *
      * @param string $content Data to render
      */
     protected function _render(&$content)
     {
-        $this->_chain->render($content);
+        foreach($this->_queue as $filter)
+        {
+            if($filter instanceof KTemplateFilterRenderer) {
+                $filter->render($content);
+            }
+        }
     }
 
     /**

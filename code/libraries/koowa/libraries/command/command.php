@@ -8,103 +8,78 @@
  */
 
 /**
- * Command
- *
- * The command handler will translate the command name into a function format and call it for the object class to
- * handle it if the method exists.
+ * Command Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommand extends KObject implements KCommandInterface
+class KCommand extends KObjectConfig implements KCommandInterface
 {
     /**
-     * Priority levels
+     * Error
+     *
+     * @var string
      */
-    const PRIORITY_HIGHEST = 1;
-    const PRIORITY_HIGH    = 2;
-    const PRIORITY_NORMAL  = 3;
-    const PRIORITY_LOW     = 4;
-    const PRIORITY_LOWEST  = 5;
+    protected $_error;
 
     /**
-     * The command priority
+     * Set the error
      *
-     * @var integer
-     */
-    protected $_priority;
-
-    /**
-     * Constructor.
+     * @param string $error
      *
-     * @param   KObjectConfig $config Configuration options
+     * @return  KCommand
      */
-    public function __construct( KObjectConfig $config = null)
+    public function setError($error)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
-        parent::__construct($config);
-
-        $this->_priority = $config->priority;
+        $this->_error = $error;
+        return $this;
     }
 
     /**
-     * Initializes the options for the object
+     * Get the error
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KObjectConfig $config Configuration options
-     * @return  void
+     * @return  string|Exception  The error
      */
-    protected function _initialize(KObjectConfig $config)
+    public function getError()
     {
-        $config->append(array(
-            'priority'   => KCommand::PRIORITY_NORMAL,
-        ));
-
-        parent::_initialize($config);
+        return $this->_error;
     }
 
     /**
-     * Command handler
+     * Get the command subject
      *
-     * @param   string          $name     The command name
-     * @param   KCommandContext $context  The command context
-     * @return  boolean         Can return both true or false.
+     * @return object	The command subject
      */
-    public function execute( $name, KCommandContext $context)
+    public function getSubject()
     {
-        $type = '';
+        return $this->caller;
+    }
 
-        if($context->caller)
-        {
-            $identifier = clone $context->caller->getIdentifier();
+    /**
+     * Set the command subject
+     *
+     * @param KObjectInterface $subject The command subject
+     * @return KCommand
+     */
+    public function setSubject(KObjectInterface $subject)
+    {
+        $this->caller = $subject;
+        return $this;
+    }
 
-            if($identifier->path) {
-                $type = array_shift($identifier->path);
-            } else {
-                $type = $identifier->name;
-            }
+    /**
+     * Set a command property
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function set($name, $value)
+    {
+        if (is_array($value)) {
+            $this->_data[$name] = new KObjectConfig($value);
+        } else {
+            $this->_data[$name] = $value;
         }
-
-        $parts  = explode('.', $name);
-        $method = !empty($type) ? '_'.$type.ucfirst(KStringInflector::implode($parts)) : '_'.lcfirst(KStringInflector::implode($parts));
-
-        if(in_array($method, $this->getMethods())) {
-            return $this->$method($context);
-        }
-
-        return true;
-    }
-
-    /**
-     * Get the priority of the command
-     *
-     * @return  integer The command priority
-     */
-    public function getPriority()
-    {
-        return $this->_priority;
     }
 }

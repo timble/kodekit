@@ -84,7 +84,7 @@ abstract class KEventDispatcherAbstract extends KObject implements KEventDispatc
      *                                     instead.
      * @return KEventDispatcherAbstract
      */
-    public function addEventListener($name, KObjectHandlable $listener, $priority = KEvent::PRIORITY_NORMAL)
+    public function addEventListener($name, KObjectHandlable $listener, $priority = KEventInterface::PRIORITY_NORMAL)
     {
         if(is_object($listener))
         {

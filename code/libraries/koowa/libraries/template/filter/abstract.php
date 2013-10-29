@@ -56,7 +56,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority' => KTemplateFilter::PRIORITY_NORMAL,
+            'priority' => self::PRIORITY_NORMAL,
             'template' => null
         ));
 
@@ -94,39 +94,6 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         $this->_template = $template;
 
         return $this;
-    }
-
-    /**
-     * Command handler
-     *
-     * @param   string          $name    The command name
-     * @param   KCommandContext $context The command context
-     * @return  boolean     Always returns TRUE
-     */
-    final public function execute($name, KCommandContext $context)
-    {
-        //Set the template
-        $this->_template = $context->caller;
-
-        //Set the data
-        $data = $context->data;
-
-        if(($name & KTemplateFilter::MODE_COMPILE) && $this instanceof KTemplateFilterCompiler) {
-            $this->compile($data);
-        }
-
-        if(($name & KTemplateFilter::MODE_RENDER) && $this instanceof KTemplateFilterRenderer) {
-            $this->render($data);
-        }
-
-        //Get the data
-        $context->data = $data;
-
-        //Reset the template
-        //$this->_template = null;
-
-        //@TODO : Allows filters to return false and halt the filter chain
-        return true;
     }
 
     /**

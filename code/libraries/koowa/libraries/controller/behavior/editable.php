@@ -15,6 +15,8 @@
  */
 class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 {
+    protected $_cookie_path;
+
     /**
      * Constructor
      *
@@ -24,7 +26,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         parent::__construct($config);
 
-        if ($this->isDispatched() && KRequest::type() == 'HTTP' && $this->getRequest()->format === 'html')
+        if ($this->isDispatched() && KRequest::type() == 'HTTP' && $this->getRequest()->query->format === 'html')
         {
             $this->registerCallback('before.read' , array($this, 'setReferrer'));
             $this->registerCallback('after.apply' , array($this, 'lockReferrer'));
@@ -39,6 +41,25 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
 		//Set the default redirect.
         $this->setRedirect(KRequest::referrer());
+
+        $this->_cookie_path = $config->cookie_path;
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config A ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'cookie_path' => KRequest::base().'/'
+        ));
+
+        parent::_initialize($config);
     }
 
 	/**
@@ -48,7 +69,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function lockReferrer()
 	{
-	    KRequest::set('cookie.referrer_locked', true);
+        setcookie('referrer_locked', 1, 0, $this->_cookie_path);
 	}
 
 	/**
@@ -58,7 +79,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function unlockReferrer()
 	{
-	    KRequest::set('cookie.referrer_locked', null);
+        setcookie('referrer_locked', null, 0, $this->_cookie_path);
 	}
 
 
@@ -78,7 +99,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             );
         }
 
-
 	    return $referrer;
 	}
 
@@ -89,8 +109,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function setReferrer()
 	{
-	    $identifier = $this->getMixer()->getIdentifier();
-
 	    if(!KRequest::has('cookie.referrer_locked'))
 	    {
 	        $request  = KRequest::url();
@@ -99,14 +117,16 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	        //Compare request url and referrer
 	        if(!isset($referrer) || ((string) $referrer == (string) $request))
 	        {
-	            $option = 'com_'.$identifier->package;
-	            $view   = KStringInflector::pluralize($identifier->name);
-	            $url    = 'index.php?option='.$option.'&view='.$view;
+                $identifier = $this->getMixer()->getIdentifier();
+	            $option     = 'com_'.$identifier->package;
+	            $view       = KStringInflector::pluralize($identifier->name);
+	            $url        = 'index.php?option='.$option.'&view='.$view;
 
 	            $referrer = $this->getObject('koowa:http.url',array('url' => $url));
+
 	        }
 
-	        KRequest::set('cookie.referrer', (string) $referrer);
+            setcookie('referrer', (string) $referrer, 0, $this->_cookie_path);
 		}
 	}
 
@@ -117,7 +137,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function unsetReferrer()
 	{
-	    KRequest::set('cookie.referrer', null);
+        setcookie('referrer', null, 0, $this->_cookie_path);
 	}
 
 	/**
@@ -125,10 +145,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * Only lock if the context contains a row object and the view layout is 'form'.
 	 *
-	 * @param  KCommandContext $context The active command context
+	 * @param  KCommand $context The active command context
 	 * @return void
 	 */
-	public function lockResource(KCommandContext $context)
+	public function lockResource(KCommand $context)
 	{
        if($context->result instanceof KDatabaseRowInterface)
        {
@@ -146,10 +166,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	/**
 	 * Unlock callback
 	 *
-	 * @param 	KCommandContext	$context The active command context
+	 * @param 	KCommand	$context The active command context
 	 * @return void
 	 */
-	public function unlockResource(KCommandContext $context)
+	public function unlockResource(KCommand $context)
 	{
 	    if($context->result instanceof KDatabaseRowInterface && $context->result->isLockable()) {
 			$context->result->unlock();
@@ -164,10 +184,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function also sets the redirect to the referrer.
 	 *
-	 * @param   KCommandContext	$context  A command context object
+	 * @param   KCommand	$context  A command context object
 	 * @return 	KDatabaseRowsetInterface  A row object containing the saved data
 	 */
-	protected function _actionSave(KCommandContext $context)
+	protected function _actionSave(KCommand $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
 		$data   = $context->caller->execute($action, $context);
@@ -186,10 +206,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function also sets the redirect to the current url
 	 *
-	 * @param	KCommandContext	         $context A command context object
+	 * @param	KCommand	         $context A command context object
 	 * @return 	KDatabaseRowsetInterface 	      A row object containing the saved data
 	 */
-	protected function _actionApply(KCommandContext $context)
+	protected function _actionApply(KCommand $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
 		$data   = $context->caller->execute($action, $context);
@@ -203,14 +223,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
 		    if($this->getModel()->getState()->isUnique())
 		    {
-	            $states = $this->getModel()->getState()->getData(true);
+	            $states = $this->getModel()->getState()->getValues(true);
 
 		        foreach($states as $key => $value) {
-		            $url->query[$key] = $data->get($key);
+		            $url->query[$key] = $data->$key;
 		        }
 		    }
 		    elseif ($data->getIdentityColumn()) {
-                $url->query[$data->getIdentityColumn()] = $data->get($data->getIdentityColumn());
+                $column = $data->getIdentityColumn();
+                $url->query[$column] = $data->$column;
             }
         }
 
@@ -224,10 +245,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function will unlock the row(s) and set the redirect to the referrer
      *
-     * @param	KCommandContext	         $context A command context object
+     * @param	KCommand	         $context A command context object
      * @return 	KDatabaseRowInterface 	 A row object containing the saved data
 	 */
-	protected function _actionCancel(KCommandContext $context)
+	protected function _actionCancel(KCommand $context)
 	{
 		//Create the redirect
 		$this->setRedirect($this->getReferrer());

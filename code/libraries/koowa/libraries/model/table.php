@@ -37,7 +37,7 @@ class KModelTable extends KModelAbstract
        $this->_table = $config->table;
 
         // Set the static states
-        $this->_state
+        $this->getState()
             ->insert('limit'    , 'int')
             ->insert('offset'   , 'int')
             ->insert('sort'     , 'cmd')
@@ -51,7 +51,7 @@ class KModelTable extends KModelAbstract
         {
             // Set the dynamic states based on the unique table keys
             foreach($this->getTable()->getUniqueColumns() as $key => $column) {
-                $this->_state->insert($key, $column->filter, null, true, $this->getTable()->mapColumns($column->related, true));
+                $this->getState()->insert($key, $column->filter, null, true, $this->getTable()->mapColumns($column->related, true));
             }
         }
     }
@@ -74,24 +74,21 @@ class KModelTable extends KModelAbstract
     }
 
     /**
-     * Set the model state properties
+     * State Change notifier
      *
-     * This function overloads the KDatabaseTableAbstract::set() function and only acts on state properties.
-     *
-     * @param   string|array|object $property The name of the property, an associative array or an object
-     * @param   mixed               $value    The value of the property
-     * @return  KModelTable
+     * @param  string 	$name  The state name being changed
+     * @return void
      */
-    public function set( $property, $value = null )
+    public function onStateChange($name)
     {
-        parent::set($property, $value);
+        parent::onStateChange($name);
 
-        // If limit has been changed, adjust offset accordingly
-        if($limit = $this->_state->limit) {
-             $this->_state->offset = $limit != 0 ? (floor($this->_state->offset / $limit) * $limit) : 0;
+        //If limit has been changed, adjust offset accordingly
+        if($name == 'limit')
+        {
+            $limit = $this->getState()->limit;
+            $this->getState()->offset = $limit != 0 ? (floor($this->getState()->offset / $limit) * $limit) : 0;
         }
-
-        return $this;
     }
 
     /**
@@ -182,7 +179,7 @@ class KModelTable extends KModelAbstract
             {
                 $query  = null;
 
-                if($this->_state->isUnique())
+                if($this->getState()->isUnique())
                 {
                 	$query = $this->getObject('koowa:database.query.select');
 
@@ -215,7 +212,7 @@ class KModelTable extends KModelAbstract
             {
                 $query  = null;
 
-                if(!$this->_state->isEmpty())
+                if(!$this->getState()->isEmpty())
                 {
                 	$query = $this->getObject('koowa:database.query.select');
 
@@ -294,7 +291,7 @@ class KModelTable extends KModelAbstract
     protected function _buildQueryWhere(KDatabaseQueryInterface $query)
     {
         //Get only the unique states
-        $states = $this->_state->getData(true);
+        $states = $this->getState()->getValues(true);
 
         if(!empty($states))
         {
@@ -331,8 +328,8 @@ class KModelTable extends KModelAbstract
      */
     protected function _buildQueryOrder(KDatabaseQueryInterface $query)
     {
-        $sort       = $this->_state->sort;
-        $direction  = strtoupper($this->_state->direction);
+        $sort       = $this->getState()->sort;
+        $direction  = strtoupper($this->getState()->direction);
 
         if($sort) {
             $query->order($this->getTable()->mapColumns($sort), $direction);
@@ -348,11 +345,11 @@ class KModelTable extends KModelAbstract
      */
     protected function _buildQueryLimit(KDatabaseQueryInterface $query)
     {
-        $limit = $this->_state->limit;
+        $limit = $this->getState()->limit;
 
         if($limit)
         {
-            $offset = $this->_state->offset;
+            $offset = $this->getState()->offset;
             $total  = $this->getTotal();
 
             //If the offset is higher than the total recalculate the offset
@@ -361,7 +358,7 @@ class KModelTable extends KModelAbstract
                 if($offset >= $total)
                 {
                     $offset = floor(($total-1) / $limit) * $limit;
-                    $this->_state->offset = $offset;
+                    $this->getState()->offset = $offset;
                 }
              }
 

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
+class KCommandCallback extends KObjectMixinCallback implements KCommandInvokerInterface
 {
 	/**
 	 * The command priority
@@ -47,7 +47,7 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'priority'      => KCommand::PRIORITY_NORMAL,
+            'priority'  => self::PRIORITY_NORMAL,
     	));
 
     	parent::_initialize($config);
@@ -61,10 +61,10 @@ class KCommandCallback extends KObjectMixinCallback implements KCommandInterface
      * directly.
 	 *
 	 * @param string          $name     The command name
-	 * @param KCommandContext $context  The command context
+	 * @param KCommand $context  The command context
 	 * @return boolean
 	 */
-	public function execute( $name, KCommandContext $context)
+	public function execute( $name, KCommand $context)
 	{
 		$result    = true;
 

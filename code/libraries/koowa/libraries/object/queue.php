@@ -37,11 +37,8 @@ class KObjectQueue extends KObject implements Iterator, Countable
      * Constructor
      *
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(KObjectConfig $config)
     {
-         //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
         $this->_object_list   = new ArrayObject();
@@ -100,7 +97,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Set the priority of an object in the queue
      *
-     * @param KObjectHandlable $object    A KCommand object
+     * @param KObjectHandlable $object    A command object
      * @param integer          $priority  The priority
      * @return KObjectQueue
      */

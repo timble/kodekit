@@ -93,7 +93,7 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_NORMAL,
+            'priority'   => self::PRIORITY_NORMAL,
             'auto_mixin' => false
         ));
 
@@ -127,11 +127,11 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
      * '_after[Command]. Command handler functions should be declared protected.
      *
      * @param   string           $name     The command name
-     * @param   KCommandContext  $context  The command context
+     * @param   KCommand  $context  The command context
      *
      * @return  mixed  Method result if the method exists, NULL otherwise.
      */
-    public function execute($name, KCommandContext $context)
+    public function execute($name, KCommand $context)
     {
         $result = null;
 

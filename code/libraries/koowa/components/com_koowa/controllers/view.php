@@ -27,10 +27,8 @@ class ComKoowaControllerView extends KControllerView
 
         $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
 
-        $this->_limit = $config->limit;
-
         // Mixin the toolbar interface
-        $this->mixin(new KControllerToolbarMixin(new KObjectConfig(array('mixer' => $this))));
+        $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
         $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
@@ -86,6 +84,20 @@ class ComKoowaControllerView extends KControllerView
         }
 
         return $this;
+    }
+
+    /**
+     * Display action
+     *
+     * If the controller was not dispatched manually load the languages files
+     *
+     * @param   KCommand $context A command context object
+     * @return 	string|bool 	The rendered output of the view or false if something went wrong
+     */
+    protected function _actionGet(KCommand $context)
+    {
+        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+        return parent::_actionGet($context);
     }
 
 	/**

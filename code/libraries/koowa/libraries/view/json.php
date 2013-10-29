@@ -57,6 +57,7 @@ class KViewJson extends KViewAbstract
     {
         parent::__construct($config);
 
+        //Padding can explicitly be turned off by setting to FALSE
         if(empty($config->padding) && $config->padding !== false)
         {
             $state = $this->getModel()->getState();
@@ -156,7 +157,7 @@ class KViewJson extends KViewAbstract
     protected function _renderData()
     {
         $model  = $this->getModel();
-        $data   = $this->_getList($model->getList());
+        $data   = $this->_getList($this->_plural ? $model->getList() : array($model->getItem()));
         $output = array(
             'version' => $this->_version,
             'links' => array(
@@ -171,8 +172,8 @@ class KViewJson extends KViewAbstract
         if ($this->_plural)
         {
             $total  = $model->getTotal();
-            $limit  = (int) $model->limit;
-            $offset = (int) $model->offset;
+            $limit  = (int) $model->getState()->limit;
+            $offset = (int) $model->getState()->offset;
 
             $output['meta'] = array(
                 'offset'   => $offset,
@@ -203,10 +204,10 @@ class KViewJson extends KViewAbstract
     /**
      * Returns the JSON representation of a rowset
      *
-     * @param  KDatabaseRowsetInterface $rowset
+     * @param  KDatabaseRowsetInterface|array $rowset
      * @return array
      */
-    protected function _getList(KDatabaseRowsetInterface $rowset)
+    protected function _getList($rowset)
     {
         $result = array();
 
@@ -270,7 +271,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _getPageLink(array $query = array())
     {
-        $url = KRequest::url();
+        $url = $this->getUrl();
 
         if ($query) {
             $url->setQuery(array_merge($url->getQuery(true), $query));
@@ -286,7 +287,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _processLinks(array &$array)
     {
-        $base = KRequest::url()->toString(KHttpUrl::AUTHORITY);
+        $base = $this->getUrl()->toString(KHttpUrl::AUTHORITY);
 
         foreach ($array as $key => &$value)
         {
@@ -313,7 +314,7 @@ class KViewJson extends KViewAbstract
      */
     protected function _processText($text)
     {
-        $base    = KRequest::url()->toString(KHttpUrl::AUTHORITY);
+        $base = $this->getUrl()->toString(KHttpUrl::AUTHORITY);
         $matches = array();
 
         preg_match_all("/(href|src)=\"(?!http|ftp|https|mailto|data)([^\"]*)\"/", $text, $matches, PREG_SET_ORDER);

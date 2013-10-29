@@ -33,7 +33,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-			'priority'   => KCommand::PRIORITY_HIGH,
+			'priority'   => self::PRIORITY_HIGH,
     	    'lifetime'	 => '900' //in seconds
 	  	));
 
@@ -135,37 +135,15 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	}
 
 	/**
-	 * Get the locked information
-	 *
-	 * @return string	The locked information as an internationalised string
-	 */
-	public function lockMessage()
-	{
-		$message = '';
-
-		if($this->locked())
-		{
-	        $user = JFactory::getUser($this->locked_by);
-			$date = $this->getObject('com:koowa.template.helper.date')->humanize(array('date' => $this->locked_on));
-			
-			$message = $this->getObject('translator')->translate(
-			    'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date)
-			);
-		}
-
-		return $message;
-	}
-
-	/**
 	 * Checks if a row can be updated
 	 *
 	 * This function determines if a row can be updated based on it's locked_by information. If a row is locked, and
      * not by the logged in user, the function will return false, otherwise it will return true
 	 *
-     * @param  KCommandContext $context
+     * @param  KCommand $context
 	 * @return boolean         True if row can be updated, false otherwise
 	 */
-	protected function _beforeUpdate(KCommandContext $context)
+	protected function _beforeUpdate(KCommand $context)
 	{
 		return (bool) !$this->locked();
 	}
@@ -176,10 +154,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 * This function determines if a row can be deleted based on it's locked_by information. If a row is locked, and
      * not by the logged in user, the function will return false, otherwise it will return true
 	 *
-     * @param  KCommandContext $context
+     * @param  KCommand $context
      * @return boolean         True if row can be deleted, false otherwise
      */
-	protected function _beforeDelete(KCommandContext $context)
+	protected function _beforeDelete(KCommand $context)
 	{
 		return (bool) !$this->locked();
 	}

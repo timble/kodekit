@@ -43,14 +43,14 @@ class KCommandMixin extends KObjectMixinAbstract
         //Enqueue the callback command
         if($config->enable_callbacks)
         {
-            $command = $this->getMixer()->mixin('koowa:command.callback', $config);
+            $command = $this->getMixer()->mixin('koowa:command.invoker.callback', $config);
             $this->getCommandChain()->enqueue($command, $config->callback_priority);
         }
 
         //Enqueue the event command
         if($config->dispatch_events)
         {
-            $command = $this->getMixer()->mixin('koowa:command.event', $config);
+            $command = $this->getMixer()->mixin('koowa:command.invoker.event', $config);
             $this->getCommandChain()->enqueue($command, $config->event_priority);
         }
     }
@@ -69,9 +69,9 @@ class KCommandMixin extends KObjectMixinAbstract
             'command_chain'     => 'koowa:command.chain',
             'event_dispatcher'  => null,
             'dispatch_events'   => true,
-            'event_priority'    => KCommand::PRIORITY_LOWEST,
+            'event_priority'    => KCommandInvokerInterface::PRIORITY_LOWEST,
             'enable_callbacks'  => false,
-            'callback_priority' => KCommand::PRIORITY_HIGH,
+            'callback_priority' => KCommandInvokerInterface::PRIORITY_HIGH,
         ));
 
         parent::_initialize($config);
@@ -82,7 +82,7 @@ class KCommandMixin extends KObjectMixinAbstract
      *
      * This functions inserts a 'caller' variable in the context which contains the mixer object.
      *
-     * @return  KCommandContext
+     * @return  KCommand
      */
     public function getCommandContext()
     {

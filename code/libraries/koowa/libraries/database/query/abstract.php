@@ -26,7 +26,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      *
      * @var array
      */
-    protected $_params;
+    protected $_parameters;
 
     /**
      * Constructor
@@ -38,7 +38,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
         parent::__construct($config);
 
         $this->_adapter = $config->adapter;
-        $this->_params  = $config->params;
+        $this->setParameters(KObjectConfig::unbox($config->parameters));
     }
 
     /**
@@ -52,8 +52,8 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'adapter' => 'koowa:database.adapter.mysqli',
-            'params'  => 'koowa:object.array'
+            'adapter'    => 'koowa:database.adapter.mysqli',
+            'parameters' => array()
         ));
     }
 
@@ -66,45 +66,32 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     public function bind(array $params)
     {
         foreach ($params as $key => $value) {
-            $this->getParams()->set($key, $value);
+            $this->getParameters()->set($key, $value);
         }
 
+        return $this;
+    }
+
+    /**
+     * Set the query parameters
+     *
+     * @param  array $parameters
+     * @return $this
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->_parameters = $this->getObject('koowa:database.query.parameters', array('parameters' => $parameters));
         return $this;
     }
 
     /**
      * Get the query parameters
      *
-     * @throws	\UnexpectedValueException	If the params doesn't implement KObjectArray
-     * @return KObjectArray
+     * @return  DatabaseQueryParameters
      */
-    public function getParams()
+    public function getParameters()
     {
-        if(!$this->_params instanceof KObjectArray)
-        {
-            $this->_params = $this->getObject($this->_params);
-
-            if(!$this->_params instanceof KObjectArray)
-            {
-                throw new UnexpectedValueException(
-                    'Params: '.get_class($this->_params).' does not implement KObjectArray'
-                );
-            }
-        }
-
-        return $this->_params;
-    }
-
-    /**
-     * Set the query parameters
-     *
-     * @param KObjectArray $params  The query parameters
-     * @return KDatabaseQueryAbstract
-     */
-    public function setParams(KObjectArray $params)
-    {
-        $this->_params = $params;
-        return $this;
+        return $this->_parameters;
     }
 
     /**
@@ -162,7 +149,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     protected function _replaceParamsCallback($matches)
     {
         $key   = substr($matches[0], 1);
-        $value = $this->_params[$key];
+        $value = $this->_parameters[$key];
 
         if(!$value instanceof KDatabaseQuerySelect) {
             $value = is_object($value) ? (string) $value : $value;
@@ -184,7 +171,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     public function __get($name)
     {
         if($name = 'params') {
-            return $this->getParams();
+            return $this->getParameters();
         }
 
         return parent::__get($name);

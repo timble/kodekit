@@ -54,19 +54,25 @@
                     }
                 },
                 initSelection: function(element, callback) {
-                    var id=$(element).val();
-                    if (id!=='') {
+                    var selected= $.parseJSON($(element).val());
+                    if (selected!=='') {
                         var data = {};
-                        data[options.value] = id;
+                        data[options.value] = selected;
+                        // Cleanup up selected. Values will be appended by select2.
+                        $(element).val('');
                         $.ajax(options.url, {
                             data: data
                         }).done(function(data) {
-                            callback(data.entities[0]);
+                            callback(data.entities);
                         });
                     }
                 },
-                formatResult: function (item) { return item[options.text]; },
-                formatSelection: function (item) { return item[options.text]; },
+                formatResult: function (item) {
+                    return item[options.text];
+                },
+                formatSelection: function (item) {
+                    return item[options.text];
+                },
                 id: options.value
             }, options);
         }

@@ -76,7 +76,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			}
 
 		    $config = array(
-        		'request' 	   => $this->_request,
+        		'request' 	   => $this->_request->query->toArray(),
 			    'dispatched'   => true
         	);
 
@@ -126,10 +126,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	/**
 	 * Dispatch the controller
 	 *
-	 * @param   KCommandContext $context A command context object
+	 * @param   KCommand $context A command context object
 	 * @return	mixed
 	 */
-	protected function _actionDispatch(KCommandContext $context)
+	protected function _actionDispatch(KCommand $context)
 	{
 	    $action = KRequest::get('post.action', 'cmd', strtolower(KRequest::method()));
 
@@ -148,10 +148,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	 * Either do a redirect or a execute a browse or read action in the controller
 	 * depending on the request method and type
 	 *
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
 	 * @return mixed
 	 */
-	protected function _actionForward(KCommandContext $context)
+	protected function _actionForward(KCommand $context)
 	{
 		if (KRequest::type() == 'HTTP')
 		{
@@ -175,10 +175,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	 * This function diverts the standard behavior and will push specific controller data
 	 * into the document
 	 *
-     * @param   KCommandContext $context A command context object
+     * @param   KCommand $context A command context object
 	 * @return	mixed
 	 */
-	protected function _actionRender(KCommandContext $context)
+	protected function _actionRender(KCommand $context)
 	{
 	    //Headers
 	    if($context->headers)
