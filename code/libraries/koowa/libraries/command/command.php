@@ -16,11 +16,14 @@
 class KCommand extends KObjectConfig implements KCommandInterface
 {
     /**
-     * Error
+     * Get the error
      *
-     * @var string
+     * @return  string|Exception  The error
      */
-    protected $_error;
+    public function getError()
+    {
+        return $this->get('error');
+    }
 
     /**
      * Set the error
@@ -31,18 +34,8 @@ class KCommand extends KObjectConfig implements KCommandInterface
      */
     public function setError($error)
     {
-        $this->_error = $error;
+        $this->set('error', $error);
         return $this;
-    }
-
-    /**
-     * Get the error
-     *
-     * @return  string|Exception  The error
-     */
-    public function getError()
-    {
-        return $this->_error;
     }
 
     /**
@@ -52,18 +45,18 @@ class KCommand extends KObjectConfig implements KCommandInterface
      */
     public function getSubject()
     {
-        return $this->caller;
+        return $this->get('subject');
     }
 
     /**
      * Set the command subject
      *
      * @param KObjectInterface $subject The command subject
-     * @return KCommand
+     * @return $this
      */
     public function setSubject(KObjectInterface $subject)
     {
-        $this->caller = $subject;
+        $this->set('subject', $subject);
         return $this;
     }
 
@@ -80,6 +73,41 @@ class KCommand extends KObjectConfig implements KCommandInterface
             $this->_data[$name] = new KObjectConfig($value);
         } else {
             $this->_data[$name] = $value;
+        }
+    }
+
+    /**
+     * Get a command property
+     *
+     * @param  string $name
+     * @return mixed  The property value
+     */
+    public function __get($name)
+    {
+        $getter = 'get'.ucfirst($name);
+        if(method_exists($this, $getter)) {
+            $value = $this->$getter();
+        } else {
+            $value = parent::__get($name);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Set a command property
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function __set($name, $value)
+    {
+        $setter = 'set'.ucfirst($name);
+        if(method_exists($this, $setter)) {
+            $this->$setter($value);
+        } else {
+            parent::__set($name, $value);
         }
     }
 }

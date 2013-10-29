@@ -13,8 +13,8 @@
  * The command invoker will translate the command name to a method name, format and call it for the object class to
  * handle it if the method exists.
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Command
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
 abstract class KCommandInvokerAbstract extends KObject implements KCommandInvokerInterface
 {
@@ -70,9 +70,9 @@ abstract class KCommandInvokerAbstract extends KObject implements KCommandInvoke
 
         $type = '';
 
-        if($context->caller)
+        if($context->subject)
         {
-            $identifier = clone $context->caller->getIdentifier();
+            $identifier = clone $context->subject->getIdentifier();
 
             if($identifier->path) {
                 $type = array_shift($identifier->path);

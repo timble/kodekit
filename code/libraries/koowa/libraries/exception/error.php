@@ -8,9 +8,9 @@
  */
 
 /**
- * Default Dispatcher Permission
+ * Error Exception
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
-final class KDispatcherPermissionDefault extends KDispatcherPermissionAbstract { }
+class KExceptionError extends ErrorException implements KException { }

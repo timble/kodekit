@@ -1,7 +1,7 @@
 /*
  ---
 
- description: Custom configuration of Select2 tuned for Nooku Framework
+ description: Custom configuration of Select2 tuned for Koowa
 
  authors:
  - Stian Didriksen

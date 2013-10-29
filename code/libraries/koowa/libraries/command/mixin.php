@@ -28,6 +28,7 @@ class KCommandMixin extends KObjectMixinAbstract
      * Object constructor
      *
      * @param   KObjectConfig $config Configuration options
+     * @throws InvalidArgumentException
      */
     public function __construct(KObjectConfig $config)
     {
@@ -84,10 +85,10 @@ class KCommandMixin extends KObjectMixinAbstract
      *
      * @return  KCommand
      */
-    public function getCommandContext()
+    public function getContext()
     {
         $context = $this->getCommandChain()->getContext();
-        $context->caller = $this->getMixer();
+        $context->setSubject($this->getMixer());
 
         return $context;
     }
@@ -95,6 +96,7 @@ class KCommandMixin extends KObjectMixinAbstract
     /**
      * Get the chain of command object
      *
+     * @throws UnexpectedValueException
      * @return  KCommandChainInterface
      */
     public function getCommandChain()

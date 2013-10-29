@@ -13,8 +13,8 @@
  * Class can be used as a mixin in classes that want to implement a an event dispatcher and allow adding and removing
  * listeners.
  *
- * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Event
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Event
  */
 class KEventMixin extends KObjectMixinAbstract
 {

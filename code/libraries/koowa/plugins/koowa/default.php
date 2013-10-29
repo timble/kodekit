@@ -30,7 +30,7 @@
  *      public function onBeforeControllerBrowse(KEvent $event)
  *      {
  *          //The caller is a reference to the object that is triggering this event
- *          $caller = $event->caller;
+ *          $caller = $event->subject;
  *
  *          //The result is the actual result of the event, if this is an after event
  *          //the result will contain the result of the action.
