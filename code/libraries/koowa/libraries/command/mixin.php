@@ -87,7 +87,7 @@ class KCommandMixin extends KObjectMixinAbstract
     public function getContext()
     {
         $context = $this->getCommandChain()->getContext();
-        $context->subject = $this->getMixer();
+        $context->setSubject($this->getMixer());
 
         return $context;
     }
