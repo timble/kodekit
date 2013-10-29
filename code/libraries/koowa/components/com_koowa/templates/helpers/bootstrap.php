@@ -133,7 +133,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         if ($config->wrapper)
         {
-            $this->getTemplate()->addFilter('wrapper');
+            $this->getTemplate()->attachFilter('wrapper');
             $this->getTemplate()->getFilter('wrapper')->setWrapper($config->wrapper);
         }
     }

@@ -8,42 +8,11 @@
  */
 
 /**
- * Default Template
+ * Abstract Template
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
 class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract
 {
-    /**
-     * Load a template helper
-     *
-     * This function merges the elements of the attached view model state with the parameters passed to the helper
-     * so that the values of one are appended to the end of the previous one.
-     *
-     * If the view state have the same string keys, then the parameter value for that key will overwrite the state.
-     *
-     * @param   string  $identifier Name of the helper, dot separated including the helper function to call
-     * @param   mixed   $params     Parameters to be passed to the helper
-     * @return  string  Helper output
-     */
-    public function renderHelper($identifier, $params = array())
-    {
-        $view = $this->getView();
-
-        if(KStringInflector::isPlural($view->getName()))
-        {
-            if($state = $view->getModel()->getState()) {
-                $params = array_merge( $state->getValues(), $params);
-            }
-        }
-        else
-        {
-            if($item = $view->getModel()->getItem()) {
-                $params = array_merge( $item->getData(), $params);
-            }
-        }
-
-        return parent::renderHelper($identifier, $params);
-    }
 }

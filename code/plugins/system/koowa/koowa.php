@@ -159,17 +159,20 @@ class PlgSystemKoowa extends JPlugin
         try
         {
             // If Koowa does not exist let Joomla handle the exception
-            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateDefault')) {
+            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateAbstract')) {
                 throw new Exception('');
             }
 
             $data = array('exception' => $exception);
-            $file = JPATH_ROOT.'/libraries/koowa/components/com_koowa/views/debug/tmpl/error.php';
 
             $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array(
                 'filters' => array('function', 'shorttag', 'variable')
             ));
-            $template->loadFile($file, $data);
+
+            $template->load('com:koowa.view.debug.tmpl.error')
+                ->compile()
+                ->evaluate($data)
+                ->render();
 
             while (@ob_end_clean());
 
@@ -177,7 +180,7 @@ class PlgSystemKoowa extends JPlugin
                 header('Content-Type: text/html');
             }
 
-            echo $template->render();
+            echo $template;
 
             exit;
         }

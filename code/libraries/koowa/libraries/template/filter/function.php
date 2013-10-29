@@ -28,7 +28,7 @@ class KTemplateFilterFunction extends KTemplateFilterAbstract implements KTempla
         '@date('      => '$this->renderHelper(\'date.format\',',
         '@overlay('   => '$this->renderHelper(\'behavior.overlay\', ',
         '@translate(' => '$this->translate(',
-        '@import('    => '$this->loadIdentifier(',
+        '@import('    => '$this->load(',
         '@route('     => '$this->getView()->createRoute(',
         '@escape('    => '$this->escape(',
         '@title('     => '$this->getView()->getTitle(',
