@@ -152,9 +152,9 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
         {
             $this->getStack()->push(clone $this);
 
-            foreach ($this->getStack()->top() as $command)
+            foreach ($this->getStack()->top() as $invoker)
             {
-                if ($command->execute($name, $context) === $this->_break_condition)
+                if ($invoker->execute($name, $context) === $this->_break_condition)
                 {
                     $this->getStack()->pop();
                     return $this->_break_condition;
