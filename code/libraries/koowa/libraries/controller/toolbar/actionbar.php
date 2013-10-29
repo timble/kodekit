@@ -169,7 +169,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     protected function _afterRead(KCommand $context)
     {
         $controller = $this->getController();
-        $name       = ucfirst($context->caller->getIdentifier()->name);
+        $name       = ucfirst($context->subject->getIdentifier()->name);
 
         if($controller->getModel()->getState()->isUnique())
         {
@@ -204,7 +204,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
 
         if($controller->canAdd())
         {
-            $identifier = $context->caller->getIdentifier();
+            $identifier = $context->subject->getIdentifier();
 
             $this->addCommand('new', array(
                 'href' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name)

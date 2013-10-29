@@ -190,7 +190,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	protected function _actionSave(KCommand $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
-		$data   = $context->caller->execute($action, $context);
+		$data   = $context->subject->execute($action, $context);
 
 		//Create the redirect
 		$this->setRedirect($this->getReferrer());
@@ -212,7 +212,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	protected function _actionApply(KCommand $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
-		$data   = $context->caller->execute($action, $context);
+		$data   = $context->subject->execute($action, $context);
 
 		//Create the redirect
 		$url = $this->getReferrer();
@@ -253,7 +253,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 		//Create the redirect
 		$this->setRedirect($this->getReferrer());
 
-	    $data = $context->caller->execute('read', $context);
+	    $data = $context->subject->execute('read', $context);
 
 		return $data;
 	}

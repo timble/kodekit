@@ -122,7 +122,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
         //Update the context
         $context->action = $action;
-        $context->caller = $this;
+        $context->subject = $this;
 
         //Find the mapped action
         if (isset( $this->_action_map[$action] )) {
