@@ -20,18 +20,22 @@
 
             this.element = $(element);
 
-            //For scrollTo to work, needs to be position:relative;
+            if(this.options.onBeforeInitialize) this.options.onBeforeInitialize.call(this);
+
+            // For scrollTo to work, needs to be position:relative;
             this.element.css('position', 'relative');
 
             this.attachHandlers();
 
             this.options.data = this.parseData(this.options.data);
 
-            //shortcut for accessing tree apis, like this: selected = this.tree('getSelectedNode')
+            // Shortcut for accessing tree apis, like this: selected = this.tree('getSelectedNode')
             this.tree = $.proxy(this.element.tree, this.element);
 
             // Instantiate the jqTree plugin with the parsed options
             this.tree(this.options);
+
+            if(this.options.onAfterInitialize) this.options.onAfterInitialize.call(this);
         },
 
         getDefaults: function(){
