@@ -1,4 +1,4 @@
-/*
+ /*
  ---
 
  description: Custom configuration of Select2 tuned for Koowa
@@ -58,12 +58,17 @@
                     if (selected!=='') {
                         var data = {};
                         data[options.value] = selected;
-                        // Cleanup up selected. Values will be appended by select2.
-                        $(element).val('');
                         $.ajax(options.url, {
                             data: data
                         }).done(function(data) {
-                            callback(data.entities);
+                                var entities = data.entities;
+                                if (!options.multiple) {
+                                    entities = entities[0];
+                                } else {
+                                    // Cleanup up selected. Values will be appended for multiple boxes.
+                                    $(element).val('');
+                                }
+                            callback(entities);
                         });
                     }
                 },
