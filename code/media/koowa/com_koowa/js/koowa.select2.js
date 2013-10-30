@@ -64,6 +64,7 @@
                                 var entities = data.entities;
                                 if (!options.multiple) {
                                     entities = entities[0];
+                                    $(element).val(selected);
                                 } else {
                                     // Cleanup up selected. Values will be appended for multiple boxes.
                                     $(element).val('');
