@@ -233,7 +233,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
      */
     public function getKey($string)
     {
-        $key = $this->_catalogue[$string];
+        $key = $this->_catalogue->{$string};
 
         if ($this->_prefix) {
             $key = $this->_prefix.$key;
