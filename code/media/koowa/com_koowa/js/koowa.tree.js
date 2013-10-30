@@ -76,7 +76,7 @@
                                 }
                             }
                         }));
-
+console.log('hi');
                         if(node.isFolder()) {
                             // states variable is for easy toggling on the click event
                             var states = [
@@ -89,7 +89,7 @@
                                 ],
                                 state = states[node.is_open ? 1 : 0],
                                 triangle = $('<i />', {
-                                    'class': state.triangle[0], //Either icon-triangle-right or icon-triangle-down
+                                    'class': 'icon-toggler '+state.triangle[0], //Either icon-triangle-right or icon-triangle-down
                                     html: state.triangle[1], //The html entity code for either a down or right arrow
                                     on: {
                                         click: function(event){
@@ -99,12 +99,7 @@
 
                                             // display or hide children items and fire the tree.open or tree.close event
                                             self.element.tree('toggle', node);
-
-                                            // toggle classes and html on the triangle, and folder icon
-                                            var state = states[node.is_open ? 1 : 0], old = states[node.is_open ? 0 : 1];
-                                            triangle.removeClass(old.triangle[0]).addClass(state.triangle[0]).html(state.triangle[1]);
-
-                                            triangle.closest('a').find('.'+old.folder).removeClass(old.folder).addClass(state.folder);
+                                            console.warn('TOGGLING!');
                                         }
                                     }
                                 });
@@ -255,16 +250,40 @@
          */
         _attachHandlers: function(){
 
-            var options = this.options, self = this;
+            var options = this.options, self = this, states = [
+                {
+                    triangle: ['icon-triangle-right', '&#x25ba;'], folder: 'icon-folder-close'
+                },
+                {
+                    triangle: ['icon-triangle-down', '&#x25bc;'], folder: 'icon-folder-open'
+                }
+            ];
 
             this.element.bind({
                 'tree.select': // The select event happens when a node is clicked
                     function(event) {
                         if(event.node) { // When event.node is null, it's actually a deselect event
                             //Style the clicked element
-                            $(this).find('.active').removeClass('active').find('[class^=icon-folder]').removeClass('icon-white');
+                            $(this).find('.active').removeClass('active').find('.icon-white').removeClass('icon-white');
                             $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=icon-folder]').addClass('icon-white');
                         }
+                    },
+                'tree.open': // The select event happens when a node is clicked
+                    function(event) {
+                        console.log(event.node);
+                        // toggle classes and html on the triangle, and folder icon
+                        var node = event.node, state = states[1], old = states[0], triangle = $(node.element).children('a').find('.icon-toggler');
+                        triangle.removeClass(old.triangle[0]).addClass(state.triangle[0]).html(state.triangle[1]);
+console.log(triangle);
+                        triangle.closest('a').find('.'+old.folder).removeClass(old.folder).addClass(state.folder);
+                    },
+                'tree.close': // The select event happens when a node is clicked
+                    function(event) {
+                        // toggle classes and html on the triangle, and folder icon
+                        var node = event.node, state = states[0], old = states[1], triangle = $(node.element).children('a').find('.icon-toggler');
+                        triangle.removeClass(old.triangle[0]).addClass(state.triangle[0]).html(state.triangle[1]);
+
+                        triangle.closest('a').find('.'+old.folder).removeClass(old.folder).addClass(state.folder);
                     },
                 'tree.init':
                     function() {
