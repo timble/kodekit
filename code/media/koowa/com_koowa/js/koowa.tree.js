@@ -249,9 +249,9 @@
             this.element.bind({
                 'tree.select': // The select event happens when a node is clicked
                     function(event) {
+                        $(this).find('.active').removeClass('active').find('.icon-white').removeClass('icon-white');
                         if(event.node) { // When event.node is null, it's actually a deselect event
                             //Style the clicked element
-                            $(this).find('.active').removeClass('active').find('.icon-white').removeClass('icon-white');
                             $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=icon-folder]').addClass('icon-white');
                         }
                     },
