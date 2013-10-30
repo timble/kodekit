@@ -206,7 +206,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
     /**
      * Checks if a given string is translatable.
      *
-     * @param $string The string to check.
+     * @param string $string The string to check.
      * @return bool True if it is, false otherwise.
      */
     public function isTranslatable($string)
@@ -217,7 +217,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
     /**
      * Checks if the translator handles a given translation key.
      *
-     * @param $key The translation key.
+     * @param string $key The translation key.
      * @return bool True if it does, false otherwise.
      */
     public function hasKey($key)
