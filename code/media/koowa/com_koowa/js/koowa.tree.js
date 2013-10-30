@@ -27,7 +27,7 @@
 
             this.attachHandlers();
 
-            this.options.data = this.parseData(this.options.data);
+            if(this.options.data && this.options.data.length) this.options.data = this.parseData(this.options.data);
 
             // Shortcut for accessing tree apis, like this: selected = this.tree('getSelectedNode')
             this.tree = $.proxy(this.element.tree, this.element);
@@ -59,6 +59,9 @@
                          */
 
                         $li.find('.jqtree-element').attr('title', node.name).wrap($('<a />', {
+                            /**
+                             * @TODO check if possible to be rid of the # attribute, or use the javascript uri
+                             */
                             href: '#',
                             on: {
                                 click: function(event){
