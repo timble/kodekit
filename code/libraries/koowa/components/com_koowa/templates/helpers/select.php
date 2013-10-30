@@ -42,6 +42,52 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     }
 
     /**
+     * Enhances a select box using Select2
+     *
+     * @param array|KObjectConfig $config
+     * @return string
+     */
+    protected function _optionlistSelect2($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'attribs' => array()
+        ))->append(array(
+            'select2_options' => array(
+                'cleanup' => $config->cleanup,
+                'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
+                'options' => array()
+            )
+        ));
+
+        $html = '';
+
+        if ($config->deselect)
+        {
+            if (!$config->attribs->multiple && !$config->select2_options->options->multiple)
+            {
+                // select2 needs the first option empty for placeholders to work on single select boxes
+                $config->options[0]->text = '';
+            }
+            else
+            {
+                // Remove the prompt option previously added. This is automatically added by select2
+                // for multiple select boxes.
+                unset($config->options[0]);
+            }
+
+            $config->select2_options->append(array('options' => array(
+                'placeholder' => $config->prompt,
+                'allowClear'  => true
+            )));
+        }
+
+        $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+
+        return $html;
+    }
+
+    /**
      * Generates an HTML select list
      *
      * @param 	array|KObjectConfig 	$config An optional array with configuration options
@@ -55,13 +101,19 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
             'name'   	=> 'id',
             'attribs'	=> array('size' => 1),
             'selected'	=> null,
-            'translate'	=> false
+            'translate'	=> false,
+            'select2'   => false
         ));
 
         $name    = $config->name;
         $attribs = $this->buildAttributes($config->attribs);
 
         $html = array();
+
+        if ($config->select2) {
+            $html[] = $this->_optionlistSelect2($config);
+        }
+
         $html[] = '<select name="'. $name .'" '. $attribs .'>';
 
         foreach($config->options as $group => $options)
