@@ -100,6 +100,7 @@ ul.jqtree-tree li.jqtree-selected > a:hover .jqtree-title i {
     opacity: 0.6;
     padding-right: 2px;
     transition: opacity 300ms;
+    font-style: normal;
 }
 .icon-triangle-right:hover, .icon-triangle-down:hover {
     opacity: 1;
