@@ -51,7 +51,7 @@ interface KTranslatorInterface
     /**
      * Checks if a given string is translatable.
      *
-     * @param $string The string to check.
+     * @param string $string The string to check.
      * @return bool True if it is, false otherwise.
      */
     public function isTranslatable($string);
