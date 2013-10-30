@@ -34,7 +34,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
     $query = $this->getRequest()->query;
     foreach ($state as $key => $value)
     {
-        if (empty($query->$key)) {
+        if (!isset($query->$key)) {
             $query->$key = $value;
         }
     }
