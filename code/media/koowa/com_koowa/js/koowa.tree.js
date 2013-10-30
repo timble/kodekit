@@ -46,6 +46,8 @@
                     data: [], //Default empty value to avoid errors when there are no items yet
                     autoOpen: 0, //Auto open just "All Categories" by default, this value is the nesting level not the node id
                     useContextMenu: false, //This allows us to right-click menu items again
+                    toggler: [{triangle: ['icon-triangle-right', '&#x25ba;'], folder: 'icon-folder-close'},//Styling options for toggler
+                              {triangle: ['icon-triangle-down', '&#x25bc;'], folder: 'icon-folder-open'}],
                     onCreateLi: function(node, $li){ //Method for customizing <li> markup
 
                         /**
@@ -76,17 +78,10 @@
                                 }
                             }
                         }));
-console.log('hi');
+
                         if(node.isFolder()) {
                             // states variable is for easy toggling on the click event
-                            var states = [
-                                    {
-                                        triangle: ['icon-triangle-right', '&#x25ba;'], folder: 'icon-folder-close'
-                                    },
-                                    {
-                                        triangle: ['icon-triangle-down', '&#x25bc;'], folder: 'icon-folder-open'
-                                    }
-                                ],
+                            var states = self.options.toggler,
                                 state = states[node.is_open ? 1 : 0],
                                 triangle = $('<i />', {
                                     'class': 'icon-toggler '+state.triangle[0], //Either icon-triangle-right or icon-triangle-down
@@ -99,7 +94,6 @@ console.log('hi');
 
                                             // display or hide children items and fire the tree.open or tree.close event
                                             self.element.tree('toggle', node);
-                                            console.warn('TOGGLING!');
                                         }
                                     }
                                 });
@@ -250,14 +244,7 @@ console.log('hi');
          */
         _attachHandlers: function(){
 
-            var options = this.options, self = this, states = [
-                {
-                    triangle: ['icon-triangle-right', '&#x25ba;'], folder: 'icon-folder-close'
-                },
-                {
-                    triangle: ['icon-triangle-down', '&#x25bc;'], folder: 'icon-folder-open'
-                }
-            ];
+            var options = this.options, self = this, states = options.toggler;
 
             this.element.bind({
                 'tree.select': // The select event happens when a node is clicked
@@ -268,16 +255,15 @@ console.log('hi');
                             $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=icon-folder]').addClass('icon-white');
                         }
                     },
-                'tree.open': // The select event happens when a node is clicked
+                'tree.open':
                     function(event) {
-                        console.log(event.node);
                         // toggle classes and html on the triangle, and folder icon
                         var node = event.node, state = states[1], old = states[0], triangle = $(node.element).children('a').find('.icon-toggler');
                         triangle.removeClass(old.triangle[0]).addClass(state.triangle[0]).html(state.triangle[1]);
-console.log(triangle);
+
                         triangle.closest('a').find('.'+old.folder).removeClass(old.folder).addClass(state.folder);
                     },
-                'tree.close': // The select event happens when a node is clicked
+                'tree.close':
                     function(event) {
                         // toggle classes and html on the triangle, and folder icon
                         var node = event.node, state = states[0], old = states[1], triangle = $(node.element).children('a').find('.icon-toggler');
