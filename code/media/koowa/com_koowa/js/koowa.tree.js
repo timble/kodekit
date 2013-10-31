@@ -292,6 +292,15 @@
 
             this._attachHandlers(); // @NOTE Attach needed events, remember to call this if you customize this method
 
+        },
+        /**
+         * @TODO move scrollIntoView logic from doclink.js, categories.tree.js and files.tree.js into here
+         * @param node
+         * @param viewport
+         * @param duration
+         */
+        scrollIntoView: function(node, viewport, duration){
+
         }
     });
 }(window.jQuery));
