@@ -87,6 +87,7 @@
                                     'class': 'icon-toggler '+state.triangle[0], //Either icon-triangle-right or icon-triangle-down
                                     html: state.triangle[1], //The html entity code for either a down or right arrow
                                     on: {
+                                        //@TODO investigate bug
                                         click: function(event){
                                             // making sure that select.node doesn't fire when clicking the open/close toggler
                                             event.preventDefault();
