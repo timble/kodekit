@@ -15,14 +15,4 @@
  */
 abstract class KHttpExceptionAbstract extends RuntimeException implements KHttpException
 {
-    /**
-     * Constructor
-     *
-     * @param string  $message  The exception message
-     * @param object  $previous The previous exception
-     */
-    public function __construct($message = null, Exception $previous = null)
-    {
-        parent::__construct($message, $this->code, $previous);
-    }
 }
