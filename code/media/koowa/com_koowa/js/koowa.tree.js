@@ -105,14 +105,11 @@
                         }
 
                         /**
-                         * The 'level' property is used for styling, if not specified then set it
-                         * @TODO this should happen during the Node init from data, preferrably not during OnCreateLi
-                         *       although the level property is only used here so it may be refactored out later to use node.getLevel() instead
-                         *       
+                         * Generates indentation for each list item according to nesting level.
+                         * @TODO the node.getLevel() property lookup isn't cached, submit patch on the jqTree github
                          */
-
-                        // Generates indentation for each list item according to nesting level.
-                        for (var i = 0; i < node.level; ++i) {
+                        var level = node.getLevel();
+                        for (var i = 1; i < level; ++i) {
                             $li.find('.jqtree-title').prepend('<i class="icon-whitespace"></i> ');
                         }
                     }
@@ -171,7 +168,6 @@
          *
          * The data objects in the list are required to have the following properties:
          * @property string|integer id          Required to be unique, integer or string is optional
-         * @property integer        level       Needed for styling, indendation is calculated based on this value
          * @property string|integer parent      Integer or string is optional, zero when no parent
          * @property string         path        Containing parent ids descending left to right separated by '/'
          * @property string         label       The text to be displayed
@@ -184,39 +180,29 @@
          *
          * Simple data sample with unique ids:
          *  [
-         *      {id: 1, level: 0, parent: 0, path: '', label: 'Blog'},
-         *      {id: 2, level: 1, parent: 1, path: '1', label: 'News'},
-         *      {id: 3, level: 2, parent: 2, path: '1/2', label: 'Nooku Code Jam'},
-         *      {id: 4, level: 2, parent: 2, path: '1/2', label: 'Nooku Framework'},
-         *      {id: 5, level 0, parent: 0, path: '', label: 'Tutorials'}
+         *      {id: 1, parent: 0, path: '', label: 'Blog'},
+         *      {id: 2, parent: 1, path: '1', label: 'News'},
+         *      {id: 3, parent: 2, path: '1/2', label: 'Nooku Code Jam'},
+         *      {id: 4, parent: 2, path: '1/2', label: 'Nooku Framework'},
+         *      {id: 5, parent: 0, path: '', label: 'Tutorials'}
          *  ]
          *
          *  Advanced data sample with non-unique ids:
          *  [
-         *      {id: 's1', section_id: 1, level: 0, parent: 0, path: '', label: 'Blog'},
-         *      {id: 's1c1', section_id: 1, category_id: 1, level: 1, parent: 's1', path: 's1', label: 'News'},
-         *      {id: 's1c2', section_id: 1, category_id: 2, level: 2, parent: 's1c1', path: 's1/s1c1', label: 'Nooku Code Jam'},
-         *      {id: 's1c3', section_id: 1, category_id: 3, level: 2, parent: 's1c1', path: 's1/s1c1', label: 'Nooku Framework'},
-         *      {id: 's2', section_id: 2, level 0, parent: 0, path: '', label: 'Tutorials'}
+         *      {id: 's1', section_id: 1, parent: 0, path: '', label: 'Blog'},
+         *      {id: 's1c1', section_id: 1, category_id: 1, parent: 's1', path: 's1', label: 'News'},
+         *      {id: 's1c2', section_id: 1, category_id: 2, parent: 's1c1', path: 's1/s1c1', label: 'Nooku Code Jam'},
+         *      {id: 's1c3', section_id: 1, category_id: 3, parent: 's1c1', path: 's1/s1c1', label: 'Nooku Framework'},
+         *      {id: 's2', section_id: 2, parent: 0, path: '', label: 'Tutorials'}
          *  ]
          */
         _parseData: function(list){
 
-            var data = [], index = {}, // 'data' is an hierarchial list while 'index' is flat and used to lookup parents
-                offset = false; // the level offset, used to handle cases where the top node got a higher 'level' value than 0 to correct the indentation
+            var data = [], index = {}; // 'data' is an hierarchial list while 'index' is flat and used to lookup parents
 
             $.each(list, function(key,item){
 
                 index[item.id] = item; // always add the item to the lookup index
-
-                //Get the offset from the first node, most of the time the offset is zero
-                if(offset === false) {
-                    offset = parseInt(item.level, 10) - 1;
-                }
-                //Only run this math when the offset is bigger than zero
-                if(offset > 0) {
-                    item.level = Math.max(item.level - offset, 0);
-                }
 
                 if(item.parent == 0 || !index.hasOwnProperty(item.parent)) {
                     data.push(item); // top level items are added directly to the new list or if orphan
