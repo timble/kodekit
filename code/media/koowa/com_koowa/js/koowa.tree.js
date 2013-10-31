@@ -104,6 +104,13 @@
                             $li.find('.jqtree-title').prepend('<i class="icon-folder-close"></i> ').prepend('<i class="icon-triangle-hide"></i>');
                         }
 
+                        /**
+                         * The 'level' property is used for styling, if not specified then set it
+                         * @TODO this should happen during the Node init from data, preferrably not during OnCreateLi
+                         *       although the level property is only used here so it may be refactored out later to use node.getLevel() instead
+                         *       
+                         */
+
                         // Generates indentation for each list item according to nesting level.
                         for (var i = 0; i < node.level; ++i) {
                             $li.find('.jqtree-title').prepend('<i class="icon-whitespace"></i> ');
