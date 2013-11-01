@@ -673,7 +673,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<script src="media://koowa/com_koowa/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/jqtree.css" />';
 
             self::$_loaded['tree'] = true;
         }
