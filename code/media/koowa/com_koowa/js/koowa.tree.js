@@ -62,19 +62,16 @@
 
                         $li.find('.jqtree-element').attr('title', node.name).wrap($('<a />', {
                             /**
-                             * @TODO check if possible to be rid of the # attribute, or use the javascript uri
+                             * Using javascript:void() instead of # to avoid issues with url routers using # as Root node
                              */
-                            href: '#',
+                            href: 'javascript:void(0)',
                             on: {
                                 click: function(event){
-                                    //If event target is .jqtree-element then the following code isn't needed
-                                    if(!$(event.target).is('.jqtree-element')) {
-                                        event.preventDefault(); //Prevent '#' added to the url, causing a scroll to top
-                                        event.stopPropagation(); //Prevent bubbling up to the click handler in jqTree
+                                    event.preventDefault(); //Prevent '#' added to the url, causing a scroll to top
+                                    event.stopPropagation(); //Prevent bubbling up to the click handler in jqTree
 
-                                        // Pass null to deselect, selectNode API never deselects when passing a node
-                                        self.tree('selectNode', self.tree('getSelectedNode') !== node ? node : null);
-                                    }
+                                    // Pass null to deselect, selectNode API never deselects when passing a node
+                                    self.tree('selectNode', node);
                                 }
                             }
                         }));
@@ -87,7 +84,6 @@
                                     'class': 'icon-toggler '+state.triangle[0], //Either icon-triangle-right or icon-triangle-down
                                     html: state.triangle[1], //The html entity code for either a down or right arrow
                                     on: {
-                                        //@TODO investigate bug
                                         click: function(event){
                                             // making sure that select.node doesn't fire when clicking the open/close toggler
                                             event.preventDefault();
