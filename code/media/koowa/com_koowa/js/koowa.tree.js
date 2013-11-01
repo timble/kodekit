@@ -301,7 +301,16 @@
          * @param duration
          */
         scrollIntoView: function(node, viewport, duration){
+            var element = $(node.element),
+                viewport = self.element.height(),
+                offsetTop = element[0].offsetTop,
+                height = element.height(),
+                scrollTo = Math.min(offsetTop, (offsetTop - viewport) + height);
 
+            if(scrollTo > self.element.scrollTop()){ //Only scroll if there's overflow
+                //@TODO shouldn't call .stop() as it causes the height property being set on the element unexpectedly
+                self.element.stop().animate({scrollTop: scrollTo }, 900);
+            }
         }
     });
 }(window.jQuery));
