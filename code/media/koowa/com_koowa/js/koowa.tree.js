@@ -307,10 +307,11 @@
                 height = element.height(),
                 scrollTo = Math.min(offsetTop, (offsetTop - viewportHeight) + height);
 
+            //@TODO make it scroll into view from the top as well
+            console.log(scrollTo, viewport.scrollTop());
+
             if(scrollTo > viewport.scrollTop()){ //Only scroll if there's overflow
-                //@TODO shouldn't call .stop() as it causes the height property being set on the element unexpectedly
-                viewport.stop().animate({scrollTop: scrollTo}, duration||900);
-                console.warn(duration||900);
+                viewport.animate({scrollTop: scrollTo}, duration||900);
             }
         }
     });
