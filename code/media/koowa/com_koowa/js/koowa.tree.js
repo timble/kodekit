@@ -295,10 +295,10 @@
 
         },
         /**
-         * @TODO move scrollIntoView logic from doclink.js, categories.tree.js and files.tree.js into here
-         * @param node
-         * @param viewport
-         * @param duration
+         * Scroll the node and its children into view with a scroll transition
+         * @param node      Node instance
+         * @param viewport  HTMLElement with the scroll overflow, usually this.element
+         * @param duration  Duration of animation, defaults to 900ms
          */
         scrollIntoView: function(node, viewport, duration){
             var element = $(node.element),
@@ -308,7 +308,7 @@
                 scrollTo = Math.min(offsetTop, (offsetTop - viewportHeight) + height);
 
             //@TODO make it scroll into view from the top as well
-            console.log(scrollTo, viewport.scrollTop());
+            if(window.console) console.log(scrollTo, viewport.scrollTop());
 
             if(scrollTo > viewport.scrollTop()){ //Only scroll if there's overflow
                 viewport.animate({scrollTop: scrollTo}, duration||900);
