@@ -198,12 +198,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             //Add the options to the config object
             $config->options = $options;
 
-            if ($config->deselect)
-            {
-                $config->options = array_merge(array($this->option(array('text' => $this->translate($config->prompt)))),
-                    $config->options->toArray());
-            }
-
             $html .= $this->optionlist($config);
         }
 
