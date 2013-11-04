@@ -51,6 +51,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
+            'prompt'  => '- Select -',
             'attribs' => array()
         ))->append(array(
             'select2_options' => array(
@@ -63,20 +64,8 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 
         if ($config->deselect)
         {
-            if (!$config->attribs->multiple && !$config->select2_options->options->multiple)
-            {
-                // select2 needs the first option empty for placeholders to work on single select boxes
-                $config->options[0]->text = '';
-            }
-            else
-            {
-                // Remove the prompt option previously added. This is automatically added by select2
-                // for multiple select boxes.
-                unset($config->options[0]);
-            }
-
             $config->select2_options->append(array('options' => array(
-                'placeholder' => $config->prompt,
+                'placeholder' => $this->translate($config->prompt),
                 'allowClear'  => true
             )));
         }
@@ -110,6 +99,13 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
         $html = array();
 
         if ($config->select2) {
+            if ($config->deselect && !$config->attribs->multiple)
+            {
+                // select2 needs the first option empty for placeholders to work on single select boxes
+                $config->options = array_merge(array($this->option(array('text' => ''))),
+                    $config->options->toArray());
+            }
+
             $html[] = $this->_optionlistSelect2($config);
         }
 
