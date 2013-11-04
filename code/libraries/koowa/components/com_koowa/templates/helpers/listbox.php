@@ -249,8 +249,13 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             jQuery(function($) {
                 var el = $("' . $config->element . '");
                 var form = el.closest("form");
-                form.get(0).addEvent("submit", function() {
-                    if (el.val()) {
+
+                var explode = function(e) {
+                   if (el.val()) {
+                        if (el.attr("name").search("\\\\[\\\\]") === -1) {
+                            // Make the input an array.
+                            el.attr("name", el.attr("name") + "[]");
+                        }
                         var values = el.val().split(",");
                         $.each(values, function(idx, value) {
                             form.append(el.clone().val(value));
@@ -260,7 +265,13 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                         // If there is no value, then we remove the element anyways to mimic a real select box.
                         el.remove();
                     }
-                });
+                };
+
+                if (form.hasClass("-koowa-form") || form.hasClass("-koowa-grid")) {
+                    form.submit(explode);
+                } else {
+                    form.get(0).addEvent("submit", explode);
+                }
             });</script>';
         }
 
