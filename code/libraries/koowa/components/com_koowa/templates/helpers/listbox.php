@@ -179,33 +179,24 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         }
         else
         {
-            if (!$config->options)
-            {
-                $options = array();
+            $options = array();
 
-                $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->getList();
+            $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->getList();
 
-                //Get the list of items
-                $items = $list->getColumn($config->value);
-                if ($config->unique) {
-                    $items = array_unique($items);
-                }
-
-                foreach ($items as $key => $value)
-                {
-                    $item      = $list->find($key);
-                    $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
-                }
-
-                //Add the options to the config object
-                $config->options = $options;
+            //Get the list of items
+            $items = $list->getColumn($config->value);
+            if ($config->unique) {
+                $items = array_unique($items);
             }
 
-            if ($config->deselect)
+            foreach ($items as $key => $value)
             {
-                $config->options = array_merge(array($this->option(array('text' => $this->translate($config->prompt)))),
-                    $config->options->toArray());
+                $item      = $list->find($key);
+                $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
             }
+
+            //Add the options to the config object
+            $config->options = $options;
 
             $html .= $this->optionlist($config);
         }
@@ -265,12 +256,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                             form.append(el.clone().val(value));
                         });
                         el.remove();
+                    } else {
+                        // If there is no value, then we remove the element anyways to mimic a real select box.
+                        el.remove();
                     }
                 });
             });</script>';
-
-            // Enable auto-cleanup if not disabled.
-            if (!isset($config->cleanup)) $config->cleanup = true;
         }
 
         $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
