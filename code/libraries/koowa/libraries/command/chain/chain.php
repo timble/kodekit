@@ -36,7 +36,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     /**
      * The command context object
      *
-     * @var KCommand
+     * @var KCommandInterface
      */
     protected $_context = null;
 
@@ -143,10 +143,10 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      * If a command returns the 'break condition' the executing is halted.
      *
      * @param   string          $name
-     * @param   KCommand $context
+     * @param   KCommandInterface $context
      * @return  void|boolean    If the chain breaks, returns the break condition. Default returns void.
      */
-    public function run($name, KCommand $context)
+    public function run($name, KCommandInterface $context)
     {
         if ($this->_enabled)
         {
@@ -227,7 +227,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     /**
      * Factory method for a command context.
      *
-     * @return  KCommand
+     * @return  KCommandInterface
      */
     public function getContext()
     {

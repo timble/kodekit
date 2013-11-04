@@ -51,7 +51,7 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
      * @throws  KControllerExceptionUnauthorized    If the user is not authentic and the action is not allowed.
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function execute( $name, KCommand $context)
+    public function execute( $name, KCommandInterface $context)
     {
         $parts = explode('.', $name);
 

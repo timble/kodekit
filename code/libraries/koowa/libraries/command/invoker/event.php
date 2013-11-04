@@ -71,10 +71,10 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
      * This functions returns void to prevent is from breaking the chain.
      *
      * @param   string  $name    The command name
-     * @param   KCommand $context The command context
+     * @param   KCommandInterface $context The command context
      * @return  void
      */
-    public function execute($name, KCommand $context)
+    public function execute($name, KCommandInterface $context)
     {
         $type = '';
 

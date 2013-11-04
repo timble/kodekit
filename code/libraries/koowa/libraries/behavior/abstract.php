@@ -127,11 +127,11 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
      * '_after[Command]. Command handler functions should be declared protected.
      *
      * @param   string           $name     The command name
-     * @param   KCommand  $context  The command context
+     * @param   KCommandInterface  $context  The command context
      *
      * @return  mixed  Method result if the method exists, NULL otherwise.
      */
-    public function execute($name, KCommand $context)
+    public function execute($name, KCommandInterface $context)
     {
         $result = null;
 

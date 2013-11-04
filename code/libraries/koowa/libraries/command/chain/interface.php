@@ -56,10 +56,10 @@ interface KCommandChainInterface
      * If a command returns the 'break condition' the executing is halted.
      *
      * @param   string          $name
-     * @param   KCommand $context
+     * @param   KCommandInterface $context
      * @return  void|boolean    If the chain breaks, returns the break condition. Default returns void.
      */
-    public function run($name, KCommand $context);
+    public function run($name, KCommandInterface $context);
 
     /**
      * Enable the chain
@@ -99,7 +99,7 @@ interface KCommandChainInterface
     /**
      * Factory method for a command context.
      *
-     * @return  KCommand
+     * @return  KCommandInterface
      */
     public function getContext();
 

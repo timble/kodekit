@@ -74,10 +74,10 @@ class KCommandEvent extends KObjectMixinAbstract implements KCommandInvokerInter
      * Command handler
      *
      * @param   string          $name     The command name
-     * @param   KCommand $context  The command context
+     * @param   KCommandInterface $context  The command context
      * @return  boolean Always returns TRUE
      */
-    public function execute($name, KCommand $context)
+    public function execute($name, KCommandInterface $context)
     {
         $type    = '';
         $package = '';

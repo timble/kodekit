@@ -49,10 +49,10 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
      * '_after[Command]. Command handler functions should be declared protected.
      *
      * @param     string            $name  The command name
-     * @param     KCommand    $context The command context
+     * @param     KCommandInterface    $context The command context
      * @return    boolean   Can return both true or false.
      */
-    public function execute($name, KCommand $context)
+    public function execute($name, KCommandInterface $context)
     {
         if ($context->data instanceof KDatabaseRowInterface) {
             $this->setMixer($context->data);
