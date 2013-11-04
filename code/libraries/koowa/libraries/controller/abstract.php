@@ -132,7 +132,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         //Execute the action
-        if($this->getCommandChain()->run('before.'.$command, $context) !== false)
+        if($this->getCommandChain()->run('before.'.$command, $context, false) !== false)
         {
             $method = '_action' . ucfirst($command);
 
