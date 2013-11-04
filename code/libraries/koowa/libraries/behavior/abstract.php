@@ -46,7 +46,8 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     /**
      * Constructor.
      *
-     * @param  KObjectConfig $config  A ObjectConfig object with configuration options
+     * @param  KObjectConfig $config A ObjectConfig object with configuration options
+     * @throws InvalidArgumentException
      */
     public function __construct(KObjectConfig $config)
     {
@@ -136,7 +137,8 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
         $result = null;
 
         $identifier = clone $context->getSubject()->getIdentifier();
-        $type = array_pop($identifier->path);
+
+        array_pop($identifier->path);
 
         $parts = explode('.', $name);
         $method = '_' . $parts[0]  . ucfirst($parts[1]);
@@ -178,7 +180,7 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
      * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the
      * behavior is callable.
      *
-     * @param  KObjectInterface $mixer The mixer requesting the mixable methods.
+     * @param  KObjectMixable $mixer The mixer requesting the mixable methods.
      * @return array An array of methods
      */
     public function getMixableMethods(KObjectMixable $mixer = null)
