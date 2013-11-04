@@ -501,6 +501,19 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         return $this->_command_chain;
     }
+
+    /**
+     * Get a database context object
+     *
+     * @return KDatabaseContext
+     */
+    public function getContext()
+    {
+        $context = new KDatabaseContext();
+        $context->setSubject($this);
+
+        return $context;
+    }
     
     /**
      * Table select method
@@ -549,14 +562,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_SELECT;
         $context->table     = $this->getBase();
         $context->query     = $query;
         $context->mode      = $mode;
         $context->options   = $options;
 
-        if ($this->getCommandChain()->run('before.select', $context) !== false)
+        if ($this->getCommandChain()->run('before.select', $context, false) !== false)
         {
             if ($context->query)
             {
@@ -668,14 +680,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_INSERT;
         $context->table     = $this->getBase();
         $context->data      = $row;
         $context->query     = $query;
         $context->affected = false;
 
-        if ($this->getCommandChain()->run('before.insert', $context) !== false)
+        if ($this->getCommandChain()->run('before.insert', $context, false) !== false)
         {
             // Filter the data and remove unwanted columns.
             $data = $this->filter($context->data->getData());
@@ -718,14 +729,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         // Create commandchain context.
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->table     = $this->getBase();
         $context->data      = $row;
         $context->query     = $query;
         $context->affected  = false;
 
-        if ($this->getCommandChain()->run('before.update', $context) !== false)
+        if ($this->getCommandChain()->run('before.update', $context, false) !== false)
         {
             foreach ($this->getPrimaryKey() as $key => $column)
             {
@@ -773,14 +783,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->table     = $this->getBase();
         $context->data      = $row;
         $context->query     = $query;
         $context->affected  = false;
 
-        if ($this->getCommandChain()->run('before.delete', $context) !== false)
+        if ($this->getCommandChain()->run('before.delete', $context, false) !== false)
         {
             foreach ($this->getPrimaryKey() as $key => $column)
             {
@@ -812,10 +821,9 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $result = null;
 
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->table = $this->getBase();
 
-        if ($this->getCommandChain()->run('before.lock', $context) !== false)
+        if ($this->getCommandChain()->run('before.lock', $context, false) !== false)
         {
             if ($this->isConnected()) {
                 $context->result = $this->getDatabase()->lockTable($this->getBase());
@@ -837,10 +845,9 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $result = null;
 
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->table = $this->getBase();
 
-        if ($this->getCommandChain()->run('before.unlock', $context) !== false)
+        if ($this->getCommandChain()->run('before.unlock', $context, false) !== false)
         {
             if ($this->isConnected()) {
                 $context->result = $this->getDatabase()->unlockTable();

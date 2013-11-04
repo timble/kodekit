@@ -280,13 +280,12 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         }
 
         $context  = $this->getContext();
-        $context->setSubject($this);
         $context->query     = $query;
         $context->operation = KDatabase::OPERATION_SELECT;
         $context->mode      = $mode;
 
         // Execute the insert operation
-        if ($this->getCommandChain()->run('before.select', $context) !== false)
+        if ($this->getCommandChain()->run('before.select', $context, false) !== false)
         {
             if ($result = $this->execute($context->query, KDatabase::RESULT_USE))
             {
@@ -337,12 +336,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function insert(KDatabaseQueryInsert $query)
     {
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_INSERT;
         $context->query = $query;
 
         //Execute the insert operation
-        if ($this->getCommandChain()->run('before.insert', $context) !== false)
+        if ($this->getCommandChain()->run('before.insert', $context, false) !== false)
         {
             //Check if we have valid data to insert, if not return false
             if ($context->query->values)
@@ -369,12 +367,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function update(KDatabaseQueryUpdate $query)
     {
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->query     = $query;
 
         //Execute the update operation
-        if ($this->getCommandChain()->run('before.update', $context) !== false)
+        if ($this->getCommandChain()->run('before.update', $context, false) !== false)
         {
             if (!empty($context->query->values))
             {
@@ -399,12 +396,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function delete(KDatabaseQueryDelete $query)
     {
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->query     = $query;
 
         //Execute the delete operation
-        if ($this->getCommandChain()->run('before.delete', $context) !== false)
+        if ($this->getCommandChain()->run('before.delete', $context, false) !== false)
         {
             //Execute the query
             $context->result = $this->execute($context->query);
@@ -509,6 +505,19 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         }
 
         return $this->_command_chain;
+    }
+
+    /**
+     * Get a database context object
+     *
+     * @return  KDatabaseContext
+     */
+    public function getContext()
+    {
+        $context = new KDatabaseContext();
+        $context->setSubject($this);
+
+        return $context;
     }
 
     /**

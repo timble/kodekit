@@ -81,10 +81,10 @@ abstract class KControllerToolbarAbstract extends KCommandInvokerAbstract implem
      * '_after[Command]. Command handler functions should be declared protected.
      *
      * @param 	string           $name	    The command name
-     * @param 	KCommand  $context 	The command context
+     * @param 	KCommandInterface  $context 	The command context
      * @return 	boolean Always returns TRUE
      */
-    final public function execute($name, KCommand $context)
+    final public function execute($name, KCommandInterface $context)
     {
         $parts  = explode('.', $name);
         $method = '_'.$parts[0].ucfirst($parts[1]);

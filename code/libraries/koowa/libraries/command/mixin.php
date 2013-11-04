@@ -79,21 +79,6 @@ class KCommandMixin extends KObjectMixinAbstract
     }
 
     /**
-     * Get the command chain context
-     *
-     * This functions inserts a 'caller' variable in the context which contains the mixer object.
-     *
-     * @return  KCommand
-     */
-    public function getContext()
-    {
-        $context = $this->getCommandChain()->getContext();
-        $context->setSubject($this->getMixer());
-
-        return $context;
-    }
-
-    /**
      * Get the chain of command object
      *
      * @throws UnexpectedValueException

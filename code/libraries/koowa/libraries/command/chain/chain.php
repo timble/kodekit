@@ -26,26 +26,13 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     protected $_enabled = true;
 
     /**
-     * The chain's break condition
-     *
-     * @see run()
-     * @var boolean
-     */
-    protected $_break_condition = false;
-
-    /**
-     * The command context object
-     *
-     * @var KCommand
-     */
-    protected $_context = null;
-
-    /**
      * The chain stack
      *
-     * @var    KObjectStack
+     * Used to track recursive chain nesting.
+     *
+     * @var KObjectStack
      */
-    protected $_stack;
+    private $__stack;
 
     /**
      * Constructor
@@ -57,10 +44,8 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     {
         parent::__construct($config);
 
-        $this->_break_condition = (boolean)$config->break_condition;
-        $this->_enabled = (boolean)$config->enabled;
-        $this->_context = $config->context;
-        $this->_stack   = $config->stack;
+        $this->_enabled = (boolean) $config->enabled;
+        $this->__stack = $this->getObject('koowa:object.stack');
     }
 
     /**
@@ -74,10 +59,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'stack'     => $this->getObject('koowa:object.stack'),
-            'context'   => new KCommand(),
-            'enabled'   => true,
-            'break_condition' => false,
+            'enabled'   => true
         ));
 
         parent::_initialize($config);
@@ -140,35 +122,54 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     /**
      * Run the commands in the chain
      *
-     * If a command returns the 'break condition' the executing is halted.
+     * If a command returns the 'break condition' the executing is halted. If no break condition is specified the
+     * command chain will pass the command invokers, regardless of the invoker result returned.
      *
-     * @param   string          $name
-     * @param   KCommand $context
-     * @return  void|boolean    If the chain breaks, returns the break condition. Default returns void.
+     * @param   string  $name
+     * @param   KCommandInterface $command
+     * @param   mixed   $condition The break condition
+     * @return  void|mixed If the chain breaks, returns the break condition. If the chain is not enabled will void
      */
-    public function run($name, KCommand $context)
+    public function run($name, KCommandInterface $command, $condition = null)
     {
         if ($this->_enabled)
         {
-            $this->getStack()->push(clone $this);
+            $this->__stack->push(clone $this);
 
-            foreach ($this->getStack()->top() as $invoker)
+            foreach ($this->__stack->top() as $invoker)
             {
-                if ($invoker->execute($name, $context) === $this->_break_condition)
+                if($condition === self::CONDITION_EXCEPTION)
                 {
-                    $this->getStack()->pop();
-                    return $this->_break_condition;
+                    try
+                    {
+                        $invoker->execute($name, $command);
+                    }
+                    catch (KCommandExceptionInvoker $e)
+                    {
+                        $this->__stack->pop();
+                        return $e;
+                    }
+                }
+                else
+                {
+                    $result = $invoker->execute($name, $command);
+
+                    if($condition !== null && $result === $condition)
+                    {
+                        $this->__stack->pop();
+                        return $condition;
+                    }
                 }
             }
 
-            $this->getStack()->pop();
+            $this->__stack->pop();
         }
     }
 
     /**
      * Enable the chain
      *
-     * @return  KCommandChain
+     * @return  $this
      */
     public function enable()
     {
@@ -182,7 +183,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      *
      * If the chain is disabled running the chain will always return TRUE
      *
-     * @return  KCommandChain
+     * @return  $this
      */
     public function disable()
     {
@@ -191,14 +192,6 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
         return $this;
     }
 
-    /**
-     * Set the priority of a command
-     *
-     * @param KObjectHandlable  $invoker
-     * @param integer           $priority
-     * @return KCommandChain
-     * @throws \InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
-     */
     public function setPriority(KObjectHandlable $invoker, $priority)
     {
         if (!$invoker instanceof KCommandInvokerInterface) {
@@ -208,13 +201,6 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
         return parent::setPriority($invoker, $priority);
     }
 
-    /**
-     * Get the priority of a command
-     *
-     * @param  KObjectHandlable $invoker
-     * @return integer The command priority
-     * @throws \InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
-     */
     public function getPriority(KObjectHandlable $invoker)
     {
         if (!$invoker instanceof KCommandInvokerInterface) {
@@ -222,25 +208,5 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
         }
 
         return parent::getPriority($invoker);
-    }
-
-    /**
-     * Factory method for a command context.
-     *
-     * @return  KCommand
-     */
-    public function getContext()
-    {
-        return clone $this->_context;
-    }
-
-    /**
-     * Get the chain object stack
-     *
-     * @return     KObjectStack
-     */
-    public function getStack()
-    {
-        return $this->_stack;
     }
 }

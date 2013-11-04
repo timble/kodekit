@@ -61,10 +61,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Fetch the unrendered view data from the cache
 	 *
-	 * @param   KCommand $context A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	void
 	 */
-	protected function _beforeGet(KCommand $context)
+	protected function _beforeGet(KControllerContextInterface $context)
 	{
 	    $view   = $this->getView();
 	    $cache  = JFactory::getCache($this->_getGroup(), 'output');
@@ -105,10 +105,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Store the unrendered view data in the cache
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	void
 	 */
-	protected function _afterGet(KCommand $context)
+	protected function _afterGet(KControllerContextInterface $context)
 	{
 	    if(empty($this->_output))
 	    {
@@ -140,10 +140,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * Only if cached data was found return it but allow the chain to continue to allow
 	 * processing all the read commands
 	 *
-	 * @param   KCommand $context A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	void
 	 */
-	protected function _afterRead(KCommand $context)
+	protected function _afterRead(KControllerContextInterface $context)
 	{
 	    if(!empty($this->_output)) {
 	        $context->result = $this->_output;
@@ -156,10 +156,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	 * Only if cached data was fetch return it and break the chain to dissallow any
 	 * further processing to take place
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	void
 	 */
-    protected function _beforeBrowse(KCommand $context)
+    protected function _beforeBrowse(KControllerContextInterface $context)
 	{
 	    if(!empty($this->_output))
 	    {
@@ -171,10 +171,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Clean the cache
 	 *
-	 * @param   KCommand $context A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	boolean
 	 */
-	protected function _afterAdd(KCommand $context)
+	protected function _afterAdd(KControllerContextInterface $context)
 	{
 	    $status = $context->result->getStatus();
 
@@ -188,10 +188,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Clean the cache
 	 *
-	 * @param   KCommandContext	A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	boolean
 	 */
-	protected function _afterDelete(KCommand $context)
+	protected function _afterDelete(KControllerContextInterface $context)
 	{
 	    $status = $context->result->getStatus();
 
@@ -205,10 +205,10 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	/**
 	 * Clean the cache
 	 *
-	 * @param   KCommand $context A command context object
+	 * @param   KControllerContextInterface $context A command context object
 	 * @return 	boolean
 	 */
-	protected function _afterEdit(KCommand $context)
+	protected function _afterEdit(KControllerContextInterface $context)
 	{
 	    $status = $context->result->getStatus();
 

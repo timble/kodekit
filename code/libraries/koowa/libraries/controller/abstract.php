@@ -111,12 +111,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string          $action  The action to execute
-     * @param   KCommand $context A command context object
+     * @param   KControllerContextInterface $context A command context object
      * @throws Exception
      * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
-    public function execute($action, KCommand $context)
+    public function execute($action, KControllerContextInterface $context)
     {
         $action = strtolower($action);
 
@@ -132,7 +132,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         //Execute the action
-        if($this->getCommandChain()->run('before.'.$command, $context) !== false)
+        if($this->getCommandChain()->run('before.'.$command, $context, false) !== false)
         {
             $method = '_action' . ucfirst($command);
 
@@ -219,7 +219,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 	/**
 	 * Get the request information
 	 *
-	 * @return KObjectConfig	A KObjectConfig object with request information
+	 * @return KControllerRequestInterface	An object with request information
 	 */
 	public function getRequest()
 	{
@@ -269,19 +269,15 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     }
 
     /**
-     * Get the command chain context
+     * Get the controller context
      *
-     * Overrides CommandMixin::getContext() to insert the request and response objects into the controller
-     * command context.
-     *
-     * @return  KCommand
-     * @see KCommandMixin::getContext
+     * @return  KControllerContext
      */
     public function getContext()
     {
-        $context = parent::getContext();
-
-        //$context->request = $this->getRequest();
+        $context = new KControllerContext();
+        $context->setSubject($this);
+        $context->setRequest($this->getRequest());
 
         return $context;
     }
@@ -328,7 +324,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             $data = !empty($args) ? $args[0] : array();
 
             //Create a context object
-            if(!($data instanceof KCommand))
+            if(!($data instanceof KCommandInterface))
             {
                 $context = $this->getContext();
                 $context->data   = $data;

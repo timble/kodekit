@@ -123,13 +123,28 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 		return $this;
 	}
 
-	/**
-	 * Dispatch the controller
-	 *
-	 * @param   KCommand $context A command context object
-	 * @return	mixed
-	 */
-	protected function _actionDispatch(KCommand $context)
+    /**
+     * Get the controller context
+     *
+     * @return KDispatcherContext
+     */
+    public function getContext()
+    {
+        $context = new KDispatcherContext();
+
+        $context->setSubject($this);
+        $context->setRequest($this->getRequest());
+
+        return $context;
+    }
+
+    /**
+     * Dispatch the controller
+     *
+     * @param KDispatcherContextInterface $context A command context object
+     * @return    mixed
+     */
+	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
 	    $action = KRequest::get('post.action', 'cmd', strtolower(KRequest::method()));
 
@@ -142,16 +157,16 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         return $result;
 	}
 
-	/**
-	 * Forward after a post request
-	 *
-	 * Either do a redirect or a execute a browse or read action in the controller
-	 * depending on the request method and type
-	 *
-     * @param   KCommand $context A command context object
-	 * @return mixed
-	 */
-	protected function _actionForward(KCommand $context)
+    /**
+     * Forward after a post request
+     *
+     * Either do a redirect or a execute a browse or read action in the controller
+     * depending on the request method and type
+     *
+     * @param KDispatcherContextInterface $context A command context object
+     * @return mixed
+     */
+	protected function _actionForward(KDispatcherContextInterface $context)
 	{
 		if (KRequest::type() == 'HTTP')
 		{
@@ -175,10 +190,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	 * This function diverts the standard behavior and will push specific controller data
 	 * into the document
 	 *
-     * @param   KCommand $context A command context object
+     * @param   KDispatcherContextInterface $context A command context object
 	 * @return	mixed
 	 */
-	protected function _actionRender(KCommand $context)
+	protected function _actionRender(KDispatcherContextInterface $context)
 	{
 	    //Headers
 	    if($context->headers)

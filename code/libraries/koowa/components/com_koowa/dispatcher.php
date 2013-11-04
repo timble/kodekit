@@ -84,10 +84,10 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiab
      *
      * This function divert the standard behavior and will redirect if no view information can be found in the request.
      *
-     * @param   KCommand	$context A command context object
+     * @param KDispatcherContextInterface $context A command context object
      * @return  ComKoowaDispatcher
      */
-    protected function _actionDispatch(KCommand $context)
+    protected function _actionDispatch(KDispatcherContextInterface $context)
     {
         //Redirect if no view information can be found in the request
         if(!KRequest::has('get.view'))
@@ -106,10 +106,10 @@ class ComKoowaDispatcher extends KDispatcherDefault implements KObjectInstantiab
      *
      * This function divert the standard behavior and will push specific controller data into the document
      *
-     * @param   KCommand	$context A command context object
+     * @param   KDispatcherContextInterface $context A command context object
      * @return  ComKoowaDispatcher
      */
-    protected function _actionRender(KCommand $context)
+    protected function _actionRender(KDispatcherContextInterface $context)
     {
         $view  = $this->getController()->getView();
 
