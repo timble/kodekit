@@ -262,12 +262,12 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                             form.append(el.clone().val(value));
                         });
                         el.remove();
+                    } else {
+                        // If there is no value, then we remove the element anyways to mimic a real select box.
+                        el.remove();
                     }
                 });
             });</script>';
-
-            // Enable auto-cleanup if not disabled.
-            if (!isset($config->cleanup)) $config->cleanup = true;
         }
 
         $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
