@@ -111,12 +111,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string          $action  The action to execute
-     * @param   KCommand $context A command context object
+     * @param   KControllerContextInterface $context A command context object
      * @throws Exception
      * @throws BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
-    public function execute($action, KCommand $context)
+    public function execute($action, KControllerContextInterface $context)
     {
         $action = strtolower($action);
 
@@ -324,7 +324,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             $data = !empty($args) ? $args[0] : array();
 
             //Create a context object
-            if(!($data instanceof KCommand))
+            if(!($data instanceof KCommandInterface))
             {
                 $context = $this->getContext();
                 $context->data   = $data;

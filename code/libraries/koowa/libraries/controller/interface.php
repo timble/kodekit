@@ -18,12 +18,12 @@ interface KControllerInterface
     /**
      * Execute an action by triggering a method in the derived class.
      *
-     * @param   string          $action  The action to execute
-     * @param   KCommand $context A command context object
+     * @param   string             $action  The action to execute
+     * @param   KControllerContextInterface $context A command context object
      * @throws  BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
-    public function execute($action, KCommand $context);
+    public function execute($action, KControllerContextInterface $context);
 
     /**
      * Gets the available actions in the controller.

@@ -145,10 +145,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * Only lock if the context contains a row object and the view layout is 'form'.
 	 *
-	 * @param  KCommand $context The active command context
+	 * @param  KControllerContextInterface $context The active command context
 	 * @return void
 	 */
-	public function lockResource(KCommand $context)
+	public function lockResource(KControllerContextInterface $context)
 	{
        if($context->result instanceof KDatabaseRowInterface)
        {
@@ -166,10 +166,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	/**
 	 * Unlock callback
 	 *
-	 * @param 	KCommand	$context The active command context
+	 * @param 	KControllerContextInterface $context The active command context
 	 * @return void
 	 */
-	public function unlockResource(KCommand $context)
+	public function unlockResource(KControllerContextInterface $context)
 	{
 	    if($context->result instanceof KDatabaseRowInterface && $context->result->isLockable()) {
 			$context->result->unlock();
@@ -184,10 +184,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function also sets the redirect to the referrer.
 	 *
-	 * @param   KCommand	$context  A command context object
+	 * @param   KControllerContextInterface $context  A command context object
 	 * @return 	KDatabaseRowsetInterface  A row object containing the saved data
 	 */
-	protected function _actionSave(KCommand $context)
+	protected function _actionSave(KControllerContextInterface $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
 		$data   = $context->subject->execute($action, $context);
@@ -206,10 +206,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function also sets the redirect to the current url
 	 *
-	 * @param	KCommand	         $context A command context object
+	 * @param	KControllerContextInterface $context A command context object
 	 * @return 	KDatabaseRowsetInterface 	      A row object containing the saved data
 	 */
-	protected function _actionApply(KCommand $context)
+	protected function _actionApply(KControllerContextInterface $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
 		$data   = $context->subject->execute($action, $context);
@@ -245,10 +245,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 *
 	 * This function will unlock the row(s) and set the redirect to the referrer
      *
-     * @param	KCommand	         $context A command context object
+     * @param	KControllerContextInterface $context A command context object
      * @return 	KDatabaseRowInterface 	 A row object containing the saved data
 	 */
-	protected function _actionCancel(KCommand $context)
+	protected function _actionCancel(KControllerContextInterface $context)
 	{
 		//Create the redirect
 		$this->setRedirect($this->getReferrer());

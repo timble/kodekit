@@ -261,13 +261,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 		return $result;
 	}
 
-	/**
-	 * Specialised display function.
-	 *
-	 * @param	KCommand	$context A command context object
-	 * @return 	string|bool 	The rendered output of the view or false if something went wrong
-	 */
-	protected function _actionGet(KCommand $context)
+    /**
+     * Specialised display function.
+     *
+     * @param KControllerContextInterface $context A command context object
+     * @return    string|bool    The rendered output of the view or false if something went wrong
+     */
+	protected function _actionGet(KControllerContextInterface $context)
 	{
 	    $result = $this->getView()->display();
 	    return $result;

@@ -166,10 +166,10 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      *
      * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
      *
-     * @param   KCommand $context
+     * @param   KDatabaseContextInterface $context
      * @return KDatabaseRowAbstract
      */
-    protected function _beforeInsert(KCommand $context)
+    protected function _beforeInsert(KDatabaseContextInterface $context)
     {
         if(isset($this->ordering))
         {
@@ -184,9 +184,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Changes the rows ordering if the virtual order field is set. Order is relative to the row's current position.
      *
-     * @param   KCommand $context
+     * @param   KDatabaseContextInterface $context
      */
-    protected function _beforeUpdate(KCommand $context)
+    protected function _beforeUpdate(KDatabaseContextInterface $context)
     {
         if(isset($this->order) && isset($this->ordering)) {
             $this->order($this->order);
@@ -196,9 +196,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Clean up the ordering after an item was deleted
      *
-     * @param   KCommand $context
+     * @param   KDatabaseContextInterface $context
      */
-    protected function _afterDelete(KCommand $context)
+    protected function _afterDelete(KDatabaseContextInterface $context)
     {
         $this->reorder();
     }

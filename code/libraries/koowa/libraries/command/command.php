@@ -30,7 +30,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
      *
      * @param string $error
      *
-     * @return  KCommand
+     * @return  $this
      */
     public function setError($error)
     {

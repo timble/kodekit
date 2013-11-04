@@ -57,10 +57,10 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 	 *
 	 * Requires a 'modified_on' and 'modified_by' column
 	 *
-     * @param KCommand $context
+     * @param KDatabaseContextInterface $context
 	 * @return void
 	 */
-	protected function _beforeUpdate(KCommand $context)
+	protected function _beforeUpdate(KDatabaseContextInterface $context)
 	{
 		//Get the modified columns
 		$modified = $this->getTable()->filter(array_flip($this->getModified()));

@@ -59,10 +59,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	/**
 	 * Generic browse action, fetches a list
 	 *
-	 * @param	KCommand	   $context A command context object
+	 * @param	KControllerContextInterface $context A command context object
 	 * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
 	 */
-	protected function _actionBrowse(KCommand $context)
+	protected function _actionBrowse(KControllerContextInterface $context)
 	{
 		$data = $this->getModel()->getList();
 		return $data;
@@ -71,10 +71,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	/**
 	 * Generic read action, fetches an item
 	 *
-	 * @param	KCommand	$context A command context object
+	 * @param	KControllerContextInterface $context A command context object
 	 * @return 	KDatabaseRowInterface	 A row object containing the selected row
 	 */
-	protected function _actionRead(KCommand $context)
+	protected function _actionRead(KControllerContextInterface $context)
 	{
 	    $data = $this->getModel()->getItem();
 	    $name = ucfirst($this->getView()->getName());
@@ -89,10 +89,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	/**
 	 * Generic edit action, saves over an existing item
 	 *
-	 * @param	KCommand	$context A command context object
+	 * @param	KControllerContextInterface $context A command context object
 	 * @return 	KDatabaseRowsetInterface A rowset object containing the updated rows
 	 */
-	protected function _actionEdit(KCommand $context)
+	protected function _actionEdit(KControllerContextInterface $context)
 	{
 	    $data = $this->getModel()->getData();
 
@@ -115,10 +115,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	/**
 	 * Generic add action, saves a new item
 	 *
-	 * @param	KCommand	$context A command context object
+	 * @param	KControllerContextInterface $context A command context object
 	 * @return 	KDatabaseRowInterface 	 A row object containing the new data
 	 */
-	protected function _actionAdd(KCommand $context)
+	protected function _actionAdd(KControllerContextInterface $context)
 	{
 		$data = $this->getModel()->getItem();
 
@@ -145,10 +145,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	/**
 	 * Generic delete function
 	 *
-	 * @param	KCommand	$context  A command context object
+	 * @param	KControllerContextInterface $context  A command context object
 	 * @return 	KDatabaseRowsetInterface  A rowset object containing the deleted rows
 	 */
-	protected function _actionDelete(KCommand $context)
+	protected function _actionDelete(KControllerContextInterface $context)
 	{
 	    $data = $this->getModel()->getData();
 
@@ -171,19 +171,19 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 		return $data;
 	}
 
-	/**
-	 * Get action
-	 *
-	 * This function translates a GET request into a read or browse action. If the view name is singular a read action
+    /**
+     * Get action
+     *
+     * This function translates a GET request into a read or browse action. If the view name is singular a read action
      * will be executed, if plural a browse action will be executed.
-	 *
-	 * If the result of the read or browse action is not a row or rowset object the function will pass through the
+     *
+     * If the result of the read or browse action is not a row or rowset object the function will pass through the
      * result, request the attached view to render itself.
-	 *
-	 * @param	KCommand	$context A command context object
-	 * @return 	string|bool 	The rendered output of the view or FALSE if something went wrong
-	 */
-	protected function _actionGet(KCommand $context)
+     *
+     * @param KControllerContextInterface $context A command context object
+     * @return    string|bool    The rendered output of the view or FALSE if something went wrong
+     */
+	protected function _actionGet(KControllerContextInterface $context)
 	{
 		//Check if we are reading or browsing
 	    $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
@@ -205,10 +205,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	 * This function translated a POST request action into an edit or add action. If the model state is unique a edit
      * action will be executed, if not unique an add action will be executed.
 	 *
-	 * @param	KCommand	 $context	A command context object
+	 * @param	KControllerContextInterface $context	A command context object
 	 * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
 	 */
-	protected function _actionPost(KCommand $context)
+	protected function _actionPost(KControllerContextInterface $context)
 	{
 		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
 		return parent::execute($action, $context);
@@ -223,11 +223,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	 *
 	 * If the resource already exists it will be completely replaced based on the data available in the request.
 	 *
-     * @param	KCommand	 $context A command context object
+     * @param	KControllerContextInterface $context A command context object
      * @throws  KControllerExceptionNotFound If the model state is not unique
      * @return 	KDatabaseRowsetInterface     A row(set) object containing the modified data
 	 */
-	protected function _actionPut(KCommand $context)
+	protected function _actionPut(KControllerContextInterface $context)
 	{
 	    $data = $this->getModel()->getItem();
 
