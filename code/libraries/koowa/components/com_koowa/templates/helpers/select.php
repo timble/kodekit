@@ -54,7 +54,6 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
             'attribs' => array()
         ))->append(array(
             'select2_options' => array(
-                'cleanup' => $config->cleanup,
                 'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
                 'options' => array()
             )
