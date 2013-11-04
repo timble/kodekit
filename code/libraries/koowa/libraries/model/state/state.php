@@ -25,7 +25,9 @@ class KModelState extends KObjectArray implements KModelStateInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @throws UnexpectedValueException
+     * @throws InvalidArgumentException
      */
     public function __construct(KObjectConfig $config)
     {
@@ -53,7 +55,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
@@ -350,6 +352,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
                 else $value = null;
 
                 $this->_data[$name]->value = $value;
+
             }
         }
     }
