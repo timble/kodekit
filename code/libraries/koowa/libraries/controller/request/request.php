@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerRequest extends KObject
+class KControllerRequest extends KObject implements KControllerRequestInterface
 {
     /**
      * The request query
@@ -52,23 +52,12 @@ class KControllerRequest extends KObject
         parent::_initialize($config);
     }
 
-    /**
-     * Set the request query
-     *
-     * @param  array $parameters
-     * @return $this
-     */
-    public function setQuery($parameters)
+    public function setQuery($query)
     {
-        $this->_query = $this->getObject('koowa:object.array', array('data' => $parameters));
+        $this->_query = $this->getObject('koowa:object.array', array('data' => $query));
         return $this;
     }
 
-    /**
-     * Get the request query
-     *
-     * @return KObjectArray
-     */
     public function getQuery()
     {
         return $this->_query;

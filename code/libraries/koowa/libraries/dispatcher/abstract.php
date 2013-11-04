@@ -123,6 +123,21 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 		return $this;
 	}
 
+    /**
+     * Get the controller context
+     *
+     * @return KDispatcherContext
+     */
+    public function getContext()
+    {
+        $context = new KDispatcherContext();
+
+        $context->setSubject($this);
+        $context->setRequest($this->getRequest());
+
+        return $context;
+    }
+
 	/**
 	 * Dispatch the controller
 	 *

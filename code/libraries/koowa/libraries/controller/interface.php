@@ -44,7 +44,7 @@ interface KControllerInterface
 	/**
 	 * Get the request information
 	 *
-	 * @return KObjectConfig A KObjectConfig object with request information
+     * @return KControllerRequestInterface	An object with request information
 	 */
 	public function getRequest();
 

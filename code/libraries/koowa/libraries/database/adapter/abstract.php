@@ -280,7 +280,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         }
 
         $context  = $this->getContext();
-        $context->setSubject($this);
         $context->query     = $query;
         $context->operation = KDatabase::OPERATION_SELECT;
         $context->mode      = $mode;
@@ -337,7 +336,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function insert(KDatabaseQueryInsert $query)
     {
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_INSERT;
         $context->query = $query;
 
@@ -369,7 +367,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function update(KDatabaseQueryUpdate $query)
     {
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->query     = $query;
 
@@ -399,7 +396,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function delete(KDatabaseQueryDelete $query)
     {
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->query     = $query;
 
@@ -509,6 +505,19 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         }
 
         return $this->_command_chain;
+    }
+
+    /**
+     * Get a database context object
+     *
+     * @return  KDatabaseContext
+     */
+    public function getContext()
+    {
+        $context = new KDatabaseContext();
+        $context->setSubject($this);
+
+        return $context;
     }
 
     /**

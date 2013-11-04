@@ -501,6 +501,19 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         return $this->_command_chain;
     }
+
+    /**
+     * Get a database context object
+     *
+     * @return KDatabaseContext
+     */
+    public function getContext()
+    {
+        $context = new KDatabaseContext();
+        $context->setSubject($this);
+
+        return $context;
+    }
     
     /**
      * Table select method
@@ -549,7 +562,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_SELECT;
         $context->table     = $this->getBase();
         $context->query     = $query;
@@ -668,7 +680,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_INSERT;
         $context->table     = $this->getBase();
         $context->data      = $row;
@@ -718,7 +729,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         // Create commandchain context.
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_UPDATE;
         $context->table     = $this->getBase();
         $context->data      = $row;
@@ -773,7 +783,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->operation = KDatabase::OPERATION_DELETE;
         $context->table     = $this->getBase();
         $context->data      = $row;
@@ -812,7 +821,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $result = null;
 
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->table = $this->getBase();
 
         if ($this->getCommandChain()->run('before.lock', $context) !== false)
@@ -837,7 +845,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $result = null;
 
         $context = $this->getContext();
-        $context->setSubject($this);
         $context->table = $this->getBase();
 
         if ($this->getCommandChain()->run('before.unlock', $context) !== false)
