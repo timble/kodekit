@@ -77,9 +77,11 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
             //Render the view output
             if($view instanceof KViewTemplate)
             {
-                $context->result = $view->getTemplate()
-                               ->loadString($data['component'], array(), false)
-                               ->render();
+                $context->result = (string) $view->getTemplate()
+                    ->setContent($data['component'])
+                    ->compile()
+                    ->evaluate()
+                    ->render();
             }
             else $context->result = $data['component'];
 

@@ -67,9 +67,9 @@ abstract class KViewTemplate extends KViewAbstract
         foreach ($filters as $key => $value)
         {
             if (is_numeric($key)) {
-                $this->getTemplate()->addFilter($value);
+                $this->getTemplate()->attachFilter($value);
             } else {
-                $this->getTemplate()->addFilter($key, $value);
+                $this->getTemplate()->attachFilter($key, $value);
             }
         }
     }
@@ -130,8 +130,17 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $layout = $this->getLayout();
 
-        $this->_content = $this->getTemplate()
-            ->loadIdentifier($layout, $this->_data)
+        if (is_string($layout) && strpos($layout, '.') === false)
+        {
+            $identifier = clone $this->getIdentifier();
+            $identifier->name = $layout;
+        }
+        else $identifier = $layout;
+
+        $this->_content = (string) $this->getTemplate()
+            ->load($identifier)
+            ->compile()
+            ->evaluate($this->_data)
             ->render();
 
         return parent::display();

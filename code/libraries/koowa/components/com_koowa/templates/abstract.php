@@ -38,97 +38,88 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 	{
 		parent::__construct($config);
 
-	    if(JFactory::getConfig()->get('caching')) {
+	    if (JFactory::getConfig()->get('caching')) {
 	        $this->_cache = JFactory::getCache('template', 'output');
 		}
 	}
 
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config  An optional KObjectConfig object with configuration options.
+     * @return 	void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'locators' => array('com' => 'com:koowa.template.locator.component')
+        ));
+
+        parent::_initialize($config);
+    }
+
 	/**
-	 * Load a template by path -- first look in the templates folder for an override
-	 *
 	 * This function tries to get the template from the cache. If it cannot be found
 	 * the template file will be loaded from the file system.
 	 *
-	 * @param   string 	$path The template path
-	 * @param	array	$data An associative array of data to be extracted in local template scope
-	 * @return KTemplateAbstract
+	 * {@inheritdoc}
 	 */
-	public function loadFile($path, $data = array())
-	{
+    public function load($path, $data = array(), $status = self::STATUS_LOADED)
+    {
 	    if(isset($this->_cache))
 	    {
 	        $identifier = md5($path);
 
 	        if ($template = $this->_cache->get($identifier))
 	        {
-		        // store the path
-		        $this->_path = $path;
+                //Push the path on the stack
+                array_push($this->_stack, $path);
 
-	            $this->loadString($template, $data);
+                $this->setContent($template, self::STATUS_COMPILED);
+
+                //Compile and evaluate partial templates
+                if(count($this->_stack) > 1)
+                {
+                    if(!($status & self::STATUS_COMPILED)) {
+                        $this->compile();
+                    }
+
+                    if(!($status & self::STATUS_EVALUATED)) {
+                        $this->evaluate($data);
+                    }
+                }
+
 	            return $this;
 	        }
 	    }
 
-		return parent::loadFile($path, $data);
-	}
-
-	/**
-	 * Searches for the file
-	 *
-	 * This function first tries to find a template override, if no override exists
-	 * it will try to find the default template
-	 *
-	 * @param	string	$path   The file path to look for.
-	 * @return	mixed	The full path and file name for the target file, or FALSE if the file is not found
-	 */
-	public function findFile($path)
-	{
-	    $template  = JFactory::getApplication()->getTemplate();
-        $override  = JPATH_THEMES.'/'.$template.'/html';
-	    $override .= str_replace(array(JPATH_BASE.'/modules', JPATH_BASE.'/components', '/views'), '', $path);
-
-	    //Try to load the template override
-	    $result = parent::findFile($override);
-
-	    if($result === false)
-	    {
-	        //If the path doesn't contain the /tmpl/ folder add it
-	        if(strpos($path, '/tmpl/') === false) {
-	            $path = dirname($path).'/tmpl/'.basename($path);
-	        }
-
-	        $result = parent::findFile($path);
-	    }
-
-	    return $result;
+		return parent::load($path, $data, $status);
 	}
 
     /**
-     * Parse the template
-     *
      * This function implements a caching mechanism when reading the template. If the template cannot be found in the
      * cache it will be filtered and stored in the cache. Otherwise it will be loaded from the cache and returned
      * directly.
      *
-     * @param string $content The template content to parse
-     * @return void
+     * {@inheritdoc}
      */
-    protected function _compile(&$content)
+    public function compile()
     {
+        $result = parent::compile();
+
         if(isset($this->_cache))
         {
             $identifier = md5($this->getPath());
 
-            if (!$this->_cache->get($identifier))
-            {
-                parent::_compile($content);
-
-                //Store the object in the cache
-                $this->_cache->store($content, $identifier);
+            //Store the object in the cache
+            if (!$this->_cache->get($identifier)) {
+                $this->_cache->store($this->_content, $identifier);
             }
-            else $content = $this->_cache->get($identifier);
         }
-        else parent::_compile($content);
+
+        return $result;
     }
 
     /**

@@ -105,7 +105,7 @@ class ComKoowaControllerModel extends KControllerModel
             {
                 $this->getView()
                     ->getTemplate()
-                    ->addFilter('toolbar', array('toolbars' => $toolbars));
+                    ->attachFilter('toolbar', array('toolbars' => $toolbars));
             };
         }
 

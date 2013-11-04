@@ -15,10 +15,44 @@
   */
 interface KTemplateInterface
 {
+    const STATUS_LOADED    = 1;
+    const STATUS_COMPILED  = 2;
+    const STATUS_EVALUATED = 4;
+    const STATUS_RENDERED  = 8;
+
+    /**
+     * Load a template by path
+     *
+     * @param   string  $path     The template path
+     * @param   array   $data     An associative array of data to be extracted in local template scope
+     * @param   integer $status   The template state
+     * @return $this
+     */
+    public function load($path, $data = array(), $status = self::STATUS_LOADED);
+
+    /**
+     * Parse and compile the template to PHP code
+     *
+     * This function passes the template through compile filter queue and returns the result.
+     *
+     * @return $this
+     */
+    public function compile();
+
+    /**
+     * Evaluate the template using a simple sandbox
+     *
+     * This function writes the template to a temporary file and then includes it.
+     *
+     * @return $this
+     * @see tempnam()
+     */
+    public function evaluate();
+
     /**
      * Render the template
      *
-     * @return string    The rendered data
+     * @return $this
      */
     public function render();
 
@@ -37,7 +71,6 @@ interface KTemplateInterface
      *
      * @param string $string String to translate
      * @param array  $parameters An array of parameters
-     *
      * @return string Translated string
      */
     public function translate($string, array $parameters = array());
@@ -48,13 +81,13 @@ interface KTemplateInterface
      * @return	string
      */
     public function getPath();
-	
-	/**
-	 * Get the template data
-	 * 
-	 * @return	mixed
-	 */
-	public function getData();
+
+    /**
+     * Get the template data
+     *
+     * @return	mixed
+     */
+    public function getData();
 
     /**
      * Get the template contents
@@ -64,95 +97,66 @@ interface KTemplateInterface
     public function getContent();
 
     /**
+     * Set the template content from a string
+     *
+     * @param  string   $content     The template content
+     * @param  integer  $status      The template state
+     * @return $this
+     */
+    public function setContent($content, $status = self::STATUS_LOADED);
+
+    /**
+     * Get the format
+     *
+     * @return 	string 	The format of the view
+     */
+    public function getFormat();
+
+    /**
      * Get the view object attached to the template
      *
-     * @return  KViewAbstract
+     * @return  KViewInterface
      */
-	public function getView();
+    public function getView();
 
     /**
      * Method to set a view object attached to the template
      *
-     * @param mixed  $view An object that implements KObjectInterface, KObjectIdentifier object
+     * @param mixed  $view An object that implements ObjectInterface, ObjectIdentifier object
      *                     or valid identifier string
      * @throws \UnexpectedValueException    If the identifier is not a view identifier
-     * @return KTemplateAbstract
-     */
-	public function setView($view);
-
-    /**
-     * Gets the translator object
-     *
-     * @return  KTranslator
-     */
-    public function getTranslator();
-
-    /**
-     * Sets the translator object
-     *
-     * @param string|KTranslator $translator A translator object or identifier
      * @return $this
      */
-    public function setTranslator($translator);
-
-    /**
-     * Load a template by identifier
-     *
-     * This functions only accepts full identifiers of the format
-     * -  com:[//application/]component.view.[.path].name
-     *
-     * @param   string   $template  The template identifier
-     * @param   array    $data      An associative array of data to be extracted in local template scope
-     * @throws \InvalidArgumentException If the template could not be found
-     * @return KTemplateAbstract
-     */
-	public function loadIdentifier($template, $data = array());
-
-    /**
-     * Load a template by path
-     *
-     * @param   string  $file     The template path
-     * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @return KTemplateAbstract
-     */
-	public function loadFile($file, $data = array());
-
-    /**
-     * Load a template from a string
-     *
-     * @param  string   $string     The template contents
-     * @param  array    $data       An associative array of data to be extracted in local template scope
-     * @return KTemplateAbstract
-     */
-	public function loadString($string, $data = array());
+    public function setView($view);
 
     /**
      * Get a filter by identifier
      *
-     * @param   mixed    $filter    An object that implements KObjectInterface, KObjectIdentifier object
-                                    or valid identifier string
+     * @param   mixed    $filter    An object that implements ObjectInterface, ObjectIdentifier object
+    or valid identifier string
      * @param   array    $config    An optional associative array of configuration settings
      * @return KTemplateFilterInterface
      */
     public function getFilter($filter, $config = array());
 
     /**
-     * Attach ar filters for template transformation
+     * Attach a filter for template transformation
      *
      * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
      * @param   array $config  An optional associative array of configuration settings
-     * @return KTemplateAbstract
+     * @return $this
      */
-    public function addFilter($filter, $config = array());
+    public function attachFilter($filter, $config = array());
 
     /**
      * Get a template helper
      *
-     * @param    mixed    $helper KObjectIdentifierInterface
+     * @param    mixed    $helper ObjectIdentifierInterface
+     * @param    array    $config An optional associative array of configuration settings
      * @return  KTemplateHelperInterface
      */
-    public function getHelper($helper);
+    public function getHelper($helper, $config = array());
 
     /**
      * Load a template helper
@@ -165,12 +169,33 @@ interface KTemplateInterface
      * @return   string   Helper output
      * @throws   \BadMethodCallException If the helper function cannot be called.
      */
-	public function renderHelper($identifier, $config = array());
+    public function renderHelper($identifier, $config = array());
 
     /**
-     * Check if the template is in a render cycle
+     * Check if the template is loaded
      *
-     * @return boolean Return TRUE if the template is being rendered
+     * @return boolean  Returns TRUE if the template is loaded. FALSE otherwise
      */
-    public function isRendering();
+    public function isLoaded();
+
+    /**
+     * Check if the template is compiled
+     *
+     * @return boolean  Returns TRUE if the template is compiled. FALSE otherwise
+     */
+    public function isCompiled();
+
+    /**
+     * Check if the template is evaluated
+     *
+     * @return boolean  Returns TRUE if the template is evaluated. FALSE otherwise
+     */
+    public function isEvaluated();
+
+    /**
+     * Check if the template is rendered
+     *
+     * @return boolean  Returns TRUE if the template is rendered. FALSE otherwise
+     */
+    public function isRendered();
 }

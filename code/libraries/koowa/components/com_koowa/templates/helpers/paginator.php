@@ -215,14 +215,11 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     {
         $html  = $pages['previous']->active ? '<li>'.$this->_bootstrap_link($pages['previous'], '&larr;').'</li>' : '';
 
-        /* @TODO should be a better way to do this than iterating the array to find the current page */
+        $padding = 2;
         $current = 0;
         foreach ($pages['pages'] as $i => $page) {
             if($page->current) $current = $i;
         }
-
-        /* @TODO move this into the $config initialize */
-        $padding = 2;
 
         $total = count($pages['pages']);
         $hellip = false;
@@ -292,10 +289,8 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     protected function _items(KObjectConfig $config)
     {
         $elements  = array();
-        $current   = ($config->current - 1) * $config->limit;
 
         // First
-        $page    = 1;
         $offset  = 0;
         $active  = $offset != $config->offset;
         $props   = array('page' => 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active );
