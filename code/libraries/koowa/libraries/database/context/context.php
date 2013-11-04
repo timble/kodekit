@@ -50,10 +50,10 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
     /**
      * Set the query object
      *
-     * @param KDatabaseQueryInterface $query
+     * @param KDatabaseQueryInterface|string $query
      * @return $this
      */
-    public function setQuery(KDatabaseQueryInterface $query)
+    public function setQuery($query)
     {
         $this->set('query', $query);
         return $this;
