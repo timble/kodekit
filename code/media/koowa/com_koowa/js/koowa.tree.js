@@ -303,15 +303,13 @@
                 height = element.height(),
                 scrollTo = Math.min(offsetTop, (offsetTop - viewportHeight) + height);
 
-            //@TODO make it scroll into view from the top as well
-            if(window.console) console.log('scrollTo', scrollTo, 'viewport.scrollTop()', viewport.scrollTop());
-
-            if(scrollTo > viewport.scrollTop()) { //Only scroll if there's overflow
+            /**
+             * Only scrolls if the element is out of bounds either from the top or bottom, with priority on the bottom
+             */
+            if(scrollTo > viewport.scrollTop()) {
                 viewport.animate({scrollTop: scrollTo}, duration||900);
             } else if (offsetTop < viewport.scrollTop()) {
-                //@TODO make it scroll into view from the top as well
                 viewport.animate({scrollTop: offsetTop}, duration||900);
-                if(window.console) console.log('offsetTop', offsetTop, 'viewport.scrollTop()', viewport.scrollTop());
             }
         }
     });
