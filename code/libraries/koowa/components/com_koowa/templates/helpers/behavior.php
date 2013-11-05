@@ -647,7 +647,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      * @note   If no 'element' option is passed, then only assets will be loaded.
      *
      * @param  array|KObjectConfig $config
-     * @return string	The html output
+     * @throws InvalidArgumentException
+     * @return string    The html output
      */
     public function tree($config = array())
     {

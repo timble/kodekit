@@ -161,7 +161,7 @@
          * Only customize this method if you know what you're doing and if it's impossible to control the data format
          * that's passed to the script during initialization.
          *
-         * @param array list
+         * @param list array
          *
          * The data objects in the list are required to have the following properties:
          * @property string|integer id          Required to be unique, integer or string is optional
