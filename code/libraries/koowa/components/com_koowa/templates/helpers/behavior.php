@@ -508,6 +508,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
+            'cleanup' => false,
             'debug' => JFactory::getApplication()->getCfg('debug'),
             'element' => '.select2-listbox',
             'options' => array(
@@ -578,6 +579,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= $this->select2(array('element' => false));
             $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
+
+            self::$_loaded['autocomplete'] = true;
         }
 
         $options   = $config->options->toJson();
@@ -589,6 +592,100 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             jQuery(function($){
                 $("'.$config->element.'").koowaSelect2('.$options.');
                 $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
+            });</script>';
+
+            self::$_loaded[$signature] = true;
+        }
+
+        return $html;
+    }
+
+    /**
+     * Loads the Koowa customized jQtree behavior and renders a sidebar-nav list useful in split views
+     *
+     * @see    http://mbraak.github.io/jqTree/
+     *
+     * @note   If no 'element' option is passed, then only assets will be loaded.
+     *
+     * @param  array|KObjectConfig $config
+     * @throws InvalidArgumentException
+     * @return string    The html output
+     */
+    public function tree($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'debug'   => JFactory::getApplication()->getCfg('debug'),
+            'element' => '',
+            'selected'  => '',
+            'list'    => array()
+        ))->append(array(
+                'options' => array(
+                    'selected' => $config->selected
+                )
+            ));
+
+        $html = '';
+
+        /**
+         * Loading the assets, if not already loaded
+         */
+        if (!isset(self::$_loaded['tree']))
+        {
+            $html .= $this->jquery();
+            $html .= '<script src="media://koowa/com_koowa/js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
+
+            self::$_loaded['tree'] = true;
+        }
+
+        /**
+         * Parse and validate list data, if any. And load the inline js that initiates the tree on specified html element
+         */
+        $signature = md5('tree-'.$config->element);
+        if($config->element && !isset(self::$_loaded[$signature]))
+        {
+            /**
+             * If there's a list set, but no 'data' in the js options, parse it
+             */
+            if(isset($config->list) && !isset($config->options->data))
+            {
+                $data = array();
+                foreach($config->list as $item)
+                {
+                    $parts = explode('/', $item->path);
+                    array_pop($parts); // remove current id
+                    $data[] = array(
+                        'label'  => $item->title,
+                        'id'     => (int)$item->id,
+                        'level'  => (int)$item->level,
+                        'path'   => $item->path,
+                        'parent' => (int)array_pop($parts)
+                    );
+                }
+                $config->options->append(array('data' => $data));
+            }
+            /**
+             * Validate that the data is the right format
+             */
+            elseif(isset($config->options->data, $config->options->data[0]))
+            {
+                $data     = $config->options->data[0];
+                $required = array('label', 'id', 'level', 'path', 'parent');
+                foreach($required as $key)
+                {
+                    if(!isset($data[$key]))
+                    {
+                        throw new InvalidArgumentException('Data must contain required param: '.$key);
+                    }
+                }
+            }
+
+            $options = $config->options->toJson();
+
+            $html .= '<script>
+            jQuery(function($){
+                new Koowa.Tree('.json_encode($config->element).', '.$options.');
             });</script>';
 
             self::$_loaded[$signature] = true;
