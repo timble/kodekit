@@ -139,7 +139,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->jquery();
 
             $html .= '<script src="media://koowa/com_koowa/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/magnific-popup.css" />';
 
             self::$_loaded['modal'] = true;
         }
@@ -319,7 +318,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['calendar']))
         {
             $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -523,7 +521,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/select2'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
 
             self::$_loaded['select2'] = true;
         }
