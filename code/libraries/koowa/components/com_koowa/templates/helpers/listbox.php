@@ -246,7 +246,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         if ($config->attribs->multiple)
         {
             $html .= '<script>
-            jQuery(function($) {
+            kQuery(function($) {
                 var el = $("' . $config->element . '");
                 var form = el.closest("form");
 

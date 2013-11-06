@@ -128,4 +128,4 @@
         return this;
     };
 
-})(jQuery);
+})(kQuery);

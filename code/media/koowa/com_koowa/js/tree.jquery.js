@@ -22,7 +22,7 @@ limitations under the License.
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  $ = this.jQuery;
+  $ = this.kQuery;
 
   SimpleWidget = (function() {
     SimpleWidget.prototype.defaults = {};
@@ -300,7 +300,7 @@ limitations under the License.
 
   this.Tree = {};
 
-  $ = this.jQuery;
+  $ = this.kQuery;
 
   Position = {
     getName: function(position) {
