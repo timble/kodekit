@@ -72,7 +72,7 @@ class KViewHtml extends KViewTemplate
      * @param string    $route  The query string used to create the route
      * @param boolean   $fqr    If TRUE create a fully qualified route. Default FALSE.
      * @param boolean   $escape If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return string The route
+     * @return KHttpUrl The route
      */
     public function createRoute($route = '', $fqr = false, $escape = true)
     {
