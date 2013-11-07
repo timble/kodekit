@@ -97,7 +97,12 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
 
         if(!empty($identifier->name))
         {
-            if(count($parts)) {
+            if(count($parts))
+            {
+                if($parts[0] === 'view') {
+                    $parts[0] = KStringInflector::pluralize($parts[0]);
+                }
+
                 $path = implode('/', $parts).'/'.strtolower($identifier->name);
             }
             else $path  = strtolower($identifier->name);

@@ -61,8 +61,14 @@ class KClassLocatorModule extends KClassLocatorAbstract
 		    $module = 'mod_'.$package;
 			$file 	   = array_pop($parts);
 
-			if(count($parts)) {
-				$path = implode('/', $parts).'/'.$file;
+			if(count($parts))
+			{
+				if($parts[0] === 'view') {
+                    $parts[0] = KStringInflector::pluralize($parts[0]);
+			    }
+
+				$path = implode('/', $parts);
+				$path = $path.'/'.$file;
 			}
 			else $path = $file;
 
