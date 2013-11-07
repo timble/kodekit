@@ -239,6 +239,30 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
+     * Creates a route based on a full or partial query string.
+     *
+     * This function adds the layout information to the route if a layout has been set
+     *
+     * @param string $route   The query string used to create the route
+     * @param boolean $fqr    If TRUE create a fully qualified route. Default TRUE.
+     * @param boolean $escape If TRUE escapes the route for xml compliance. Default TRUE.
+     * @return KHttpUrl       The route
+     */
+    public function createRoute($route = '', $fqr = true, $escape = true)
+    {
+        $route = parent::createRoute($route, $fqr, $escape);
+
+        if (!isset($route->query['layout']) && !empty($this->_layout))
+        {
+            if ($route->query['view'] == $this->getName()) {
+                $route->query['layout'] = $this->getLayout();
+            }
+        }
+
+        return $route;
+    }
+
+    /**
      * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
      * name as the method name. If the method name is a setter method the setter will be called instead.
      *
