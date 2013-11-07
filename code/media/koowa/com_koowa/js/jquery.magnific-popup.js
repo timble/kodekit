@@ -33,7 +33,7 @@ var CLOSE_EVENT = 'Close',
  */
 var mfp, // As we have only one instance of MagnificPopup object, we define it locally to not to use 'this'
 	MagnificPopup = function(){},
-	_isJQ = !!(window.jQuery),
+	_isJQ = !!(window.kQuery),
 	_prevStatus,
 	_window = $(window),
 	_body,
@@ -2023,4 +2023,4 @@ $.magnificPopup.registerModule(RETINA_NS, {
 })();
 
 /*>>fastclick*/
-})(window.jQuery || window.Zepto);
+})(window.kQuery || window.Zepto);

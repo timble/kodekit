@@ -72,8 +72,6 @@
             }
         },
         unhighlight: function (element, errorClass, validClass) {
-            var addon = $(element).parent('div.input-prepend, div.input-append');
-
             if (element.type === 'radio') {
                 this.findByName(element.name).parent('div').parent('div').removeClass(errorClass).addClass(validClass);
             } else {
@@ -89,7 +87,7 @@
             }else {
                 error.insertAfter(element);
             }
-        },
+        }
     });
 
-})(jQuery);
+})(kQuery);

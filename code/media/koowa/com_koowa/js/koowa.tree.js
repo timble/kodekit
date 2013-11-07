@@ -313,4 +313,4 @@
             }
         }
     });
-}(window.jQuery));
+}(window.kQuery));

@@ -109,4 +109,4 @@ Koowa.Overlay = Koowa.Class.extend({
     }
 });
 
-})(jQuery);
+})(window.kQuery);

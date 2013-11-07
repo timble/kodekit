@@ -106,7 +106,7 @@ class KObjectLocatorModule extends KObjectLocatorAbstract
 		{
 			if(count($parts))
 			{
-				$path    = KStringInflector::pluralize(array_shift($parts)).
+				$path    = array_shift($parts);
 				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
 				$path   .= '/'.strtolower($identifier->name);
 			}

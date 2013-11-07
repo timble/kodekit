@@ -36,7 +36,7 @@
             }
         });
     }
-})(jQuery);
+})(kQuery);
 
 (function ($, undefined) {
     "use strict";
@@ -3210,4 +3210,4 @@
         }
     };
 
-}(jQuery));
+}(kQuery));

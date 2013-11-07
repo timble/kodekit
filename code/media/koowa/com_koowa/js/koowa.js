@@ -378,7 +378,7 @@ Koowa.Controller = Koowa.Class.extend({
     },
 
     trigger: function(type, args){
-        var event = jQuery.Event('koowa:'+type);
+        var event = $.Event('koowa:'+type);
         this.form.trigger(event, args);
         return !event.isDefaultPrevented();
     },
@@ -616,4 +616,4 @@ Koowa.Controller.Form = Koowa.Controller.extend({
 
 });
 
-})(jQuery);
+})(window.kQuery);

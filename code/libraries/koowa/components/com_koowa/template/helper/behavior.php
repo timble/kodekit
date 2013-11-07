@@ -50,10 +50,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * Loads jQuery
+     * Loads jQuery under a global variable called kQuery.
      *
      * Loads it from Joomla in 3.0+ and our own sources in 2.5. If debug config property is set, an uncompressed
      * version will be included.
+     *
+     * You can do window.jQuery = window.$ = window.kQuery; to use the default names
      *
      * @param array|KObjectConfig $config
      * @return string
@@ -71,6 +73,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             if (version_compare(JVERSION, '3.0', 'ge')) {
                 JHtml::_('jquery.framework');
+                JHtml::_('script', 'media/koowa/com_koowa/js/koowa.jquery.js', false, false, false, false, false);
             } else {
                 $html .= '<script src="media://koowa/com_koowa/js/jquery'.($config->debug ? '' : '.min').'.js" />';
             }
@@ -149,7 +152,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded[$signature]))
         {
             $html .= "<script>
-            jQuery(function($){
+            kQuery(function($){
                 $('$config->selector').each(function(idx, el) {
                     var el = $(el);
                     var data = el.data('$config->data');
@@ -204,7 +207,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded[$signature]))
         {
             $html .= "<script>
-                jQuery(function($) {
+                kQuery(function($) {
                     $('$config->selector').each(function(idx, el) {
                         var el = $(el);
                         var data = el.data('$config->data');
@@ -246,7 +249,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 'size' => 25,
                 'maxlength' => 19,
                 'placeholder' => '', //@TODO placeholder fix for chrome may not be needed anymore
-                'oninput' => 'if(jQuery(this).data(\'datepicker\'))jQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
+                'oninput' => 'if(kQuery(this).data(\'datepicker\'))kQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
             )
         ))->append(array(
              'id'      => 'datepicker-'.$config->name,
@@ -336,7 +339,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script>
             (function($){
                 $.fn.datepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
-            }(jQuery));
+            }(kQuery));
             </script>';
 
             self::$_loaded['calendar'] = true;
@@ -348,7 +351,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             // Only display the triggers once for each control.
             if (!in_array($config->id, $loaded)) {
                 $html .= "<script>
-                    jQuery(function($){
+                    kQuery(function($){
                         var options = ".$config->options.";
                         if(!options.hasOwnProperty('parentEl')) {
                             options.parentEl = $('#".$config->id."').parent();
@@ -436,7 +439,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         //Don't pass an empty array as options
         $options = json_encode($config->options->toArray());
-        $html .= sprintf("<script>jQuery(function(){ new Koowa.Overlay('#%s', %s);});</script>", $id, $options);
+        $html .= sprintf("<script>kQuery(function(){ new Koowa.Overlay('#%s', %s);});</script>", $id, $options);
 
         $html .= '<div class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
         return $html;
@@ -479,7 +482,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded[$signature]))
         {
             $html .= "<script>
-            jQuery(function($){
+            kQuery(function($){
                 $('$config->selector').on('koowa:validate', function(event){
                     if(!$(this).valid()) {
                         event.preventDefault();
@@ -531,7 +534,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if($config->element && !isset(self::$_loaded[$signature]))
         {
             $html .= '<script>
-            jQuery(function($){
+            kQuery(function($){
                 $("'.$config->element.'").select2('.$options.');
                 $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
             });</script>';
@@ -586,7 +589,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if($config->element && !isset(self::$_loaded[$signature]))
         {
             $html .= '<script>
-            jQuery(function($){
+            kQuery(function($){
                 $("'.$config->element.'").koowaSelect2('.$options.');
                 $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
             });</script>';
@@ -681,7 +684,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $options = $config->options->toJson();
 
             $html .= '<script>
-            jQuery(function($){
+            kQuery(function($){
                 new Koowa.Tree('.json_encode($config->element).', '.$options.');
             });</script>';
 
