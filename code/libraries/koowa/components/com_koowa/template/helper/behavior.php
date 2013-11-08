@@ -537,6 +537,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/select2'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
 
             self::$_loaded['select2'] = true;
         }
@@ -599,6 +600,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if($config->element && !isset(self::$_loaded[$signature]))
         {
+            $html .= $this->select2(array('element' => false));
             $html .= '<script>
             kQuery(function($){
                 $("'.$config->element.'").koowaSelect2('.$options.');
