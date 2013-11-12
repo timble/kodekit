@@ -166,20 +166,16 @@ class ComKoowaControllerModel extends KControllerModel
         return $row;
     }
 
-	/**
-     * Set a request property
-     *
-     *  This function translates 'limitstart' to 'offset' for compatibility with Joomla
-     *
-     * @param  	string 	$property The property name.
-     * @param 	mixed 	$value    The property value.
+    /*
+     * Overridden for translating 'limitstart' to 'offset' for compatibility with Joomla
      */
- 	public function __set($property, $value)
+    public function setRequest(array $request)
     {
-        if($property == 'limitstart') {
-            $property = 'offset';
+        if (isset($request['limitstart']))
+        {
+            $request['offset'] = $request['limitstart'];
         }
 
-        parent::__set($property, $value);
-  	}
+        return parent::setRequest($request);
+    }
 }
