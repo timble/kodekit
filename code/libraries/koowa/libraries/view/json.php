@@ -137,14 +137,14 @@ class KViewJson extends KViewAbstract
     /**
      * Force the route to fully qualified and not escaped by default
      *
-     * @param   string  $route   The query string used to create the route
-     * @param   boolean $fqr     If TRUE create a fully qualified route. Default TRUE.
-     * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return  string  The route
+     * @param   string|array    $route   The query string used to create the route
+     * @param   boolean         $fqr     If TRUE create a fully qualified route. Default TRUE.
+     * @param   boolean         $escape  If TRUE escapes the route for xml compliance. Default FALSE.
+     * @return  KHttpUrl        The route
      */
-    public function createRoute($route = '', $fqr = true, $escape = false)
+    public function getRoute($route = '', $fqr = true, $escape = false)
     {
-        return parent::createRoute($route, $fqr, $escape);
+        return parent::getRoute($route, $fqr, $escape);
     }
 
     /**
@@ -260,7 +260,7 @@ class KViewJson extends KViewAbstract
         $package = $this->getIdentifier()->package;
         $view    = $row->getIdentifier()->name;
 
-        return $this->createRoute(sprintf('option=com_%s&view=%s&slug=%s&format=json', $package, $view, $row->slug));
+        return $this->getRoute(sprintf('option=com_%s&view=%s&slug=%s&format=json', $package, $view, $row->slug));
     }
 
     /**

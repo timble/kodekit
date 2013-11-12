@@ -366,14 +366,12 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     }
 
 	/**
-	 * Create a route based on a full or partial query string
+     * Get a route based on a full or partial query string
 	 *
-     * index.php? will be automatically added.
-	 * option, view and layout can be omitted. The following variations will result in the same route:
-	 *
-	 * - foo=bar
-     * - view=myview&foo=bar
-	 * - option=com_mycomp&view=myview&foo=bar
+     * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
+     *
+     * - foo=bar
+     * - option=com_mycomp&view=myview&foo=bar
 	 *
 	 * In templates, use @route()
 	 *
@@ -382,7 +380,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
      * @return  KHttpUrl     The route
 	 */
-	public function createRoute($route = '', $fqr = true, $escape = true)
+	public function getRoute($route = '', $fqr = true, $escape = true)
 	{
         //Parse route
         $parts = array();
