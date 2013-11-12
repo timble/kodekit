@@ -243,23 +243,35 @@ abstract class KViewTemplate extends KViewAbstract
      *
      * This function adds the layout information to the route if a layout has been set
      *
-     * @param string $route   The query string used to create the route
-     * @param boolean $fqr    If TRUE create a fully qualified route. Default TRUE.
-     * @param boolean $escape If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return KHttpUrl       The route
+     * @param string|array $route   The query string used to create the route
+     * @param boolean $fqr          If TRUE create a fully qualified route. Default TRUE.
+     * @param boolean $escape       If TRUE escapes the route for xml compliance. Default TRUE.
+     * @return KHttpUrl             The route
      */
     public function createRoute($route = '', $fqr = true, $escape = true)
     {
-        $route = parent::createRoute($route, $fqr, $escape);
-
-        if (!isset($route->query['layout']) && !empty($this->_layout))
+        if (is_string($route))
         {
-            if ($route->query['view'] == $this->getName()) {
-                $route->query['layout'] = $this->getLayout();
+            $parts = parse_str($route);
+        }
+        else
+        {
+            $parts = (array) $route;
+        }
+
+        if (count($parts) && !isset($parts['layout']) && !empty($this->_layout))
+        {
+            if (!isset($parts['view']) || ($parts['view'] == $this->getName()))
+            {
+                if (is_array($route)) {
+                    $route[] = 'layout=' . $this->getLayout();
+                } else {
+                    $route .= '&layout=' . $this->getLayout();
+                }
             }
         }
 
-        return $route;
+        return parent::createRoute($route, $fqr, $escape);
     }
 
     /**
