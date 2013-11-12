@@ -63,16 +63,11 @@ class KClassLocatorComponent extends KClassLocatorAbstract
 
             if(count($parts))
             {
-                if($parts[0] != 'view')
-                {
-                    foreach($parts as $key => $value) {
-                        $parts[$key] = KStringInflector::pluralize($value);
-                    }
+                if($parts[0] === 'view') {
+                    $parts[0] = KStringInflector::pluralize($parts[0]);
                 }
-                else $parts[0] = KStringInflector::pluralize($parts[0]);
 
-                $path = implode('/', $parts);
-                $path = $path.'/'.$file;
+                $path = implode('/', $parts).'/'.$file;
             }
             else $path = $file;
 
@@ -89,7 +84,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
 
             $path = $basepath.'/components/'.$component.'/'.$path.'.php';
         }
-        
+
 		return $path;
 	}
 }

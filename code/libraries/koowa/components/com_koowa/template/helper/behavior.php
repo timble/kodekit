@@ -140,11 +140,16 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded['modal']))
         {
             $html .= $this->jquery();
-
             $html .= '<script src="media://koowa/com_koowa/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/magnific-popup.css" />';
 
             self::$_loaded['modal'] = true;
+        }
+
+        if (!isset(self::$_loaded['modal-css']))
+        {
+            $html .= '<style src="media://koowa/com_koowa/css/modal.css" />';
+
+            self::$_loaded['modal-css'] = true;
         }
 
         $options   = json_encode($config->options->toArray());
@@ -322,7 +327,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['calendar']))
         {
             $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -345,6 +349,13 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             </script>';
 
             self::$_loaded['calendar'] = true;
+        }
+
+        if (!isset(self::$_loaded['calendar-css']))
+        {
+            $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
+
+            self::$_loaded['calendar-css'] = true;
         }
 
         $attribs = $this->buildAttributes($config->attribs);
@@ -526,9 +537,16 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         {
             $html .= $this->jquery();
             $html .= '<script src="media://koowa/com_koowa/js/select2'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
 
             self::$_loaded['select2'] = true;
+        }
+
+        if (!isset(self::$_loaded['select2-css']))
+        {
+            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
+
+            self::$_loaded['select2-css'] = true;
         }
 
         $options   = $config->options->toJson();
@@ -577,20 +595,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $html ='';
 
-        // Load the necessary files if they haven't yet been loaded
-        if(!isset(self::$_loaded['autocomplete']))
-        {
-            $html .= $this->select2(array('element' => false));
-            $html .= '<script src="media://koowa/com_koowa/js/koowa.select2.js" />';
-
-            self::$_loaded['autocomplete'] = true;
-        }
-
         $options   = $config->options->toJson();
         $signature = md5('autocomplete-'.$config->element.$options);
 
         if($config->element && !isset(self::$_loaded[$signature]))
         {
+            $html .= $this->select2(array('element' => false));
             $html .= '<script>
             kQuery(function($){
                 $("'.$config->element.'").koowaSelect2('.$options.');
@@ -641,6 +651,16 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
             self::$_loaded['tree'] = true;
         }
+
+        if (!isset(self::$_loaded['tree-css']))
+        {
+            $html .= '<style src="media://koowa/com_koowa/css/tree.css" />';
+
+            self::$_loaded['tree-css'] = true;
+        }
+
+
+
 
         /**
          * Parse and validate list data, if any. And load the inline js that initiates the tree on specified html element
