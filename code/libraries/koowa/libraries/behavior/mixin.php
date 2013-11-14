@@ -121,7 +121,7 @@ class KBehaviorMixin extends KCommandMixin
      * @param   mixed $behavior   An object that implements BehaviorInterface, an ObjectIdentifier
      *                            or valid identifier string
      * @param   array $config    An optional associative array of configuration settings
-     * @return  Object The mixer object
+     * @return  KObject The mixer object
      */
     public function attachBehavior($behavior, $config = array())
     {
