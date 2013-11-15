@@ -177,8 +177,8 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
         $config->append(array(
             'name'   	=> '',
             'attribs'	=> array(),
-            'true'		=> 'Yes',
-            'false'		=> 'No',
+            'true'		=> $this->translate('Yes'),
+            'false'		=> $this->translate('No'),
             'selected'	=> null,
             'translate'	=> true
         ));
