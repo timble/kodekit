@@ -19,40 +19,43 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
      * Locate the template based on a virtual path
      *
      * @param  string $path  Stream path or resource
-     * @return string   The physical stream path for the template
+     * @return string The physical stream path for the template
      */
     public function locate($path)
     {
-        $path = $this->_getPath($path);
+        $result = false;
+        $info   = pathinfo( $path );
+
+        //Handle short hand identifiers
+        if(strpos($info['filename'], '.') === false)
+        {
+            $path       = pathinfo($this->getTemplate()->getPath());
+            $identifier = $this->getIdentifier($path['filename']);
+            $filename   = $info['filename'];
+        }
+        else
+        {
+            $identifier = $this->getIdentifier($info['dirname'].'/'.$info['filename']);
+            $filename   = $identifier->name;
+        }
+
+        $parts = $identifier->path;
+
+        if($parts[0] === 'view') {
+            $parts[0] = KStringInflector::pluralize($parts[0]);
+        }
+
+        $component = 'com_'.strtolower($identifier->package);
+        $extension = $info['extension'].'.php';
+
+        $basepath  = $identifier->basepath.'/components/'.$component;
+        $filepath  = implode('/', $parts).'/tmpl';
+        $fullpath  = $basepath.'/'.$filepath.'/'.$filename.'.'.$extension;
 
         // Find the template
-        $result = $this->realPath($path);
+        $result = $this->realPath($fullpath);
 
         return $result;
-    }
-
-    /**
-     * Converts a path identifier into a full path
-     *
-     * @param  string $path
-     * @return string File path
-     */
-    protected function _getPath($path)
-    {
-        // Make sure we have a proper identifier
-        if (is_string($path) && strpos($path, '.') === false)
-        {
-            $identifier = clone $this->getTemplate()->getView()->getIdentifier();
-            $identifier->name = $path;
-        }
-        else $identifier = $path;
-
-        //Identify the template
-        $identifier = $this->getIdentifier($identifier);
-
-        $path = dirname($identifier->filepath).'/'.$identifier->name.'.php';
-
-        return $path;
     }
 
     /**

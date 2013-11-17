@@ -128,14 +128,16 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
-        $layout = $this->getLayout();
+        $layout     = $this->getLayout();
+        $format     = $this->getFormat();
+        $data       = $this->getData();
 
         if (is_string($layout) && strpos($layout, '.') === false)
         {
             $identifier = clone $this->getIdentifier();
-            $identifier->name = $layout;
+            $identifier->name = $layout.'.'.$format;
         }
-        else $identifier = $layout;
+        else $identifier = $layout.'.'.$format;
 
         $this->_content = (string) $this->getTemplate()
             ->load($identifier)
