@@ -24,33 +24,30 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
     public function locate($path)
     {
         $result = false;
-        $info   = pathinfo( $path );
 
-        //Handle short hand identifiers
-        if(strpos($info['filename'], '.') === false)
+        if(strpos($path, ':') === false)
         {
-            $path       = pathinfo($this->getTemplate()->getPath());
-            $identifier = $this->getIdentifier($path['filename']);
-            $filename   = $info['filename'];
+            $identifier = $this->getIdentifier($this->getTemplate()->getPath());
+
+            $format    = pathinfo($path, PATHINFO_EXTENSION);
+            $template  = pathinfo($path, PATHINFO_FILENAME);
         }
         else
         {
-            $identifier = $this->getIdentifier($info['dirname'].'/'.$info['filename']);
-            $filename   = $identifier->name;
+            $identifier = $this->getIdentifier($path);
+
+            $format    = $identifier->name;
+            $template  = array_pop($identifier->path);
         }
 
         $parts = $identifier->path;
-
         if($parts[0] === 'view') {
             $parts[0] = KStringInflector::pluralize($parts[0]);
         }
 
-        $component = 'com_'.strtolower($identifier->package);
-        $extension = $info['extension'].'.php';
-
-        $basepath  = $identifier->basepath.'/components/'.$component;
+        $basepath  = $identifier->basepath.'/components/com_'.strtolower($identifier->package);
         $filepath  = implode('/', $parts).'/tmpl';
-        $fullpath  = $basepath.'/'.$filepath.'/'.$filename.'.'.$extension;
+        $fullpath  = $basepath.'/'.$filepath.'/'.$template.'.'.$format.'.php';
 
         // Find the template
         $result = $this->realPath($fullpath);

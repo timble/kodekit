@@ -87,7 +87,7 @@ abstract class KViewTemplate extends KViewAbstract
         $config->append(array(
             'data'			   => array(),
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'template', 'url'),
+            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'url'),
             'auto_assign'      => true,
         ));
 
@@ -128,19 +128,22 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
-        $layout     = $this->getLayout();
-        $format     = $this->getFormat();
-        $data       = $this->getData();
+        $layout  = $this->getLayout();
+        $format  = $this->getFormat();
+        $data    = $this->getData();
 
+        //Handle partial layout paths
         if (is_string($layout) && strpos($layout, '.') === false)
         {
             $identifier = clone $this->getIdentifier();
-            $identifier->name = $layout.'.'.$format;
-        }
-        else $identifier = $layout.'.'.$format;
+            $identifier->name = $layout;
 
+            $layout = (string) $identifier;
+        }
+
+        //Render the template
         $this->_content = (string) $this->getTemplate()
-            ->load($identifier)
+            ->load((string) $layout.'.'.$format)
             ->compile()
             ->evaluate($this->_data)
             ->render();
