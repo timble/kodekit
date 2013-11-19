@@ -41,7 +41,7 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
         }
 
         $parts = $identifier->path;
-        if($parts[0] === 'view') {
+        if(isset($parts[0]) && $parts[0] === 'view') {
             $parts[0] = KStringInflector::pluralize($parts[0]);
         }
 
