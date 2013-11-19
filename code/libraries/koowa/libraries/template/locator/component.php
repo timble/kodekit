@@ -20,14 +20,20 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
      *
      * @param  string $path  Stream path or resource
      * @return string The physical stream path for the template
+     * @throws RuntimeException If a partial template path is passed and no base template has been loaded.
      */
     public function locate($path)
     {
         $result = false;
 
+        //Qualify partial templates.
         if(strpos($path, ':') === false)
         {
-            $identifier = $this->getIdentifier($this->getTemplate()->getPath());
+            if(!$base = $this->getTemplate()->getPath()) {
+                throw new RuntimeException('Cannot qualify partial template path');
+            }
+
+            $identifier = $this->getIdentifier($base);
 
             $format    = pathinfo($path, PATHINFO_EXTENSION);
             $template  = pathinfo($path, PATHINFO_FILENAME);
