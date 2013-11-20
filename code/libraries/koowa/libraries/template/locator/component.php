@@ -37,6 +37,9 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
 
             $format    = pathinfo($path, PATHINFO_EXTENSION);
             $template  = pathinfo($path, PATHINFO_FILENAME);
+
+            $parts     = $identifier->path;
+            array_pop($parts);
         }
         else
         {
@@ -45,9 +48,9 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
 
             $format    = $identifier->name;
             $template  = array_pop($identifier->path);
+            $parts     = $identifier->path;
         }
 
-        $parts = $identifier->path;
         if(isset($parts[0]) && $parts[0] === 'view') {
             $parts[0] = KStringInflector::pluralize($parts[0]);
         }
