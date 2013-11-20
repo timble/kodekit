@@ -66,7 +66,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      *
      * Method will always perform a referrer check. If any of the checks fail an forbidden exception should be thrown.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context A dispatcher context object
+     * @throws KControllerExceptionForbidden
      * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
     public function authenticateRequest(KDispatcherContextInterface $context)
@@ -113,7 +114,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
      * redirect the dispatcher to another URL after a GET request.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context A dispatcher context object
+     * @return bool
      */
     protected function _actionRedirect(KDispatcherContextInterface $context)
     {
@@ -148,7 +150,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * be set the enforced to the maximum limit. Default max limit is .
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @return 	KDatabaseRow(Set)Interface	A row(set) object containing the modified data
+     * @return KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the modified data
      */
     protected function _actionGet(KDispatcherContextInterface $context)
     {
@@ -185,8 +187,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * @throws  KDispatcherExceptionMethodNotAllowed    The action specified in the request is not allowed for the
      *          entity identified by the Request-URI. The response MUST include an Allow header containing a list of
      *          valid actions for the requested entity.
-     *          ControllerExceptionBadRequest           The action could not be found based on the info in the request.
-     * @return 	KDatabaseRow(Set)Interface	A row(set) object containing the modified data
+     * @throws  KControllerExceptionBadRequest           The action could not be found based on the info in the request.
+     * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	A row(set) object containing the modified data
      */
     protected function _actionPost(KDispatcherContextInterface $context)
     {
@@ -232,7 +234,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      *
      * @param   KDispatcherContextInterface $context	A dispatcher context object
      * @throws  KControllerExceptionBadRequest 	If the model state is not unique
-     * @return 	KDatabaseRow(set)Ineterface	    A row(set) object containing the modified data
+     * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	    A row(set) object containing the modified data
      */
     protected function _actionPut(KDispatcherContextInterface $context)
     {
@@ -277,7 +279,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * This function translates a DELETE request into a delete action.
      *
      * @param   KDispatcherContextInterface $context	A dispatcher context object
-     * @return 	KDatabaseRow(Set)Interface	A row(set) object containing the modified data
+     * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	A row(set) object containing the modified data
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {
