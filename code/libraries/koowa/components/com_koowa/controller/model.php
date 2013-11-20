@@ -17,13 +17,6 @@
 class ComKoowaControllerModel extends KControllerModel
 {
 	/**
-	 * The limit information
-	 *
-	 * @var	array
-	 */
-	protected $_limit;
-
-	/**
 	 * Constructor
 	 *
 	 * @param   KObjectConfig $config Configuration options
@@ -34,17 +27,11 @@ class ComKoowaControllerModel extends KControllerModel
 
         $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
 
-        $this->_limit = $config->limit;
-
         // Mixin the toolbar interface
         $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
-        $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
-
-        if($this->isDispatched() && $config->persistable) {
-            $this->attachBehavior('persistable');
-        }
+        $this->registerCallback('before.render' , array($this, 'attachToolbars'), array($config->toolbars));
 	}
 
 	/**
@@ -57,16 +44,6 @@ class ComKoowaControllerModel extends KControllerModel
      */
     protected function _initialize(KObjectConfig $config)
     {
-        //Disable controller persistency on non-HTTP requests,
-        //e.g. AJAX, and requests containing the tmpl variable set to component (modal boxes)
-        if($this->getIdentifier()->application === 'admin')
-        {
-            $persistable = (KRequest::type() == 'HTTP' && KRequest::get('get.tmpl','cmd') != 'component');
-            $config->append(array(
-                'persistable'    => $persistable,
-            ));
-        }
-
         //Add default toolbars only if the controller is being dispatched and the user is logged in.
         $toolbars = array();
         if($config->dispatched && !JFactory::getUser()->guest)
@@ -80,7 +57,6 @@ class ComKoowaControllerModel extends KControllerModel
 
         //Set the maximum list limit to 100
         $config->append(array(
-            'limit'     => array('max' => 100, 'default' => JFactory::getApplication()->getCfg('list_limit')),
             'toolbars'  => $toolbars
         ));
 
@@ -112,36 +88,6 @@ class ComKoowaControllerModel extends KControllerModel
         return $this;
     }
 
-	/**
-     * Browse action
-     *
-     * Use the application default limit if no limit exists in the model and limit the limit to a maximum.
-     *
-     * @param   KControllerContextInterface $context A command context object
-     * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
-     */
-    protected function _actionBrowse(KControllerContextInterface $context)
-    {
-        if($this->isDispatched())
-        {
-            $limit = $this->getModel()->getState()->limit;
-
-            //If limit is empty use default
-            if(empty($limit)) {
-                $limit = $this->_limit->default;
-            }
-
-            //Force the maximum limit
-            if($limit > $this->_limit->max) {
-                $limit = $this->_limit->max;
-            }
-
-            $this->getModel()->getState()->limit = $limit;
-        }
-
-        return parent::_actionBrowse($context);
-    }
-
     /**
      * Read action
      *
@@ -164,18 +110,5 @@ class ComKoowaControllerModel extends KControllerModel
         }
 
         return $row;
-    }
-
-    /*
-     * Overridden for translating 'limitstart' to 'offset' for compatibility with Joomla
-     */
-    public function setRequest(array $request)
-    {
-        if (isset($request['limitstart']))
-        {
-            $request['offset'] = $request['limitstart'];
-        }
-
-        return parent::setRequest($request);
     }
 }
