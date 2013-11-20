@@ -47,9 +47,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-        	'controller' => $this->getIdentifier()->package,
-    		'request'	 => KRequest::get('get', 'string'),
+        $config->append(array(
+            'behaviors'  => array('permissible'),
+            'controller' => $this->getIdentifier()->package,
+            'request'	 => KRequest::get('get', 'string')
         ))->append(array (
             'request' 	 => array('format' => KRequest::format() ? KRequest::format() : 'html')
         ));
