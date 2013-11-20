@@ -13,4 +13,14 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Module\Koowa
  */
-class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract {}
+class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
+{
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'locators' => array('mod' => 'mod:koowa.template.locator.module')
+        ));
+
+        parent::_initialize($config);
+    }
+}

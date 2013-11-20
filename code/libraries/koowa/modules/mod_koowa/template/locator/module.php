@@ -8,32 +8,26 @@
  */
 
 /**
- * Component Template Locator
+ * Module Template Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Module\Koowa
  */
-class KTemplateLocatorComponent extends KTemplateLocatorAbstract
+class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
 {
     /**
      * Locate the template based on a virtual path
      *
      * @param  string $path  Stream path or resource
      * @return string The physical stream path for the template
-     * @throws RuntimeException If a partial template path is passed and no base template has been loaded.
      */
     public function locate($path)
     {
         $result = false;
 
-        //Qualify partial templates.
         if(strpos($path, ':') === false)
         {
-            if(!$base = $this->getTemplate()->getPath()) {
-                throw new RuntimeException('Cannot qualify partial template path');
-            }
-
-            $identifier = $this->getIdentifier($base);
+            $identifier = $this->getIdentifier($this->getTemplate()->getPath());
 
             $format    = pathinfo($path, PATHINFO_EXTENSION);
             $template  = pathinfo($path, PATHINFO_FILENAME);
@@ -51,8 +45,8 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
             $parts[0] = KStringInflector::pluralize($parts[0]);
         }
 
-        $basepath  = $identifier->basepath.'/components/com_'.strtolower($identifier->package);
-        $filepath  = implode('/', $parts).'/tmpl';
+        $basepath  = $identifier->basepath.'/modules/mod_'.strtolower($identifier->package);
+        $filepath  = (count($parts) ? implode('/', $parts).'/' : '').'tmpl';
         $fullpath  = $basepath.'/'.$filepath.'/'.$template.'.'.$format.'.php';
 
         // Find the template
