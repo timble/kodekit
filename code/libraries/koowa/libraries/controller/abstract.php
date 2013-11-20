@@ -25,13 +25,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected $_actions = array();
 
     /**
-     * Array of class methods to call for a given action.
-     *
-     * @var array
-     */
-    protected $_action_map = array();
-
-    /**
      * Has the controller been dispatched
      *
      * @var boolean
@@ -110,44 +103,43 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Execute an action by triggering a method in the derived class.
      *
-     * @param   string          $action  The action to execute
+     * @param   string                      $action  The action to execute
      * @param   KControllerContextInterface $context A command context object
-     * @throws Exception
-     * @throws BadMethodCallException
-     * @return  mixed|bool      The value returned by the called method, false in error case.
+     * @throws  Exception
+     * @throws  BadMethodCallException
+     * @return  mixed|bool The value returned by the called method, false in error case.
      */
     public function execute($action, KControllerContextInterface $context)
     {
-        $action = strtolower($action);
+        $action  = strtolower($action);
 
-        //Update the context
-        $context->action = $action;
-        $context->subject = $this;
+        //Set the context subject
+        $context_subject = $context->getSubject();
+        $context->setSubject($this);
 
-        //Find the mapped action
-        if (isset( $this->_action_map[$action] )) {
-           $command = $this->_action_map[$action];
-        } else {
-           $command = $action;
-        }
+        //Set the context action
+        $context->action  = $action;
 
         //Execute the action
-        if($this->getCommandChain()->run('before.'.$command, $context, false) !== false)
+        if($this->getCommandChain()->run('before.'.$action, $context, false) !== false)
         {
-            $method = '_action' . ucfirst($command);
+            $method = '_action' . ucfirst($action);
 
             if (!method_exists($this, $method))
             {
-                if (isset($this->_mixed_methods[$command])) {
-                    $context->result = $this->_mixed_methods[$command]->execute('action.' . $command, $context);
+                if (isset($this->_mixed_methods[$action])) {
+                    $context->result = $this->_mixed_methods[$action]->execute('action.' . $command, $context);
                 } else {
-                    throw new KControllerExceptionNotImplemented("Can't execute '$command', method: '$method' does not exist");
+                    throw new KControllerExceptionNotImplemented("Can't execute '$action', method: '$method' does not exist");
                 }
             }
             else  $context->result = $this->$method($context);
 
-            $this->getCommandChain()->run('after.'.$command, $context);
+            $this->getCommandChain()->run('after.'.$action, $context);
         }
+
+        //Reset the context subject
+        $context->setSubject($context_subject);
 
         //Handle exceptions
         if($context->getError() instanceof Exception)
@@ -186,7 +178,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
                 }
             }
 
-            $this->_actions = array_unique(array_merge($this->_actions, array_keys($this->_action_map)));
+            $this->_actions = array_unique($this->_actions);
         }
 
         return parent::mixin($mixin, $config);
@@ -210,7 +202,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
                 }
             }
 
-            $this->_actions = array_unique(array_merge($this->_actions, array_keys($this->_action_map)));
+            $this->_actions = array_unique($this->_actions);
         }
 
         return $this->_actions;
@@ -283,28 +275,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     }
 
     /**
-     * Register (map) an action to a method in the class.
-     *
-     * @param   string  $alias  The action.
-     * @param   string  $action The name of the method in the derived class to perform for this action.
-     *
-     * @return  KControllerAbstract
-     */
-    public function registerActionAlias($alias, $action)
-    {
-        $alias = strtolower($alias);
-
-        if (!in_array($alias, $this->getActions())) {
-            $this->_action_map[$alias] = $action;
-        }
-
-        //Force reload of the actions
-        $this->_actions = array_unique(array_merge($this->_actions, array_keys($this->_action_map)));
-
-        return $this;
-    }
-
-    /**
      * Execute a controller action by it's name.
 	 *
 	 * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
@@ -327,6 +297,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             if(!($data instanceof KCommandInterface))
             {
                 $context = $this->getContext();
+                $context->param = $data;
                 $context->data   = $data;
                 $context->result = false;
             }
