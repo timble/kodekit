@@ -24,7 +24,7 @@ class ComKoowaDispatcherBehaviorPersistable extends KDispatcherBehaviorPersistab
     public function getHandle()
     {
         //Disable controller persistency on requests containing the tmpl variable set to component (modal boxes)
-        if($this->getIdentifier()->application === 'admin' && KRequest::get('get.tmpl','cmd') != 'component') {
+        if (KRequest::get('get.tmpl','cmd') != 'component') {
             return parent::getHandle();
         }
 
