@@ -52,12 +52,23 @@ class KControllerRequest extends KObject implements KControllerRequestInterface
         parent::_initialize($config);
     }
 
+    /**
+     * Set the request query
+     *
+     * @param  array $parameters
+     * @return KControllerRequest
+     */
     public function setQuery($query)
     {
         $this->_query = $this->getObject('koowa:object.array', array('data' => $query));
         return $this;
     }
 
+    /**
+     * Get the request query
+     *
+     * @return KObjectArray
+     */
     public function getQuery()
     {
         return $this->_query;
