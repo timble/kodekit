@@ -64,9 +64,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
 		// Set the view identifier
 		$this->_view = $config->view;
-
-		//Register display as alias for get
-		$this->registerActionAlias('display', 'get');
 	}
 
 	/**
@@ -110,6 +107,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
 			//Create the view
 			$config = array(
+                'url'	      => KRequest::url(),
                 'model'       => $this->getModel(),
                 'auto_assign' => $this instanceof KControllerModellable
             );
@@ -123,7 +121,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
 			//Make sure the view exists
 		    if($this->isDispatched() && !file_exists(dirname($this->_view->getIdentifier()->filepath))) {
-		        throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found', KHttpResponse::NOT_FOUND);
+		        throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
 		    }
 		}
 
@@ -211,7 +209,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 			else $identifier = $this->getIdentifier($model);
 
 			if($identifier->path[0] != 'model') {
-
 				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a model identifier');
 			}
 
@@ -262,12 +259,12 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	}
 
     /**
-     * Specialised display function.
+     * Render action
      *
      * @param KControllerContextInterface $context A command context object
      * @return    string|bool    The rendered output of the view or false if something went wrong
      */
-	protected function _actionGet(KControllerContextInterface $context)
+	protected function _actionRender(KControllerContextInterface $context)
 	{
 	    $result = $this->getView()->display();
 	    return $result;
