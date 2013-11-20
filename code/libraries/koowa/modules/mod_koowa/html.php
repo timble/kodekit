@@ -71,9 +71,7 @@ class ModKoowaHtml extends KViewHtml
             }
             $this->getTemplate()->load($layout.'.'.$format);
 		}
-		else {
-            $this->getTemplate()->setContent($this->module->content);
-		}
+		else $this->getTemplate()->setContent($this->module->content);
 
         $this->_content = (string) $this->getTemplate()
             ->compile()
