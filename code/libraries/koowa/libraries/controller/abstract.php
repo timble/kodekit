@@ -128,7 +128,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             if (!method_exists($this, $method))
             {
                 if (isset($this->_mixed_methods[$action])) {
-                    $context->result = $this->_mixed_methods[$action]->execute('action.' . $command, $context);
+                    $context->result = $this->_mixed_methods[$action]->execute('action.' . $action, $context);
                 } else {
                     throw new KControllerExceptionNotImplemented("Can't execute '$action', method: '$method' does not exist");
                 }
