@@ -33,7 +33,7 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
                 throw new RuntimeException('Cannot qualify partial template path');
             }
 
-            $identifier = $this->getIdentifier($base);
+            $identifier = clone $this->getIdentifier($base);
 
             $format    = pathinfo($path, PATHINFO_EXTENSION);
             $template  = pathinfo($path, PATHINFO_FILENAME);
