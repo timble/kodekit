@@ -40,7 +40,8 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
         }
         else
         {
-            $identifier = $this->getIdentifier($path);
+            // Need to clone here since we use array_pop and it modifies the cached identifier
+            $identifier = clone $this->getIdentifier($path);
 
             $format    = $identifier->name;
             $template  = array_pop($identifier->path);
