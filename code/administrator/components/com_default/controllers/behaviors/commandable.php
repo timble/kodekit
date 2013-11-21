@@ -149,7 +149,10 @@ class ComDefaultControllerBehaviorCommandable  extends KControllerBehaviorComman
             }
             else $title = false;
 
-            $document->setBuffer($title, 'modules', 'title');
+            // We directly push it to Joomla in template helpers in 3.0+
+            if (version_compare(JVERSION, '3.0', 'lt')) {
+                $document->setBuffer($title, 'modules', 'title');
+            }
 
             //Render the menubar
             if(in_array('menubar', $this->_render))

@@ -31,17 +31,30 @@ class ComDefaultTemplateHelperToolbar extends KTemplateHelperAbstract
         ));
 
         $title = $this->translate($config->toolbar->getTitle());
-        
+
         if (version_compare(JVERSION, '3.0', 'ge'))
         {
-            // Strip the extension.
-            $icons = explode(' ', $config->toolbar->getIcon());
-            foreach ($icons as &$icon)
+            if (version_compare(JVERSION, '3.2', 'ge'))
             {
-                $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
-            }
+                // Strip the extension.
+                $icons = explode(' ', $config->toolbar->getIcon());
+                foreach ($icons as &$icon) {
+                    $icon = preg_replace('#\.[^.]*$#', '', $icon);
+                }
 
-            $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
+                $layout = new JLayoutFile('joomla.toolbar.title');
+                $html = $layout->render(array('title' => $title, 'icon' => $icon));
+            }
+            else
+            {
+                // Strip the extension.
+                $icons = explode(' ', $config->toolbar->getIcon());
+                foreach ($icons as &$icon) {
+                    $icon = 'icon-48-' . preg_replace('#\.[^.]*$#', '', $icon);
+                }
+
+                $html = '<div class="pagetitle ' . htmlspecialchars(implode(' ', $icons)) . '"><h2>' . $title . '</h2></div>';
+            }
 
             $app = JFactory::getApplication();
             $app->JComponentTitle = $html;
