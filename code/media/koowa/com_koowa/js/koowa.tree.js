@@ -23,7 +23,7 @@
             if(this.options.onBeforeInitialize) this.options.onBeforeInitialize.call(this);
 
             // For scrollTo to work, needs to be position:relative;
-            if(this.element.css('position') == 'relative') {
+            if(this.element.css('position') != 'relative') {
                 this.element.css('position', 'relative');
                 //Warn that a css optimization should be done
                 if(window.console) console.warn('The element:', this.element, 'should have position:relative applied by css');
