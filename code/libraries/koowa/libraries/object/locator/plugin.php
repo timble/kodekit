@@ -22,14 +22,15 @@ class KObjectLocatorPlugin extends KObjectLocatorAbstract
 	 */
 	protected $_type = 'plg';
 
-	/**
-	 * Get the classname based on an identifier
-	 *
-	 * @param  KObjectIdentifier $identifier An identifier object - plg.type.plugin.[.path].name
-	 * @return string|boolean  Return object on success, returns FALSE on failure
-	 */
-	public function findClass(KObjectIdentifier $identifier)
-	{
+    /**
+     * Returns a fully qualified class name for a given identifier.
+     *
+     * @param KObjectIdentifier $identifier An identifier object
+     * @param bool  $fallback   Use the fallbacks to locate the identifier
+     * @return string|false  Return the class name on success, returns FALSE on failure
+     */
+    public function locate(KObjectIdentifier $identifier, $fallback = true)
+    {
 	    $classpath = KStringInflector::camelize(implode('_', $identifier->path));
 		$classname = 'Plg'.ucfirst($identifier->package).$classpath.ucfirst($identifier->name);
 
@@ -39,34 +40,5 @@ class KObjectLocatorPlugin extends KObjectLocatorAbstract
 		}
 
 		return $classname;
-	}
-
-	/**
-	 * Get the path based on an identifier
-	 *
-	 * @param  KObjectIdentifier $identifier An Identifier object - plg.type.plugin.[.path].name
-	 * @return string|boolean		Returns the path on success FALSE on failure
-	 */
-	public function findPath(KObjectIdentifier $identifier)
-	{
-	    $path  = '';
-	    $parts = $identifier->path;
-
-		$type  = $identifier->package;
-
-		if(!empty($identifier->name))
-		{
-			if(count($parts))
-			{
-				$path    = array_shift($parts);
-				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
-				$path   .= '/'.strtolower($identifier->name);
-			}
-			else $path  = strtolower($identifier->name);
-		}
-
-        $path = $identifier->basepath.'/plugins/'.$type.'/'.$path.'/'.$path.'.php';
-
-		return $path;
 	}
 }

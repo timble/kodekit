@@ -386,7 +386,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         if(isset($this->{'_'.$property}))
         {
             if($property == 'classname' && empty($this->_classname)) {
-                $this->_classname = self::$_locators[$this->_type]->findClass($this);
+                $this->_classname = self::$_locators[$this->_type]->locate($this);
             }
 
             $result =& $this->{'_'.$property};

@@ -15,20 +15,64 @@
  */
 abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
 {
-	/**
-	 * The type
-	 *
-	 * @var string
-	 */
-	protected $_type = '';
+    /**
+     * The locator type
+     *
+     * @var string
+     */
+    protected $_type = '';
 
-	/**
-	 * Get the type
-	 *
-	 * @return string	Returns the type
-	 */
-	public function getType()
-	{
-		return $this->_type;
-	}
+    /**
+     * The class prefix sequence in FIFO order
+     *
+     * @var array
+     */
+    protected $_fallbacks = array();
+
+    /**
+     * Constructor.
+     *
+     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_fallbacks = KObjectConfig::unbox($config->fallbacks);
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'fallbacks' => array(),
+        ));
+    }
+
+    /**
+     * Get the type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
+     * Get the locator fallbacks
+     *
+     * @return array
+     */
+    public function getFallbacks()
+    {
+        return $this->_fallbacks;
+    }
 }

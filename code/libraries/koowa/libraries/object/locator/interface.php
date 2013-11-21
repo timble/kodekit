@@ -15,26 +15,26 @@
  */
 interface KObjectLocatorInterface
 {
-	/**
-	 * Get the classname based on an identifier
-	 *
-	 * @param 	KObjectIdentifier $identifier An identifier object - [application::]type.package.[.path].name
-	 * @return 	string|boolean 	Returns the class on success, returns FALSE on failure
-	 */
-	public function findClass(KObjectIdentifier $identifier);
-
-	 /**
-     * Get the path based on an identifier
+    /**
+     * Get the locator type
      *
-     * @param  KObjectIdentifier $identifier  An identifier object - [application::]type.package.[.path].name
-     * @return string	Returns the path
+     * @return string
      */
-    public function findPath(KObjectIdentifier $identifier);
+    public function getType();
 
-	/**
-	 * Get the type
-	 *
-	 * @return string	Returns the type
-	 */
-	public function getType();
+    /**
+     * Get the locator fallbacks
+     *
+     * @return array
+     */
+    public function getFallbacks();
+
+    /**
+     * Returns a fully qualified class name for a given identifier.
+     *
+     * @param KObjectIdentifier $identifier An identifier object
+     * @param bool  $fallback   Use the fallbacks to locate the identifier
+     * @return string|false  Return the class name on success, returns FALSE on failure
+     */
+    public function locate(KObjectIdentifier $identifier, $fallback = true);
 }
