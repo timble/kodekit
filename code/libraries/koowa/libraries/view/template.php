@@ -130,7 +130,6 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $layout  = $this->getLayout();
         $format  = $this->getFormat();
-        $data    = $this->getData();
 
         //Handle partial layout paths
         if (is_string($layout) && strpos($layout, '.') === false)
@@ -145,7 +144,7 @@ abstract class KViewTemplate extends KViewAbstract
         $this->_content = (string) $this->getTemplate()
             ->load((string) $layout.'.'.$format)
             ->compile()
-            ->evaluate($this->_data)
+            ->evaluate($this->getData())
             ->render();
 
         return parent::display();
