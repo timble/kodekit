@@ -103,26 +103,33 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             //Make sure we have a view identifier
             if(!($this->_view instanceof KObjectIdentifier)) {
                 $this->setView($this->_view);
-        }
+            }
 
-        //Create the view
-        $config = array(
-            'url'	        => KRequest::url(),
-            'model'       => $this->getModel(),
-            'auto_assign' => $this instanceof KControllerModellable
-        );
+            //Create the view
+            $config = array(
+                'url'	      => KRequest::url(),
+                'model'       => $this->getModel(),
+                'auto_assign' => $this instanceof KControllerModellable
+            );
 
-        $this->_view = $this->getObject($this->_view, $config);
+            $this->_view = $this->getObject($this->_view, $config);
 
-        //Set the layout
-        if(isset($this->getRequest()->query->layout)) {
-            $this->_view->setLayout($this->getRequest()->query->layout);
-        }
+            //Set the layout
+            if(isset($this->getRequest()->query->layout)) {
+                $this->_view->setLayout($this->getRequest()->query->layout);
+            }
 
-        //Make sure the view exists
-		    if($this->isDispatched() && !file_exists(dirname($this->_view->getIdentifier()->filepath))) {
-		        throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
-		    }
+            //Make sure the view exists if we are dispatching this controller
+            // FIXME: get the class name without fallbacks
+            if($this->isDispatched())
+            {
+                $class = $this->_view->getIdentifier()->getClassName();
+                $path  = $this->getObject('manager')->getClassLoader()->findPath($class);
+
+                if(!file_exists(dirname($path))) {
+                    throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
+                }
+            }
 		}
 
 		return $this->_view;
