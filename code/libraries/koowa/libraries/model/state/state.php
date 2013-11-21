@@ -79,7 +79,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      *
      * @return  KModelState
      */
-    public function insert($name, $filter, $default = null, $unique = false, $required = array())
+    public function insert($name, $filter, $default = null, $unique = false, $required = array(), $internal = false)
     {
         //Create the state
         $state = new stdClass();
@@ -89,6 +89,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
         $state->unique   = $unique;
         $state->required = $required;
         $state->default  = $default;
+        $state->internal = $internal;
         $this->_data[$name] = $state;
 
         //Set the value to default
@@ -246,6 +247,63 @@ class KModelState extends KObjectArray implements KModelStateInterface
         }
 
         return $data;
+    }
+
+    /**
+     * Set a state property
+     *
+     * @param string $name      The name of the state
+     * @param string $property  The name of the property
+     * @param mixed  $value     The value of the property
+     * @return KModelState
+     */
+    public function setProperty($name, $property, $value)
+    {
+        if($this->has($name))
+        {
+            if($this->hasProperty($name, $property)) {
+                $this->_data[$name]->$property = $value;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get a state property
+     *
+     * @param string $name     The name of the state
+     * @param string $property The name of the property
+     * @return mixed|null   Return the property value or NULL if the property does not exist
+     */
+    public function getProperty($name, $property)
+    {
+        $value = null;
+        if($this->has($name))
+        {
+            if(isset($this->_data[$name]->$property)) {
+                $result = $this->_data[$name]->$property;
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * Check if a state property exists
+     *
+     * @param string $name     The name of the state
+     * @param string $property The name of the property
+     * @return boolean   Return TRUE if the the property exists, FALSE otherwise
+     */
+    public function hasProperty($name, $property)
+    {
+        $result = false;
+        if($this->has($name)) {
+            $result = property_exists($this->_data[$name], $property);
+        }
+
+        return $result;
     }
 
     /**

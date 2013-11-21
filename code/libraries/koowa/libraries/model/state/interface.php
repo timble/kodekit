@@ -69,6 +69,34 @@ interface KModelStateInterface
     public function reset();
 
     /**
+     * Set a state property
+     *
+     * @param string $name      The name of the state
+     * @param string $property  The name of the property
+     * @param mixed  $value     The value of the property
+     * @return mixed
+     */
+    public function setProperty($name, $property, $value);
+
+    /**
+     * Get a state property
+     *
+     * @param string $name     The name of the state
+     * @param string $property The name of the property
+     * @return mixed
+     */
+    public function getProperty($name, $property);
+
+    /**
+     * Check if a state property exists
+     *
+     * @param string $name     The name of the state
+     * @param string $property The name of the property
+     * @return boolean   Return TRUE if the the property exists, FALSE otherwise
+     */
+    public function hasProperty($name, $property);
+
+    /**
      * Set the state data
      *
      * This function will only filter values if we have a value. If the value is an empty string it will be filtered
