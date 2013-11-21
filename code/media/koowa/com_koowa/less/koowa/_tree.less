@@ -1,3 +1,5 @@
+
+
 ul.jqtree-tree ul.jqtree_common {
     list-style: none outside;
     margin: 0;
@@ -102,11 +104,42 @@ ul.jqtree-tree li.jqtree-selected > a:hover .jqtree-title i {
     transition: opacity 300ms;
     font-style: normal;
 }
-.icon-triangle-right:hover, .icon-triangle-down:hover {
-    opacity: 1;
-    transition: opacity 300ms;
+.icon-triangle-right, .icon-triangle-down {
+    &:hover {
+        opacity: 1;
+        transition: opacity 300ms;
+    }
 }
 
 ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
     outline: dashed 1px #0000ff;
+}
+
+.jqtree-tree {
+
+    &:before,
+    &:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+
+    ul, li {
+        float: left !important;
+        min-width: 100%;
+        overflow: visible;
+
+        a {
+            padding: 6px 10px !important;
+            width: auto;
+        }
+
+        .icon-toggler {
+            font-size: 10px;
+        }
+
+        .jqtree-title {
+            line-height: 1em; // Make both lists the same height
+        }
+    }
 }
