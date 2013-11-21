@@ -83,13 +83,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     protected $_name = '';
 
-    /**
-     * The file path
-     *
-     * @var string
-     */
-    protected $_filepath = '';
-
      /**
      * The classname
      *
@@ -156,7 +149,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             'name'		  => $this->_name,
             'identifier'  => $this->_identifier,
             'basepath'    => $this->_basepath,
-            'filepath'	  => $this->filepath,
             'classname'   => $this->classname,
         );
 
@@ -176,6 +168,16 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	        $this->{'_'.$property} = $value;
 	    }
 	}
+
+    /**
+     * Checks if the identifier has been defined
+     *
+     * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
+     */
+    public function exists()
+    {
+        return (bool) $this->getLocator()->locate($this, false);
+    }
 
 	/**
 	 * Set an application path
@@ -280,6 +282,16 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
+     * Get the identifier class name
+     *
+     * @return string
+     */
+    public function getClassName()
+    {
+        return $this->classname;
+    }
+
+    /**
      * Formats the identifier as a type:[//application/]package.[.path].name string
      *
      * @return string
@@ -369,7 +381,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             //Unset the properties
             $this->_identifier = '';
             $this->_classname  = '';
-            $this->_filepath   = '';
         }
     }
 
@@ -381,21 +392,17 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function &__get($property)
     {
+        $result = null;
         if(isset($this->{'_'.$property}))
         {
-            if($property == 'filepath' && empty($this->_filepath)) {
-                $this->_filepath = self::$_locators[$this->_type]->findPath($this);
-            }
-
             if($property == 'classname' && empty($this->_classname)) {
-                $this->_classname = self::$_locators[$this->_type]->findClass($this);
+                $this->_classname = self::$_locators[$this->_type]->locate($this);
             }
 
-            return $this->{'_'.$property};
+            $result =& $this->{'_'.$property};
         }
 
-        $null = null;
-        return $null;
+        return $result;
     }
 
     /**

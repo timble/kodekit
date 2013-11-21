@@ -304,14 +304,14 @@ class KViewVcard extends KViewFile
     /**
      * Force the route to fully qualified and not escaped by default
      *
-     * @param   string  $route   The query string used to create the route
-     * @param   boolean $fqr     If TRUE create a fully qualified route. Default TRUE.
-     * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return  string  The route
+     * @param   string|array    $route   The query string used to create the route
+     * @param   boolean $fqr    If TRUE create a fully qualified route. Default TRUE.
+     * @param   boolean $escape If TRUE escapes the route for xml compliance. Default FALSE.
+     * @return  KHttpUrl        The route
      */
-    public function createRoute($route = '', $fqr = true, $escape = false)
+    public function getRoute($route = '', $fqr = true, $escape = false)
     {
-        return parent::createRoute($route, $fqr, $escape);
+        return parent::getRoute($route, $fqr, $escape);
     }
 
     /**

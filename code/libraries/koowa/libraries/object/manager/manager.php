@@ -97,7 +97,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
         }
 
 	    //Auto-load the koowa adapter
-        KObjectIdentifier::addLocator(new KObjectLocatorKoowa());
+        KObjectIdentifier::addLocator(new KObjectLocatorKoowa($config));
 
         //Register self and set a 'manager' alias
         $this->setObject($this->getIdentifier(), $this);
@@ -580,7 +580,9 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
                 );
             }
         }
-        else throw new KObjectExceptionNotFound('Cannot load object from identifier: '. $identifier);
+        else {
+            throw new KObjectExceptionNotFound('Cannot load object from identifier: '. $identifier);
+        }
 
         return $result;
     }

@@ -59,6 +59,6 @@ class ComKoowaViewUsersJson extends KViewJson
         $package = $this->getIdentifier()->package;
         $view    = 'users';
 
-        return $this->createRoute(sprintf('option=com_%s&view=%s&id=%s&format=json', $package, $view, $row->id));
+        return $this->getRoute(sprintf('option=com_%s&view=%s&id=%s&format=json', $package, $view, $row->id));
     }
 }

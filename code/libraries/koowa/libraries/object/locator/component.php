@@ -15,100 +15,93 @@
  */
 class KObjectLocatorComponent extends KObjectLocatorAbstract
 {
-	/**
-	 * The type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'com';
+    /**
+     * The type
+     *
+     * @var string
+     */
+    protected $_type = 'com';
 
-	/**
-	 * Get the classname based on an identifier
-	 *
-	 * This locator will try to create an generic or default classname on the identifier information
-	 * if the actual class cannot be found using a predefined fallback sequence.
-	 *
-	 * Fallback sequence : -> Named Component Specific
-	 *                     -> Named Component Default
-	 *                     -> Default Component Specific
-	 *                     -> Default Component Default
-	 *                     -> Framework Specific
-	 *                     -> Framework Default
-	 *
-	 * @param KObjectIdentifier $identifier An identifier object - com:[//application/]component.view.[.path].name
-	 * @return string|boolean  Return object on success, returns FALSE on failure
-	 */
-	public function findClass(KObjectIdentifier $identifier)
-	{
-	    $path      = KStringInflector::camelize(implode('_', $identifier->path));
-        $classname = 'Com'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
-
-      	//Manually load the class to set the basepath
-		if (!$this->getObject('koowa:class.loader')->loadClass($classname, $identifier->basepath))
-		{
-		    $classpath = $identifier->path;
-			$classtype = !empty($classpath) ? array_shift($classpath) : '';
-
-			//Create the fallback path and make an exception for views
-			$path = ($classtype != 'view') ? ucfirst($classtype).KStringInflector::camelize(implode('_', $classpath)) : ucfirst($classtype);
-
-			/*
-			 * Find the classname to fallback too and auto-load the class
-			 *
-			 * Fallback sequence : -> Named Component Specific
-			 *                     -> Named Component Default
-			 *                     -> Koowa Component Specific
-			 *                     -> Koowa Component Default
-			 *                     -> Framework Specific
-			 *                     -> Framework Default
-			 */
-			if(class_exists('Com'.ucfirst($identifier->package).$path.ucfirst($identifier->name))) {
-				$classname = 'Com'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
-			} elseif(class_exists('Com'.ucfirst($identifier->package).$path.'Default')) {
-				$classname = 'Com'.ucfirst($identifier->package).$path.'Default';
-			} elseif(class_exists('ComKoowa'.$path.ucfirst($identifier->name))) {
-				$classname = 'ComKoowa'.$path.ucfirst($identifier->name);
-			} elseif(class_exists('ComKoowa'.$path.'Default')) {
-				$classname = 'ComKoowa'.$path.'Default';
-			} elseif(class_exists( 'K'.$path.ucfirst($identifier->name))) {
-				$classname = 'K'.$path.ucfirst($identifier->name);
-			} elseif(class_exists('K'.$path.'Default')) {
-				$classname = 'K'.$path.'Default';
-			} else {
-				$classname = false;
-			}
-		}
-
-		return $classname;
-	}
-
-	/**
-	 * Get the path based on an identifier
-	 *
-	 * @param  KObjectIdentifier $identifier  An identifier object - com:[//application/]component.view.[.path].name
-	 * @return string	Returns the path
-	 */
-    public function findPath(KObjectIdentifier $identifier)
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
     {
-        $path  = '';
-        $parts = $identifier->path;
+        $config->append(array(
+            'fallbacks' => array(
+                'Com<Package><Path><Name>',
+                'Com<Package><Path>Default',
+                'ComKoowa<Path><Name>',
+                'ComKoowa<Path>Default',
+                'K<Path><Name>',
+                'K<Path>Default'
+            )
+        ));
 
-        $component = 'com_'.strtolower($identifier->package);
+        parent::_initialize($config);
+    }
 
-        if(!empty($identifier->name))
-        {
-            if(count($parts))
-            {
-                if($parts[0] === 'view') {
-                    $parts[0] = KStringInflector::pluralize($parts[0]);
-                }
+    /**
+     * Returns a fully qualified class name for a given identifier.
+     *
+     * @param KObjectIdentifier $identifier An identifier object
+     * @param bool  $fallback   Use the fallbacks to locate the identifier
+     * @return string|false  Return the class name on success, returns FALSE on failure
+     */
+    public function locate(KObjectIdentifier $identifier, $fallback = true)
+    {
+        $class   = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
 
-                $path = implode('/', $parts).'/'.strtolower($identifier->name);
-            }
-            else $path  = strtolower($identifier->name);
+        $package = ucfirst($identifier->package);
+        $name    = ucfirst($identifier->name);
+
+        //Make an exception for 'view' and 'module' types
+        $path  = $identifier->path;
+        $type  = !empty($path) ? array_shift($path) : '';
+
+        if(!in_array($type, array('view','module'))) {
+            $path = ucfirst($type).KStringInflector::camelize(implode('_', $path));
+        } else {
+            $path = ucfirst($type);
         }
 
-        $path = $identifier->basepath.'/components/'.$component.'/'.$path.'.php';
-        return $path;
+        //Allow locating default classes if $path is empty.
+        if(empty($path))
+        {
+            $path = $name;
+            $name = '';
+        }
+
+        //Check if the class exists
+        $result = false;
+        if (!$this->getObject('koowa:class.loader')->loadClass('Com'.$package.$class, $identifier->basepath))
+        {
+            //Use the fallbacks
+            if($fallback)
+            {
+                foreach($this->_fallbacks as $fallback)
+                {
+                    $result = str_replace(
+                        array('<Package>', '<Path>', '<Name>', '<Class>'),
+                        array($package   , $path   , $name   , $class),
+                        $fallback
+                    );
+
+                    if(!class_exists($result)) {
+                        $result = false;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        else $result = 'Com'.$package.$class;
+
+        return $result;
     }
 }

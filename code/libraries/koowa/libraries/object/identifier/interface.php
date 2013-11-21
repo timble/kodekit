@@ -19,6 +19,13 @@
 interface KObjectIdentifierInterface extends Serializable
 {
     /**
+     * Checks if the identifier has been defined
+     *
+     * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
+     */
+    public function exists();
+
+    /**
      * Set an application path
      *
      * @param string $application The name of the application
