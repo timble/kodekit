@@ -487,6 +487,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
      * to the KCommandChain mixin.
      *
+     * @throws UnexpectedValueException
      * @return  KCommandChainInterface
      */
     public function getCommandChain()

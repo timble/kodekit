@@ -382,7 +382,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
      */
     public function getAliases($identifier)
     {
-        $identifier = $this->sgetIdentifier($identifier);
+        $identifier = $this->getIdentifier($identifier);
         return array_search((string) $identifier, $this->_aliases);
     }
 

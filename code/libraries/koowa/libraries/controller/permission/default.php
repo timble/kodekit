@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-final class ComKoowaControllerPermissionDefault extends ComKoowaControllerPermissionAbstract { }
+final class KControllerPermissionDefault extends KControllerPermissionAbstract { }

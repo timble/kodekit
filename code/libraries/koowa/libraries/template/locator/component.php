@@ -24,8 +24,6 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
      */
     public function locate($path)
     {
-        $result = false;
-
         //Qualify partial templates.
         if(strpos($path, ':') === false)
         {

@@ -99,10 +99,11 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      * Method will always perform a cookie token check. If a user session is active a session token check
      * will also be done. If any of the checks fail an forbidden exception  being thrown.
      *
-     * @param   KDispatcherContext $context The command context
+     * @param   KDispatcherContextInterface $context The command context
+     * @throws KControllerExceptionForbidden
      * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
-    public function authenticateRequestK(DispatcherContextInterfacet $context)
+    public function authenticateRequest(KDispatcherContextInterface $context)
     {
         //Check cookie token
         if(KRequest::token() !== KRequest::get('cookie._token', 'md5')) {
@@ -123,7 +124,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     /**
      * Sign the response with a token
      *
-     * @param KDispatcherContext $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context	A dispatcher context object
      */
     public function signResponse(KDispatcherContextInterface $context)
     {
@@ -207,6 +208,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      * redirect the dispatcher to another URL after a GET request.
      *
      * @param KDispatcherContextInterface $context   A command context object
+     * @return bool
      */
     protected function _actionRedirect(KDispatcherContextInterface $context)
     {

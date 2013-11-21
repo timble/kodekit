@@ -158,7 +158,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
         if(!$dispatcher instanceof KDispatcherInterface)
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'Dispatcher: '.get_class($dispatcher).' does not implement KDispatcherInterface'
             );
         }
@@ -185,6 +185,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      * Send the response
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return string
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
@@ -205,5 +206,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         if(is_string($context->result)) {
             return $context->result;
         }
+
+        return '';
     }
 }

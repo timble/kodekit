@@ -665,7 +665,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
                 if (!($locator instanceof KTemplateLocatorInterface))
                 {
-                    throw new \UnexpectedValueException(
+                    throw new UnexpectedValueException(
                         "Template loader $identifier does not implement KTemplateLocatorInterface"
                     );
                 }

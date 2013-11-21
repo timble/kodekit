@@ -257,7 +257,7 @@ class KViewVcard extends KViewFile
      * @param   string $type Type [WORK|HOME]
      * @return  KViewVCard
      */
-    public function setURL($url, $type = 'WORK')
+    public function setVcardURL($url, $type = 'WORK')
     {
         $this->_properties['URL;'.$type] = $url;
         return $this;

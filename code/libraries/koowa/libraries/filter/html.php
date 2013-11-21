@@ -153,8 +153,6 @@ class KFilterHtml extends KFilterAbstract implements KFilterTraversable
     {
         $preTag         = null;
         $postTag        = $source;
-        $currentSpace   = false;
-        $attr           = '';
 
         // Is there a tag? If so it will certainly start with a '<'
         $tagOpen_start  = strpos($source, '<');
@@ -176,7 +174,6 @@ class KFilterHtml extends KFilterAbstract implements KFilterTraversable
 
             // Do we have a nested tag?
             $tagOpen_nested = strpos($fromTagOpen, '<');
-            $tagOpen_nested_end = strpos(substr($postTag, $tagOpen_end), '>');
             if (($tagOpen_nested !== false) && ($tagOpen_nested < $tagOpen_end)) {
                 $preTag         .= substr($postTag, 0, ($tagOpen_nested +1));
                 $postTag        = substr($postTag, ($tagOpen_nested +1));
@@ -185,7 +182,6 @@ class KFilterHtml extends KFilterAbstract implements KFilterTraversable
             }
 
             // Lets get some information about our tag and setup attribute pairs
-            $tagOpen_nested = (strpos($fromTagOpen, '<') + $tagOpen_start +1);
             $currentTag     = substr($fromTagOpen, 0, $tagOpen_end);
             $tagLength      = strlen($currentTag);
             $tagLeft        = $currentTag;
@@ -400,6 +396,7 @@ class KFilterHtml extends KFilterAbstract implements KFilterTraversable
     protected function _decode($source)
     {
         // entity decode
+        $ttr       = array();
         $trans_tbl = get_html_translation_table(HTML_ENTITIES);
         foreach($trans_tbl as $k => $v) {
             $ttr[$v] = utf8_encode($k);

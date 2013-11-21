@@ -23,8 +23,6 @@ class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
      */
     public function locate($path)
     {
-        $result = false;
-
         if(strpos($path, ':') === false)
         {
             $identifier = $this->getIdentifier($this->getTemplate()->getPath());

@@ -18,7 +18,7 @@ interface KHttpMessageInterface
     /**
      * Set the header parameters
      *
-     * @param  array $headers
+     * @param  array $parameters
      * @return KHttpMessageInterface
      */
     public function setHeaders($parameters);
@@ -26,7 +26,6 @@ interface KHttpMessageInterface
     /**
      * Get the headers container
      *
-     * @param  array $headers
      * @return KHttpMessageHeaders
      */
     public function getHeaders();

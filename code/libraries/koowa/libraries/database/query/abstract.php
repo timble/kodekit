@@ -87,7 +87,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Get the query parameters
      *
-     * @return  DatabaseQueryParameters
+     * @return  KDatabaseQueryParameters
      */
     public function getParameters()
     {
