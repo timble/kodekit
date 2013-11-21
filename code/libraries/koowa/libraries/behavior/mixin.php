@@ -37,7 +37,7 @@ class KBehaviorMixin extends KCommandMixin
     /**
      * Constructor
      *
-     * @param KObjectConfig $object An optional ObjectConfig object with configuration options.
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options.
      */
     public function __construct(KObjectConfig $config)
     {

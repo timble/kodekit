@@ -34,7 +34,7 @@ interface KHttpRequestInterface extends KHttpMessageInterface
     /**
      * Set the url for this request
      *
-     * @param string|KHttpUrl   $uri
+     * @param string|KHttpUrl   $url
      * @throws InvalidArgumentException If the url is not an instance of KHttpUrl or a string
      * @return KHttpRequest
      */

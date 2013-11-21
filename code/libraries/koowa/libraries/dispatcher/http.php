@@ -304,7 +304,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         //Retrieve HTTP methods allowed by the dispatcher
         $actions = array_diff($this->getActions(), array('dispatch'));
 
-        foreach($actions as $key => $action)
+        foreach($actions as $action)
         {
             if($this->canExecute($action)) {
                 $methods[$action] = $action;

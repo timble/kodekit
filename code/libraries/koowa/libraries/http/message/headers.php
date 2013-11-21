@@ -188,6 +188,7 @@ class KHttpMessageHeaders extends KObjectArray
 
         foreach ($headers as $name => $values)
         {
+            $value   = '';
             $name    = implode('-', array_map('ucfirst', explode('-', $name)));
             $results = array();
 
@@ -202,8 +203,9 @@ class KHttpMessageHeaders extends KObjectArray
                 $value = implode($results, '; ');
             }
 
-            // FIXME: check if value is defined
-            $content .= sprintf("%s %s\r\n", $name.':', $value);
+            if ($value) {
+                $content .= sprintf("%s %s\r\n", $name.':', $value);
+            }
         }
 
         return $content;

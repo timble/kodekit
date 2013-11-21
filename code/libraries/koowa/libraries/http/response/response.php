@@ -56,21 +56,22 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     const TEMPORARY_REDIRECT        = 307;
 
     // [Client Error 4xx]  
-    const BAD_REQUEST               = 400;
-    const UNAUTHORIZED              = 401;
-    const FORBIDDEN                 = 403;
-    const NOT_FOUND                 = 404;
-    const METHOD_NOT_ALLOWED        = 405;
-    const NOT_ACCEPTABLE            = 406;
-    const REQUEST_TIMEOUT           = 408;
-    const CONFLICT                  = 409;
-    const GONE                      = 410;
-    const LENGTH_REQUIRED           = 411;
-    const PRECONDITION_FAILED       = 412;
-    const REQUEST_ENTITY_TOO_LARGE  = 413;
-    const REQUEST_URI_TOO_LONG      = 414;
-    const UNSUPPORTED_MEDIA_TYPE    = 415;
-    const EXPECTATION_FAILED        = 417;
+    const BAD_REQUEST                   = 400;
+    const UNAUTHORIZED                  = 401;
+    const FORBIDDEN                     = 403;
+    const NOT_FOUND                     = 404;
+    const METHOD_NOT_ALLOWED            = 405;
+    const NOT_ACCEPTABLE                = 406;
+    const REQUEST_TIMEOUT               = 408;
+    const CONFLICT                      = 409;
+    const GONE                          = 410;
+    const LENGTH_REQUIRED               = 411;
+    const PRECONDITION_FAILED           = 412;
+    const REQUEST_ENTITY_TOO_LARGE      = 413;
+    const REQUEST_URI_TOO_LONG          = 414;
+    const UNSUPPORTED_MEDIA_TYPE        = 415;
+    const REQUESTED_RANGE_NOT_SATISFIED = 416;
+    const EXPECTATION_FAILED            = 417;
 
     // [Server Error 5xx]  
     const INTERNAL_SERVER_ERROR     = 500;
@@ -314,6 +315,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.29
      *
+     * @throws RuntimeException
      * @return DateTime A DateTime instance
      */
     public function getLastModified()
@@ -360,6 +362,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.21
      *
+     * @throws RuntimeException
      * @return DateTime A DateTime instance
      */
     public function getExpires()
@@ -558,7 +561,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     {
         $result = true;
         if ($maxAge = $this->getMaxAge()) {
-            $result = ($maxAge - $this->getAge()) <= O;
+            $result = ($maxAge - $this->getAge()) <= 0;
         }
 
         return $result;

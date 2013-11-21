@@ -98,7 +98,6 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
     /**
      * Get the headers container
      *
-     * @param  array $headers
      * @return KHttpMessageHeaders
      */
     public function getHeaders()
@@ -110,6 +109,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      * Sets the HTTP protocol version (1.0 or 1.1).
      *
      * @param string $version The HTTP protocol version
+     * @throws InvalidArgumentException
      * @return KHttpResponse
      */
     public function setVersion($version)
