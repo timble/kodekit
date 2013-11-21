@@ -169,6 +169,16 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	    }
 	}
 
+    /**
+     * Checks if the identifier has been defined
+     *
+     * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
+     */
+    public function exists()
+    {
+        return (bool) $this->getLocator()->locate($this, false);
+    }
+
 	/**
 	 * Set an application path
 	 *

@@ -120,10 +120,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             }
 
             //Make sure the view exists if we are dispatching this controller
-            // FIXME: get the class name without fallbacks
             if($this->isDispatched())
             {
-                $class = $this->_view->getIdentifier()->getClassName();
+                $class = $this->_view->getIdentifier()->getLocator()->locate($this->_view->getIdentifier(), false);
                 $path  = $this->getObject('manager')->getClassLoader()->findPath($class);
 
                 if(!file_exists(dirname($path))) {
