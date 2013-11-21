@@ -73,8 +73,27 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
      */
     public function attachToolbar($toolbar, $config = array())
     {
-        if (!($toolbar instanceof KControllerToolbarInterface)) {
-            $toolbar = $this->createToolbar($toolbar, $config);
+        if (!($toolbar instanceof KControllerToolbarInterface))
+        {
+            if (!($toolbar instanceof KObjectIdentifier))
+            {
+                //Create the complete identifier if a partial identifier was passed
+                if (is_string($toolbar) && strpos($toolbar, '.') === false)
+                {
+                    $identifier = clone $this->getIdentifier();
+                    $identifier->path = array('controller', 'toolbar');
+                    $identifier->name = $toolbar;
+                }
+                else $identifier = $this->getIdentifier($toolbar);
+            }
+            else $identifier = $toolbar;
+
+            $config['controller'] = $this->getMixer();
+            $toolbar = $this->getObject($identifier, $config);
+
+            if (!($toolbar instanceof KControllerToolbarInterface)) {
+                throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
+            }
         }
 
         //Store the toolbar to allow for type lookups
@@ -143,38 +162,5 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     public function getToolbars()
     {
         return $this->_toolbars;
-    }
-
-    /**
-     * Get a toolbar by identifier
-     *
-     * @param  KObjectIdentifier|string $toolbar Toolbar identifier
-     * @param  array|KObjectConfig             $config  Configuration options
-     * @throws UnexpectedValueException
-     * @return KControllerToolbarInterface
-     */
-    public function createToolbar($toolbar, $config = array())
-    {
-        if (!($toolbar instanceof KObjectIdentifier))
-        {
-            //Create the complete identifier if a partial identifier was passed
-            if (is_string($toolbar) && strpos($toolbar, '.') === false)
-            {
-                $identifier = clone $this->getIdentifier();
-                $identifier->path = array('controller', 'toolbar');
-                $identifier->name = $toolbar;
-            }
-            else $identifier = $this->getIdentifier($toolbar);
-        }
-        else $identifier = $toolbar;
-
-        $config['controller'] = $this->getMixer();
-        $toolbar = $this->getObject($identifier, $config);
-
-        if (!($toolbar instanceof KControllerToolbarInterface)) {
-            throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
-        }
-
-        return $toolbar;
     }
 }
