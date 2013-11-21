@@ -180,7 +180,18 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         if (!empty($title))
         {
-            if ($this->_useBootstrap())
+            if (version_compare(JVERSION, '3.2', 'ge'))
+            {
+                // Strip the extension.
+                $icons = explode(' ', $config->toolbar->getIcon());
+                foreach ($icons as &$icon) {
+                    $icon = preg_replace('#\.[^.]*$#', '', $icon);
+                }
+
+                $layout = new JLayoutFile('joomla.toolbar.title');
+                $html = $layout->render(array('title' => $title, 'icon' => $icon));
+            }
+            elseif ($this->_useBootstrap())
             {
                 // Strip the extension.
                 $icons = explode(' ', $icon);
