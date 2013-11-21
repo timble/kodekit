@@ -413,7 +413,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
             $states = array();
             foreach($this->getModel()->getState() as $name => $state)
             {
-                if($state->default != $state->value) {
+                if($state->default != $state->value && !$state->internal) {
                     $states[$name] = $state->value;
                 }
             }
@@ -424,8 +424,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $url = JRoute::_('index.php?'.http_build_query($parts), $escape);
 
         //Add the host and the schema
-        if ($fqr === true)
-        {
+        if ($fqr === true) {
             $url = $this->getUrl()->toString(KHttpUrl::AUTHORITY) . '/' . $url;
         }
 
