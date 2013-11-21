@@ -65,12 +65,7 @@ class KObjectLocatorPlugin extends KObjectLocatorAbstract
 			else $path  = strtolower($identifier->name);
 		}
 
-		//Plugins can have their own folder
-		if (is_file($identifier->basepath.'/plugins/'.$type.'/'.$path.'/'.$path.'.php')) {
-		    $path = $identifier->basepath.'/plugins/'.$type.'/'.$path.'/'.$path.'.php';
-	    } else {
-		    $path = $identifier->basepath.'/plugins/'.$type.'/'.$path.'.php';
-		}
+        $path = $identifier->basepath.'/plugins/'.$type.'/'.$path.'/'.$path.'.php';
 
 		return $path;
 	}
