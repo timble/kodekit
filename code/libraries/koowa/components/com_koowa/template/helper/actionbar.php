@@ -114,7 +114,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             $href = $command->href;
 
             if (substr($href, 0, 1) === '&') {
-                $href = $this->getTemplate()->getView()->createRoute($href);
+                $href = $this->getTemplate()->getView()->getRoute($href);
             }
 
             $command->attribs['href'] = $href;

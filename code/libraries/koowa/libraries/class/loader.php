@@ -200,28 +200,6 @@ class KClassLoader implements KClassLoaderInterface
         return $result;
     }
 
-	/**
-     * Load a class based on an identifier
-     *
-     * @param string|object The identifier or identifier object
-     * @return boolean      Returns TRUE on success throws exception on failure
-     */
-    public function loadIdentifier($identifier)
-    {
-        $result = false;
-
-        $identifier = KObjectManager::getInstance()->getIdentifier($identifier);
-
-        //Get the path
-        $path = $identifier->filepath;
-
-        if ($path !== false) {
-            $result = $this->loadFile($path);
-        }
-
-        return $result;
-    }
-
     /**
      * Load a class based on a path
      *

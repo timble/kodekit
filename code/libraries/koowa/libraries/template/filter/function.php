@@ -29,7 +29,7 @@ class KTemplateFilterFunction extends KTemplateFilterAbstract implements KTempla
         '@overlay('   => '$this->renderHelper(\'behavior.overlay\', ',
         '@translate(' => '$this->translate(',
         '@import('    => '$this->load(',
-        '@route('     => '$this->getView()->createRoute(',
+        '@route('     => '$this->getView()->getRoute(',
         '@escape('    => '$this->escape(',
         '@title('     => '$this->getView()->getTitle(',
     );

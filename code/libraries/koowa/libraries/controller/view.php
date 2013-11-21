@@ -87,42 +87,48 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
         parent::_initialize($config);
     }
 
-	/**
-	 * Get the view object attached to the controller
-	 *
-	 * This function will check if the view folder exists. If not it will throw an exception. This is a security measure
+    /**
+     * Get the view object attached to the controller
+     *
+     * This function will check if the view folder exists. If not it will throw an exception. This is a security measure
      * to make sure we can only explicitly get data from views the have been physically defined.
-	 *
-	 * @throws  KControllerExceptionNotFound if the view cannot be found.
-	 * @return	KViewAbstract
-	 */
-	public function getView()
-	{
-	    if(!$this->_view instanceof KViewInterface)
-		{
-		    //Make sure we have a view identifier
-		    if(!($this->_view instanceof KObjectIdentifier)) {
-		        $this->setView($this->_view);
-			}
+     *
+     * @throws  KControllerExceptionNotFound if the view cannot be found.
+     * @return	KViewAbstract
+     */
+    public function getView()
+    {
+        if(!$this->_view instanceof KViewInterface)
+        {
+            //Make sure we have a view identifier
+            if(!($this->_view instanceof KObjectIdentifier)) {
+                $this->setView($this->_view);
+            }
 
-			//Create the view
-			$config = array(
+            //Create the view
+            $config = array(
                 'url'	      => KRequest::url(),
                 'model'       => $this->getModel(),
                 'auto_assign' => $this instanceof KControllerModellable
             );
 
-			$this->_view = $this->getObject($this->_view, $config);
+            $this->_view = $this->getObject($this->_view, $config);
 
-			//Set the layout
-			if(isset($this->getRequest()->query->layout)) {
-        	    $this->_view->setLayout($this->getRequest()->query->layout);
-        	}
+            //Set the layout
+            if(isset($this->getRequest()->query->layout)) {
+                $this->_view->setLayout($this->getRequest()->query->layout);
+            }
 
-			//Make sure the view exists
-		    if($this->isDispatched() && !file_exists(dirname($this->_view->getIdentifier()->filepath))) {
-		        throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
-		    }
+            //Make sure the view exists if we are dispatching this controller
+            if($this->isDispatched())
+            {
+                $class = $this->_view->getIdentifier()->getLocator()->locate($this->_view->getIdentifier(), false);
+                $path  = $this->getObject('manager')->getClassLoader()->findPath($class);
+
+                if(!file_exists(dirname($path))) {
+                    throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
+                }
+            }
 		}
 
 		return $this->_view;

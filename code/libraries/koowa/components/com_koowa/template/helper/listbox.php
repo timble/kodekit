@@ -236,7 +236,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 $parts = array_merge($parts, KObjectConfig::unbox($config->filter));
             }
 
-            $config->url = $this->getTemplate()->getView()->createRoute($parts, false, false);
+            $config->url = $this->getTemplate()->getView()->getRoute($parts, false, false);
         }
 
         $html = '';

@@ -141,23 +141,19 @@ interface KViewInterface
     public function setUrl(KHttpUrl $url);
 
     /**
-     * Create a route based on a full or partial query string
+     * Get a route based on a full or partial query string
      *
-     * index.php? will be automatically added.
-     * option, view and layout can be omitted. The following variations will result in the same route:
+     * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
      *
      * - foo=bar
-     * - view=myview&foo=bar
      * - option=com_mycomp&view=myview&foo=bar
-     *
-     * If the route starts with '&' the query string will be appended to the current URL.
      *
      * In templates, use @route()
      *
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to FALSE.
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  string The route
+     * @return  KHttpUrl     The route
      */
-    public function createRoute($route, $fqr = null, $escape = null);
+    public function getRoute($route, $fqr = null, $escape = null);
 }

@@ -22,98 +22,88 @@ class KObjectLocatorModule extends KObjectLocatorAbstract
 	 */
 	protected $_type = 'mod';
 
-	/**
-	 * Get the classname based on an identifier
-	 *
-	 * This locator will try to create an generic or default classname on the identifier information
-	 * if the actual class cannot be found using a predefined fallback sequence.
-	 *
-	 * Fallback sequence : -> Named Module Specific
-	 *                     -> Named Module Default
-	 *                     -> Default Module Specific
-	 *                     -> Default Module Default
-	 *                     -> Framework Specific
-	 *                     -> Framework Default
-	 *
-	 * @param KObjectIdentifier $identifier  An identifier object - mod:[//application/]module.[.path].name
-	 * @return string|boolean  Return object on success, returns FALSE on failure
-	 */
-	public function findClass(KObjectIdentifier $identifier)
-	{
-	    $path = KStringInflector::camelize(implode('_', $identifier->path));
-		$classname = 'Mod'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'fallbacks' => array(
+                'Mod<Package><Path><Name>',
+                'Mod<Package><Path>Default',
+                'ModKoowa<Path><Name>',
+                'ModKoowa<Path>Default',
+                'ComKoowa<Path><Name>',
+                'ComKoowa<Path>Default',
+                'K<Path><Name>',
+                'K<Path>Default'
+            )
+        ));
 
-		//Don't allow the auto-loader to load module classes if they don't exists yet
-		if (!$this->getObject('koowa:class.loader')->loadClass($classname, $identifier->basepath))
-		{
-			$classpath = $identifier->path;
-			$classtype = !empty($classpath) ? array_shift($classpath) : 'view';
+        parent::_initialize($config);
+    }
 
-			//Create the fallback path and make an exception for views
-			$com_path = ($classtype != 'view') ? ucfirst($classtype).KStringInflector::camelize(implode('_', $classpath)) : ucfirst($classtype);
-			$mod_path = ($classtype != 'view') ? ucfirst($classtype).KStringInflector::camelize(implode('_', $classpath)) : '';
+    /**
+     * Returns a fully qualified class name for a given identifier.
+     *
+     * @param KObjectIdentifier $identifier An identifier object
+     * @param bool  $fallback   Use the fallbacks to locate the identifier
+     * @return string|false  Return the class name on success, returns FALSE on failure
+     */
+    public function locate(KObjectIdentifier $identifier, $fallback = true)
+    {
+        $class   = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
 
-			/*
-			 * Find the classname to fallback too and auto-load the class
-			 *
-			 * Fallback sequence : -> Named Module Specific
-			 *                     -> Named Module Default
-			 *                     -> Default Module Specific
-			 *                     -> Default Module Default
-			 *                     -> Default Component Specific
-			 *                     -> Default Component Default
-			 *                     -> Framework Specific
-			 *                     -> Framework Default
-			 */
-			if(class_exists('Mod'.ucfirst($identifier->package).$mod_path.ucfirst($identifier->name))) {
-				$classname = 'Mod'.ucfirst($identifier->package).$mod_path.ucfirst($identifier->name);
-			} elseif(class_exists('Mod'.ucfirst($identifier->package).$mod_path.'Default')) {
-				$classname = 'Mod'.ucfirst($identifier->package).$mod_path.'Default';
-			} elseif(class_exists('ModKoowa'.$mod_path.ucfirst($identifier->name))) {
-				$classname = 'ModKoowa'.$mod_path.ucfirst($identifier->name);
-			} elseif(class_exists('ModKoowa'.$mod_path.'Default')) {
-				$classname = 'ModKoowa'.$mod_path.'Default';
-			} elseif(class_exists('ComKoowa'.$com_path.ucfirst($identifier->name))) {
-				$classname = 'ComKoowa'.$com_path.ucfirst($identifier->name);
-			} elseif(class_exists('ComKoowa'.$com_path.'Default')) {
-				$classname = 'ComKoowa'.$com_path.'Default';
-			} elseif(class_exists( 'K'.$com_path.ucfirst($identifier->name))) {
-				$classname = 'K'.$com_path.ucfirst($identifier->name);
-			} elseif(class_exists('K'.$com_path.'Default')) {
-				$classname = 'K'.$com_path.'Default';
-			} else {
-				$classname = false;
-			}
+        $package = ucfirst($identifier->package);
+        $name    = ucfirst($identifier->name);
 
-		}
+        //Make an exception for 'view' and 'module' types
+        $path  = $identifier->path;
+        $type  = !empty($path) ? array_shift($path) : '';
 
-		return $classname;
-	}
+        if(!in_array($type, array('view','module'))) {
+            $path = ucfirst($type).KStringInflector::camelize(implode('_', $path));
+        } else {
+            $path = ucfirst($type);
+        }
 
-	/**
-	 * Get the path based on an identifier
-	 *
-	 * @param  KObjectIdentifier $identifier An identifier object - mod:[//application/]module.[.path].name
-	 * @return string	Returns the path
-	 */
-	public function findPath(KObjectIdentifier $identifier)
-	{
-		$path  = '';
-	    $parts = $identifier->path;
-		$name  = $identifier->package;
+        //Allow locating default classes if $path is empty.
+        if(empty($path))
+        {
+            $path = $name;
+            $name = '';
+        }
 
-		if(!empty($identifier->name))
-		{
-			if(count($parts))
-			{
-				$path    = array_shift($parts);
-				$path   .= count($parts) ? '/'.implode('/', $parts) : '';
-				$path   .= '/'.strtolower($identifier->name);
-			}
-			else $path  = strtolower($identifier->name);
-		}
+        //Check if the class exists
+        $result = false;
+        if (!$this->getObject('koowa:class.loader')->loadClass('Mod'.$package.$class, $identifier->basepath))
+        {
+            //Use the fallbacks
+            if($fallback)
+            {
+                foreach($this->_fallbacks as $fallback)
+                {
+                    $result = str_replace(
+                        array('<Package>', '<Path>', '<Name>', '<Class>'),
+                        array($package   , $path   , $name   , $class),
+                        $fallback
+                    );
 
-		$path = $identifier->basepath.'/modules/mod_'.$name.'/'.$path.'.php';
-	    return $path;
-	}
+                    if(!class_exists($result)) {
+                        $result = false;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        else $result = 'Mod'.$package.$class;
+
+        return $result;
+    }
 }

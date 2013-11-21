@@ -89,8 +89,8 @@ class KViewRss extends KViewTemplate
      * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default FALSE.
      * @return  string  The route
      */
-    public function createRoute($route = '', $fqr = true, $escape = true)
+    public function getRoute($route = '', $fqr = true, $escape = true)
     {
-        return parent::createRoute($route, $fqr, $escape);
+        return parent::getRoute($route, $fqr, $escape);
     }
 }
