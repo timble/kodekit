@@ -482,6 +482,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
      * to the KCommandChain mixin.
      *
+     * @throws UnexpectedValueException
      * @return  KCommandChainInterface
      */
     public function getCommandChain()

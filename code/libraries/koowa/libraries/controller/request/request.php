@@ -55,7 +55,7 @@ class KControllerRequest extends KObject implements KControllerRequestInterface
     /**
      * Set the request query
      *
-     * @param  array $parameters
+     * @param  array $query
      * @return KControllerRequest
      */
     public function setQuery($query)

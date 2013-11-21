@@ -70,7 +70,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      *
      * The priority parameter can be used to override the command priority while enqueueing the command.
      *
-     * @param   KCommandInvokerInterface   $invoker
+     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker
      * @param   integer            $priority The command priority, usually between 1 (high priority) and 5 (lowest),
      *                                        default is 3. If no priority is set, the command priority will be used
      *                                        instead.
@@ -164,6 +164,8 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
 
             $this->__stack->pop();
         }
+
+        return null;
     }
 
     /**

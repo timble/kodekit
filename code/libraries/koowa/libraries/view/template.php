@@ -196,7 +196,7 @@ abstract class KViewTemplate extends KViewAbstract
 
             if(!$this->_template instanceof KTemplateInterface)
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Template: '.get_class($this->_template).' does not implement KTemplateInterface'
                 );
             }

@@ -59,13 +59,13 @@ class KTemplateFilterUrl extends KTemplateFilterAbstract implements KTemplateFil
     /**
      * Add a path alias
      *
-     * @param array $alias An array of aliases to be appended
-     * @param int  $mode   The template mode
+     * @param string $alias Alias to be appended
+     * @param mixed  $value Value
      * @return KTemplateFilterUrl
      */
-    public function addAlias($alias, $path)
+    public function addAlias($alias, $value)
     {
-        $this->_aliases[$alias] = $path;
+        $this->_aliases[$alias] = $value;
         return $this;
     }
 
