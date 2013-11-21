@@ -34,11 +34,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 		//Set the controller
 		$this->_controller = $config->controller;
 
-		if(KRequest::method() != 'GET') {
-			$this->registerCallback('after.dispatch' , array($this, 'forward'));
-	  	}
-
-	    $this->registerCallback('after.dispatch', array($this, 'render'));
+	    $this->registerCallback('after.dispatch', array($this, 'send'));
 	}
 
     /**
@@ -51,9 +47,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-        	'controller' => $this->getIdentifier()->package,
-    		'request'	 => KRequest::get('get', 'string'),
+        $config->append(array(
+            'behaviors'  => array('permissible'),
+            'controller' => $this->getIdentifier()->package,
+            'request'	 => KRequest::get('get', 'string')
         ))->append(array (
             'request' 	 => array('format' => KRequest::format() ? KRequest::format() : 'html')
         ));
@@ -139,78 +136,77 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     }
 
     /**
-     * Dispatch the controller
+     * Forward the request
      *
-     * @param KDispatcherContextInterface $context A command context object
-     * @return    mixed
+     * Forward to another dispatcher internally. Method makes an internal sub-request, calling the specified
+     * dispatcher and passing along the context.
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @throws	\UnexpectedValueException	If the dispatcher doesn't implement the KDispatcherInterface
      */
-	protected function _actionDispatch(KDispatcherContextInterface $context)
-	{
-	    $action = KRequest::get('post.action', 'cmd', strtolower(KRequest::method()));
+    protected function _actionForward(KDispatcherContextInterface $context)
+    {
+        //Get the dispatcher identifier
+        if(is_string($context->param) && strpos($context->param, '.') === false )
+        {
+            $identifier			 = clone $this->getIdentifier();
+            $identifier->package = $context->param;
+        }
+        else $identifier = $this->getIdentifier($context->param);
 
-	    if(KRequest::method() != KHttpRequest::GET) {
-            $context->data = KRequest::get(strtolower(KRequest::method()), 'raw');;
+        $dispatcher = $this->getObject($identifier);
+
+        if(!$dispatcher instanceof KDispatcherInterface)
+        {
+            throw new UnexpectedValueException(
+                'Dispatcher: '.get_class($dispatcher).' does not implement KDispatcherInterface'
+            );
         }
 
-	    $result = $this->getController()->execute($action, $context);
-
-        return $result;
-	}
+        $dispatcher->dispatch($context);
+    }
 
     /**
-     * Forward after a post request
+     * Dispatch the request
      *
-     * Either do a redirect or a execute a browse or read action in the controller
-     * depending on the request method and type
+     * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
+     * the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context A command context object
-     * @return mixed
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return	mixed
      */
-	protected function _actionForward(KDispatcherContextInterface $context)
-	{
-		if (KRequest::type() == 'HTTP')
-		{
-			if($redirect = $this->getController()->getRedirect())
-			{
-			    JFactory::getApplication()
-					->redirect($redirect['url'], $redirect['message'], $redirect['type']);
-			}
-		}
+    protected function _actionDispatch(KDispatcherContextInterface $context)
+    {
+        //Send the response
+        $this->send($context);
+    }
 
-		if(KRequest::type() == 'AJAX')
-		{
-			$context->result = $this->getController()->execute('display', $context);
-			return $context->result;
-		}
-	}
+    /**
+     * Send the response
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return string
+     */
+    protected function _actionSend(KDispatcherContextInterface $context)
+    {
+        //Headers
+        if($context->headers)
+        {
+            foreach($context->headers as $name => $value) {
+                header($name.' : '.$value);
+            }
+        }
 
-	/**
-	 * Push the controller data into the document
-	 *
-	 * This function diverts the standard behavior and will push specific controller data
-	 * into the document
-	 *
-     * @param   KDispatcherContextInterface $context A command context object
-	 * @return	mixed
-	 */
-	protected function _actionRender(KDispatcherContextInterface $context)
-	{
-	    //Headers
-	    if($context->headers)
-	    {
-	        foreach($context->headers as $name => $value) {
-	            header($name.' : '.$value);
-	        }
-	    }
-
-	    //Status
+        //Status
         if($context->status) {
-            // FIXME: Replace with proper method call
             header('HTTP/1.1 '.$context->status.' '.KHttpResponse::$status_messages[$context->status]);
         }
 
-	    if(is_string($context->result)) {
-		     return $context->result;
-		}
-	}
+        //Content
+        if(is_string($context->result)) {
+            return $context->result;
+        }
+
+        return '';
+    }
 }

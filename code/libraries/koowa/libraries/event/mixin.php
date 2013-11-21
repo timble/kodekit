@@ -38,14 +38,15 @@ class KEventMixin extends KObjectMixinAbstract
     /**
      * Object constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @throws InvalidArgumentException
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
         if (is_null($config->event_dispatcher)) {
-            throw new \InvalidArgumentException('event_dispatcher [KEventDispatcherInterface] config option is required');
+            throw new InvalidArgumentException('event_dispatcher [KEventDispatcherInterface] config option is required');
         }
 
         //Set the event dispatcher
@@ -91,6 +92,7 @@ class KEventMixin extends KObjectMixinAbstract
     /**
      * Get the event dispatcher
      *
+     * @throws UnexpectedValueException
      * @return  KEventDispatcherInterface
      */
     public function getEventDispatcher()
@@ -102,7 +104,7 @@ class KEventMixin extends KObjectMixinAbstract
             //Make sure the request implements KEventDispatcherInterface
             if(!$this->_event_dispatcher instanceof KEventDispatcherInterface)
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'EventDispatcher: '.get_class($this->_event_dispatcher).' does not implement KEventDispatcherInterface'
                 );
             }
@@ -198,7 +200,7 @@ class KEventMixin extends KObjectMixinAbstract
      * @param  mixed $subscriber An object that implements ObjectInterface, ObjectIdentifier object
      *                          or valid identifier string
      * @param  array  $config   An optional associative array of configuration settings
-     * @throws \DomainException    If the subscriber is not implementing the EventSubscriberInterface
+     * @throws UnexpectedValueException    If the subscriber is not implementing the EventSubscriberInterface
      * @return KEventListenerInterface
      */
     public function getEventSubscriber($subscriber, $config = array())
@@ -224,7 +226,7 @@ class KEventMixin extends KObjectMixinAbstract
             //Check the event subscriber interface
             if (!($subscriber instanceof KEventListenerInterface))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     "Event Subscriber $identifier does not implement KEventListenerInterface"
                 );
             }

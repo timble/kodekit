@@ -8,19 +8,13 @@
  */
 
 /**
- * Default Template
+ * Http Request Headers
+ *
+ * Container class that handles the aggregations of HTTP headers as a collection
+ *
+ * @link http://tools.ietf.org/html/rfc2616#section-4.2
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Module\Koowa
+ * @package Koowa\Library\Http
  */
-class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
-{
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'locators' => array('mod' => 'mod:koowa.template.locator.module')
-        ));
-
-        parent::_initialize($config);
-    }
-}
+class KHttpRequestHeaders extends KHttpMessageHeaders {}

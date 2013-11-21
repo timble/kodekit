@@ -37,7 +37,7 @@ class KBehaviorMixin extends KCommandMixin
     /**
      * Constructor
      *
-     * @param KObjectConfig $object An optional ObjectConfig object with configuration options.
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options.
      */
     public function __construct(KObjectConfig $config)
     {
@@ -121,7 +121,7 @@ class KBehaviorMixin extends KCommandMixin
      * @param   mixed $behavior   An object that implements BehaviorInterface, an ObjectIdentifier
      *                            or valid identifier string
      * @param   array $config    An optional associative array of configuration settings
-     * @return  Object The mixer object
+     * @return  KObject The mixer object
      */
     public function attachBehavior($behavior, $config = array())
     {

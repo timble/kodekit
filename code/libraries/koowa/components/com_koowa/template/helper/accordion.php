@@ -61,7 +61,7 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 		$config = new KObjectConfig($config);
 
 		$config->append(array(
-			'title'		=> 'Slide',
+			'title'		=> $this->translate('Slide'),
 			'id'     	=> '',
 			'translate'	=> true
 		));

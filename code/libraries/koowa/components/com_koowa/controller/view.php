@@ -31,7 +31,7 @@ class ComKoowaControllerView extends KControllerView
         $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
-        $this->registerCallback('before.get' , array($this, 'attachToolbars'), array($config->toolbars));
+        $this->registerCallback('before.render' , array($this, 'attachToolbars'), array($config->toolbars));
     }
 
     /**
@@ -94,26 +94,9 @@ class ComKoowaControllerView extends KControllerView
      * @param KControllerContextInterface $context A command context object
      * @return    string|bool    The rendered output of the view or false if something went wrong
      */
-    protected function _actionGet(KControllerContextInterface $context)
+    protected function _actionRender(KControllerContextInterface $context)
     {
         $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
-        return parent::_actionGet($context);
+        return parent::_actionRender($context);
     }
-
-	/**
-     * Set a request property
-     *
-     *  This function translates 'limitstart' to 'offset' for compatibility with Joomla
-     *
-     * @param  	string 	$property The property name.
-     * @param 	mixed 	$value    The property value.
-     */
- 	public function __set($property, $value)
-    {
-        if($property == 'limitstart') {
-            $property = 'offset';
-        }
-
-        parent::__set($property, $value);
-  	}
 }

@@ -21,19 +21,19 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
      * @param  string $path
      * @return string File path
      */
-    protected function _getPath($path)
+    public function locate($path)
     {
-        $path = parent::_getPath($path);
-
-        if (strpos($path, '/tmpl/') === false) {
-            $path = dirname($path).'/tmpl/'.basename($path);
-        }
+        $result = parent::locate($path);
 
         $template  = JFactory::getApplication()->getTemplate();
         $override  = JPATH_THEMES.'/'.$template.'/html';
         $override .= str_replace(array(JPATH_BASE.'/modules', JPATH_BASE.'/components', '/views', '/tmpl'), '', $path);
 
-        $result = $this->realPath($override) ? $override : $path;
+        $override = $this->realPath($override);
+
+        if ($override) {
+            $result = $override;
+        }
 
         return $result;
     }

@@ -665,7 +665,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
                 if (!($locator instanceof KTemplateLocatorInterface))
                 {
-                    throw new \UnexpectedValueException(
+                    throw new UnexpectedValueException(
                         "Template loader $identifier does not implement KTemplateLocatorInterface"
                     );
                 }
@@ -675,104 +675,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         }
 
         return $locator;
-    }
-
-	/**
-	 * Returns a directory path for temporary files
-	 * 
-	 * @return string Folder path
-	 */
-	protected function _getTemporaryDirectory()
-	{
-		return sys_get_temp_dir();
-	}
-	
-	/**
-	 * Creates a file with a unique file name 
-	 * 
-	 * @param string|null $directory Uses the result of _getTemporaryDirectory() by default
-	 * @return string File path
-	 */
-	protected function _getTemporaryFile($directory = null)
-	{
-		if ($directory === null) {
-			$directory = $this->_getTemporaryDirectory();
-		}
-		
-		$name = str_replace('.', '', uniqid('tmpl', true));
-		$path = $directory.'/'.$name;
-
-		touch($path);
-		
-		return $path;
-	}
-
-    /**
-     * Parse and compile the template to PHP code
-     *
-     * This function passes the template through compile filters and returns the result.
-     *
-     * @param  string $content Data to parse
-     */
-    protected function _compile(&$content)
-    {
-        foreach($this->_queue as $filter)
-        {
-            if($filter instanceof KTemplateFilterCompiler) {
-                $filter->compile($content);
-            }
-        }
-    }
-
-    /**
-     * Evaluate the template using a simple sandbox
-     *
-     * This function writes the template to a temporary file and then includes it.
-     *
-     * @param string $content The evaluated data
-     * @see tempnam()
-     */
-    protected function _evaluate(&$content)
-    {
-        //Increase counter
-        $this->__counter++;
-
-        //Create temporary file
-        $tempfile = $this->_getTemporaryFile();
-
-        //Write the template to the file
-        $handle = fopen($tempfile, "w+");
-        fwrite($handle, $content);
-        fclose($handle);
-
-        //Include the file
-        extract($this->_data, EXTR_SKIP);
-
-        ob_start();
-        include $tempfile;
-        $content = ob_get_clean();
-
-        unlink($tempfile);
-
-        //Reduce counter
-        $this->__counter--;
-    }
-
-    /**
-     * Process the template
-     *
-     * This function passes the template through render filter and returns the result.
-     *
-     * @param string $content Data to render
-     */
-    protected function _render(&$content)
-    {
-        foreach($this->_queue as $filter)
-        {
-            if($filter instanceof KTemplateFilterRenderer) {
-                $filter->render($content);
-            }
-        }
     }
 
     /**
@@ -813,6 +715,36 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     public function isRendered()
     {
         return $this->_status & self::STATUS_RENDERED;
+    }
+
+    /**
+     * Returns a directory path for temporary files
+     *
+     * @return string Folder path
+     */
+    protected function _getTemporaryDirectory()
+    {
+        return sys_get_temp_dir();
+    }
+
+    /**
+     * Creates a file with a unique file name
+     *
+     * @param string|null $directory Uses the result of _getTemporaryDirectory() by default
+     * @return string File path
+     */
+    protected function _getTemporaryFile($directory = null)
+    {
+        if ($directory === null) {
+            $directory = $this->_getTemporaryDirectory();
+        }
+
+        $name = str_replace('.', '', uniqid('tmpl', true));
+        $path = $directory.'/'.$name;
+
+        touch($path);
+
+        return $path;
     }
 
     /**

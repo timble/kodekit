@@ -32,15 +32,6 @@ interface KControllerInterface
      */
     public function getActions();
 
-    /**
-     * Register (map) an action to a method in the class.
-     *
-     * @param   string  $alias  The action.
-     * @param   string  $action The name of the method in the derived class to perform for this action.
-     * @return  KControllerInterface
-     */
-    public function registerActionAlias( $alias, $action );
-
 	/**
 	 * Get the request information
 	 *

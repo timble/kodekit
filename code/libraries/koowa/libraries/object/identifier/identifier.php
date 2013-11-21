@@ -130,7 +130,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         $this->_path = explode('.', $this->_path);
 
         // Set the extension (first part)
-        $this->_package = array_shift($this->_path);
+        $this->package = array_shift($this->_path);
 
         // Set the name (last part)
         if(count($this->_path)) {
@@ -362,6 +362,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
                 }
             }
 
+
             //Set the properties
             $this->{'_'.$property} = $value;
 
@@ -388,10 +389,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 
             if($property == 'classname' && empty($this->_classname)) {
                 $this->_classname = self::$_locators[$this->_type]->findClass($this);
-            }
-
-            if($property == 'basepath' && isset(self::$_packages[$this->_package])) {
-               $this->_basepath = self::$_packages[$this->_package];
             }
 
             return $this->{'_'.$property};

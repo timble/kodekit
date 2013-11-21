@@ -26,7 +26,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-    		'behaviors'  => array('discoverable', 'editable')
+    		'behaviors'  => array('editable')
         ));
 
         parent::_initialize($config);
@@ -56,6 +56,26 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 		return parent::setView($view);
 	}
 
+    /**
+     * Get action
+     *
+     * This function translates a GET request into a read or browse action. If the view name is singular a read action
+     * will be executed, if plural a browse action will be executed.
+     *
+     * @param KControllerContextInterface $context A command context object
+     * @return    string|bool    The rendered output of the view or FALSE if something went wrong
+     */
+    protected function _actionRender(KControllerContextInterface $context)
+    {
+        //Check if we are reading or browsing
+        $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
+
+        //Execute the action
+        $this->execute($action, $context);
+
+        return parent::_actionRender($context);
+    }
+
 	/**
 	 * Generic browse action, fetches a list
 	 *
@@ -80,7 +100,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	    $name = ucfirst($this->getView()->getName());
 
 		if($this->getModel()->getState()->isUnique() && $data->isNew()) {
-		    $context->setError(new KControllerExceptionNotFound($name.' Not Found', KHttpResponse::NOT_FOUND));
+		    $context->setError(new KControllerExceptionNotFound($name.' Not Found'));
 		}
 
 		return $data;
@@ -107,7 +127,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 		        $context->status = KHttpResponse::NO_CONTENT;
 		    }
 		}
-		else $context->setError(new KControllerExceptionNotFound('Resource Not Found', KHttpResponse::NOT_FOUND));
+		else $context->setError(new KControllerExceptionNotFound('Resource Not Found'));
 
 		return $data;
 	}
@@ -137,7 +157,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 		    }
 		    else $context->status = KHttpResponse::CREATED;
 		}
-		else $context->setError(new KControllerExceptionBadRequest('Resource Already Exists', KHttpResponse::BAD_REQUEST));
+		else $context->setError(new KControllerExceptionBadRequest('Resource Already Exists'));
 
 		return $data;
 	}
@@ -166,89 +186,8 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 		    }
 		    else $context->status = KHttpResponse::NO_CONTENT;
 		}
-		else  $context->setError(new KControllerExceptionNotFound('Resource Not Found', KHttpResponse::NOT_FOUND));
+		else  $context->setError(new KControllerExceptionNotFound('Resource Not Found'));
 
 		return $data;
-	}
-
-    /**
-     * Get action
-     *
-     * This function translates a GET request into a read or browse action. If the view name is singular a read action
-     * will be executed, if plural a browse action will be executed.
-     *
-     * If the result of the read or browse action is not a row or rowset object the function will pass through the
-     * result, request the attached view to render itself.
-     *
-     * @param KControllerContextInterface $context A command context object
-     * @return    string|bool    The rendered output of the view or FALSE if something went wrong
-     */
-	protected function _actionGet(KControllerContextInterface $context)
-	{
-		//Check if we are reading or browsing
-	    $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
-
-	    //Execute the action
-		$result = $this->execute($action, $context);
-
-		//Only process the result if a valid row or rowset object has been returned
-		if(($result instanceof KDatabaseRowInterface) || ($result instanceof KDatabaseRowsetInterface)) {
-            $result = parent::_actionGet($context);
-		}
-
-		return (string) $result;
-	}
-
-	/**
-	 * Post action
-	 *
-	 * This function translated a POST request action into an edit or add action. If the model state is unique a edit
-     * action will be executed, if not unique an add action will be executed.
-	 *
-	 * @param	KControllerContextInterface $context	A command context object
-	 * @return 	KDatabaseRowsetInterface	A row(set) object containing the modified data
-	 */
-	protected function _actionPost(KControllerContextInterface $context)
-	{
-		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
-		return parent::execute($action, $context);
-	}
-
-	/**
-	 * Put action
-	 *
-	 * This function translates a PUT request into an edit or add action. Only if the model state is unique and the
-     * item exists an edit action will be executed, if the resources doesn't exist and the state is unique an add
-     * action will be executed.
-	 *
-	 * If the resource already exists it will be completely replaced based on the data available in the request.
-	 *
-     * @param	KControllerContextInterface $context A command context object
-     * @throws  KControllerExceptionNotFound If the model state is not unique
-     * @return 	KDatabaseRowsetInterface     A row(set) object containing the modified data
-	 */
-	protected function _actionPut(KControllerContextInterface $context)
-	{
-	    $data = $this->getModel()->getItem();
-
-	    if($this->getModel()->getState()->isUnique())
-	    {
-            $action = 'add';
-	        if(!$data->isNew())
-	        {
-	            //Reset the row data
-	            $data->reset();
-	            $action = 'edit';
-            }
-
-            //Set the row data based on the unique state information
-	        $state = $this->getModel()->getState()->getValues(true);
-	        $data->setData($state);
-
-            $data = parent::execute($action, $context);
-	    }
-	    else $context->setError(new KControllerExceptionNotFound(ucfirst('Resource not found', KHttpResponse::BAD_REQUEST)));
-
-	    return $data;
 	}
 }

@@ -482,6 +482,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
      * to the KCommandChain mixin.
      *
+     * @throws UnexpectedValueException
      * @return  KCommandChainInterface
      */
     public function getCommandChain()
@@ -570,6 +571,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         if ($this->getCommandChain()->run('before.select', $context, false) !== false)
         {
+            $data = null;
+
             if ($context->query)
             {
                 if($context->mode == KDatabase::FETCH_ARRAY_LIST || $context->mode == KDatabase::FETCH_OBJECT_LIST) {

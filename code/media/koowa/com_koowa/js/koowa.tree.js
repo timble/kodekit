@@ -23,7 +23,11 @@
             if(this.options.onBeforeInitialize) this.options.onBeforeInitialize.call(this);
 
             // For scrollTo to work, needs to be position:relative;
-            this.element.css('position', 'relative');
+            if(this.element.css('position') == 'relative') {
+                this.element.css('position', 'relative');
+                //Warn that a css optimization should be done
+                if(window.console) console.warn('The element:', this.element, 'should have position:relative applied by css');
+            }
 
             this.attachHandlers();
 
@@ -299,17 +303,35 @@
         scrollIntoView: function(node, viewport, duration){
             var element = $(node.element),
                 viewportHeight = viewport.height(),
+                viewportWidth = viewport.width(),
                 offsetTop = element[0].offsetTop,
                 height = element.height(),
-                scrollTo = Math.min(offsetTop, (offsetTop - viewportHeight) + height);
+                width = element.width(),
+                scrollTo = Math.min(offsetTop, (offsetTop - viewportHeight) + height),
+                animate = {};
 
             /**
              * Only scrolls if the element is out of bounds either from the top or bottom, with priority on the bottom
              */
             if(scrollTo > viewport.scrollTop()) {
-                viewport.animate({scrollTop: scrollTo}, duration||900);
+                animate.scrollTop = scrollTo;
             } else if (offsetTop < viewport.scrollTop()) {
-                viewport.animate({scrollTop: offsetTop}, duration||900);
+                animate.scrollTop = offsetTop;
+            }
+
+            /**
+             * Support animating a horizontal scrollbar, if necessary
+             */
+            if(viewportWidth < width) {
+                var title = element.find('.jqtree-title').filter(":first"),
+                    whitespace = title.find('.icon-whitespace').last(),
+                    scrollToLeft = whitespace.length ? whitespace[0].offsetLeft : 0;
+
+                animate.scrollLeft = scrollToLeft;
+            }
+
+            if(animate.scrollTop || animate.scrollLeft) {
+                viewport.animate(animate, duration||900);
             }
         }
     });

@@ -20,7 +20,7 @@ abstract class KControllerPermissionAbstract extends KObjectMixinAbstract implem
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function canGet()
+    public function canRender()
     {
         return ($this->getMixer() instanceof KControllerViewable);
     }

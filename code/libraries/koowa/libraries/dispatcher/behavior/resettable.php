@@ -49,7 +49,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 	protected function _afterDispatch(KDispatcherContextInterface $context)
 	{
         if(!KRequest::type() == 'AJAX') {
-            $this->setRedirect(KRequest::getReferrer());
+            $this->getController()->setRedirect(KRequest::getReferrer());
         }
 	}
 }

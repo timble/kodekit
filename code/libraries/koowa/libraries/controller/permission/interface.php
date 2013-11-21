@@ -20,7 +20,7 @@ interface KControllerPermissionInterface
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function canGet();
+    public function canRender();
 
     /**
      * Permission handler for read actions

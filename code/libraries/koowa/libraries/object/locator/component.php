@@ -57,8 +57,8 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
 			 *
 			 * Fallback sequence : -> Named Component Specific
 			 *                     -> Named Component Default
-			 *                     -> Default Component Specific
-			 *                     -> Default Component Default
+			 *                     -> Koowa Component Specific
+			 *                     -> Koowa Component Default
 			 *                     -> Framework Specific
 			 *                     -> Framework Default
 			 */

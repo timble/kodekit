@@ -121,6 +121,7 @@ class KCommandEvent extends KObjectMixinAbstract implements KCommandInvokerInter
     /**
      * Get the event dispatcher
      *
+     * @throws UnexpectedValueException
      * @return  KEventDispatcherInterface
      */
     public function getEventDispatcher()
@@ -156,7 +157,7 @@ class KCommandEvent extends KObjectMixinAbstract implements KCommandInvokerInter
     /**
      * Get the methods that are available for mixin.
      *
-     * @param  Object $mixer Mixer object
+     * @param  KObjectMixable $mixer Mixer object
      * @return array An array of methods
      */
     public function getMixableMethods(KObjectMixable $mixer = null)

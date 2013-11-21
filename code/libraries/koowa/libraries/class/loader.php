@@ -56,7 +56,7 @@ class KClassLoader implements KClassLoaderInterface
             $this->_registry = new KClassRegistryCache();
 
             if(isset($config['cache_prefix'])) {
-                $this->_registry->setCachePrefix($config['cache_prefix']);
+                $this->_registry->setNamespace($config['cache_prefix']);
             }
         }
         else $this->_registry = new KClassRegistry();

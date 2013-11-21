@@ -87,7 +87,7 @@ abstract class KViewTemplate extends KViewAbstract
         $config->append(array(
             'data'			   => array(),
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'template', 'url'),
+            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'url'),
             'auto_assign'      => true,
         ));
 
@@ -128,19 +128,23 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function display()
     {
-        $layout = $this->getLayout();
+        $layout  = $this->getLayout();
+        $format  = $this->getFormat();
 
+        //Handle partial layout paths
         if (is_string($layout) && strpos($layout, '.') === false)
         {
             $identifier = clone $this->getIdentifier();
             $identifier->name = $layout;
-        }
-        else $identifier = $layout;
 
+            $layout = (string) $identifier;
+        }
+
+        //Render the template
         $this->_content = (string) $this->getTemplate()
-            ->load($identifier)
+            ->load((string) $layout.'.'.$format)
             ->compile()
-            ->evaluate($this->_data)
+            ->evaluate($this->getData())
             ->render();
 
         return parent::display();
@@ -191,7 +195,7 @@ abstract class KViewTemplate extends KViewAbstract
 
             if(!$this->_template instanceof KTemplateInterface)
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Template: '.get_class($this->_template).' does not implement KTemplateInterface'
                 );
             }
