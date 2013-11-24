@@ -6,6 +6,7 @@
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
 if(!Koowa) {
+    /** @namespace */
     var Koowa = {};
 }
 
@@ -16,16 +17,21 @@ if(!Koowa) {
  * License MIT (c) Dustin Diaz & Jacob Thornton 2012
  */
 
+    /** @exports klass */
 !function (name, context, definition) {
     if (typeof define == 'function') define(definition)
     //else if (typeof module != 'undefined') module.exports = definition() //@NOTE this breaks qunit
     else context[name] = definition()
-}('klass', this, function () {
+}('klass', this,
+    /** @exports klass */
+    function () {
     var context = this
         , old = context.klass
         , f = 'function'
         , fnTest = /xyz/.test(function () {xyz}) ? /\bsupr\b/ : /.*/
         , proto = 'prototype'
+
+
 
     function klass(o) {
         return extend.call(isFn(o) ? o : function () {}, o, 1)
@@ -128,7 +134,12 @@ $(function() {
     });
 });
 
+/** @class */
 Koowa.Class = klass({
+
+    /**
+     * @memberOf Koowa.Class#
+     */
     options: {},
     /**
      * @returns {object}
@@ -136,6 +147,10 @@ Koowa.Class = klass({
     getOptions: function() {
         return {};
     },
+
+    /**
+     * @constructs Koowa.Class
+     * */
     initialize: function() {
         this.setOptions(this.getOptions());
     },
@@ -153,6 +168,7 @@ Koowa.Class = klass({
  *
  * @param   {object} config Configuration object. Accepted keys: method, url, params, element
  * @example new KForm({url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
+ * @extends Koowa.Class
  */
 Koowa.Form = Koowa.Class.extend({
     initialize: function(config) {
