@@ -8,7 +8,7 @@
  */
 
 /**
- * Controller Request
+ * Controller Request Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
