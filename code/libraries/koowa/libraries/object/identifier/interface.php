@@ -19,6 +19,15 @@
 interface KObjectIdentifierInterface extends Serializable
 {
     /**
+     * Checks if the identifier extends a class, implements an interface or uses a trait
+     *
+     * @param string $identifier An identifier object or a class name
+     * @param boolean $autoload  Whether to allow this function to load the class automatically through the __autoload()
+     *                           magic method.
+     */
+    public function inherits($class, $autoload = true);
+
+    /**
      * Checks if the identifier has been defined
      *
      * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
@@ -94,6 +103,20 @@ interface KObjectIdentifierInterface extends Serializable
      *  @return array
      */
     public static function getLocators();
+
+    /**
+     * Check if the object is a singleton
+     *
+     * @return boolean Returns TRUE if the object is a multiton, FALSE otherwise.
+     */
+    public function isMultiton();
+
+    /**
+     * Check if the object is a singleton
+     *
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isSingleton();
 
     /**
      * Formats the identifier as a [application::]type.component.[.path].name string

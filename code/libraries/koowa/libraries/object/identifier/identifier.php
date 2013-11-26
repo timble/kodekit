@@ -170,6 +170,40 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	}
 
     /**
+     * Checks if the identifier extends a class, implements an interface or uses a trait
+     *
+     * @param string $identifier An identifier object or a class name
+     * @param boolean $autoload  Whether to allow this function to load the class automatically through the __autoload()
+     *                           magic method.
+     */
+    public function inherits($class, $autoload = true)
+    {
+        if($class instanceof KObjectIdentifier) {
+            $class = $class->classname;
+        }
+
+        //Check parent classes
+        if(array_key_exists($class, class_parents($this->classname, $autoload))) {
+            return true;
+        }
+
+        //Check interfaces
+        if(array_key_exists($class, class_implements($this->classname, $autoload))) {
+            return true;
+        }
+
+        //Check traits
+        if(function_exists('class_uses'))
+        {
+            if(array_key_exists($class, class_uses($this->classname, $autoload))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Checks if the identifier has been defined
      *
      * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
@@ -289,6 +323,26 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     public function getClassName()
     {
         return $this->classname;
+    }
+
+    /**
+     * Check if the object is a multiton
+     *
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isMultiton()
+    {
+        return array_key_exists('KObjectMultiton', class_implements($this->classname));
+    }
+
+    /**
+     * Check if the object is a singleton
+     *
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isSingleton()
+    {
+        return array_key_exists('KObjectSingleton', class_implements($this->classname));
     }
 
     /**
