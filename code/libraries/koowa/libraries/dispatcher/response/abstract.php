@@ -46,7 +46,7 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
         parent::__construct($config);
 
         //Create the transport queue
-        $this->_queue = $this->getObject('lib:object.queue');
+        $this->_queue = $this->getObject('koowa:object.queue');
 
         //Set the response messages
         $this->_messages = $this->getUser()->getSession()->getContainer('message')->all();
