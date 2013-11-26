@@ -171,14 +171,16 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         if ($mixin instanceof KControllerBehaviorAbstract)
         {
+            $actions = $this->getActions();
+
             foreach ($mixin->getMethods() as $method)
             {
                 if (substr($method, 0, 7) == '_action') {
-                    $this->_actions[] = strtolower(substr($method, 7));
+                    $actions[] = strtolower(substr($method, 7));
                 }
             }
 
-            $this->_actions = array_unique($this->_actions);
+            $this->_actions = array_unique($actions);
         }
 
         return parent::mixin($mixin, $config);

@@ -18,9 +18,16 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     /**
      * The permission object
      *
-     * @var KControllerPermissionInterface
+     * @var mixed An object that implements KControllerPermissionInterface, KObjectIdentifierInterface or valid
+     * identifier string
      */
     protected $_permission;
+
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+        $this->_permission = $config->permission;
+    }
 
     /**
      * Initializes the default configuration for the object
@@ -106,36 +113,27 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     {
         parent::onMixin($mixer);
 
-        //Mixin the permission
-        if(!$this->getPermission())
+        $permission = $this->_permission;
+
+        if (!$permission instanceof KControllerPermissionInterface)
         {
-            $permission       = clone $mixer->getIdentifier();
-            $permission->path = array('controller', 'permission');
+            if (!$permission || (is_string($permission) && strpos($permission, '.') === false))
+            {
+                $identifier = clone $mixer->getIdentifier();
+                $identifier->path = array('controller', 'permission');
 
-            $this->setPermission($mixer->mixin($permission));
+                if ($permission) $identifier->name = $permission;
+
+                $permission = $identifier;
+            }
+
+            if (!$permission instanceof KObjectIdentifierInterface)
+            {
+                $permission = $this->getIdentifier($permission);
+            }
         }
-    }
 
-    /**
-     * Get the permission
-     *
-     * @return KControllerPermissionInterface
-     */
-    public function getPermission()
-    {
-        return $this->_permission;
-    }
-
-    /**
-     * Set the permission
-     *
-     * @param  KControllerPermissionInterface $permission The controller permission object
-     * @return KControllerBehaviorPermissible
-     */
-    public function setPermission(KControllerPermissionInterface $permission)
-    {
-        $this->_permission = $permission;
-        return $this;
+        $this->_permission = $mixer->mixin($permission);
     }
 
     /**
