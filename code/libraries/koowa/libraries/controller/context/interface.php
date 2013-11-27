@@ -21,4 +21,11 @@ interface KControllerContextInterface extends KCommandInterface
      * @return KControllerRequestInterface
      */
     public function getRequest();
+
+    /**
+     * Get the response object
+     *
+     * @return KControllerResponseInterface
+     */
+    public function getResponse();
 }

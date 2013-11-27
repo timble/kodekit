@@ -29,11 +29,33 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      * Set the request object
      *
      * @param KControllerRequestInterface $request
-     * @return $this
+     * @return KControllerContext
      */
     public function setRequest(KControllerRequestInterface $request)
     {
         $this->set('request', $request);
+        return $this;
+    }
+
+    /**
+     * Get the response object
+     *
+     * @return KControllerResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->get('response');
+    }
+
+    /**
+     * Set the response object
+     *
+     * @param KControllerResponseInterface $response
+     * @return KControllerContext
+     */
+    public function setResponse(KControllerResponseInterface $response)
+    {
+        $this->set('response', $response);
         return $this;
     }
 }
