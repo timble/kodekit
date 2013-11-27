@@ -25,22 +25,26 @@ class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
     {
         if(strpos($path, ':') === false)
         {
-            $identifier = $this->getIdentifier($this->getTemplate()->getPath());
+            if(!$base = $this->getTemplate()->getPath()) {
+                throw new RuntimeException('Cannot qualify partial template path');
+            }
+
+            $identifier = clone $this->getIdentifier($base);
 
             $format    = pathinfo($path, PATHINFO_EXTENSION);
             $template  = pathinfo($path, PATHINFO_FILENAME);
+
+            $parts     = $identifier->path;
+            array_pop($parts);
         }
         else
         {
-            $identifier = $this->getIdentifier($path);
+            // Need to clone here since we use array_pop and it modifies the cached identifier
+            $identifier = clone $this->getIdentifier($path);
 
             $format    = $identifier->name;
             $template  = array_pop($identifier->path);
-        }
-
-        $parts = $identifier->path;
-        if(isset($parts[0]) && $parts[0] === 'view') {
-            $parts[0] = KStringInflector::pluralize($parts[0]);
+            $parts     = $identifier->path;
         }
 
         $basepath  = $identifier->basepath.'/modules/mod_'.strtolower($identifier->package);

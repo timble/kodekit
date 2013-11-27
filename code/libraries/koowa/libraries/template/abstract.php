@@ -163,17 +163,17 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function load($path, $data = array(), $status = self::STATUS_LOADED)
     {
-        $parts = parse_url($path);
+        $parts   = parse_url($path);
 
         //Set the default type if no scheme can be found
-        if(!isset($parts['scheme'])) {
-            $type = 'com';
-        } else {
-            $type = $parts['scheme'];
+        $locator = $this->getLocator(isset($parts['scheme']) ? $parts['scheme'] : $this->getIdentifier()->type);
+
+        if (!$locator) {
+            $locator = $this->getLocator('com');
         }
 
         //Check of the file exists
-        if (!$template = $this->getLocator($type)->locate($path)) {
+        if (!$template = $locator->locate($path)) {
             throw new InvalidArgumentException('Template "' . $path . '" not found');
         }
 
