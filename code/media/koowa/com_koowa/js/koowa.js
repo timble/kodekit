@@ -262,7 +262,7 @@ Koowa.Grid = Koowa.Class.extend({
 
         this.checkboxes.on('change.koowa', function(event, ignore){
             if(!ignore) {
-                self.uncheckAll();
+                self.setCheckAll();
             }
         });
     },
@@ -274,8 +274,10 @@ Koowa.Grid = Koowa.Class.extend({
         this.checkboxes.prop('checked', value);
         changed.trigger('change', true);
     },
-
-    uncheckAll: function(){
+    uncheckAll: function() {
+        this.checkAll(false);
+    },
+    setCheckAll: function(){
         var total = this.checkboxes.filter(function(i, checkbox){
             return $(checkbox).prop('checked') !== false;
         }).length;
@@ -483,8 +485,11 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
         this.setTableHeaders();
         this.setTableRows();
 
-        //<select> elements in headers and footers are for filters, so they need to submit the form on change
+        // <select> elements in headers and footers are for filters, so they need to submit the form on change
         this.form.find('thead select, tfoot select').on('change.koowa', function(){
+            // We need to uncheck rows here otherwise only selected rows will be visible after submitting the form
+            self.grid.uncheckAll();
+
             if (self.options.ajaxify) {
                 event.preventDefault();
 
