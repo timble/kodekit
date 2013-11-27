@@ -123,8 +123,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             if($this->isDispatched())
             {
                 $identifier = $this->_view->getIdentifier();
-                $classname = 'Com' . ucfirst($identifier->package) . KStringInflector::camelize(implode('_',
-                        $identifier->path)) . ucfirst($identifier->name);
+                $classname = 'Com' . ucfirst($identifier->package) . KStringInflector::camelize(implode('_', $identifier->path)) . ucfirst($identifier->name);
                 $path  = $this->getObject('manager')->getClassLoader()->findPath($classname, $identifier->basepath);
 
                 if(!file_exists(dirname($path))) {
