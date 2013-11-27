@@ -28,13 +28,9 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
     {
         $result = null;
 
-        if($this->getController()instanceof KControllerModellable)
-        {
-            if(KRequest::method() == 'GET' && KRequest::type() == 'HTTP')  {
-                $result = parent::getHandle();
-            }
+        if(KRequest::method() == 'GET' && KRequest::type() == 'HTTP')  {
+            $result = parent::getHandle();
         }
-
 
         return $result;
     }
@@ -50,23 +46,26 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
      */
     protected function _beforeGet(KDispatcherContextInterface $context)
     {
-        $model = $this->getController()->getModel();
-
-        // Built the session identifier based on the action
-        $identifier  = $model->getIdentifier();
-        $state       = KRequest::get('session.'.$identifier, 'raw', array());
-
-        //Append the data to the request object
-        $query = $this->getRequest()->query;
-        foreach ($state as $key => $value)
+        if($this->getController()instanceof KControllerModellable)
         {
-            if (!isset($query->$key)) {
-                $query->$key = $value;
-            }
-        }
+            $model = $this->getController()->getModel();
 
-        //Push the request in the model
-        $model->getState()->setValues($query->toArray());
+            // Built the session identifier based on the action
+            $identifier  = $model->getIdentifier();
+            $state       = KRequest::get('session.'.$identifier, 'raw', array());
+
+            //Append the data to the request object
+            $query = $this->getRequest()->query;
+            foreach ($state as $key => $value)
+            {
+                if (!isset($query->$key)) {
+                    $query->$key = $value;
+                }
+            }
+
+            //Push the request in the model
+            $model->getState()->setValues($query->toArray());
+        }
     }
 
     /**
@@ -77,24 +76,27 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
      */
     protected function _afterGet(KDispatcherContextInterface $context)
     {
-        $model  = $this->getController()->getModel();
-        $state  = $model->getState();
-
-        $vars = array();
-        foreach($state->toArray() as $var)
+        if($this->getController()instanceof KControllerModellable)
         {
-            if(!$var->unique) {
-                $vars[$var->name] = $var->value;
+            $model  = $this->getController()->getModel();
+            $state  = $model->getState();
+
+            $vars = array();
+            foreach($state->toArray() as $var)
+            {
+                if(!$var->unique) {
+                    $vars[$var->name] = $var->value;
+                }
             }
+
+            // Built the session identifier based on the action
+            $identifier = $model->getIdentifier();
+
+            //Prevent unused state information from being persisted
+            KRequest::set('session.'.$identifier, null);
+
+            //Set the state in the session
+            KRequest::set('session.'.$identifier, $vars);
         }
-
-        // Built the session identifier based on the action
-        $identifier = $model->getIdentifier();
-
-        //Prevent unused state information from being persisted
-        KRequest::set('session.'.$identifier, null);
-
-        //Set the state in the session
-        KRequest::set('session.'.$identifier, $vars);
     }
 }
