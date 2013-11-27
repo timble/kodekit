@@ -167,7 +167,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
             $this->setPermission($permission);
         }
 
-        $mixer->mixin($this->getPermission());
+        $mixer->mixin($this->getPermission()->setMixer($mixer));
     }
 
     /**
