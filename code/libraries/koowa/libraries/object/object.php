@@ -50,7 +50,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      *
      * @param   KObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config = null)
+    public function __construct( KObjectConfig $config)
     {
         //Set the object manager
         if(isset($config->object_manager)) {
@@ -63,9 +63,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         }
 
         //Initialise the object
-        if($config) {
-            $this->_initialize($config);
-        }
+        $this->_initialize($config);
     }
 
     /**
