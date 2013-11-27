@@ -170,7 +170,7 @@ class PlgSystemKoowa extends JPlugin
                 'filters' => array('function', 'shorttag', 'variable')
             ));
 
-            $template->load('com:koowa.view.debug.error.html')
+            $template->load('com:koowa.debug.error.html')
                 ->compile()
                 ->evaluate($data)
                 ->render();

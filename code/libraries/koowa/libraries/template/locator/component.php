@@ -49,12 +49,8 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
             $parts     = $identifier->path;
         }
 
-        if(isset($parts[0]) && $parts[0] === 'view') {
-            $parts[0] = KStringInflector::pluralize($parts[0]);
-        }
-
         $basepath  = $identifier->basepath.'/components/com_'.strtolower($identifier->package);
-        $filepath  = implode('/', $parts).'/tmpl';
+        $filepath  = 'views/'.implode('/', $parts).'/tmpl';
         $fullpath  = $basepath.'/'.$filepath.'/'.$template.'.'.$format.'.php';
 
         // Find the template

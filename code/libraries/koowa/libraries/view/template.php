@@ -136,6 +136,7 @@ abstract class KViewTemplate extends KViewAbstract
         {
             $identifier = clone $this->getIdentifier();
             $identifier->name = $layout;
+            unset($identifier->path[0]);
 
             $layout = (string) $identifier;
         }
