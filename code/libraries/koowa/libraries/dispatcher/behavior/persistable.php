@@ -27,9 +27,14 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
     public function getHandle()
     {
         $result = null;
-        if(KRequest::method() == 'GET' && KRequest::type() == 'HTTP')  {
-            $result = parent::getHandle();
+
+        if($this->getController()instanceof KControllerModellable)
+        {
+            if(KRequest::method() == 'GET' && KRequest::type() == 'HTTP')  {
+                $result = parent::getHandle();
+            }
         }
+
 
         return $result;
     }
@@ -48,7 +53,7 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
         $model = $this->getController()->getModel();
 
         // Built the session identifier based on the action
-        $identifier  = $model->getIdentifier().'.'.$context->action;
+        $identifier  = $model->getIdentifier();
         $state       = KRequest::get('session.'.$identifier, 'raw', array());
 
         //Append the data to the request object
@@ -84,7 +89,7 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
         }
 
         // Built the session identifier based on the action
-        $identifier = $model->getIdentifier().'.'.$context->action;
+        $identifier = $model->getIdentifier();
 
         //Prevent unused state information from being persisted
         KRequest::set('session.'.$identifier, null);
