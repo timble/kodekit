@@ -23,6 +23,18 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
     protected $_permission;
 
     /**
+     * Constructor.
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_permission = $config->permission;
+    }
+
+    /**
      * Initializes the default configuration for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -34,7 +46,8 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
-            'auto_mixin' => true
+            'auto_mixin' => true,
+            'permission' => null,
         ));
 
         parent::_initialize($config);
@@ -107,35 +120,29 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
     {
         parent::onMixin($mixer);
 
-        //Mixin the permission
-        $permission       = clone $mixer->getIdentifier();
-        $permission->path = array('dispatcher', 'permission');
+        //Create and mixin the permission if it's doesn't exist yet
+        if (!$this->_permission instanceof KDispatcherPermissionInterface)
+        {
+            $permission = $this->_permission;
 
-        if($permission !== $this->getPermission()) {
-            $this->setPermission($mixer->mixin($permission));
+            if (!$permission || (is_string($permission) && strpos($permission, '.') === false))
+            {
+                $identifier = clone $mixer->getIdentifier();
+                $identifier->path = array('dispatcher', 'permission');
+
+                if ($permission) {
+                    $identifier->name = $permission;
+                }
+
+                $permission = $identifier;
+            }
+
+            if (!$permission instanceof KObjectIdentifierInterface) {
+                $permission = $this->getIdentifier($permission);
+            }
+
+            $this->_permission = $mixer->mixin($permission);
         }
-    }
-
-    /**
-     * Get the permission
-     *
-     * @return KDispatcherPermissionInterface
-     */
-    public function getPermission()
-    {
-        return $this->_permission;
-    }
-
-    /**
-     * Set the permission
-     *
-     * @param  KDispatcherPermissionInterface $permission The dispatcher permission object
-     * @return KControllerBehaviorPermissible
-     */
-    public function setPermission(KDispatcherPermissionInterface $permission)
-    {
-        $this->_permission = $permission;
-        return $this;
     }
 
     /**
