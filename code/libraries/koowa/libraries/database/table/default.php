@@ -13,26 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseTableDefault extends KDatabaseTableAbstract implements KObjectInstantiable
+class KDatabaseTableDefault extends KDatabaseTableAbstract implements KObjectMultiton
 {
-	/**
-     * Force creation of a singleton
-     *
-     * @param   KObjectConfigInterface    $config    Configuration options
-     * @param 	KObjectManagerInterface	$manager A KObjectManagerInterface object
-     * @return KDatabaseTableDefault
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        // Check if an instance with this identifier already exists or not
-        if (!$manager->isRegistered($config->object_identifier))
-        {
-            //Create the singleton
-            $classname = $config->object_identifier->classname;
-            $instance  = new $classname($config);
-            $manager->setObject($config->object_identifier, $instance);
-        }
 
-        return $manager->getObject($config->object_identifier);
-    }
 }

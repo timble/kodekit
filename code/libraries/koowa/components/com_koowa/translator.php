@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
+class ComKoowaTranslator extends KTranslator implements KObjectMultiton
 {
     /**
      * A reference to Joomla translator
@@ -111,25 +111,6 @@ class ComKoowaTranslator extends KTranslator implements KObjectInstantiable
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Force creation of a singleton
-     *
-     * @param KObjectConfigInterface  $config optional KObjectConfig object with configuration options
-     * @param KObjectManagerInterface $manager
-     * @return ComKoowaTranslator
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        if (!$manager->isRegistered($config->object_identifier))
-        {
-            $classname = $config->object_identifier->classname;
-            $instance  = new $classname($config);
-            $manager->setObject($config->object_identifier, $instance);
-        }
-
-        return $manager->getObject($config->object_identifier);
     }
 
     /**

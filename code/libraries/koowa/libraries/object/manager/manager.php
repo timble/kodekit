@@ -225,6 +225,11 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface
 
             //Decorate the object
             $instance = $this->_decorate($identifier, $instance);
+
+            //Auto register the object
+            if($identifier->isMultiton()) {
+                $this->setObject($identifier, $instance);
+            }
 		}
 		else $instance = $this->_objects->offsetGet((string) $identifier);
 

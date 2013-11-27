@@ -17,7 +17,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiable
+abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiable, KObjectMultiton
 {
     /**
      * The filter errors
@@ -63,9 +63,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     }
 
     /**
-     * Force creation of a singleton
-     *
-     * Function also decorates the filter with KFilterIterator if the filter implements KFilterTraversable
+     * Create filter and decorate it with KFilterIterator if the filter implements KFilterTraversable
      *
      * @param   KObjectConfigInterface  $config    Configuration options
      * @param 	KObjectManagerInterface $manager A KObjectManagerInterface object
@@ -74,21 +72,15 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        // Check if an instance with this identifier already exists or not
-        if (!$manager->isRegistered($config->object_identifier))
-        {
-            //Create the singleton
-            $classname = $config->object_identifier->classname;
-            $instance  = new $classname($config);
+        //Create the singleton
+        $classname = $config->object_identifier->classname;
+        $instance  = new $classname($config);
 
-            if($instance instanceof KFilterTraversable) {
-                $instance = $instance->decorate('koowa:filter.iterator');
-            }
-
-            $manager->setObject($config->object_identifier, $instance);
+        if($instance instanceof KFilterTraversable) {
+            $instance = $instance->decorate('koowa:filter.iterator');
         }
 
-        return $manager->getObject($config->object_identifier);
+        return $instance;
     }
 
     /**

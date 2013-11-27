@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KObjectInstantiable
+class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KObjectMultiton
 {
     /**
 	 * The cache object
@@ -38,25 +38,6 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KO
             $this->_cache = JFactory::getCache('database', 'output');
         }
 	}
-
-	/**
-     * Force creation of a singleton
-     *
-     * @param  KObjectConfigInterface  $config     Configuration options
-     * @param  KObjectManagerInterface $manager  A KObjectManagerInterface object
-     * @return KDatabaseAdapterInterface
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        if (!$manager->isRegistered($config->object_identifier))
-        {
-            $classname = $config->object_identifier->classname;
-            $instance  = new $classname($config);
-            $manager->setObject($config->object_identifier, $instance);
-        }
-
-        return $manager->getObject($config->object_identifier);
-    }
 
     /**
      * Initializes the options for the object
