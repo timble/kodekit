@@ -67,66 +67,113 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
     }
 
     /**
-     * Add unique token field
+     * Handle form replacements
      *
      * @param string
-     * @return KTemplateFilterForm
+     * @return $this
      */
     public function render(&$text)
     {
-    	// All: Add the action if left empty
-    	if (preg_match_all('#<\s*form.*?action=""#im', $text, $matches, PREG_SET_ORDER))
-    	{
-    		$view   = $this->getTemplate()->getView();
-    		$state  = $view->getModel()->getState();
-    		$action = $view->getRoute(http_build_query($state->getValues($state->isUnique()), '', '&'));
+        $this->_addAction($text);
+        $this->_addToken($text);
+        $this->_addQueryParameters($text);
 
-    		foreach ($matches as $match)
-    		{
-    			$str  = str_replace('action=""', 'action="'.$action.'"', $match[0]);
-    			$text = str_replace($match[0], $str, $text);
-    		}
-    	}
+        return $this;
+    }
 
-        // POST : Add token
-        if(!empty($this->_token_value))
+    /**
+     * Add the action if left empty
+     *
+     * @param string $text Template text
+     * @return $this
+     */
+    protected function _addAction(&$text)
+    {
+        // All: Add the action if left empty
+        if (preg_match_all('#<\s*form.*?action=""#im', $text, $matches, PREG_SET_ORDER))
         {
+            $view   = $this->getTemplate()->getView();
+            $state  = $view->getModel()->getState();
+            $values = $state->getValues($state->isUnique());
+
+            foreach($state as $name => $item)
+            {
+                if($item->default == $item->value || $item->internal) {
+                    unset($values[$name]);
+                }
+            }
+
+            $action = $view->getRoute(http_build_query($values, '', '&'));
+
+            foreach ($matches as $match)
+            {
+                $str  = str_replace('action=""', 'action="'.$action.'"', $match[0]);
+                $text = str_replace($match[0], $str, $text);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add the token to the form
+     *
+     * @param string $text Template text
+     * @return $this
+     */
+    protected function _addToken(&$text)
+    {
+        // POST : Add token
+        if (!empty($this->_token_value)) {
             $text    = preg_replace('/(<form.*method="post".*>)/i',
-            	'\1'.PHP_EOL.'<input type="hidden" name="'.$this->_token_name.'" value="'.$this->_token_value.'" />',
+                '\1'.PHP_EOL.'<input type="hidden" name="'.$this->_token_name.'" value="'.$this->_token_value.'" />',
                 $text
             );
         }
 
         // GET : Add token to .-koowa-grid forms
-        if(!empty($this->_token_value))
-        {
+        if (!empty($this->_token_value)) {
             $text    = preg_replace('#(<\s*?form\s+?.*?class=(?:\'|")[^\'"]*?-koowa-grid.*?(?:\'|").*?)>#im',
-            	'\1 data-token-name="'.$this->_token_name.'" data-token-value="'.$this->_token_value.'">',
+                '\1 data-token-name="'.$this->_token_name.'" data-token-value="'.$this->_token_value.'">',
                 $text
             );
         }
 
-        // GET : Add query params
+        return $this;
+    }
+
+    /**
+     * Add query parameters as hidden fields to the GET forms
+     *
+     * @param string $text Template text
+     * @return $this
+     */
+    protected function _addQueryParameters(&$text)
+    {
         $matches = array();
-        if(preg_match_all('#<form.*action=".*\?(.*)".*method="get".*>#iU', $text, $matches))
-        {
-            foreach($matches[1] as $key => $query)
-            {
+        if (preg_match_all('#<form.*action=".*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches)) {
+            foreach ($matches[1] as $key => $query) {
                 parse_str(str_replace('&amp;', '&', $query), $query);
 
                 $input = '';
-                foreach($query as $name => $value)
-                {
-                    if(is_array($value))
-                    {
-                        foreach($value as $k => $v) {
+                foreach ($query as $name => $value) {
+                    if (strpos($matches[2][$key], 'name="'.$name.'"') !== false) {
+                        continue;
+                    }
+
+                    if (is_array($value)) {
+                        foreach ($value as $k => $v)
+                        {
+                            if (!is_scalar($v)) {
+                                continue;
+                            }
+
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'['.$k.']" value="'.$v.'" />';
                         }
-                    }
-                    else $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+                    } else $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
                 }
 
-                $text = str_replace($matches[0][$key], $matches[0][$key].$input, $text);
+                $text = str_replace($matches[2][$key], $input.$matches[2][$key], $text);
             }
         }
 
