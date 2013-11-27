@@ -26,6 +26,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
+
         $this->_permission = $config->permission;
     }
 
@@ -86,19 +87,65 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      */
     public function canExecute($action)
     {
-        $method  = 'can'.ucfirst($action);
-        $methods = $this->getMixer()->getMethods();
+        $result = false;
 
-        if (!isset($methods[$method]))
+        $method = 'can' . ucfirst($action);
+
+        if (($permission = $this->getPermission()) && method_exists($permission, $method))
         {
-            $actions = $this->getActions();
-            $actions = array_flip($actions);
-
-            $result = isset($actions[$action]);
+            $result = $permission->$method();
         }
-        else $result = $this->$method();
+        elseif ($mixer = $this->getMixer())
+        {
+            $actions = $mixer->getActions();
+            $actions = array_flip($actions);
+            $result  = isset($actions[$action]);
+        }
 
         return $result;
+    }
+
+    /**
+     * Permission getter.
+     *
+     * @return KControllerPermissionInterface|null The permission object, null if permission is not set.
+     */
+    public function getPermission()
+    {
+        if ($this->_permission && !$this->_permission instanceof KControllerPermissionInterface)
+        {
+            if (!$this->_permission instanceof KObjectIdentifier)
+            {
+                $this->setPermission($this->_permission);
+            }
+
+            $classname = $this->_permission->classname;
+            $config    = new KObjectConfig(array('mixer' => $this->getMixer()));
+
+            $this->_permission = new $classname($config);
+        }
+
+        return $this->_permission;
+    }
+
+    /**
+     * Permission setter.
+     *
+     * @param mixed $permission An object that implements KControllerPermissionInterface, KObjectIdentifier or a
+     *                          valid identifier string.
+     *
+     * @return $this
+     */
+    public function setPermission($permission)
+    {
+        if (!$permission instanceof KControllerPermissionInterface && !$permission instanceof KObjectIdentifierInterface)
+        {
+            $permission = $this->getIdentifier($permission);
+        }
+
+        $this->_permission = $permission;
+
+        return $this;
     }
 
     /**
@@ -113,27 +160,14 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     {
         parent::onMixin($mixer);
 
-        $permission = $this->_permission;
-
-        if (!$permission instanceof KControllerPermissionInterface)
+        if (!$this->getPermission())
         {
-            if (!$permission || (is_string($permission) && strpos($permission, '.') === false))
-            {
-                $identifier = clone $mixer->getIdentifier();
-                $identifier->path = array('controller', 'permission');
-
-                if ($permission) $identifier->name = $permission;
-
-                $permission = $identifier;
-            }
-
-            if (!$permission instanceof KObjectIdentifierInterface)
-            {
-                $permission = $this->getIdentifier($permission);
-            }
+            $permission       = clone $mixer->getIdentifier();
+            $permission->path = array('controller', 'permission');
+            $this->setPermission($permission);
         }
 
-        $this->_permission = $mixer->mixin($permission);
+        $mixer->mixin($this->getPermission());
     }
 
     /**
