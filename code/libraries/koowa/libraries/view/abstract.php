@@ -403,7 +403,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         }
 
         //Add the format information to the route only if it's not 'html'
-        if (!isset($parts['format'])) {
+        if (!isset($parts['format']) && $this->getIdentifier()->name !== 'html') {
             $parts['format'] = $this->getIdentifier()->name;
         }
 
