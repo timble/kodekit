@@ -50,11 +50,8 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * @param   KObjectConfig $config Configuration options.
      */
-    public function __construct( KObjectConfig $config = null)
+    public function __construct( KObjectConfig $config)
     {
-        //If no config is passed create it
-        if(!isset($config)) $config = new KObjectConfig();
-
         parent::__construct($config);
 
          //Set the dispatched state
