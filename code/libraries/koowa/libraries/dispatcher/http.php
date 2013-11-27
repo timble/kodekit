@@ -156,7 +156,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     {
         $controller = $this->getController();
 
-        if($controller instanceof KControllerModellable)
+        if($controller instanceof KControllerViewable)
         {
             if(!$controller->getModel()->getState()->isUnique())
             {
