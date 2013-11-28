@@ -12,7 +12,6 @@
  *
  * Check if an refers to a legal URL inside the system. Use when redirecting to an URL that was passed in a request
  *
- *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
@@ -29,8 +28,8 @@ class KFilterInternalurl extends KFilterAbstract implements KFilterTraversable
         if(!is_string($value)) {
             return false;
         }
-        
-        if(stripos($value, (string) KRequest::url()->toString(KHttpUrl::AUTHORITY)) !== 0) {
+
+        if(stripos($value, (string)  $this->getObject('request')->getUrl()->toString(KHttpUrl::SCHEME | KHttpUrl::HOST)) !== 0) {
         	return false;
         }
 
