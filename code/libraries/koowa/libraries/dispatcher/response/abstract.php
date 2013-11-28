@@ -49,7 +49,7 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
         $this->_queue = $this->getObject('koowa:object.queue');
 
         //Set the response messages
-        $this->_messages = $this->getUser()->getSession()->getContainer('message')->all();
+        //$this->_messages = $this->getUser()->getSession()->getContainer('message')->all();
 
         //Attach the response transport handlers
         $transports = (array) KObjectConfig::unbox($config->transports);
