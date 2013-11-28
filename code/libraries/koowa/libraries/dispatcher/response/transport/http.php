@@ -99,13 +99,13 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         $request = $response->getRequest();
 
         //Make sure we do not have body content for 204, 205 and 305 status codes
-        $codes = array(HttpResponse::NO_CONTENT, HttpResponse::NOT_MODIFIED, HttpResponse::RESET_CONTENT);
+        $codes = array(KHttpResponse::NO_CONTENT, KHttpResponse::NOT_MODIFIED, KHttpResponse::RESET_CONTENT);
         if (in_array($response->getStatusCode(), $codes)) {
             $response->setContent(null);
         }
 
         //Remove location header if we are not redirecting and the status code is not 201
-        if(!$response->isRedirect() && $response->getStatusCode() !== HttpResponse::CREATED)
+        if(!$response->isRedirect() && $response->getStatusCode() !== KHttpResponse::CREATED)
         {
             if($response->headers->has('Location')) {
                 $response->headers->remove('Location');
@@ -138,7 +138,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
 
         //Add Last-Modified header if not present
         if(!$response->headers->has('Last-Modified')) {
-            $response->setLastModified(new \DateTime('now'));
+            $response->setLastModified(new DateTime('now'));
         }
 
         //Add Content-Length if not present
@@ -152,7 +152,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         }
 
         //Modifies the response so that it conforms to the rules defined for a 304 status code.
-        if($response->getStatusCode() == HttpResponse::NOT_MODIFIED)
+        if($response->getStatusCode() == KHttpResponse::NOT_MODIFIED)
         {
             $response->setContent(null);
 
