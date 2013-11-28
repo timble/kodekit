@@ -26,26 +26,50 @@ interface KControllerInterface
     public function execute($action, KControllerContextInterface $context);
 
     /**
+     * Get the controller context
+     *
+     * @return  KControllerContextInterface
+     */
+    public function getContext();
+
+    /**
      * Gets the available actions in the controller.
      *
      * @return array Actions
      */
     public function getActions();
 
-	/**
-	 * Get the request information
-	 *
-     * @return KControllerRequestInterface	An object with request information
-	 */
-	public function getRequest();
+    /**
+     * Set the request object
+     *
+     * @param KControllerRequestInterface $request A request object
+     * @return KControllerAbstract
+     */
+    public function setRequest(KControllerRequestInterface $request);
 
-	/**
-	 * Set the request information
-	 *
-	 * @param array	$request An associative array of request information
-	 * @return KControllerInterface
-	 */
-	public function setRequest(array $request);
+    /**
+     * Get the request object
+     *
+     * @throws UnexpectedValueException	If the request doesn't implement the ControllerRequestInterface
+     * @return KControllerRequestInterface
+     */
+    public function getRequest();
+
+    /**
+     * Set the response object
+     *
+     * @param KControllerResponseInterface $request A request object
+     * @return KControllerAbstract
+     */
+    public function setResponse(KControllerResponseInterface $response);
+
+    /**
+     * Get the response object
+     *
+     * @throws	UnexpectedValueException	If the response doesn't implement the ControllerResponseInterface
+     * @return KControllerResponseInterface
+     */
+    public function getResponse();
 
     /**
      * Has the controller been dispatched

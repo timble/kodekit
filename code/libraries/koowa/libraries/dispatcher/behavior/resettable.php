@@ -30,7 +30,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
     public function getHandle()
     {
         $result = null;
-        if(KRequest::method() == 'POST' && KRequest::content('type') == 'application/x-www-form-urlencoded') {
+        if($this->getRequest()->isPost() && $this->getRequest()->getContentType() == 'application/x-www-form-urlencoded') {
             $result = parent::getHandle();
         }
 
@@ -48,8 +48,8 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 	 */
 	protected function _afterDispatch(KDispatcherContextInterface $context)
 	{
-        if(!KRequest::type() == 'AJAX') {
-            $this->getController()->setRedirect(KRequest::getReferrer());
+        if(!$context->request->isAjax() && $context->response->isSuccess()) {
+            $context->response->setRedirect($context->request->getReferrer());
         }
 	}
 }

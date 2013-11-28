@@ -28,7 +28,7 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
     {
         $result = null;
 
-        if(KRequest::method() == 'GET' && KRequest::type() == 'HTTP')  {
+        if($this->getRequest()->isGet() && !$this->getRequest()->isAjax()) {
             $result = parent::getHandle();
         }
 

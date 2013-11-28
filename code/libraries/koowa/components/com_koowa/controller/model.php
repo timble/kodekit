@@ -104,7 +104,7 @@ class ComKoowaControllerModel extends KControllerModel
         //Add the notice if the row is locked
         if($this->getIdentifier()->application === 'admin' && isset($row))
         {
-            if(!isset($this->getRequest()->query->layout) && $row->isLockable() && $row->locked()) {
+            if(!$this->getRequest()->query->has('layout', 'cmd') && $row->isLockable() && $row->locked()) {
                 JFactory::getApplication()->enqueueMessage($row->lockMessage(), 'notice');
             }
         }

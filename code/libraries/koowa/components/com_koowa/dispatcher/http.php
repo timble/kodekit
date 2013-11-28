@@ -25,8 +25,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         parent::__construct($config);
 
         //Force the controller to the information found in the request
-        if($config->request->view) {
-            $this->_controller = $config->request->view;
+        if($this->getRequest()->query->has('view')) {
+            $this->_controller = $this->getRequest()->query->get('view', 'cmd');
         }
     }
 
@@ -62,8 +62,12 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             }
         }
 
+        if (KRequest::has('get.limitstart')) {
+            KRequest::set('offset', KRequest::has('get.limitstart', 'int'));
+        }
+
         $config->append(array(
-            'limit'     => array('default' => JFactory::getApplication()->getCfg('list_limit')),
+            'limit' => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
 
         parent::_initialize($config);
@@ -105,16 +109,18 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      */
     public function authenticateRequest(KDispatcherContextInterface $context)
     {
+        $request = $context->request;
+
         //Check cookie token
-        if(KRequest::token() !== KRequest::get('cookie._token', 'md5')) {
-            throw new KControllerExceptionForbidden('Invalid Cookie Token');
+        if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
+            throw new ControllerExceptionForbidden('Invalid Cookie Token');
         }
 
         //Check session token
         if(!JFactory::getUser()->guest)
         {
-            if( KRequest::token() !== JSession::getFormToken()) {
-                throw new KControllerExceptionForbidden('Invalid Session Token');
+            if($request->getToken() !== JSession::getFormToken()) {
+                throw new KControllerExceptionForbidden('Invalid Session Token or Session Time-out');
             }
         }
 
@@ -128,55 +134,13 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      */
     public function signResponse(KDispatcherContextInterface $context)
     {
-        //if(!$context->response->isError())
-        //{
+        if(!$context->response->isError())
+        {
             $token = JSession::getFormToken();
 
             setcookie('_token', $token, 0, KRequest::base().'/');
             header('X-Token : '.$token);
-        //}
-    }
-
-    /**
-     * Get the request object
-     *
-     * Joomla 3 Compatibility. Re-run the routing and add returned keys to the $_GET request. Joomla 3 sets the results
-     * of the router in $_REQUEST and not in $_GET (which is wrong).
-     *
-     * @throws  UnexpectedValueException	If the request doesn't implement the KDispatcherRequestInterface
-     * @return ComKoowaDispatcherHttp
-     */
-    public function getRequest()
-    {
-        $app = JFactory::getApplication();
-        if ($app->isSite() && $app->getCfg('sef'))
-        {
-            $uri = clone JURI::getInstance();
-
-            $router = JFactory::getApplication()->getRouter();
-            $result = $router->parse($uri);
-
-            foreach ($result as $key => $value)
-            {
-                if (!KRequest::has('get.'.$key)) {
-                    KRequest::set('get.'.$key, $value);
-                }
-            }
         }
-
-        return parent::getRequest();
-    }
-
-    /*
-     * Overridden for translating 'limitstart' to 'offset' for compatibility with Joomla
-     */
-    public function setRequest(array $request)
-    {
-        if (isset($request['limitstart'])) {
-            $request['offset'] = $request['limitstart'];
-        }
-
-        return parent::setRequest($request);
     }
 
     /**
@@ -192,30 +156,13 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         //Redirect if no view information can be found in the request
         if(!KRequest::has('get.view'))
         {
-            $url = clone(KRequest::url());
+            $url = clone($context->request->getUrl());
             $url->query['view'] = $this->getController()->getView()->getName();
 
             $this->redirect($url);
         }
 
         return parent::_actionDispatch($context);
-    }
-
-    /**
-     * Redirect
-     *
-     * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
-     * redirect the dispatcher to another URL after a GET request.
-     *
-     * @param KDispatcherContextInterface $context   A command context object
-     * @return bool
-     */
-    protected function _actionRedirect(KDispatcherContextInterface $context)
-    {
-        $url = $context->param;
-        JFactory::getApplication()->redirect($url);
-
-        return false;
     }
 
     /**
@@ -228,19 +175,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
-        $view = $this->getController()->getView();
-
-        //Send the mimetype
-        JFactory::getDocument()->setMimeEncoding($view->mimetype);
-
-        //Disabled the application menubar
-        if($this->getIdentifier()->application === 'admin')
-        {
-            if($this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
-                KRequest::set('get.hidemainmenu', 1);
-            }
-        }
-
         //Redirect the request
         if (KRequest::method() != 'GET' && KRequest::type() == 'HTTP')
         {
@@ -249,6 +183,25 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
                 JFactory::getApplication()
                     ->redirect($redirect['url'], $redirect['message'], $redirect['type']);
             }
+        }
+
+        //Pass back to Joomla for none AJAX requests.
+        if($context->request->getFormat() == 'html' && !$context->request->isAjax())
+        {
+            $view = $this->getController()->getView();
+
+            //Send the mimetype
+            JFactory::getDocument()->setMimeEncoding($view->mimetype);
+
+            //Disabled the application menubar
+            if($this->getIdentifier()->application === 'admin')
+            {
+                if($this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
+                    KRequest::set('get.hidemainmenu', 1);
+                }
+            }
+
+            return $context->response->getContent();
         }
 
         return parent::_actionSend($context);

@@ -33,8 +33,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
 		//Set the controller
 		$this->_controller = $config->controller;
-
-	    $this->registerCallback('after.dispatch', array($this, 'send'));
 	}
 
     /**
@@ -50,19 +48,68 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $config->append(array(
             'behaviors'  => array('permissible'),
             'controller' => $this->getIdentifier()->package,
-            'request'	 => KRequest::get('get', 'string')
-        ))->append(array (
-            'request' 	 => array('format' => KRequest::format() ? KRequest::format() : 'html')
+            'request'    => 'koowa:dispatcher.request',
+            'response'   => 'koowa:dispatcher.response',
         ));
 
         parent::_initialize($config);
     }
 
-	/**
-	 * Method to get a controller object
-	 *
-	 * @return	KControllerAbstract
-	 */
+    /**
+     * Get the request object
+     *
+     * @throws	UnexpectedValueException	If the request doesn't implement the KDispatcherRequestInterface
+     * @return KDispatcherRequest
+     */
+    public function getRequest()
+    {
+        if(!$this->_request instanceof KDispatcherRequestInterface)
+        {
+            $this->_request = parent::getRequest();
+
+            if(!$this->_request instanceof KDispatcherRequestInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Request: '.get_class($this->_request).' does not implement KDispatcherRequestInterface'
+                );
+            }
+        }
+
+        return $this->_request;
+    }
+
+    /**
+     * Get the response object
+     *
+     * @throws	UnexpectedValueException	If the response doesn't implement the KDispatcherResponseInterface
+     * @return KDispatcherResponse
+     */
+    public function getResponse()
+    {
+        if(!$this->_response instanceof KDispatcherResponseInterface)
+        {
+            $this->_response = parent::getResponse();
+
+            //Set the request in the response
+            $this->_response->setRequest($this->getRequest());
+
+            if(!$this->_response instanceof KDispatcherResponseInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Response: '.get_class($this->_response).' does not implement KDispatcherResponseInterface'
+                );
+            }
+        }
+
+        return $this->_response;
+    }
+
+    /**
+     * Method to get a controller object
+     *
+     * @throws	UnexpectedValueException	If the controller doesn't implement the ControllerInterface
+     * @return	KControllerAbstract
+     */
 	public function getController()
 	{
 		if(!($this->_controller instanceof KControllerInterface))
@@ -73,24 +120,32 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			}
 
 		    $config = array(
-        		'request' 	   => $this->_request->query->toArray(),
-			    'dispatched'   => true
+                'request' 	 => $this->getRequest(),
+                'response'   => $this->getResponse(),
+                'dispatched' => true
         	);
 
 			$this->_controller = $this->getObject($this->_controller, $config);
+
+            //Make sure the controller implements KControllerInterface
+            if(!$this->_controller instanceof KControllerInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Controller: '.get_class($this->_controller).' does not implement KControllerInterface'
+                );
+            }
 		}
 
 		return $this->_controller;
 	}
 
-	/**
-	 * Method to set a controller object attached to the dispatcher
-	 *
-	 * @param	mixed	$controller An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
-	 * @return	KDispatcherAbstract
-	 */
+    /**
+     * Method to set a controller object attached to the dispatcher
+     *
+     * @param	mixed	$controller An object that implements KControllerInterface, KObjectIdentifier object
+     * 					            or valid identifier string
+     * @return	KDispatcherAbstract
+     */
 	public function setController($controller)
 	{
 		if(!($controller instanceof KControllerInterface))
@@ -107,10 +162,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			    $identifier->name	= $controller;
 			}
 		    else $identifier = $this->getIdentifier($controller);
-
-			if($identifier->path[0] != 'controller') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a controller identifier');
-			}
 
 			$controller = $identifier;
 		}
@@ -131,6 +182,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
         $context->setSubject($this);
         $context->setRequest($this->getRequest());
+        $context->setResponse($this->getResponse());
 
         return $context;
     }
@@ -142,7 +194,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      * dispatcher and passing along the context.
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @throws	\UnexpectedValueException	If the dispatcher doesn't implement the KDispatcherInterface
+     * @throws	UnexpectedValueException	If the dispatcher doesn't implement the KDispatcherInterface
      */
     protected function _actionForward(KDispatcherContextInterface $context)
     {
@@ -154,7 +206,13 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         }
         else $identifier = $this->getIdentifier($context->param);
 
-        $dispatcher = $this->getObject($identifier);
+        //Create the dispatcher
+        $config = array(
+            'request' 	 => $context->request,
+            'response'   => $context->response,
+        );
+
+        $dispatcher = $this->getObject($identifier, $config);
 
         if(!$dispatcher instanceof KDispatcherInterface)
         {
@@ -185,28 +243,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      * Send the response
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @return string
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
-        //Headers
-        if($context->headers)
-        {
-            foreach($context->headers as $name => $value) {
-                header($name.' : '.$value);
-            }
-        }
-
-        //Status
-        if($context->status) {
-            header('HTTP/1.1 '.$context->status.' '.KHttpResponse::$status_messages[$context->status]);
-        }
-
-        //Content
-        if(is_string($context->result)) {
-            return $context->result;
-        }
-
-        return '';
+        $context->response->send();
+        exit(0);
     }
 }

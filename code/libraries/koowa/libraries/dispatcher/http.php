@@ -41,6 +41,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         //Sign GET request with a cookie token
         $this->registerCallback('after.get' , array($this, 'signResponse'));
+
+        //Send the request after dispatching
+        $this->registerCallback('after.dispatch', array($this, 'send'));
 	}
 
     /**
@@ -72,8 +75,10 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      */
     public function authenticateRequest(KDispatcherContextInterface $context)
     {
+        $request = $context->request;
+
         //Check referrer
-        if(!KRequest::referrer()) {
+        if(!$request->getReferrer()) {
             throw new KControllerExceptionForbidden('Invalid Request Referrer');
         }
 
@@ -102,7 +107,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
         //Execute the component method
-        $method = strtolower(KRequest::method());
+        $method = strtolower($context->request->getMethod());
         $result = $this->execute($method, $context);
 
         return $result;
@@ -121,23 +126,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     {
         $url = $context->param;
 
-        //Set the redirect into the response
-        $context->result = sprintf(
-            '<!DOCTYPE html>
-                <html>
-                    <head>
-                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                        <meta http-equiv="refresh" content="1;url=%1$s" />
-                        <title>Redirecting to %1$s</title>
-                    </head>
-                    <body>
-                        Redirecting to <a href="%1$s">%1$s</a>.
-                    </body>
-                </html>'
-            , htmlspecialchars($url, ENT_QUOTES, 'UTF-8')
-        );
-
-        $context->status = KHttpResponse::MOVED_PERMANENTLY;
+        $context->response->setStatus(KDispatcherResponse::MOVED_PERMANENTLY);
+        $context->response->setRedirect($url);
         $this->send();
 
         return false;
@@ -196,9 +186,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         $controller = $this->getController();
 
         //Get the action from the request data
-        if(KRequest::has('post.action'))
+        if($context->request->data->has('_action'))
         {
-            $action = strtolower(KRequest::get('post.action', 'alpha'));
+            $action = strtolower($context->request->data->get('_action', 'alpha'));
 
             if(in_array($action, array('browse', 'read', 'render'))) {
                 throw new KDispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
@@ -217,9 +207,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
             throw new KControllerExceptionBadRequest('Action not found');
         }
 
-        //Set the data in the context
-        $context->data = KRequest::get(strtolower(KRequest::method()), 'raw');
-        
         return $controller->execute($action, $context);
     }
 
@@ -246,7 +233,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
             if($controller->getModel()->getState()->isUnique())
             {
                 $action = 'add';
-                $entity = $controller->getModel()->getRow();
+                $entity = $controller->getModel()->getItem();
 
                 if(!$entity->isNew())
                 {
@@ -267,9 +254,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
             throw new KControllerExceptionBadRequest('Resource not found');
         }
 
-        //Set the data in the context
-        $context->data = KRequest::get(strtolower(KRequest::method()), 'raw');
-
         return $entity = $controller->execute($action, $context);
     }
 
@@ -284,10 +268,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     protected function _actionDelete(KDispatcherContextInterface $context)
     {
         $controller = $this->getController();
-
-        //Set the data in the context
-        $context->data = KRequest::get(strtolower(KRequest::method()), 'raw');
-
         return $controller->execute('delete', $context);
     }
 
@@ -338,6 +318,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
             }
         }
 
-        header('Allow : '.$result);
+        $context->response->headers->set('Allow', $result);
     }
 }

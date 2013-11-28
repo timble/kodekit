@@ -78,11 +78,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     {
         $config->append(array(
     	    'model'	     => $this->getIdentifier()->name,
+            'view' 		 => $this->getIdentifier()->name,
     	    'behaviors'  => array('permissible'),
-    		'request' 	 => array('format' => 'html')
-         ))->append(array(
-            'view' 		=> $config->request->view ? $config->request->view : $this->getIdentifier()->name
-        ));
+         ));
 
         parent::_initialize($config);
     }
@@ -90,11 +88,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Get the view object attached to the controller
      *
-     * This function will check if the view folder exists. If not it will throw an exception. This is a security measure
-     * to make sure we can only explicitly get data from views the have been physically defined.
+     * If we are dispatching this controller this function will check if the view folder exists. If not it will throw
+     * an exception. This is a security measure to make sure we can only explicitly get data from views the have been
+     * physically defined.
      *
-     * @throws  KControllerExceptionNotFound if the view cannot be found.
-     * @return	KViewAbstract
+     * @throws  KControllerExceptionNotFound If the view cannot be found. Only when controller is being dispatched.
+     * @throws	UnexpectedValueException	If the views doesn't implement the KViewInterface
+     * @return	KViewInterface
      */
     public function getView()
     {
@@ -107,16 +107,20 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
             //Create the view
             $config = array(
-                'url'	      => KRequest::url(),
+                'url'	      => $this->getObject('request')->getUrl(),
                 'model'       => $this->getModel(),
+                'layout'      => $this->getRequest()->query->get('layout', 'identifier'),
                 'auto_assign' => $this instanceof KControllerModellable
             );
 
             $this->_view = $this->getObject($this->_view, $config);
 
-            //Set the layout
-            if(isset($this->getRequest()->query->layout)) {
-                $this->_view->setLayout($this->getRequest()->query->layout);
+            //Make sure the view implements KViewInterface
+            if(!$this->_view instanceof KViewInterface)
+            {
+                throw new UnexpectedValueException(
+                    'View: '.get_class($this->_view).' does not implement KViewInterface'
+                );
             }
 
             //Make sure the view exists if we are dispatching this controller
@@ -140,8 +144,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	 *
 	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
 	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a view identifier
-	 * @return	object	A KViewAbstract object or a KObjectIdentifier object
+	 * @return	object	A KViewInterface object or a KObjectIdentifier object
 	 */
 	public function setView($view)
 	{
@@ -151,13 +154,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 		    {
 			    $identifier			= clone $this->getIdentifier();
 			    $identifier->path	= array('view', $view);
-			    $identifier->name	= $this->getRequest()->query->format;
+			    $identifier->name	= $this->getRequest()->getFormat();
 			}
 			else $identifier = $this->getIdentifier($view);
-
-			if($identifier->path[0] != 'view') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a view identifier');
-			}
 
 			$view = $identifier;
 		}
@@ -170,7 +169,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	/**
 	 * Get the model object attached to the controller
 	 *
-	 * @return	KModelAbstract
+     * @throws	\UnexpectedValueException	If the model doesn't implement the ModelInterface
+	 * @return	KModelInterface
 	 */
 	public function getModel()
 	{
@@ -183,6 +183,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
             $this->_model = $this->getObject($this->_model);
 
+            if(!$this->_model instanceof KModelInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Model: '.get_class($this->_model).' does not implement KModelInterface'
+                );
+            }
+
             //Inject the request into the model state
             $this->_model->setState($this->getRequest()->query->toArray());
 		}
@@ -190,14 +197,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 		return $this->_model;
 	}
 
-	/**
-	 * Method to set a model object attached to the controller
-	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a model identifier
-	 * @return	object	A KModelAbstract object or a KObjectIdentifier object
-	 */
+    /**
+     * Method to set a model object attached to the controller
+     *
+     * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
+     * 					       or valid identifier string
+     * @return	KControllerView
+     */
 	public function setModel($model)
 	{
 		if(!($model instanceof KModelInterface))
@@ -214,10 +220,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 			    $identifier->name	= $model;
 			}
 			else $identifier = $this->getIdentifier($model);
-
-			if($identifier->path[0] != 'model') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a model identifier');
-			}
 
 			$model = $identifier;
 		}
@@ -268,13 +270,33 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Render action
      *
+     *
+     *
      * @param KControllerContextInterface $context A command context object
      * @return    string|bool    The rendered output of the view or false if something went wrong
      */
 	protected function _actionRender(KControllerContextInterface $context)
 	{
-	    $result = $this->getView()->display();
-	    return $result;
+        $view = $this->getView();
+
+        //Push the content in the view, used for view decoration
+        $view->setContent($context->response->getContent());
+
+        //Render the view
+        $param = KObjectConfig::unbox($context->param);
+
+        if(is_array($param)) {
+            $data = (array) $param;
+        } else {
+            $data = array();
+        }
+
+        $content = $view->display($data);
+
+        //Set the data in the response
+        $context->response->setContent($content, $view->mimetype);
+
+        return $content;
 	}
 
 	/**
@@ -294,16 +316,21 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	    //This prevents the model being loaded during object instantiation.
 		if(!isset($this->_mixed_methods[$method]))
         {
+            //Set the view
+            if($method == 'view') {
+                $this->setView($args[0]);
+            }
+
             //Check if the method is a state property
 			$state = $this->getModel()->getState();
 
-			if(isset($state->$method) || in_array($method, array('layout', 'view', 'format')))
+			if(isset($state->$method) || in_array($method, array('layout', 'format')))
 			{
-                $this->getRequest()->query->$method = $args[0];
-                $this->getModel()->getState()->set($method, $args[0]);
+                $this->getRequest()->query->set($method, $args[0]);
 
-				if($method == 'view') {
-                   $this->_view = $args[0];
+                //Check for model state properties
+                if(isset($state->$method)) {
+                    $this->getModel()->getState()->set($method, $args[0]);
                 }
 
 				return $this;

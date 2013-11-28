@@ -25,18 +25,18 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected $_actions = array();
 
     /**
-     * Has the controller been dispatched
+     * Response object or identifier
      *
-     * @var boolean
+     * @var	string|object
      */
-    protected $_dispatched;
+    protected $_response;
 
     /**
-	 * The request information
-	 *
-	 * @var KControllerRequest
-	 */
-	protected $_request = null;
+     * Request object or identifier
+     *
+     * @var	string|object
+     */
+    protected $_request;
 
     /**
      * Chain of command object
@@ -44,6 +44,20 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * @var KCommandChain
      */
     protected $_command_chain;
+
+    /**
+     * Has the controller been dispatched
+     *
+     * @var boolean
+     */
+    protected $_dispatched;
+
+    //Status codes
+    const STATUS_SUCCESS   = KHttpResponse::OK;
+    const STATUS_CREATED   = KHttpResponse::CREATED;
+    const STATUS_ACCEPTED  = KHttpResponse::ACCEPTED;
+    const STATUS_UNCHANGED = KHttpResponse::NO_CONTENT;
+    const STATUS_RESET     = KHttpResponse::RESET_CONTENT;
 
     /**
      * Constructor.
@@ -54,11 +68,19 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         parent::__construct($config);
 
-         //Set the dispatched state
+        //Set the dispatched state
         $this->_dispatched = $config->dispatched;
 
-        //Set the request
-        $this->setRequest((array) KObjectConfig::unbox($config->request));
+        // Set the model identifier
+        $this->_request = $config->request;
+
+        // Set the view identifier
+        $this->_response = $config->response;
+
+        //Set the query in the request
+        if(!empty($config->query)) {
+            $this->getRequest()->query->add(KObjectConfig::unbox($config->query));
+        }
 
         // Mixin the behavior interface
         $this->mixin('koowa:behavior.mixin', $config);
@@ -80,8 +102,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             'event_dispatcher'  => 'koowa:event.dispatcher',
             'enable_callbacks'  => true,
             'dispatched'		=> false,
-            'request'		    => null,
+            'request'           => 'koowa:controller.request',
+            'response'          => 'koowa:controller.response',
             'behaviors'         => array(),
+            'query'             => array()
         ));
 
         parent::_initialize($config);
@@ -137,19 +161,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
         //Reset the context subject
         $context->setSubject($context_subject);
-
-        //Handle exceptions
-        if($context->getError() instanceof Exception)
-        {
-            if($context->headers)
-	        {
-	            foreach($context->headers as $name => $value) {
-	                header($name.' : '.$value);
-	            }
-	        }
-
-            throw $context->getError();
-        }
 
         return $context->result;
     }
@@ -207,30 +218,77 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         return $this->_actions;
     }
 
-	/**
-	 * Get the request information
-	 *
-	 * @return KControllerRequestInterface	An object with request information
-	 */
-	public function getRequest()
-	{
-		return $this->_request;
-	}
+    /**
+     * Set the request object
+     *
+     * @param KControllerRequestInterface $request A request object
+     * @return KControllerAbstract
+     */
+    public function setRequest(KControllerRequestInterface $request)
+    {
+        $this->_request = $request;
+        return $this;
+    }
 
-	/**
-	 * Set the request information
-	 *
-	 * @param array	$request An associative array of request information
-	 * @return KControllerAbstract
-	 */
-	public function setRequest(array $request)
-	{
-		$this->_request = $this->getObject('koowa:controller.request', array(
-            'query' => $request
-        ));
+    /**
+     * Get the request object
+     *
+     * @throws UnexpectedValueException	If the request doesn't implement the ControllerRequestInterface
+     * @return KControllerRequestInterface
+     */
+    public function getRequest()
+    {
+        if(!$this->_request instanceof KControllerRequestInterface)
+        {
+            $this->_request = $this->getObject($this->_request);
 
-		return $this;
-	}
+            if(!$this->_request instanceof KControllerRequestInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Request: '.get_class($this->_request).' does not implement KControllerRequestInterface'
+                );
+            }
+        }
+
+        return $this->_request;
+    }
+
+    /**
+     * Set the response object
+     *
+     * @param KControllerResponseInterface $request A request object
+     * @return KControllerAbstract
+     */
+    public function setResponse(KControllerResponseInterface $response)
+    {
+        $this->_response = $response;
+        return $this;
+    }
+
+    /**
+     * Get the response object
+     *
+     * @throws	UnexpectedValueException	If the response doesn't implement the ControllerResponseInterface
+     * @return KControllerResponseInterface
+     */
+    public function getResponse()
+    {
+        if(!$this->_response instanceof KControllerResponseInterface)
+        {
+            $this->_response = $this->getObject($this->_response, array(
+                'request' => $this->getRequest(),
+            ));
+
+            if(!$this->_response instanceof KControllerResponseInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Response: '.get_class($this->_response).' does not implement KControllerResponseInterface'
+                );
+            }
+        }
+
+        return $this->_response;
+    }
 
     /**
      * Get the chain of command object
@@ -269,6 +327,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $context = new KControllerContext();
         $context->setSubject($this);
         $context->setRequest($this->getRequest());
+        $context->setResponse($this->getResponse());
 
         return $context;
     }
@@ -296,8 +355,15 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             if(!($data instanceof KCommandInterface))
             {
                 $context = $this->getContext();
+
+                //Store the parameters in the context
                 $context->param = $data;
-                $context->data   = $data;
+
+                //Automatic set the data in the request if an associative array is passed
+                if(is_array($data) && !is_numeric(key($data))) {
+                    $context->request->data->add($data);
+                }
+
                 $context->result = false;
             }
             else $context = $data;

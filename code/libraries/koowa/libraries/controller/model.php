@@ -32,29 +32,42 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         parent::_initialize($config);
     }
 
-	/**
-	 * Method to set a view object attached to the controller
-	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @return	KControllerAbstract
-	 */
-    public function setView($view)
-	{
-	    if(is_string($view) && strpos($view, '.') === false )
-		{
-		    if(!isset($this->getRequest()->query->view))
-		    {
-		        if($this->getModel()->getState()->isUnique()) {
-			        $view = KStringInflector::singularize($view);
-		        } else {
-			        $view = KStringInflector::pluralize($view);
-	    	    }
-		    }
-		}
+    /**
+     * Get the view object attached to the controller
+     *
+     * @return	KViewInterface
+     */
+    public function getView()
+    {
+        if(!$this->_view instanceof KViewInterface)
+        {
+            if(!$this->_view instanceof KObjectIdentifier)
+            {
+                if(!$this->getRequest()->query->has('view'))
+                {
+                    $view = $this->getIdentifier()->name;
 
-		return parent::setView($view);
-	}
+                    if($this->getModel()->getState()->isUnique()) {
+                        $view = KStringInflector::singularize($view);
+                    } else {
+                        $view = KStringInflector::pluralize($view);
+                    }
+                }
+                else $view = $this->getRequest()->query->get('view', 'cmd');
+
+                //Set the view
+                $this->setView($view);
+            }
+
+            //Get the view
+            $view = parent::getView();
+
+            //Set the model in the view
+            $view->setModel($this->getModel());
+        }
+
+        return parent::getView();
+    }
 
     /**
      * Get action
@@ -100,94 +113,99 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	    $name = ucfirst($this->getView()->getName());
 
 		if($this->getModel()->getState()->isUnique() && $data->isNew()) {
-		    $context->setError(new KControllerExceptionNotFound($name.' Not Found'));
+            throw new KControllerExceptionNotFound($name.' Not Found');
 		}
 
 		return $data;
 	}
 
-	/**
-	 * Generic edit action, saves over an existing item
-	 *
-	 * @param	KControllerContextInterface $context A command context object
-	 * @return 	KDatabaseRowsetInterface A rowset object containing the updated rows
-	 */
-	protected function _actionEdit(KControllerContextInterface $context)
-	{
-	    $data = $this->getModel()->getData();
+    /**
+     * Generic edit action, saves over an existing item
+     *
+     * @param	KControllerContextInterface	$context A controller context object
+     * @throws  KControllerExceptionNotFound If the entity could not be found
+     * @return 	KDatabaseRow(set)Interface A row(set) object containing the updated row(s)
+     */
+    protected function _actionEdit(KControllerContextInterface $context)
+    {
+        $entity = $this->getModel()->getData();
 
-	    if(count($data))
-	    {
-	        $data->setData(KObjectConfig::unbox($context->data));
+        if(count($entity))
+        {
+            $entity->setData($context->request->data->toArray());
 
-	        //Only set the reset content status if the action explicitly succeeded
-	        if($data->save() === true) {
-		        $context->status = KHttpResponse::RESET_CONTENT;
-		    } else {
-		        $context->status = KHttpResponse::NO_CONTENT;
-		    }
-		}
-		else $context->setError(new KControllerExceptionNotFound('Resource Not Found'));
+            //Only set the reset content status if the action explicitly succeeded
+            if($entity->save() === true) {
+                $context->response->setStatus(self::STATUS_RESET);
+            } else {
+                $context->response->setStatus(self::STATUS_UNCHANGED);
+            }
+        }
+        else throw new KControllerExceptionNotFound('Resource could not be found');
 
-		return $data;
-	}
+        return $entity;
+    }
 
-	/**
-	 * Generic add action, saves a new item
-	 *
-	 * @param	KControllerContextInterface $context A command context object
-	 * @return 	KDatabaseRowInterface 	 A row object containing the new data
-	 */
-	protected function _actionAdd(KControllerContextInterface $context)
-	{
-		$data = $this->getModel()->getItem();
+    /**
+     * Generic add action, saves a new item
+     *
+     * @param	KControllerContextInterface	$context A controller context object
+     * @throws  KControllerExceptionActionFailed If the delete action failed on the data entity
+     * @throws  KControllerExceptionBadRequest   If the entity already exists
+     * @return 	KDatabaseRowInterface   A row object containing the new data
+     */
+    protected function _actionAdd(KControllerContextInterface $context)
+    {
+        $entity = $this->getModel()->getItem();
 
-		if($data->isNew())
-		{
-		    $data->setData(KObjectConfig::unbox($context->data));
-
-		    //Only throw an error if the action explicitly failed.
-		    if($data->save() === false)
-		    {
-			    $error = $data->getStatusMessage();
-		        $context->setError(new KControllerExceptionActionFailed(
-		           $error ? $error : 'Add Action Failed', KHttpResponse::INTERNAL_SERVER_ERROR
-		        ));
-
-		    }
-		    else $context->status = KHttpResponse::CREATED;
-		}
-		else $context->setError(new KControllerExceptionBadRequest('Resource Already Exists'));
-
-		return $data;
-	}
-
-	/**
-	 * Generic delete function
-	 *
-	 * @param	KControllerContextInterface $context  A command context object
-	 * @return 	KDatabaseRowsetInterface  A rowset object containing the deleted rows
-	 */
-	protected function _actionDelete(KControllerContextInterface $context)
-	{
-	    $data = $this->getModel()->getData();
-
-		if(count($data))
-	    {
-            $data->setData(KObjectConfig::unbox($context->data));
+        if($entity->isNew())
+        {
+            $entity->setData($context->request->data->toArray());
 
             //Only throw an error if the action explicitly failed.
-	        if($data->delete() === false)
-	        {
-			    $error = $data->getStatusMessage();
-                $context->setError(new KControllerExceptionActionFailed(
-		            $error ? $error : 'Delete Action Failed', KHttpResponse::INTERNAL_SERVER_ERROR
-		        ));
-		    }
-		    else $context->status = KHttpResponse::NO_CONTENT;
-		}
-		else  $context->setError(new KControllerExceptionNotFound('Resource Not Found'));
+            if($entity->save() === false)
+            {
+                $error = $entity->getStatusMessage();
+                throw new KControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
+            }
+            else $context->response->setStatus(self::STATUS_CREATED);
+        }
+        else throw new KControllerExceptionBadRequest('Resource Already Exists');
 
-		return $data;
-	}
+        return $entity;
+    }
+
+    /**
+     * Generic delete function
+     *
+     * @param	KControllerContextInterface	$context A controller context object
+     * @throws  KControllerExceptionActionFailed 	If the delete action failed on the data entity
+     * @return 	KDatabaseRow(set)Interface A row(set) object containing the deleted row(s)
+     */
+    protected function _actionDelete(KControllerContextInterface $context)
+    {
+        $entity = $this->getModel()->getData();
+
+        if($entity instanceof KDatabaseRowsetInterface)  {
+            $count = count($entity);
+        } else {
+            $count = (int) !$entity->isNew();;
+        }
+
+        if($count)
+        {
+            $entity->setData($context->request->data->toArray());
+
+            //Only throw an error if the action explicitly failed.
+            if($entity->delete() === false)
+            {
+                $error = $entity->getStatusMessage();
+                throw new KControllerExceptionActionFailed($error ? $error : 'Delete Action Failed');
+            }
+            else $context->response->setStatus(self::STATUS_UNCHANGED);
+        }
+        else throw new KControllerExceptionNotFound('Resource Not Found');
+
+        return $entity;
+    }
 }
