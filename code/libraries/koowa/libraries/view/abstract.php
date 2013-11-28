@@ -138,13 +138,13 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      */
     public function set($property, $value = null)
     {
-        if (is_array($property)) {
+        if (is_array($property))
+        {
             foreach($property as $key => $value) {
                 $this->set($key, $value);
             }
-        } else {
-            $this->$property = $value;
         }
+        else $this->$property = $value;
 
         return $this;
     }
