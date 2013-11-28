@@ -25,7 +25,7 @@ class ComKoowaControllerModel extends KControllerModel
 	{
 		parent::__construct($config);
 
-        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+        $this->getObject('translator')->loadTranslations($this->getIdentifier());
 
         // Mixin the toolbar interface
         $this->mixin('koowa:controller.toolbar.mixin');

@@ -25,7 +25,7 @@ class ComKoowaControllerView extends KControllerView
     {
         parent::__construct($config);
 
-        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+        $this->getObject('translator')->loadTranslations($this->getIdentifier());
 
         // Mixin the toolbar interface
         $this->mixin('koowa:controller.toolbar.mixin');
@@ -96,7 +96,7 @@ class ComKoowaControllerView extends KControllerView
      */
     protected function _actionRender(KControllerContextInterface $context)
     {
-        $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+        $this->getObject('translator')->loadTranslations($this->getIdentifier());
         return parent::_actionRender($context);
     }
 }
