@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-interface DispatcherRequestInterface extends KControllerRequestInterface
+interface KDispatcherRequestInterface extends KControllerRequestInterface
 {
     /**
      * Sets a list of trusted proxies.
@@ -21,7 +21,7 @@ interface DispatcherRequestInterface extends KControllerRequestInterface
      * You should only list the reverse proxies that you manage directly.
      *
      * @param array $proxies A list of trusted proxies
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function setProxies(array $proxies);
 
@@ -36,7 +36,7 @@ interface DispatcherRequestInterface extends KControllerRequestInterface
      * Set the request cookies
      *
      * @param  array $cookies
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function setCookies($cookies);
 
@@ -51,7 +51,7 @@ interface DispatcherRequestInterface extends KControllerRequestInterface
      * Set the request files
      *
      * @param  array $files
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function setFiles($files);
 
@@ -142,7 +142,7 @@ interface DispatcherRequestInterface extends KControllerRequestInterface
      * Set the base URL for which the request is executed.
      *
      * @param string $url
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public function setBaseUrl($url);
 
@@ -157,7 +157,7 @@ interface DispatcherRequestInterface extends KControllerRequestInterface
      * Set the base path for which the request is executed.
      *
      * @param string $path
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public function setBasePath($path);
 
@@ -188,7 +188,7 @@ interface DispatcherRequestInterface extends KControllerRequestInterface
      * @param string       $format    The format
      * @param string|array $mimeTypes The associated mime types (the preferred one must be the first as it will be used
      *                                as the content type)
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function addFormat($format, $mime_types);
 

@@ -15,14 +15,14 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class DispatcherRequest extends KDispatcherRequestAbstract implements KObjectInstantiable, KObjectSingleton
+class KDispatcherRequest extends KDispatcherRequestAbstract implements KObjectInstantiable, KObjectSingleton
 {
     /**
      * Force creation of a singleton
      *
      * @param 	KObjectConfig            $config	  A ObjectConfig object with configuration options
      * @param 	KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
