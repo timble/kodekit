@@ -271,7 +271,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * You should only list the reverse proxies that you manage directly.
      *
      * @param array $proxies A list of trusted proxies
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function setProxies(array $proxies)
     {
@@ -293,7 +293,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Set the request cookies
      *
      * @param  array $cookies
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function setCookies($parameters)
     {
@@ -314,7 +314,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Set the request files
      *
      * @param  array $files
-     * @return DispatcherRequestInterface
+     * @return KDispatcherRequestInterface
      */
     public function setFiles($parameters)
     {
@@ -363,7 +363,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Sets the request method.
      *
      * @param string $method
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public function setMethod($method)
     {
@@ -662,7 +662,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Set the base URL for which the request is executed.
      *
      * @param string $url
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public function setBaseUrl($url)
     {
@@ -697,7 +697,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Set the base path for which the request is executed.
      *
      * @param string $path
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public function setBasePath($path)
     {
@@ -735,9 +735,8 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      *
      * Find the format by using following sequence :
      *
-     * 1. Use the format information from the url
-     * 2. Use the the 'format' request parameter
-     * 3. Use the accept header with the highest quality apply the reverse format map to find the format.
+     * 1. Use the the 'format' request parameter
+     * 2. Use the accept header with the highest quality apply the reverse format map to find the format.
      *
      * @param string $format The default format
      * @return  string  The request format or NULL if no format could be found
@@ -748,36 +747,32 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
         {
             if(!$this->query->has('format'))
             {
-                if(!$this->getUrl()->getFormat())
+                if($this->_headers->has('Accept'))
                 {
-                    if($this->_headers->has('Accept'))
+                    $accept  = $this->_headers->get('Accept');
+                    $formats = $this->_parseAccept($accept);
+
+                    /**
+                     * If the browser is requested text/html serve it at all times
+                     *
+                     * @hotfix #409 : Android 2.3 requesting application/xml
+                     */
+                    if(!isset($formats['text/html']))
                     {
-                        $accept  = $this->_headers->get('Accept');
-                        $formats = $this->_parseAccept($accept);
+                        //Get the highest quality format
+                        $mime_type = key($formats);
 
-                        /**
-                         * If the browser is requested text/html serve it at all times
-                         *
-                         * @hotfix #409 : Android 2.3 requesting application/xml
-                         */
-                        if(!isset($formats['text/html']))
+                        foreach (static::$_formats as $value => $mime_types)
                         {
-                            //Get the highest quality format
-                            $mime_type = key($formats);
-
-                            foreach (static::$_formats as $value => $mime_types)
+                            if (in_array($mime_type, (array) $mime_types))
                             {
-                                if (in_array($mime_type, (array) $mime_types))
-                                {
-                                    $format = $value;
-                                    break;
-                                }
+                                $format = $value;
+                                break;
                             }
                         }
-                        else $format = 'html';
                     }
+                    else $format = 'html';
                 }
-                else $format = $this->getUrl()->getFormat();
             }
             else $format = $this->query->get('format', 'word');
 
@@ -793,7 +788,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * @param string       $format    The format
      * @param string|array $mimeTypes The associated mime types (the preferred one must be the first as it will be used
      *                                as the content type)
-     * @return DispatcherRequest
+     * @return KDispatcherRequest
      */
     public function addFormat($format, $mime_types)
     {
