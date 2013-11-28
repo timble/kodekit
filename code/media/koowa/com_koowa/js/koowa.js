@@ -642,7 +642,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
         options = {
             method:'post',
             url: this.options.url+(idQuery ? append+idQuery : ''),
-            params: $.extend({}, {action: context.action}, context.data)
+            params: $.extend({}, {_action: context.action}, context.data)
         };
 
         new Koowa.Form(options).submit();
@@ -658,7 +658,7 @@ Koowa.Controller.Form = Koowa.Controller.extend({
             return false;
         }
 
-        this.form.append($('<input/>', {name: 'action', type: 'hidden', value: context.action}));
+        this.form.append($('<input/>', {name: '_action', type: 'hidden', value: context.action}));
         this.form.submit();
     }
 
