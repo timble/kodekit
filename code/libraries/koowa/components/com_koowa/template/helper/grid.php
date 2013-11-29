@@ -27,6 +27,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
+            'attribs' => array()
         ));
 
         if($config->row->isLockable() && $config->row->locked())
@@ -40,7 +41,10 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $column = $config->row->getIdentityColumn();
             $value  = $config->row->{$column};
 
-            $html = '<input type="radio" class="-koowa-grid-checkbox" name="'.$column.'[]" value="'.$value.'" />';
+            $attribs = $this->buildAttributes($config->attribs);
+
+            $html = '<input type="radio" class="-koowa-grid-checkbox" name="%s[]" value="%s" %s />';
+            $html = sprintf($html, $column, $value, $attribs);
         }
 
         return $html;
