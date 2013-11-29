@@ -137,11 +137,12 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      *
      * Valid types are strings, numbers, and objects that implement a __toString() method.
      *
-     * @param mixed $content
-     * @throws UnexpectedValueException If the content is not a string are cannot be casted to a string.
-     * @return KHttpMessage
+     * @param mixed  $content   The content
+     * @param string $type      The content type
+     * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
+     * @return HttpMessage
      */
-    public function setContent($content)
+    public function setContent($content, $type = null)
     {
         if (!is_null($content) && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString')))
         {
@@ -152,6 +153,11 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
 
         //Cast to a string
         $this->_content = (string) $content;
+
+        if(isset($type)) {
+            $this->setContentType($type);
+        }
+
         return $this;
     }
 
