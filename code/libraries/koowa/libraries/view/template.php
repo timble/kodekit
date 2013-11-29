@@ -255,14 +255,10 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function getRoute($route = '', $fqr = true, $escape = true)
     {
-        if (is_string($route))
-        {
-            // FIXME
-            $parts = parse_str($route);
-        }
-        else
-        {
-            $parts = (array) $route;
+        if(is_string($route)) {
+            parse_str(trim($route), $parts);
+        } else {
+            $parts = $route;
         }
 
         if (count($parts) && !isset($parts['layout']) && !empty($this->_layout))
