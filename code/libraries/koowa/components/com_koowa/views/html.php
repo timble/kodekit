@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaViewHtml extends KViewDefault
+class ComKoowaViewHtml extends KViewHtml
 {
     /**
      * Constructor

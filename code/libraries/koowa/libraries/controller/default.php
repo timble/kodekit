@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerDefault extends KControllerModel {}
+final class KControllerDefault extends KControllerModel {}
