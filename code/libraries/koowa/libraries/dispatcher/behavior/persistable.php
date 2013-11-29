@@ -84,7 +84,7 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
             $vars = array();
             foreach($state->toArray() as $var)
             {
-                if(!$var->unique) {
+                if(!$var->unique && !$var->internal) {
                     $vars[$var->name] = $var->value;
                 }
             }
