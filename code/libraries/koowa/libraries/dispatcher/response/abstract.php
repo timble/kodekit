@@ -162,7 +162,7 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
      * Path needs to be of the form "scheme://..." and a wrapper for that protocol need to be registered. See @link
      * http://www.php.net/manual/en/wrappers.php for a list of default PHP stream protocols and wrappers.
      *
-     * @param mixed  $content   The content
+     * @param mixed  $path   The path
      * @param string $type      The content type
      * @throws InvalidArgumentException If the path is not a valid stream or no stream wrapper is registered for the
      *                                   stream protocol
@@ -219,9 +219,10 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
     /**
      * Get a transport handler by identifier
      *
-     * @param   mixed    $transport    An object that implements ObjectInterface, ObjectIdentifier object
+     * @param   mixed $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                                 or valid identifier string
-     * @param   array    $config    An optional associative array of configuration settings
+     * @param   array $config An optional associative array of configuration settings
+     * @throws UnexpectedValueException
      * @return KDispatcherResponseAbstract
      */
     public function getTransport($transport, $config = array())

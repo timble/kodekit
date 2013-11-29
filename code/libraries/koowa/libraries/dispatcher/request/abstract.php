@@ -110,7 +110,6 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Constructor
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return DispatcherRequest
      */
     public function __construct(KObjectConfig $config)
     {
@@ -292,7 +291,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
     /**
      * Set the request cookies
      *
-     * @param  array $cookies
+     * @param  array $parameters
      * @return KDispatcherRequestInterface
      */
     public function setCookies($parameters)
@@ -313,7 +312,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
     /**
      * Set the request files
      *
-     * @param  array $files
+     * @param  array $parameters
      * @return KDispatcherRequestInterface
      */
     public function setFiles($parameters)
@@ -785,8 +784,8 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
     /**
      * Associates a format with mime types.
      *
-     * @param string       $format    The format
-     * @param string|array $mimeTypes The associated mime types (the preferred one must be the first as it will be used
+     * @param string       $format     The format
+     * @param string|array $mime_types The associated mime types (the preferred one must be the first as it will be used
      *                                as the content type)
      * @return KDispatcherRequest
      */
@@ -1040,10 +1039,10 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Parses an accept header and returns an array (type => quality) of the accepted types, ordered by quality.
      *
      * @param string    $accept     The header to parse
-     * @param array     $default    The default values
+     * @param array     $defaults   The default values
      * @return array
      */
-    protected function _parseAccept( $accept, array $defaults = NULL)
+    protected function _parseAccept($accept, array $defaults = NULL)
     {
         if (!empty($accept))
         {

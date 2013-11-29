@@ -185,8 +185,8 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
     /**
      * Associates a format with mime types.
      *
-     * @param string       $format    The format
-     * @param string|array $mimeTypes The associated mime types (the preferred one must be the first as it will be used
+     * @param string       $format     The format
+     * @param string|array $mime_types The associated mime types (the preferred one must be the first as it will be used
      *                                as the content type)
      * @return KDispatcherRequestInterface
      */

@@ -95,14 +95,14 @@ interface KFilesystemStreamInterface
      * Truncates the stream to a given length
      *
      * @param integer $size The size to truncate
-     * @return Returns TRUE on success or FALSE on failure.
+     * @return bool Returns TRUE on success or FALSE on failure.
      */
     public function truncate($size);
 
     /**
      * Flush the data from the stream to another stream
      *
-     * @param resource $stream The stream resource to flush the data too
+     * @param resource $output The stream resource to flush the data too
      * @param int      $range  The total length of the stream to flush, if -1 the stream will be flushed until eof. The limit
      *                         should lie within the total size of the stream.
      * @return bool Returns TRUE on success, FALSE on failure
@@ -253,7 +253,7 @@ interface KFilesystemStreamInterface
     /**
      * Detach a filter
      *
-     * @param string $name   The name of the filter
+     * @param string $filter   The name of the filter
      * @return bool
      */
     public function detachFilter($filter);
@@ -287,6 +287,7 @@ interface KFilesystemStreamInterface
      * Function prevents from registering the wrapper twice
      *
      * @param mixed $wrapper An ObjectIdentifier object or valid identifier string
+     * @param array $config A config object
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function registerWrapper($wrapper, $config = array());

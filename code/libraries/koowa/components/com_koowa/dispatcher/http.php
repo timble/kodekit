@@ -113,7 +113,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
 
         //Check cookie token
         if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
-            throw new ControllerExceptionForbidden('Invalid Cookie Token');
+            throw new KControllerExceptionForbidden('Invalid Cookie Token');
         }
 
         //Check session token

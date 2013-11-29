@@ -257,6 +257,7 @@ abstract class KViewTemplate extends KViewAbstract
     {
         if (is_string($route))
         {
+            // FIXME
             $parts = parse_str($route);
         }
         else

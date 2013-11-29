@@ -36,7 +36,7 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
      * @param string    $path
      * @param string    $mode
      * @param int       $options
-     * @param string    $opended_path
+     * @param string    $opened_path
      *
      * @return boolean
      */
@@ -253,6 +253,7 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
      * Truncate to given size
      *
      * @param int $size
+     * @return bool
      */
     public function stream_truncate($size)
     {
