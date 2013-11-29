@@ -42,9 +42,7 @@ class KModelTable extends KModelAbstract
             ->insert('offset'   , 'int')
             ->insert('sort'     , 'cmd')
             ->insert('direction', 'word', 'asc')
-            ->insert('search'   , 'string')
-            // callback state for JSONP, needs to be filtered as cmd to prevent XSS
-            ->insert('callback' , 'cmd');
+            ->insert('search'   , 'string');
 
         //Try getting a table object
         if($this->isConnected())

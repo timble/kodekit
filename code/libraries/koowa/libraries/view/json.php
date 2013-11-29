@@ -85,7 +85,6 @@ class KViewJson extends KViewAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'padding'	  => '', // Can be turned off by setting this to false
             'version'     => '1.0',
             'text_fields' => array('description'), // Links are converted to absolute ones in these fields
             'plural'      => KStringInflector::isPlural($this->getName())
@@ -126,10 +125,6 @@ class KViewJson extends KViewAbstract
             $this->_content = json_encode($this->_content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
         }
 
-        //Handle JSONP
-        if (!empty($this->_padding)) {
-            $this->_content = $this->_padding.'('.$this->_content.');';
-        }
 
         return parent::display();
     }
