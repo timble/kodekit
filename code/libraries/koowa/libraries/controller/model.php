@@ -35,6 +35,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Get the view object attached to the controller
      *
+     * If the view is not an object, an object identifier or a fully qualified identifier string and the request does
+     * not contain view information try to get the view from based on the model state instead. If the model is unique
+     * use a singular view name, if not unique use a plural view name.
+     *
      * @return	KViewInterface
      */
     public function getView()
@@ -43,17 +47,21 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         {
             if(!$this->_view instanceof KObjectIdentifier)
             {
-                if(!$this->getRequest()->query->has('view'))
+                if(is_string($this->_view) && strpos($this->_view, '.') === false )
                 {
-                    $view = $this->getIdentifier()->name;
+                    if(!$this->getRequest()->query->has('view'))
+                    {
+                        $view = $this->getIdentifier()->name;
 
-                    if($this->getModel()->getState()->isUnique()) {
-                        $view = KStringInflector::singularize($view);
-                    } else {
-                        $view = KStringInflector::pluralize($view);
+                        if($this->getModel()->getState()->isUnique()) {
+                            $view = KStringInflector::singularize($view);
+                        } else {
+                            $view = KStringInflector::pluralize($view);
+                        }
                     }
+                    else $view = $this->getRequest()->query->get('view', 'cmd');
                 }
-                else $view = $this->getRequest()->query->get('view', 'cmd');
+                else $view = $this->_view;
 
                 //Set the view
                 $this->setView($view);
