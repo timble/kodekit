@@ -86,7 +86,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
 
         if (!in_array('koowa', self::$_loaded_files))
         {
-            $this->loadLanguageFiles('com_koowa');
+            $this->loadTranslations('com_koowa');
             self::$_loaded_files[] = 'koowa';
         }
     }
@@ -231,7 +231,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
      *
      * @return boolean
      */
-    public function loadLanguageFiles($extension, $app = null)
+    public function loadTranslations($extension, $app = null)
     {
         if ($extension instanceof KObjectIdentifier) {
             $extension = $extension->type.'_'.$extension->package;
@@ -240,10 +240,10 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
         $folder = $this->_getExtensionFolder($extension, $app);
 
         $results = array();
-        $results[] = $this->_loadLanguageFile($extension, $this->_fallback_locale, $folder);
+        $results[] = $this->_loadTranslation($extension, $this->_fallback_locale, $folder);
 
         if ($this->getLocale() !== $this->_fallback_locale) {
-            $results[] = $this->_loadLanguageFile($extension, $this->getLocale(), $folder);
+            $results[] = $this->_loadTranslation($extension, $this->getLocale(), $folder);
         }
 
         return in_array(true, $results);
@@ -306,7 +306,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
      * @param string $base   Base path
      * @return bool
      */
-    protected function _loadLanguageFile($extension, $locale, $base)
+    protected function _loadTranslation($extension, $locale, $base)
     {
         $result    = true;
         $signature = md5($extension.$base.$locale);

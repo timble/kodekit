@@ -54,7 +54,7 @@ class ModKoowaHtml extends KViewHtml
     {
 		//Load the language files.
 		if(isset($this->module->module)) {
-            $this->getObject('translator')->loadLanguageFiles($this->getIdentifier());
+            $this->getObject('translator')->loadTranslations($this->getIdentifier());
 		}
 
         if(empty($this->module->content))

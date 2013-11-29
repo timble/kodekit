@@ -183,7 +183,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             if (version_compare(JVERSION, '3.2', 'ge'))
             {
                 // Strip the extension.
-                $icons = explode(' ', $config->toolbar->getIcon());
+                $icons = explode(' ', $config->command->icon);
                 foreach ($icons as &$icon) {
                     $icon = preg_replace('#\.[^.]*$#', '', $icon);
                 }
