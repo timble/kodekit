@@ -22,6 +22,16 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
      * @var array
      */
     protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back', 'options');
+
+    /**
+     * Load the language strings for toolbar button labels
+     *
+     * @param KControllerContextInterface $context
+     */
+    protected function _beforeRender(KControllerContextInterface $context)
+    {
+        JFactory::getLanguage()->load('joomla', JPATH_ADMINISTRATOR);
+    }
     
     /**
      * If the method is called with one of the standard Joomla toolbar buttons translate the label correctly
