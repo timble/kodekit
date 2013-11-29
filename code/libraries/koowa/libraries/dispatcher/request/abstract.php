@@ -585,7 +585,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
 
         if($isInternal)
         {
-            if(!$this->getObject('koowa:filter.internalurl')->validate($this->_referrer->toString(HttpUrl::SCHEME | HttpUrl::HOST))) {
+            if(!$this->getObject('koowa:filter.internalurl')->validate($this->_referrer->toString(KHttpUrl::SCHEME | KHttpUrl::HOST))) {
                 return null;
             }
         }
@@ -651,7 +651,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
             $base = clone $this->getUrl();
             $base->setUrl(rtrim((string)$this->_base_url, '/'));
 
-            $this->_base_url = $this->getObject('koowa:http.url', array('url' => $base->toString(HttpUrl::BASE)));
+            $this->_base_url = $this->getObject('koowa:http.url', array('url' => $base->toString(KHttpUrl::BASE)));
         }
 
         return $this->_base_url;

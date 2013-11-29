@@ -87,28 +87,4 @@ class ComKoowaControllerModel extends KControllerModel
 
         return $this;
     }
-
-    /**
-     * Read action
-     *
-     * This functions implements an extra check to hide the main menu is the view name is singular (item views)
-     *
-     * @param  KControllerContextInterface $context A command context object
-     * @return KDatabaseRowInterface A row object containing the selected row
-     */
-    protected function _actionRead(KControllerContextInterface $context)
-    {
-        //Perform the read action
-        $row = parent::_actionRead($context);
-
-        //Add the notice if the row is locked
-        if($this->getIdentifier()->application === 'admin' && isset($row))
-        {
-            if(!$this->getRequest()->query->has('layout', 'cmd') && $row->isLockable() && $row->locked()) {
-                JFactory::getApplication()->enqueueMessage($row->lockMessage(), 'notice');
-            }
-        }
-
-        return $row;
-    }
 }

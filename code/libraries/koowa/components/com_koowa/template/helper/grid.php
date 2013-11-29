@@ -32,7 +32,8 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->row->isLockable() && $config->row->locked())
         {
-            $html = '<span class="editlinktip koowa-tooltip" title="'.$config->row->lockMessage() .'">
+            $html = '<span class="editlinktip koowa-tooltip"
+                           title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
 						<img src="media://koowa/com_koowa/images/locked.png"/>
 					</span>';
         }
@@ -65,7 +66,8 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->row->isLockable() && $config->row->locked())
         {
-            $html = '<span class="editlinktip koowa-tooltip" title="'.$config->row->lockMessage() .'">
+            $html = '<span class="editlinktip koowa-tooltip"
+                           title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
 						<img src="media://koowa/com_koowa/images/locked.png"/>
 					</span>';
         }
