@@ -128,7 +128,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             {
                 $identifier = $this->_view->getIdentifier();
                 $classname = 'Com' . ucfirst($identifier->package) . KStringInflector::camelize(implode('_', $identifier->path)) . ucfirst($identifier->name);
-                $path  = $this->getObject('manager')->getClassLoader()->findPath($classname, $identifier->basepath);
+                $path       = $this->getObject('manager')->getClassLoader()->findPath($classname, $identifier->basepath);
 
                 if(!file_exists(dirname($path))) {
                     throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
