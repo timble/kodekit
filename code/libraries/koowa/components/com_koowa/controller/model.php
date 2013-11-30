@@ -55,7 +55,6 @@ class ComKoowaControllerModel extends KControllerModel
             };
         }
 
-        //Set the maximum list limit to 100
         $config->append(array(
             'toolbars'  => $toolbars
         ));
