@@ -256,7 +256,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Set the response object
      *
-     * @param KControllerResponseInterface $request A request object
+     * @param KControllerResponseInterface $response A response object
      * @return KControllerAbstract
      */
     public function setResponse(KControllerResponseInterface $response)

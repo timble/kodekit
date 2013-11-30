@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Module\Koowa
  */
-class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
+final class ModKoowaTemplateDefault extends ComKoowaTemplateAbstract
 {
     protected function _initialize(KObjectConfig $config)
     {

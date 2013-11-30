@@ -20,7 +20,7 @@ class KDispatcherResponse extends KDispatcherResponseAbstract implements KObject
     /**
      * Force creation of a singleton
      *
-     * @param 	KObjectConfig            $config	  A ObjectConfig object with configuration options
+     * @param 	KObjectConfigInterface  $config	  A ObjectConfig object with configuration options
      * @param 	KObjectManagerInterface	$manager  A ObjectInterface object
      * @return KDispatcherRequest
      */

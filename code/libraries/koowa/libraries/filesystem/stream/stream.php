@@ -234,7 +234,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     /**
      * Flush the data from the stream to another stream
      *
-     * @param resource $stream The stream resource to flush the data too
+     * @param resource $output The stream resource to flush the data too
      * @param int      $range  The total length of the stream to flush, if -1 the stream will be flushed until eof. The limit
      *                         should lie within the total size of the stream.
      * @return bool Returns TRUE on success, FALSE on failure
@@ -635,7 +635,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     /**
      * Detach a filter
      *
-     * @param string $name   The name of the filter
+     * @param string $filter   The name of the filter
      * @return bool
      */
     public function detachFilter($filter)
@@ -658,6 +658,8 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      * Function prevents from registering the wrapper twice
      *
      * @param mixed $wrapper An ObjectIdentifier object or valid identifier string
+     * @param array $config
+     * @throws UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function registerWrapper($wrapper, $config = array() )
@@ -680,6 +682,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      * Un Register a stream wrapper
      *
      * @param mixed $wrapper An ObjectIdentifier object or valid identifier string
+     * @throws UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function unregisterWrapper($wrapper)

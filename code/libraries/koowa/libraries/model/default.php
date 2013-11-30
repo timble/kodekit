@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelDefault extends KModelTable { }
+final class KModelDefault extends KModelTable { }

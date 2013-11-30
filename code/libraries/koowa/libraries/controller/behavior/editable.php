@@ -258,4 +258,42 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
 		return $data;
 	}
+
+    /**
+     * Prevent editing a locked resource
+     *
+     * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
+     * to complete will be added. Clients should wait until at least this time before retrying the request.
+     *
+     * @param   KControllerContext	$context A controller context object
+     * @throws  KControllerExceptionConflict If the resource is locked
+     * @return 	void
+     */
+    protected function _beforeEdit(KControllerContext $context)
+    {
+        if($this->isLocked())
+        {
+            $context->response->headers->set('Retry-After', $context->user->session->getLifetime());
+            throw new KControllerExceptionConflict('Resource is locked.');
+        }
+    }
+
+    /**
+     * Prevent deleting a locked resource
+     *
+     * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
+     * to complete will be added. Clients should wait until at least this time before retrying the request.
+     *
+     * @param   KControllerContext	$context A controller context object
+     * @throws  KControllerExceptionConflict If the resource is locked
+     * @return 	void
+     */
+    protected function _beforeDelete(KControllerContext $context)
+    {
+        if($this->isLocked())
+        {
+            $context->response->headers->set('Retry-After', $context->user->session->getLifetime());
+            throw new KControllerExceptionConflict('Resource is locked');
+        }
+    }
 }

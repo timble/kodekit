@@ -17,7 +17,15 @@
 class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
 {
     /**
+     * An array of MD5 hashes for loaded style strings
+     */
+    protected $_loaded = array();
+
+    /**
      * Render style information
+     *
+     * First checks if the style has been loaded already
+     * Note that for links the check is done in JDocument so no need to repeat here.
      *
      * @param string    $style  The style information
      * @param boolean   $link   True, if the style information is a URL
@@ -34,8 +42,16 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
 
         if($link) {
             $document->addStyleSheet($style, 'text/css', null, $attribs);
-        } else {
-            $document->addStyleDeclaration($style);
+        }
+        else
+        {
+            $hash = md5($style.serialize($attribs));
+
+            if (!isset($this->_loaded[$hash])) {
+                $document->addStyleDeclaration($style);
+
+                $this->_loaded[$hash] = true;
+            }
         }
 
         return '';

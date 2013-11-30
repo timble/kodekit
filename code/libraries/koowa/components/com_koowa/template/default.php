@@ -13,6 +13,6 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract
+final class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract
 {
 }

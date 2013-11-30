@@ -119,6 +119,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         $config->append(array(
             'name'      => 'access',
             'attribs'   => array(),
+            'deselect_value' => '',
             'deselect'  => true,
             'prompt'    => '- '.$this->translate('Select').' -'
         ))->append(array(
@@ -127,7 +128,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $prompt = false;
         if ($config->deselect) {
-            $prompt = array((object) array('value' => '', 'text'  => $config->prompt));
+            $prompt = array((object) array('value' => $config->deselect_value, 'text'  => $config->prompt));
         }
 
         $html = JHtml::_('access.level', $config->name, $config->selected, $config->attribs->toArray(), $prompt);

@@ -104,6 +104,12 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         $command = $config->command;
 
+        if ($command->allowed === false)
+        {
+            $command->attribs->title = $this->translate('You are not allowed to perform this action');
+            $command->attribs->class->append(array('disabled', 'unauthorized'));
+        }
+
          //Add a toolbar class	
         $command->attribs->class->append(array('toolbar'));
 

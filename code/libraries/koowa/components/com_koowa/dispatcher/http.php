@@ -40,34 +40,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      */
     protected function _initialize(KObjectConfig $config)
     {
-        /*
-         * Joomla 3.x Compat
-         *
-         * Re-run the routing and add returned keys to the $_GET request
-         * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
-         */
-        $app = JFactory::getApplication();
-        if ($app->isSite() && $app->getCfg('sef'))
-        {
-            $uri = clone JURI::getInstance();
-
-            $router = JFactory::getApplication()->getRouter();
-            $result = $router->parse($uri);
-
-            foreach ($result as $key => $value)
-            {
-                if (!KRequest::has('get.'.$key)) {
-                    KRequest::set('get.'.$key, $value);
-                }
-            }
-        }
-
-        if (KRequest::has('get.limitstart')) {
-            KRequest::set('offset', KRequest::has('get.limitstart', 'int'));
-        }
-
         $config->append(array(
-            'limit' => array('default' => JFactory::getApplication()->getCfg('list_limit')),
+            'request' => 'com:koowa.dispatcher.request',
+            'limit'   => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
 
         parent::_initialize($config);
@@ -113,7 +88,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
 
         //Check cookie token
         if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
-            throw new ControllerExceptionForbidden('Invalid Cookie Token');
+            throw new KControllerExceptionForbidden('Invalid Cookie Token');
         }
 
         //Check session token

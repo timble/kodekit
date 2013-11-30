@@ -27,7 +27,7 @@ interface KModelStateInterface
      *                             Default FALSE.
      * @return  $this
      */
-    public function insert($name, $filter, $default = null, $unique = false, $required = array());
+    public function insert($name, $filter, $default = null, $unique = false, $required = array(), $internal = false);
 
     /**
      * Retrieve a configuration item and return $default if there is no element set.

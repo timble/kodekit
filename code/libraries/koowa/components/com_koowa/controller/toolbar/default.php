@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerToolbarDefault extends ComKoowaControllerToolbarActionbar
+final class ComKoowaControllerToolbarDefault extends ComKoowaControllerToolbarActionbar
 {
 
 }

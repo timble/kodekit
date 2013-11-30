@@ -109,35 +109,42 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
             'offset'     => 0,
             'limit'      => 0,
             'show_limit' => true,
-		    'show_count' => true
+		    'show_count' => true,
+            'show_pages' => true,
+            'use_bootstrap' => version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite()
         ));
 
         $this->_initialize($config);
 
-        $j30 = version_compare(JVERSION, '3.0', '>=');
-        
-        $html = '';
-
-        if ($j30) {
-            $html .= '<div class="pagination pagination-toolbar">';
-        } else {
-            $html .= '<div class="pagination pagination-legacy">';
+        if ($config->count === 1) {
+            $config->show_pages = false;
         }
+
+        $class = $config->use_bootstrap ? 'pagination-toolbar' : 'pagination-legacy';
+
+        $html = '<div class="pagination '.$class.'">';
 
         if($config->show_limit) {
-            $html .= '<div class="limit">'.$this->translate('Display NUM').' '.$this->limit($config).'</div>';
+            $html .= '<div class="limit">'.$this->limit($config).'</div>';
         }
 
-        if($j30) {
-            $html .= '<ul class="pagination-list">';
-            $html .=  $this->_bootstrap_pages($this->_items($config));
-            $html .= '</ul>';
-        } else {
-            $html .=  $this->_pages($this->_items($config));
-            if($config->show_count) {
-                $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
+        if ($config->show_pages)
+        {
+            if($config->use_bootstrap)
+            {
+                $html .= '<ul class="pagination-list">';
+                $html .=  $this->_bootstrap_pages($this->_items($config));
+                $html .= '</ul>';
+            } else {
+                $html .=  $this->_pages($this->_items($config));
             }
         }
+
+        if($config->show_count) {
+            $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
+        }
+
+
         $html .= '</div>';
 
         return $html;

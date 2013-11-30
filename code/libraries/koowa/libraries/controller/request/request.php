@@ -33,7 +33,6 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      * Constructor
      *
      * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
-     * @return HttpResponse
      */
     public function __construct(KObjectConfig $config)
     {

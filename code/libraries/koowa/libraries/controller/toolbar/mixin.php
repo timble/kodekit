@@ -68,7 +68,8 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
      *
      * @param   mixed $toolbar An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @param  array  $config   An optional associative array of configuration settings
+     * @param  array  $config An optional associative array of configuration settings
+     * @throws UnexpectedValueException
      * @return  KObject The mixer object
      */
     public function attachToolbar($toolbar, $config = array())

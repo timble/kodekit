@@ -134,8 +134,9 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
      * Flash messages are self-expiring messages that are meant to live for exactly one request. They can be used
      * across redirects, or flushed at the end of the request.
      *
-     * @param  string   $message   The flash message
-     * @param  string   $type      Message category type. Default is 'success'.
+     * @param  string $message The flash message
+     * @param string  $type Message category type. Default is 'success'.
+     * @throws UnexpectedValueException
      * @return KControllerResponse
      */
     public function addMessage($message, $type = self::FLASH_SUCCESS)

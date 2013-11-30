@@ -27,11 +27,13 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
+            'attribs' => array()
         ));
 
         if($config->row->isLockable() && $config->row->locked())
         {
-            $html = '<span class="editlinktip koowa-tooltip" title="'.$config->row->lockMessage() .'">
+            $html = '<span class="editlinktip koowa-tooltip"
+                           title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
 						<img src="media://koowa/com_koowa/images/locked.png"/>
 					</span>';
         }
@@ -40,7 +42,10 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $column = $config->row->getIdentityColumn();
             $value  = $config->row->{$column};
 
-            $html = '<input type="radio" class="-koowa-grid-checkbox" name="'.$column.'[]" value="'.$value.'" />';
+            $attribs = $this->buildAttributes($config->attribs);
+
+            $html = '<input type="radio" class="-koowa-grid-checkbox" name="%s[]" value="%s" %s />';
+            $html = sprintf($html, $column, $value, $attribs);
         }
 
         return $html;
@@ -56,11 +61,13 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
+            'attribs' => array()
         ));
 
         if($config->row->isLockable() && $config->row->locked())
         {
-            $html = '<span class="editlinktip koowa-tooltip" title="'.$config->row->lockMessage() .'">
+            $html = '<span class="editlinktip koowa-tooltip"
+                           title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
 						<img src="media://koowa/com_koowa/images/locked.png"/>
 					</span>';
         }
@@ -69,14 +76,18 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $column = $config->row->getIdentityColumn();
             $value  = $config->row->{$column};
 
-            $html = '<input type="checkbox" class="-koowa-grid-checkbox" name="'.$column.'[]" value="'.$value.'" />';
+            $attribs = $this->buildAttributes($config->attribs);
+
+
+            $html = '<input type="checkbox" class="-koowa-grid-checkbox" name="%s[]" value="%s" %s />';
+            $html = sprintf($html, $column, $value, $attribs);
         }
 
         return $html;
     }
 
     /**
-     * Render an search header
+     * Render a search box
      *
      * @param 	array 	$config An optional array with configuration options
      * @return	string	Html
@@ -85,10 +96,12 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfig($config);
         $config->append(array(
-            'search' => null
+            'search'      => null,
+            'placeholder' => $this->translate('Find by title or description&hellip;')
         ));
 
-        $html = '<input name="search" id="search" value="'.$this->escape($config->search).'" />';
+        $html  = '<label for="search"><i class="icon-search"></i></label>';
+        $html .= '<input type="search" name="search" id="search" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
         $html .= '<button>'.$this->translate('Go').'</button>';
         $html .= '<button onclick="document.getElementById(\'search\').value=\'\';this.form.submit();">'.$this->translate('Reset').'</button>';
 
@@ -253,13 +266,25 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $downdata = $config->data->toArray();
         $downdata = htmlentities(json_encode($downdata));
 
-        $tmpl = '
-            <span>
-                <a class="jgrid" href="#" title="%s" data-action="edit" data-data="%s">
-                    <span class="state %s" style="background-repeat: no-repeat"><span class="text">%s</span></span>
-                </a>
-            </span>
-            ';
+        if ($config->sort === $config->field)
+        {
+            $tmpl = '
+                <span>
+                    <a class="jgrid" href="#" title="%s" data-action="edit" data-data="%s">
+                        <span class="state %s" style="width: 12px; height: 12px; background-repeat: no-repeat"><span class="text">%s</span></span>
+                    </a>
+                </span>
+                ';
+        }
+        else
+        {
+            $tmpl = '
+                <span class="jgrid koowa-tooltip" title="'.$this->translate('Please order by this column first by clicking the column title').'">
+                    <span class="state %3$s" style="width: 12px; height: 12px; background-repeat: no-repeat; background-position: 0 -12px;">
+                        <span class="text">%4$s</span>
+                    </span>
+                </span>';
+        }
 
         if ($config->row->{$config->field} > 1) {
             $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $this->translate('Move up');

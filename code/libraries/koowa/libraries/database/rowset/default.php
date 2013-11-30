@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseRowsetDefault extends KDatabaseRowsetTable {}
+final class KDatabaseRowsetDefault extends KDatabaseRowsetTable {}

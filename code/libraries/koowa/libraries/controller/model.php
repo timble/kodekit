@@ -192,12 +192,13 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 		return $data;
 	}
 
-	/**
-	 * Generic read action, fetches an item
-	 *
-	 * @param	KControllerContextInterface $context A command context object
-	 * @return 	KDatabaseRowInterface	 A row object containing the selected row
-	 */
+    /**
+     * Generic read action, fetches an item
+     *
+     * @param    KControllerContextInterface $context A command context object
+     * @throws KControllerExceptionNotFound
+     * @return    KDatabaseRowInterface     A row object containing the selected row
+     */
 	protected function _actionRead(KControllerContextInterface $context)
 	{
 	    $data = $this->getModel()->getItem();
@@ -269,9 +270,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic delete function
      *
-     * @param	KControllerContextInterface	$context A controller context object
-     * @throws  KControllerExceptionActionFailed 	If the delete action failed on the data entity
-     * @return 	KDatabaseRow(set)Interface A row(set) object containing the deleted row(s)
+     * @param  KControllerContextInterface $context A controller context object
+     * @throws KControllerExceptionNotFound
+     * @throws KControllerExceptionActionFailed
+     * @return KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the deleted row(s)
      */
     protected function _actionDelete(KControllerContextInterface $context)
     {
