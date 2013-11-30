@@ -15,7 +15,27 @@
  */
 abstract class KControllerModel extends KControllerView implements KControllerModellable
 {
- 	/**
+    /**
+     * Model object or identifier (com://APP/COMPONENT.model.NAME)
+     *
+     * @var	string|object
+     */
+    protected $_model;
+
+    /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        // Set the model identifier
+        $this->_model = $config->model;
+    }
+
+    /**
      * Initializes the default configuration for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -75,6 +95,69 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         }
 
         return parent::getView();
+    }
+
+    /**
+     * Get the model object attached to the controller
+     *
+     * @throws	\UnexpectedValueException	If the model doesn't implement the ModelInterface
+     * @return	KModelInterface
+     */
+    public function getModel()
+    {
+        if(!$this->_model instanceof KModelInterface)
+        {
+            //Make sure we have a model identifier
+            if(!($this->_model instanceof KObjectIdentifier)) {
+                $this->setModel($this->_model);
+            }
+
+            $this->_model = $this->getObject($this->_model);
+
+            if(!$this->_model instanceof KModelInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Model: '.get_class($this->_model).' does not implement KModelInterface'
+                );
+            }
+
+            //Inject the request into the model state
+            $this->_model->setState($this->getRequest()->query->toArray());
+        }
+
+        return $this->_model;
+    }
+
+    /**
+     * Method to set a model object attached to the controller
+     *
+     * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
+     * 					       or valid identifier string
+     * @return	KControllerView
+     */
+    public function setModel($model)
+    {
+        if(!($model instanceof KModelInterface))
+        {
+            if(is_string($model) && strpos($model, '.') === false )
+            {
+                // Model names are always plural
+                if(KStringInflector::isSingular($model)) {
+                    $model = KStringInflector::pluralize($model);
+                }
+
+                $identifier			= clone $this->getIdentifier();
+                $identifier->path	= array('model');
+                $identifier->name	= $model;
+            }
+            else $identifier = $this->getIdentifier($model);
+
+            $model = $identifier;
+        }
+
+        $this->_model = $model;
+
+        return $this->_model;
     }
 
     /**
@@ -215,5 +298,36 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         else throw new KControllerExceptionNotFound('Resource Not Found');
 
         return $entity;
+    }
+
+    /**
+     * Supports a simple form Fluent Interfaces. Allows you to set the request properties by using the request property
+     * name as the method name.
+     *
+     * For example : $controller->limit(10)->browse();
+     *
+     * @param	string	$method Method name
+     * @param	array	$args   Array containing all the arguments for the original call
+     * @return	KControllerModel
+     *
+     * @see http://martinfowler.com/bliki/FluentInterface.html
+     */
+    public function __call($method, $args)
+    {
+        //Check first if we are calling a mixed in method to prevent the model being
+        //loaded during object instantiation.
+        if(!isset($this->_mixed_methods[$method]))
+        {
+            //Check for model state properties
+            if(isset($this->getModel()->getState()->$method))
+            {
+                $this->getRequest()->query->set($method, $args[0]);
+                $this->getModel()->getState()->set($method, $args[0]);
+
+                return $this;
+            }
+        }
+
+        return parent::__call($method, $args);
     }
 }
