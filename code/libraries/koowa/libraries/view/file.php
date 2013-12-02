@@ -360,10 +360,8 @@ class KViewFile extends KViewAbstract
         // Prevent caching
         // Pragma and cache-control needs to be empty for IE on SSL.
         // See: http://support.microsoft.com/default.aspx?scid=KB;EN-US;q316431
-        ;
-        if (preg_match('#(?:MSIE |Internet Explorer/)(?:[0-9.]+)#', $this->getObject('request')->getAgent())
-               && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-        ) {
+        $request = $this->getObject('request');
+        if ($request->isSecure() && preg_match('#(?:MSIE |Internet Explorer/)(?:[0-9.]+)#', $request->getAgent())) {
             header('Pragma: ');
             header('Cache-Control: ');
         }

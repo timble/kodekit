@@ -40,7 +40,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 		$this->registerCallback('after.cancel', array($this, 'unlockResource'));
 
 		//Set the default redirect.
-        $this->setRedirect(KRequest::referrer());
+        $this->setRedirect($this->getRequest()->getReferrer());
 
         $this->_cookie_path = $config->cookie_path;
     }
@@ -90,7 +90,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function getReferrer()
 	{
-        $referrer = KRequest::get('cookie.referrer', 'url');
+        $referrer = $this->getRequest()->cookies->get('referrer', 'url');
 
         if ($referrer)
         {
@@ -109,10 +109,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	public function setReferrer()
 	{
-	    if(!KRequest::has('cookie.referrer_locked'))
+	    if(!$this->getRequest()->cookies->has('referrer_locked'))
 	    {
-	        $request  = KRequest::url();
-	        $referrer = KRequest::referrer();
+	        $request  = $this->getRequest()->getUrl();
+	        $referrer = $this->getRequest()->getReferrer();
 
 	        //Compare request url and referrer
 	        if(!isset($referrer) || ((string) $referrer == (string) $request))
@@ -219,7 +219,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
 		if ($data instanceof KDatabaseRowInterface)
 		{
-            $url = clone KRequest::url();
+            $url = clone $this->getRequest()->getUrl();
 
 		    if($this->getModel()->getState()->isUnique())
 		    {

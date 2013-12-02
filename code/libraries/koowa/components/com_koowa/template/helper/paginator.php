@@ -265,7 +265,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      */
     protected function _bootstrap_link($page, $title)
     {
-        $url   = clone KRequest::url();
+        $url   = $this->getObject('request')->getUrl();
         $query = $url->getQuery(true);
 
         //For compatibility with Joomla use limitstart instead of offset
