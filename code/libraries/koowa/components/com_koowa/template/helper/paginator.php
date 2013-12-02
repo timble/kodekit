@@ -110,15 +110,12 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
             'limit'      => 0,
             'show_limit' => true,
 		    'show_count' => true,
-            'show_pages' => true,
             'use_bootstrap' => version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite()
+        ))->append(array(
+            'show_pages' => $config->count !== 1
         ));
 
         $this->_initialize($config);
-
-        if ($config->count === 1) {
-            $config->show_pages = false;
-        }
 
         $class = $config->use_bootstrap ? 'pagination-toolbar' : 'pagination-legacy';
 
@@ -190,7 +187,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      */
     protected function _link($page, $title)
     {
-        $url   = clone KRequest::url();
+        $url   = clone $this->getObject('request')->getUrl();
         $query = $url->getQuery(true);
 
         //For compatibility with Joomla use limitstart instead of offset

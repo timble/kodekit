@@ -13,7 +13,7 @@
  * @author  Arunas Mazeika <https://github.com/amazeika>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDatabaseTableUsers extends KDatabaseTableDefault
+class ComKoowaDatabaseTableUsers extends KDatabaseTableAbstract
 {
     protected function _initialize(KObjectConfig $config)
     {

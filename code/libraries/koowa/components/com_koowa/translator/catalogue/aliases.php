@@ -77,7 +77,6 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
             'next year (hold for menu)' => 'JLIB_HTML_BEHAVIOR_NEXT_YEAR_HOLD_FOR_MENU',
             '(shift-)click or drag to change value' => 'JLIB_HTML_BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE',
             '%a, %b %e' => 'JLIB_HTML_BEHAVIOR_TT_DATE_FORMAT',
-            'display num' => 'JGLOBAL_DISPLAY_NUM',
             'start' => 'JLIB_HTML_START',
             'prev' => 'JPREV',
             'next' => 'JNEXT',

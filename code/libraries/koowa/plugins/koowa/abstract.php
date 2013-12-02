@@ -25,7 +25,7 @@
  *
  * <code>
  * <?php
- *  class plgKoowaFoo extends plgKoowaDefault
+ *  class plgKoowaFoo extends PlgKoowaAbstract
  * {
  *      public function onBeforeControllerBrowse(KEvent $event)
  *      {
@@ -45,7 +45,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Plugin\Koowa
  */
-abstract class PlgKoowaDefault extends KEventListener
+abstract class PlgKoowaAbstract extends KEventListener
 {
 	/**
 	 * A JRegistry object holding the parameters for the plugin
