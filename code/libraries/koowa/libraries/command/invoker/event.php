@@ -76,32 +76,48 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
      */
     public function execute($name, KCommandInterface $context)
     {
-        $type = '';
+        $type    = '';
+        $package = '';
+        $subject = '';
 
         if ($context->getSubject())
         {
             $identifier = clone $context->getSubject()->getIdentifier();
+            $package = $identifier->package;
 
-            if ($identifier->path) {
+            if ($identifier->path)
+            {
                 $type = array_shift($identifier->path);
-            } else {
-                $type = $identifier->name;
+                $subject = $identifier->name;
             }
+            else $type = $identifier->name;
         }
 
-        $parts = explode('.', $name);
-        $name = 'on' . ucfirst(array_shift($parts)) . ucfirst($type) . KStringInflector::implode($parts);
+        $parts  = explode('.', $name);
+        $when   = array_shift($parts);               // Before or After
+        $name   = KStringInflector::implode($parts); // Read Dispatch Select etc.
 
+        // Create Specific and Generic event names
+        $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;
+        $event_generic  = 'on'.ucfirst($when).ucfirst($type).$name;
+
+        // Clone the context
         if($this->_clone_context) {
             $event = clone($context);
         } else {
             $event = $context;
         }
 
-        $event = new KEvent($event);
+        // Create event object to check for propagation
+        $event = new KEvent($event_specific, $context);
         $event->setTarget($context->getSubject());
 
-        $this->getEventDispatcher()->dispatchEvent($name, $event);
+        $this->getEventDispatcher()->dispatchEvent($event_specific, $event);
+
+        // Ensure event can be propagated and event name is different
+        if ($event->canPropagate() && $event_specific != $event_generic) {
+            $this->getEventDispatcher()->dispatchEvent($event_generic, $event);
+        }
     }
 
     /**
