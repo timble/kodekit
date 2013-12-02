@@ -47,4 +47,31 @@ class ComKoowaDispatcherRequest extends KDispatcherRequest
 
         parent::_initialize($config);
     }
+
+    /**
+     * Returns the root URL from which this request is executed.
+     *
+     * @return KHttpUrl A HttpUrl object
+     */
+    public function getRootUrl()
+    {
+        if (!$this->_root_url instanceof KHttpUrl) {
+            $this->_root_url = $this->getBaseUrl();
+        }
+
+        return $this->_root_url;
+    }
+
+    /**
+     * Set the root URL for which the request is executed.
+     *
+     * @param string $url
+     * @return KDispatcherRequest
+     */
+    public function setRootUrl($url)
+    {
+        $this->_root_url = $url;
+
+        return $this;
+    }
 }

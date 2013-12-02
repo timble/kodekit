@@ -672,7 +672,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
     /**
      * Returns the base path of the request.
      *
-     * @param   boolean $fqp If TRUE create a fully qualified path. Default TRUE.
+     * @param   boolean $fqp If TRUE create a fully qualified path. Default FALSE.
      * @return  string
      */
     public function getBasePath($fqp = false)

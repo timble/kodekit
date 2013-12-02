@@ -105,6 +105,8 @@ class PlgSystemKoowa extends JPlugin
             $manager->registerAlias('translator', 'com:koowa.translator');
             $manager->registerAlias('request', 'com:koowa.dispatcher.request');
 
+            /*$url = $manager->getObject('http.url', array('url' => '/administrator'));
+            $manager->getObject('request')->setBaseUrl($url);*/
             //Setup the request, this is case insensitive since Windows servers allow folder names like /Administrator
             if (JFactory::getApplication()->getName() !== 'site') {
                 KRequest::root(str_ireplace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
