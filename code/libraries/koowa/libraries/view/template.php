@@ -23,25 +23,18 @@ abstract class KViewTemplate extends KViewAbstract
     protected $_template;
 
     /**
-     * Auto assign
-     *
-     * @var boolean
-     */
-    protected $_auto_assign;
-
-    /**
-     * The assigned data
-     *
-     * @var boolean
-     */
-    protected $_data;
-
-    /**
      * Layout name
      *
      * @var string
      */
     protected $_layout;
+
+    /**
+     * Auto assign
+     *
+     * @var boolean
+     */
+    protected $_auto_fetch;
 
     /**
      * Constructor
@@ -52,14 +45,14 @@ abstract class KViewTemplate extends KViewAbstract
     {
         parent::__construct($config);
 
-        //Set the auto assign state
-        $this->_auto_assign = $config->auto_assign;
+        //Set the auto fetch
+        $this->_auto_fetch = $config->auto_fetch;
 
-        //Set the data
-        $this->_data = KObjectConfig::unbox($config->data);
+        //Set the layout
+        $this->setLayout($config->layout);
 
         //Set the template object
-        $this->_template = $config->template;
+        $this->setTemplate($config->template);
 
         //Add the template filters
         $filters = (array) KObjectConfig::unbox($config->template_filters);
@@ -72,6 +65,9 @@ abstract class KViewTemplate extends KViewAbstract
                 $this->getTemplate()->attachFilter($key, $value);
             }
         }
+
+        //Fetch the view data before rendering
+        $this->registerCallback('before.render' , array($this, 'fetchData'));
     }
 
     /**
@@ -85,48 +81,22 @@ abstract class KViewTemplate extends KViewAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'data'			   => array(),
+            'layout'           => '',
             'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'function', 'variable', 'script', 'style', 'link', 'url'),
-            'auto_assign'      => true,
+            'template_filters' => array('shorttag', 'function', 'script', 'decorator', 'style', 'link', 'url'),
+            'auto_fetch'       => true,
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Set a view properties
-     *
-     * @param   string  $property The property name.
-     * @param   mixed   $value    The property value.
-     */
-    public function __set($property, $value)
-    {
-        $this->_data[$property] = $value;
-    }
-
-    /**
-     * Get a view property
-     *
-     * @param   string  $property The property name.
-     * @return  string  The property value.
-     */
-    public function __get($property)
-    {
-        $result = null;
-        if(isset($this->_data[$property])) {
-            $result = $this->_data[$property];
-        }
-
-        return $result;
-    }
-
-    /**
      * Return the views output
      *
-     * @return string 	The output of the view
+     * @param KViewContext	$context A view context object
+     * @return string  The output of the view
      */
-    public function display()
+    protected function _actionRender(KViewContext $context)
     {
         $layout  = $this->getLayout();
         $format  = $this->getFormat();
@@ -148,29 +118,39 @@ abstract class KViewTemplate extends KViewAbstract
             ->evaluate($this->getData())
             ->render();
 
-        return parent::display();
+        return parent::_actionRender($context);
     }
 
     /**
-     * Sets the view data
+     * Fetch the view data
      *
-     * @param   array $data The view data
-     * @return  KViewTemplate
+     * This function will always fetch the model state. Model data will only be fetched if the auto_fetch property is
+     * set to TRUE.
+     *
+     * @param KViewContext	$context A view context object
+     * @return void
      */
-    public function setData(array $data)
+    public function fetchData(KViewContext $context)
     {
-        $this->_data = $data;
-        return $this;
-    }
+        $model = $this->getModel();
 
-    /**
-     * Get the view data
-     *
-     * @return  array   The view data
-     */
-    public function getData()
-    {
-        return $this->_data;
+        //Auto-assign the state to the view
+        $context->data->state = $model->getState();
+
+        //Auto-assign the data from the model
+        if($this->_auto_fetch)
+        {
+            //Get the view name
+            $name = $this->getName();
+
+            //Assign the data of the model to the view
+            if(KStringInflector::isPlural($name))
+            {
+                $context->data->$name = $model->getList();
+                $context->data->total = $model->getTotal();
+            }
+            else $context->data->$name = $model->getItem();
+        }
     }
 
     /**
@@ -234,13 +214,25 @@ abstract class KViewTemplate extends KViewAbstract
     }
 
     /**
-     * Execute and return the views output
+     * Get the layout
      *
-     * @return  string
+     * @return string The layout name
      */
-    public function __toString()
+    public function getLayout()
     {
-        return $this->display();
+        return empty($this->_layout) ? 'default' : $this->_layout;
+    }
+
+    /**
+     * Sets the layout name to use
+     *
+     * @param    string  $layout The template name.
+     * @return   $this
+     */
+    public function setLayout($layout)
+    {
+        $this->_layout = $layout;
+        return $this;
     }
 
     /**
@@ -274,32 +266,5 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         return parent::getRoute($route, $fqr, $escape);
-    }
-
-    /**
-     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
-     * name as the method name. If the method name is a setter method the setter will be called instead.
-     *
-     * For example : $view->layout('foo')->title('name')->display().
-     *
-     * @param   string  $method Method name
-     * @param   array   $args   Array containing all the arguments for the original call
-     * @return  KViewAbstract
-     *
-     * @see http://martinfowler.com/bliki/FluentInterface.html
-     */
-    public function __call($method, $args)
-    {
-        //If one argument is passed we assume a setter method is being called
-        if(count($args) == 1)
-        {
-            if(method_exists($this, 'set'.ucfirst($method))) {
-                return $this->{'set'.ucfirst($method)}($args[0]);
-            } else {
-                return $this->set($method, $args[0]);
-            }
-        }
-
-        return parent::__call($method, $args);
     }
 }

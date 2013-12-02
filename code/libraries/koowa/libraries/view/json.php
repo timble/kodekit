@@ -19,13 +19,6 @@
 class KViewJson extends KViewAbstract
 {
     /**
-     * The padding for JSONP
-     *
-     * @var string
-     */
-    protected $_padding;
-
-    /**
      * JSON API version
      *
      * @var string
@@ -57,17 +50,6 @@ class KViewJson extends KViewAbstract
     {
         parent::__construct($config);
 
-        //Padding can explicitly be turned off by setting to FALSE
-        if(empty($config->padding) && $config->padding !== false)
-        {
-            $state = $this->getModel()->getState();
-
-            if(isset($state->callback) && (strlen($state->callback) > 0)) {
-                $config->padding = $state->callback;
-            }
-        }
-
-        $this->_padding = $config->padding;
         $this->_version = $config->version;
         $this->_plural  = $config->plural;
 
@@ -96,16 +78,15 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Return the views content
+     * Render and return the views output
      *
-     * If the view 'content'  is empty the content will be generated based on the model data, if it set it will
+     * If the view 'content'  is empty the output will be generated based on the model data, if it set it will
      * be returned instead.
      *
-     * If the model contains a callback state, the callback value will be used to apply padding to the JSON output.
-     *
-     *  @return string A RFC4627-compliant JSON string, which may also be embedded into HTML.
+     * @param KViewContext	$context A view context object
+     * @return string A RFC4627-compliant JSON string, which may also be embedded into HTML.
      */
-    public function display()
+    protected function _actionRender(KViewContext $context)
     {
         if (empty($this->_content))
         {
@@ -126,7 +107,7 @@ class KViewJson extends KViewAbstract
         }
 
 
-        return parent::display();
+        return parent::_actionRender($context);
     }
 
     /**

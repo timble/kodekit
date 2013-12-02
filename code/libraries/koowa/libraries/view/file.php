@@ -105,7 +105,7 @@ class KViewFile extends KViewAbstract
     {
         parent::__construct($config);
 
-        $this->set($config->toArray());
+        $this->setData($config->toArray());
     }
 
     /**

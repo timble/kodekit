@@ -97,9 +97,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
             //Create the view
             $config = array(
-                'url'	      => $this->getObject('request')->getUrl(),
-                'layout'      => $this->getRequest()->query->get('layout', 'identifier'),
-                'auto_assign' => $this instanceof KControllerModellable
+                'url'	     => $this->getObject('request')->getUrl(),
+                'layout'     => $this->getRequest()->query->get('layout', 'identifier'),
+                'auto_fetch' => $this instanceof KControllerModellable
             );
 
             $this->_view = $this->getObject($this->_view, $config);
@@ -217,7 +217,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             $data = array();
         }
 
-        $content = $view->display($data);
+        $content = $view->render($data);
 
         //Set the data in the response
         $context->response->setContent($content, $view->mimetype);

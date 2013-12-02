@@ -44,11 +44,18 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     protected $_content;
 
     /**
-     * Layout name
+     * Chain of command object
      *
-     * @var     string
+     * @var KCommandChain
      */
-    protected $_layout;
+    protected $_command_chain;
+
+    /**
+     * The view data
+     *
+     * @var boolean
+     */
+    protected $_data;
 
     /**
 	 * The mimetype
@@ -66,21 +73,18 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 	{
 		parent::__construct($config);
 
-        //Set the view url
+        //Set the data
+        $this->_data = KObjectConfig::unbox($config->data);
+
         $this->setUrl($config->url);
+        $this->setContent($config->contents);
+        $this->mimetype = $config->mimetype;
 
-		//Set the output if defined in the config
-        $this->setContent($config->content);
-
-		//Set the mimetype of defined in the config
-		$this->mimetype = $config->mimetype;
-
-		// set the model
-		$this->setModel($config->model);
         $this->setTranslator($config->translator);
+        $this->setModel($config->model);
 
-		// set the layout
-        $this->setLayout($config->layout);
+        // Mixin the behavior interface
+        $this->mixin('koowa:behavior.mixin', $config);
 	}
 
     /**
@@ -94,11 +98,15 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'data'              => array(),
+            'command_chain'     => 'koowa:command.chain',
+            'dispatch_events'   => true,
+            'event_dispatcher'  => 'event.dispatcher',
+            'enable_callbacks'  => true,
             'model'      => 'koowa:model.empty',
             'translator' => null,
 	    	'content'	 => '',
     		'mimetype'	 => '',
-            'layout'     => '',
             'url'        =>  $this->getObject('koowa:http.url')
 	  	));
 
@@ -106,14 +114,40 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     }
 
     /**
-     * Return the views output
+     * Execute an action by triggering a method in the derived class.
      *
-     * @return string 	The  of the view
+     * @param   array $data The view data
+     * @return  string  The output of the view
      */
-    public function display()
+    final public function render($data = array())
     {
-        $content = $this->getContent();
-        return trim($content);
+        $context = $this->getContext();
+        $context->data   = $data;
+        $context->action = 'render';
+
+        if ($this->getCommandChain()->run('before.render', $context, false) !== false)
+        {
+            //Push the data in the view
+            $this->setData(KObjectConfig::unbox($context->data));
+
+            //Render the view
+            $context->result = $this->_actionRender($context);
+            $this->getCommandChain()->run('after.render', $context);
+        }
+
+        return $context->result;
+    }
+
+    /**
+     * Render the view
+     *
+     * @param KViewContext	$context A view context object
+     * @return string  The output of the view
+     */
+    protected function _actionRender(KViewContext $context)
+    {
+        $contents = $this->getContent();
+        return trim($contents);
     }
 
     /**
@@ -132,20 +166,13 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     /**
      * Set a view property
      *
-     * @param   mixed  $property The property name.
-     * @param   mixed   $value    The property value.
+     * @param   string $property The property name.
+     * @param   mixed  $value    The property value.
      * @return KViewAbstract
      */
-    public function set($property, $value = null)
+    public function set($property, $value)
     {
-        if (is_array($property))
-        {
-            foreach($property as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
-        else $this->$property = $value;
-
+        $this->_data[$property] = $value;
         return $this;
     }
 
@@ -157,13 +184,9 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * @throws InvalidArgumentException
      * @return string  The property value.
      */
-    public function get($property = null, $default = null)
+    public function get($property, $default = null)
     {
-        if (is_null($property)) {
-            throw new InvalidArgumentException('Invalid property name in'.get_class($this).'::get');
-        }
-
-        return isset($this->$property) ? $this->$property : $default;
+        return isset($this->_data[$property]) ? $this->_data[$property] : $default;
     }
 
     /**
@@ -174,7 +197,32 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      */
     public function has($property)
     {
-        return isset($this->$property);
+        return isset($this->_data[$property]);
+    }
+
+    /**
+     * Sets the view data
+     *
+     * @param   array $data The view data
+     * @return  KViewAbstract
+     */
+    public function setData($data)
+    {
+        foreach($data as $name => $value) {
+            $this->set($name, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData()
+    {
+        return $this->_data;
     }
 
     /**
@@ -230,57 +278,64 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         return $this;
     }
 
-	/**
-	 * Get the model object attached to the controller
-	 *
-	 * @return	KModelAbstract
-	 */
-	public function getModel()
-	{
-		if(!$this->_model instanceof KModelInterface)
-		{
-			//Make sure we have a model identifier
-		    if(!($this->_model instanceof KObjectIdentifier)) {
-		        $this->setModel($this->_model);
-			}
+    /**
+     * Get the model object attached to the view
+     *
+     * @throws	UnexpectedValueException	If the model doesn't implement the ModelInterface
+     * @return	KModelInterface
+     */
+    public function getModel()
+    {
+        if(!$this->_model instanceof KModelInterface)
+        {
+            if(!($this->_model instanceof KObjectIdentifier)) {
+                $this->setModel($this->_model);
+            }
 
-		    $this->_model = $this->getObject($this->_model);
-		}
+            $this->_model = $this->getObject($this->_model);
 
-		return $this->_model;
-	}
+            if(!$this->_model instanceof KModelInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Model: '.get_class($this->_model).' does not implement KModelInterface'
+                );
+            }
+        }
 
-	/**
-	 * Method to set a model object attached to the view
-	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					       or valid identifier string
-	 * @return	KViewAbstract
-	 */
+        return $this->_model;
+    }
+
+    /**
+     * Method to set a model object attached to the controller
+     *
+     * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
+     * 					       or valid identifier string
+     * @return	KViewAbstract
+     */
     public function setModel($model)
-	{
-		if(!($model instanceof KModelInterface))
-		{
-	        if(is_string($model) && strpos($model, '.') === false )
-		    {
-			    // Model names are always plural
-			    if(KStringInflector::isSingular($model)) {
-				    $model = KStringInflector::pluralize($model);
-			    }
+    {
+        if(!($model instanceof KModelInterface))
+        {
+            if(is_string($model) && strpos($model, '.') === false )
+            {
+                // Model names are always plural
+                if(KStringInflector::isSingular($model)) {
+                    $model = KStringInflector::pluralize($model);
+                }
 
-			    $identifier			= clone $this->getIdentifier();
-			    $identifier->path	= array('model');
-			    $identifier->name	= $model;
-			}
-			else $identifier = $this->getIdentifier($model);
+                $identifier			= clone $this->getIdentifier();
+                $identifier->path	= array('model');
+                $identifier->name	= $model;
+            }
+            else $identifier = $this->getIdentifier($model);
 
-			$model = $identifier;
-		}
+            $model = $identifier;
+        }
 
-		$this->_model = $model;
+        $this->_model = $model;
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Gets the translator object
@@ -314,28 +369,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 
         $this->_translator = $translator;
 
-        return $this;
-    }
-
-    /**
-     * Get the layout
-     *
-     * @return string The layout name
-     */
-    public function getLayout()
-    {
-        return empty($this->_layout) ? 'default' : $this->_layout;
-    }
-
-    /**
-     * Sets the layout name to use
-     *
-     * @param    string  $layout The template name.
-     * @return   $this
-     */
-    public function setLayout($layout)
-    {
-        $this->_layout = $layout;
         return $this;
     }
 
@@ -433,13 +466,103 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         return $route;
 	}
 
-	/**
-	 * Returns the views output
- 	 *
-	 * @return 	string
-	 */
-	public function __toString()
-	{
-		return $this->display();
-	}
+    /**
+     * Get the chain of command object
+     *
+     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
+     * to the CommandChain mixin.
+     *
+     * @return  KCommandChainInterface
+     */
+    public function getCommandChain()
+    {
+        if(!$this->_command_chain instanceof KCommandChainInterface)
+        {
+            //Ask the parent the relay the call to the mixin
+            $this->_command_chain = parent::getCommandChain();
+
+            if(!$this->_command_chain instanceof KCommandChainInterface)
+            {
+                throw new UnexpectedValueException(
+                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
+                );
+            }
+        }
+
+        return $this->_command_chain;
+    }
+
+    /**
+     * Get the view context
+     *
+     * @return  KViewContext
+     */
+    public function getContext()
+    {
+        $context = new KViewContext();
+        $context->setSubject($this);
+        $context->setData($this->_data);
+
+        return $context;
+    }
+
+    /**
+     * Set a view data property
+     *
+     * @param   string  $property The property name.
+     * @param   mixed   $value    The property value.
+     */
+    public function __set($property, $value)
+    {
+        $this->set($property, $value);
+    }
+
+    /**
+     * Get a view data property
+     *
+     * @param   string  $property The property name.
+     * @return  string  The property value.
+     */
+    public function __get($property)
+    {
+        return $this->get($property);
+    }
+
+    /**
+     * Returns the views output
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
+     * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
+     * name as the method name. If the method name is a setter method the setter will be called instead.
+     *
+     * For example : $view->data(array('foo' => 'bar'))->title('name')->render().
+     *
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
+     * @return  KViewAbstract
+     *
+     * @see http://martinfowler.com/bliki/FluentInterface.html
+     */
+    public function __call($method, $args)
+    {
+        //If one argument is passed we assume a setter method is being called
+        if (count($args) == 1)
+        {
+            if (!method_exists($this, 'set' . ucfirst($method)))
+            {
+                $this->$method = $args[0];
+                return $this;
+            }
+            else return $this->{'set' . ucfirst($method)}($args[0]);
+        }
+
+        return parent::__call($method, $args);
+    }
 }

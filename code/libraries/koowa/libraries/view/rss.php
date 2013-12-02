@@ -38,39 +38,6 @@ class KViewRss extends KViewTemplate
         parent::_initialize($config);
     }
 
-	/**
-	 * Return the views output
-	 *
-	 * This function will auto assign the model data to the view if the auto_assign
-	 * property is set to TRUE.
- 	 *
-	 * @return string 	The output of the view
-	 */
-	public function display()
-	{
-	    $model = $this->getModel();
-
-        //Auto-assign the state to the view
-        $this->state = $model->getState();
-
-        //Auto-assign the data from the model
-        if($this->_auto_assign)
-	    {
-	        //Get the view name
-		    $name  = $this->getName();
-
-	        //Assign the data of the model to the view
-		    if(KStringInflector::isPlural($name))
-			{
-		        $this->$name = $model->getList();
-				$this->total = $model->getTotal();
-		    }
-			else $this->$name = $model->getItem();
-		}
-
-		return parent::display();
-	}
-
     /**
      * Get the layout to use
      *

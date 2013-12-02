@@ -16,11 +16,12 @@
 interface KViewInterface
 {
     /**
-     * Return the views output
+     * Execute an action by triggering a method in the derived class.
      *
-     * @return string 	The output of the view
+     * @param   array $data The view data
+     * @return  string  The output of the view
      */
-    public function display();
+    public function render($data = array());
 
     /**
      * Set a view property
@@ -29,7 +30,7 @@ interface KViewInterface
      * @param   mixed   $value    The property value.
      * @return  KViewAbstract
      */
-    public function set($property, $value = null);
+    public function set($property, $value);
 
     /**
      * Get a view property
@@ -38,7 +39,7 @@ interface KViewInterface
      * @param  mixed  $default  Default value to return.
      * @return  string  The property value.
      */
-    public function get($property = null, $default = null);
+    public function get($property, $default = null);
 
     /**
      * Check if a view property exists
@@ -56,6 +57,21 @@ interface KViewInterface
      * @return string Translated string
      */
     public function translate($string, array $parameters = array());
+
+    /**
+     * Sets the view data
+     *
+     * @param   array $data The view data
+     * @return  KViewInterface
+     */
+    public function setData($data);
+
+    /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData();
 
     /**
 	 * Get the name
@@ -156,4 +172,21 @@ interface KViewInterface
      * @return  KHttpUrl     The route
      */
     public function getRoute($route, $fqr = null, $escape = null);
+
+    /**
+     * Get the chain of command object
+     *
+     * To increase performance a reference to the command chain is stored in object scope to prevent slower calls
+     * to the CommandChain mixin.
+     *
+     * @return  KCommandChainInterface
+     */
+    public function getCommandChain();
+
+    /**
+     * Get the view context
+     *
+     * @return  KViewContext
+     */
+    public function getContext();
 }

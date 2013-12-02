@@ -17,7 +17,7 @@
  * @see     http://www.imc.org/pdi/
  * @see     http://en.wikipedia.org/wiki/VCard
  */
-class KViewVcard extends KViewFile
+class KViewVcard extends KViewAbstract
 {
     /**
      * The Vcard properties
@@ -44,11 +44,12 @@ class KViewVcard extends KViewFile
     }
 
     /**
-     * Return the view content
+     * Return the views output
      *
-     * @return string  The content of the view
+     * @param KViewContext	$context A view context object
+     * @return string  The output of the view
      */
-    public function display()
+    protected function _actionRender(KViewContext $context)
     {
         //Set the filename
         $filename = $this->getObject('koowa:filter.filename')->sanitize($this->_properties['FN']);
@@ -72,7 +73,8 @@ class KViewVcard extends KViewFile
         $data   .= "\r\n";
 
         $this->setContent($data);
-        parent::display();
+
+        parent::_actionRender($context);
     }
 
     /**

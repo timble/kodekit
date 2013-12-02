@@ -59,10 +59,13 @@ class KViewCsv extends KViewFile
        	parent::_initialize($config);
     }
 
-	/**
-	 * Sets the views output
-	 */
-	public function display()
+    /**
+     * Return the views output
+     *
+     * @param KViewContext	$context A view context object
+     * @return string 	The output of the view
+     */
+    protected function _actionRender(KViewContext $context)
 	{
 		$rows    = '';
 	    $columns = array();
@@ -95,7 +98,7 @@ class KViewCsv extends KViewFile
         // Set the content
         $this->setContent($header.$rows);
 
-        parent::display();
+        return parent::_actionRender($context);
 	}
 
 	/**

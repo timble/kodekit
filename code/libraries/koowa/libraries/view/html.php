@@ -33,37 +33,36 @@ class KViewHtml extends KViewTemplate
     	parent::_initialize($config);
     }
 
-	/**
-	 * Return the views output
-	 *
-     * This function will always assign the model state to the template. Model data will only be assigned if the
-     * auto_assign property is set to TRUE.
- 	 *
-	 * @return string 	The output of the view
-	 */
-	public function display()
+    /**
+     * Fetch the view data
+     *
+     * This function will always fetch the model state. Model data will only be fetched if the auto_fetch property is
+     * set to TRUE.
+     *
+     * @param KViewContext	$context A view context object
+     * @return void
+     */
+    public function fetchData(KViewContext $context)
 	{
         $model = $this->getModel();
 
         //Auto-assign the state to the view
-        $this->state = $model->getState();
+        $context->data->state = $model->getState();
 
         //Auto-assign the data from the model
-        if($this->_auto_assign)
+        if($this->_auto_fetch)
         {
             //Get the view name
-            $name  = $this->getName();
+            $name = $this->getName();
 
             //Assign the data of the model to the view
             if(KStringInflector::isPlural($name))
             {
-                $this->$name = $model->getList();
-                $this->total = $model->getTotal();
+                $context->data->$name = $model->getList();
+                $context->data->total = $model->getTotal();
             }
-            else $this->$name = $model->getItem();
+            else $context->data->$name = $model->getItem();
         }
-
-		return parent::display();
 	}
 
     /**
