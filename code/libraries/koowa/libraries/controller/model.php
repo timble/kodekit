@@ -46,7 +46,8 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-    		'behaviors'  => array('editable')
+    		'behaviors'  => array('editable'),
+            'model'	     => $this->getIdentifier()->name,
         ));
 
         parent::_initialize($config);
