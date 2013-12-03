@@ -129,7 +129,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _actionDispatch(KDispatcherContextInterface $context)
     {
         //Redirect if no view information can be found in the request
-        if(!KRequest::has('get.view'))
+        if(!$this->getRequest()->query->has('view'))
         {
             $url = clone($context->request->getUrl());
             $url->query['view'] = $this->getController()->getView()->getName();
