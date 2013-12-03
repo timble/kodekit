@@ -105,7 +105,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         $config = new KObjectConfig($config);
         $config->append(array(
             'total'      => 0,
-            'display'    => 4,
+            'display'    => 2,
             'offset'     => 0,
             'limit'      => 0,
             'show_limit' => true,
@@ -140,7 +140,6 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         if($config->show_count) {
             $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
         }
-
 
         $html .= '</div>';
 
@@ -219,35 +218,10 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     {
         $html  = $pages['previous']->active ? '<li>'.$this->_bootstrap_link($pages['previous'], '&larr;').'</li>' : '';
 
-        $padding = 2;
-        $current = 0;
-        foreach ($pages['pages'] as $i => $page) {
-            if($page->current) $current = $i;
-        }
-
-        $total = count($pages['pages']);
-        $hellip = false;
-        foreach ($pages['pages'] as $i => $page)
+        foreach ($pages['pages'] as $page)
         {
-            $in_range = $i > ($current - $padding) && $i < ($current + $padding);
-
-            if ($i < $padding || $in_range || $i >= ($total - $padding))
-            {
-                $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
-                $html .= $this->_bootstrap_link($page, $page->page);
-
-                $hellip = false;
-            }
-            else
-            {
-                if($hellip == true) continue;
-
-                $html .= '<li class="disabled">';
-                $html .= '<a href="#">&hellip;</a>';
-
-                $hellip = true;
-            }
-
+            $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
+            $html .= $this->_bootstrap_link($page, $page->page);
             $html .= '</li>';
         }
 
