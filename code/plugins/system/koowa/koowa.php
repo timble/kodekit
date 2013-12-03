@@ -170,7 +170,7 @@ class PlgSystemKoowa extends JPlugin
             $data = array('exception' => $exception);
 
             $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array(
-                'filters' => array('function', 'shorttag', 'variable')
+                'filters' => array('function', 'shorttag')
             ));
 
             $template->load('com:koowa.debug.error.html')
@@ -185,6 +185,8 @@ class PlgSystemKoowa extends JPlugin
             }
 
             echo $template;
+
+
 
             exit;
         }
