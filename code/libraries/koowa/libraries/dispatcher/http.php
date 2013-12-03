@@ -320,4 +320,18 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         $context->response->headers->set('Allow', $result);
     }
+
+    /**
+     * Return the affected entities in the payload for AJAX POST and PUT requests
+     *
+     * {@inheritdoc}
+     */
+    protected function _actionSend(KDispatcherContextInterface $context)
+    {
+        if ($this->getRequest()->isAjax() && ($this->getRequest()->isPost() || $this->getRequest()->isPut())) {
+            $context->result = $this->getController()->execute('render', $context);
+        }
+
+        parent::_actionSend($context);
+    }
 }
