@@ -46,7 +46,6 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
-            'auto_mixin' => true,
             'permission' => null,
         ));
 
