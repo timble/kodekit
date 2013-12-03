@@ -222,7 +222,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
         return ($this->getMethod() === self::CONNECT);
     }
 
-    /*
+    /**
      * Is this a PATCH method request?
      *
      * @return bool
