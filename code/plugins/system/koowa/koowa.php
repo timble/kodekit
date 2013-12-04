@@ -53,7 +53,7 @@ class PlgSystemKoowa extends JPlugin
 
         //Set exception handler
         if (JDEBUG) {
-            set_exception_handler(array($this, 'exceptionHandler'));
+            //set_exception_handler(array($this, 'exceptionHandler'));
         }
 
 		// Koowa: setup
