@@ -328,8 +328,14 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
-        if ($this->getRequest()->isAjax() && ($this->getRequest()->isPost() || $this->getRequest()->isPut())) {
-            $context->result = $this->getController()->execute('render', $context);
+        $request  = $this->getRequest();
+        $response = $this->getResponse();
+
+        if ($request->isAjax() && !$request->isGet())
+        {
+            if ($response->isSuccess() && $response->getStatusCode() !== KHttpResponse::NO_CONTENT) {
+                $context->result = $this->getController()->execute('render', $context);
+            }
         }
 
         parent::_actionSend($context);
