@@ -312,12 +312,22 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
     /**
      * Check if the response is attachable
      *
+     * A response is attachable if the request is downloadable or the content type is 'application/force-download'
+     *
+     * If the request is made by an Ipad, iPod or iPhone user agent the response will never be attachable. iOS browsers
+     * cannot handle files send as disposition : attachment.
+     *
      * @return bool
      */
     public function isAttachable()
     {
-        if($this->getRequest()->isDownload() || $this->getContentType() == 'application/force-download') {
-            return true;
+        $request = $this->getRequest();
+
+        if(!preg_match('#(iPad|iPod|iPhone)#', $request->getAgent()))
+        {
+            if($request->isDownload() || $this->getContentType() == 'application/force-download') {
+                return true;
+            }
         }
 
         return false;
