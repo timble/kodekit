@@ -184,6 +184,12 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
             }
         }
 
+        // Prevent caching: Cache-control needs to be empty for IE on SSL.
+        // See: http://support.microsoft.com/default.aspx?scid=KB;EN-US;q316431
+        if ($request->isSecure() && preg_match('#(?:MSIE |Internet Explorer/)(?:[0-9.]+)#', $request->getAgent())) {
+            $response->headers->set('Cache-Control', '');
+        }
+
         //Send headers and content
         $this->sendHeaders($response)
              ->sendContent($response);
