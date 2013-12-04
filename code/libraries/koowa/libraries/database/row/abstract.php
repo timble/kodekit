@@ -110,6 +110,44 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         parent::_initialize($config);
     }
 
+    /**
+     * Get a row field value
+     *
+     * @param   string  $column The column name.
+     * @return  string  The corresponding value.
+     */
+    public function get($column)
+    {
+        return $this->offsetGet($column);
+    }
+
+    /**
+     * Set row field value
+     *
+     * If the value is the same as the current value and the row is loaded from the database the value will not be reset.
+     * If the row is new the value will be (re)set and marked as modified
+     *
+     * @param   string  $column The column name.
+     * @param   mixed   $value  The column value.
+     * @return  DatabaseRowAbstract
+     */
+    public function set($column, $value)
+    {
+        $this->offsetSet($column, $value);
+        return $this;
+    }
+
+    /**
+     * Test existence of a column
+     *
+     * @param  string  $column The column name.
+     * @return boolean
+     */
+    public function has($column)
+    {
+        return $this->offsetExists($column);
+    }
+
 	/**
 	 * Test the connected status of the row.
 	 *

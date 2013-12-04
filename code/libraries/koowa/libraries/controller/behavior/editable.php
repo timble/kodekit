@@ -26,18 +26,18 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         parent::__construct($config);
 
-        if ($this->isDispatched() && KRequest::type() == 'HTTP' && $this->getRequest()->query->format === 'html')
+        $this->registerCallback('after.read'  , array($this, 'lockResource'));
+        $this->registerCallback('after.save'  , array($this, 'unlockResource'));
+        $this->registerCallback('after.cancel', array($this, 'unlockResource'));
+
+        if($this->isDispatched() && $this->getRequest()->getFormat() == 'html')
         {
             $this->registerCallback('before.read' , array($this, 'setReferrer'));
             $this->registerCallback('after.apply' , array($this, 'lockReferrer'));
-			$this->registerCallback('after.read'  , array($this, 'unlockReferrer'));
-	        $this->registerCallback('after.save'  , array($this, 'unsetReferrer'));
-			$this->registerCallback('after.cancel', array($this, 'unsetReferrer'));
+            $this->registerCallback('after.read'  , array($this, 'unlockReferrer'));
+            $this->registerCallback('after.save'  , array($this, 'unsetReferrer'));
+            $this->registerCallback('after.cancel', array($this, 'unsetReferrer'));
         }
-
-		$this->registerCallback('after.read'  , array($this, 'lockResource'));
-		$this->registerCallback('after.save'  , array($this, 'unlockResource'));
-		$this->registerCallback('after.cancel', array($this, 'unlockResource'));
 
 		//Set the default redirect.
         $this->setRedirect($this->getObject('request')->getReferrer());
@@ -62,119 +62,225 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         parent::_initialize($config);
     }
 
-	/**
-	 * Lock the referrer from updates
-	 *
-	 * @return void
-	 */
-	public function lockReferrer()
-	{
-        setcookie('referrer_locked', 1, 0, $this->_cookie_path);
+    /**
+     * Lock the referrer from updates
+     *
+     * @param  KControllerContextInterface  $context A controller context object
+     * @return void
+     */
+    public function lockReferrer(KControllerContextInterface $context)
+    {
+        $cookie = $this->getObject('koowa:http.cookie', array(
+            'name'   => 'referrer_locked',
+            'value'  => true,
+            'path'   => $this->_cookie_path
+        ));
+
+        $context->response->headers->addCookie($cookie);
+    }
+
+    /**
+     * Unlock the referrer for updates
+     *
+     * @param   KControllerContextInterface  $context A controller context object
+     * @return void
+     */
+    public function unlockReferrer(KControllerContextInterface $context)
+    {
+        $context->response->headers->clearCookie('referrer_locked', $this->_cookie_path);
+    }
+
+    /**
+     * Get the referrer
+     *
+     * @param   KControllerContextInterface $context A controller context object
+     * @return  KHttpUrl    A HttpUrl object.
+     */
+    public function getReferrer(KControllerContextInterface $context)
+    {
+        $referrer = $this->getObject('koowa:http.url',
+            array('url' => $context->request->cookies->get('referrer', 'url'))
+        );
+
+        return $referrer;
 	}
 
-	/**
-	 * Unlock the referrer for updates
-	 *
-	 * @return void
-	 */
-	public function unlockReferrer()
-	{
-        setcookie('referrer_locked', null, 0, $this->_cookie_path);
-	}
-
-
-	/**
-	 * Get the referrer
-	 *
-	 * @return KHttpUrl	A KHttpUrl object.
-	 */
-	public function getReferrer()
-	{
-        $referrer = $this->getRequest()->cookies->get('referrer', 'url');
-
-        if ($referrer)
+    /**
+     * Set the referrer
+     *
+     * @param  KControllerContextInterface $context A controller context object
+     * @return void
+     */
+    public function setReferrer(KControllerContextInterface $context)
+    {
+        if (!$context->request->cookies->has('referrer_locked'))
         {
-            $referrer = $this->getObject('koowa:http.url',
-                array('url' => $referrer)
-            );
+            $request  = $context->request->getUrl();
+            $referrer = $context->request->getReferrer();
+
+            //Compare request url and referrer
+            if (!isset($referrer) || ((string)$referrer == (string)$request))
+            {
+                $controller = $this->getMixer();
+                $identifier = $controller->getIdentifier();
+
+                $option   = 'com_' . $identifier->package;
+                $view     = KStringInflector::pluralize($identifier->name);
+                $referrer = $controller->getView()->getRoute('option=' . $option . '&view=' . $view, true, false);
+            }
+
+            //Add the referrer cookie
+            $cookie = $this->getObject('koowa:http.cookie', array(
+                'name'   => 'referrer',
+                'value'  => $referrer,
+                'path'   => $this->_cookie_path
+            ));
+
+            $context->response->headers->addCookie($cookie);
         }
-
-	    return $referrer;
-	}
-
-	/**
-	 * Set the referrer
-	 *
-	 * @return void
-	 */
-	public function setReferrer()
-	{
-	    if(!$this->getRequest()->cookies->has('referrer_locked'))
-	    {
-	        $request  = $this->getRequest()->getUrl();
-	        $referrer = $this->getRequest()->getReferrer();
-
-	        //Compare request url and referrer
-	        if(!isset($referrer) || ((string) $referrer == (string) $request))
-	        {
-                $identifier = $this->getMixer()->getIdentifier();
-	            $option     = 'com_'.$identifier->package;
-	            $view       = KStringInflector::pluralize($identifier->name);
-	            $url        = 'index.php?option='.$option.'&view='.$view;
-
-	            $referrer = $this->getObject('koowa:http.url',array('url' => $url));
-
-	        }
-
-            setcookie('referrer', (string) $referrer, 0, $this->_cookie_path);
-		}
 	}
 
 	/**
 	 * Unset the referrer
 	 *
+     * @param  KControllerContextInterface $context A controller context object
 	 * @return void
 	 */
-	public function unsetReferrer()
+	public function unsetReferrer(KControllerContextInterface $context)
 	{
-        setcookie('referrer', null, 0, $this->_cookie_path);
+        $context->response->headers->clearCookie('referrer', $this->_cookie_path);
 	}
 
-	/**
-	 * Lock callback
-	 *
-	 * Only lock if the context contains a row object and the view layout is 'form'.
-	 *
-	 * @param  KControllerContextInterface $context The active command context
-	 * @return void
-	 */
-	public function lockResource(KControllerContextInterface $context)
-	{
-       if($context->result instanceof KDatabaseRowInterface)
-       {
-	        $view = $this->getView();
+    /**
+     * Check if the resource is locked
+     *
+     * @return bool Returns TRUE if the resource is locked, FALSE otherwise.
+     */
+    public function isLocked()
+    {
+        if($this->getModel()->getState()->isUnique())
+        {
+            $entity = $this->getModel()->getItem();
 
-	        if($view instanceof KViewTemplate)
-	        {
-                if($view->getLayout() == 'form' && $context->result->isLockable()) {
-		            $context->result->lock();
-		        }
+            if($entity->isLockable() && $entity->isLocked()) {
+                return true;
             }
-	    }
-	}
+        }
 
-	/**
-	 * Unlock callback
-	 *
-	 * @param 	KControllerContextInterface $context The active command context
-	 * @return void
-	 */
-	public function unlockResource(KControllerContextInterface $context)
-	{
-	    if($context->result instanceof KDatabaseRowInterface && $context->result->isLockable()) {
-			$context->result->unlock();
-		}
-	}
+        return false;
+    }
+
+    /**
+     * Check if the resource is lockable
+     *
+     * @return bool Returns TRUE if the resource is can be locked, FALSE otherwise.
+     */
+    public function isLockable()
+    {
+        $controller = $this->getMixer();
+
+        if($controller instanceof KControllerModellable)
+        {
+            if($this->getModel()->getState()->isUnique())
+            {
+                $entity = $this->getModel()->getItem();
+
+                if($entity->isLockable()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Lock the resource
+     *
+     * Only lock if the context contains a row object and if the user has an active session he can edit or delete the
+     * resource. Otherwise don't lock it.
+     *
+     * @param   KControllerContextInterface  $context A controller context object
+     * @return  void
+     */
+    public function lockResource(KControllerContextInterface $context)
+    {
+        if($this->isLockable() && $this->canEdit()) {
+            $context->result->lock();
+        }
+    }
+
+    /**
+     * Unlock the resource
+     *
+     * @param  KControllerContextInterface  $context A controller context object
+     * @return void
+     */
+    public function unlockResource(KControllerContextInterface $context)
+    {
+        if($this->isLockable() && $this->canEdit()) {
+            $context->result->unlock();
+        }
+    }
+
+    /**
+     * Permission handler for save actions
+     *
+     * Method returns TRUE if the controller implements the ControllerModellable interface.
+     *
+     * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
+     */
+    public function canSave()
+    {
+        if($this->getRequest()->getFormat() == 'html')
+        {
+            if($this->getModel()->getState()->isUnique())
+            {
+                if($this->canEdit())
+                {
+                    if($this->isLockable() && !$this->isLocked()) {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if($this->canAdd()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Permission handler for apply actions
+     *
+     * Method returns TRUE if the controller implements the ControllerModellable interface.
+     *
+     * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
+     */
+    public function canApply()
+    {
+        return $this->canSave();
+    }
+
+    /**
+     * Permission handler for cancel actions
+     *
+     * Method returns TRUE if the controller implements the ControllerModellable interface.
+     *
+     * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
+     */
+    public function canCancel()
+    {
+        if($this->getRequest()->getFormat() == 'html') {
+            return $this->canRead();
+        }
+
+        return false;
+    }
 
 	/**
 	 * Save action
@@ -189,13 +295,13 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionSave(KControllerContextInterface $context)
 	{
-		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
-		$data   = $context->subject->execute($action, $context);
+        $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
+        $entity = $context->getSubject()->execute($action, $context);
 
-		//Create the redirect
-		$this->setRedirect($this->getReferrer());
+        //Create the redirect
+        $context->response->setRedirect($this->getReferrer($context));
 
-		return $data;
+        return $entity;
 	}
 
 	/**
@@ -211,34 +317,30 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionApply(KControllerContextInterface $context)
 	{
-		$action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
-		$data   = $context->subject->execute($action, $context);
+        $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
+        $entity = $context->getSubject()->execute($action, $context);
 
-		//Create the redirect
-		$url = $this->getReferrer();
+        //Create the redirect
+        $url = $this->getReferrer($context);
 
-		if ($data instanceof KDatabaseRowInterface)
-		{
-            $url = clone $this->getRequest()->getUrl();
+        if ($entity instanceof KDatabaseRowInterface)
+        {
+            $url = clone $context->request->getUrl();
 
-		    if($this->getModel()->getState()->isUnique())
-		    {
-	            $states = $this->getModel()->getState()->getValues(true);
-
-		        foreach($states as $key => $value) {
-		            $url->query[$key] = $data->$key;
-		        }
-		    }
-		    elseif ($data->getIdentityColumn())
+            if ($this->getModel()->getState()->isUnique())
             {
-                $column = $data->getIdentityColumn();
-                $url->query[$column] = $data->$column;
+                $states = $this->getModel()->getState()->getValues(true);
+
+                foreach ($states as $key => $value) {
+                    $url->query[$key] = $entity->get($key);
+                }
             }
+            else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
         }
 
-		$this->setRedirect($url);
+        $context->response->setRedirect($url);
 
-		return $data;
+        return $entity;
 	}
 
 	/**
@@ -251,12 +353,12 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionCancel(KControllerContextInterface $context)
 	{
-		//Create the redirect
-		$this->setRedirect($this->getReferrer());
+        //Create the redirect
+        $context->response->setRedirect($this->getReferrer($context));
 
-	    $data = $context->subject->execute('read', $context);
+        $entity = $context->getSubject()->execute('read', $context);
 
-		return $data;
+        return $entity;
 	}
 
     /**
@@ -265,11 +367,11 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
      * to complete will be added. Clients should wait until at least this time before retrying the request.
      *
-     * @param   KControllerContext	$context A controller context object
+     * @param   KControllerContextInterface	$context A controller context object
      * @throws  KControllerExceptionConflict If the resource is locked
      * @return 	void
      */
-    protected function _beforeEdit(KControllerContext $context)
+    protected function _beforeEdit(KControllerContextInterface $context)
     {
         if($this->isLocked())
         {
@@ -284,11 +386,11 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
      * to complete will be added. Clients should wait until at least this time before retrying the request.
      *
-     * @param   KControllerContext	$context A controller context object
+     * @param   KControllerContextInterface	$context A controller context object
      * @throws  KControllerExceptionConflict If the resource is locked
      * @return 	void
      */
-    protected function _beforeDelete(KControllerContext $context)
+    protected function _beforeDelete(KControllerContextInterface $context)
     {
         if($this->isLocked())
         {
