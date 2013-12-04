@@ -194,6 +194,6 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         $this->sendHeaders($response)
              ->sendContent($response);
 
-        return headers_sent();
+        return true;
     }
 }
