@@ -35,7 +35,6 @@ class KObjectLocatorModule extends KObjectLocatorAbstract
         $config->append(array(
             'fallbacks' => array(
                 'Mod<Package><Path><Name>',
-                'Mod<Package><Path>Default',
                 'ModKoowa<Path><Name>',
                 'ModKoowa<Path>Default',
                 'ComKoowa<Path><Name>',
