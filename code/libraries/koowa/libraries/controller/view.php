@@ -196,7 +196,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Render action
      *
-     *
+     * This function will also set the rendered output in the response.
      *
      * @param KControllerContextInterface $context A command context object
      * @return    string|bool    The rendered output of the view or false if something went wrong
