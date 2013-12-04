@@ -34,38 +34,6 @@ class KViewHtml extends KViewTemplate
     }
 
     /**
-     * Fetch the view data
-     *
-     * This function will always fetch the model state. Model data will only be fetched if the auto_fetch property is
-     * set to TRUE.
-     *
-     * @param KViewContext	$context A view context object
-     * @return void
-     */
-    public function fetchData(KViewContext $context)
-	{
-        $model = $this->getModel();
-
-        //Auto-assign the state to the view
-        $context->data->state = $model->getState();
-
-        //Auto-assign the data from the model
-        if($this->_auto_fetch)
-        {
-            //Get the view name
-            $name = $this->getName();
-
-            //Assign the data of the model to the view
-            if(KStringInflector::isPlural($name))
-            {
-                $context->data->$name = $model->getList();
-                $context->data->total = $model->getTotal();
-            }
-            else $context->data->$name = $model->getItem();
-        }
-	}
-
-    /**
      * Force the route to be not fully qualified and escaped
      *
      * @param string|array  $route  The query string used to create the route
