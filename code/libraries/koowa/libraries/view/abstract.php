@@ -454,14 +454,12 @@ abstract class KViewAbstract extends KObject implements KViewInterface
             $parts = array_merge($states, $parts);
         }
 
-        $url = JRoute::_('index.php?'.http_build_query($parts), $escape);
+        $route = JRoute::_('index.php?'.http_build_query($parts), $escape);
 
         //Add the host and the schema
         if ($fqr === true) {
-            $url = $this->getUrl()->toString(KHttpUrl::AUTHORITY) . '/' . $url;
+            $route = $this->getUrl()->toString(KHttpUrl::AUTHORITY) . '/' . $route;
         }
-
-        $route = $this->getObject('koowa:http.url', array('url' => $url));
 
         return $route;
 	}
