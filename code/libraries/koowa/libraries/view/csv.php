@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
-class KViewCsv extends KViewFile
+class KViewCsv extends KViewAbstract
 {
 	/**
 	 * Character used for quoting
