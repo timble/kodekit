@@ -8,46 +8,13 @@
  */
 
 /**
- * Passes Joomla routing results to the request
+ * Dispatcher Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
 class ComKoowaDispatcherRequest extends KDispatcherRequest
 {
-    protected function _initialize(KObjectConfig $config)
-    {
-        parent::_initialize($config);
-
-        /*
-         * Joomla 3.x Compat
-         *
-         * Re-run the routing and add returned keys to the $_GET request
-         * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
-         */
-        $app = JFactory::getApplication();
-        if ($app->isSite() && $app->getCfg('sef'))
-        {
-            $uri = clone JURI::getInstance();
-
-            $router = JFactory::getApplication()->getRouter();
-            $result = $router->parse($uri);
-
-            foreach ($result as $key => $value)
-            {
-                if (!$config->query->has($key)) {
-                    $config->query->set($key, $value);
-                }
-            }
-        }
-
-        if ($config->query->limitstart) {
-            $config->query->offset = $config->query->limitstart;
-        }
-
-        parent::_initialize($config);
-    }
-
     /**
      * Returns the root URL from which this request is executed.
      *

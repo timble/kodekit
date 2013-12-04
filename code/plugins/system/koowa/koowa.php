@@ -51,9 +51,6 @@ class PlgSystemKoowa extends JPlugin
             JToolbarHelper::title('');
         }
 
-		//Set constants
-		define('KDEBUG', JDEBUG);
-
         //Set exception handler
         if (JDEBUG) {
             set_exception_handler(array($this, 'exceptionHandler'));
@@ -126,6 +123,32 @@ class PlgSystemKoowa extends JPlugin
 
 		parent::__construct($subject, $config);
 	}
+
+    /**
+     * Adds application response time and memory usage to Chrome Inspector with ChromeLogger extension
+     *
+     * See: https://chrome.google.com/webstore/detail/chrome-logger/noaneddfkdjfnfdakjjmocngnfkfehhd
+     */
+    public function __destruct()
+    {
+        if (JDEBUG && !headers_sent())
+        {
+            $buffer = JProfiler::getInstance('Application')->getBuffer();
+            if ($buffer)
+            {
+                $data = strip_tags(end($buffer));
+                $row = array(array($data), null, 'info');
+
+                $header = array(
+                    'version' => '4.1.0',
+                    'columns' => array('log', 'backtrace', 'type'),
+                    'rows'    => array($row)
+                );
+
+                header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));
+            }
+        }
+    }
 	
 	/**
 	 * Set the disposition to inline for JSON requests
@@ -151,6 +174,37 @@ class PlgSystemKoowa extends JPlugin
 			}
 		}
 	}
+
+    /*
+     * Joomla 3.x Compat
+     *
+     * Re-run the routing and add returned keys to the $_GET request
+     * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
+     */
+    public function onAfterRoute()
+    {
+        $request = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.request');
+
+        $app = JFactory::getApplication();
+        if ($app->isSite() && $app->getCfg('sef'))
+        {
+            $uri     = clone JURI::getInstance();
+
+            $router = JFactory::getApplication()->getRouter();
+            $result = $router->parse($uri);
+
+            foreach ($result as $key => $value)
+            {
+                if (!$request->query->has($key)) {
+                    $request->query->set($key, $value);
+                }
+            }
+        }
+
+        if ($request->query->limitstart) {
+            $request->query->offset = $request->query->limitstart;
+        }
+    }
 
  	/**
 	 * Custom exception handler
@@ -199,30 +253,4 @@ class PlgSystemKoowa extends JPlugin
             }
         }
 	}
-
-    /**
-     * Adds application response time and memory usage to Chrome Inspector with ChromeLogger extension
-     *
-     * See: https://chrome.google.com/webstore/detail/chrome-logger/noaneddfkdjfnfdakjjmocngnfkfehhd
-     */
-    public function __destruct()
-    {
-        if (JDEBUG && !headers_sent())
-        {
-            $buffer = JProfiler::getInstance('Application')->getBuffer();
-            if ($buffer)
-            {
-                $data = strip_tags(end($buffer));
-                $row = array(array($data), null, 'info');
-
-                $header = array(
-                    'version' => '4.1.0',
-                    'columns' => array('log', 'backtrace', 'type'),
-                    'rows'    => array($row)
-                );
-
-                header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));
-            }
-        }
-    }
 }
