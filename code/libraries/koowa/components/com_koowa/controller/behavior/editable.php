@@ -24,8 +24,8 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
     protected function _actionSave2new(KControllerContextInterface $context)
     {
         // Cache and lock the referrer since _ActionSave would unset it
-        $referrer = $this->getReferrer();
-        $this->lockReferrer();
+        $referrer = $this->getReferrer($context);
+        $this->lockReferrer($context);
 
         $entity = $this->save($context);
 
