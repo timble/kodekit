@@ -41,8 +41,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'request' => 'com:koowa.dispatcher.request',
-            'limit'   => array('default' => JFactory::getApplication()->getCfg('list_limit')),
+            'request'  => 'com:koowa.dispatcher.request',
+            'limit'    => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
 
         parent::_initialize($config);
@@ -160,8 +160,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             }
         }
 
-        //Pass back to Joomla for none AJAX requests.
-        if($context->request->getFormat() == 'html' && !$context->request->isAjax())
+        //Pass back to Joomla for none AJAX html requests. All other requests are handled by the dispatcher
+        if($context->response->getContentType() == 'text/html' && !$context->request->isAjax())
         {
             $view = $this->getController()->getView();
 
