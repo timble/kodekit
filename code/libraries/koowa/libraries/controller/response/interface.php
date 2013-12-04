@@ -55,7 +55,7 @@ interface KControllerResponseInterface extends KHttpResponseInterface
      * @throws UnexpectedValueException If the location is not a string, or cannot be cast to a string
      * @return KControllerResponse
      */
-    public function setRedirect($location, $message, $type = self::FLASH_SUCCESS);
+    public function setRedirect($location, $message = '', $type = self::FLASH_SUCCESS);
 
     /**
      * Add a response message
