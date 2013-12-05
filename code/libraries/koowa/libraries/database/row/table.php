@@ -249,46 +249,27 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 		return $result;
 	}
 
-	/**
-	 * Count the rows in the database based on the data in the row
-	 *
-	 * @return integer
-	 */
-	public function count()
-	{
-		$result = false;
+    /**
+     * Unset a row field
+     *
+     * This function will reset required column to their default value, not required fields will be unset.
+     *
+     * @param    string  $column The column name.
+     * @return   void
+     */
+    public function offsetUnset($column)
+    {
+        if ($this->isConnected())
+        {
+            $field = $this->getTable()->getColumn($column);
 
-	    if($this->isConnected())
-		{
-	        $data   = $this->getTable()->filter($this->getData(true), true);
-		    $result = $this->getTable()->count($data);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Unset a row field
-	 *
-	 * This function will reset required column to their default value, not required
-	 * fields will be unset.
-	 *
-	 * @param	string  $column The column name.
-	 * @return	void
-	 */
-	public function __unset($column)
-	{
-		if($this->isConnected())
-		{
-	        $field = $this->getTable()->getColumn($column);
-
-		    if(isset($field) && $field->required) {
-			    $this->_data[$column] = $field->default;
-		    } else {
-			    parent::__unset($column);
-		    }
-		}
-	}
+            if (isset($field) && $field->required) {
+                parent::offsetSet($this->_data[$column], $field->default);
+            } else {
+                parent::offsetUnset($column);
+            }
+        }
+    }
 
 	/**
 	 * Search the mixin method map and call the method or trigger an error
