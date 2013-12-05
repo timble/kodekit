@@ -294,15 +294,19 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
     /**
      * Check if the response is streamable
      *
-     * All response are considered streamable, only if the Accept-Ranges has a value 'none' the response should not
-     * be streamed.
+     * A response is considered streamable, if the Accept-Ranges does not have value 'none' or if the Transfer-Encoding
+     * is set the chunked.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.5
      * @return bool
      */
     public function isStreamable()
     {
-        if($this->_headers->get('Accept-Ranges', null) !== 'none' && $this->getStream()->getType() == 'file') {
+        if($this->_headers->get('Transfer-Encoding') == 'chunked') {
+            return true;
+        }
+
+        if($this->_headers->get('Accept-Ranges', null) !== 'none') {
             return true;
         };
 
