@@ -815,14 +815,34 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     }
 
     /**
-     * Check if the stream wrapper is registered for a specific protocol
+     * Check if the stream wrapper is registered
      *
      * @param string $protocol
-     * @return bool TRUE if the path is a registered stream URL, FALSE otherwise.
+     * @return bool TRUE if the protocol is a registered stream wrapper, FALSE otherwise.
      */
     public function isRegistered($protocol)
     {
         $result = in_array($protocol, stream_get_wrappers());
+        return $result;
+    }
+
+    /**
+     * Check if the stream wrapper for a registered protocol is supported
+     *
+     * @param string $protocol
+     * @return bool TRUE if the protocol is a registered stream wrapper and is supported, FALSE otherwise.
+     */
+    public function isSupported($protocol)
+    {
+        $result = $this->isRegistered($protocol);
+
+        if(!ini_get('allow_url_fopen'))
+        {
+            if(in_array(array('ftp', 'sftp', 'http', 'https'), $protocol)) {
+                $result = false;
+            }
+        }
+
         return $result;
     }
 
