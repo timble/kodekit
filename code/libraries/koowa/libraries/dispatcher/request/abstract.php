@@ -1007,7 +1007,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      * Check if the request is streaming
      *
      * Responses that contain a Range header is considered to be streaming.
-     * @link  @link : http://tools.ietf.org/html/rfc2616#section-14.35
+     * @link : http://tools.ietf.org/html/rfc2616#section-14.35
      *
      * @return bool
      */
