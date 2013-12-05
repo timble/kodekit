@@ -157,7 +157,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	{
 		$result = null;
 
-		if($this->_new)
+		if($this->isNew())
 		{
             if($this->isConnected())
             {
@@ -193,7 +193,7 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 
 	    if($this->isConnected())
 	    {
-	        if($this->_new) {
+	        if($this->isNew()) {
 	            $result = $this->getTable()->insert($this);
 		    } else {
 		        $result = $this->getTable()->update($this);
