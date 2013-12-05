@@ -44,7 +44,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * @var bool
      */
-    protected $_new = true;
+    private $__new = true;
 
     /**
 	 * Name of the identity column in the rowset
@@ -70,21 +70,18 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         // Reset the row
         $this->reset();
 
-        // Set the new state of the row
-        $this->_new = $config->new;
-
-        // Set the row data
-        if(isset($config->data))  {
-            $this->setData((array) KObjectConfig::unbox($config->data), $this->_new);
-        }
-
         //Set the status
-        if(isset($config->status)) {
+        if (isset($config->status)) {
             $this->setStatus($config->status);
         }
 
+        // Set the row data
+        if (isset($config->data)) {
+            $this->setData($config->data->toArray(), $this->isNew());
+        }
+
         //Set the status message
-        if(!empty($config->status_message)) {
+        if (!empty($config->status_message)) {
             $this->setStatusMessage($config->status_message);
         }
     }
@@ -101,7 +98,6 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     {
         $config->append(array(
              'data'             => null,
-             'new'              => true,
              'status'           => null,
              'status_message'   => '',
              'identity_column'  => null
@@ -129,7 +125,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * @param   string  $column The column name.
      * @param   mixed   $value  The column value.
-     * @return  DatabaseRowAbstract
+     * @return  KDatabaseRowAbstract
      */
     public function set($column, $value)
     {
@@ -146,6 +142,18 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     public function has($column)
     {
         return $this->offsetExists($column);
+    }
+
+    /**
+     * Remove a row field
+     *
+     * @param   string  $column The column name.
+     * @return  $this
+     */
+    public function remove($column)
+    {
+        $this->offsetUnset($column);
+        return $this;
     }
 
 	/**
@@ -222,9 +230,19 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function setStatus($status)
     {
-        $this->_status   = $status;
-        $this->_new      = ($status === NULL) ? true : false;
+        if($status === KDatabase::STATUS_CREATED) {
+            $this->__new = false;
+        }
 
+        if($status === KDatabase::STATUS_DELETED) {
+            $this->__new = true;
+        }
+
+        if($status === KDatabase::STATUS_LOADED) {
+            $this->__new = false;
+        }
+
+        $this->_status = $status;
         return $this;
     }
 
@@ -272,8 +290,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function save()
     {
-        $this->_modified = array();
+        if (!$this->isNew()) {
+            $this->setStatus(KDatabase::STATUS_UPDATED);
+        } else {
+            $this->setStatus(KDatabase::STATUS_CREATED);
+        }
 
+        $this->_modified = array();
         return false;
     }
 
@@ -284,6 +307,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function delete()
     {
+        $this->setStatus(KDatabase::STATUS_DELETED);
+
         return false;
     }
 
@@ -387,34 +412,37 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function isNew()
     {
-        return (bool) $this->_new;
+        return (bool) $this->__new;
     }
 
-	/**
-	 * Search the mixin method map and call the method or trigger an error
-	 *
-	 * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
-     * the behavior exists the function will return TRUE, otherwise FALSE.
-	 *
-	 * @param  string 	$method     The function name
-	 * @param  array  	$arguments  The function arguments
-	 * @throws BadMethodCallException 	If method could not be found
-	 * @return mixed The result of the function
-	 */
-	public function __call($method, $arguments)
-	{
-		// If the method is of the form is[Behavior] handle it.
-		$parts = KStringInflector::explode($method);
+    /**
+     * Set row field value
+     *
+     * If the value is the same as the current value and the row is loaded from the database the value will not be reset.
+     * If the row is new the value will be (re)set and marked as modified
+     *
+     * @param   string  $column The column name.
+     * @param   mixed   $value  The column value.
+     * @return  void
+     */
+    public function offsetSet($column, $value)
+    {
+        if ($this->isNew() || !array_key_exists($column, $this->_data) || ($this->_data[$column] != $value))
+        {
+            parent::offsetSet($column, $value);
+            $this->_modified[$column] = $column;
+        }
+    }
 
-		if($parts[0] == 'is' && isset($parts[1]))
-		{
-			if(isset($this->_mixed_methods[$method])) {
-				return true;
-			}
-
-			return false;
-		}
-
-		return parent::__call($method, $arguments);
-	}
+    /**
+     * Remove a row field
+     *
+     * @param   string  $column The column name.
+     * @return  void
+     */
+    public function offsetUnset($column)
+    {
+        parent::offsetUnset($column);
+        unset($this->_modified[$column]);
+    }
 }

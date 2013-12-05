@@ -133,7 +133,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $name    = $this->getIdentifier()->name;
 
         $config->append(array(
-            'database'          => $this->getObject('koowa:database.adapter.mysqli'),
+            'database'          => 'koowa:database.adapter.mysqli',
             'name'              => empty($package) ? $name : $package.'_'.$name,
             'column_map'        => null,
             'filters'           => array(),
@@ -152,10 +152,22 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     /**
      * Gets the database adapter
      *
+     * @throws	\UnexpectedValueException	If the adapter doesn't implement DatabaseAdapterInterface
      * @return KDatabaseAdapterInterface
      */
     public function getDatabase()
     {
+        if(!$this->_database instanceof KDatabaseAdapterInterface)
+        {
+            $this->_database = $this->getObject($this->_database);
+
+            if(!$this->_database instanceof KDatabaseAdapterInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Adapter: '.get_class($this->_database).' does not implement DatabaseAdapterInterface'
+                );
+            }
+        }
         return $this->_database;
     }
     
@@ -598,21 +610,26 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
             switch ($context->mode)
             {
-                case KDatabase::FETCH_ROW    :
+                case KDatabase::FETCH_ROW:
                 {
-                    $context->data = $this->getRow();
-                    if(isset($data) && !empty($data)) {
-                       $context->data->setData($data, false)->setStatus(KDatabase::STATUS_LOADED);
+                    if (isset($data) && !empty($data))
+                    {
+                        $options['data']   = $data;
+                        $options['status'] = KDatabase::STATUS_LOADED;
                     }
+
+                    $context->data = $this->getRow($options);
                     break;
                 }
 
-                case KDatabase::FETCH_ROWSET :
+                case KDatabase::FETCH_ROWSET:
                 {
-                    $context->data = $this->getRowset();
-                    if(isset($data) && !empty($data)) {
-                        $context->data->addData($data, false);
+                    if (isset($data) && !empty($data)) {
+                        $options['data']   = $data;
+                        $options['status'] = KDatabase::STATUS_LOADED;
                     }
+
+                    $context->data = $this->getRowset($options);
                     break;
                 }
 
@@ -703,8 +720,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             {
                 if ($context->affected)
                 {
-                    if ($this->getIdentityColumn()) {
-                        $data[$this->getIdentityColumn()] = $this->getDatabase()->getInsertId();
+                    if(($column = $this->getIdentityColumn()) && $this->getColumn($this->mapColumns($column, true), true)->autoinc) {
+                        $data[$this->getIdentityColumn()] = $this->getAdapter()->getInsertId();
                     }
 
                     $context->data->setData($this->mapColumns($data, true))->setStatus(KDatabase::STATUS_CREATED);

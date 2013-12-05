@@ -29,16 +29,31 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	 */
 	public function __construct(KObjectConfig $config = null)
 	{
-		parent::__construct($config);
+        //Bypass DatabaseRowsetAbstract constructor to prevent data from being added twice
+        KObjectSet::__construct($config);
 
-		$this->_table = $config->table;
+        //Set the row cloning
+        $this->_row_cloning = $config->row_cloning;
 
-		// Reset the rowset
+        //Set the table identifier
+        $this->_table = $config->table;
+
+        // Set the table identifier
+        if (isset($config->identity_column)) {
+            $this->_identity_column = $config->identity_column;
+        }
+
+        // Reset the rowset
         $this->reset();
 
         // Insert the data, if exists
-        if(!empty($config->data)) {
-	        $this->addData($config->data->toArray(), $config->new);
+        if (!empty($config->data)) {
+            $this->addRow($config->data->toArray(), $config->status);
+        }
+
+        //Set the status message
+        if (!empty($config->status_message)) {
+            $this->setStatusMessage($config->status_message);
         }
 	}
 
@@ -131,6 +146,23 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	    return (bool) $this->getTable();
 	}
 
+    /**
+     * Add rows to the rowset
+     *
+     * @param  array  $data  An associative array of row data to be inserted.
+     * @param  bool   $new   If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
+     * @return $this
+     * @see __construct
+     */
+    public function addRow(array $data, $new = true)
+    {
+        if ($this->isConnected()) {
+            parent::addRow($data, $new);
+        }
+
+        return $this;
+    }
+
 	/**
 	 * Get an empty row
 	 *
@@ -148,28 +180,36 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
 	    return $result;
 	}
 
-	/**
-	 * Forward the call to each row
-	 *
-	 * This functions overloads KDatabaseRowsetAbstract::__call and implements
-	 * a just in time mixin strategy. Available table behaviors are only mixed
-	 * when needed.
-	 *
-	 * @param  string 	$method     The function name
-	 * @param  array  	$arguments  The function arguments
-	 * @throws BadMethodCallException 	If method could not be found
-	 * @return mixed The result of the function
-	 */
-	public function __call($method, $arguments)
-	{
-	    // If the method hasn't been mixed yet, load all the behaviors.
-		if($this->isConnected() && !isset($this->_mixed_methods[$method]))
-		{
-			foreach($this->getTable()->getBehaviors() as $behavior) {
-				$this->mixin($behavior);
-			}
-		}
+    /**
+     * Search the mixin method map and call the method or forward the call to each row
+     *
+     * This function implements a just in time mixin strategy. Available table behaviors are only mixed when needed.
+     * Lazy mixing is triggered by calling DatabaseRowTable::is[Behaviorable]();
+     *
+     * @param  string     $method    The function name
+     * @param  array      $arguments The function arguments
+     * @return mixed The result of the function
+     */
+    public function __call($method, $arguments)
+    {
+        if ($this->isConnected() && !isset($this->_mixed_methods[$method]))
+        {
+            $parts = KStringInflector::explode($method);
 
-		return parent::__call($method, $arguments);
-	}
+            //Check if a behavior is mixed
+            if ($parts[0] == 'is' && isset($parts[1]))
+            {
+                //Lazy mix behaviors
+                $behavior = strtolower($parts[1]);
+
+                if ($this->getTable()->hasBehavior($behavior)) {
+                    $this->mixin($this->getTable()->getBehavior($behavior));
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return parent::__call($method, $arguments);
+    }
 }

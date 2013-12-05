@@ -29,16 +29,33 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
      */
 	public function __construct(KObjectConfig $config = null)
 	{
-		parent::__construct($config);
+        //Bypass DatabaseRowAbstract constructor to prevent data from being added twice
+        KObject::__construct($config);
 
-		$this->_table = $config->table;
+        //Set the table identifier
+        $this->_table = $config->table;
 
-		// Reset the row
+        // Set the table identifier
+        if (isset($config->identity_column)) {
+            $this->_identity_column = $config->identity_column;
+        }
+
+        // Reset the row
         $this->reset();
 
-        // Reset the row data
-        if(isset($config->data))  {
-            $this->setData($config->data->toArray(), $this->_new);
+        //Set the status
+        if (isset($config->status)) {
+            $this->setStatus($config->status);
+        }
+
+        // Set the row data
+        if (isset($config->data)) {
+            $this->setData($config->data->toArray(), $this->isNew());
+        }
+
+        //Set the status message
+        if (!empty($config->status_message)) {
+            $this->setStatusMessage($config->status_message);
         }
 	}
 
@@ -148,15 +165,14 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 		        $row   = $this->getTable()->select($data, KDatabase::FETCH_ROW);
 
 		        // Set the data if the row was loaded successfully.
-		        if(!$row->isNew())
-		        {
-			        $this->setData($row->toArray(), false);
-			        $this->_modified = array();
-			        $this->_new      = false;
+                if (!$row->isNew())
+                {
+                    $this->setData($row->getData(), false);
+                    $this->_modified = array();
 
-			        $this->setStatus(KDatabase::STATUS_LOADED);
-			        $result = $this;
-		        }
+                    $this->setStatus(KDatabase::STATUS_LOADED);
+                    $result = $this;
+                }
             }
 		}
 
@@ -204,20 +220,12 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	{
 		$result = false;
 
-		if($this->isConnected())
-		{
-            if(!$this->_new)
-		    {
-		        $result = $this->getTable()->delete($this);
-
-		        if($result !== false)
-	            {
-	                if(((integer) $result) > 0) {
-	                    $this->_new = true;
-	                }
-                }
-		    }
-		}
+        if ($this->isConnected())
+        {
+            if (!$this->isNew()) {
+                $result = $this->getTable()->delete($this);
+            }
+        }
 
 		return (bool) $result;
 	}
@@ -296,31 +304,30 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	 */
 	public function __call($method, $arguments)
 	{
-	    if($this->isConnected())
-		{
-		    $parts = KStringInflector::explode($method);
+        if ($this->isConnected())
+        {
+            $parts = KStringInflector::explode($method);
 
-		     //Check if a behavior is mixed
-		    if($parts[0] == 'is' && isset($parts[1]))
-		    {
-		        if(!isset($this->_mixed_methods[$method]))
+            if($parts[0] == 'is' && isset($parts[1]))
+            {
+                if(!isset($this->_mixed_methods[$method]))
                 {
-		             //Lazy mix behaviors
-		            $behavior = strtolower($parts[1]);
+                    //Lazy mix behaviors
+                    $behavior = strtolower($parts[1]);
 
-                    if($this->getTable()->hasBehavior($behavior))
+                    if ($this->getTable()->hasBehavior($behavior))
                     {
                         $this->mixin($this->getTable()->getBehavior($behavior));
                         return true;
-		            }
+                    }
 
-			        return false;
+                    return false;
                 }
 
                 return true;
-		    }
-		}
+            }
+        }
 
-		return parent::__call($method, $arguments);
+        return parent::__call($method, $arguments);
 	}
 }

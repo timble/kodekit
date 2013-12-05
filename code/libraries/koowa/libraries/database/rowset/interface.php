@@ -15,6 +15,22 @@
  */
 interface KDatabaseRowsetInterface
 {
+    /**
+     * Set the value of all the columns
+     *
+     * @param   string  $column The column name.
+     * @param   mixed   $value The value for the property.
+     * @return  void
+     */
+    public function set($column, $value);
+
+    /**
+     * Retrieve an array of column values
+     *
+     * @param   string  $column The column name.
+     * @return  array   An array of all the column values
+     */
+    public function get($column);
 	/**
      * Returns all data as an array.
      *
@@ -32,17 +48,32 @@ interface KDatabaseRowsetInterface
   	 */
   	 public function setData( $data, $modified = true );
 
-	/**
+    /**
      * Add rows to the rowset
      *
-     * @param  array    $data   An associative array of row data to be inserted.
-     * @param  boolean  $new    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
-     * @return void
+     * @param  array   $rows    An associative array of row data to be inserted.
+     * @param  string  $status  The row(s) status
+     * @return KDatabaseRowsetInterface
      * @see __construct
      */
-    public function addData(array $data, $new = true);
+    public function addRow(array $rows, $status = null);
 
-	/**
+    /**
+     * Returns the status message
+     *
+     * @return string The status message
+     */
+    public function getStatusMessage();
+
+    /**
+     * Set the status message
+     *
+     * @param   string $message The status message
+     * @return  KDatabaseRowsetInterface
+     */
+    public function setStatusMessage($message);
+
+    /**
 	 * Gets the identity column of the rowset
 	 *
 	 * @return string

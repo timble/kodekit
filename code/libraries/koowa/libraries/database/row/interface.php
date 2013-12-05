@@ -15,12 +15,41 @@
  */
 interface KDatabaseRowInterface
 {
-	/**
-     * Returns the status of this row.
+    /**
+     * Set row field value
      *
-     * @return string The status value.
+     * If the value is the same as the current value and the row is loaded from the database the value will not be reset.
+     * If the row is new the value will be (re)set and marked as modified
+     *
+     * @param   string $column The column name.
+     * @param   mixed  $value  The value for the property.
+     * @return  KDatabaseRowInterface
      */
-    public function getStatus();
+    public function set($column, $value);
+
+    /**
+     * Get a row field value
+     *
+     * @param   string  $column The column name.
+     * @return  string  The corresponding value.
+     */
+    public function get($column);
+
+    /**
+     * Test existence of a column
+     *
+     * @param  string  $column The column name.
+     * @return boolean
+     */
+    public function has($column);
+
+    /**
+     * Remove a row field
+     *
+     * @param   string  $column The column name.
+     * @return  KDatabaseRowInterface
+     */
+    public function remove($column);
 
 	/**
      * Load the row from the database.
@@ -77,6 +106,36 @@ interface KDatabaseRowInterface
      * @return  KDatabaseRowInterface
      */
      public function setData( $data, $modified = true );
+
+    /**
+     * Returns the status of this row.
+     *
+     * @return string The status value.
+     */
+    public function getStatus();
+
+    /**
+     * Set the status
+     *
+     * @param   string|null $status The status value or NULL to reset the status
+     * @return  KDatabaseRowInterface
+     */
+    public function setStatus($status);
+
+    /**
+     * Returns the status message
+     *
+     * @return string The status message
+     */
+    public function getStatusMessage();
+
+    /**
+     * Set the status message
+     *
+     * @param   string $message The status message
+     * @return  KDatabaseRowInterface
+     */
+    public function setStatusMessage($message);
 
     /**
      * Get a list of columns that have been modified

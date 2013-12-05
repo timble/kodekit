@@ -73,16 +73,6 @@ abstract class KModelAbstract extends KObject implements KModelInterface
         parent::_initialize($config);
     }
 
-	/**
-	 * Test the connected status of the model.
-	 *
-	 * @return	boolean	Returns TRUE by default.
-	 */
-    public function isConnected()
-	{
-	    return true;
-	}
-
     /**
      * Reset all cached data and reset the model state to it's default
      *

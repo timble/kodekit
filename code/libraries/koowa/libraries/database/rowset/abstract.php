@@ -22,6 +22,20 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
 	 */
 	protected $_identity_column;
 
+    /**
+     * The status message
+     *
+     * @var string
+     */
+    protected $_status_message = '';
+
+    /**
+     * Clone row object when adding data
+     *
+     * @var    boolean
+     */
+    protected $_row_cloning;
+
 	/**
      * Constructor
      *
@@ -30,6 +44,8 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     public function __construct(KObjectConfig $config)
     {
     	parent::__construct($config);
+
+        $this->_row_cloning = $config->row_cloning;
 
     	// Set the table identifier
     	if(isset($config->identity_column)) {
@@ -41,8 +57,13 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
 
 		// Insert the data, if exists
 		if(!empty($config->data)) {
-			$this->addData($config->data->toArray(), $config->new);
+            $this->addRow($config->data->toArray(), $config->status);
 		}
+
+        //Set the status message
+        if (!empty($config->status_message)) {
+            $this->setStatusMessage($config->status_message);
+        }
     }
 
     /**
@@ -56,9 +77,11 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'data'              => null,
-            'new'               => true,
-            'identity_column'   => null
+            'data'            => null,
+            'identity_column' => null,
+            'status'          => null,
+            'status_message'  => '',
+            'row_cloning'     => true
         ));
 
         parent::_initialize($config);
@@ -132,6 +155,38 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     }
 
     /**
+     * Retrieve an array of column values
+     *
+     * @param   string  $column The column name.
+     * @return  array   An array of all the column values
+     */
+    public function get($column)
+    {
+        $result = array();
+        foreach ($this as $key => $row) {
+            $result[$key] = $row->$column;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set the value of all the columns
+     *
+     * @param   string  $column The column name.
+     * @param   mixed   $value The value for the property.
+     * @return  $this
+     */
+    public function set($column, $value)
+    {
+        foreach ($this as $row) {
+            $row->$column = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns all data as an array.
      *
      * @param   boolean $modified If TRUE, only return the modified data. Default FALSE
@@ -177,29 +232,61 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         return $this;
     }
 
-	/**
+    /**
      * Add rows to the rowset
      *
-     * @param  array    $data   An associative array of row data to be inserted.
-     * @param  boolean  $new    If TRUE, mark the row(s) as new (i.e. not in the database yet). Default TRUE
-     * @return  KDatabaseRowsetAbstract
+     * This function will either clone the row object, or create a new instance of the row object for each row being
+     * inserted. By default the row will be cloned.
+     *
+     * @param  array   $rows    An associative array of row data to be inserted.
+     * @param  string  $status  The row(s) status
+     * @return $this
      * @see __construct
      */
-    public function addData(array $data, $new = true)
+    public function addRow(array $rows, $status = NULL)
     {
-        //Set the data in the row object and insert the row
-        foreach($data as $row)
+        if ($this->_row_cloning)
         {
-            $options = array(
-            	'data'   => $row,
-                'status' => $new ? NULL : KDatabase::STATUS_LOADED,
-                'new'    => $new,
-            );
+            $default = $this->getRow()->setStatus($status);
 
-            $this->insert($this->getRow($options));
+            foreach ($rows as $k => $data)
+            {
+                $row = clone $default;
+                $row->setData($data, $row->isNew());
+
+                $this->insert($row);
+            }
+        }
+        else
+        {
+            foreach ($rows as $k => $data)
+            {
+                $row = $this->getRow()->setStatus($status);
+                $row->setData($data, $row->isNew());
+
+                $this->insert($row);
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * Get an instance of a row object for this rowset
+     *
+     * @param   array $options An optional associative array of configuration settings.
+     * @return  KDatabaseRowInterface
+     */
+    public function getRow(array $options = array())
+    {
+        $identifier = clone $this->getIdentifier();
+        $identifier->path = array('database', 'row');
+        $identifier->name = KStringInflector::singularize($this->getIdentifier()->name);
+
+        //The row default options
+        $options['identity_column'] = $this->getIdentityColumn();
+
+        return $this->getObject($identifier, $options);
     }
 
 	/**
@@ -234,6 +321,28 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     }
 
     /**
+     * Returns the status message
+     *
+     * @return string The status message
+     */
+    public function getStatusMessage()
+    {
+        return $this->_status_message;
+    }
+
+    /**
+     * Set the status message
+     *
+     * @param   string $message The status message
+     * @return  DatabaseRowsetAbstract
+     */
+    public function setStatusMessage($message)
+    {
+        $this->_status_message = $message;
+        return $this;
+    }
+
+    /**
      * Gets the identity column of the rowset
      *
      * @return string
@@ -255,11 +364,11 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     {
         $result = null;
 
-        if(!is_scalar($needle))
+        if(is_array($needle))
         {
             $result = clone $this;
 
-            foreach ($this as $row)
+            foreach($this as $row)
             {
                 foreach($needle as $key => $value)
                 {
@@ -269,11 +378,9 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
                 }
             }
         }
-        else
-        {
-            if(isset($this->_object_set[$needle])) {
-                $result = $this->_object_set[$needle];
-            }
+
+        if(is_scalar($needle) && isset($this->_object_set[$needle])) {
+            $result = $this->_object_set[$needle];
         }
 
         return $result;
@@ -288,13 +395,16 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     {
         $result = false;
 
-        if(count($this))
+        if (count($this))
         {
             $result = true;
 
-            foreach ($this as $row)
+            foreach ($this as $i => $row)
             {
-                if(!$row->save()) {
+                if (!$row->save())
+                {
+                    // Set current row status message as rowset status message.
+                    $this->setStatusMessage($row->getStatusMessage());
                     $result = false;
                 }
             }
@@ -312,13 +422,16 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     {
         $result = false;
 
-        if(count($this))
+        if (count($this))
         {
             $result = true;
 
-            foreach ($this as $row)
+            foreach ($this as $i => $row)
             {
-                if(!$row->delete()) {
+                if (!$row->delete())
+                {
+                    // Set current row status message as rowset status message.
+                    $this->setStatusMessage($row->getStatusMessage());
                     $result = false;
                 }
             }
@@ -337,24 +450,6 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         $this->_object_set->exchangeArray(array());
 
         return true;
-    }
-
-	/**
-     * Get an instance of a row object for this rowset
-     *
-     * @param	array $options An optional associative array of configuration settings.
-     * @return  KDatabaseRowInterface
-     */
-    public function getRow(array $options = array())
-    {
-        $identifier         = clone $this->getIdentifier();
-        $identifier->path   = array('database', 'row');
-        $identifier->name   = KStringInflector::singularize($this->getIdentifier()->name);
-
-        //The row default options
-        $options['identity_column'] = $this->getIdentityColumn();
-
-        return $this->getObject($identifier, $options);
     }
 
 	/**
