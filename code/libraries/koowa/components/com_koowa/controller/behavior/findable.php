@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerBehaviorFinder extends KControllerBehaviorAbstract
+class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
 {
     /**
      * Joomla event dispatcher
