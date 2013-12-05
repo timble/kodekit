@@ -143,7 +143,10 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     /**
      * Push the controller data into the document
      *
-     * This function divert the standard behavior and will push specific controller data into the document
+     * This function will pass back to Joomla if the following conditions are met :
+     *    - response content type is text/html
+     *    - response is not a redirect
+     *    - request is not an ajax request
      *
      * @param   KDispatcherContextInterface	$context A command context object
      * @return  ComKoowaDispatcherHttp
@@ -153,15 +156,13 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         //Redirect the request
         if (KRequest::method() != 'GET' && KRequest::type() == 'HTTP')
         {
-            if($redirect = $this->getController()->getRedirect())
-            {
-                JFactory::getApplication()
-                    ->redirect($redirect['url'], $redirect['message'], $redirect['type']);
+            if($redirect = $this->getController()->getRedirect()) {
+                JFactory::getApplication()->redirect($redirect['url'], $redirect['message'], $redirect['type']);
             }
         }
 
-        //Pass back to Joomla for none AJAX html requests. All other requests are handled by the dispatcher
-        if($context->response->getContentType() == 'text/html' && !$context->request->isAjax())
+        //Only pass back to Joomla.
+        if(!$context->response->isRedirect() && $context->response->getContentType() == 'text/html' && !$context->request->isAjax())
         {
             $view = $this->getController()->getView();
 
