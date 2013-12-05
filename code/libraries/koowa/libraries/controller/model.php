@@ -217,7 +217,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      *
      * @param	KControllerContextInterface	$context A controller context object
      * @throws  KControllerExceptionNotFound If the entity could not be found
-     * @return 	KDatabaseRow(set)Interface A row(set) object containing the updated row(s)
+     * @return    KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the updated row(s)
      */
     protected function _actionEdit(KControllerContextInterface $context)
     {
