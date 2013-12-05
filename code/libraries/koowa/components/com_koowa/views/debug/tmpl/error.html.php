@@ -108,45 +108,6 @@ defined('KOOWA') or die; ?>
             <?php endforeach ?>
         </ol>
     </div>
-    <h2><a href="#<?= $env_id = 'environment' ?>" onclick="return toggleElement('<?= $env_id ?>')"><?= 'Environment' ?></a></h2>
-    <div id="<?= $env_id ?>" class="content collapsed">
-        <?php $included = get_included_files() ?>
-        <h3><a href="#<?= $env_id = 'environment_included' ?>" onclick="return toggleElement('<?= $env_id ?>')"><?= 'Included files' ?></a> (<?= count($included) ?>)</h3>
-        <div id="<?= $env_id ?>" class="collapsed">
-            <table cellspacing="0">
-                <?php foreach ($included as $file): ?>
-                    <tr>
-                        <td><code><?= @helper('debug.path', array('file' => $file)) ?></code></td>
-                    </tr>
-                <?php endforeach ?>
-            </table>
-        </div>
-        <?php $included = get_loaded_extensions() ?>
-        <h3><a href="#<?= $env_id = 'environment_loaded' ?>" onclick="return toggleElement('<?= $env_id ?>')"><?= 'Loaded extensions' ?></a> (<?= count($included) ?>)</h3>
-        <div id="<?= $env_id ?>" class="collapsed">
-            <table cellspacing="0">
-                <?php foreach ($included as $file): ?>
-                    <tr>
-                        <td><code><?= @helper('debug.path', array('file' => $file)) ?></code></td>
-                    </tr>
-                <?php endforeach ?>
-            </table>
-        </div>
-        <?php foreach (array('_SESSION', '_GET', '_POST', '_FILES', '_COOKIE', '_SERVER') as $var): ?>
-            <?php if (empty($GLOBALS[$var]) OR ! is_array($GLOBALS[$var])) continue ?>
-            <h3><a href="#<?= $env_id = 'environment'.strtolower($var) ?>" onclick="return toggleElement('<?= $env_id ?>')">$<?= $var ?></a></h3>
-            <div id="<?= $env_id ?>" class="collapsed">
-                <table cellspacing="0">
-                    <?php foreach ($GLOBALS[$var] as $key => $value): ?>
-                        <tr>
-                            <td><code><?= $key ?></code></td>
-                            <td><pre><?= @helper('debug.dump', array('value' => $value)) ?></pre></td>
-                        </tr>
-                    <?php endforeach ?>
-                </table>
-            </div>
-        <?php endforeach ?>
-    </div>
 </div>
 
 </body>

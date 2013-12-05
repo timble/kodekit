@@ -38,7 +38,7 @@ class ComKoowaTemplateHelperDebug extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'length'          => 128,
-            'level_recursion' => 5
+            'level_recursion' => 0
         ));
 
         return $this->_dump($value, $config->length, $config->level_recursion);
