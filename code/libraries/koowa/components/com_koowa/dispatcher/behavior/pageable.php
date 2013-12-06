@@ -39,7 +39,8 @@ class ComKoowaDispatcherBehaviorPageable extends KControllerBehaviorAbstract
      */
     protected function _afterDispatch(KDispatcherContextInterface $context)
     {
-        if ($this->_enabled) {
+        if ($this->_enabled)
+        {
             $params = array(
                 'directory' => dirname(dirname(dirname(__FILE__))) . '/views/page',
                 'template'  => 'tmpl',
