@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="<?php echo KRequest::root(); ?>/templates/system/css/general.css" type="text/css"/>
     <jdoc:include type="head" />
 </head>
-<body class="koowa front_form">
+<body class="koowa koowa_template">
 <!--[if lte IE 8 ]>
 <div class="old-ie"> <![endif]-->
-<div class="front_form_container">
+<div class="koowa_template_container">
     <jdoc:include type="message" />
     <jdoc:include type="component" />
 </div>
