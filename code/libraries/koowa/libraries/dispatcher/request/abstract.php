@@ -775,10 +775,23 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
             }
             else $format = $this->query->get('format', 'word');
 
-            $this->_format = $format;
+            $this->setFormat($format);
         }
 
         return $this->_format;
+    }
+
+    /**
+     * Sets a format
+     *
+     * @param $format The format
+     * @return $this
+     */
+    public function setFormat($format)
+    {
+        $this->_format = $format;
+
+        return $this;
     }
 
     /**
