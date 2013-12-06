@@ -5,14 +5,14 @@
     <link rel="stylesheet" href="<?php echo KRequest::root(); ?>/media/koowa/com_koowa/css/bootstrap.css"
           type="text/css"/>
     <link rel="stylesheet" href="<?php echo KRequest::root(); ?>/templates/system/css/general.css" type="text/css"/>
-    <jdoc:include type="head"/>
+    <jdoc:include type="head" />
 </head>
 <body class="koowa front_form">
 <!--[if lte IE 8 ]>
 <div class="old-ie"> <![endif]-->
 <div class="front_form_container">
-    <jdoc:include type="message"/>
-    <jdoc:include type="component"/>
+    <jdoc:include type="message" />
+    <jdoc:include type="component" />
 </div>
 <!--[if lte IE 8 ]></div><![endif]-->
 </body>
