@@ -77,7 +77,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $this->_data = KObjectConfig::unbox($config->data);
 
         $this->setUrl($config->url);
-        $this->setContent($config->contents);
+        $this->setContent($config->content);
         $this->mimetype = $config->mimetype;
 
         $this->setTranslator($config->translator);
