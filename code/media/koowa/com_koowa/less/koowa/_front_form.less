@@ -1,0 +1,123 @@
+// Styling the body.koowa class
+&.front_form {
+
+    // Vars for this file only
+    @bodyPadding:   15px;
+    @maxWidth: 1020px;
+
+    margin: 0;
+    padding: 50px 0 10px;
+    font-family: Arial, sans-serif;
+    background: #333;
+    font-size: 13px;
+
+    @media screen and (min-width:600px) {
+        padding: 60px 10px 10px;
+    }
+
+    .front_form_container {
+        box-shadow: 0 5px 8px rgba(0,0,0,.75);
+        background: #fff;
+        margin: 0 auto;
+        max-width: @maxWidth;
+    }
+
+    label {
+        font-size: 13px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 4px 12px;
+        font-size: 13px;
+        margin-bottom: 0;
+        line-height: 18px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .docman_toolbar {
+        .clearfix();
+        position: fixed;
+        z-index: 999;
+        top: 0;
+        left: auto;
+        right: auto;
+        width: 100%;
+        max-width: @maxWidth;
+        text-align: center;
+        margin: 0 auto;
+        float: none;
+        display: block;
+
+        @media screen and (min-width:600px) {
+            .box-sizing(border-box);
+            border-top: 15px solid #333; // Make the window appear to be 15px from the top
+            border-left: 10px solid #333; // Make the window appear to be 15px from the top
+            border-right: 10px solid #333; // Make the window appear to be 15px from the top
+            margin-left: -10px;
+            margin-right: -10px;
+            max-width: @maxWidth+20;
+        }
+
+        .btn-toolbar {
+            border-bottom: 1px solid #CCC; // Make the window appear to be 15px from the top
+            height: auto;
+            margin: 0;
+            padding: 10px;
+            min-height: 30px;
+            background: #ffffff;
+            background: -moz-linear-gradient(top,#ffffff 0%,#ededed 100%);
+            background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#ffffff),color-stop(100%,#ededed));
+            background: -webkit-linear-gradient(top,#ffffff 0%,#ededed 100%);
+            background: -o-linear-gradient(top,#ffffff 0%,#ededed 100%);
+            background: -ms-linear-gradient(top,#ffffff 0%,#ededed 100%);
+            background: linear-gradient(top,#ffffff 0%,#ededed 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#ededed',GradientType=0);
+            color: #0C192E;
+            text-shadow: 0 1px 0 #FFF;
+            display: block;
+            float: none;
+            text-align: left;
+
+            i {
+                display: none !important;
+            }
+        }
+    }
+
+    .docman_form {
+        padding: 0 @bodyPadding;
+    }
+
+    .docman_description_container {
+        overflow: auto;
+
+        @media screen and (max-width:320px){
+            width: 320px - (@bodyPadding * 2);
+        }
+
+        [class^="icon-"] {
+            display: none !important;
+        }
+    }
+
+    .docman_secondary_container {
+        border-bottom: none;
+
+        @media screen and (min-width: 768px) {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+    }
+
+    .docman_container {
+        padding-top: 15px;
+    }
+
+    // Re-aligning the description buttons
+    #editor-xtd-buttons .btn-toolbar {
+        margin: 0;
+    }
+}
+
