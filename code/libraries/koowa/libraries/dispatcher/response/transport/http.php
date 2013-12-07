@@ -116,8 +116,9 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         if($response->isDownloadable())
         {
             //Last-Modified header
-            $time = $response->getStream()->getTime(KFilesystemStream::TIME_MODIFIED);
-            $response->setLastModified($time);
+            if($time = $response->getStream()->getTime(KFilesystemStream::TIME_MODIFIED)) {
+                $response->setLastModified($time);
+            };
 
             //Disposition header
             $response->headers->set('Content-Disposition', array(
