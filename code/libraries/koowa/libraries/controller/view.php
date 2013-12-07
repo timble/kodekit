@@ -67,9 +67,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-    	    'model'	     => $this->getIdentifier()->name,
-            'view' 		 => $this->getIdentifier()->name,
-    	    'behaviors'  => array('permissible'),
+            'view' => $this->getIdentifier()->name,
          ));
 
         parent::_initialize($config);

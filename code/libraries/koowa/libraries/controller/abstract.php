@@ -104,7 +104,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             'dispatched'		=> false,
             'request'           => 'koowa:controller.request',
             'response'          => 'koowa:controller.response',
-            'behaviors'         => array(),
+            'behaviors'         => array('permissible'),
             'query'             => array()
         ));
 
