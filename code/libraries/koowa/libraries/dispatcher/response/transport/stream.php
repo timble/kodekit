@@ -247,7 +247,7 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
                     $size   = $this->getFileSize($response);
 
                     $response->setStatus(KHttpResponse::PARTIAL_CONTENT);
-                    $response->headers->set('Content-Length', $range - $offset);
+                    $response->headers->set('Content-Length', $range - $offset + 1);
                     $response->headers->set('Content-Range', sprintf('bytes %s-%s/%s', $offset, $range, $size));
                 }
 
