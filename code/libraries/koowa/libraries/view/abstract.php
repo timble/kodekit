@@ -128,7 +128,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         if ($this->getCommandChain()->run('before.render', $context, false) !== false)
         {
             //Push the data in the view
-            $this->setData(KObjectConfig::unbox($context->data));
+            $this->setData($context->data);
 
             //Render the view
             $context->result = $this->_actionRender($context);
