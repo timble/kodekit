@@ -163,7 +163,7 @@ class KDispatcherResponseAbstract extends KControllerResponse implements KDispat
      * http://www.php.net/manual/en/wrappers.php for a list of default PHP stream protocols and wrappers.
      *
      * @param mixed  $path   The path
-     * @param string $type      The content type
+     * @param string $type   The content type
      * @throws InvalidArgumentException If the path is not a valid stream or no stream wrapper is registered for the
      *                                   stream protocol
      * @return KDispatcherResponseAbstract
