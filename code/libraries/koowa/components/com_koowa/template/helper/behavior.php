@@ -71,9 +71,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['jquery']))
         {
-            if (version_compare(JVERSION, '3.0', 'ge')) {
+            if (version_compare(JVERSION, '3.0', 'ge'))
+            {
                 JHtml::_('jquery.framework');
                 JHtml::_('script', 'media/koowa/com_koowa/js/koowa.jquery.js', false, false, false, false, false);
+
             } else {
                 $html .= '<script src="media://koowa/com_koowa/js/jquery'.($config->debug ? '' : '.min').'.js" />';
             }
@@ -658,9 +660,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
             self::$_loaded['tree-css'] = true;
         }
-
-
-
 
         /**
          * Parse and validate list data, if any. And load the inline js that initiates the tree on specified html element

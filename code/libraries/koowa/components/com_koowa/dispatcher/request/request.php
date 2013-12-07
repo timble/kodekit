@@ -38,7 +38,6 @@ class ComKoowaDispatcherRequest extends KDispatcherRequest
     public function setRootUrl($url)
     {
         $this->_root_url = $url;
-
         return $this;
     }
 }

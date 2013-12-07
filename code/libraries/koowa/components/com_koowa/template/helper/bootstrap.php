@@ -105,11 +105,9 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
                     $html .= sprintf('<style src="media://%s" />', $file);
 
                     self::$_loaded[$config->package.'-'.$config->file] = true;
-
                     break;
                 }
             }
-
         }
 
         if ($config->wrapper) {

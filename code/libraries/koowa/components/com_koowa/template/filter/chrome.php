@@ -100,7 +100,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
 		$name = $this->getIdentifier()->package . '_' . $this->getIdentifier()->name;
 
 		//Create a module object
-		$module   	       = new KObject();
+		$module   	       = new KObject(new KObjectConfig());
 		$module->id        = uniqid();
 		$module->module    = 'mod_'.$name;
 		$module->content   = $text;
