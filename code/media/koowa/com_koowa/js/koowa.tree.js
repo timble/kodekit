@@ -145,10 +145,10 @@
         /**
          * Customizable parse data method
          *
-         * Customize this method if the structure is a bit non-standard, like DOClink in DOCman
-         * or if you need to wrap all nodes in a root node, like the DOCman documents view categories sidebar tree.
+         * Customize this method if the structure is a bit non-standard
+         * or if you need to wrap all nodes in a root node
          *
-         * The following code sample shows how to create a root node like seen in DOCman:
+         * The following code sample shows how to create a root node:
          * return [{
          *      label: 'All Categories',
          *      id: -1, //negative 1 used as jqTree isn't optimized to deal with zero integer ids, methods like selectNode fail

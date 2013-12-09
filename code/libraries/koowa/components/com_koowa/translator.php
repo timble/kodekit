@@ -226,7 +226,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
     /**
      * Load the extension language files.
      *
-     * @param string|KObjectIdentifier $extension Extension identifier or name (e.g. com_docman)
+     * @param string|KObjectIdentifier $extension Extension identifier or name (e.g. com_files)
      * @param string $app Application. Leave blank for current one.
      *
      * @return boolean
