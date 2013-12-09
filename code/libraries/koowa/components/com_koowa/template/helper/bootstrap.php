@@ -68,7 +68,11 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             'file'          => $identifier->type === 'mod' ? 'module' : $identifier->application,
             'load_default'  => version_compare(JVERSION, '3.0', '<')
         ))->append(array(
-            'wrapper'       => sprintf('<div class="koowa %s">%%s</div>', $config->wrapper_class)
+            'wrapper'       => sprintf('<div class="koowa %s">
+            <!--[if lte IE 8 ]><div class="old-ie"><![endif]-->
+            %%s
+            <!--[if lte IE 8 ]></div><![endif]-->
+            </div>', $config->wrapper_class)
         ));
 
         $html = '';
