@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherResponseAbstract extends KControllerResponse implements KDispatcherResponseInterface
+abstract class KDispatcherResponseAbstract extends KControllerResponse implements KDispatcherResponseInterface
 {
     /**
      * The transport queue

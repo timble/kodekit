@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherRequestAbstract extends KControllerRequest implements KDispatcherRequestInterface
+abstract class KDispatcherRequestAbstract extends KControllerRequest implements KDispatcherRequestInterface
 {
     /**
      * The request cookies
