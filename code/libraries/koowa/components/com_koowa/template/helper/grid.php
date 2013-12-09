@@ -32,9 +32,10 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->row->isLockable() && $config->row->locked())
         {
-            $html = '<span class="editlinktip koowa-tooltip"
+            $html = $this->getTemplate()->renderHelper('behavior.tooltip');
+            $html .= $this->getTemplate()->renderHelper('behavior.icons');
+            $html .= '<span class="koowa-tooltip jticn-locked"
                            title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
-						<img src="media://koowa/com_koowa/images/locked.png"/>
 					</span>';
         }
         else
@@ -66,9 +67,10 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->row->isLockable() && $config->row->locked())
         {
-            $html = '<span class="editlinktip koowa-tooltip"
+            $html = $this->getTemplate()->renderHelper('behavior.tooltip');
+            $html .= $this->getTemplate()->renderHelper('behavior.icons');
+            $html .= '<span class="koowa-tooltip jticn-locked"
                            title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
-						<img src="media://koowa/com_koowa/images/locked.png"/>
 					</span>';
         }
         else
@@ -177,8 +179,6 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     /**
      * Render an enable field
      *
-     * TODO: might want to take this out
-     *
      * @param 	array 	$config An optional array with configuration options
      * @return	string	Html
      */
@@ -187,21 +187,31 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config = new KObjectConfig($config);
         $config->append(array(
             'row'  		=> null,
-            'field'		=> 'enabled'
+            'field'		=> 'enabled',
+            'clickable' => true
         ))->append(array(
-                'data'		=> array($config->field => $config->row->{$config->field})
-            ));
+            'enabled'   => (bool) $config->row->{$config->field},
+            'data'		=> array($config->field => $config->row->{$config->field} ? 0 : 1),
+        ))->append(array(
+            'alt'       => $config->enabled ? $this->translate('Enabled') : $this->translate('Disabled'),
+            'tooltip'   => $config->enabled ? $this->translate('Disable Item') : $this->translate('Enable Item'),
+            'color'     => $config->enabled ? '#468847' : '#b94a48',
+            'icon'      => $config->enabled ? 'enabled' : 'disabled',
+        ));
 
-        $img    = $config->row->{$config->field} ? 'enabled.png' : 'disabled.png';
-        $alt 	= $config->row->{$config->field} ? $this->translate( 'Enabled' ) : $this->translate( 'Disabled' );
-        $text 	= $config->row->{$config->field} ? $this->translate( 'Disable Item' ) : $this->translate( 'Enable Item' );
+        if ($config->clickable)
+        {
+            $data    = htmlentities(json_encode($config->data->toArray()));
+            $attribs = 'style="cursor: pointer;color:'.$config->color.'" data-action="edit" data-data="'.$data.'"
+                title="'.$config->tooltip.'"';
+        } else {
+            $attribs = 'style="color:'.$config->color.'"';
+        }
 
-        $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
-
-        $data = $config->data->toArray();
-        $data = htmlentities(json_encode($data));
-
-        $html = '<img src="media://koowa/com_koowa/images/'. $img .'" border="0" alt="'. $alt .'" data-action="edit" data-data="'.$data.'" title='.$text.' />';
+        $html = '<span class="koowa-tooltip jt_file_icon jticn-%s" %s><i>%s</i></span>';
+        $html = sprintf($html, $config->icon, $attribs, $config->alt);
+        $html .= $this->getTemplate()->renderHelper('behavior.tooltip');
+        $html .= $this->getTemplate()->renderHelper('behavior.icons');
 
         return $html;
     }
@@ -218,24 +228,17 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config->append(array(
             'row'  		=> null,
             'field'		=> 'enabled',
-            'clickable'  => true
+            'clickable' => true
         ))->append(array(
-            'data'		=> array($config->field => $config->row->{$config->field})
+            'enabled'   => (bool) $config->row->{$config->field},
+        ))->append(array(
+            'alt'       => $config->enabled ? $this->translate('Published') : $this->translate('Unpublished'),
+            'tooltip'   => $config->enabled ? $this->translate('Unpublish Item') : $this->translate('Publish Item'),
+            'color'     => $config->enabled ? '#468847' : '#b94a48',
+            'icon'      => $config->enabled ? 'enabled' : 'disabled',
         ));
 
-        $class  = $config->row->{$config->field} ? 'publish' : 'unpublish';
-        $alt 	= $config->row->{$config->field} ? $this->translate('Published') : $this->translate('Unpublished');
-        $text 	= $config->row->{$config->field} ? $this->translate('Unpublish Item') : $this->translate('Publish Item');
-
-        $config->data->{$config->field} = $config->row->{$config->field} ? 0 : 1;
-
-        $data = $config->data->toArray();
-        $data = json_encode($data);
-
-        $html = '<a class="jgrid" href="#" data-action="edit" data-data="'.$data.'" title="'.$text.'">';
-        $html .= '<span class="state '.$class.'"><span class="text">'.$alt.'</span></span></a>';
-
-        return $html;
+        return $this->enable($config);
     }
 
     /**
