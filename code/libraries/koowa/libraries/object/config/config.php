@@ -266,6 +266,17 @@ class KObjectConfig implements KObjectConfigInterface
         return $array;
     }
 
+    /**
+     * Return a ObjectConfig object from an array
+     *
+     * @param  array $array
+     * @return KObjectConfig Returns a ObjectConfig object
+     */
+    public static function fromArray(array $array)
+    {
+        return new self($array);
+    }
+
  	/**
      * Returns a string with the encapsulated data in JSON format
      *
