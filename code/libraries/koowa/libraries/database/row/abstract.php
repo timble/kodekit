@@ -435,4 +435,28 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         parent::offsetUnset($column);
         unset($this->_modified[$column]);
     }
+
+    /**
+     * Search the mixin method map and call the method or trigger an error
+     *
+     * @param  string 	$method     The function name
+     * @param  array  	$arguments  The function arguments
+     * @return mixed The result of the function
+     */
+    public function __call($method, $arguments)
+    {
+        // If the method is of the form is[Behavior] handle it.
+        $parts = KStringInflector::explode($method);
+
+        if($parts[0] == 'is' && isset($parts[1]))
+        {
+            if(isset($this->_mixed_methods[$method])) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return parent::__call($method, $arguments);
+    }
 }
