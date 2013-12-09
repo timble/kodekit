@@ -188,7 +188,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         //Get the action from the request data
         if($context->request->data->has('_action'))
         {
-            $action = strtolower($context->request->data->get('_action', 'alpha'));
+            $action = strtolower($context->request->data->get('_action', 'alnum'));
 
             if(in_array($action, array('browse', 'read', 'render'))) {
                 throw new KDispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
