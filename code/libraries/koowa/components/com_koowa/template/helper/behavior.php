@@ -50,6 +50,26 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
+     * Loads icon font
+     *
+     * @param array|KObjectConfig $config
+     * @return string
+     */
+    public function icons($config = array())
+    {
+        $html = '';
+
+        if (!isset(self::$_loaded['icons-css']))
+        {
+            $html .= '<style src="media://koowa/com_koowa/css/icons.css" />';
+
+            self::$_loaded['icons-css'] = true;
+        }
+
+        return $html;
+    }
+
+    /**
      * Loads jQuery under a global variable called kQuery.
      *
      * Loads it from Joomla in 3.0+ and our own sources in 2.5. If debug config property is set, an uncompressed

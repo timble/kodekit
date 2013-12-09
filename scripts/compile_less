@@ -4,7 +4,7 @@ LESSC_BIN=lessc
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 INPUT_PATH=$DIR/../code/media/koowa/com_koowa/less
 OUTPUT_PATH=$DIR/../code/media/koowa/com_koowa/css
-FILES=('datepicker' 'modal' 'select2' 'tree')
+FILES=('datepicker' 'modal' 'select2' 'tree' 'icons')
 
 for FILE in "${FILES[@]}"
 do
