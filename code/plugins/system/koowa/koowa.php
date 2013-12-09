@@ -149,31 +149,6 @@ class PlgSystemKoowa extends JPlugin
             }
         }
     }
-	
-	/**
-	 * Set the disposition to inline for JSON requests
-	 */
-	public function onAfterRender()
-	{
-		if (JFactory::getDocument()->getType() !== 'json') {
-			return;
-		}
-		
-		$headers = JResponse::getHeaders();
-		foreach ($headers as $header)
-		{
-			if ($header['name'] === 'Content-disposition')
-			{
-				$string = $header['value'];
-				if (strpos($string, 'attachment; ') !== false) 
-				{
-					$string = str_replace($string, 'attachment; ', 'inline; ');
-					JResponse::setHeader('Content-disposition', $string, true);
-					break;
-				}
-			}
-		}
-	}
 
     /*
      * Joomla 3.x Compat
@@ -239,8 +214,6 @@ class PlgSystemKoowa extends JPlugin
             }
 
             echo $template;
-
-
 
             exit;
         }
