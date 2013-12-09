@@ -163,7 +163,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
             if(!$this->_database instanceof KDatabaseAdapterInterface)
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Adapter: '.get_class($this->_database).' does not implement DatabaseAdapterInterface'
                 );
             }

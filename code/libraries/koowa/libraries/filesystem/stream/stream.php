@@ -466,7 +466,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
         $info = $this->getInfo();
 
         if(isset($info[$time])) {
-            $result = \DateTime::createFromFormat('U', $info[$time]);
+            $result = DateTime::createFromFormat('U', $info[$time]);
         }
 
         return $result;

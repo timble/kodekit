@@ -470,7 +470,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
 
         // Make sure host does not contain forbidden characters (see RFC 952 and RFC 2181)
         if ($host && !preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host)) {
-            throw new \UnexpectedValueException('Invalid Host');
+            throw new UnexpectedValueException('Invalid Host');
         }
 
         return $host;
@@ -761,7 +761,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
                         //Get the highest quality format
                         $mime_type = key($formats);
 
-                        foreach (static::$_formats as $value => $mime_types)
+                        foreach (self::$_formats as $value => $mime_types)
                         {
                             if (in_array($mime_type, (array) $mime_types))
                             {
@@ -804,7 +804,7 @@ class KDispatcherRequestAbstract extends KControllerRequest implements KDispatch
      */
     public function addFormat($format, $mime_types)
     {
-        static::$_formats[$format] = is_array($mime_types) ? $mime_types : array($mime_types);
+        self::$_formats[$format] = is_array($mime_types) ? $mime_types : array($mime_types);
         return $this;
     }
 

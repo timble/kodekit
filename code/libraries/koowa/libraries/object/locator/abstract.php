@@ -32,7 +32,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
      */
     public function __construct(KObjectConfig $config)
     {
@@ -46,7 +46,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  KObjectConfig $config An optional KObjectConfig object with configuration options.
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
