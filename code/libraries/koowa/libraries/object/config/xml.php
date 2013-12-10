@@ -28,7 +28,12 @@ class KObjectConfigXml extends KObjectConfigFormat
 
         if(!empty($string))
         {
-            $xml  = simplexml_load_string($string);
+            $xml  = @simplexml_load_string($string);
+
+            if(!$xml) {
+                throw new RuntimeException('Cannot decode XML string');
+            }
+
             foreach ($xml->children() as $node) {
                 $data[(string) $node['name']] = self::_decodeValue($node);
             }

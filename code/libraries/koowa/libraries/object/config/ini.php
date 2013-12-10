@@ -28,7 +28,7 @@ class KObjectConfigIni extends KObjectConfigFormat
 
         if(!empty($string))
         {
-            $data = parse_ini_string($string, true);
+            $data = @parse_ini_string($string, true);
 
             if($data === false) {
                 throw new RuntimeException('Cannot parse INI string');
