@@ -20,9 +20,9 @@ class KObjectConfigYaml extends KObjectConfigFormat
      *
      * @param  string $string
      * @return KObjectConfigYaml|false   Returns a KObjectConfig object. False on failure.
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    public static function fromString($string)
+    public function fromString($string)
     {
         $config = false;
 

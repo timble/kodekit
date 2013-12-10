@@ -22,14 +22,14 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * @return KObjectConfigFormat
      * @throws RuntimeException
      */
-    public static function fromFile($filename)
+    public function fromFile($filename)
     {
         if (!is_file($filename) || !is_readable($filename)) {
             throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
         $string = file_get_contents($filename);
-        $config = self::fromString($string);
+        $config = $this->fromString($string);
 
         return $config;
     }

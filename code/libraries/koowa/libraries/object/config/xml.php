@@ -20,9 +20,9 @@ class KObjectConfigXml extends KObjectConfigFormat
      *
      * @param  string $string
      * @return KObjectConfigXml|false   Returns a KObjectConfig object. False on failure.
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    public static function fromString($string)
+    public function fromString($string)
     {
         $data = array();
 

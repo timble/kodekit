@@ -22,7 +22,7 @@ class KObjectConfigJson extends KObjectConfigFormat
      * @return KObjectConfigJson|false   Returns a KObjectConfig object. False on failure.
      * @throws \RuntimeException
      */
-    public static function fromString($string)
+    public function fromString($string)
     {
         $data = array();
 
