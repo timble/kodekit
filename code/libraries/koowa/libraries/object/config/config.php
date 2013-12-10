@@ -267,27 +267,6 @@ class KObjectConfig implements KObjectConfigInterface
     }
 
     /**
-     * Return a ObjectConfig object from an array
-     *
-     * @param  array $array
-     * @return KObjectConfig Returns a ObjectConfig object
-     */
-    public static function fromArray(array $array)
-    {
-        return new self($array);
-    }
-
- 	/**
-     * Returns a string with the encapsulated data in JSON format
-     *
-     * @return string  Returns the data encoded to JSON
-     */
-    public function toJson()
-    {
-        return json_encode($this->toArray());
-    }
-
-    /**
      * Retrieve a configuration element
      *
      * @param string $name
@@ -351,15 +330,5 @@ class KObjectConfig implements KObjectConfigInterface
         }
 
         $this->_data = $array;
-    }
-
-    /**
-     * Returns a string with the encapsulated data in JSON format
-     *
-     * @return string   returns the data encoded to JSON
-     */
-    public function __toString()
-    {
-        return $this->toJson();
     }
 }

@@ -78,12 +78,4 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @return array
      */
     public function toArray();
-
-    /**
-     * Return a ObjectConfig object from an array
-     *
-     * @param  array $array
-     * @return KObjectConfig Returns a ObjectConfig object
-     */
-    public static function fromArray(array $array);
 }
