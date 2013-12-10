@@ -16,29 +16,6 @@
 class KCommand extends KObjectConfig implements KCommandInterface
 {
     /**
-     * Get the error
-     *
-     * @return  string|Exception  The error
-     */
-    public function getError()
-    {
-        return $this->get('error');
-    }
-
-    /**
-     * Set the error
-     *
-     * @param string $error
-     *
-     * @return  $this
-     */
-    public function setError($error)
-    {
-        $this->set('error', $error);
-        return $this;
-    }
-
-    /**
      * Get the command subject
      *
      * @return object	The command subject
