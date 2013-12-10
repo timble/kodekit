@@ -25,7 +25,7 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
     /**
      * Constructor
      *
-     * @param KObjectConfig $config An optional KKObjectConfig object with configuration options.
+     * @param KObjectConfig $config An optional KObjectConfig object with configuration options.
      */
     public function __construct(KObjectConfig $config)
     {
@@ -61,8 +61,8 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
      *
      * @param  string $format The format name
      * @param  array  $config A optional array of configuration options
-     * @throws \RuntimeException            If the format isn't registered
-     * @throws \UnexpectedValueException	If the format object doesn't implement the KObjectConfigSerializable
+     * @throws RuntimeException            If the format isn't registered
+     * @throws UnexpectedValueException	If the format object doesn't implement the KObjectConfigSerializable
      * @return KObjectConfig
      */
     public function getFormat($format, $config = array())
@@ -97,14 +97,14 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
      * Register config format
      *
      * @param string $format The name of the format
-     * @param mixed  $class A class that implements ObjectInterface, ObjectIdentifier
+     * @param mixed  $class A class that implements KObjectInterface, KObjectIdentifier
      * @throws InvalidArgumentException If the class does not exist.
      * @return $this
      */
     public function registerFormat($format, $class)
     {
         if(!class_exists($class, true)) {
-            throw new InvalidArgumentException('Class : $class cannot does not exist.');
+            throw new InvalidArgumentException('Class : '.$class.' cannot does not exist.');
         }
 
         $this->_formats[$format] = $class;
@@ -116,8 +116,8 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
      *
      * @param  string  $filename
      * @return KObjectConfig
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function fromFile($filename)
     {
