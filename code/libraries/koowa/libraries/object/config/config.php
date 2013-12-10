@@ -70,11 +70,12 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function set($name, $value)
     {
-        if (is_array($value)) {
-            $this->_data[$name] = new self($value);
-        } else {
-            $this->_data[$name] = $value;
+        if (is_array($value))
+        {
+            $class = get_class($this);
+            $this->_data[$name] = new $class($value);
         }
+        else $this->_data[$name] = $value;
     }
 
     /**
