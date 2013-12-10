@@ -34,7 +34,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= $this->getTemplate()->renderHelper('behavior.icons');
-            $html .= '<span class="koowa-tooltip jticn-locked"
+            $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
                            title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
 					</span>';
         }
@@ -69,7 +69,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= $this->getTemplate()->renderHelper('behavior.icons');
-            $html .= '<span class="koowa-tooltip jticn-locked"
+            $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
                            title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
 					</span>';
         }
@@ -208,7 +208,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $attribs = 'style="color:'.$config->color.'"';
         }
 
-        $html = '<span class="koowa-tooltip jt_file_icon jticn-%s" %s><i>%s</i></span>';
+        $html = '<span class="koowa-tooltip koowa_icon koowa-icon-%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
         $html .= $this->getTemplate()->renderHelper('behavior.tooltip');
         $html .= $this->getTemplate()->renderHelper('behavior.icons');
