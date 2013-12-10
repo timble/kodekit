@@ -59,7 +59,8 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
                 $identifier			= clone $this->getIdentifier();
                 $identifier->path	= array('template');
                 $identifier->name	= $template ? $template : 'default';
-            } else $identifier = $this->getIdentifier($template);
+            }
+            else $identifier = $this->getIdentifier($template);
 	
             $template = $this->getObject($identifier);
         }
@@ -117,7 +118,8 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
                     $item = implode(' ', $item);
                 }
 
-                if (is_bool($item)) {
+                if (is_bool($item))
+                {
                     if ($item === false) continue;
                     $item = $key;
                 }
