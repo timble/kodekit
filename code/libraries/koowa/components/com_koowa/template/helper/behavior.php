@@ -31,7 +31,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function koowa($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug' => JFactory::getApplication()->getCfg('debug')
         ));
@@ -62,7 +62,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['icons-css']))
         {
             $html .= '<style src="media://koowa/com_koowa/css/icons.css" />';
-
             self::$_loaded['icons-css'] = true;
         }
 
@@ -82,7 +81,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function jquery($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug' => JFactory::getApplication()->getCfg('debug')
         ));
@@ -149,7 +148,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 	 */
 	public function modal($config = array())
 	{
-		$config = new KObjectConfig($config);
+		$config = new KObjectConfigJson($config);
         $config->append(array(
             'debug'    => JFactory::getApplication()->getCfg('debug'),
             'selector' => '.koowa-modal',
@@ -207,7 +206,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function tooltip($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'selector' => '.koowa-tooltip',
             'data'     => 'koowa-tooltip',
@@ -263,12 +262,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         static $loaded;
 
-        if ($loaded === null)
-        {
+        if ($loaded === null) {
             $loaded = array();
         }
 
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
@@ -297,8 +295,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         ));
 
         // Handle the special case for "now".
-        if (strtoupper($config->value) == 'NOW')
-        {
+        if (strtoupper($config->value) == 'NOW') {
             $config->value = strftime($config->format);
         }
 
@@ -307,8 +304,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00') {
             $config->value = strftime($config->format, strtotime($config->value) /*+ $config->gmt_offset*/);
+        } else {
+            $config->value = '';
         }
-        else $config->value = '';
 
         // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
         $config->format = str_replace(
@@ -382,9 +380,11 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $attribs = $this->buildAttributes($config->attribs);
 
-        if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled') {
+        if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
+        {
             // Only display the triggers once for each control.
-            if (!in_array($config->id, $loaded)) {
+            if (!in_array($config->id, $loaded))
+            {
                 $html .= "<script>
                     kQuery(function($){
                         var options = ".$config->options.";
@@ -424,7 +424,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function overlay($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'url'  		=> '',
             'options'  	=> array(),
@@ -488,7 +488,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function validator($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug' => JFactory::getApplication()->getCfg('debug'),
             'selector' => '.-koowa-form',
@@ -542,7 +542,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function select2($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'cleanup' => false,
             'debug' => JFactory::getApplication()->getCfg('debug'),
@@ -571,7 +571,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['select2-css'] = true;
         }
 
-        $options   = $config->options->toJson();
+        $options   = $config->options;
         $signature = md5('select2-'.$config->element.$options);
 
         if($config->element && !isset(self::$_loaded[$signature]))
@@ -596,7 +596,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function autocomplete($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'element'  => null,
             'options'  => array(
@@ -617,7 +617,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $html ='';
 
-        $options   = $config->options->toJson();
+        $options   = $config->options;
         $signature = md5('autocomplete-'.$config->element.$options);
 
         if($config->element && !isset(self::$_loaded[$signature]))
@@ -648,7 +648,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function tree($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug'   => JFactory::getApplication()->getCfg('debug'),
             'element' => '',
@@ -716,14 +716,13 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $required = array('label', 'id', 'level', 'path', 'parent');
                 foreach($required as $key)
                 {
-                    if(!isset($data[$key]))
-                    {
+                    if(!isset($data[$key])) {
                         throw new InvalidArgumentException('Data must contain required param: '.$key);
                     }
                 }
             }
 
-            $options = $config->options->toJson();
+            $options = $config->options;
 
             $html .= '<script>
             kQuery(function($){

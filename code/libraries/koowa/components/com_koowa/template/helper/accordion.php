@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 */
 	public function startPane($config = array())
 	{
-		$config = new KObjectConfig($config);
+		$config = new KObjectConfigJson($config);
 
 		$config->append(array(
 			'id'	=> 'sliders',
@@ -58,7 +58,7 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 */
 	public function startPanel($config = array())
 	{
-		$config = new KObjectConfig($config);
+		$config = new KObjectConfigJson($config);
 
 		$config->append(array(
 			'title'		=> $this->translate('Slide'),

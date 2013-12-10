@@ -23,7 +23,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
      */
     public function startPane($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'id'      => 'tabs',
             'options' => array()
@@ -51,7 +51,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
      */
     public function startPanel( $config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'title'     => '',
             'class'     => '',

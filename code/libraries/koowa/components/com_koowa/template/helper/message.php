@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperMessage extends KTemplateHelperAbstract
      */
     public function lock($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'row' => null
         ));

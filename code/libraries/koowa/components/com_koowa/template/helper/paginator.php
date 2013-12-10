@@ -68,7 +68,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      */
     public function limit($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'limit'	  	=> 0,
             'attribs'	=> array(),
@@ -102,7 +102,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      */
     public function pagination($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'total'      => 0,
             'display'    => 2,

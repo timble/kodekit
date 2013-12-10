@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
      */
     public function display($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'editor'    => null,
             'name'      => 'description',

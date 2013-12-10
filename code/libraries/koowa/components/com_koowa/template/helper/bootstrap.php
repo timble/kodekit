@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      */
     public function javascript($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug' => JFactory::getApplication()->getCfg('debug')
         ));
@@ -59,7 +59,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
     {
         $identifier = $this->getTemplate()->getIdentifier();
 
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug'         => JFactory::getApplication()->getCfg('debug'),
             'javascript'    => false,
@@ -128,7 +128,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      */
     public function wrapper($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'wrapper' => null
         ));

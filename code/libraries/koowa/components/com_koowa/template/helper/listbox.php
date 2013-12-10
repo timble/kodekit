@@ -27,7 +27,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function users($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'autocomplete' => true,
             'model'        => 'users',
@@ -49,7 +49,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function enabled( $config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -82,7 +82,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function published($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -115,7 +115,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     public function access($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'      => 'access',
             'attribs'   => array(),
@@ -154,7 +154,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     protected function _listbox($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'		  => '',
             'attribs'	  => array(),
@@ -215,7 +215,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
      */
     protected function _autocomplete($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'attribs'  => array(),
             'validate' => true,
@@ -240,8 +240,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             $config->url = $this->getTemplate()->getView()->getRoute($parts, false, false);
         }
 
-        if ($config->url instanceof KHttpUrl)
-        {
+        if ($config->url instanceof KHttpUrl) {
             $config->url = $config->url->toString();
         }
 
@@ -285,8 +284,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $config->attribs->name  = $config->name;
 
-        if ($config->selected)
-        {
+        if ($config->selected) {
             $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
         }
 

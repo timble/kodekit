@@ -23,7 +23,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function render($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
         	'toolbar' => null,
             'title'   => null,
@@ -97,7 +97,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function command($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
         	'command' => NULL
         ));
@@ -175,7 +175,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function title($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'command' => NULL,
         ));
@@ -236,7 +236,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function separator($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
         	'command' => NULL
         ));
@@ -258,7 +258,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function modal($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
         	'command' => NULL
         ));

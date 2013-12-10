@@ -24,7 +24,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
      */
     public function option($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'value' 	=> null,
             'text'   	=> '',
@@ -49,7 +49,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
      */
     protected function _optionlistSelect2($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'prompt'  => '- Select -',
             'attribs' => array()
@@ -83,7 +83,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
      */
     public function optionlist($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'options' 	=> array(),
             'name'   	=> 'id',
@@ -113,16 +113,14 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 
         foreach($config->options as $group => $options)
         {
-            if (is_numeric($group))
-            {
+            if (is_numeric($group)) {
                 $options = array($options);
-            }
-            else
-            {
+            } else {
                 $html[] = '<optgroup label="' . $this->escape($group) . '">';
             }
 
-            foreach ($options as $option) {
+            foreach ($options as $option)
+            {
                 $value  = $option->value;
                 $text   = $config->translate ? $this->translate( $option->text ) : $option->text;
 
@@ -173,7 +171,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
 	 */
     public function booleanlist($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'   	=> '',
             'attribs'	=> array(),
@@ -213,7 +211,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
      */    
     public function checklist( $config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
                 'list' 		=> null,
                 'name'   	=> 'id',
@@ -245,7 +243,8 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
                         break;
                     }
                 }
-            } else $extra .= ($key == $config->selected) ? 'checked="checked"' : '';
+            }
+            else $extra .= ($key == $config->selected) ? 'checked="checked"' : '';
 
             $html[] = '<label class="checkbox" for="'.$name.$key.'">';
             $html[] = '<input type="checkbox" name="'.$name.'[]" id="'.$name.$key.'" value="'.$key.'" '.$extra.' '.$attribs.' />';
@@ -264,7 +263,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
      */
     public function radiolist($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'list' 		=> null,
             'name'   	=> 'id',
