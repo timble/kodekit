@@ -49,6 +49,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             'controller' => $this->getIdentifier()->package,
             'request'    => 'koowa:dispatcher.request',
             'response'   => 'koowa:dispatcher.response',
+            'user'       => 'koowa:dispatcher.user',
         ));
 
         parent::_initialize($config);
@@ -104,6 +105,29 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     }
 
     /**
+     * Get the user object
+     *
+     * @throws	UnexpectedValueException	If the user doesn't implement the KDispatcherUserInterface
+     * @return KDispatcherUserInterface
+     */
+    public function getUser()
+    {
+        if(!$this->_user instanceof KDispatcherUserInterface)
+        {
+            $this->_user = parent::getUser();
+
+            if(!$this->_user instanceof KDispatcherUserInterface)
+            {
+                throw new UnexpectedValueException(
+                    'User: '.get_class($this->_user).' does not implement KDispatcherUserInterface'
+                );
+            }
+        }
+
+        return $this->_user;
+    }
+
+    /**
      * Method to get a controller object
      *
      * @throws	UnexpectedValueException	If the controller doesn't implement the ControllerInterface
@@ -121,6 +145,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 		    $config = array(
                 'request' 	 => $this->getRequest(),
                 'response'   => $this->getResponse(),
+                'user'       => $this->getUser(),
                 'dispatched' => true
         	);
 
@@ -182,6 +207,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $context->setSubject($this);
         $context->setRequest($this->getRequest());
         $context->setResponse($this->getResponse());
+        $context->setUser($this->getUser());
 
         return $context;
     }
@@ -209,6 +235,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $config = array(
             'request' 	 => $context->request,
             'response'   => $context->response,
+            'user'       => $context->user,
         );
 
         $dispatcher = $this->getObject($identifier, $config);
