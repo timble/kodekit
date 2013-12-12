@@ -17,7 +17,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\User
  */
-class UserSessionContainerMessage extends KUserSessionContainerAbstract
+class KUserSessionContainerMessage extends KUserSessionContainerAbstract
 {
     /**
      * The previous flash messages
@@ -77,7 +77,7 @@ class UserSessionContainerMessage extends KUserSessionContainerAbstract
      *
      * @param string    $message
      * @param string    $type    Message category type. Default is 'success'.
-     * @return UserSessionContainerMessage
+     * @return KUserSessionContainerMessage
      */
     public function add($message, $type = 'success')
     {
@@ -90,7 +90,7 @@ class UserSessionContainerMessage extends KUserSessionContainerAbstract
      *
      * @param string       $type    Message category type.
      * @param string|array $messages
-     * @return UserSessionContainerMessage
+     * @return KUserSessionContainerMessage
      */
     public function set($type, $messages)
     {
@@ -116,7 +116,7 @@ class UserSessionContainerMessage extends KUserSessionContainerAbstract
      * Removes current flash messages for a given type
      *
      * @param string $type  Message category type.
-     * @return UserSessionContainerMessage
+     * @return KUserSessionContainerMessage
      */
     public function remove($type)
     {
@@ -127,7 +127,7 @@ class UserSessionContainerMessage extends KUserSessionContainerAbstract
     /**
      * Clears out all current flash messages
      *
-     * @return UserSessionContainerMessage
+     * @return KUserSessionContainerMessage
      */
     public function clear()
     {
@@ -139,7 +139,7 @@ class UserSessionContainerMessage extends KUserSessionContainerAbstract
      * Add new flash messages
      *
      * @param array $messages An of messages per type
-     * @return UserSessionContainerMessage
+     * @return KUserSessionContainerMessage
      */
     public function values(array $messages)
     {
