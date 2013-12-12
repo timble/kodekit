@@ -33,7 +33,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
         parent::__construct($config);
 
         //Set the user properties and attributes
-        $this->setData($config);
+        $this->setData($config->data);
     }
 
     /**
@@ -47,17 +47,19 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'id'         => 0,
-            'email'      => '',
-            'name'       => '',
-            'role'       => 0,
-            'groups'     => array(),
-            'password'   => '',
-            'salt'       => '',
-            'authentic'  => false,
-            'enabled'    => true,
-            'expired'    => false,
-            'attributes' => array(),
+            'data' => array(
+                'id'         => 0,
+                'email'      => '',
+                'name'       => '',
+                'role'       => 0,
+                'groups'     => array(),
+                'password'   => '',
+                'salt'       => '',
+                'authentic'  => false,
+                'enabled'    => true,
+                'expired'    => false,
+                'attributes' => array(),
+            )
         ));
 
         parent::_initialize($config);
@@ -72,11 +74,6 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     public function setData($data)
     {
         $this->__data = new KObjectConfigJson($data);
-
-        unset($data->mixins);
-        unset($data->object_manager);
-        unset($data->object_identifier);
-
         return $this;
     }
 
