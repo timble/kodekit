@@ -50,9 +50,6 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
 
         //Set the attribute session separator
         $this->_separator = $config->separator;
-
-        //Load the session data
-        $this->loadSession();
     }
 
     /**
@@ -66,7 +63,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'namespace' => '__koowa_'.$this->getIdentifier()->name,
+            'namespace' => '__'.$this->getIdentifier()->name,
             'separator' => '.',
         ));
 
