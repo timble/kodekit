@@ -40,7 +40,7 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
      */
     public function sendContent(KDispatcherResponseInterface $response)
     {
-        /*$session  = $response->getUser()->getSession();
+        $session  = $response->getUser()->getSession();
 
         //Set the messages into the session
         $messages = $response->getMessages();
@@ -52,7 +52,7 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
             }
 
             $session->getContainer('message')->values($messages);
-        }*/
+        }
 
         //Set the redirect into the response
         $response->setContent(sprintf(
