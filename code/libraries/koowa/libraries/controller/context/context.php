@@ -58,4 +58,26 @@ class KControllerContext extends KCommand implements KControllerContextInterface
         $this->set('response', $response);
         return $this;
     }
+
+    /**
+     * Get the user object
+     *
+     * @return KControllerUserInterface
+     */
+    public function getUser()
+    {
+        return $this->get('user');
+    }
+
+    /**
+     * Set the user object
+     *
+     * @param KControllerResponseInterface $response
+     * @return KControllerContext
+     */
+    public function setUser(KControllerUserInterface $user)
+    {
+        $this->set('user', $user);
+        return $this;
+    }
 }

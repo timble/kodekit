@@ -23,6 +23,13 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     protected $_request;
 
     /**
+     * User object
+     *
+     * @var	string|object
+     */
+    protected $_user;
+
+    /**
      * The response messages
      *
      * @var	array
@@ -39,6 +46,7 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
         parent::__construct($config);
 
         $this->setRequest($config->request);
+        $this->setUser($config->user);
 
         //Set the messages
         $this->_messages = array();
@@ -56,6 +64,7 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     {
         $config->append(array(
             'request' => null,
+            'user'    => null
         ));
 
         parent::_initialize($config);
@@ -81,6 +90,28 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     public function getRequest()
     {
         return $this->_request;
+    }
+
+    /**
+     * Set the user object
+     *
+     * @param KControllerUserInterface $user A request object
+     * @return KControllerResponse
+     */
+    public function setUser(KControllerUserInterface $user)
+    {
+        $this->_user = $user;
+        return $this;
+    }
+
+    /**
+     * Get the user object
+     *
+     * @return KControllerUserInterface
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
@@ -199,5 +230,6 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
         parent::__clone();
 
         $this->_request = clone $this->_request;
+        $this->_user    = clone $this->_user;
     }
 }

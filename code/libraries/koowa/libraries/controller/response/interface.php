@@ -41,6 +41,21 @@ interface KControllerResponseInterface extends KHttpResponseInterface
     public function getRequest();
 
     /**
+     * Set the user object
+     *
+     * @param KControllerUserInterface $user A user object
+     * @return KControllerResponse
+     */
+    public function setUser(KControllerUserInterface $user);
+
+    /**
+     * Get the user object
+     *
+     * @return KControllerUserInterface
+     */
+    public function getUser();
+
+    /**
      * Set a redirect location
      *
      * Method will use a 303 See other status by default if no other redirect status code is set yet. The flash

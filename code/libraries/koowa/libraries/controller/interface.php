@@ -50,7 +50,7 @@ interface KControllerInterface
     /**
      * Get the request object
      *
-     * @throws UnexpectedValueException	If the request doesn't implement the ControllerRequestInterface
+     * @throws UnexpectedValueException	If the request doesn't implement the KControllerRequestInterface
      * @return KControllerRequestInterface
      */
     public function getRequest();
@@ -66,10 +66,25 @@ interface KControllerInterface
     /**
      * Get the response object
      *
-     * @throws	UnexpectedValueException	If the response doesn't implement the ControllerResponseInterface
+     * @throws	UnexpectedValueException	If the response doesn't implement the KControllerResponseInterface
      * @return KControllerResponseInterface
      */
     public function getResponse();
+
+    /**
+     * Set the user object
+     *
+     * @param KControllerUserInterface $user A request object
+     * @return KControllerUser
+     */
+    public function setUser(KControllerUserInterface $user);
+
+    /**
+     * Get the user object
+     *
+     * @return KControllerUserInterface
+     */
+    public function getUser();
 
     /**
      * Has the controller been dispatched

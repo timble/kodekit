@@ -39,6 +39,13 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected $_request;
 
     /**
+     * User object or identifier
+     *
+     * @var	string|object
+     */
+    protected $_user;
+
+    /**
      * Chain of command object
      *
      * @var KCommandChain
@@ -77,6 +84,9 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         // Set the view identifier
         $this->_response = $config->response;
 
+        // Set the user identifier
+        $this->_user = $config->user;
+
         //Set the query in the request
         if(!empty($config->query)) {
             $this->getRequest()->query->add(KObjectConfig::unbox($config->query));
@@ -104,6 +114,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             'dispatched'		=> false,
             'request'           => 'koowa:controller.request',
             'response'          => 'koowa:controller.response',
+            'user'              => 'koowa:controller.user',
             'behaviors'         => array('permissible'),
             'query'             => array()
         ));
@@ -277,6 +288,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         {
             $this->_response = $this->getObject($this->_response, array(
                 'request' => $this->getRequest(),
+                'user'    => $this->getUser(),
             ));
 
             if(!$this->_response instanceof KControllerResponseInterface)
@@ -288,6 +300,43 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         return $this->_response;
+    }
+
+    /**
+     * Set the user object
+     *
+     * @param KControllerUserInterface $user A request object
+     * @return KControllerAbstract
+     */
+    public function setUser(KControllerUserInterface $user)
+    {
+        $this->_user = $user;
+        return $this;
+    }
+
+    /**
+     * Get the user object
+     *
+     * @throws UnexpectedValueException	If the user doesn't implement the KControllerUserInterface
+     * @return KControllerUserInterface
+     */
+    public function getUser()
+    {
+        if(!$this->_user instanceof KControllerUserInterface)
+        {
+            $this->_user = $this->getObject($this->_user, array(
+                'request' => $this->getRequest(),
+            ));
+
+            if(!$this->_user instanceof KControllerUserInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'User: '.get_class($this->_user).' does not implement KControllerUserInterface'
+                );
+            }
+        }
+
+        return $this->_user;
     }
 
     /**
@@ -328,6 +377,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $context->setSubject($this);
         $context->setRequest($this->getRequest());
         $context->setResponse($this->getResponse());
+        $context->setUser($this->getUser());
 
         return $context;
     }

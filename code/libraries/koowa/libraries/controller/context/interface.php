@@ -28,4 +28,11 @@ interface KControllerContextInterface extends KCommandInterface
      * @return KControllerResponseInterface
      */
     public function getResponse();
+
+    /**
+     * Get the user object
+     *
+     * @return KControllerUserInterface
+     */
+    public function getUser();
 }
