@@ -16,27 +16,6 @@
 abstract class KControllerView extends KControllerAbstract implements KControllerViewable
 {
 	/**
-	 * URL for redirection.
-	 *
-	 * @var	string
-	 */
-	protected $_redirect = null;
-
-	/**
-	 * Redirect message.
-	 *
-	 * @var	string
-	 */
-	protected $_redirect_message = null;
-
-	/**
-	 * Redirect message type.
-	 *
-	 * @var	string
-	 */
-	protected $_redirect_type = 'message';
-
-	/**
 	 * View object or identifier (com://APP/COMPONENT.view.NAME.FORMAT)
 	 *
 	 * @var	string|object
@@ -151,44 +130,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 		$this->_view = $view;
 
 		return $this->_view;
-	}
-
-	/**
-	 * Set a URL for browser redirection.
-	 *
-	 * @param	string  $url URL to redirect to.
-	 * @param	string	$msg Message to display on redirect. Optional, defaults to value set internally by controller, if any.
-	 * @param	string	$type Message type. Optional, defaults to 'message'.
-	 * @return	KControllerAbstract
-	 */
-	public function setRedirect( $url, $msg = null, $type = 'message' )
-	{
-		$this->_redirect   		 = $url;
-		$this->_redirect_message = $msg;
-		$this->_redirect_type	 = $type;
-
-		return $this;
-	}
-
-	/**
-	 * Returns an array with the redirect url, the message and the message type
-	 *
-	 * @return array Named array containing url, message and messageType, or null if no redirect was set
-	 */
-	public function getRedirect()
-	{
-		$result = array();
-
-		if(!empty($this->_redirect))
-		{
-			$result = array(
-				'url' 		=> JRoute::_($this->_redirect, false),
-				'message' 	=> $this->_redirect_message,
-				'type' 		=> $this->_redirect_type,
-			);
-		}
-
-		return $result;
 	}
 
     /**

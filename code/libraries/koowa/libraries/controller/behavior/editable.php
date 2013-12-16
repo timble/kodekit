@@ -39,9 +39,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             $this->registerCallback('after.cancel', array($this, 'unsetReferrer'));
         }
 
-		//Set the default redirect.
-        $this->setRedirect($this->getObject('request')->getReferrer());
-
         $this->_cookie_path = $config->cookie_path;
     }
 

@@ -36,7 +36,7 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
         $view       = KStringInflector::singularize($identifier->name);
         $url        = sprintf('index.php?option=com_%s&view=%s', $identifier->package, $view);
 
-        $this->setRedirect($this->getObject('koowa:http.url',array('url' => $url)));
+        $context->response->setRedirect($this->getObject('koowa:http.url',array('url' => $url)));
 
         return $entity;
     }

@@ -108,14 +108,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
-        //Redirect the request
-        if (KRequest::method() != 'GET' && KRequest::type() == 'HTTP')
-        {
-            if($redirect = $this->getController()->getRedirect()) {
-                JFactory::getApplication()->redirect($redirect['url'], $redirect['message'], $redirect['type']);
-            }
-        }
-
         //Only pass back to Joomla.
         if(!$context->response->isRedirect() && $context->response->getContentType() == 'text/html' && !$context->request->isAjax())
         {
