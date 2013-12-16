@@ -37,11 +37,11 @@ interface KUserInterface
     public function getName();
 
     /**
-     * Returns the role of the user
+     * Returns the roles of the user
      *
-     * @return int The role id
+     * @return array An array of role id's
      */
-    public function getRole();
+    public function getRoles();
 
     /**
      * Returns the groups the user is part of

@@ -51,7 +51,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
                 'id'         => 0,
                 'email'      => '',
                 'name'       => '',
-                'role'       => 0,
+                'roles'      => array(),
                 'groups'     => array(),
                 'password'   => '',
                 'salt'       => '',
@@ -119,13 +119,13 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     }
 
     /**
-     * Returns the role of the user
+     * Returns the roles of the user
      *
-     * @return int The role id
+     * @return array An array of role id's
      */
-    public function getRole()
+    public function getRoles()
     {
-        return $this->getData()->role;
+        return $this->getData()->roles;
     }
 
     /**

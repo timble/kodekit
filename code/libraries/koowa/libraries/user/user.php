@@ -83,13 +83,13 @@ class KUser extends KUserAbstract implements KObjectInstantiable, KObjectSinglet
     }
 
     /**
-     * Returns the role of the user
+     * Returns the roles of the user
      *
      * @return int The role id
      */
-    public function getRole()
+    public function getRoles()
     {
-        return $this->getSession()->get('user.role');
+        return $this->getSession()->get('user.roles');
     }
 
     /**
