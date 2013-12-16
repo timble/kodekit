@@ -647,7 +647,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Returns the base URL from which this request is executed.
      *
-     * @param
+     * @param   string    $application Gets the base URL of the specified application, defaults to current one
      * @return  KHttpUrl  A HttpUrl object
      */
     public function getBaseUrl($application = null)
