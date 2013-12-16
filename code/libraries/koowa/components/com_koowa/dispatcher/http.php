@@ -41,7 +41,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'request'  => 'com:koowa.dispatcher.request',
+            'request'  => 'com:koowa.dispatcher.request.joomla',
+            'user'     => 'com:koowa.dispatcher.user.joomla',
             'limit'    => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
 
@@ -70,52 +71,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         }
 
         return $manager->getObject($config->object_identifier);
-    }
-
-    /**
-     * Check the request token to prevent CSRF exploits
-     *
-     * Method will always perform a cookie token check. If a user session is active a session token check
-     * will also be done. If any of the checks fail an forbidden exception  being thrown.
-     *
-     * @param   KDispatcherContextInterface $context The command context
-     * @throws KControllerExceptionForbidden
-     * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
-     */
-    public function authenticateRequest(KDispatcherContextInterface $context)
-    {
-        $request = $context->request;
-
-        //Check cookie token
-        if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
-            throw new KControllerExceptionForbidden('Invalid Cookie Token');
-        }
-
-        //Check session token
-        if(!JFactory::getUser()->guest)
-        {
-            if($request->getToken() !== JSession::getFormToken()) {
-                throw new KControllerExceptionForbidden('Invalid Session Token or Session Time-out');
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Sign the response with a token
-     *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
-     */
-    public function signResponse(KDispatcherContextInterface $context)
-    {
-        if(!$context->response->isError())
-        {
-            $token = JSession::getFormToken();
-
-            setcookie('_token', $token, 0, KRequest::base().'/');
-            header('X-Token : '.$token);
-        }
     }
 
     /**

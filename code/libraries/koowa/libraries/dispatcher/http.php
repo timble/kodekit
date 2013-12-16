@@ -67,7 +67,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     /**
      * Check the request token to prevent CSRF exploits
      *
-     * Method will always perform a referrer check. If any of the checks fail an forbidden exception should be thrown.
+     * Method will always perform a referrer check and a token cookie token check if the user is not authentic or a
+     * session token check if the user is authentic. If any of the checks fail a forbidden exception is thrown.
      *
      * @param KDispatcherContextInterface $context A dispatcher context object
      * @throws KControllerExceptionForbidden
@@ -76,10 +77,26 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     public function authenticateRequest(KDispatcherContextInterface $context)
     {
         $request = $context->request;
+        $user    = $context->user;
 
-        //Check referrer
-        if(!$request->getReferrer()) {
-            throw new KControllerExceptionForbidden('Invalid Request Referrer');
+        if(!$user->isAuthentic())
+        {
+            //Check referrer
+            if(!$request->getReferrer()) {
+                throw new KControllerExceptionForbidden('Invalid Request Referrer');
+            }
+
+            //Check cookie token
+            if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
+                throw new KControllerExceptionForbidden('Invalid Cookie Token');
+            }
+        }
+        else
+        {
+            //Check session token
+            if( $request->getToken() !== $user->session->getToken()) {
+                throw new KControllerExceptionForbidden('Invalid Session Token');
+            }
         }
 
         return true;
@@ -92,7 +109,18 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      */
     public function signResponse(KDispatcherContextInterface $context)
     {
-        //do nothing
+        if(!$context->response->isError())
+        {
+            $token = $context->user->session->getToken();
+
+            $context->response->headers->addCookie($this->getObject('koowa:http.cookie', array(
+                'name'   => '_token',
+                'value'  => $token,
+                'path'   => $context->request->getBaseUrl()->getPath() ?: '/'
+            )));
+
+            $context->response->headers->set('X-Token', $token);
+        }
     }
 
     /**
