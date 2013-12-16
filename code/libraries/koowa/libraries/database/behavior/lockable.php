@@ -74,7 +74,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 		//Prevent lock take over, only an saved and unlocked row and be locked
 		if(!$this->isNew() && !$this->locked())
 		{
-			$this->locked_by = (int) JFactory::getUser()->get('id');
+			$this->locked_by = (int) $this->getObject('user')->getId();
 			$this->locked_on = gmdate('Y-m-d H:i:s');
 			$this->save();
 		}
@@ -91,7 +91,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 */
 	public function unlock()
 	{
-		$userid = JFactory::getUser()->get('id');
+		$userid = $this->getObject('user')->getId();
 
 		//Only an saved row can be unlocked by the user who locked it
 		if(!$this->isNew() && $this->locked_by != 0 && $this->locked_by == $userid)
@@ -123,7 +123,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
                 //Check if the lock has gone stale
                 if($current - $locked < $this->_lifetime)
 			    {
-                    $userid = JFactory::getUser()->get('id');
+                    $userid = $this->getObject('user')->getId();
 			        if($this->locked_by != 0 && $this->locked_by != $userid) {
 			            $result= true;
                     }
