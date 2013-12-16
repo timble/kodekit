@@ -103,12 +103,16 @@ class PlgSystemKoowa extends JPlugin
             $manager->registerAlias('user'      , 'com:koowa.user');
             $manager->registerAlias('request'   , 'com:koowa.dispatcher.request.joomla');
 
-            /*$url = $manager->getObject('http.url', array('url' => '/administrator'));
-            $manager->getObject('request')->setBaseUrl($url);*/
             //Setup the request, this is case insensitive since Windows servers allow folder names like /Administrator
             if (JFactory::getApplication()->getName() !== 'site') {
                 KRequest::root(str_ireplace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
             }
+
+            $application = JFactory::getApplication()->getName();
+            $manager->getObject('request')
+                    ->registerApplication('site', '')
+                    ->registerApplication('admin', '/administrator')
+                    ->setApplication($application === 'administrator' ? 'admin' : $application);
 
             //Load the koowa plugins
             JPluginHelper::importPlugin('koowa', null, true);
