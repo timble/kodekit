@@ -69,7 +69,15 @@ class KClassLocatorComponent extends KClassLocatorAbstract
 
                 $path = implode('/', $parts).'/'.$file;
             }
-            else $path = $file;
+            else
+            {
+                //Exception for packages. Follow framework structure. Don't load classes from root.
+                if(isset($this->_basepaths[$package])) {
+                    $path = $file.'/'.$file;
+                } else {
+                    $path = $file;
+                }
+            }
 
             //Find the basepath
             if(!empty($basepath) && empty($this->_basepaths[$package])) {
