@@ -164,7 +164,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         $config = array();
         $config['separator'] = $this->_separator;
 
-        if(!isset($this->_length)) {
+        if (!isset($this->_length)) {
             $config['length'] = $this->getTable()->getColumn('slug')->length;
         } else {
             $config['length'] = $this->_length;
@@ -229,6 +229,13 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         //If the slug needs to be unique and it already exists, make it unique
         if($this->_unique && $table->count(array('slug' => $this->slug)))
         {
+            $length = $this->_length ? $this->_length : $table->getColumn('slug')->length;
+
+            // Cut 4 characters to make space for slug-1 slug-23 etc
+            if ($length && strlen($this->slug) > $length-4) {
+                $this->slug = substr($this->slug, 0, $length-4);
+            }
+
             $query = $this->getObject('koowa:database.query.select')
                         ->columns('slug')
                         ->where('slug LIKE :slug')
