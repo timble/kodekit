@@ -330,7 +330,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
             if(!$this->_user instanceof KControllerUserInterface)
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'User: '.get_class($this->_user).' does not implement KControllerUserInterface'
                 );
             }
