@@ -73,7 +73,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
 
             if($this->canExecute($action) === false)
             {
-                if(JFactory::getUser()->guest) {
+                if($context->user->isAuthentic()) {
                     throw new KControllerExceptionUnauthorized('Action '.ucfirst($action).' Not Allowed');
                 } else {
                     throw new KControllerExceptionForbidden('Action '.ucfirst($action).' Not Allowed');
