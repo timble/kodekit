@@ -100,7 +100,8 @@ class PlgSystemKoowa extends JPlugin
 
             $manager->registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
             $manager->registerAlias('translator', 'com:koowa.translator');
-            $manager->registerAlias('request'   , 'com:koowa.dispatcher.request');
+            $manager->registerAlias('user'      , 'com:koowa.user');
+            $manager->registerAlias('request'   , 'com:koowa.dispatcher.request.joomla');
 
             /*$url = $manager->getObject('http.url', array('url' => '/administrator'));
             $manager->getObject('request')->setBaseUrl($url);*/

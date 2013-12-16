@@ -11,9 +11,9 @@
  * Dispatcher Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcherRequest extends KDispatcherRequest
+class ComKoowaDispatcherRequestJoomla extends KDispatcherRequest
 {
     /**
      * Returns the root URL from which this request is executed.
