@@ -56,7 +56,8 @@ class ComKoowaControllerModel extends KControllerModel
         }
 
         $config->append(array(
-            'toolbars'  => $toolbars
+            'toolbars'  => $toolbars,
+            'user'      => 'com:koowa.controller.user.joomla',
         ));
 
         parent::_initialize($config);
