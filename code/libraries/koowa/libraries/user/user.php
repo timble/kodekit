@@ -22,7 +22,7 @@ class KUser extends KUserAbstract implements KObjectInstantiable, KObjectSinglet
     /**
      * Force creation of a singleton
      *
-     * @param  KObjectConfig            $config	  A ObjectConfig object with configuration options
+     * @param  KObjectConfigInterface   $config	  A ObjectConfig object with configuration options
      * @param  KObjectManagerInterface	$manager  A ObjectInterface object
      * @return KDispatcherRequest
      */
@@ -187,7 +187,7 @@ class KUser extends KUserAbstract implements KObjectInstantiable, KObjectSinglet
      * Get an user attribute
      *
      * @param   string  $identifier Attribute identifier, eg .foo.bar
-     * @param   mixed   $value      Default value when the attribute doesn't exist
+     * @param   mixed   $default    Default value when the attribute doesn't exist
      * @return  mixed   The value
      */
     public function get($identifier, $default = null)
