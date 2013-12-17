@@ -124,6 +124,20 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
                 }
             }
 
+            //Send the cookies
+            foreach ($context->response->headers->getCookies() as $cookie)
+            {
+                setcookie(
+                    $cookie->name,
+                    $cookie->value,
+                    $cookie->expire,
+                    $cookie->path,
+                    $cookie->domain,
+                    $cookie->isSecure(),
+                    $cookie->isHttpOnly()
+                );
+            }
+
             return $context->response->getContent();
         }
 

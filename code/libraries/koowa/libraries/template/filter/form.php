@@ -44,7 +44,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
     {
         parent::__construct($config);
 
-        $this->_token_value = $config->token_value;
+        $this->_token_value = $this->getObject('user')->getSession()->getToken();
         $this->_token_name  = $config->token_name;
     }
 
@@ -151,17 +151,21 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
     protected function _addQueryParameters(&$text)
     {
         $matches = array();
-        if (preg_match_all('#<form.*action=".*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches)) {
-            foreach ($matches[1] as $key => $query) {
+        if (preg_match_all('#<form.*action=".*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches))
+        {
+            foreach ($matches[1] as $key => $query)
+            {
                 parse_str(str_replace('&amp;', '&', $query), $query);
 
                 $input = '';
-                foreach ($query as $name => $value) {
+                foreach ($query as $name => $value)
+                {
                     if (strpos($matches[2][$key], 'name="'.$name.'"') !== false) {
                         continue;
                     }
 
-                    if (is_array($value)) {
+                    if (is_array($value))
+                    {
                         foreach ($value as $k => $v)
                         {
                             if (!is_scalar($v)) {
@@ -170,7 +174,8 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
 
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'['.$k.']" value="'.$v.'" />';
                         }
-                    } else $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+                    }
+                    else $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
                 }
 
                 $text = str_replace($matches[2][$key], $input.$matches[2][$key], $text);
