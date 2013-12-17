@@ -21,4 +21,14 @@ interface ComKoowaUserInterface extends KUserInterface
      * @return string The username
      */
     public function getUsername();
+
+    /**
+     * Method to get a parameter value
+     *
+     * @param   string  $key      Parameter key
+     * @param   mixed   $default  Parameter default value
+     *
+     * @return  mixed  The value or the default if it did not exist
+     */
+    public function getParameter($key, $default = null);
 }

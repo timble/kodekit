@@ -32,7 +32,6 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
                 'authentic'  => !$user->guest,
                 'enabled'    => !$user->block,
                 'expired'    => !$user->activation,
-                'attributes' => $user->getParameters()->toArray(),
             )
         ));
 
@@ -47,5 +46,17 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
     public function getUsername()
     {
         return $this->getSession()->get('user.username');
+    }
+
+    /**
+     * Method to get a parameter value
+     *
+     * @param   string  $key      Parameter key
+     * @param   mixed   $default  Parameter default value
+     * @return  mixed  The value or the default if it did not exist
+     */
+    public function getParameter($key, $default = null)
+    {
+        return JFactory::getUser()->getParam($key, $default);
     }
 }

@@ -336,7 +336,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 {
                     // Get a date object based on the correct timezone.
                     $date = JFactory::getDate($config->value, 'UTC');
-                    $date->setTimezone(new DateTimeZone($this->getObject('user')->get('timezone', JFactory::getConfig()->get('offset'))));
+                    $date->setTimezone(new DateTimeZone($this->getObject('user')->getParameter('timezone', JFactory::getConfig()->get('offset'))));
 
                     // Transform the date string.
                     $config->value = $date->format('Y-m-d H:i:s', true, false);
