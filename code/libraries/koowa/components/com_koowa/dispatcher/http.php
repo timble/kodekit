@@ -41,7 +41,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'request'  => 'com:koowa.dispatcher.request.joomla',
             'user'     => 'com:koowa.dispatcher.user.joomla',
             'limit'    => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
