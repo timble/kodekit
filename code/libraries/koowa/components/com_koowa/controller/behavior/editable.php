@@ -30,7 +30,13 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
         $entity = $this->save($context);
 
         // Re-set the referrer
-        KRequest::set('cookie.referrer', (string) $referrer);
+        $cookie = $this->getObject('koowa:http.cookie', array(
+            'name'   => 'referrer',
+            'value'  => (string) $referrer,
+            'path'   => $this->_cookie_path
+        ));
+
+        $context->response->headers->addCookie($cookie);
 
         $identifier = $this->getMixer()->getIdentifier();
         $view       = KStringInflector::singularize($identifier->name);

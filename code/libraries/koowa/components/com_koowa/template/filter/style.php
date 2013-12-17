@@ -34,7 +34,7 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
      */
     protected function _renderStyle($style, $link, $attribs = array())
     {
-        if(KRequest::type() == 'AJAX') {
+        if($this->getObject('request')->isAjax()) {
             return parent::_renderStyle($style, $link, $attribs);
         }
 

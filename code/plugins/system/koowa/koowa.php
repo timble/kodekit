@@ -103,11 +103,6 @@ class PlgSystemKoowa extends JPlugin
             $manager->registerAlias('user'      , 'com:koowa.user');
             $manager->registerAlias('request'   , 'koowa:dispatcher.request');
 
-            //Setup the request, this is case insensitive since Windows servers allow folder names like /Administrator
-            if (JFactory::getApplication()->getName() !== 'site') {
-                KRequest::root(str_ireplace('/'.JFactory::getApplication()->getName(), '', KRequest::base()));
-            }
-
             $application = JFactory::getApplication()->getName();
             $manager->getObject('request')
                     ->registerApplication('site', '')

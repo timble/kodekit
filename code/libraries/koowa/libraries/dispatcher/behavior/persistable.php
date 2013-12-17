@@ -46,16 +46,15 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
      */
     protected function _beforeGet(KDispatcherContextInterface $context)
     {
-        if($this->getController()instanceof KControllerModellable)
+        if($this->getController() instanceof KControllerModellable)
         {
-            $model = $this->getController()->getModel();
-
-            // Built the session identifier based on the action
-            $identifier  = $model->getIdentifier();
-            $state       = KRequest::get('session.'.$identifier, 'raw', array());
+            $model      = $this->getController()->getModel();
+            $identifier = $model->getIdentifier();
+            $state      = (array) $context->user->get($identifier);
 
             //Append the data to the request object
             $query = $this->getRequest()->query;
+
             foreach ($state as $key => $value)
             {
                 if (!isset($query->$key)) {
@@ -92,11 +91,8 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
             // Built the session identifier based on the action
             $identifier = $model->getIdentifier();
 
-            //Prevent unused state information from being persisted
-            KRequest::set('session.'.$identifier, null);
-
-            //Set the state in the session
-            KRequest::set('session.'.$identifier, $vars);
+            //Set the state in the user session
+            $context->user->set($identifier, $vars);
         }
     }
 }

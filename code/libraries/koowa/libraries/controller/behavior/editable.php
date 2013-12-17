@@ -53,7 +53,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'cookie_path' => KRequest::base().'/'
+            'cookie_path' => $this->getObject('request')->getBaseUrl('site').'/'
         ));
 
         parent::_initialize($config);

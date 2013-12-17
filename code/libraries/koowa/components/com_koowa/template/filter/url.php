@@ -29,9 +29,9 @@ class ComKoowaTemplateFilterUrl extends KTemplateFilterUrl
     {
         $config->append(array(
             'aliases' => array(
-                'media://' => KRequest::root().'/media/',
-                'base://'  => KRequest::base().'/',
-                'root://'  => KRequest::root().'/',
+                'media://' => $this->getObject('request')->getBaseUrl('site').'/media/',
+                'base://'  => $this->getObject('request')->getBaseUrl().'/',
+                'root://'  => $this->getObject('request')->getBaseUrl('site').'/',
             ),
         ));
 

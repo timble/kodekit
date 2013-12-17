@@ -26,7 +26,7 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
      */
     protected function _renderScript($script, $link, $attribs = array())
     {
-        if(KRequest::type() == 'AJAX') {
+        if($this->getObject('request')->isAjax()) {
             return parent::_renderScript($script, $link, $attribs);
         }
 
