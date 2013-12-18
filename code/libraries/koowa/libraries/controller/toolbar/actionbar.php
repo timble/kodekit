@@ -185,8 +185,8 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         if($saveable)
         {
             $this->getCommand('title')->title = $title;
-            $this->addCommand('save');
             $this->addCommand('apply');
+            $this->addCommand('save');
         }
 
         $this->addCommand('cancel');
