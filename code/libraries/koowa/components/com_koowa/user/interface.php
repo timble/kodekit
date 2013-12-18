@@ -31,4 +31,14 @@ interface ComKoowaUserInterface extends KUserInterface
      * @return  mixed  The value or the default if it did not exist
      */
     public function getParameter($key, $default = null);
+
+    /**
+     * Method to check user authorisation
+     *
+     * @param   string  $action     The name of the action to check for permission.
+     * @param   string  $assetname  The name of the asset on which to perform the action.
+     *
+     * @return  boolean  True if authorised
+     */
+    public function authorise($action, $assetname = null);
 }

@@ -59,4 +59,9 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
     {
         return JFactory::getUser()->getParam($key, $default);
     }
+
+    public function authorise($action, $assetname = null)
+    {
+        return JFactory::getUser()->authorise($action, $assetname);
+    }
 }
