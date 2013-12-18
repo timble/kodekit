@@ -20,7 +20,7 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
      */
     public function canAdd()
     {
-        return (parent::canAdd() && JFactory::getUser()->authorise('core.create') === true);
+        return (parent::canAdd() && $this->getObject('user')->authorise('core.create') === true);
     }
 
     /**
@@ -28,7 +28,7 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
      */
     public function canEdit()
     {
-        return (parent::canEdit() && JFactory::getUser()->authorise('core.edit') === true);
+        return (parent::canEdit() && $this->getObject('user')->authorise('core.edit') === true);
     }
 
     /**
@@ -36,7 +36,7 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
      */
     public function canDelete()
     {
-        return (parent::canDelete() && JFactory::getUser()->authorise('core.delete') === true);
+        return (parent::canDelete() && $this->getObject('user')->authorise('core.delete') === true);
     }
 
     /**
@@ -47,7 +47,8 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
     public function canAdmin()
     {
         $component = $this->getIdentifier()->package;
-        return JFactory::getUser()->authorise('core.admin', 'com_'.$component) === true;
+
+        return $this->getObject('user')->authorise('core.admin', 'com_'.$component) === true;
     }
 
     /**
@@ -59,6 +60,6 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
     {
         $component = $this->getIdentifier()->package;
 
-        return JFactory::getUser()->authorise('core.manage', 'com_'.$component) === true;
+        return $this->getObject('user')->authorise('core.manage', 'com_'.$component) === true;
     }
 }
