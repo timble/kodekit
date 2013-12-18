@@ -253,9 +253,19 @@ abstract class KViewTemplate extends KViewAbstract
             $parts = $route;
         }
 
-        if (count($parts) && !isset($parts['layout']) && !empty($this->_layout))
+        //Check to see if there is component information in the route if not add it
+        if (!isset($parts['option'])) {
+            $parts['option'] = 'com_' . $this->getIdentifier()->package;
+        }
+
+        //Add the view information to the route if it's not set
+        if (!isset($parts['view'])) {
+            $parts['view'] = $this->getName();
+        }
+
+        if (!isset($parts['layout']) && !empty($this->_layout))
         {
-            if (!isset($parts['view']) || ($parts['view'] == $this->getName()))
+            if (($parts['option'] == $this->getIdentifier()->package) && ($parts['view'] == $this->getName()))
             {
                 if (is_array($route)) {
                     $route[] = 'layout=' . $this->getLayout();
