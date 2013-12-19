@@ -227,7 +227,14 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         }
 
         //If the slug needs to be unique and it already exists, make it unique
-        if($this->_unique && $table->count(array('slug' => $this->slug)))
+
+        $query = $this->getObject('koowa:database.query.select');
+        $query->where('slug = :slug')
+            ->where($table->getIdentityColumn().' <> :id')
+            ->bind(array('slug' => $this->slug))
+            ->bind(array('id'=> $this->id));
+
+        if($this->_unique && $table->count($query))
         {
             $length = $this->_length ? $this->_length : $table->getColumn('slug')->length;
 
