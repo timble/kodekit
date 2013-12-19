@@ -290,7 +290,7 @@ Koowa.Grid = Koowa.Class.extend({
 /**
  * Find all selected checkboxes' ids in the grid
  *
- * @param   {string|object|null} context   A DOM Element, Document, or jQuery to use as context
+ * @param   {string|object|null} [context]   A DOM Element, Document, or jQuery to use as context
  * @return  array           The items' ids
  */
 Koowa.Grid.getAllSelected = function(context) {
@@ -300,7 +300,7 @@ Koowa.Grid.getAllSelected = function(context) {
 /**
  * Get a query string for selected checkboxes
  *
- * @param   {string|object|null} context   A DOM Element, Document, or jQuery to use as context
+ * @param   {string|object|null} [context]   A DOM Element, Document, or jQuery to use as context
  * @return  array           The items' ids
  */
 Koowa.Grid.getIdQuery = function(context) {
