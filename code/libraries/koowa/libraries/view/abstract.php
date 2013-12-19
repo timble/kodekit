@@ -454,6 +454,12 @@ abstract class KViewAbstract extends KObject implements KViewInterface
             $parts = array_merge($states, $parts);
         }
 
+        // Push option and view to the beginning of the array for easy to read URLs
+        $parts = array_merge(array(
+            'option' => null,
+            'view'   => null
+        ), $parts);
+
         $route = JRoute::_('index.php?'.http_build_query($parts), $escape);
 
         //Add the host and the schema
