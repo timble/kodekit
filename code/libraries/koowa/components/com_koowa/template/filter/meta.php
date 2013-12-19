@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateFilterLink extends KTemplateFilterLink
+class ComKoowaTemplateFilterMeta extends KTemplateFilterMeta
 {
     /**
      * Find any virtual tags and render them
@@ -26,12 +26,12 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
     public function render(&$text)
     {
         $request = $this->getObject('request');
-        $links   = $this->_parseTags($text);
+        $meta    = $this->_parseTags($text);
 
         if($this->getTemplate()->getView()->getLayout() == 'koowa') {
-            $text = str_replace('<ktml:link>', $links, $text);
+            $text = str_replace('<ktml:meta>', $meta, $text);
         } else  {
-            $text = $links.$text;
+            $text = $meta.$text;
         }
     }
 
@@ -48,12 +48,8 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
 
         if($this->getTemplate()->getView()->getLayout() == 'joomla')
         {
-            $link      = isset($attribs['src']) ? $attribs['src'] : false;
-            $relType  = 'rel';
-            $relValue = $attribs['rel'];
-            unset($attribs['rel']);
-
-            JFactory::getDocument()->addHeadLink($link, $relValue, $relType, $attribs);
+            $meta = parent::_renderTag($attribs, $content);
+            JFactory::getDocument()->addCustomTag($meta);
         }
         else return parent::_renderTag($attribs, $content);
     }

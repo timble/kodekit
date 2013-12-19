@@ -24,6 +24,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     {
         parent::__construct($config);
 
+        //Render the page before sending the response
+        $this->registerCallback('before.send', array($this, 'renderPage'));
+
         //Force the controller to the information found in the request
         if($this->getRequest()->query->has('view')) {
             $this->_controller = $this->getRequest()->query->get('view', 'cmd');
@@ -41,8 +44,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'user'     => 'com:koowa.dispatcher.user.joomla',
-            'limit'    => array('default' => JFactory::getApplication()->getCfg('list_limit')),
+            'user'   => 'com:koowa.dispatcher.user.joomla',
+            'limit'  => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
 
         parent::_initialize($config);
@@ -73,6 +76,28 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     }
 
     /**
+     * Render the page
+     *
+     * @param KDispatcherContextInterface $context
+     */
+    public function renderPage(KDispatcherContextInterface $context)
+    {
+        $request   = $context->request;
+        $response  = $context->response;
+
+        //Render the page
+        if(!$response->isRedirect() && $response->getContentType() == 'text/html')
+        {
+            //Render the page
+            $config = array('response' => $response);
+
+            $this->getObject('com:koowa.controller.page', $config)
+                ->layout($request->query->get('tmpl', 'cmd') == 'koowa' ? 'koowa' : 'joomla')
+                ->render();
+        }
+    }
+
+    /**
      * Dispatch the controller and redirect
      *
      * This function divert the standard behavior and will redirect if no view information can be found in the request.
@@ -83,7 +108,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _actionDispatch(KDispatcherContextInterface $context)
     {
         //Redirect if no view information can be found in the request
-        if(!$this->getRequest()->query->has('view'))
+        if(!$context->request->query->has('view'))
         {
             $url = clone($context->request->getUrl());
             $url->query['view'] = $this->getController()->getView()->getName();
@@ -91,31 +116,24 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $this->redirect($url);
         }
 
-        return parent::_actionDispatch($context);
+        return  parent::_actionDispatch($context);
     }
 
     /**
-     * Push the controller data into the document
+     * Send the response
      *
-     * This function will pass back to Joomla if the following conditions are met :
-     *    - response content type is text/html
-     *    - response is not a redirect
-     *    - request is not an ajax request
-     *
-     * @param   KDispatcherContextInterface	$context A command context object
-     * @return  ComKoowaDispatcherHttp
+     * @param KDispatcherContextInterface $context	A dispatcher context object
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
-        //Only pass back to Joomla.
-        if(!$context->response->isRedirect() && $context->response->getContentType() == 'text/html' && !$context->request->isAjax())
+        $request   = $context->request;
+        $response  = $context->response;
+
+        if(!$response->isRedirect() && !$request->query->get('tmpl', 'cmd') == 'page')
         {
             $view = $this->getController()->getView();
 
-            //Send the mimetype
-            JFactory::getDocument()->setMimeEncoding($view->mimetype);
-
-            //Disabled the application menubar
+            //Request
             if($this->getIdentifier()->application === 'admin')
             {
                 if($this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
@@ -123,8 +141,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
                 }
             }
 
-            //Send the cookies
-            foreach ($context->response->headers->getCookies() as $cookie)
+            //Cookies
+            foreach ($response->headers->getCookies() as $cookie)
             {
                 setcookie(
                     $cookie->name,
@@ -137,7 +155,14 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
                 );
             }
 
-            return $context->response->getContent();
+            //Mimetype
+            JFactory::getDocument()->setMimeEncoding($view->mimetype);
+
+            //Content
+            echo $response->getContent();
+
+            //Stop processing and return to Joomla
+            return false;
         }
 
         return parent::_actionSend($context);
