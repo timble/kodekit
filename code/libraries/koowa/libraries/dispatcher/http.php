@@ -41,9 +41,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         //Sign GET request with a cookie token
         $this->registerCallback('after.get' , array($this, 'signResponse'));
-
-        //Send the request after dispatching
-        $this->registerCallback('after.dispatch', array($this, 'send'));
 	}
 
     /**
@@ -136,9 +133,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 	{
         //Execute the component method
         $method = strtolower($context->request->getMethod());
-        $result = $this->execute($method, $context);
+        $this->execute($method, $context);
 
-        return $result;
+        return parent::_actionDispatch($context);
 	}
 
     /**
