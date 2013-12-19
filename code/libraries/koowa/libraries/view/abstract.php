@@ -546,7 +546,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
      * name as the method name. If the method name is a setter method the setter will be called instead.
      *
-     * For example : $view->data(array('foo' => 'bar'))->title('name')->render().
+     * For example : $view->data(array('foo' => 'bar'))->title('name')->render()
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
