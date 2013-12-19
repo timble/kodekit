@@ -74,15 +74,15 @@ interface KControllerInterface
     /**
      * Set the user object
      *
-     * @param KControllerUserInterface $user A request object
-     * @return KControllerUser
+     * @param KUserInterface $user A request object
+     * @return KUserInterface
      */
-    public function setUser(KControllerUserInterface $user);
+    public function setUser(KUserInterface $user);
 
     /**
      * Get the user object
      *
-     * @return KControllerUserInterface
+     * @return KUserInterface
      */
     public function getUser();
 

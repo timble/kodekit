@@ -49,7 +49,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             'controller' => $this->getIdentifier()->package,
             'request'    => 'koowa:dispatcher.request',
             'response'   => 'koowa:dispatcher.response',
-            'user'       => 'koowa:dispatcher.user',
         ));
 
         parent::_initialize($config);
@@ -102,29 +101,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         }
 
         return $this->_response;
-    }
-
-    /**
-     * Get the user object
-     *
-     * @throws	UnexpectedValueException	If the user doesn't implement the KDispatcherUserInterface
-     * @return KDispatcherUserInterface
-     */
-    public function getUser()
-    {
-        if(!$this->_user instanceof KDispatcherUserInterface)
-        {
-            $this->_user = parent::getUser();
-
-            if(!$this->_user instanceof KDispatcherUserInterface)
-            {
-                throw new UnexpectedValueException(
-                    'User: '.get_class($this->_user).' does not implement KDispatcherUserInterface'
-                );
-            }
-        }
-
-        return $this->_user;
     }
 
     /**

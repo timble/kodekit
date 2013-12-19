@@ -56,7 +56,7 @@ abstract class ComKoowaControllerView extends KControllerView
 
         $config->append(array(
             'toolbars'  => $toolbars,
-            'user'      => 'com:koowa.controller.user.joomla',
+            'user'      => 'com:koowa.user',
         ));
 
         parent::_initialize($config);

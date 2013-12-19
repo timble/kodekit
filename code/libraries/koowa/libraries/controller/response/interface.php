@@ -43,15 +43,15 @@ interface KControllerResponseInterface extends KHttpResponseInterface
     /**
      * Set the user object
      *
-     * @param KControllerUserInterface $user A user object
+     * @param KUserInterface $user A user object
      * @return KControllerResponse
      */
-    public function setUser(KControllerUserInterface $user);
+    public function setUser(KUserInterface $user);
 
     /**
      * Get the user object
      *
-     * @return KControllerUserInterface
+     * @return KUserInterface
      */
     public function getUser();
 

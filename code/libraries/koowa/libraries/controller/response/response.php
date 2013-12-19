@@ -95,10 +95,10 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Set the user object
      *
-     * @param KControllerUserInterface $user A request object
+     * @param KUserInterface $user A request object
      * @return KControllerResponse
      */
-    public function setUser(KControllerUserInterface $user)
+    public function setUser(KUserInterface $user)
     {
         $this->_user = $user;
         return $this;
@@ -107,7 +107,7 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Get the user object
      *
-     * @return KControllerUserInterface
+     * @return KUserInterface
      */
     public function getUser()
     {

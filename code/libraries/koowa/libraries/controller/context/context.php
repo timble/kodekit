@@ -62,7 +62,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
     /**
      * Get the user object
      *
-     * @return KControllerUserInterface
+     * @return KUserInterface
      */
     public function getUser()
     {
@@ -72,10 +72,10 @@ class KControllerContext extends KCommand implements KControllerContextInterface
     /**
      * Set the user object
      *
-     * @param KControllerResponseInterface $response
+     * @param KUserInterface $response
      * @return KControllerContext
      */
-    public function setUser(KControllerUserInterface $user)
+    public function setUser(KUserInterface $user)
     {
         $this->set('user', $user);
         return $this;

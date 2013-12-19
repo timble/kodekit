@@ -114,7 +114,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             'dispatched'		=> false,
             'request'           => 'koowa:controller.request',
             'response'          => 'koowa:controller.response',
-            'user'              => 'koowa:controller.user',
+            'user'              => 'koowa:user',
             'behaviors'         => array('permissible'),
             'query'             => array()
         ));
@@ -305,10 +305,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Set the user object
      *
-     * @param KControllerUserInterface $user A request object
+     * @param KUserInterface $user A request object
      * @return KControllerAbstract
      */
-    public function setUser(KControllerUserInterface $user)
+    public function setUser(KUserInterface $user)
     {
         $this->_user = $user;
         return $this;
@@ -317,21 +317,21 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Get the user object
      *
-     * @throws UnexpectedValueException	If the user doesn't implement the KControllerUserInterface
-     * @return KControllerUserInterface
+     * @throws UnexpectedValueException	If the user doesn't implement the KUserInterface
+     * @return KUserInterface
      */
     public function getUser()
     {
-        if(!$this->_user instanceof KControllerUserInterface)
+        if(!$this->_user instanceof KUserInterface)
         {
             $this->_user = $this->getObject($this->_user, array(
                 'request' => $this->getRequest(),
             ));
 
-            if(!$this->_user instanceof KControllerUserInterface)
+            if(!$this->_user instanceof KUserInterface)
             {
                 throw new UnexpectedValueException(
-                    'User: '.get_class($this->_user).' does not implement KControllerUserInterface'
+                    'User: '.get_class($this->_user).' does not implement KUserInterface'
                 );
             }
         }

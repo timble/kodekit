@@ -372,7 +372,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         if($this->isLocked())
         {
-            $context->response->headers->set('Retry-After', $context->user->session->getLifetime());
+            $context->response->headers->set('Retry-After', $context->user->getSession()->getLifetime());
             throw new KControllerExceptionConflict('Resource is locked.');
         }
     }
@@ -391,7 +391,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         if($this->isLocked())
         {
-            $context->response->headers->set('Retry-After', $context->user->session->getLifetime());
+            $context->response->headers->set('Retry-After', $context->user->getSession()->getLifetime());
             throw new KControllerExceptionConflict('Resource is locked');
         }
     }

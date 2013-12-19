@@ -91,7 +91,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         else
         {
             //Check session token
-            if( $request->getToken() !== $user->session->getToken()) {
+            if( $request->getToken() !== $user->getSession()->getToken()) {
                 throw new KControllerExceptionForbidden('Invalid Session Token');
             }
         }
@@ -108,7 +108,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     {
         if(!$context->response->isError())
         {
-            $token = $context->user->session->getToken();
+            $token = $context->user->getSession()->getToken();
 
             $context->response->headers->addCookie($this->getObject('koowa:http.cookie', array(
                 'name'   => '_token',
