@@ -9,12 +9,12 @@
 
 
 /**
- * Resource Controller
+ * View Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerView extends KControllerView
+abstract class ComKoowaControllerView extends KControllerView
 {
     /**
      * Constructor
