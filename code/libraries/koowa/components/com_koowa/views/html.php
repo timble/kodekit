@@ -27,22 +27,4 @@ class ComKoowaViewHtml extends KViewHtml
         //Add alias filter for editor helper
         $this->getTemplate()->getFilter('function')->addFunction('@editor', '$this->renderHelper(\'editor.display\', ');
     }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KObjectConfig $config Configuration options.
-     * @return  void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        //Add the module template filter
-        $config->append(array(
-            'template_filters'	=> array('module'),
-        ));
-
-        parent::_initialize($config);
-    }
 }

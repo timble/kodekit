@@ -17,27 +17,72 @@
 class ComKoowaTemplateFilterScript extends KTemplateFilterScript
 {
     /**
-     * Render script information
+     * An array of MD5 hashes for loaded script strings
+     */
+    protected $_loaded = array();
+
+    /**
+     * Find any virtual tags and render them
      *
-     * @param string    $script  The script information
-     * @param boolean   $link    True, if the script information is a URL.
-     * @param array     $attribs Associative array of attributes
+     * This function will pre-pend the tags to the content
+     *
+     * @param string $text  The text to parse
+     */
+    public function render(&$text)
+    {
+        $request = $this->getObject('request');
+        $scripts = $this->_parseTags($text);
+
+        if($this->getTemplate()->getView()->getLayout() == 'koowa') {
+            $text = str_replace('<ktml:script>', $scripts, $text);
+        } else  {
+            $text = $scripts.$text;
+        }
+    }
+
+    /**
+     * Render the tag
+     *
+     * @param 	array	$attribs Associative array of attributes
+     * @param 	string	$content The tag content
      * @return string
      */
-    protected function _renderScript($script, $link, $attribs = array())
+    protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getObject('request')->isAjax()) {
-            return parent::_renderScript($script, $link, $attribs);
+        $request = $this->getObject('request');
+
+        if($this->getTemplate()->getView()->getLayout() == 'joomla')
+        {
+            $link      = isset($attribs['src']) ? $attribs['src'] : false;
+            $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
+
+            if(!$link)
+            {
+                $script = trim($content);
+                $hash   = md5($script.serialize($attribs));
+
+                if (!isset($this->_loaded[$hash]))
+                {
+                    JFactory::getDocument()->addScriptDeclaration($script);
+                    $this->_loaded[$hash] = true;
+                }
+            }
+            else
+            {
+                if($condition)
+                {
+                    $script = parent::_renderTag($attribs, $content);
+                    JFactory::getDocument()->addCustomTag($script);
+                }
+                else
+                {
+                    unset($attribs['src']);
+                    unset($attribs['condition']);
+
+                    JFactory::getDocument()->addScript($link, 'text/javascript');
+                }
+            }
         }
-
-        $document = JFactory::getDocument();
-
-        if($link) {
-            $document->addScript($script, 'text/javascript');
-        } else {
-            $document->addScriptDeclaration($script);
-        }
-
-        return '';
+        else return parent::_renderTag($attribs, $content);
     }
 }

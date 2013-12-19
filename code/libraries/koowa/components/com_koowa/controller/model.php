@@ -9,12 +9,12 @@
 
 
 /**
- * Service Controller
+ * Model Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerModel extends KControllerModel
+abstract class ComKoowaControllerModel extends KControllerModel
 {
 	/**
 	 * Constructor

@@ -1,76 +1,65 @@
 <?php
 /**
- * Koowa Framework - http://developer.joomlatools.com/koowa
+ * Nooku Framework - http://www.nooku.org
  *
  * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ * @link		git://git.assembla.com/nooku-framework.git for the canonical source repository
  */
 
 /**
  * Link Template Filter
  *
- * Filter to parse link tags
+ * Filter to parse link tags.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterLink extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterLink extends KTemplateFilterTag
 {
-	/**
-	 * Find any <link /> elements and render them
-	 *
-	 * @param string $text Block of text to parse
-	 * @return KTemplateFilterLink
-	 */
-	public function render(&$text)
-	{
-		//Parse the script information
-		$scripts = $this->_parseLinks($text);
+    /**
+     * Parse the text for script tags
+     *
+     * @param string $text  The text to parse
+     * @return string
+     */
+    protected function _parseTags(&$text)
+    {
+        $tags = '';
 
-		//Prepend the script information
-		$text = $scripts.$text;
+        $matches = array();
+        if(preg_match_all('#<link\ href="([^"]+)"(.*)\/>#iU', $text, $matches))
+        {
+            foreach(array_unique($matches[1]) as $key => $match)
+            {
+                //Set required attributes
+                $attribs = array(
+                    'href' => $match
+                );
 
-		return $this;
-	}
+                $attribs = array_merge($this->parseAttributes( $matches[2][$key]), $attribs);
 
-	/**
-	 * Parse the text for script tags
-	 *
-	 * @param string $text Block of text to parse
-	 * @return string
-	 */
-	protected function _parseLinks(&$text)
-	{
-		$scripts = '';
+                $tags .= $this->_renderTag($attribs);
+            }
 
-		$matches = array();
-		if(preg_match_all('#<link\ href="([^"]+)"(.*)\/>#iU', $text, $matches))
-		{
-			foreach(array_unique($matches[1]) as $key => $match)
-			{
-				$attribs = $this->parseAttributes( $matches[2][$key]);
-				$scripts .= $this->_renderScript($match, $attribs);
-			}
+            $text = str_replace($matches[0], '', $text);
+        }
 
-			$text = str_replace($matches[0], '', $text);
-		}
+        return $tags;
+    }
 
-		return $scripts;
-	}
+    /**
+     * Render the tag
+     *
+     * @param 	array	$attribs Associative array of attributes
+     * @param 	string	$content The tag content
+     * @return string
+     */
+    protected function _renderTag($attribs = array(), $content = null)
+    {
+        $attribs = $this->buildAttributes($attribs);
 
-	/**
-	 * Render script information
-	 *
-	 * @param string	$link       The script information
-	 * @param array		$attribs    Associative array of attributes
-	 * @return string
-	 */
-	protected function _renderLink($link, $attribs = array())
-	{
-		$attribs = $this->buildAttributes($attribs);
-
-		$html = '<link href="'.$link.'" '.$attribs.'/>'."\n";
-		return $html;
-	}
+        $html = '<link '.$attribs.'/>'."\n";
+        return $html;
+    }
 }

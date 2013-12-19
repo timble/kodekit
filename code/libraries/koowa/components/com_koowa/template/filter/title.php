@@ -9,12 +9,12 @@
 
 
 /**
- * Script Template Filter
+ * Title Template Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateFilterLink extends KTemplateFilterLink
+class ComKoowaTemplateFilterTitle extends KTemplateFilterTitle
 {
     /**
      * Find any virtual tags and render them
@@ -29,7 +29,7 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
         $links   = $this->_parseTags($text);
 
         if($this->getTemplate()->getView()->getLayout() == 'koowa') {
-            $text = str_replace('<ktml:link>', $links, $text);
+            $text = str_replace('<ktml:title>', $links, $text);
         } else  {
             $text = $links.$text;
         }
@@ -48,12 +48,11 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
 
         if($this->getTemplate()->getView()->getLayout() == 'joomla')
         {
-            $link      = isset($attribs['src']) ? $attribs['src'] : false;
-            $relType  = 'rel';
-            $relValue = $attribs['rel'];
-            unset($attribs['rel']);
+            if($this->_escape) {
+                $content = $this->getTemplate()->escape($content);
+            }
 
-            JFactory::getDocument()->addHeadLink($link, $relValue, $relType, $attribs);
+            JFactory::getDocument()->setTitle($content);
         }
         else return parent::_renderTag($attribs, $content);
     }

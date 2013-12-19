@@ -15,111 +15,104 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterScript extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterScript extends KTemplateFilterTag
 {
-	/**
-     * Initializes the options for the object
+    /**
+     * Parse the text for script tags
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
+     * This function will selectively filter all script tags that don't have a type attribute defined or where the
+     * type="text/javascript". If the element includes a data-inline attribute the element will not be excluded.
      *
-     * @param   KObjectConfig $config Configuration options
-     * @return  void
+     * @param string $text  The text to parse
+     * @return string
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _parseTags(&$text)
     {
-        $config->append(array(
-            'priority'   => self::PRIORITY_LOW,
-        ));
+        $tags = '';
 
-        parent::_initialize($config);
-    }
+        $matches = array();
+        // <script src="" />
+        if(preg_match_all('#<script(?!\s+data\-inline\s*)\s+src="([^"]+)"(.*)/>#siU', $text, $matches))
+        {
+            foreach(array_unique($matches[1]) as $key => $match)
+            {
+                //Set required attributes
+                $attribs = array(
+                    'src' => $match
+                );
 
-	/**
-	 * Find any <script src="" /> or <script></script> elements and render them
-	 *
-	 * <script inline></script> can be used for inline scripts
-	 *
-	 * @param string $text Block of text to parse
-	 * @return $this
-	 */
-	public function render(&$text)
-	{
-		//Parse the script information
-		$scripts = $this->_parseScripts($text);
+                $attribs = array_merge($this->parseAttributes( $matches[2][$key]), $attribs);
 
-		//Prepend the script information
-		$text = $scripts.$text;
-
-		return $this;
-	}
-
-	/**
-	 * Parse the text for script tags
-	 *
-	 * @param string $text Block of text to parse
-	 * @return string
-	 */
-	protected function _parseScripts(&$text)
-	{
-		$scripts = '';
-
-		$matches = array();
-		// <script src="" />
-		if(preg_match_all('#<script(?!\s+data-inline\s*)\s+src="([^"]+)"(.*)/>#siU', $text, $matches))
-		{
-			foreach(array_unique($matches[1]) as $key => $match)
-			{
-				$attribs = $this->parseAttributes( $matches[2][$key]);
-
-                if (!isset($attribs['type'])) {
+                if(!isset($attribs['type'])) {
                     $attribs['type'] = 'text/javascript';
-                }
+                };
 
                 if($attribs['type'] == 'text/javascript')
                 {
-                    $scripts .= $this->_renderScript($match, true, $attribs);
+                    $tags .= $this->_renderTag($attribs);
+                    $text = str_replace($matches[0][$key], '', $text);
                 }
-			}
+            }
+        }
 
-			$text = str_replace($matches[0], '', $text);
-		}
+        $matches = array();
+        // <script></script>
+        if(preg_match_all('#<script(?!\s+data\-inline\s*)(.*)>(.*)</script>#siU', $text, $matches))
+        {
+            foreach($matches[2] as $key => $match)
+            {
+                $attribs = $this->parseAttributes( $matches[1][$key]);
 
-		$matches = array();
-		// <script></script>
-		if(preg_match_all('#<script(?!\s+data-inline\s*)(.*)>(.*)</script>#siU', $text, $matches))
-		{
-			foreach($matches[2] as $key => $match)
-			{
-				$attribs = $this->parseAttributes( $matches[1][$key]);
-				$scripts .= $this->_renderScript($match, false, $attribs);
-			}
+                if(!isset($attribs['type'])) {
+                    $attribs['type'] = 'text/javascript';
+                };
 
-			$text = str_replace($matches[0], '', $text);
-		}
+                if($attribs['type'] == 'text/javascript')
+                {
+                    $tags .= $this->_renderTag($attribs, $match);
+                    $text = str_replace($matches[0][$key], '', $text);
+                }
+            }
+        }
 
-		return $scripts;
-	}
+        return $tags;
+    }
 
-	/**
-	 * Render script information
-	 *
-	 * @param string	$script  The script information
-	 * @param boolean	$link    True, if the script information is a URL.
-	 * @param array		$attribs Associative array of attributes
-	 * @return string
-	 */
-	protected function _renderScript($script, $link, $attribs = array())
-	{
-		$attribs = $this->buildAttributes($attribs);
+    /**
+     * Render the tag
+     *
+     * @param 	array	$attribs Associative array of attributes
+     * @param 	string	$content The tag content
+     * @return string
+     */
+    protected function _renderTag($attribs = array(), $content = null)
+    {
+        $link = isset($attribs['src']) ? $attribs['src'] : false;
+        $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
 
-		if(!$link)
-		{
-			$html  = '<script type="text/javascript" '.$attribs.'>'."\n";
-			$html .= trim($script);
-			$html .= '</script>'."\n";
-		}
-		else $html = '<script type="text/javascript" src="'.$script.'" '.$attribs.'></script>'."\n";
+        if(!$link)
+        {
+            $attribs = $this->buildAttributes($attribs);
 
-		return $html;
-	}
+            $html  = '<script '.$attribs.'>'."\n";
+            $html .= trim($content);
+            $html .= '</script>'."\n";
+        }
+        else
+        {
+            unset($attribs['src']);
+            unset($attribs['condition']);
+            $attribs = $this->buildAttributes($attribs);
+
+            if($condition)
+            {
+                $html  = '<!--['.$condition.']>';
+                $html .= '<script src="'.$link.'" '.$attribs.' /></script>'."\n";
+                $html .= '<![endif]-->';
+            }
+            else $html  = '<script src="'.$link.'" '.$attribs.' /></script>'."\n";
+        }
+
+        return $html;
+    }
 }

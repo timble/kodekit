@@ -22,38 +22,67 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
     protected $_loaded = array();
 
     /**
-     * Render style information
+     * Find any virtual tags and render them
      *
-     * First checks if the style has been loaded already
-     * Note that for links the check is done in JDocument so no need to repeat here.
+     * This function will pre-pend the tags to the content
      *
-     * @param string    $style  The style information
-     * @param boolean   $link   True, if the style information is a URL
-     * @param array     $attribs Associative array of attributes
+     * @param string $text  The text to parse
+     */
+    public function render(&$text)
+    {
+        $request = $this->getObject('request');
+        $styles = $this->_parseTags($text);
+
+        if($this->getTemplate()->getView()->getLayout() == 'koowa') {
+            $text = str_replace('<ktml:style>', $styles, $text);
+        } else  {
+            $text = $styles.$text;
+        }
+    }
+
+    /**
+     * Render the tag
+     *
+     * @param 	array	$attribs Associative array of attributes
+     * @param 	string	$content The tag content
      * @return string
      */
-    protected function _renderStyle($style, $link, $attribs = array())
+    protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getObject('request')->isAjax()) {
-            return parent::_renderStyle($style, $link, $attribs);
-        }
+        $request = $this->getObject('request');
 
-        $document = JFactory::getDocument();
-
-        if($link) {
-            $document->addStyleSheet($style, 'text/css', null, $attribs);
-        }
-        else
+        if($this->getTemplate()->getView()->getLayout() == 'joomla')
         {
-            $hash = md5($style.serialize($attribs));
+            $link      = isset($attribs['src']) ? $attribs['src'] : false;
+            $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
 
-            if (!isset($this->_loaded[$hash])) {
-                $document->addStyleDeclaration($style);
+            if(!$link)
+            {
+                $style = parent::_renderTag($attribs, $content);
+                $hash  = md5($style.serialize($attribs));
 
-                $this->_loaded[$hash] = true;
+                if (!isset($this->_loaded[$hash]))
+                {
+                    JFactory::getDocument()->addStyleDeclaration($style);
+                    $this->_loaded[$hash] = true;
+                }
+            }
+            else
+            {
+                if($condition)
+                {
+                    $style = parent::_renderTag($attribs, $content);
+                    JFactory::getDocument()->addCustomTag($style);
+                }
+                else
+                {
+                    unset($attribs['src']);
+                    unset($attribs['condition']);
+
+                    JFactory::getDocument()->addStyleSheet($link, 'text/css', null, $attribs);
+                }
             }
         }
-
-        return '';
+        else return parent::_renderTag($attribs, $content);
     }
 }

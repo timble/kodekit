@@ -454,6 +454,12 @@ abstract class KViewAbstract extends KObject implements KViewInterface
             $parts = array_merge($states, $parts);
         }
 
+        // Push option and view to the beginning of the array for easy to read URLs
+        $parts = array_merge(array(
+            'option' => null,
+            'view'   => null
+        ), $parts);
+
         $route = JRoute::_('index.php?'.http_build_query($parts), $escape);
 
         //Add the host and the schema
@@ -540,7 +546,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      * Supports a simple form of Fluent Interfaces. Allows you to assign variables to the view by using the variable
      * name as the method name. If the method name is a setter method the setter will be called instead.
      *
-     * For example : $view->data(array('foo' => 'bar'))->title('name')->render().
+     * For example : $view->data(array('foo' => 'bar'))->title('name')->render()
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
@@ -550,8 +556,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      */
     public function __call($method, $args)
     {
-        //If one argument is passed we assume a setter method is being called
-        if (count($args) == 1)
+        // If method isn't mixed and only one argument is passed we assume a setter method is being called
+        if (!isset($this->_mixed_methods[$method]) && (count($args) == 1))
         {
             if (!method_exists($this, 'set' . ucfirst($method)))
             {
