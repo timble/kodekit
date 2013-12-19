@@ -550,8 +550,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface
      */
     public function __call($method, $args)
     {
-        //If one argument is passed we assume a setter method is being called
-        if (count($args) == 1)
+        // If method isn't mixed and only one argument is passed we assume a setter method is being called
+        if (!isset($this->_mixed_methods[$method]) && (count($args) == 1))
         {
             if (!method_exists($this, 'set' . ucfirst($method)))
             {
