@@ -15,99 +15,85 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterStyle extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterStyle extends KTemplateFilterTag
 {
-	/**
-     * Initializes the options for the object
+    /**
+     * Parse the text for style tags
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KObjectConfig $config Configuration options
-     * @return  void
+     * @param string $text  The text to parse
+     * @return 	string
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _parseTags(&$text)
     {
-        $config->append(array(
-            'priority'   => self::PRIORITY_LOW,
-        ));
+        $tags = '';
 
-        parent::_initialize($config);
+        $matches = array();
+        if(preg_match_all('#<style\s+src="([^"]+)"(.*)\/>#iU', $text, $matches))
+        {
+            foreach(array_unique($matches[1]) as $key => $match)
+            {
+                //Set required attributes
+                $attribs = array(
+                    'src' => $match
+                );
+
+                $attribs = array_merge($this->parseAttributes( $matches[2][$key]), $attribs);
+                $tags .= $this->_renderTag($attribs);
+            }
+
+            $text = str_replace($matches[0], '', $text);
+        }
+
+        $matches = array();
+        if(preg_match_all('#<style(.*)>(.*)<\/style>#siU', $text, $matches))
+        {
+            foreach($matches[2] as $key => $match)
+            {
+                $attribs = $this->parseAttributes( $matches[1][$key]);
+                $tags .= $this->_renderTag($attribs, $match);
+            }
+
+            $text = str_replace($matches[0], '', $text);
+        }
+
+        return $tags;
     }
 
-	/**
-	 * Find any <style src"" /> or <style></style> elements and render them
-	 *
-     * @param string $text Block of text to parse
-     * @return $this
-     */
-	public function render(&$text)
-	{
-		//Parse the script information
-		$styles = $this->_parseStyles($text);
-
-		//Prepend the script information
-		$text = $styles.$text;
-
-		return $this;
-	}
-
-	/**
-	 * Parse the text for style tags
-	 *
-	 * @param 	string 	$text Block of text to parse
-	 * @return 	string
-	 */
-	protected function _parseStyles(&$text)
-	{
-		$styles = '';
-
-		$matches = array();
-		if(preg_match_all('#<style\s*src="([^"]+)"(.*)\/>#iU', $text, $matches))
-		{
-			foreach(array_unique($matches[1]) as $key => $match)
-			{
-				$attribs = $this->parseAttributes( $matches[2][$key]);
-				$styles .= $this->_renderStyle($match, true, $attribs);
-			}
-
-			$text = str_replace($matches[0], '', $text);
-		}
-
-		$matches = array();
-		if(preg_match_all('#<style(.*)>(.*)<\/style>#siU', $text, $matches))
-		{
-			foreach($matches[2] as $key => $match)
-			{
-				$attribs = $this->parseAttributes( $matches[1][$key]);
-				$styles .= $this->_renderStyle($match, false, $attribs);
-			}
-
-			$text = str_replace($matches[0], '', $text);
-		}
-
-		return $styles;
-	}
-
-	/**
-	 * Render style information
-	 *
-     * @param string	$style   The script information
-     * @param boolean	$link    True, if the script information is a URL.
-     * @param array		$attribs Associative array of attributes
+    /**
+     * Render the tag
+     *
+     * @param 	array	$attribs Associative array of attributes
+     * @param 	string	$content The tag content
      * @return string
      */
-	protected function _renderStyle($style, $link, $attribs = array())
-	{
-		$attribs = $this->buildAttributes($attribs);
+    protected function _renderTag($attribs = array(), $content = null)
+    {
+        $link = isset($attribs['src']) ? $attribs['src'] : false;
+        $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
 
-		if(!$link)
-		{
-			$html  = '<style type="text/css" '.$attribs.'>'."\n";
-			$html .= trim($style['data']);
-			$html .= '</style>'."\n";
-		}
-		else $html = '<link type="text/css" rel="stylesheet" href="'.$style.'" '.$attribs.' />'."\n";
+        if(!$link)
+        {
+            $attribs = $this->buildAttributes($attribs);
 
-		return $html;
-	}
+            $html  = '<style type="text/css" '.$attribs.'>'."\n";
+            $html .= trim($content);
+            $html .= '</style>'."\n";
+        }
+        else
+        {
+            unset($attribs['src']);
+            unset($attribs['condition']);
+            $attribs = $this->buildAttributes($attribs);
+
+            if($condition)
+            {
+                $html  = '<!--['.$condition.']>';
+                $html .= '<link type="text/css" rel="stylesheet" href="'.$link.'" '.$attribs.' />'."\n";
+                $html .= '<![endif]-->';
+            }
+            else $html  = '<link type="text/css" rel="stylesheet" href="'.$link.'" '.$attribs.' />'."\n";
+        }
+
+        return $html;
+    }
 }
