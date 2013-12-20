@@ -26,7 +26,7 @@ class ModKoowaHtml extends KViewHtml
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-        	'template_filters' => array('chrome'),
+        	'template_filters' => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
             'data'			   => array(
                 'styles' => array()
             )
@@ -46,11 +46,12 @@ class ModKoowaHtml extends KViewHtml
 	}
 
     /**
-     * Renders and echo's the views output
+     * Return the views output
      *
-     * @return ModKoowaHtml
+     * @param KViewContext	$context A view context object
+     * @return string  The output of the view
      */
-    public function display()
+    protected function _actionRender(KViewContext $context)
     {
 		//Load the language files.
 		if(isset($this->module->module)) {
@@ -69,6 +70,7 @@ class ModKoowaHtml extends KViewHtml
 
                 $layout = (string) $identifier;
             }
+
             $this->getTemplate()->load($layout.'.'.$format);
 		}
 		else $this->getTemplate()->setContent($this->module->content);
