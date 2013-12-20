@@ -50,9 +50,10 @@ class KTemplateFilterScript extends KTemplateFilterTag
                 if($attribs['type'] == 'text/javascript')
                 {
                     $tags .= $this->_renderTag($attribs);
-                    $text = str_replace($matches[0][$key], '', $text);
                 }
             }
+
+            $text = str_replace($matches[0], '', $text);
         }
 
         $matches = array();
