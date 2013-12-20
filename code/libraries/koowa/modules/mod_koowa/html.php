@@ -93,6 +93,8 @@ class ModKoowaHtml extends KViewHtml
     {
         if($property == 'module')
         {
+            $value = clone $value;
+
             if(is_string($value->params)) {
                 $value->params = $this->_parseParams($value->params);
             }
