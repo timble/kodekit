@@ -46,7 +46,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 	 * @param 	KDispatcherContextInterface $context The active command context
 	 * @return 	void
 	 */
-	protected function _afterDispatch(KDispatcherContextInterface $context)
+	protected function _beforeSend(KDispatcherContextInterface $context)
 	{
         if(!$context->request->isAjax() && $context->response->isSuccess()) {
             $context->response->setRedirect($context->request->getReferrer());
