@@ -51,12 +51,54 @@ class PlgSystemKoowa extends JPlugin
             JToolbarHelper::title('');
         }
 
+        //Bugfix: Set offset according to user's timezone
+        if (!JFactory::getUser()->guest)
+        {
+            if ($offset = JFactory::getUser()->getParam('timezone')) {
+                JFactory::getConfig()->set('offset', $offset);
+            }
+        }
+
         //Set exception handler
         if (JDEBUG) {
             set_exception_handler(array($this, 'exceptionHandler'));
         }
 
-		// Koowa: setup
+		//Bootstrap the Koowa Framework
+        $this->bootstrap();
+
+		parent::__construct($subject, $config);
+	}
+
+    /**
+     * Adds application response time and memory usage to Chrome Inspector with ChromeLogger extension
+     *
+     * See: https://chrome.google.com/webstore/detail/chrome-logger/noaneddfkdjfnfdakjjmocngnfkfehhd
+     */
+    public function __destruct()
+    {
+        if (JDEBUG && !headers_sent())
+        {
+            $buffer = JProfiler::getInstance('Application')->getBuffer();
+            if ($buffer)
+            {
+                $data = strip_tags(end($buffer));
+                $row = array(array($data), null, 'info');
+
+                $header = array(
+                    'version' => '4.1.0',
+                    'columns' => array('log', 'backtrace', 'type'),
+                    'rows'    => array($row)
+                );
+
+                header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));
+            }
+        }
+    }
+
+    public function bootstrap()
+    {
+        // Koowa: setup
         $path = JPATH_LIBRARIES.'/koowa/libraries/koowa.php';
         if (file_exists($path))
         {
@@ -105,48 +147,14 @@ class PlgSystemKoowa extends JPlugin
 
             $application = JFactory::getApplication()->getName();
             $manager->getObject('request')
-                    ->registerApplication('site', '')
-                    ->registerApplication('admin', '/administrator')
-                    ->setApplication($application === 'administrator' ? 'admin' : $application);
+                ->registerApplication('site', '')
+                ->registerApplication('admin', '/administrator')
+                ->setApplication($application === 'administrator' ? 'admin' : $application);
+
+            $manager->getObject('com:koowa.object.bootstrapper.application')->bootstrap();
 
             //Load the koowa plugins
             JPluginHelper::importPlugin('koowa', null, true);
-
-            //Bugfix: Set offset according to user's timezone
-            if (!JFactory::getUser()->guest)
-            {
-                if ($offset = JFactory::getUser()->getParam('timezone')) {
-                    JFactory::getConfig()->set('offset', $offset);
-                }
-            }
-        }
-
-		parent::__construct($subject, $config);
-	}
-
-    /**
-     * Adds application response time and memory usage to Chrome Inspector with ChromeLogger extension
-     *
-     * See: https://chrome.google.com/webstore/detail/chrome-logger/noaneddfkdjfnfdakjjmocngnfkfehhd
-     */
-    public function __destruct()
-    {
-        if (JDEBUG && !headers_sent())
-        {
-            $buffer = JProfiler::getInstance('Application')->getBuffer();
-            if ($buffer)
-            {
-                $data = strip_tags(end($buffer));
-                $row = array(array($data), null, 'info');
-
-                $header = array(
-                    'version' => '4.1.0',
-                    'columns' => array('log', 'backtrace', 'type'),
-                    'rows'    => array($row)
-                );
-
-                header('X-ChromeLogger-Data: ' . base64_encode(utf8_encode(json_encode($header))));
-            }
         }
     }
 
