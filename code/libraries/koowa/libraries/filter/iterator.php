@@ -86,4 +86,20 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     {
         return $this->getDelegate()->getErrors();
     }
+
+    /**
+     * Set the decorated filter
+     *
+     * @param   KFilterInterface $delegate The decorated filter
+     * @return  KFilterIterator
+     * @throws  InvalidArgumentException If the delegate is not a filter
+     */
+    public function setDelegate($delegate)
+    {
+        if (!$delegate instanceof KFilterInterface) {
+            throw new InvalidArgumentException('Filter: '.get_class($delegate).' does not implement KFilterInterface');
+        }
+
+        return parent::setDelegate($delegate);
+    }
 }
