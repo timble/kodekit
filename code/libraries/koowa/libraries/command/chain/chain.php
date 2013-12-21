@@ -132,7 +132,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      */
     public function run($name, KCommandInterface $command, $condition = null)
     {
-        if ($this->_enabled)
+        if ($this->isEnabled())
         {
             $this->__stack->push(clone $this);
 
@@ -210,5 +210,15 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
         }
 
         return parent::getPriority($invoker);
+    }
+
+    /**
+     * Check of the command chain is enabled
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->_enabled;
     }
 }

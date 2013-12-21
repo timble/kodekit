@@ -103,4 +103,11 @@ interface KCommandChainInterface
      * @throws InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
      */
     public function getPriority(KObjectHandlable $invoker);
+
+    /**
+     * Check of the command chain is enabled
+     *
+     * @return bool
+     */
+    public function isEnabled();
 }
