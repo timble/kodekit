@@ -11,7 +11,7 @@
  * Event Profiler Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Nooku\Library\Event
+ * @package Koowa\Library\Event
  */
 interface KEventProfilerInterface extends KEventDispatcherInterface
 {

@@ -11,7 +11,7 @@
  * Event Profiler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Nooku\Library\Event
+ * @package Koowa\Library\Event
  */
 class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
 {
