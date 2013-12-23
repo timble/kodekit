@@ -142,6 +142,23 @@ interface KObjectManagerInterface
     public function getAliases($identifier);
 
     /**
+     * Register an object locator
+     *
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectLocatorInterface
+     * @return KObjectManagerInterface
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    public function registerLocator($identifier, array $config = array());
+
+    /**
+     * Get a registered object locator based on his type
+     *
+     * @param string $type The locator type
+     * @return KObjectLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     */
+    public function getLocator($type);
+
+    /**
      * Get the class loader
      *
      * @return KClassLoaderInterface
@@ -164,4 +181,20 @@ interface KObjectManagerInterface
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function isRegistered($identifier);
+
+    /**
+     * Check if the object is a multiton
+     *
+     * @param mixed $identifier An object that implements the ObjectInterface, an ObjectIdentifier or valid identifier string
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isMultiton($identifier);
+
+    /**
+     * Check if the object is a singleton
+     *
+     * @param mixed $identifier An object that implements the ObjectInterface, an ObjectIdentifier or valid identifier string
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isSingleton($identifier);
 }

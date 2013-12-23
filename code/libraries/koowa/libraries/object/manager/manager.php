@@ -15,26 +15,19 @@
  */
 class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObjectSingleton
 {
-	/**
-     * The identifier registry
+    /**
+     * The object identifier
      *
-     * @var array
+     * @var KObjectIdentifier
      */
-    protected $_identifiers = null;
+    private $__object_identifier;
 
     /**
-	 * The identifier aliases
-	 *
-	 * @var	array
-	 */
-	protected $_aliases = array();
-
-	/**
-	 * The objects
-	 *
-	 * @var	array
-	 */
-	protected $_objects = null;
+     * The object registry
+     *
+     * @var KObjectRegistry
+     */
+    protected $_registry;
 
 	/**
 	 * The mixins
@@ -82,26 +75,23 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         //Set the class loader
         $this->setClassLoader($config['class_loader']);
 
-        // Create the object container
-        $this->_objects = new ArrayObject();
-
-        // Create the identifier registry
-        $this->_identifiers = new KObjectIdentifierRegistry();
-
-	    if ($config->cache_prefix) {
-            $this->_identifiers->setCachePrefix($config->cache_prefix);
+        //Create the object registry
+        if($config->cache_enabled)
+        {
+            $this->_registry = new KObjectRegistryCache();
+            $this->_registry->setCachePrefix($config->cache_prefix);
         }
+        else $this->_registry = new KObjectRegistry();
 
-	    if ($config->cache_enabled) {
-            $this->_identifiers->enableCache($config->cache_enabled);
-        }
+        //Create the object identifier
+        $this->__object_identifier = $this->getIdentifier('object.manager');
 
 	    //Auto-load the koowa adapter
         KObjectIdentifier::addLocator(new KObjectLocatorKoowa($config));
 
         //Register self and set a 'manager' alias
-        $this->setObject($this->getIdentifier(), $this);
-        $this->registerAlias('koowa:object.manager', 'manager');
+        $this->setObject('object.manager', $this);
+        $this->registerAlias('object.manager', 'manager');
 	}
 
     /**
@@ -170,31 +160,28 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     {
         if(isset($identifier))
         {
-            if(!is_string($identifier))
+            if (!is_string($identifier))
             {
-                if($identifier instanceof KObjectInterface) {
+                if ($identifier instanceof KObjectInterface) {
                     $identifier = $identifier->getIdentifier();
                 }
             }
 
-            //Recursively resolve the real identifier if an alias was passed
-            while(array_key_exists((string) $identifier, $this->_aliases)) {
-                $identifier = $this->_aliases[(string) $identifier];
-            }
-
-            if(!$this->_identifiers->offsetExists((string) $identifier))
+            //Get the identifier object
+            if (!$result = $this->_registry->find($identifier))
             {
-                if(is_string($identifier)) {
-                    $identifier = new KObjectIdentifier($identifier);
+                if (is_string($identifier)) {
+                    $result = new KObjectIdentifier($identifier, $this);
+                } else {
+                    $result = $identifier;
                 }
 
-                $this->_identifiers->offsetSet((string) $identifier, $identifier);
+                $this->_registry->set($result);
             }
-            else $identifier = $this->_identifiers->offsetGet((string)$identifier);
         }
-        else $identifier = $this->getIdentifier('koowa:object.manager');
+        else $result = $this->__object_identifier;
 
-        return $identifier;
+        return $result;
     }
 
     /**
@@ -215,7 +202,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	{
 		$identifier = $this->getIdentifier($identifier);
 
-		if(!$this->_objects->offsetExists((string) $identifier))
+        if (!$this->isRegistered($identifier))
 		{
 		    //Instantiate the identifier
 			$instance = $this->_instantiate($identifier, $config);
@@ -231,7 +218,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
                 $this->setObject($identifier, $instance);
             }
 		}
-		else $instance = $this->_objects->offsetGet((string) $identifier);
+        else $instance = $this->_registry->get($identifier);
 
 		return $instance;
 	}
@@ -246,11 +233,46 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	 */
 	public function setObject($identifier, $object)
 	{
-		$objIdentifier = $this->getIdentifier($identifier);
-		$strIdentifier = (string) $objIdentifier;
-
-		$this->_objects->offsetSet($strIdentifier, $object);
+        $identifier = $this->getIdentifier($identifier);
+        $this->_registry->set($identifier, $object);
 	}
+
+    /**
+     * Set the configuration options for an identifier
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param array	$config     An associative array of configuration options
+     * @return KObjectManager
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    public function setConfig($identifier, array $config)
+    {
+        $objIdentifier = $this->getIdentifier($identifier);
+        $strIdentifier = (string) $objIdentifier;
+
+        if(isset($this->_configs[$strIdentifier])) {
+            $this->_configs[$strIdentifier] =  array_merge_recursive($this->_configs[$strIdentifier], $config);
+        } else {
+            $this->_configs[$strIdentifier] = $config;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the configuration options for an identifier
+     *
+     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @return array An associative array of configuration options
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    public function getConfig($identifier)
+    {
+        $objIdentifier = $this->getIdentifier($identifier);
+        $strIdentifier = (string) $objIdentifier;
+
+        return isset($this->_configs[$strIdentifier])  ? $this->_configs[$strIdentifier] : array();
+    }
 
     /**
      * Register a mixin for an identifier
@@ -283,7 +305,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         //If the identifier already exists mixin the mixin
         if ($this->isRegistered($identifier))
         {
-            $mixer = $this->_objects->offsetGet((string)$identifier);
+            $mixer = $this->_registry->get($identifier);
             $this->_mixin($identifier, $mixer);
         }
 
@@ -336,7 +358,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         //If the identifier already exists decorate it
         if ($this->isRegistered($identifier))
         {
-            $delegate = $this->_objects->offsetGet((string)$identifier);
+            $delegate = $this->_registry->get($identifier);
             $this->_decorate($identifier, $delegate);
         }
 
@@ -358,6 +380,52 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         return isset($this->_decorators[$strIdentifier])  ? $this->_decorators[$strIdentifier] : array();
     }
 
+    /**
+     * Register an object locator
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectLocatorInterface
+     * @return KObjectManager
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    public function registerLocator($identifier, array $config = array())
+    {
+        if(!$identifier instanceof KObjectLocatorInterface)
+        {
+            $locator = $this->getObject($identifier, $config);
+
+            if(!$locator instanceof KObjectLocatorInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Locator: '.get_class($locator).' does not implement KObjectLocatorInterface'
+                );
+            }
+        }
+        else $locator = $identifier;
+
+        //Add the locator
+        KObjectIdentifier::addLocator($locator);
+
+        return $this;
+    }
+
+    /**
+     * Get a registered object locator based on his type
+     *
+     * @param string $type The locator type
+     * @return KObjectLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     */
+    public function getLocator($type)
+    {
+        $result = null;
+
+        $locators = KObjectIdentifier::getLocators();
+        if(isset($locators[$type])) {
+            $result = $locators[$type];
+        }
+
+        return $result;
+    }
+
 	/**
 	 * Set an alias for an identifier
 	 *
@@ -368,12 +436,10 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	 */
 	public function registerAlias($identifier, $alias)
 	{
-		//Don't register an alias if alias and identifier are the same
-        if($alias != $identifier)
-        {
-            $identifier = $this->getIdentifier($identifier);
-            $this->_aliases[$alias] = $identifier;
-        }
+        $identifier = $this->getIdentifier($identifier);
+        $alias      = trim((string) $alias);
+
+        $this->_registry->alias($alias, $identifier);
 
         return $this;
 	}
@@ -387,8 +453,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      */
     public function getAliases($identifier)
     {
-        $identifier = $this->getIdentifier($identifier);
-        return array_search((string) $identifier, $this->_aliases);
+        return array_search((string) $identifier, $this->_registry->getAliases());
     }
 
     /**
@@ -413,43 +478,6 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         return $this;
     }
 
-	/**
-	 * Set the configuration options for an identifier
-	 *
-	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @param array	$config     An associative array of configuration options
-     * @return KObjectManager
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-	 */
-	public function setConfig($identifier, array $config)
-	{
-		$objIdentifier = $this->getIdentifier($identifier);
-		$strIdentifier = (string) $objIdentifier;
-
-		if(isset($this->_configs[$strIdentifier])) {
-		    $this->_configs[$strIdentifier] =  array_merge_recursive($this->_configs[$strIdentifier], $config);
-		} else {
-		    $this->_configs[$strIdentifier] = $config;
-		}
-
-        return $this;
-	}
-
-	/**
-	 * Get the configuration options for an identifier
-	 *
-	 * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @return array An associative array of configuration options
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-	 */
-	public function getConfig($identifier)
-	{
-		$objIdentifier = $this->getIdentifier($identifier);
-		$strIdentifier = (string) $objIdentifier;
-
-	    return isset($this->_configs[$strIdentifier])  ? $this->_configs[$strIdentifier] : array();
-	}
-
     /**
      * Check if the object instance exists based on the identifier
      *
@@ -461,10 +489,49 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     {
         try
         {
-            $objIdentifier = $this->getIdentifier($identifier);
-            $strIdentifier = (string) $objIdentifier;
-            $result = (bool) $this->_objects->offsetExists($strIdentifier);
+            $object = $this->_registry->get($this->getIdentifier($identifier));
 
+            //If the object implements ObjectInterface we have registered an object
+            if($object instanceof KObjectInterface) {
+                $result = true;
+            } else {
+                $result = false;
+            }
+
+        } catch (KObjectExceptionInvalidIdentifier $e) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if the object is a multiton
+     *
+     * @param mixed $identifier An object that implements the ObjectInterface, an ObjectIdentifier or valid identifier string
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isMultiton($identifier)
+    {
+        try {
+            $result = $this->getIdentifier($identifier)->isMultiton();
+        } catch (KObjectExceptionInvalidIdentifier $e) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if the object is a singleton
+     *
+     * @param mixed $identifier An object that implements the ObjectInterface, an ObjectIdentifier or valid identifier string
+     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
+     */
+    public function isSingleton($identifier)
+    {
+        try {
+            $result = $this->getIdentifier($identifier)->isSingleton();
         } catch (KObjectExceptionInvalidIdentifier $e) {
             $result = false;
         }
@@ -585,9 +652,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
                 );
             }
         }
-        else {
-            throw new KObjectExceptionNotFound('Cannot load object from identifier: '. $identifier);
-        }
+        else throw new KObjectExceptionNotFound('Cannot load object from identifier: '. $identifier);
 
         return $result;
     }
