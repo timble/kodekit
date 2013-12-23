@@ -30,6 +30,13 @@ interface KDispatcherPermissionInterface
     public function canDispatch();
 
     /**
+     * Permission handler for exception actions
+     *
+     * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
+     */
+    public function canException();
+
+    /**
      * Permission handler for redirect actions
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.

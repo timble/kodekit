@@ -33,6 +33,9 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
 		//Set the controller
 		$this->_controller = $config->controller;
+
+        //Register the default exception handler
+        $this->addEventListener('onException', array($this, 'exception'), KEvent::PRIORITY_LOW);
 	}
 
     /**
@@ -237,6 +240,45 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      */
     protected function _actionDispatch(KDispatcherContextInterface $context)
     {
+        //Send the response
+        $this->send($context);
+    }
+
+    /**
+     * Render an exception
+     *
+     * @throws InvalidArgumentException If the action parameter is not an instance of Exception
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     */
+    protected function _actionException(KDispatcherContextInterface $context)
+    {
+        //Check an exception was passed
+        if(!isset($context->param) && !$context->param instanceof KException)
+        {
+            throw new InvalidArgumentException(
+                "Action parameter 'exception' [KException] is required"
+            );
+        }
+
+        //Get the exception object
+        if($context->param instanceof KEventException) {
+            $exception = $context->param->getException();
+        } else {
+            $exception = $context->param;
+        }
+
+        //If the error code does not correspond to a status message, use 500
+        $code = $exception->getCode();
+        if(!isset(KHttpResponse::$status_messages[$code])) {
+            $code = '500';
+        }
+
+        //Get the error message
+        $message = KHttpResponse::$status_messages[$code];
+
+        //Set the response status
+        $context->response->setStatus($code , $message);
+
         //Send the response
         $this->send($context);
     }
