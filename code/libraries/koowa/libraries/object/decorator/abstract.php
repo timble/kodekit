@@ -66,7 +66,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
     /**
      * Set the decorated object
      *
-     * @return  KObjectDecoratorAbstract
+     * @return object
      */
     public function getDelegate()
     {
