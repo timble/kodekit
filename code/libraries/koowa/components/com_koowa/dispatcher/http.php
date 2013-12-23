@@ -28,7 +28,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         $this->registerCallback('before.send', array($this, 'renderPage'));
 
         //Render an exception before sending the response
-        $this->registerCallback('before.exception', array($this, 'renderException'));
+        $this->registerCallback('before.fail', array($this, 'renderError'));
 
         //Force the controller to the information found in the request
         if($this->getRequest()->query->has('view')) {
@@ -107,7 +107,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      * @throws InvalidArgumentException If the action parameter is not an instance of Exception
      * @param KDispatcherContextInterface $context	A dispatcher context object
      */
-    public function renderException(KDispatcherContextInterface $context)
+    public function renderError(KDispatcherContextInterface $context)
     {
         $request   = $context->request;
         $response  = $context->response;
@@ -127,26 +127,29 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $exception = $context->param;
         }
 
-        //Render the exception if debug mode is enabled or if we are returning json
-        if(JDEBUG || $response->getContentType() == 'application/json')
-        {
-            $config = array(
-                'request'  => $request,
-                'response' => $response
-            );
-
-            $this->getObject('com:koowa.controller.exception',  $config)
-                ->render($exception);
-
-            //Do not pass response back to Joomla
-            $context->request->query->set('tmpl', 'koowa');
-        }
-        else
+        if(!JDEBUG && $request->getFormat() == 'html')
         {
             if (version_compare(JVERSION, '3.0', '>=')) {
                 JErrorPage::render($exception);
             } else {
                 JError::raiseError($exception->getCode(), $exception->getMessage());
+            }
+        }
+        else
+        {
+            //Render the exception if debug mode is enabled or if we are returning json
+            if(in_array($request->getFormat(), array('json', 'html')))
+            {
+                $config = array(
+                    'request'  => $request,
+                    'response' => $response
+                );
+
+                $this->getObject('com:koowa.controller.error',  $config)
+                    ->render($exception);
+
+                //Do not pass response back to Joomla
+                $context->request->query->set('tmpl', 'koowa');
             }
         }
     }

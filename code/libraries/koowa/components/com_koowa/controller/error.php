@@ -13,10 +13,10 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaControllerException extends KControllerView
+class ComKoowaControllerError extends KControllerView
 {
     /**
-     * Render an exception
+     * Render an error
      *
      * @throws InvalidArgumentException If the action parameter is not an instance of KException
      * @param KControllerContextInterface $context	A controller context object

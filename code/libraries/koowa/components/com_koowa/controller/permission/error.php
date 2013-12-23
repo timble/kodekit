@@ -8,12 +8,12 @@
  */
 
 /**
- * Exception Controller Permission
+ * Error Controller Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class ComKoowaControllerPermissionException extends KControllerPermissionAbstract
+class ComKoowaControllerPermissionError extends KControllerPermissionAbstract
 {
     public function canRender()
     {

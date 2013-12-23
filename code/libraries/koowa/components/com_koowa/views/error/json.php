@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ViewExceptionJson extends KViewJson
+class ViewErrorJson extends KViewJson
 {
     protected function _actionRender(KViewContext $context)
     {
