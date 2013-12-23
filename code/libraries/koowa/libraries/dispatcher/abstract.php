@@ -35,7 +35,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 		$this->_controller = $config->controller;
 
         //Register the default exception handler
-        $this->addEventListener('onException', array($this, 'exception'), KEvent::PRIORITY_LOW);
+        $this->addEventListener('onException', array($this, 'fail'), KEvent::PRIORITY_LOW);
 	}
 
     /**
@@ -250,7 +250,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      * @throws InvalidArgumentException If the action parameter is not an instance of Exception
      * @param KDispatcherContextInterface $context	A dispatcher context object
      */
-    protected function _actionException(KDispatcherContextInterface $context)
+    protected function _actionFail(KDispatcherContextInterface $context)
     {
         //Check an exception was passed
         if(!isset($context->param) && !$context->param instanceof KException)
@@ -291,6 +291,12 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     protected function _actionSend(KDispatcherContextInterface $context)
     {
         $context->response->send();
-        exit(0);
+
+        $status = 0;
+        if(!$context->response->isSuccess) {
+            $status = (int) $context->response->getStatusCode();
+        }
+
+        exit($status);
     }
 }

@@ -40,7 +40,7 @@ abstract class KDispatcherPermissionAbstract extends KObjectMixinAbstract implem
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function canException()
+    public function canFail()
     {
         return true;
     }
