@@ -8,7 +8,7 @@
  */
 
 /**
- * Koowa Loader Adapter
+ * Koowa Class Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader

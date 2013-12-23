@@ -8,7 +8,7 @@
  */
 
 /**
- * Component Loader Adapter
+ * Component Class Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader

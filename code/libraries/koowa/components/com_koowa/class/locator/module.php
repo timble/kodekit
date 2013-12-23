@@ -8,37 +8,37 @@
  */
 
 /**
- * Plugin Loader Adapter
+ * Module Class Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Component\Koowa
  */
-class KClassLocatorPlugin extends KClassLocatorAbstract
+class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 {
 	/**
 	 * The adapter type
 	 *
 	 * @var string
 	 */
-	protected $_type = 'plg';
+	protected $_type = 'mod';
 
 	/**
 	 * The class prefix
 	 *
 	 * @var string
 	 */
-	protected $_prefix = 'Plg';
+	protected $_prefix = 'Mod';
 
 	/**
 	 * Get the path based on a class name
 	 *
-	 * @param  string $classname The class name
-     * @param  string $basepath  The base path
+	 * @param  string $classname    The class name
+     * @param  string $basepath     The base path
 	 * @return string|boolean		Returns the path on success FALSE on failure
 	 */
 	public function locate($classname, $basepath = null)
 	{
-        $path = false;
+		$path = false;
 
         if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
         {
@@ -58,11 +58,19 @@ class KClassLocatorPlugin extends KClassLocatorAbstract
             array_shift($parts);
             $package = array_shift($parts);
 
-			if(count($parts)) {
+		    $module = 'mod_'.$package;
+			$file 	   = array_pop($parts);
+
+			if(count($parts))
+			{
+				if($parts[0] === 'view') {
+                    $parts[0] = KStringInflector::pluralize($parts[0]);
+			    }
+
 				$path = implode('/', $parts);
-			} else {
-				$path = $package;
+				$path = $path.'/'.$file;
 			}
+			else $path = $file;
 
             //Find the basepath
             if(!empty($basepath) && empty($this->_basepaths[$package])) {
@@ -75,8 +83,8 @@ class KClassLocatorPlugin extends KClassLocatorAbstract
                 $basepath = $this->_basepath;
             }
 
-		    $path = $basepath.'/plugins/'.$package.'/'.$path.'.php';
-	    }
+			$path = $basepath.'/modules/'.$module.'/'.$path.'.php';
+		}
 
 		return $path;
 

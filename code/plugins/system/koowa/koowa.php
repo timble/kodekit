@@ -107,14 +107,6 @@ class PlgSystemKoowa extends JPlugin
             $manager = KObjectManager::getInstance();
             $loader  = $manager->getClassLoader();
 
-            $loader->registerLocator(new KClassLocatorModule(array(
-                'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
-            )));
-
-            $loader->registerLocator(new KClassLocatorPlugin(array(
-                'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
-            )));
-
             $loader->registerLocator(new KClassLocatorComponent(array(
                 'basepaths' => array(
                     '*'          => JPATH_BASE,
@@ -124,9 +116,17 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.module'));
-            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.plugin'));
+            $loader->registerLocator(new ComKoowaClassLocatorModule(array(
+                'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
+            )));
+
+            $loader->registerLocator(new ComKoowaClassLocatorPlugin(array(
+                'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
+            )));
+
             KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.component'));
+            KObjectIdentifier::addLocator($manager->getObject('com:koowa.object.locator.module'));
+            KObjectIdentifier::addLocator($manager->getObject('com:koowa.object.locator.plugin'));
 
             KObjectIdentifier::registerApplication('site' , JPATH_SITE);
             KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
