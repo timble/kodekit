@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-interface KEventProfilerInterface extends KEventDispatcherInterface
+interface KEventProfilerInterface
 {
     /**
      * Disables the profiler.

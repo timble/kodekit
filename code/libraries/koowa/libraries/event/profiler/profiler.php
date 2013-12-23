@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
+class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface, KEventDispatcherInterface
 {
    /**
     * The start time
