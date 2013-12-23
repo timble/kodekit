@@ -96,9 +96,6 @@ class ComKoowaControllerException extends KControllerView
         //Render the exception
         $result = parent::_actionRender($context);
 
-        //Set the response status
-        $context->response->setStatus($code , $message);
-
         return $result;
     }
 }
