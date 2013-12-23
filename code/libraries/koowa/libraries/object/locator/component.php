@@ -78,7 +78,7 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
 
         //Check if the class exists
         $result = false;
-        if (!$this->getObject('koowa:class.loader')->loadClass('Com'.$package.$class, $identifier->basepath))
+        if (!$this->getObject('koowa:class.loader')->load('Com'.$package.$class, $identifier->basepath))
         {
             //Use the fallbacks
             if($fallback)
