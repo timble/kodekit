@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEventDispatcher extends KEventDispatcherAbstract implements KObjectInstantiable, KObjectSingleton
+class KEventDispatcher extends KEventDispatcherException implements KObjectInstantiable, KObjectSingleton
 {
     /**
      * Force creation of a singleton
@@ -31,7 +31,7 @@ class KEventDispatcher extends KEventDispatcherAbstract implements KObjectInstan
             $manager->setObject($config->object_identifier, $instance);
 
             //Add the object alias to allow easy access to the singleton
-            $manager->registerAlias('event.dispatcher', $config->object_identifier);
+            $manager->registerAlias($config->object_identifier, 'event.dispatcher');
         }
 
         return $manager->getObject('event.dispatcher');

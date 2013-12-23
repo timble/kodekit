@@ -101,7 +101,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 
         //Register self and set a 'manager' alias
         $this->setObject($this->getIdentifier(), $this);
-        $this->registerAlias('manager', 'koowa:object.manager');
+        $this->registerAlias('koowa:object.manager', 'manager');
 	}
 
     /**
@@ -361,12 +361,12 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	/**
 	 * Set an alias for an identifier
 	 *
-	 * @param string $alias     The alias
 	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param string $alias     The identifier alias
      * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
 	 */
-	public function registerAlias($alias, $identifier)
+	public function registerAlias($identifier, $alias)
 	{
 		//Don't register an alias if alias and identifier are the same
         if($alias != $identifier)
@@ -558,7 +558,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         $result = null;
 
         //Load the class manually using the basepath
-        if($this->getClassLoader()->loadClass($identifier->classname, $identifier->basepath))
+        if($this->getClassLoader()->load($identifier->classname, $identifier->basepath))
         {
             if (!array_key_exists('KObjectInterface', class_implements($identifier->classname, false)))
             {

@@ -89,7 +89,7 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
 
         //Aliases
         foreach ($this->_aliases as $alias => $identifier) {
-            $manager->registerAlias($alias, $identifier);
+            $manager->registerAlias($identifier, $alias);
         }
 
         //Configs

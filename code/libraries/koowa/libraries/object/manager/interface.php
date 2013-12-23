@@ -123,14 +123,14 @@ interface KObjectManagerInterface
     public function getDecorators($identifier);
 
     /**
-     * Register an alias for an identifier
+     * Set an alias for an identifier
      *
-     * @param string $alias      The alias
-     * @param mixed  $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return KObjectManagerInterface
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param string $alias     The identifier alias
+     * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function registerAlias($alias, $identifier);
+    public function registerAlias($identifier, $alias);
 
     /**
      * Get the aliases for an identifier

@@ -32,7 +32,7 @@ class KUserSession extends KUserSessionAbstract implements KObjectInstantiable, 
             $instance  = new $classname($config);
             $manager->setObject($config->object_identifier, $instance);
 
-            $manager->registerAlias('user.session', $config->object_identifier);
+            $manager->registerAlias($config->object_identifier, 'user.session');
         }
 
         return $manager->getObject('user.session');
