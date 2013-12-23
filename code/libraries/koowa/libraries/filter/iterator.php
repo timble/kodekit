@@ -102,4 +102,14 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
 
         return parent::setDelegate($delegate);
     }
+
+    /**
+     * Set the decorated object
+     *
+     * @return KFilterInterface
+     */
+    public function getDelegate()
+    {
+        return parent::getDelegate();
+    }
 }
