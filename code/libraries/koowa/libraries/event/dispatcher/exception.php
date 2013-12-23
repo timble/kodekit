@@ -8,17 +8,17 @@
  */
 
 /**
- * Exception Dispatcher
+ * Exception Event Dispatcher
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Exception
  */
-class KExceptionDispatcherAbstract extends KObject
+class KEventDispatcherException extends KEventDispatcherAbstract
 {
     /**
-     * Error modes
+     * Error levels
      */
-    const SYSTEM      = 0;
+    const SYSTEM      = null;
     const DEVELOPMENT = -1; //E_ALL   | E_STRICT  | ~E_DEPRECATED
     const PRODUCTION  = 7;  //E_ERROR | E_WARNING | E_PARSE
 
@@ -30,13 +30,6 @@ class KExceptionDispatcherAbstract extends KObject
     protected $_error_level;
 
     /**
-     * Event dispatcher object
-     *
-     * @var KEventDispatcherInterface
-     */
-    protected $_event_dispatcher;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
@@ -45,15 +38,12 @@ class KExceptionDispatcherAbstract extends KObject
     {
         parent::__construct($config);
 
-        //Set the event dispatcher
-        if (is_null($config->event_dispatcher)) {
-            throw new InvalidArgumentException('event_dispatcher [KEventDispatcherInterface] config option is required');
-        }
-
-        $this->_event_dispatcher = $config->event_dispatcher;
-
         //Set the error level
         $this->setErrorLevel($config->error_level);
+
+        if($config->catch_exceptions) {
+            $this->catchExceptions();
+        }
 
         if($config->catch_user_errors) {
             $this->catchUserErrors();
@@ -61,10 +51,6 @@ class KExceptionDispatcherAbstract extends KObject
 
         if($config->catch_fatal_errors) {
             $this->catchFatalErrors();
-        }
-
-        if($config->catch_exceptions) {
-            $this->catchExceptions();
         }
     }
 
@@ -79,10 +65,9 @@ class KExceptionDispatcherAbstract extends KObject
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'event_dispatcher'   => 'event.dispatcher',
             'catch_exceptions'   => true,
-            'catch_user_errors'  => true,
-            'catch_fatal_errors' => true,
+            'catch_user_errors'  => false,
+            'catch_fatal_errors' => false,
             'error_level'        => self::SYSTEM,
         ));
 
@@ -96,19 +81,18 @@ class KExceptionDispatcherAbstract extends KObject
      * exception instead.
      *
      * @link    http://www.php.net/manual/en/function.set-exception-handler.php#88082
-     * @param   object|array   An array, a ObjectConfig or a Event object
-     * @return  KExceptionEvent
+     * @param   object|array   $event An array, a KObjectConfig or a KEventException object
+     * @return  KEventException
      */
     public function dispatchException($event = array())
     {
         try
         {
-            //Make sure we have an event object
-            if (!$event instanceof KExceptionEvent) {
-                $event = new KExceptionEvent($event);
+            if (!$event instanceof KEventException) {
+                $event = new KEventException($event);
             }
 
-            $this->getEventDispatcher()->dispatchEvent('onException', $event);
+            parent::dispatch('onException', $event);
         }
         catch (Exception $e)
         {
@@ -184,40 +168,6 @@ class KExceptionDispatcherAbstract extends KObject
     }
 
     /**
-     * Get the event dispatcher
-     *
-     * @return  KEventDispatcherInterface
-     */
-    public function getEventDispatcher()
-    {
-        if(!$this->_event_dispatcher instanceof KEventDispatcherInterface)
-        {
-            $this->_event_dispatcher = $this->getObject($this->_event_dispatcher);
-
-            if(!$this->_event_dispatcher instanceof KEventDispatcherInterface)
-            {
-                throw new \UnexpectedValueException(
-                    'EventDispatcher: '.get_class($this->_event_dispatcher).' does not implement EventDispatcherInterface'
-                );
-            }
-        }
-
-        return $this->_event_dispatcher;
-    }
-
-    /**
-     * Set the chain of command object
-     *
-     * @param   KEventDispatcherInterface  $dispatcher An event dispatcher object
-     * @return  Object  The mixer object
-     */
-    public function setEventDispatcher(KEventDispatcherInterface $dispatcher)
-    {
-        $this->_event_dispatcher = $dispatcher;
-        return $this;
-    }
-
-    /**
      * Exception Handler
      *
      * @param $exception
@@ -239,7 +189,7 @@ class KExceptionDispatcherAbstract extends KObject
      * @param array  $context    An array that points to the active symbol table at the point the error occurred
      * @return bool
      */
-    public function handleUserError($level, $message, $file, $line, $context)
+    public function handleUserError($level, $message, $file, $line, $context = null)
     {
         $error_level = $this->getErrorLevel();
 
@@ -247,11 +197,8 @@ class KExceptionDispatcherAbstract extends KObject
         {
             if (error_reporting() & $level && $error_level & $level)
             {
-                $exception = new KExceptionError($message, 500, $level, $file, $line);
-                $this->dispatchException(array(
-                    'exception' => $exception,
-                    'context'   => $context
-                ));
+                $exception = new KExceptionError($message, KHttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line);
+                $this->dispatchException(array('exception' => $exception, 'context'   => $context));
             }
 
             //Let the normal error flow continue
@@ -275,7 +222,7 @@ class KExceptionDispatcherAbstract extends KObject
 
         if (error_reporting() & $level && $error_level & $level)
         {
-            $exception = new KExceptionError($error['message'], 500, $level, $error['file'], $error['line']);
+            $exception = new KExceptionError($error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']);
             $this->dispatchException(array('exception' => $exception));
         }
 

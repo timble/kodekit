@@ -17,15 +17,14 @@
  */
 class KEvent extends KObjectConfig implements KEventInterface
 {
-
- 	/**
+    /**
      * The propagation state of the event
      *
      * @var boolean
      */
     protected $_propagate = true;
 
- 	/**
+    /**
      * The event name
      *
      * @var array
@@ -40,23 +39,26 @@ class KEvent extends KObjectConfig implements KEventInterface
     protected $_target;
 
     /**
-     * Constructor.
+     * Dispatcher of the event
      *
-     * @param	string 			$name   The event name
-     * @param   array|KObjectConfig 	$config An associative array of configuration settings or a KObjectConfig instance.
+     * @var KEventDispatcherInterface
      */
-    public function __construct( $name, $config = array() )
+    protected $_dispatcher;
+
+    /**
+     * Set an event property
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function set($name, $value)
     {
-    	$this->_data = array();
-        if (is_array($config) || $config instanceof Traversable)
-        {
-            foreach ($config as $key => $value) {
-                $this->__set($key, $value);
-            }
+        if (is_array($value)) {
+            $this->_data[$name] = new KObjectConfig($value);
+        } else {
+            $this->_data[$name] = $value;
         }
-        
-        //Set the command name
-        $this->_name = $name;
     }
 
     /**
@@ -67,6 +69,18 @@ class KEvent extends KObjectConfig implements KEventInterface
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Set the event name
+     *
+     * @param string $name  The event name
+     * @return KEvent
+     */
+    public function setName($name)
+    {
+        $this->_name = $name;
+        return $this;
     }
 
     /**
@@ -82,13 +96,35 @@ class KEvent extends KObjectConfig implements KEventInterface
     /**
      * Set the event target
      *
-     * @param KObjectInterface $target The event target
-     * @return KEventInterface
+     * @param object $target The event target
+     * @return KEvent
      */
     public function setTarget(KObjectInterface $target)
     {
         $this->_target = $target;
         return $this;
+    }
+
+    /**
+     * Stores the EventDispatcher that dispatches this Event
+     *
+     * @param KEventDispatcherInterface $dispatcher
+     * @return KEvent
+     */
+    public function setDispatcher(KEventDispatcherInterface $dispatcher)
+    {
+        $this->_dispatcher = $dispatcher;
+        return $this;
+    }
+
+    /**
+     * Returns the EventDispatcher that dispatches this Event
+     *
+     * @return KEventDispatcherInterface
+     */
+    public function getDispatcher()
+    {
+        return $this->_dispatcher;
     }
 
     /**
@@ -104,9 +140,8 @@ class KEvent extends KObjectConfig implements KEventInterface
     /**
      * Stops the propagation of the event to further event listeners.
      *
-     * If multiple event listeners are connected to the same event, no
-     * further event listener will be triggered once any trigger calls
-     * stopPropagation().
+     * If multiple event listeners are connected to the same event, no further event listener will be triggered once
+     * any trigger calls stopPropagation().
      *
      * @return KEvent
      */

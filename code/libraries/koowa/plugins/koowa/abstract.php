@@ -45,7 +45,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Plugin\Koowa
  */
-abstract class PlgKoowaAbstract extends KEventListener
+abstract class PlgKoowaAbstract extends KEventSubscriberAbstract
 {
 	/**
 	 * A JRegistry object holding the parameters for the plugin
@@ -100,8 +100,8 @@ abstract class PlgKoowaAbstract extends KEventListener
 		//Inject the object manager
 		$config['object_manager'] = KObjectManager::getInstance();
 
-		//Inject the dispatcher
-		$config['dispatcher'] = KObjectManager::getInstance()->getObject('event.dispatcher');
+		//Self subscribe the plugin to the koowa event dispatcher
+        KObjectManager::getInstance()->getObject('event.dispatcher')->addSubscriber($this);
 
 		parent::__construct(new KObjectConfig($config));
 	}

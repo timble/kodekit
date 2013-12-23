@@ -137,7 +137,7 @@ class KEventMixin extends KObjectMixinAbstract
      */
     public function addEventListener($event, $listener, $priority = KEventInterface::PRIORITY_NORMAL)
     {
-        $this->getEventDispatcher()->addEventListener($event, $listener, $priority);
+        $this->getEventDispatcher()->addListener($event, $listener, $priority);
         return $this->getMixer();
     }
 
@@ -150,7 +150,7 @@ class KEventMixin extends KObjectMixinAbstract
      */
     public function removeEventListener($event, $listener)
     {
-        $this->getEventDispatcher()->removeEventListener($event, $listener);
+        $this->getEventDispatcher()->removeListener($event, $listener);
         return $this->getMixer();
     }
 
@@ -167,12 +167,12 @@ class KEventMixin extends KObjectMixinAbstract
      */
     public function addEventSubscriber($subscriber, $config = array(), $priority = null)
     {
-        if (!($subscriber instanceof KEventListenerInterface)) {
+        if (!($subscriber instanceof KEventSubscriberInterface)) {
             $subscriber = $this->getEventSubscriber($subscriber, $config);
         }
 
         $priority = is_int($priority) ? $priority : $subscriber->getPriority();
-        $this->getEventDispatcher()->addEventSubscriber($subscriber, $priority);
+        $this->getEventDispatcher()->addSubscriber($subscriber, $priority);
 
         return $this;
     }
@@ -186,11 +186,11 @@ class KEventMixin extends KObjectMixinAbstract
      */
     public function removeEventSubscriber($subscriber)
     {
-        if (!($subscriber instanceof KEventListenerInterface)) {
+        if (!($subscriber instanceof KEventSubscriberInterface)) {
             $subscriber = $this->getEventSubscriber($subscriber);
         }
 
-        $this->getEventDispatcher()->removeEventSubscriber($subscriber);
+        $this->getEventDispatcher()->removeSubscriber($subscriber);
         return $this->getMixer();
     }
 
@@ -201,7 +201,7 @@ class KEventMixin extends KObjectMixinAbstract
      *                          or valid identifier string
      * @param  array  $config   An optional associative array of configuration settings
      * @throws UnexpectedValueException    If the subscriber is not implementing the EventSubscriberInterface
-     * @return KEventListenerInterface
+     * @return KEventSubscriberInterface
      */
     public function getEventSubscriber($subscriber, $config = array())
     {
@@ -224,10 +224,10 @@ class KEventMixin extends KObjectMixinAbstract
             $subscriber = $this->getObject($identifier, $config);
 
             //Check the event subscriber interface
-            if (!($subscriber instanceof KEventListenerInterface))
+            if (!($subscriber instanceof KEventSubscriberInterface))
             {
                 throw new UnexpectedValueException(
-                    "Event Subscriber $identifier does not implement KEventListenerInterface"
+                    "Event Subscriber $identifier does not implement KEventSubscriberInterface"
                 );
             }
         }

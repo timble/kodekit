@@ -1,4 +1,4 @@
-<?php
+0<?php
 /**
  * Koowa Framework - http://developer.joomlatools.com/koowa
  *
@@ -13,14 +13,14 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Exception
  */
-class KExceptionEvent extends KEvent implements KException
+class KEventException extends KEvent implements KException
 {
     /**
      * Set the exception
      *
      * @param \Exception $exception
      */
-    public function setException(\Exception $exception)
+    public function setException(Exception $exception)
     {
         $this->exception = $exception;
     }

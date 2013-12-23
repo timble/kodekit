@@ -112,11 +112,11 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
         $event = new KEvent($event_specific, $context);
         $event->setTarget($context->getSubject());
 
-        $this->getEventDispatcher()->dispatchEvent($event_specific, $event);
+        $this->getEventDispatcher()->dispatch($event_specific, $event);
 
         // Ensure event can be propagated and event name is different
         if ($event->canPropagate() && $event_specific != $event_generic) {
-            $this->getEventDispatcher()->dispatchEvent($event_generic, $event);
+            $this->getEventDispatcher()->dispatch($event_generic, $event);
         }
     }
 

@@ -97,7 +97,7 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
      * @param   object|array  $event An array, a Library\ObjectConfig or a Library\Event object
      * @return  KEventProfiler
      */
-    public function dispatchEvent($name, $event = array())
+    public function dispatch($name, $event = array())
     {
         if($this->isEnabled())
         {
@@ -109,35 +109,37 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
             );
         }
 
-        return $this->getDelegate()->dispatchEvent($name, $event);
+        return $this->getDelegate()->dispatch($name, $event);
     }
 
     /**
      * Add an event listener
      *
-     * @param  string            $name The event name
-     * @param  KObjectHandlable  $listener An object implementing the KObjectHandlable interface
-     * @param  integer           $priority The event priority, usually between 1 (high priority) and 5 (lowest),
-     *                                     default is 3. If no priority is set, the command priority will be used
-     *                                     instead.
-     * @return KEventDispatcher
+     * @param  string    $name       The event name
+     * @param  callable  $listener   The listener
+     * @param  integer   $priority   The event priority, usually between 1 (high priority) and 5 (lowest),
+     *                               default is 3. If no priority is set, the command priority will be used
+     *                               instead.
+     * @throws InvalidArgumentException If the listener is not a callable
+     * @return KEventProfiler
      */
-    public function addEventListener($name, KObjectHandlable $listener, $priority = KEventInterface::PRIORITY_NORMAL)
+    public function addListener($name, $listener, $priority = KEvent::PRIORITY_NORMAL)
     {
-        $this->getDelegate()->addEventListener($name, $listener, $priority);
+        $this->getDelegate()->addListener($name, $listener, $priority);
         return $this;
     }
 
     /**
      * Remove an event listener
      *
-     * @param   string           $name      The event name
-     * @param   KObjectHandlable $listener  An object implementing the KObjectHandlable interface
-     * @return  KEventDispatcherInterface
+     * @param   string    $name      The event name
+     * @param   callable  $listener  The listener
+     * @throws  InvalidArgumentException If the listener is not a callable
+     * @return  KEventProfiler
      */
-    public function removeEventListener($name, KObjectHandlable $listener)
+    public function removeListener($name, $listener)
     {
-        $this->getDelegate()->removeEventListener($name, $listener);
+        $this->getDelegate()->removeListener($name, $listener);
         return $this;
     }
 
@@ -164,29 +166,79 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
     }
 
     /**
+     * Add an event subscriber
+     *
+     * @param  KEventSubscriberInterface $subscriber The event subscriber to add
+     * @param  integer   $priority   The event priority, usually between 1 (high priority) and 5 (lowest),
+     *                               default is 3. If no priority is set, the command priority will be used
+     *                               instead.
+     * @return  KEventProfiler
+     */
+    public function addSubscriber(KEventSubscriberInterface $subscriber, $priority = null)
+    {
+        $this->getDelegate()->addSubscriber($subscriber, $priority);
+        return $this;
+    }
+
+    /**
+     * Remove an event subscriber
+     *
+     * @param  KEventSubscriberInterface $subscriber The event subscriber to remove
+     * @return KEventProfiler
+     */
+    public function removeSubscriber(KEventSubscriberInterface $subscriber)
+    {
+        $this->getDelegate()->removeSubscriber($subscriber);
+        return $this;
+    }
+
+    /**
+     * Gets the event subscribers
+     *
+     * @return array    An associative array of event subscribers, keys are the subscriber handles
+     */
+    public function getSubscribers()
+    {
+        return $this->getDelegate()->getSubscribers();
+    }
+
+    /**
+     * Check if the handler is connected to a dispatcher
+     *
+     * @param  KEventSubscriberInterface $subscriber  The event subscriber
+     * @return boolean TRUE if the handler is already connected to the dispatcher. FALSE otherwise.
+     */
+    public function isSubscribed(KEventSubscriberInterface $subscriber)
+    {
+        return $this->isSubscribed($subscriber);
+    }
+
+    /**
      * Set the priority of an event
      *
-     * @param  string            $name     The event name
-     * @param  KObjectHandlable  $listener  An object implementing the KObjectHandlable interface
-     * @param  integer           $priority The event priority
-     * @return KEventDispatcherInterface
+     * @param  string    $name      The event name
+     * @param  callable  $listener  The listener
+     * @param  integer   $priority  The event priority
+     * @throws  InvalidArgumentException If the listener is not a callable
+     * @return  KEventDispatcherAbstract
      */
-    public function setEventPriority($name, KObjectHandlable $listener, $priority)
+    public function setPriority($name, $listener, $priority)
     {
-        $this->getDelegate()->setEventPriority($name, $listener, $priority);
+        $this->getDelegate()->setPriority($name, $listener, $priority);
         return $this;
     }
 
     /**
      * Get the priority of an event
      *
-     * @param   string            $name     The event name
-     * @param   KObjectHandlable  $listener An object implementing the KObjectHandlable interface
-     * @return  integer|boolean The event priority or FALSE if the event isn't listened for.
+     * @param   string    $name      The event name
+     * @param   callable  $listener  The listener
+     * @throws  InvalidArgumentException If the listener is not a callable
+     * @return  integer|false The event priority or FALSE if the event isn't listened for.
      */
-    public function getEventPriority($name, KObjectHandlable $listener)
+    public function getPriority($name, $listener)
     {
-        return $this->getDelegate()->getEventPriority($name, $listener);
+        return $this->getDelegate()->getPriority($name, $listener);
     }
 
     /**
@@ -238,14 +290,24 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
      *
      * @param   KEventDispatcherInterface $delegate The decorated event dispatcher
      * @return  KEventProfiler
-     * @throws  \InvalidArgumentException If the delegate is not an event dispatcher
+     * @throws  InvalidArgumentException If the delegate is not an event dispatcher
      */
     public function setDelegate($delegate)
     {
         if (!$delegate instanceof KEventDispatcherInterface) {
-            throw new \InvalidArgumentException('EventDispatcher: '.get_class($delegate).' does not implement KEventDispatcherInterface');
+            throw new InvalidArgumentException('EventDispatcher: '.get_class($delegate).' does not implement KEventDispatcherInterface');
         }
 
         return parent::setDelegate($delegate);
+    }
+
+    /**
+     * Set the decorated object
+     *
+     * @return KEventDispatcherInterface
+     */
+    public function getDelegate()
+    {
+        return parent::getDelegate();
     }
 }

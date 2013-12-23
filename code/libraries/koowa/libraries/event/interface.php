@@ -29,9 +29,17 @@ interface KEventInterface
     /**
      * Get the event name
      *
-     * @return string The event name
+     * @return string	The event name
      */
     public function getName();
+
+    /**
+     * Set the event name
+     *
+     * @param string $name The event name
+     * @return KEvent
+     */
+    public function setName($name);
 
     /**
      * Get the event target
@@ -49,6 +57,21 @@ interface KEventInterface
     public function setTarget(KObjectInterface $target);
 
     /**
+     * Stores the EventDispatcher that dispatches this Event
+     *
+     * @param KEventDispatcherInterface $dispatcher
+     * @return KEvent
+     */
+    public function setDispatcher(KEventDispatcherInterface $dispatcher);
+
+    /**
+     * Returns the EventDispatcher that dispatches this Event
+     *
+     * @return KEventDispatcherInterface
+     */
+    public function getDispatcher();
+
+    /**
      * Returns whether further event listeners should be triggered.
      *
      * @return boolean 	TRUE if the event can propagate. Otherwise FALSE
@@ -61,7 +84,7 @@ interface KEventInterface
      * If multiple event listeners are connected to the same event, no further event listener will be triggered once
      * any trigger calls stopPropagation().
      *
-     * @return KEventInterface
+     * @return KEvent
      */
     public function stopPropagation();
 }
