@@ -23,18 +23,25 @@ require_once dirname(__FILE__).'/registry/registry.php';
 class KClassLoader implements KClassLoaderInterface
 {
     /**
-     * The file container
+     * The class locators
+     *
+     * @var array
+     */
+    protected $_locators = array();
+
+    /**
+     * The class container
      *
      * @var array
      */
     protected $_registry = null;
 
     /**
-     * Adapter list
+     * Class aliases
      *
-     * @var array
+     * @var    array
      */
-    protected $_locators = array();
+    protected $_aliases = array();
 
     /**
      * Prefix map
@@ -105,7 +112,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function register($prepend = false)
     {
-        spl_autoload_register(array($this, 'loadClass'), true, $prepend);
+        spl_autoload_register(array($this, 'load'), true, $prepend);
 
         if (function_exists('__autoload')) {
             spl_autoload_register('__autoload');
@@ -121,9 +128,84 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function unregister()
     {
-        spl_autoload_unregister(array($this, 'loadClass'));
+        spl_autoload_unregister(array($this, 'load'));
     }
 
+    /**
+     * Load a class based on a class name
+     *
+     * @param string  $class    The class name
+     * @param string  $basepath The basepath
+     * @return boolean  Returns TRUE on success throws exception on failure
+     */
+    public function load($class, $basepath = null)
+    {
+        $result = true;
+
+        if(!$this->isDeclared($class))
+        {
+            //Get the path
+            $path = $this->find( $class, $basepath );
+
+            if ($path !== false)
+            {
+                if (!in_array($path, get_included_files()) && file_exists($path)){
+                    require $path;
+                } else {
+                    $result = false;
+                }
+
+            }
+            else $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the path based on a class name
+     *
+     * @param string	$class      The class name
+     * @param string    $basepath   The basepath
+     * @return string   Returns canonicalized absolute pathname
+     */
+    public function find($class, $basepath = null)
+    {
+        static $base;
+
+        //Switch the base
+        $base = $basepath ? $basepath : $base;
+
+        //Recursively resolve the real class if an alias was passed
+        while(array_key_exists((string) $class, $this->_aliases)) {
+            $class = $this->_aliases[(string) $class];
+        }
+
+        if(!$this->_registry->offsetExists($base.'-'.(string) $class))
+        {
+            $result = false;
+
+            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $class);
+            $parts = explode(' ', $word);
+
+            if(isset($this->_prefix_map[$parts[0]]))
+            {
+                $result = $this->_locators[$this->_prefix_map[$parts[0]]]->locate( $class, $basepath);
+
+                if ($result !== false)
+                {
+                    //Get the canonicalized absolute pathname
+                    $path = realpath($result);
+                    $result = $path !== false ? $path : $result;
+                }
+
+                $this->_registry->offsetSet($base.'-'.(string) $class, $result);
+            }
+
+        } else $result = $this->_registry->offsetGet($base.'-'.(string)$class);
+
+        return $result;
+    }
 
     /**
      * Get the class registry object
@@ -175,91 +257,28 @@ class KClassLoader implements KClassLoaderInterface
     }
 
     /**
-     * Load a class based on a class name
+     * Register an alias for a class
      *
-     * @param string  $class    The class name
-     * @param string  $basepath The basepath
-     * @return boolean  Returns TRUE on success throws exception on failure
+     * @param string  $class The original
+     * @param string  $alias The alias name for the class.
      */
-    public function loadClass($class, $basepath = null)
+    public function registerAlias($class, $alias)
     {
-        $result = true;
+        $alias = trim($alias);
+        $class = trim($class);
 
-        if(!$this->isDeclared($class))
-        {
-            //Get the path
-            $path = $this->findPath( $class, $basepath );
-
-            if ($path !== false) {
-                $result = $this->loadFile($path);
-            } else {
-                $result = false;
-            }
-        }
-
-        return $result;
+        $this->_aliases[$alias] = $class;
     }
 
     /**
-     * Load a class based on a path
+     * Get the registered alias for a class
      *
-     * @param string	$path The file path
-     * @return boolean  Returns TRUE on success throws exception on failure
+     * @param  string $class The class
+     * @return array   An array of aliases
      */
-    public function loadFile($path)
+    public function getAliases($class)
     {
-        $result = false;
-
-        //Don't re-include files and stat the file if it exists.
-        //Realpath is needed to resolve symbolic links.
-        if (!in_array(realpath($path), get_included_files()) && file_exists($path))
-        {
-            if ($included = include $path) {
-                $result = true;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the path based on a class name
-     *
-     * @param string	$class      The class name
-     * @param string    $basepath   The basepath
-     * @return string   Returns canonicalized absolute pathname
-     */
-    public function findPath($class, $basepath = null)
-    {
-        static $base;
-
-        //Switch the base
-        $base = $basepath ? $basepath : $base;
-
-        if(!$this->_registry->offsetExists($base.'-'.(string) $class))
-        {
-            $result = false;
-
-            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $class);
-            $parts = explode(' ', $word);
-
-            if(isset($this->_prefix_map[$parts[0]]))
-            {
-                $result = $this->_locators[$this->_prefix_map[$parts[0]]]->locate( $class, $basepath);
-
-                if ($result !== false)
-                {
-                   //Get the canonicalized absolute pathname
-                   $path = realpath($result);
-                   $result = $path !== false ? $path : $result;
-                }
-
-                $this->_registry->offsetSet($base.'-'.(string) $class, $result);
-            }
-
-        } else $result = $this->_registry->offsetGet($base.'-'.(string)$class);
-
-        return $result;
+        return isset($this->_aliases[$class]) ? $this->_aliases[$class] : array();
     }
 
     /**

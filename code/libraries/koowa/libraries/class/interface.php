@@ -31,6 +31,22 @@ interface KClassLoaderInterface
     public function unregister();
 
     /**
+     * Load a class based on a class name
+     *
+     * @param  string   $class  The class name
+     * @return boolean  Returns TRUE if the class could be loaded, otherwise returns FALSE.
+     */
+    public function load($class);
+
+    /**
+     * Get the path based on a class name
+     *
+     * @param string $class   The class name
+     * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
+     */
+    public function find($class);
+
+    /**
      * Register a class locator
      *
      * @param KClassLocatorInterface $locator
@@ -54,28 +70,20 @@ interface KClassLoaderInterface
     public function getLocators();
 
     /**
-     * Load a class based on a class name
+     * Register an alias for a class
      *
-     * @param  string   $class  The class name
-     * @return boolean  Returns TRUE if the class could be loaded, otherwise returns FALSE.
+     * @param string  $class The original
+     * @param string  $alias The alias name for the class.
      */
-    public function loadClass($class);
+    public function registerAlias($class, $alias);
 
     /**
-     * Load a class based on a path
+     * Get the registered alias for a class
      *
-     * @param string	$path The file path
-     * @return boolean  Returns TRUE if the file could be loaded, otherwise returns FALSE.
+     * @param  string $class The class
+     * @return array   An array of aliases
      */
-    public function loadFile($path);
-
-    /**
-     * Get the path based on a class name
-     *
-     * @param string $class   The class name
-     * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
-     */
-    public function findPath($class);
+    public function getAliases($class);
 
     /**
      * Tells if a class, interface or trait exists.
