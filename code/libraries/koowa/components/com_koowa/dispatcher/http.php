@@ -27,6 +27,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         //Render the page before sending the response
         $this->registerCallback('before.send', array($this, 'renderPage'));
 
+        //Render an exception before sending the response
+        $this->registerCallback('before.exception', array($this, 'renderException'));
+
         //Force the controller to the information found in the request
         if($this->getRequest()->query->has('view')) {
             $this->_controller = $this->getRequest()->query->get('view', 'cmd');
@@ -44,8 +47,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'user'   => 'com:koowa.user',
-            'limit'  => array('default' => JFactory::getApplication()->getCfg('list_limit')),
+            'event_subscribers' => array('unauthorized'),
+            'user'              => 'com:koowa.user',
+            'limit'             => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));
 
         parent::_initialize($config);
@@ -69,7 +73,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $manager->setObject($config->object_identifier, $instance);
 
             //Add the factory map to allow easy access to the singleton
-            $manager->registerAlias('dispatcher', $config->object_identifier);
+            $manager->registerAlias($config->object_identifier, 'dispatcher');
         }
 
         return $manager->getObject($config->object_identifier);
@@ -98,6 +102,56 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     }
 
     /**
+     * Render an exception
+     *
+     * @throws InvalidArgumentException If the action parameter is not an instance of Exception
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     */
+    public function renderException(KDispatcherContextInterface $context)
+    {
+        $request   = $context->request;
+        $response  = $context->response;
+
+        //Check an exception was passed
+        if(!isset($context->param) && !$context->param instanceof KException)
+        {
+            throw new InvalidArgumentException(
+                "Action parameter 'exception' [KException] is required"
+            );
+        }
+
+        //Get the exception object
+        if($context->param instanceof KEventException) {
+            $exception = $context->param->getException();
+        } else {
+            $exception = $context->param;
+        }
+
+        //Render the exception if debug mode is enabled or if we are returning json
+        if(JDEBUG || $response->getContentType() == 'application/json')
+        {
+            $config = array(
+                'request'  => $request,
+                'response' => $response
+            );
+
+            $this->getObject('com:koowa.controller.exception',  $config)
+                ->render($exception);
+
+            //Do not pass response back to Joomla
+            $context->request->query->set('tmpl', 'koowa');
+        }
+        else
+        {
+            if (version_compare(JVERSION, '3.0', '>=')) {
+                JErrorPage::render($exception);
+            } else {
+                JError::raiseError($exception->getCode(), $exception->getMessage());
+            }
+        }
+    }
+
+    /**
      * Dispatch the controller and redirect
      *
      * This function divert the standard behavior and will redirect if no view information can be found in the request.
@@ -116,7 +170,14 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $this->redirect($url);
         }
 
-        return  parent::_actionDispatch($context);
+        //Catch exceptions before Joomla does (JApplication::dispatch())
+        try {
+            $result =  parent::_actionDispatch($context);
+        } catch(Exception $exception) {
+            $result = $this->getEventDispatcher()->dispatchException(array('exception' => $exception));
+        }
+
+        return $result;
     }
 
     /**
@@ -129,7 +190,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         $request   = $context->request;
         $response  = $context->response;
 
-        if(!$response->isRedirect() && !$request->query->get('tmpl', 'cmd') == 'page')
+        if(!$response->isRedirect() && $request->query->get('tmpl', 'cmd') != 'koowa')
         {
             $view = $this->getController()->getView();
 

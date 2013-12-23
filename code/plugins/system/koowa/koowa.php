@@ -59,11 +59,6 @@ class PlgSystemKoowa extends JPlugin
             }
         }
 
-        //Set exception handler
-        if (JDEBUG) {
-            set_exception_handler(array($this, 'exceptionHandler'));
-        }
-
 		//Bootstrap the Koowa Framework
         $this->bootstrap();
 
@@ -140,10 +135,10 @@ class PlgSystemKoowa extends JPlugin
             KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
             KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
 
-            $manager->registerAlias('koowa:database.adapter.mysqli', 'com://admin/koowa.database.adapter.mysqli');
-            $manager->registerAlias('translator', 'com:koowa.translator');
-            $manager->registerAlias('user'      , 'com:koowa.user');
-            $manager->registerAlias('request'   , 'koowa:dispatcher.request');
+            $manager->registerAlias('com:koowa.database.adapter.mysqli', 'koowa:database.adapter.mysqli');
+            $manager->registerAlias('com:koowa.translator'    , 'translator');
+            $manager->registerAlias('com:koowa.user'          , 'user');
+            $manager->registerAlias('koowa:dispatcher.request', 'request' );
 
             $application = JFactory::getApplication()->getName();
             $manager->getObject('request')
@@ -155,7 +150,11 @@ class PlgSystemKoowa extends JPlugin
 
             //Load the koowa plugins
             JPluginHelper::importPlugin('koowa', null, true);
+
+            return true;
         }
+
+        return false;
     }
 
     /*
@@ -166,7 +165,7 @@ class PlgSystemKoowa extends JPlugin
      */
     public function onAfterRoute()
     {
-        $request = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.request');
+        $request = KObjectManager::getInstance()->getObject('request');
 
         $app = JFactory::getApplication();
         if ($app->isSite() && $app->getCfg('sef'))
@@ -188,50 +187,4 @@ class PlgSystemKoowa extends JPlugin
             $request->query->offset = $request->query->limitstart;
         }
     }
-
- 	/**
-	 * Custom exception handler
-	 *
-	 * @param Exception $exception an Exception object
-	 * @return void
-	 */
-	public function exceptionHandler(Exception $exception)
-	{
-        try
-        {
-            // If Koowa does not exist let Joomla handle the exception
-            if (!class_exists('Koowa') || !class_exists('ComKoowaTemplateAbstract')) {
-                throw new Exception('');
-            }
-
-            $data = array('exception' => $exception);
-
-            $template = KObjectManager::getInstance()->getObject('com:koowa.template.default', array(
-                'filters' => array('function', 'shorttag')
-            ));
-
-            $template->load('com:koowa.debug.error.html')
-                ->compile()
-                ->evaluate($data)
-                ->render();
-
-            while (@ob_end_clean());
-
-            if (!headers_sent()) {
-                header('Content-Type: text/html');
-            }
-
-            echo $template;
-
-            exit;
-        }
-        catch (Exception $e)
-        {
-            if (version_compare(JVERSION, '3.0', '>=')) {
-                JErrorPage::render($exception);
-            } else {
-                JError::raiseError($exception->getCode(), $exception->getMessage());
-            }
-        }
-	}
 }
