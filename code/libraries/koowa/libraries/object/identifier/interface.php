@@ -35,6 +35,67 @@ interface KObjectIdentifierInterface extends Serializable
     public function exists();
 
     /**
+     * Get the identifier type
+     *
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * Set the identifier type
+     *
+     * @param  string $type
+     * @return KObjectIdentifierInterface
+     * @throws DomainException If the type is unknown
+     */
+    public function setType($type);
+
+    /**
+     * Get the identifier package
+     *
+     * @return string
+     */
+    public function getPackage();
+
+    /**
+     * Set the identifier package
+     *
+     * @param  string $package
+     * @return KObjectIdentifierInterface
+     */
+    public function setPackage($package);
+
+    /**
+     * Get the identifier package
+     *
+     * @return array
+     */
+    public function getPath();
+
+    /**
+     * Set the identifier path
+     *
+     * @param  string $path
+     * @return KObjectIdentifierInterface
+     */
+    public function setPath(array $path);
+
+    /**
+     * Get the identifier package
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Set the identifier name
+     *
+     * @param  string $name
+     * @return KObjectIdentifierInterface
+     */
+    public function setName($name);
+
+    /**
      * Set an application path
      *
      * @param string $application The name of the application
@@ -49,7 +110,7 @@ interface KObjectIdentifierInterface extends Serializable
      * @param string    $application   The name of the application
      * @return string	The path of the application
      */
-    public static function getApplication($application);
+    public static function getApplicationPath($application);
 
     /**
      * Get a list of applications
@@ -73,7 +134,7 @@ interface KObjectIdentifierInterface extends Serializable
      * @param string    $package   The name of the application
      * @return string	The path of the application
      */
-    public static function getPackage($package);
+    public static function getPackagePath($package);
 
     /**
      * Get a list of packages

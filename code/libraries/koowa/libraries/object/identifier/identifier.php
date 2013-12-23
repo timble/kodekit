@@ -214,6 +214,94 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         return (bool) $this->getLocator()->locate($this, false);
     }
 
+    /**
+     * Get the identifier type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
+     * Set the identifier type
+     *
+     * @param  string $type
+     * @return  KObjectIdentifierInterface
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get the identifier package
+     *
+     * @return string
+     */
+    public function getPackage()
+    {
+        return $this->_package;
+    }
+
+    /**
+     * Set the identifier package
+     *
+     * @param  string $package
+     * @return  KObjectIdentifierInterface
+     */
+    public function setPackage($package)
+    {
+        $this->package = $package;
+        return $this;
+    }
+
+    /**
+     * Get the identifier package
+     *
+     * @return array
+     */
+    public function getPath()
+    {
+        return $this->_path;
+    }
+
+    /**
+     * Set the identifier path
+     *
+     * @param  string $path
+     * @return  KObjectIdentifierInterface
+     */
+    public function setPath(array $path)
+    {
+        $this->_path = $path;
+        return $this;
+    }
+
+    /**
+     * Get the identifier package
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * Set the identifier name
+     *
+     * @param  string $name
+     * @return  KObjectIdentifierInterface
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
 	/**
 	 * Set an application path
 	 *
@@ -232,7 +320,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	 * @param string    $application   The name of the application
 	 * @return string	The path of the application
      */
-    public static function getApplication($application)
+    public static function getApplicationPath($application)
     {
         return isset(self::$_applications[$application]) ? self::$_applications[$application] : null;
     }
@@ -265,7 +353,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      * @param string    $package   The name of the application
      * @return string	The path of the application
      */
-    public static function getPackage($package)
+    public static function getPackagePath($package)
     {
         return isset(self::$_packages[$package]) ? self::$_packages[$package] : null;
     }
