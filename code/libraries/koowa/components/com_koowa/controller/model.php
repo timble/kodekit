@@ -102,8 +102,8 @@ abstract class ComKoowaControllerModel extends KControllerModel
         {
             if($this->isEditable() && KStringInflector::isSingular($this->getView()->getName()))
             {
-                //Use JRequest as we do not pass the request query back into the Joomla context
-                JRequest::setVar('hidemainmenu', 1);
+                //Use JInput as we do not pass the request query back into the Joomla context
+                JFactory::getApplication()->input->set('hidemainmenu', 1);
             }
         }
 
