@@ -124,11 +124,11 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Register an alias for an identifier
      *
-     * @param mixed $alias      The alias
      * @param KObjectIdentifier  $identifier
+     * @param mixed             $alias      The alias
      * @return KObjectRegistry
      */
-    public function alias($alias, KObjectIdentifier $identifier)
+    public function alias(KObjectIdentifier $identifier, $alias)
     {
         $alias      = trim((string) $alias);
         $identifier = (string) $identifier;

@@ -439,7 +439,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         $identifier = $this->getIdentifier($identifier);
         $alias      = trim((string) $alias);
 
-        $this->_registry->alias($alias, $identifier);
+        $this->_registry->alias($identifier, $alias);
 
         return $this;
 	}
