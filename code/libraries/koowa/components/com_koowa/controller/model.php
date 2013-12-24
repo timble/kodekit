@@ -87,4 +87,26 @@ abstract class ComKoowaControllerModel extends KControllerModel
 
         return $this;
     }
+
+    /**
+     * Generic read action, fetches an item
+     *
+     * @param    KControllerContextInterface $context A command context object
+     * @throws KControllerExceptionNotFound
+     * @return    KDatabaseRowInterface     A row object containing the selected row
+     */
+    protected function _actionRead(KControllerContextInterface $context)
+    {
+        //Request
+        if($this->getIdentifier()->application === 'admin')
+        {
+            if($this->isEditable() && KStringInflector::isSingular($this->getView()->getName()))
+            {
+                //Use JRequest as we do not pass the request query back into the Joomla context
+                JRequest::setVar('hidemainmenu', 1);
+            }
+        }
+
+        return parent::_actionRead($context);
+    }
 }

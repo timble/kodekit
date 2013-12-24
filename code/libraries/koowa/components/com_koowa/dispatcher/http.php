@@ -197,14 +197,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         {
             $view = $this->getController()->getView();
 
-            //Request
-            if($this->getIdentifier()->application === 'admin')
-            {
-                if($this->getController()->isEditable() && KStringInflector::isSingular($view->getName())) {
-                    $context->getRequest()->query->set('hidemainmenu', 1);
-                }
-            }
-
             //Cookies
             foreach ($response->headers->getCookies() as $cookie)
             {
