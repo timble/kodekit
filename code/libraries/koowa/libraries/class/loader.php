@@ -37,13 +37,6 @@ class KClassLoader implements KClassLoaderInterface
     protected $_registry = null;
 
     /**
-     * Class aliases
-     *
-     * @var    array
-     */
-    protected $_aliases = array();
-
-    /**
      * Prefix map
      *
      * @var array
@@ -176,12 +169,7 @@ class KClassLoader implements KClassLoaderInterface
         //Switch the base
         $base = $basepath ? $basepath : $base;
 
-        //Recursively resolve the real class if an alias was passed
-        while(array_key_exists((string) $class, $this->_aliases)) {
-            $class = $this->_aliases[(string) $class];
-        }
-
-        if(!$this->_registry->offsetExists($base.'-'.(string) $class))
+        if(!$this->_registry->has($base.'-'.(string) $class))
         {
             $result = false;
 
@@ -199,10 +187,10 @@ class KClassLoader implements KClassLoaderInterface
                     $result = $path !== false ? $path : $result;
                 }
 
-                $this->_registry->offsetSet($base.'-'.(string) $class, $result);
+                $this->_registry->set($base.'-'.(string) $class, $result);
             }
 
-        } else $result = $this->_registry->offsetGet($base.'-'.(string)$class);
+        } else $result = $this->_registry->get($base.'-'.(string)$class);
 
         return $result;
     }
@@ -267,7 +255,7 @@ class KClassLoader implements KClassLoaderInterface
         $alias = trim($alias);
         $class = trim($class);
 
-        $this->_aliases[$alias] = $class;
+        $this->_registry->alias($class, $alias);
     }
 
     /**
@@ -278,7 +266,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function getAliases($class)
     {
-        return isset($this->_aliases[$class]) ? $this->_aliases[$class] : array();
+        return array_search($class, $this->_registry->getAliases());
     }
 
     /**
