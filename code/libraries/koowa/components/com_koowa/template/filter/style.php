@@ -30,7 +30,6 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
      */
     public function render(&$text)
     {
-        $request = $this->getObject('request');
         $styles = $this->_parseTags($text);
 
         if($this->getTemplate()->getView()->getLayout() == 'koowa') {
@@ -49,8 +48,6 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        $request = $this->getObject('request');
-
         if($this->getTemplate()->getView()->getLayout() == 'joomla')
         {
             $link      = isset($attribs['src']) ? $attribs['src'] : false;
