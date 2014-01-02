@@ -165,26 +165,29 @@ class PlgSystemKoowa extends JPlugin
      */
     public function onAfterRoute()
     {
-        $request = KObjectManager::getInstance()->getObject('request');
-
-        $app = JFactory::getApplication();
-        if ($app->isSite() && $app->getCfg('sef'))
+        if (class_exists('Koowa'))
         {
-            $uri     = clone JURI::getInstance();
+            $request = KObjectManager::getInstance()->getObject('request');
 
-            $router = JFactory::getApplication()->getRouter();
-            $result = $router->parse($uri);
-
-            foreach ($result as $key => $value)
+            $app = JFactory::getApplication();
+            if ($app->isSite() && $app->getCfg('sef'))
             {
-                if (!$request->query->has($key)) {
-                    $request->query->set($key, $value);
+                $uri     = clone JURI::getInstance();
+
+                $router = JFactory::getApplication()->getRouter();
+                $result = $router->parse($uri);
+
+                foreach ($result as $key => $value)
+                {
+                    if (!$request->query->has($key)) {
+                        $request->query->set($key, $value);
+                    }
                 }
             }
-        }
 
-        if ($request->query->limitstart) {
-            $request->query->offset = $request->query->limitstart;
+            if ($request->query->limitstart) {
+                $request->query->offset = $request->query->limitstart;
+            }
         }
     }
 }
