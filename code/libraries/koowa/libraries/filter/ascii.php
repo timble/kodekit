@@ -36,7 +36,7 @@ class KFilterAscii extends KFilterAbstract implements KFilterTraversable
 	 */
 	public function sanitize($value)
 	{
-		$string = htmlentities(utf8_decode($value));
+		$string = htmlentities(utf8_decode($value), ENT_SUBSTITUTE);
 		$string = preg_replace(
 			array('/&szlig;/','/&(..)lig;/', '/&([aouAOU])uml;/','/&(.)[^;]*;/'),
 			array('ss',"$1","$1".'e',"$1"),
