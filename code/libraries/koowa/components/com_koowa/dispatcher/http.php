@@ -146,6 +146,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
                 );
 
                 $this->getObject('com:koowa.controller.error',  $config)
+                    ->layout('default')
                     ->render($exception);
 
                 //Do not pass response back to Joomla
