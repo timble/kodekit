@@ -94,7 +94,7 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
 
         //Configs
         foreach ($this->_configs as $identifier => $config) {
-            $manager->setConfig($identifier, $config);
+            $manager->setConfig($identifier, KObjectConfig::unbox($config));
         }
 
         //Mixins
