@@ -173,6 +173,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         if($controller instanceof KControllerModellable)
         {
+            $controller->getModel()->getState()->setProperty('limit', 'default', $this->_limit->default);
+
             if(!$controller->getModel()->getState()->isUnique())
             {
                 $limit = abs($controller->getModel()->getState()->limit);
