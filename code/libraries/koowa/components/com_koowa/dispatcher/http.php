@@ -193,7 +193,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         $request   = $context->request;
         $response  = $context->response;
 
-        if(!$response->isRedirect() && $request->query->get('tmpl', 'cmd') != 'koowa')
+        if($request->isGet() && !$response->isRedirect() && $request->query->get('tmpl', 'cmd') != 'koowa')
         {
             $view = $this->getController()->getView();
 
