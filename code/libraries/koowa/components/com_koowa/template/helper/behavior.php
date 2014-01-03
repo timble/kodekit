@@ -112,18 +112,32 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
 	public function mootools($config = array())
 	{
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug')
+        ));
+
+        $html = '';
+
 		if (!isset(self::$_loaded['mootools']))
 		{
-            if (version_compare(JVERSION, '3.0', 'ge') && $this->getObject('request')->query->get('tmpl', 'cmd') !== 'koowa') {
-                JHTML::_('behavior.framework', true);
-            } else {
-                JHTML::_('behavior.mootools', false);
+            if ($this->getObject('request')->query->get('tmpl', 'cmd') !== 'koowa')
+            {
+                if (version_compare(JVERSION, '3.0', 'ge')) {
+                    JHTML::_('behavior.framework', true);
+                } else {
+                    JHTML::_('behavior.mootools', false);
+                }
+            }
+            else {
+                $html .= '<script src="media://system/js/mootools-core'.($config->debug ? '-uncompressed' : '').'.js" />';
+                $html .= '<script src="media://system/js/mootools-more'.($config->debug ? '-uncompressed' : '').'.js" />';
             }
 
 			self::$_loaded['mootools'] = true;
 		}
 
-		return '';
+		return $html;
 	}
 
 
