@@ -16,6 +16,7 @@ if (typeof window.kQuery === 'undefined' && typeof window.jQuery !== 'undefined'
         // Do not use versions older than 1.8
         if (!(version[0] == '1' && parseInt(version[1], 10) < 8)) {
             kQuery = tmp;
+        } else {
             throw new TypeError('jQuery 1.8 or newer is required!');
         }
     }
