@@ -28,7 +28,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     {
         if($config->total != 0)
         {
-            $config->limit  = (int) max($config->limit, 1);
+            $config->limit  = (int) max($config->limit, 0);
             $config->offset = (int) max($config->offset, 0);
 
             if($config->limit > $config->total) {

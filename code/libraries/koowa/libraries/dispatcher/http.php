@@ -177,10 +177,10 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
             if(!$controller->getModel()->getState()->isUnique())
             {
-                $limit = abs($controller->getModel()->getState()->limit);
+                $limit = $this->getRequest()->query->get('limit', 'int');
 
                 //Allow a zero limit, set to default is limit is not set
-                if(empty($limit) && $limit != 0) {
+                if(empty($limit) && $limit !== 0) {
                     $limit = $this->_limit->default;
                 }
 
