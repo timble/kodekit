@@ -188,11 +188,6 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
         {
             if (version_compare(JVERSION, '3.2', 'ge'))
             {
-                // Strip the extension.
-                $icons = explode(' ', $config->command->icon);
-                foreach ($icons as &$icon) {
-                    $icon = preg_replace('#\.[^.]*$#', '', $icon);
-                }
 
                 $layout = new JLayoutFile('joomla.toolbar.title');
                 $html = $layout->render(array('title' => $title, 'icon' => $icon));
