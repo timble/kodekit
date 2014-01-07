@@ -413,7 +413,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<div class="input-append date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
             $html .= '<input type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
             $html .= '<span class="add-on btn" >';
-            $html .= '<i class="icon-calendar icon-th"></i>&zwnj;'; //&zwnj; is a zero width non-joiner, helps the button get the right height without adding to the width (like with &nbsp;)
+            $html .= '<span class="koowa_icon koowa-icon-calendar"><i>calendar</i></span>';
             $html .= '</span>';
             $html .= '</div>';
         }
