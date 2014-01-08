@@ -75,7 +75,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         ));
 
         $html     = '';
-        $selected = '';
+        $selected = 0;
         $options  = array();
 
         foreach(array(5, 10, 15, 20, 25, 30, 50, 100) as $value)
@@ -85,6 +85,10 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
             }
 
             $options[] = $this->option(array('text' => $value, 'value' => $value));
+        }
+
+        if ($config->limit == $config->total) {
+            $options[] = $this->option(array('text' => $this->translate('All'), 'value' => 0));
         }
 
         $html .= $this->optionlist(array('options' => $options, 'name' => 'limit', 'attribs' => $config->attribs, 'selected' => $selected));
