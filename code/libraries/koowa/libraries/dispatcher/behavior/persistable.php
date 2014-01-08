@@ -44,7 +44,7 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
      * @param 	KDispatcherContextInterface $context The active dispatcher context
      * @return 	void
      */
-    protected function _beforeGet(KDispatcherContextInterface $context)
+    protected function _beforeBrowse(KDispatcherContextInterface $context)
     {
         if($this->getController() instanceof KControllerModellable)
         {
@@ -73,7 +73,7 @@ class KDispatcherBehaviorPersistable extends KControllerBehaviorAbstract
      * @param 	KDispatcherContextInterface $context The active dispatcher context
      * @return 	void
      */
-    protected function _afterGet(KDispatcherContextInterface $context)
+    protected function _afterBrowse(KDispatcherContextInterface $context)
     {
         if($this->getController()instanceof KControllerModellable)
         {
