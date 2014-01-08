@@ -282,7 +282,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         else
         {
             $tmpl = '
-                <span class="jgrid koowa-tooltip" title="'.$this->translate('Please order by this column first by clicking the column title').'">
+                <span class="jgrid">
                     <span class="state %3$s" style="width: 12px; height: 12px; background-repeat: no-repeat; background-position: 0 -12px;">
                         <span class="text">%4$s</span>
                     </span>
@@ -300,6 +300,16 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $this->translate('Move down');
             $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow', $icon);
         }
+
+        if ($config->sort !== $config->field)
+        {
+            $html = '<div class="koowa-tooltip"
+                          data-koowa-tooltip="'.htmlentities(json_encode(array('placement' => 'left'))).'"
+                          title="'.$this->translate('Please order by this column first by clicking the column title').'">'
+                    .$html.
+                    '</div>';
+        }
+
 
         return $html;
     }
