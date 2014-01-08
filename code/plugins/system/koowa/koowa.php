@@ -185,7 +185,7 @@ class PlgSystemKoowa extends JPlugin
                 }
             }
 
-            if ($request->query->limitstart) {
+            if ($request->query->has('limitstart')) {
                 $request->query->offset = $request->query->limitstart;
             }
         }

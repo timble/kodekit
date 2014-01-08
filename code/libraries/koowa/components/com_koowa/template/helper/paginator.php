@@ -197,6 +197,8 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         $query['limit']      = $page->limit;
         $query['limitstart'] = $page->offset;
 
+        unset($query['offset']);
+
         $url->setQuery($query);
 
         $class = $page->current ? 'class="active"' : '';
@@ -249,6 +251,8 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
         //For compatibility with Joomla use limitstart instead of offset
         $query['limit']      = $page->limit;
         $query['limitstart'] = $page->offset;
+
+        unset($query['offset']);
 
         $url->setQuery($query);
 
