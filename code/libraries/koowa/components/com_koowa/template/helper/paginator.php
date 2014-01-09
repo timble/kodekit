@@ -113,17 +113,14 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
             'offset'     => 0,
             'limit'      => 0,
             'show_limit' => true,
-		    'show_count' => true,
-            'use_bootstrap' => version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite()
+		    'show_count' => false
         ))->append(array(
             'show_pages' => $config->count !== 1
         ));
 
         $this->_initialize($config);
 
-        $class = $config->use_bootstrap ? 'pagination-toolbar' : 'pagination-legacy';
-
-        $html = '<div class="pagination '.$class.'">';
+        $html = '<div class="pagination pagination-toolbar">';
 
         if($config->show_limit) {
             $html .= '<div class="limit">'.$this->limit($config).'</div>';
@@ -131,14 +128,9 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 
         if ($config->show_pages)
         {
-            if($config->use_bootstrap)
-            {
-                $html .= '<ul class="pagination-list">';
-                $html .=  $this->_bootstrap_pages($this->_items($config));
-                $html .= '</ul>';
-            } else {
-                $html .=  $this->_pages($this->_items($config));
-            }
+            $html .= '<ul class="pagination-list">';
+            $html .=  $this->_pages($this->_items($config));
+            $html .= '</ul>';
         }
 
         if($config->show_count) {
@@ -151,32 +143,36 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     }
 
     /**
-     * Render a list of pages links
-     *
-     * This function is overrides the default behavior to render the links in the khepri template backend style.
+     * Render a list of page links
      *
      * @param   array   $pages An array of page data
      * @return  string  Html
      */
     protected function _pages($pages)
     {
-        $class = $pages['first']->active ? '' : 'off';
-        $html  = '<div class="button2-right '.$class.'"><div class="start">'.$this->_link($pages['first'], 'Start').'</div></div>';
+        $html = '';
 
-        $class = $pages['previous']->active ? '' : 'off';
-        $html  .= '<div class="button2-right '.$class.'"><div class="prev">'.$this->_link($pages['previous'], 'Prev').'</div></div>';
+        //$html .= $pages['first']->active ? '<li>'.$this->_link($pages['first'], '<i class="icon-fast-backward icon-first"></i>').'</li>' : '';
 
-        $html  .= '<div class="button2-left"><div class="page">';
-        foreach($pages['pages'] as $page) {
+        $html .= $pages['previous']->active ? '<li>'.$this->_link($pages['previous'], '<i class="icon-backward icon-previous"></i>').'</li>' : '';
+
+        $previous = null;
+        foreach ($pages['pages'] as $page)
+        {
+            if ($previous && $page->page - $previous->page > 1) {
+                $html .= '<li class="disabled"><a href="#">&hellip;</a></li>';
+            }
+
+            $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
             $html .= $this->_link($page, $page->page);
+            $html .= '</li>';
+
+            $previous = $page;
         }
-        $html .= '</div></div>';
 
-        $class = $pages['next']->active ? '' : 'off';
-        $html  .= '<div class="button2-left '.$class.'"><div class="next">'.$this->_link($pages['next'], 'Next').'</div></div>';
+        $html  .= $pages['next']->active ? '<li>'.$this->_link($pages['next'], '<i class="icon-forward icon-next"></i>').'</li>' : '';
 
-        $class = $pages['last']->active ? '' : 'off';
-        $html  .= '<div class="button2-left '.$class.'"><div class="end">'.$this->_link($pages['last'], 'End').'</div></div>';
+        //$html  .= $pages['last']->active ? '<li>'.$this->_link($pages['last'], '<i class="icon-fast-forward icon-last"></i>').'</li>' : '';
 
         return $html;
     }
@@ -189,61 +185,6 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
      * @return string
      */
     protected function _link($page, $title)
-    {
-        $url   = clone $this->getObject('request')->getUrl();
-        $query = $url->getQuery(true);
-
-        //For compatibility with Joomla use limitstart instead of offset
-        $query['limit']      = $page->limit;
-        $query['limitstart'] = $page->offset;
-
-        unset($query['offset']);
-
-        $url->setQuery($query);
-
-        $class = $page->current ? 'class="active"' : '';
-
-        if($page->active && !$page->current) {
-            $html = '<a href="'.$url.'" '.$class.'>'.$this->translate($title).'</a>';
-        } else {
-            $html = '<span '.$class.'>'.$this->translate($title).'</span>';
-        }
-
-        return $html;
-    }
-
-    /**
-     * Render a list of page links using Bootstrap HTML output
-     *
-     * This function is overrides the default behavior to render the links in the khepri template backend style.
-     *
-     * @param   array   $pages An array of page data
-     * @return  string  Html
-     */
-    protected function _bootstrap_pages($pages)
-    {
-        $html  = $pages['previous']->active ? '<li>'.$this->_bootstrap_link($pages['previous'], '&larr;').'</li>' : '';
-
-        foreach ($pages['pages'] as $page)
-        {
-            $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
-            $html .= $this->_bootstrap_link($page, $page->page);
-            $html .= '</li>';
-        }
-
-        $html  .= $pages['next']->active ? '<li>'.$this->_bootstrap_link($pages['next'], '&rarr;').'</li>' : '';
-
-        return $html;
-    }
-
-    /**
-     * Generates a pagination link using Bootstrap HTML output
-     *
-     * @param KObject $page Page object
-     * @param string  $title Page title
-     * @return string
-     */
-    protected function _bootstrap_link($page, $title)
     {
         $url   = $this->getObject('request')->getUrl();
         $query = $url->getQuery(true);
@@ -324,22 +265,27 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     {
         if($display = $config->display)
         {
-            $start  = (int) max($config->current - $display, 1);
-            $start  = min($config->count, $start);
+            $start  = min($config->count, (int) max($config->current - $display, 1));
             $stop   = (int) min($config->current + $display, $config->count);
+
+            $pages = range($start, $stop);
+
+            if ($config->current > 2) {
+                array_unshift($pages, 1, 2);
+            }
+
+            if ($config->count - $config->current > 2) {
+                array_push($pages, $config->count-1, $config->count);
+            }
         }
         else // show all pages
         {
-            $start = 1;
-            $stop = $config->count;
+            $pages = range(1, $config->count);
         }
 
         $result = array();
-        if($start > 0)
-        {
-            foreach(range($start, $stop) as $pagenumber) {
-                $result[$pagenumber] =  ($pagenumber-1) * $config->limit;
-            }
+        foreach($pages as $pagenumber) {
+            $result[$pagenumber] =  ($pagenumber-1) * $config->limit;
         }
 
         return $result;
