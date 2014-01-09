@@ -128,7 +128,8 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
         $prompt = false;
         if ($config->deselect) {
-            $prompt = array((object) array('value' => $config->deselect_value, 'text'  => $config->prompt));
+            // without &nbsp; Joomla strips the last hyphen of the prompt
+            $prompt = array((object) array('value' => $config->deselect_value, 'text'  => $config->prompt.'&nbsp;'));
         }
 
         $html = JHtml::_('access.level', $config->name, $config->selected, $config->attribs->toArray(), $prompt);
