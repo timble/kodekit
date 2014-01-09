@@ -154,7 +154,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
 
         //$html .= $pages['first']->active ? '<li>'.$this->_link($pages['first'], '<i class="icon-fast-backward icon-first"></i>').'</li>' : '';
 
-        $html .= $pages['previous']->active ? '<li>'.$this->_link($pages['previous'], '<i class="icon-backward icon-previous"></i>').'</li>' : '';
+        $html .= $pages['previous']->active ? '<li>'.$this->_link($pages['previous'], '&larr;').'</li>' : '';
 
         $previous = null;
         foreach ($pages['pages'] as $page)
@@ -170,7 +170,7 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
             $previous = $page;
         }
 
-        $html  .= $pages['next']->active ? '<li>'.$this->_link($pages['next'], '<i class="icon-forward icon-next"></i>').'</li>' : '';
+        $html  .= $pages['next']->active ? '<li>'.$this->_link($pages['next'], '&rarr;').'</li>' : '';
 
         //$html  .= $pages['last']->active ? '<li>'.$this->_link($pages['last'], '<i class="icon-fast-forward icon-last"></i>').'</li>' : '';
 
