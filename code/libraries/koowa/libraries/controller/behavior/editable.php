@@ -26,10 +26,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         parent::__construct($config);
 
-        $this->registerCallback('after.read'  , array($this, 'lockResource'));
-        $this->registerCallback('after.save'  , array($this, 'unlockResource'));
-        $this->registerCallback('after.cancel', array($this, 'unlockResource'));
-
         if($this->isDispatched() && $this->getRequest()->getFormat() == 'html')
         {
             $this->registerCallback('before.read' , array($this, 'setReferrer'));
@@ -37,6 +33,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             $this->registerCallback('after.read'  , array($this, 'unlockReferrer'));
             $this->registerCallback('after.save'  , array($this, 'unsetReferrer'));
             $this->registerCallback('after.cancel', array($this, 'unsetReferrer'));
+
+            // Only lock/unlock entities in administrator or in form layouts in site
+            $application = $this->getMixer()->getIdentifier()->application;
+            if ($application === 'admin' || $this->getRequest()->query->layout === 'form')
+            {
+                $this->registerCallback('after.read'  , array($this, 'lockResource'));
+                $this->registerCallback('after.save'  , array($this, 'unlockResource'));
+                $this->registerCallback('after.cancel', array($this, 'unlockResource'));
+            }
         }
 
         $this->_cookie_path = $config->cookie_path;
