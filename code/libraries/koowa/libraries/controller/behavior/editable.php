@@ -26,7 +26,11 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         parent::__construct($config);
 
-        $this->registerCallback('after.read'  , array($this, 'lockResource'));
+        if ($this->getRequest()->getFormat() != 'json')
+        {
+            $this->registerCallback('after.read'  , array($this, 'lockResource'));
+        }
+
         $this->registerCallback('after.save'  , array($this, 'unlockResource'));
         $this->registerCallback('after.cancel', array($this, 'unlockResource'));
 
