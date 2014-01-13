@@ -28,7 +28,7 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
         $config->append(array(
             'date'     => 'now',
             'timezone'   => true,
-            'format'     => $this->translate('DATE_FORMAT_LC1')
+            'format'     => $this->translate('DATE_FORMAT_LC3')
         ));
 
         return JHtml::_('date', $config->date, $config->format, $config->timezone);
