@@ -43,7 +43,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
      * This functions merges the request information with any model state information that was saved in the session and
      * returns the result.
      *
-     * @param 	KDispatcherContextInterface $context The active dispatcher context
+     * @param 	KControllerContextInterface $context The active dispatcher context
      * @return 	void
      */
     protected function _beforeBrowse(KControllerContextInterface $context)
@@ -60,7 +60,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
     /**
      * Saves the model state in the session
      *
-     * @param 	KDispatcherContextInterface $context The active dispatcher context
+     * @param 	KControllerContextInterface $context The active dispatcher context
      * @return 	void
      */
     protected function _afterBrowse(KControllerContextInterface $context)
