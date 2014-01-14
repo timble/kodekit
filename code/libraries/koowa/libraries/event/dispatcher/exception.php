@@ -18,9 +18,9 @@ class KEventDispatcherException extends KEventDispatcherAbstract
     /**
      * Error levels
      */
-    const SYSTEM      = null;
-    const DEVELOPMENT = -1; //E_ALL   | E_STRICT  | ~E_DEPRECATED
-    const PRODUCTION  = 7;  //E_ERROR | E_WARNING | E_PARSE
+    const ERROR_SYSTEM       = null;
+    const ERROR_DEVELOPMENT  = -1; //E_ALL   | E_STRICT  | ~E_DEPRECATED
+    const ERROR_PRODUCTION   = 7;  //E_ERROR | E_WARNING | E_PARSE
 
     /**
      * The error level.
@@ -68,7 +68,7 @@ class KEventDispatcherException extends KEventDispatcherAbstract
             'catch_exceptions'   => true,
             'catch_user_errors'  => false,
             'catch_fatal_errors' => false,
-            'error_level'        => self::SYSTEM,
+            'error_level'        => self::ERROR_SYSTEM,
         ));
 
         parent::_initialize($config);
