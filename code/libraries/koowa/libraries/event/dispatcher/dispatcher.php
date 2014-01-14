@@ -26,8 +26,8 @@ class KEventDispatcher extends KEventDispatcherException implements KObjectInsta
     {
         if (!$manager->isRegistered('event.dispatcher'))
         {
-            $classname = $config->object_identifier->classname;
-            $instance  = new $classname($config);
+            $class    = $manager->getClass($config->object_identifier);
+            $instance = new $class($config);
             $manager->setObject($config->object_identifier, $instance);
 
             //Add the object alias to allow easy access to the singleton

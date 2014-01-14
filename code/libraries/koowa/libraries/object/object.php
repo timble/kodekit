@@ -117,7 +117,8 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
             $config = new KObjectConfig($config);
             $config->mixer = $this;
 
-            $mixin = new $identifier->classname($config);
+            $class = $this->getObject('manager')->getClass($identifier);
+            $mixin = new $class($config);
 
             if(!$mixin instanceof KObjectMixinInterface)
             {
@@ -174,7 +175,8 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
             $config = new KObjectConfig($config);
             $config->delegate = $this;
 
-            $decorator = new $identifier->classname($config);
+            $class     = $this->getObject('manager')->getClass($identifier);
+            $decorator = new $class($config);
 
             /*
              * Check if the decorator extends from KObjectDecorator to ensure it's implementing the

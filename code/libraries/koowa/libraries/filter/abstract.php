@@ -73,8 +73,8 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
         //Create the singleton
-        $classname = $config->object_identifier->classname;
-        $instance  = new $classname($config);
+        $class    = $manager->getClass($config->object_identifier);
+        $instance = new $class($config);
 
         if($instance instanceof KFilterTraversable) {
             $instance = $instance->decorate('koowa:filter.iterator');
