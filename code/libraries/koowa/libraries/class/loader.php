@@ -10,7 +10,7 @@
 require_once dirname(__FILE__).'/interface.php';
 require_once dirname(__FILE__).'/locator/interface.php';
 require_once dirname(__FILE__).'/locator/abstract.php';
-require_once dirname(__FILE__).'/locator/koowa.php';
+require_once dirname(__FILE__).'/locator/library.php';
 require_once dirname(__FILE__).'/registry/interface.php';
 require_once dirname(__FILE__).'/registry/registry.php';
 
@@ -37,11 +37,11 @@ class KClassLoader implements KClassLoaderInterface
     protected $_registry = null;
 
     /**
-     * Prefix map
+     * An associative array of basepaths
      *
      * @var array
      */
-    protected $_prefix_map = array();
+    protected $_basepaths = array();
 
     /**
      * Constructor
@@ -61,12 +61,13 @@ class KClassLoader implements KClassLoaderInterface
         }
         else $this->_registry = new KClassRegistry();
 
-        //Add the koowa class loader
-        $this->registerLocator(new KClassLocatorKoowa(
-            array('basepaths' => array('*' => dirname(dirname(__FILE__))))
-        ));
+        //Register the library locator
+        $this->registerLocator(new KClassLocatorLibrary());
 
-        //Auto register the loader
+        //Register the Koowa Library namesoace 'K'
+        $this->getLocator('lib')->registerNamespace('K', dirname(dirname(__FILE__)));
+
+        //Register the loader with the PHP autoloader
         $this->register();
     }
 
@@ -128,7 +129,7 @@ class KClassLoader implements KClassLoaderInterface
      * Load a class based on a class name
      *
      * @param string  $class    The class name
-     * @param string  $basepath The basepath
+     *  @param string $basepath The basepath name
      * @return boolean  Returns TRUE on success throws exception on failure
      */
     public function load($class, $basepath = null)
@@ -138,7 +139,7 @@ class KClassLoader implements KClassLoaderInterface
         if(!$this->isDeclared($class))
         {
             //Get the path
-            $path = $this->find( $class, $basepath );
+            $path = $this->getPath( $class, $basepath );
 
             if ($path !== false)
             {
@@ -158,41 +159,54 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Get the path based on a class name
      *
-     * @param string	$class      The class name
-     * @param string    $basepath   The basepath
-     * @return string   Returns canonicalized absolute pathname
+     * @param string $class    The class name
+     * @param string $basepath The basepath name
+     * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function find($class, $basepath = null)
+    public function getPath($class, $basepath = null)
     {
         static $base;
+        $result = false;
 
         //Switch the base
-        $base = $basepath ? $basepath : $base;
+        $prefix = $basepath ? $basepath.'-' : $base;
 
-        if(!$this->_registry->has($base.'-'.(string) $class))
+        if(!$this->_registry->has($prefix.$class))
         {
-            $result = false;
-
-            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $class);
-            $parts = explode(' ', $word);
-
-            if(isset($this->_prefix_map[$parts[0]]))
+            //Locate the class
+            foreach($this->_locators as $locator)
             {
-                $result = $this->_locators[$this->_prefix_map[$parts[0]]]->locate( $class, $basepath);
-
-                if ($result !== false)
-                {
-                    //Get the canonicalized absolute pathname
-                    $path = realpath($result);
-                    $result = $path !== false ? $path : $result;
-                }
-
-                $this->_registry->set($base.'-'.(string) $class, $result);
+                $path = $this->getBasepath($basepath);
+                if(false !== $result = $locator->locate($class, $path)) {
+                    break;
+                };
             }
 
-        } else $result = $this->_registry->get($base.'-'.(string)$class);
+            if ($result !== false)
+            {
+                //Get the canonicalized absolute pathname
+                if($result = realpath($result)) {
+                    $this->_registry->set($prefix.$class, $result);
+                }
+            }
+
+        } else $result = $this->_registry->get($prefix.$class);
 
         return $result;
+    }
+
+    /**
+     * Get the path based on a class name
+     *
+     * @param string $class    The class name
+     * @param string $path     The class path
+     * @param string $basepath The basepath name
+     * @return void
+     */
+    public function setPath($class, $path, $basepath = null)
+    {
+        $prefix = $basepath ? $basepath.'-' : '';
+        $this->_registry->set($prefix.$class, $path);
     }
 
     /**
@@ -213,8 +227,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function registerLocator(KClassLocatorInterface $locator)
     {
-        $this->_locators[$locator->getType()]     = $locator;
-        $this->_prefix_map[$locator->getPrefix()] = $locator->getType();
+        $this->_locators[$locator->getType()] = $locator;
     }
 
     /**
@@ -235,7 +248,7 @@ class KClassLoader implements KClassLoaderInterface
     }
 
     /**
-     * Get the registered adapters
+     * Get the registered class locators
      *
      * @return array
      */
@@ -267,6 +280,39 @@ class KClassLoader implements KClassLoaderInterface
     public function getAliases($class)
     {
         return array_search($class, $this->_registry->getAliases());
+    }
+
+    /**
+     * Register a basepath by name
+     *
+     * @param string $name The name of the basepath
+     * @param string $path The path
+     * @return void
+     */
+    public function registerBasepath($name, $path)
+    {
+        $this->_basepaths[$name] = $path;
+    }
+
+    /**
+     * Get a basepath by name
+     *
+     * @param string $name The name of the application
+     * @return string The path of the application
+     */
+    public function getBasepath($name)
+    {
+        return isset($this->_basepaths[$name]) ? $this->_basepaths[$name] : null;
+    }
+
+    /**
+     * Get a list of basepaths
+     *
+     * @return array
+     */
+    public function getBasepaths()
+    {
+        return $this->_basepaths;
     }
 
     /**
