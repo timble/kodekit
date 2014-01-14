@@ -223,11 +223,18 @@ class KClassLoader implements KClassLoaderInterface
      * Register a class locator
      *
      * @param  KClassLocatorInterface $locator
+     * @param  bool $prepend If true, the locator will be prepended instead of appended.
      * @return void
      */
-    public function registerLocator(KClassLocatorInterface $locator)
+    public function registerLocator(KClassLocatorInterface $locator, $prepend = false )
     {
-        $this->_locators[$locator->getType()] = $locator;
+        $array = array($locator->getType() => $locator);
+
+        if($prepend) {
+            $this->_locators = $array + $this->_locators;
+        } else {
+            $this->_locators = $this->_locators + $array;
+        }
     }
 
     /**

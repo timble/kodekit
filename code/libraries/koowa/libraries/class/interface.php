@@ -60,10 +60,11 @@ interface KClassLoaderInterface
     /**
      * Register a class locator
      *
-     * @param KClassLocatorInterface $locator
+     * @param  KClassLocatorInterface $locator
+     * @param  bool $prepend If true, the locator will be prepended instead of appended.
      * @return void
      */
-    public function registerLocator(KClassLocatorInterface $locator);
+    public function registerLocator(KClassLocatorInterface $locator, $prepend = false );
 
     /**
      * Get a registered class locator based on his type
