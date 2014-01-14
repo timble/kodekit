@@ -22,12 +22,12 @@ class KClassLocatorComponent extends KClassLocatorAbstract
 	 */
 	protected $_type = 'com';
 
-	/**
-	 * The class prefix
-	 *
-	 * @var string
-	 */
-	protected $_prefix = 'Com';
+    /**
+     * The active basepath
+     *
+     * @var string
+     */
+    protected $_basepath;
 
 	/**
 	 * Get the path based on a class name
@@ -38,16 +38,16 @@ class KClassLocatorComponent extends KClassLocatorAbstract
 	 */
 	public function locate($classname, $basepath = null)
 	{
-		$path = false;
-
-        if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
+        //Find the class
+        if (substr($classname, 0, 3) === 'Com')
         {
             /*
              * Exception rule for Exception classes
              *
              * Transform class to lower case to always load the exception class from the /exception/ folder.
              */
-            if ($pos = strpos($classname, 'Exception')) {
+            if ($pos = strpos($classname, 'Exception'))
+            {
                 $filename  = substr($classname, $pos + strlen('Exception'));
                 $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
@@ -56,7 +56,8 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             $parts   = explode(' ', $word);
 
             array_shift($parts);
-            $package = array_shift($parts);
+            $package   = array_shift($parts);
+            $namespace = ucfirst($package);
 
             $component = 'com_'.$package;
             $file 	   = array_pop($parts);
@@ -71,28 +72,28 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             }
             else
             {
-                //Exception for packages. Follow framework structure. Don't load classes from root.
-                if(isset($this->_basepaths[$package])) {
+                //Exception for framework components. Follow library structure. Don't load classes from root.
+                if(isset($this->_namespaces[$namespace])) {
                     $path = $file.'/'.$file;
                 } else {
                     $path = $file;
                 }
             }
 
-            //Find the basepath
-            if(!empty($basepath) && empty($this->_basepaths[$package])) {
-                $this->_basepath = $basepath;
+            //Switch basepath
+            if(!$this->getNamespace($namespace))
+            {
+                if(!empty($basepath)) {
+                    $this->_basepath = $basepath;
+                } else {
+                    $basepath = $this->_basepath;
+                }
             }
+            else $basepath = $this->getNamespace($namespace);
 
-            if(isset($this->_basepaths[$package])) {
-                $basepath = $this->_basepaths[$package];
-            } else {
-                $basepath = $this->_basepath;
-            }
-
-            $path = $basepath.'/components/'.$component.'/'.$path.'.php';
+            return $basepath.'/components/'.$component.'/'.$path.'.php';
         }
 
-		return $path;
+		return false;
 	}
 }

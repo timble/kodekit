@@ -16,36 +16,6 @@
 interface KClassLocatorInterface
 {
     /**
-	 * Get the type
-	 *
-	 * @return string	Returns the type
-	 */
-	public function getType();
-
-	/**
-	 * Get the class prefix
-	 *
-	 * @return string	Returns the class prefix
-	 */
-	public function getPrefix();
-
-    /**
-     * Register a specific package basepath
-     *
-     * @param  string   $basepath The base path of the package
-     * @param  string   $package
-     * @return KClassLocatorInterface
-     */
-    public function registerBasepath($basepath, $package = null);
-
-    /**
-     * Get the registered base paths
-     *
-     * @return array An array with package name as keys and base path as values
-     */
-    public function getBasepaths();
-
-    /**
      * Get the path based on a class name
      *
      * @param  string  $classname The class name
@@ -53,4 +23,43 @@ interface KClassLocatorInterface
      * @return string|boolean     Returns the path on success FALSE on failure
      */
     public function locate($classname, $basepath = null);
+
+    /**
+	 * Get the type
+	 *
+	 * @return string	Returns the type
+	 */
+	public function getType();
+
+    /**
+     * Register a namespace
+     *
+     * @param  string $namespace
+     * @param  string $path The location of the namespace
+     * @return KClassLocatorInterface
+     */
+    public function registerNamespace($namespace, $path);
+
+    /**
+     * Registers an array of namespaces
+     *
+     * @param array $namespaces An array of namespaces (namespaces as keys and location as value)
+     * @return KClassLocatorInterface
+     */
+    public function registerNamespaces(array $namespaces);
+
+    /**
+     * Get a the namespace paths
+     *
+     * @param string $namespace The namespace
+     * @return string The namespace path
+     */
+    public function getNamespace($namespace);
+
+    /**
+     * Get the registered namespaces
+     *
+     * @return array An array with namespaces as keys and path as value
+     */
+    public function getNamespaces();
 }

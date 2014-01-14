@@ -22,26 +22,12 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
 	 */
 	protected $_type = '';
 
-	/**
-	 * The class prefix
-	 *
-	 * @var string
-	 */
-	protected $_prefix = '';
-
     /**
-     * The active basepath
-     *
-     * @var string
-     */
-    protected $_basepath = '';
-
-    /**
-     * Package/basepath pairs to search
+     * Namespace/directory pairs to search
      *
      * @var array
      */
-    protected $_basepaths = array();
+    protected $_namespaces = array();
 
 	/**
      * Constructor.
@@ -50,59 +36,76 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
      */
     public function __construct( $config = array())
     {
-        if(isset($config['basepaths']))
+        if(isset($config['namespaces']))
         {
-            $packages = (array) $config['basepaths'];
-            foreach($packages as $package => $path) {
-                $this->registerBasepath($path, $package);
+            $namespaces = (array) $config['namespaces'];
+            foreach($namespaces as $namespace => $path) {
+                $this->registerNamespace($namespace, $path);
             }
         }
     }
 
     /**
-     * Register a specific package basepath
+     * Get the type
      *
-     * @param  string   $basepath The base path of the package
-     * @param  string   $package
+     * @return string	Returns the type
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
+     * Register a namespace
+     *
+     * @param  string $namespace
+     * @param  string $path The location of the namespace
      * @return KClassLocatorInterface
      */
-    public function registerBasepath($basepath, $package = '*')
+    public function registerNamespace($namespace, $path)
     {
-        if($package == '*') {
-            $this->_basepath = $basepath;
-        }
+        $namespace = trim($namespace, '\\');
+        $this->_namespaces[$namespace] = $path;
 
-        $this->_basepaths[$package] = $basepath;
+        krsort($this->_namespaces, SORT_STRING);
+
         return $this;
     }
 
-	/**
-	 * Get the type
-	 *
-	 * @return string	Returns the type
-	 */
-	public function getType()
-	{
-		return $this->_type;
-	}
-
     /**
-     * Get the registered base paths
+     * Registers an array of namespaces
      *
-     * @return array An array with package name as keys and base path as values
+     * @param array $namespaces An array of namespaces (namespaces as keys and location as value)
+     * @return KClassLocatorInterface
      */
-    public function getBasepaths()
+    public function registerNamespaces(array $namespaces)
     {
-        return $this->_basepaths;
+        foreach ($namespaces as $namespace => $path) {
+            $this->registerNamespace($namespace, $path);
+        }
+
+        return $this;
     }
 
-	/**
-	 * Get the class prefix
-	 *
-	 * @return string	Returns the class prefix
-	 */
-	public function getPrefix()
-	{
-		return $this->_prefix;
-	}
+    /**
+     * Get a the namespace paths
+     *
+     * @param string $namespace The namespace
+     * @return string The namespace path
+     */
+    public function getNamespace($namespace)
+    {
+        $namespace = trim($namespace, '\\');
+        return isset($this->_namespaces[$namespace]) ?  $this->_namespaces[$namespace] : null;
+    }
+
+    /**
+     * Get the registered namespaces
+     *
+     * @return array An array with namespaces as keys and path as value
+     */
+    public function getNamespaces()
+    {
+        return $this->_namespaces;
+    }
 }
