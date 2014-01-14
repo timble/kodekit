@@ -68,4 +68,32 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
             }
         }
     }
+
+    /**
+     * Only lock entities in administrator or in form layouts in site
+     *
+     * {@inheritdoc}
+     */
+    public function lockResource(KControllerContextInterface $context)
+    {
+        $domain = $this->getMixer()->getIdentifier()->domain;
+
+        if ($domain === 'admin' || $this->getRequest()->query->layout === 'form') {
+            parent::lockResource($context);
+        }
+    }
+
+    /**
+     * Only unlock entities in administrator or in form layouts in site
+     *
+     * {@inheritdoc}
+     */
+    public function unlockResource(KControllerContextInterface $context)
+    {
+        $domain = $this->getMixer()->getIdentifier()->domain;
+
+        if ($domain === 'admin' || $this->getRequest()->query->layout === 'form') {
+            parent::unlockResource($context);
+        }
+    }
 }
