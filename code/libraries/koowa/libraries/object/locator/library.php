@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObjectLocatorKoowa extends KObjectLocatorAbstract
+class KObjectLocatorLibrary extends KObjectLocatorAbstract
 {
     /**
      * The type
