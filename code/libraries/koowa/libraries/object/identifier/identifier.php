@@ -106,11 +106,11 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             }
 
             // Set the type
-            $this->type = isset($parts['scheme']) ? $parts['scheme'] : 'koowa';
+            $this->_type = isset($parts['scheme']) ? $parts['scheme'] : 'koowa';
 
             //Set the domain
             if(isset($parts['host'])) {
-                $this->domain = $parts['host'];
+                $this->_domain = $parts['host'];
             }
 
             // Set the path
@@ -118,7 +118,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             $this->_path = explode('.', $this->_path);
 
             // Set the extension (first part)
-            $this->package = array_shift($this->_path);
+            $this->_package = array_shift($this->_path);
 
             // Set the name (last part)
             if(count($this->_path)) {
@@ -128,9 +128,9 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         else
         {
             $parts = $identifier;
-
             foreach ($parts as $key => $value) {
-                $this->$key = $value;
+                $this->{'_'.$key} = $value;
+
             }
 
             $identifier = $this->toString();
@@ -148,6 +148,9 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	public function serialize()
 	{
         $data = $this->toArray();
+        $data['identifier'] = $this->_identifier;
+        $data['class']      = $this->_class;
+
         return serialize($data);
 	}
 
@@ -399,44 +402,13 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             'package'	  => $this->_package,
             'path'		  => $this->_path,
             'name'		  => $this->_name,
-            'class'       => $this->_class,
-            'identifier'  => $this->_identifier,
         );
 
         return $data;
     }
 
     /**
-     * Implements the virtual class properties
-     *
-     * This function creates a string representation of the identifier.
-     *
-     * @param   string $property The virtual property to set.
-     * @param   string $value    Set the virtual property to this value.
-     */
-    public function __set($property, $value)
-    {
-        if (property_exists($this, '_'.$property))
-        {
-            //Force the path to an array
-            if($property == 'path')
-            {
-                if(is_scalar($value)) {
-                    $value = (array) $value;
-                }
-            }
-
-            //Set the properties
-            $this->{'_'.$property} = $value;
-
-            //Unset the properties
-            $this->_class      = '';
-            $this->_identifier = '';
-        }
-    }
-
-    /**
-     * Implements access to virtual properties by reference so that it appears to be a public property.
+     *Implements access to virtual properties so that it appears to be a read-only public property.
      *
      * @param   string  $property The virtual property to return.
      * @return  array   The value of the virtual property.
@@ -466,7 +438,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
-     * Allow casting of the identifiier to a string
+     * Allow casting of the identifier to a string
      *
      * @return string
      */
