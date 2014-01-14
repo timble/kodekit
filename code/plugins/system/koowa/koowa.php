@@ -31,7 +31,9 @@ class PlgSystemKoowa extends JPlugin
 			if (JFactory::getApplication()->getName() === 'administrator') 
 			{
 				$link   = JRoute::_('index.php?option=com_config');
-				$error  = 'In order to use Joomlatools framework, your database type in Global Configuration should be set to <strong>MySQLi</strong>. Please go to <a href="%2$s">Global Configuration</a> and in the \'Server\' tab change your Database Type to <strong>MySQLi</strong>.';
+				$error  = 'In order to use Joomlatools framework, your database type in Global Configuration should be
+				           set to <strong>MySQLi</strong>. Please go to <a href="%2$s">Global Configuration</a> and in
+				           the \'Server\' tab change your Database Type to <strong>MySQLi</strong>.';
 
                 JFactory::getApplication()->enqueueMessage(sprintf(JText::_($error), $link), 'warning');
 			}
@@ -107,34 +109,44 @@ class PlgSystemKoowa extends JPlugin
             $manager = KObjectManager::getInstance();
             $loader  = $manager->getClassLoader();
 
+            //Application basepaths
+            $loader->registerBasepath('site' , JPATH_SITE);
+            $loader->registerBasepath('admin', JPATH_ADMINISTRATOR);
+
+            //Component locator
             $loader->registerLocator(new KClassLocatorComponent(array(
-                'basepaths' => array(
-                    '*'          => JPATH_BASE,
-                    'koowa'      => JPATH_LIBRARIES.'/koowa',
-                    'files'      => JPATH_LIBRARIES.'/koowa',
-                    'activities' => JPATH_LIBRARIES.'/koowa'
+                'namespaces' => array(
+                    '\\'         => JPATH_BASE,
+                    'Koowa'      => JPATH_LIBRARIES.'/koowa',
+                    'Files'      => JPATH_LIBRARIES.'/koowa',
+                    'Activities' => JPATH_LIBRARIES.'/koowa'
                 )
             )));
 
+            $manager->registerLocator($manager->getObject('koowa:object.locator.component'));
+
+            //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(
-                'basepaths' => array('*' => JPATH_BASE, 'koowa' => JPATH_LIBRARIES.'/koowa')
+                'namespaces' => array(
+                    '\\'     => JPATH_BASE,
+                    'Koowa'  => JPATH_LIBRARIES.'/koowa',
+
+                )
             )));
 
+            $manager->registerLocator($manager->getObject('com:koowa.object.locator.module'));
+
+            //Plugin Locator
             $loader->registerLocator(new ComKoowaClassLocatorPlugin(array(
-                'basepaths' => array('*' => JPATH_ROOT, 'koowa' => JPATH_LIBRARIES.'/koowa')
+                'namespaces' => array(
+                    '\\'     => JPATH_ROOT,
+                    'Koowa'  => JPATH_LIBRARIES.'/koowa',
+                )
             )));
 
-            KObjectIdentifier::addLocator($manager->getObject('koowa:object.locator.component'));
-            KObjectIdentifier::addLocator($manager->getObject('com:koowa.object.locator.module'));
-            KObjectIdentifier::addLocator($manager->getObject('com:koowa.object.locator.plugin'));
+            $manager->registerLocator($manager->getObject('com:koowa.object.locator.plugin'));
 
-            KObjectIdentifier::registerApplication('site' , JPATH_SITE);
-            KObjectIdentifier::registerApplication('admin', JPATH_ADMINISTRATOR);
-
-            KObjectIdentifier::registerPackage('koowa'     , JPATH_LIBRARIES.'/koowa');
-            KObjectIdentifier::registerPackage('files'     , JPATH_LIBRARIES.'/koowa');
-            KObjectIdentifier::registerPackage('activities', JPATH_LIBRARIES.'/koowa');
-
+            //Object aliases
             $manager->registerAlias('com:koowa.database.adapter.mysqli', 'koowa:database.adapter.mysqli');
             $manager->registerAlias('com:koowa.translator'    , 'translator');
             $manager->registerAlias('com:koowa.user'          , 'user');
@@ -146,7 +158,7 @@ class PlgSystemKoowa extends JPlugin
                 ->registerApplication('admin', '/administrator')
                 ->setApplication($application === 'administrator' ? 'admin' : $application);
 
-            $manager->getObject('com:koowa.object.bootstrapper.application')->bootstrap();
+            $manager->getObject('com:koowa.object.bootstrapper.application')->bootstrap($application);
 
             //Load the koowa plugins
             JPluginHelper::importPlugin('koowa', null, true);
