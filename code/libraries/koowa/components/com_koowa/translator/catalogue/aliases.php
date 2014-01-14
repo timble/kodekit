@@ -83,7 +83,7 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
             'end' => 'JLIB_HTML_END'
         );
 
-        if ($this->getIdentifier()->application === 'admin')
+        if ($this->getIdentifier()->domain === 'admin')
         {
             $config->append(array(
                 'data'  => $defaults

@@ -50,7 +50,7 @@ abstract class ComKoowaControllerModel extends KControllerModel
         {
             $toolbars[] = $this->getIdentifier()->name;
 
-            if($this->getIdentifier()->application === 'admin') {
+            if($this->getIdentifier()->domain === 'admin') {
                 $toolbars[] = 'menubar';
             };
         }
@@ -98,7 +98,7 @@ abstract class ComKoowaControllerModel extends KControllerModel
     protected function _actionRead(KControllerContextInterface $context)
     {
         //Request
-        if($this->getIdentifier()->application === 'admin')
+        if($this->getIdentifier()->domain === 'admin')
         {
             if($this->isEditable() && KStringInflector::isSingular($this->getView()->getName()))
             {

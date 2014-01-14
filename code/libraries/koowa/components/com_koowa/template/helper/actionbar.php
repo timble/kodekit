@@ -300,7 +300,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
             'icon-apply'  => 'icon-edit'
         );
 
-        if (version_compare(JVERSION, '3.0', '>=') || $this->getIdentifier()->application == 'site') {
+        if (version_compare(JVERSION, '3.0', '>=') || $this->getIdentifier()->domain == 'site') {
             $icon = str_replace('icon-32-', 'icon-', $icon);
         }
 

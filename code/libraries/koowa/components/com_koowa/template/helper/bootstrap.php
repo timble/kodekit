@@ -65,7 +65,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             'javascript'    => false,
             'wrapper_class' => $identifier->type.'_'.$identifier->package,
             'package'       => $identifier->package,
-            'file'          => $identifier->type === 'mod' ? 'module' : $identifier->application,
+            'file'          => $identifier->type === 'mod' ? 'module' : $identifier->domain,
             'load_default'  => version_compare(JVERSION, '3.0', '<')
         ))->append(array(
             'wrapper'       => sprintf('<div class="koowa %s">

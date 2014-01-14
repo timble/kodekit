@@ -49,7 +49,7 @@ abstract class ComKoowaControllerView extends KControllerView
         {
             $toolbars[] = $this->getIdentifier()->name;
 
-            if($this->getIdentifier()->application === 'admin') {
+            if($this->getIdentifier()->domain === 'admin') {
                 $toolbars[] = 'menubar';
             }
         }

@@ -167,7 +167,7 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             'select2'         => false,
             'value'		      => $config->name,
             'selected'        => $config->{$config->name},
-            'identifier'      => 'com://'.$this->getIdentifier()->application.'/'.$this->getIdentifier()->package.'.model.'.$config->model
+            'identifier'      => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
             'text'		      => $config->value,
         ))->append(array(
