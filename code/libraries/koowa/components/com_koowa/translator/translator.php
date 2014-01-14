@@ -346,7 +346,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
                 $old['name'] = 'catalogue';
             }
 
-            $identifier = KObjectIdentifier::fromArray($old);
+            $identifier = $this->getIdentifier($old);
         }
 
         return $this->getObject($identifier);

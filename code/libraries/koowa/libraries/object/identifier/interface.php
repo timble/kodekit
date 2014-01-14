@@ -140,28 +140,9 @@ interface KObjectIdentifierInterface extends Serializable
     public function toString();
 
     /**
-     * Build the identifier from a string
-     *
-     * Partial identifiers are also accepted. fromString tries its best to parse them correctly.
-     *
-     * @param   string  $identifier
-     * @throws  UnexpectedValueException If the identifier is not a string or cannot be casted to one.
-     * @return  KObjectIdentifier
-     */
-    public static function fromString($identifier);
-
-    /**
      * Formats the identifier as an associative array
      *
      * @return array
      */
     public function toArray();
-
-    /**
-     * Build the identifier from an array
-     *
-     * @param   array  $parts Associative array like toArray() returns.
-     * @return  KObjectIdentifier
-     */
-    public static function fromArray(array $parts);
 }

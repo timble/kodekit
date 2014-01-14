@@ -157,7 +157,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
                 }
 
                 if(is_array($identifier)) {
-                    $identifier = KObjectIdentifier::fromArray($identifier);
+                    $identifier = new KObjectIdentifier($identifier);
                 }
             }
 

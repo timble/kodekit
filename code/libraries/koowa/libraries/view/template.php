@@ -108,7 +108,7 @@ abstract class KViewTemplate extends KViewAbstract
             $identifier['name'] = $layout;
             unset($identifier['path'][0]);
 
-            $layout = (string) KObjectIdentifier::fromArray($identifier);
+            $layout = (string) $this->getIdentifier($identifier);
         }
 
         //Render the template
