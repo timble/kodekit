@@ -21,27 +21,6 @@
 class KObjectIdentifier implements KObjectIdentifierInterface
 {
     /**
-     * An associative array of application paths
-     *
-     * @var array
-     */
-    protected static $_applications = array();
-
-    /**
-     * An associative array of package paths
-     *
-     * @var array
-     */
-    protected static $_packages = array();
-
-    /**
-     * Associative array of identifier adapters
-     *
-     * @var array
-     */
-    protected static $_locators = array();
-
-    /**
      * The identifier
      *
      * @var string
@@ -49,18 +28,18 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     protected $_identifier = '';
 
     /**
-     * The application name
-     *
-     * @var string
-     */
-    protected $_application = '';
-
-    /**
      * The identifier type [com|plg|mod]
      *
      * @var string
      */
     protected $_type = '';
+
+    /**
+     * The identifier domain
+     *
+     * @var string
+     */
+    protected $_domain = '';
 
     /**
      * The identifier package
@@ -84,50 +63,77 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     protected $_name = '';
 
      /**
-     * The classname
+     * The identifier class
      *
      * @var string
      */
-    protected $_classname = '';
+    protected $_class = '';
 
     /**
-     * The base path
+     * The object config
      *
-     * @var string
+     * @var KObjectConfig
      */
-    protected $_basepath = '';
+    protected $_config = null;
+
+    /**
+     * The object mixins
+     *
+     * @var array
+     */
+    protected $_mixins = array();
+
+    /**
+     * The object decorators
+     *
+     * @var array
+     */
+    protected $_decorators = array();
 
     /**
      * Constructor
      *
-     * @param   string $identifier Identifier string or object in type://namespace/package.[.path].name format
+     * @param   string $identifier Identifier string or object in type://domain/package[.path].name format
      * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
      */
     public function __construct($identifier)
     {
         //Get the parts
-        if(false === $parts = parse_url($identifier)) {
-            throw new KObjectExceptionInvalidIdentifier('Identifier cannot be parsed : '.$identifier);
+        if(!is_array($identifier))
+        {
+            if(false === $parts = parse_url($identifier)) {
+                throw new KObjectExceptionInvalidIdentifier('Identifier cannot be parsed : '.$identifier);
+            }
+
+            // Set the type
+            $this->type = isset($parts['scheme']) ? $parts['scheme'] : 'koowa';
+
+            //Set the domain
+            if(isset($parts['host'])) {
+                $this->domain = $parts['host'];
+            }
+
+            // Set the path
+            $this->_path = trim($parts['path'], '/');
+            $this->_path = explode('.', $this->_path);
+
+            // Set the extension (first part)
+            $this->package = array_shift($this->_path);
+
+            // Set the name (last part)
+            if(count($this->_path)) {
+                $this->_name = array_pop($this->_path);
+            }
         }
+        else
+        {
+            $parts = $identifier;
 
-        // Set the type
-        $this->type = isset($parts['scheme']) ? $parts['scheme'] : 'koowa';
+            foreach ($parts as $key => $value) {
+                $this->$key = $value;
+            }
 
-        //Set the application
-        if(isset($parts['host'])) {
-            $this->application = $parts['host'];
-        }
-
-        // Set the path
-        $this->_path = trim($parts['path'], '/');
-        $this->_path = explode('.', $this->_path);
-
-        // Set the extension (first part)
-        $this->package = array_shift($this->_path);
-
-        // Set the name (last part)
-        if(count($this->_path)) {
-            $this->_name = array_pop($this->_path);
+            $identifier = $this->toString();
         }
 
         //Cache the identifier to increase performance
@@ -141,17 +147,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	 */
 	public function serialize()
 	{
-        $data = array(
-            'application' => $this->_application,
-            'type'		  => $this->_type,
-            'package'	  => $this->_package,
-            'path'		  => $this->_path,
-            'name'		  => $this->_name,
-            'identifier'  => $this->_identifier,
-            'basepath'    => $this->_basepath,
-            'classname'   => $this->classname,
-        );
-
+        $data = $this->toArray();
         return serialize($data);
 	}
 
@@ -170,51 +166,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 	}
 
     /**
-     * Checks if the identifier extends a class, implements an interface or uses a trait
-     *
-     * @param string  $class An identifier object or a class name
-     * @param boolean $autoload  Whether to allow this function to load the class automatically through the __autoload()
-     *                           magic method.
-     * @return bool
-     */
-    public function inherits($class, $autoload = true)
-    {
-        if($class instanceof KObjectIdentifier) {
-            $class = $class->classname;
-        }
-
-        //Check parent classes
-        if(array_key_exists($class, class_parents($this->classname, $autoload))) {
-            return true;
-        }
-
-        //Check interfaces
-        if(array_key_exists($class, class_implements($this->classname, $autoload))) {
-            return true;
-        }
-
-        //Check traits
-        if(function_exists('class_uses'))
-        {
-            if(array_key_exists($class, class_uses($this->classname, $autoload))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if the identifier has been defined
-     *
-     * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
-     */
-    public function exists()
-    {
-        return (bool) $this->getLocator()->locate($this, false);
-    }
-
-    /**
      * Get the identifier type
      *
      * @return string
@@ -225,15 +176,13 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
-     * Set the identifier type
+     * Get the identifier domain
      *
-     * @param  string $type
-     * @return  KObjectIdentifierInterface
+     * @return string
      */
-    public function setType($type)
+    public function getDomain()
     {
-        $this->type = $type;
-        return $this;
+        return $this->_domain;
     }
 
     /**
@@ -247,18 +196,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
-     * Set the identifier package
-     *
-     * @param  string $package
-     * @return  KObjectIdentifierInterface
-     */
-    public function setPackage($package)
-    {
-        $this->package = $package;
-        return $this;
-    }
-
-    /**
      * Get the identifier package
      *
      * @return array
@@ -266,18 +203,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     public function getPath()
     {
         return $this->_path;
-    }
-
-    /**
-     * Set the identifier path
-     *
-     * @param  string $path
-     * @return  KObjectIdentifierInterface
-     */
-    public function setPath(array $path)
-    {
-        $this->_path = $path;
-        return $this;
     }
 
     /**
@@ -291,127 +216,119 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
-     * Set the identifier name
-     *
-     * @param  string $name
-     * @return  KObjectIdentifierInterface
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-	/**
-	 * Set an application path
-	 *
-	 * @param string $application The name of the application
-	 * @param string $path        The path of the application
-	 * @return void
-     */
-    public static function registerApplication($application, $path)
-    {
-        self::$_applications[$application] = $path;
-    }
-
-	/**
-	 * Get an application path
-	 *
-	 * @param string    $application   The name of the application
-	 * @return string	The path of the application
-     */
-    public static function getApplicationPath($application)
-    {
-        return isset(self::$_applications[$application]) ? self::$_applications[$application] : null;
-    }
-
-	/**
-     * Get a list of applications
-     *
-     * @return array
-     */
-    public static function getApplications()
-    {
-        return self::$_applications;
-    }
-
-    /**
-     * Set a package path
-     *
-     * @param string $package    The name of the package
-     * @param string $path       The path of the package
-     * @return void
-     */
-    public static function registerPackage($package, $path)
-    {
-        self::$_packages[$package] = $path;
-    }
-
-    /**
-     * Get a package path
-     *
-     * @param string    $package   The name of the application
-     * @return string	The path of the application
-     */
-    public static function getPackagePath($package)
-    {
-        return isset(self::$_packages[$package]) ? self::$_packages[$package] : null;
-    }
-
-    /**
-     * Get a list of packages
-     *
-     * @return array
-     */
-    public static function getPackages()
-    {
-        return self::$_packages;
-    }
-
-	/**
-     * Add a identifier adapter
-     *
-     * @param KObjectLocatorInterface $locator A KObjectLocator
-     * @return void
-     */
-    public static function addLocator(KObjectLocatorInterface $locator)
-    {
-        self::$_locators[$locator->getType()] = $locator;
-    }
-
-    /**
-     * Get the object locator
-     *
-     * @return KObjectLocatorInterface|null  Returns the object locator or NULL if the locator can not be found.
-     */
-    public function getLocator()
-    {
-        $result = null;
-        if(isset(self::$_locators[$this->_type])) {
-            $result = self::$_locators[$this->_type];
-        }
-
-        return $result;
-    }
-
-	/**
-     * Get the registered locators
-     *
-     * @return array
-     */
-    public static function getLocators()
-    {
-        return self::$_locators;
-    }
-
-    /**
      * Get the identifier class name
      *
      * @return string
      */
-    public function getClassName()
+    public function getClass()
     {
-        return $this->classname;
+        return $this->_class;
+    }
+
+    /**
+     * Set the identifier class name
+     *
+     * @param  string $class
+     * @return KObjectIdentifier
+     */
+    public function setClass($class)
+    {
+        $this->_class = $class;
+        return $this;
+    }
+
+    /**
+     * Get the config
+     *
+     * This function will lazy create a config object is one does not exist yet.
+     *
+     * @return KObjectConfig
+     */
+    public function getConfig()
+    {
+        if(!isset($this->_config)) {
+            $this->_config = new KObjectConfig();
+        }
+
+        return $this->_config;
+    }
+
+    /**
+     * Set the config
+     *
+     * @param   array    $data   A ObjectConfig object or a an array of configuration options
+     * @param   boolean  $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
+     * @return  KObjectIdentifierInterface
+     */
+    public function setConfig($data, $merge = true)
+    {
+        $config = $this->getConfig();
+
+        if($merge) {
+            $config->append($data);
+        } else {
+            $this->_config = new KObjectConfig($data);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a mixin
+     *
+     * @param mixed $decorator An object implementing ObjectMixinInterface, an ObjectIdentifier or an identifier string
+     * @param array $config     An array of configuration options
+     * @return KObjectIdentifierInterface
+     * @see KObject::mixin()
+     */
+    public function addMixin($mixin, $config = array())
+    {
+        if ($mixin instanceof KObjectMixinInterface || $mixin instanceof KObjectIdentifier) {
+            $this->_mixins[] = $mixin;
+        } else {
+            $this->_mixins[$mixin] = $config;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the mixin registry
+     *
+     * @return array
+     */
+    public function getMixins()
+    {
+        return $this->_mixins;
+    }
+
+    /**
+     * Add a decorator
+     *
+     * @param mixed $decorator An object implementing ObjectDecoratorInterface, an ObjectIdentifier or an identifier string
+     * @param array $config    An array of configuration options
+     * @return KObjectIdentifierInterface
+     * @see KObject::decorate()
+     */
+    public function addDecorator($decorator, $config = array())
+    {
+        if ($decorator instanceof KObjectDecoratorInterface || $decorator instanceof KObjectIdentifier) {
+            $this->_decorators[] = $decorator;
+        } else {
+            $this->_decorators[$decorator] = $config;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the decorators
+     *
+     *  @return array
+     */
+    public function getDecorators()
+    {
+        return $this->_decorators;
     }
 
     /**
@@ -421,7 +338,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function isMultiton()
     {
-        return array_key_exists('KObjectMultiton', class_implements($this->classname));
+        return array_key_exists('KObjectMultiton', class_implements($this->class));
     }
 
     /**
@@ -431,11 +348,11 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function isSingleton()
     {
-        return array_key_exists('KObjectSingleton', class_implements($this->classname));
+        return array_key_exists('KObjectSingleton', class_implements($this->class));
     }
 
     /**
-     * Formats the identifier as a type:[//application/]package.[.path].name string
+     * Formats the identifier as a type:[//domain/]package.[.path].name string
      *
      * @return string
      */
@@ -447,8 +364,8 @@ class KObjectIdentifier implements KObjectIdentifierInterface
                 $this->_identifier .= $this->_type;
             }
 
-            if(!empty($this->_application)) {
-                $this->_identifier .= '://'.$this->_application.'/';
+            if(!empty($this->_domain)) {
+                $this->_identifier .= '://'.$this->_domain.'/';
             } else {
                 $this->_identifier .= ':';
             }
@@ -470,13 +387,66 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     }
 
     /**
+     * Build the identifier from a string
+     *
+     * Partial identifiers are also accepted. fromString tries its best to parse them correctly.
+     *
+     * @param   string  $identifier
+     * @throws  UnexpectedValueException If the identifier is not a string or cannot be casted to one.
+     * @return  KObjectIdentifier
+     */
+    public static function fromString($identifier)
+    {
+        if (!is_string($identifier) && !is_numeric($identifier) && !is_callable(array($identifier, '__toString')))
+        {
+            throw new UnexpectedValueException(
+                'The identifier must be a string or object implementing __toString(), "'.gettype($identifier).'" given.'
+            );
+        }
+
+        $identifier = new self($identifier);
+        return $identifier;
+    }
+
+    /**
+     * Formats the identifier as an associative array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = array(
+            'domain'      => $this->_domain,
+            'type'		  => $this->_type,
+            'package'	  => $this->_package,
+            'path'		  => $this->_path,
+            'name'		  => $this->_name,
+            'class'       => $this->_class,
+            'identifier'  => $this->_identifier,
+        );
+
+        return $data;
+    }
+
+    /**
+     * Build the identifier from an array
+     *
+     * @param   array  $parts Associative array like toArray() returns.
+     * @return  KObjectIdentifier
+     */
+    public static function fromArray(array $parts)
+    {
+        $identifier = new self($parts);
+        return $identifier;
+    }
+
+    /**
      * Implements the virtual class properties
      *
      * This function creates a string representation of the identifier.
      *
      * @param   string $property The virtual property to set.
      * @param   string $value    Set the virtual property to this value.
-     * @throws  KObjectExceptionInvalidIdentifier If the application or type are unknown
      */
     public function __set($property, $value)
     {
@@ -490,40 +460,12 @@ class KObjectIdentifier implements KObjectIdentifierInterface
                 }
             }
 
-            //Set the base path based on the application path
-            if($property == 'application')
-            {
-                //Check if the application is registered
-                if(!isset(self::$_applications[$value])) {
-                    throw new KObjectExceptionInvalidIdentifier('Unknown application: '.$value);
-               }
-
-               $this->_basepath = self::$_applications[$value];
-            }
-
-            if($property == 'package')
-            {
-                if(isset(self::$_packages[$value])) {
-                    $this->_basepath = self::$_packages[$value];
-                }
-            }
-
-            //Set the type and make sure it's
-            if($property == 'type')
-            {
-                //Check if the type is registered
-                if($value != 'koowa' && !isset(self::$_locators[$value]))  {
-                    throw new KObjectExceptionInvalidIdentifier('Unknown type: '.$value);
-                }
-            }
-
-
             //Set the properties
             $this->{'_'.$property} = $value;
 
             //Unset the properties
+            $this->_class      = '';
             $this->_identifier = '';
-            $this->_classname  = '';
         }
     }
 
@@ -533,16 +475,11 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      * @param   string  $property The virtual property to return.
      * @return  array   The value of the virtual property.
      */
-    public function &__get($property)
+    public function __get($property)
     {
         $result = null;
-        if(isset($this->{'_'.$property}))
-        {
-            if($property == 'classname' && empty($this->_classname)) {
-                $this->_classname = self::$_locators[$this->_type]->locate($this);
-            }
-
-            $result =& $this->{'_'.$property};
+        if(isset($this->{'_'.$property})) {
+            $result = $this->{'_'.$property};
         }
 
         return $result;
@@ -556,16 +493,29 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function __isset($property)
     {
-        return isset($this->{'_'.$property});
+        $name = ltrim($property, '_');
+        $vars = get_object_vars($this);
+
+        return isset($vars['_'.$name]);
     }
 
     /**
-     * Allow casting of the identfiier to a string
+     * Allow casting of the identifiier to a string
      *
      * @return string
      */
     public function __toString()
     {
         return $this->toString();
+    }
+
+    /**
+     * Prevent creating clones of this class
+     *
+     * @throws Exception
+     */
+    final private function __clone()
+    {
+        throw new Exception("An object identifier is an immutable object and cannot be cloned.");
     }
 }

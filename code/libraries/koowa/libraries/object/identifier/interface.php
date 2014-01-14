@@ -19,22 +19,6 @@
 interface KObjectIdentifierInterface extends Serializable
 {
     /**
-     * Checks if the identifier extends a class, implements an interface or uses a trait
-     *
-     * @param string $class An identifier object or a class name
-     * @param boolean $autoload  Whether to allow this function to load the class automatically through the __autoload()
-     *                           magic method.
-     */
-    public function inherits($class, $autoload = true);
-
-    /**
-     * Checks if the identifier has been defined
-     *
-     * @return bool Returns TRUE if the identifier exists, FALSE otherwise.
-     */
-    public function exists();
-
-    /**
      * Get the identifier type
      *
      * @return string
@@ -42,13 +26,11 @@ interface KObjectIdentifierInterface extends Serializable
     public function getType();
 
     /**
-     * Set the identifier type
+     * Get the identifier domain
      *
-     * @param  string $type
-     * @return KObjectIdentifierInterface
-     * @throws DomainException If the type is unknown
+     * @return string
      */
-    public function setType($type);
+    public function getDomain();
 
     /**
      * Get the identifier package
@@ -58,27 +40,11 @@ interface KObjectIdentifierInterface extends Serializable
     public function getPackage();
 
     /**
-     * Set the identifier package
-     *
-     * @param  string $package
-     * @return KObjectIdentifierInterface
-     */
-    public function setPackage($package);
-
-    /**
      * Get the identifier package
      *
      * @return array
      */
     public function getPath();
-
-    /**
-     * Set the identifier path
-     *
-     * @param  string $path
-     * @return KObjectIdentifierInterface
-     */
-    public function setPath(array $path);
 
     /**
      * Get the identifier package
@@ -88,82 +54,69 @@ interface KObjectIdentifierInterface extends Serializable
     public function getName();
 
     /**
-     * Set the identifier name
+     * Get the identifier class name
      *
-     * @param  string $name
+     * @return string
+     */
+    public function getClass();
+
+    /**
+     * Set the identifier class name
+     *
+     * @param  string $class
      * @return KObjectIdentifierInterface
      */
-    public function setName($name);
+    public function setClass($class);
 
     /**
-     * Set an application path
+     * Get the config
      *
-     * @param string $application The name of the application
-     * @param string $path        The path of the application
-     * @return void
+     * @return KObjectConfig
      */
-    public static function registerApplication($application, $path);
+    public function getConfig();
 
     /**
-     * Get an application path
+     * Set the config
      *
-     * @param string    $application   The name of the application
-     * @return string	The path of the application
+     * @param  KObjectConfig|array $data   A ObjectConfig object or a an array of configuration options
+     * @param   boolean           $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
+     * @return  KObjectIdentifierInterface
      */
-    public static function getApplicationPath($application);
+    public function setConfig($data, $merge = true);
 
     /**
-     * Get a list of applications
+     * Add a mixin
      *
-     * @return array
-     */
-    public static function getApplications();
-
-    /**
-     * Set a package path
-     *
-     * @param string $package    The name of the package
-     * @param string $path       The path of the package
-     * @return void
-     */
-    public static function registerPackage($package, $path);
-
-    /**
-     * Get a package path
-     *
-     * @param string    $package   The name of the application
-     * @return string	The path of the application
-     */
-    public static function getPackagePath($package);
-
-    /**
-     * Get a list of packages
-     *
-     * @return array
-     */
-    public static function getPackages();
-
-    /**
-     * Add a object locator
-     *
-     * @param KObjectLocatorInterface $locator
+     *  @param mixed $decorator An object implementing ObjectMixinInterface, an ObjectIdentifier or an identifier string
+     * @param array $config     An array of configuration options
      * @return KObjectIdentifierInterface
+     * @see Object::mixin()
      */
-    public static function addLocator(KObjectLocatorInterface $locator);
+    public function addMixin($mixin, $config = array());
 
     /**
-     * Get the object locator
+     * Get the mixins
      *
-     * @return KObjectLocatorInterface|null  Returns the object locator or NULL if the locator can not be found.
+     *  @return array
      */
-    public function getLocator();
+    public function getMixins();
+
+    /**
+     * Add a decorator
+     *
+     * @param mixed $decorator An object implementing ObjectDecoratorInterface, an ObjectIdentifier or an identifier string
+     * @param array $config    An array of configuration options
+     * @return KObjectIdentifierInterface
+     * @see Object::decorate()
+     */
+    public function addDecorator($decorator, $config = array());
 
     /**
      * Get the decorators
      *
      *  @return array
      */
-    public static function getLocators();
+    public function getDecorators();
 
     /**
      * Check if the object is a singleton
@@ -185,4 +138,30 @@ interface KObjectIdentifierInterface extends Serializable
      * @return string
      */
     public function toString();
+
+    /**
+     * Build the identifier from a string
+     *
+     * Partial identifiers are also accepted. fromString tries its best to parse them correctly.
+     *
+     * @param   string  $identifier
+     * @throws  UnexpectedValueException If the identifier is not a string or cannot be casted to one.
+     * @return  KObjectIdentifier
+     */
+    public static function fromString($identifier);
+
+    /**
+     * Formats the identifier as an associative array
+     *
+     * @return array
+     */
+    public function toArray();
+
+    /**
+     * Build the identifier from an array
+     *
+     * @param   array  $parts Associative array like toArray() returns.
+     * @return  KObjectIdentifier
+     */
+    public static function fromArray(array $parts);
 }
