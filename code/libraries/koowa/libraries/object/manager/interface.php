@@ -28,7 +28,25 @@ interface KObjectManagerInterface
      * @return KObjectIdentifier
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function getIdentifier($identifier = null);
+    public function getIdentifier($identifier = null, $autolocate = false);
+
+    /**
+     * Get the identifier class
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
+     * @return string
+     */
+    public function getClass($identifier, $fallback = true);
+
+    /**
+     * Get the identifier class
+     *
+     * @param mixed  $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param string $class      The class name
+     * @return string
+     */
+    public function setClass($identifier, $class);
 
     /**
      * Get an object instance based on an object identifier
@@ -90,15 +108,6 @@ interface KObjectManagerInterface
     public function registerMixin($identifier, $mixin);
 
     /**
-     * Get the mixins for an identifier
-     *
-     * @param mixed $identifier An object that implements the KObjectInterface, an KObjectIdentifier or valid identifier string
-     * @return array An array of mixins registered for the identifier
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     */
-    public function getMixins($identifier);
-
-    /**
      * Register a decorator for an identifier
      *
      * The object is decorated when it's first instantiated see {@link get} The object represented by the identifier is
@@ -112,15 +121,6 @@ interface KObjectManagerInterface
      * @see KObjectDecoratable::decorate()
      */
     public function registerDecorator($identifier, $decorator);
-
-    /**
-     * Get the decorators for an identifier
-     *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return array An array of decorators registered for the identifier
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     */
-    public function getDecorators($identifier);
 
     /**
      * Set an alias for an identifier
