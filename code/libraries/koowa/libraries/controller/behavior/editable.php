@@ -34,9 +34,10 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             $this->registerCallback('after.save'  , array($this, 'unsetReferrer'));
             $this->registerCallback('after.cancel', array($this, 'unsetReferrer'));
 
+            $domain = $this->getMixer()->getIdentifier()->domain;
+
             // Only lock/unlock entities in administrator or in form layouts in site
-            $application = $this->getMixer()->getIdentifier()->application;
-            if ($application === 'admin' || $this->getRequest()->query->layout === 'form')
+            if ($domain === 'admin' || $this->getRequest()->query->layout === 'form')
             {
                 $this->registerCallback('after.read'  , array($this, 'lockResource'));
                 $this->registerCallback('after.save'  , array($this, 'unlockResource'));
