@@ -11,7 +11,7 @@
  * Module Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
 {
@@ -80,7 +80,7 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
 
         //Check if the class exists
         $result = false;
-        if (!$this->getObject('manager')->getClassLoader()->load('Mod'.$package.$class, $identifier->basepath))
+        if (!$this->getObject('manager')->getClassLoader()->load('Mod'.$package.$class, $identifier->domain))
         {
             //Use the fallbacks
             if($fallback)

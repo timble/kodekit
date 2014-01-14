@@ -11,7 +11,7 @@
  * Component Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Component\Koowa
  */
 class KObjectLocatorComponent extends KObjectLocatorAbstract
 {
@@ -78,7 +78,7 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
 
         //Check if the class exists
         $result = false;
-        if (!$this->getObject('manager')->getClassLoader()->load('Com'.$package.$class, $identifier->basepath))
+        if (!$this->getObject('manager')->getClassLoader()->load('Com'.$package.$class, $identifier->domain))
         {
             //Use the fallbacks
             if($fallback)
