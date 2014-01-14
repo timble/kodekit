@@ -78,8 +78,7 @@ class KTranslator extends KObject implements KTranslatorInterface
      */
     public function replaceParameters($string, array $parameters = array())
     {
-        $keys = array_map(array($this, '_replaceKeys'), array_keys($parameters));
-
+        $keys       = array_map(array($this, '_replaceKeys'), array_keys($parameters));
         $parameters = array_combine($keys, $parameters);
 
         return strtr($string, $parameters);
