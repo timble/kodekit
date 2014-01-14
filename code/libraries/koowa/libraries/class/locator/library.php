@@ -8,26 +8,19 @@
  */
 
 /**
- * Koowa Class Locator
+ * Library Class Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
-class KClassLocatorKoowa extends KClassLocatorAbstract
+class KClassLocatorLibrary extends KClassLocatorAbstract
 {
 	/**
 	 * The adapter type
 	 *
 	 * @var string
 	 */
-	protected $_type = 'koowa';
-
-	/**
-	 * The class prefix
-	 *
-	 * @var string
-	 */
-	protected $_prefix = 'K';
+	protected $_type = 'lib';
 
 	/**
 	 * Get the path based on a class name
@@ -38,17 +31,19 @@ class KClassLocatorKoowa extends KClassLocatorAbstract
 	 */
 	public function locate($classname, $basepath = null)
 	{
-		$path = false;
-
-		// If class start with a 'K' it is a Koowa framework class and we handle it
-        if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
+        foreach($this->_namespaces as $namespace => $basepath)
         {
+            if(strpos($classname, $namespace) !== 0) {
+                continue;
+            }
+
             /*
              * Exception rule for Exception classes
              *
              * Transform class to lower case to always load the exception class from the /exception/ folder.
              */
-            if ($pos = strpos($classname, 'Exception')) {
+            if ($pos = strpos($classname, 'Exception'))
+            {
                 $filename  = substr($classname, $pos + strlen('Exception'));
                 $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
@@ -65,13 +60,14 @@ class KClassLocatorKoowa extends KClassLocatorAbstract
 				$path = $path.'/'.$path;
 			}
 
-			if(!is_file($this->_basepath.'/'.$path.'.php')) {
-				$path = $path.'/'.strtolower(array_pop($parts));
-			}
+            $file = $basepath.'/'.$path.'.php';
+            if(!is_file($file)) {
+                $file = $basepath.'/'.$path.'/'.strtolower(array_pop($parts)).'.php';
+            }
 
-			$path = $this->_basepath.'/'.$path.'.php';
+            return $file;
 		}
 
-		return $path;
+		return false;
 	}
 }
