@@ -23,13 +23,6 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
 	protected $_type = 'plg';
 
 	/**
-	 * The class prefix
-	 *
-	 * @var string
-	 */
-	protected $_prefix = 'Plg';
-
-	/**
 	 * Get the path based on a class name
 	 *
 	 * @param  string $classname The class name
@@ -38,16 +31,15 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
 	 */
 	public function locate($classname, $basepath = null)
 	{
-        $path = false;
-
-        if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
+        if (substr($classname, 0, 3) === 'Plg')
         {
             /*
-             * Exception rule for Exception classes
-             *
-             * Transform class to lower case to always load the exception class from the /exception/ folder.
-             */
-            if ($pos = strpos($classname, 'Exception')) {
+                 * Exception rule for Exception classes
+                 *
+                 * Transform class to lower case to always load the exception class from the /exception/ folder.
+                 */
+            if ($pos = strpos($classname, 'Exception'))
+            {
                 $filename  = substr($classname, $pos + strlen('Exception'));
                 $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
@@ -56,29 +48,26 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
             $parts = explode(' ', $word);
 
             array_shift($parts);
-            $package = array_shift($parts);
+            $package   = array_shift($parts);
+            $namespace = ucfirst($package);
 
-			if(count($parts)) {
-				$path = implode('/', $parts);
-			} else {
-				$path = $package;
-			}
-
-            //Find the basepath
-            if(!empty($basepath) && empty($this->_basepaths[$package])) {
-                $this->_basepath = $basepath;
-            }
-
-            if(isset($this->_basepaths[$package])) {
-                $basepath = $this->_basepaths[$package];
+            if(count($parts)) {
+                $path = implode('/', $parts);
             } else {
-                $basepath = $this->_basepath;
+                $path = $package;
             }
 
-		    $path = $basepath.'/plugins/'.$package.'/'.$path.'.php';
+            //Switch basepath
+            if(!$this->getNamespace($namespace)) {
+                $basepath = $this->getNamespace('\\');
+            } else {
+                $basepath = $this->getNamespace($namespace);
+            }
+
+            return $basepath.'/plugins/'.$package.'/'.$path.'.php';
 	    }
 
-		return $path;
+		return false;
 
 	}
 }

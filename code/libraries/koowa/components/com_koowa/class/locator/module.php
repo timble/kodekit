@@ -22,12 +22,12 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 	 */
 	protected $_type = 'mod';
 
-	/**
-	 * The class prefix
-	 *
-	 * @var string
-	 */
-	protected $_prefix = 'Mod';
+    /**
+     * The active basepath
+     *
+     * @var string
+     */
+    protected $_basepath;
 
 	/**
 	 * Get the path based on a class name
@@ -38,16 +38,15 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 	 */
 	public function locate($classname, $basepath = null)
 	{
-		$path = false;
-
-        if (substr($classname, 0, strlen($this->_prefix)) === $this->_prefix)
+        if (substr($classname, 0, 3) === 'Mod')
         {
             /*
              * Exception rule for Exception classes
              *
              * Transform class to lower case to always load the exception class from the /exception/ folder.
              */
-            if ($pos = strpos($classname, 'Exception')) {
+            if ($pos = strpos($classname, 'Exception'))
+            {
                 $filename  = substr($classname, $pos + strlen('Exception'));
                 $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
@@ -56,37 +55,38 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
             $parts = explode(' ', $word);
 
             array_shift($parts);
-            $package = array_shift($parts);
+            $package   = array_shift($parts);
+            $namespace = ucfirst($package);
 
-		    $module = 'mod_'.$package;
-			$file 	   = array_pop($parts);
+            $module = 'mod_'.$package;
+            $file 	= array_pop($parts);
 
-			if(count($parts))
-			{
-				if($parts[0] === 'view') {
+            if(count($parts))
+            {
+                if($parts[0] === 'view') {
                     $parts[0] = KStringInflector::pluralize($parts[0]);
-			    }
+                }
 
-				$path = implode('/', $parts);
-				$path = $path.'/'.$file;
-			}
-			else $path = $file;
-
-            //Find the basepath
-            if(!empty($basepath) && empty($this->_basepaths[$package])) {
-                $this->_basepath = $basepath;
+                $path = implode('/', $parts);
+                $path = $path.'/'.$file;
             }
+            else $path = $file;
 
-            if(isset($this->_basepaths[$package])) {
-                $basepath = $this->_basepaths[$package];
-            } else {
-                $basepath = $this->_basepath;
+            //Switch basepath
+            if(!$this->getNamespace($namespace))
+            {
+                if(!empty($basepath)) {
+                    $this->_basepath = $basepath;
+                } else {
+                    $basepath = $this->_basepath;
+                }
             }
+            else $basepath = $this->getNamespace($namespace);
 
-			$path = $basepath.'/modules/'.$module.'/'.$path.'.php';
+            return $basepath.'/modules/'.$module.'/'.$path.'.php';
 		}
 
-		return $path;
+		return false;
 
 	}
 }
