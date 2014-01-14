@@ -263,7 +263,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
         $type    = substr($extension, 0, 3);
         $package = substr($extension, 4);
 
-        if ($override = KObjectIdentifier::getPackagePath($package)) {
+        if ($override = $this->getObject('manager')->getClassLoader()->getLocator('com')->getNamespace($package)) {
             $base = $override;
         }
         else
@@ -333,17 +333,20 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
     {
         if (strpos($identifier, '.') === false)
         {
-            $old = clone $this->getIdentifier();
+            $old = $this->getIdentifier()->toArray();
 
-            if ($identifier) {
-                $old->path = array('translator', 'catalogue');
-                $old->name = $identifier;
-            } else {
-                $old->path = array('translator');
-                $old->name = 'catalogue';
+            if ($identifier)
+            {
+                $old['path'] = array('translator', 'catalogue');
+                $old['name'] = $identifier;
+            }
+            else
+            {
+                $old['path'] = array('translator');
+                $old['name'] = 'catalogue';
             }
 
-            $identifier = $old;
+            $identifier = KObjectIdentifier::fromArray($old);
         }
 
         return $this->getObject($identifier);
