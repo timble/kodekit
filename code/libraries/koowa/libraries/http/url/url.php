@@ -539,7 +539,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = KObjectManager::getInstance()->getObject('koowa:http.url', array('url' => $parts));
+        $url = new self(new KObjectConfig(array('url' => $parts)));
         return $url;
     }
 
