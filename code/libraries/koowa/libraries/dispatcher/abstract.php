@@ -160,9 +160,11 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 				    $controller = KStringInflector::singularize($controller);
 			    }
 
-			    $identifier			= clone $this->getIdentifier();
-			    $identifier->path	= array('controller');
-			    $identifier->name	= $controller;
+			    $identifier			= $this->getIdentifier()->toArray();
+			    $identifier['path']	= array('controller');
+			    $identifier['name']	= $controller;
+
+                $identifier = $this->getIdentifier($identifier);
 			}
 		    else $identifier = $this->getIdentifier($controller);
 
@@ -205,8 +207,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         //Get the dispatcher identifier
         if(is_string($context->param) && strpos($context->param, '.') === false )
         {
-            $identifier			 = clone $this->getIdentifier();
-            $identifier->package = $context->param;
+            $identifier			   = $this->getIdentifier()->toArray();
+            $identifier['package'] = $context->param;
         }
         else $identifier = $this->getIdentifier($context->param);
 

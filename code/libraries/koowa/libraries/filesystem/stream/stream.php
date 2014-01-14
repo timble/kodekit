@@ -595,17 +595,20 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
             //Create the complete identifier if a partial identifier was passed
             if (is_string($filter) && strpos($filter, '.') === false)
             {
-                $identifier = clone $this->getIdentifier();
-                $identifier->path = array('stream', 'filter');
-                $identifier->name = $filter;
+                $identifier = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('stream', 'filter');
+                $identifier['name'] = $filter;
+
+                $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($filter);
 
-            if($identifier->inherits('KFilesystemStreamFilterInterface'))
-            {
-                $filter = $identifier->classname;
-                $filter::register();
+            //Make sure the class
+            $filter = $this->getObject('manager')->getClass($identifier);
 
+            if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($filter)))
+            {
+                $filter::register();
                 $filter = $filter::getName();
             }
         }

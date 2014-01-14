@@ -72,12 +72,12 @@ abstract class KCommandInvokerAbstract extends KObject implements KCommandInvoke
 
         if($context->subject)
         {
-            $identifier = clone $context->subject->getIdentifier();
+            $identifier = $context->subject->getIdentifier()->toArray();
 
-            if($identifier->path) {
-                $type = array_shift($identifier->path);
+            if($identifier['path']) {
+                $type = array_shift($identifier['path']);
             } else {
-                $type = $identifier->name;
+                $type = $identifier['name'];
             }
         }
 

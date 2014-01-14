@@ -82,15 +82,15 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
 
         if ($context->getSubject())
         {
-            $identifier = clone $context->getSubject()->getIdentifier();
-            $package = $identifier->package;
+            $identifier = $context->getSubject()->getIdentifier()->toArray();
+            $package    = $identifier['package'];
 
-            if ($identifier->path)
+            if ($identifier['path'])
             {
-                $type = array_shift($identifier->path);
-                $subject = $identifier->name;
+                $type    = array_shift($identifier['path']);
+                $subject = $identifier['name'];
             }
-            else $type = $identifier->name;
+            else $type = $identifier['name'];
         }
 
         $parts  = explode('.', $name);

@@ -233,8 +233,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->jquery();
 
             // Load Boostrap with JS plugins.
-            $identifier = clone $this->getIdentifier();
-            $identifier->name = 'bootstrap';
+            $identifier         = $this->getIdentifier()->toArray();
+            $identifier['name'] = 'bootstrap';
             $html .= $this->getObject($identifier)->load(array('javascript' => true));
 
             self::$_loaded['tooltip'] = true;

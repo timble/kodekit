@@ -31,25 +31,31 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
                 throw new RuntimeException('Cannot qualify partial template path');
             }
 
-            $identifier = clone $this->getIdentifier($base);
+            $identifier = $this->getIdentifier($base)->toArray();
 
             $format    = pathinfo($path, PATHINFO_EXTENSION);
             $template  = pathinfo($path, PATHINFO_FILENAME);
 
-            $parts     = $identifier->path;
+            $parts     = $identifier['path'];
             array_pop($parts);
         }
         else
         {
             // Need to clone here since we use array_pop and it modifies the cached identifier
-            $identifier = clone $this->getIdentifier($path);
+            $identifier = $this->getIdentifier($path)->toArray();
 
-            $format    = $identifier->name;
-            $template  = array_pop($identifier->path);
-            $parts     = $identifier->path;
+            $format    = $identifier['name'];
+            $template  = array_pop($identifier['path']);
+            $parts     = $identifier['path'];
         }
 
-        $basepath  = $identifier->basepath.'/components/com_'.strtolower($identifier->package);
+        if(!empty($identifier['domain'])) {
+            $rootpath = $this->getObject('manager')->getClassLoader()->getBasepath($identifier['domain']);
+        } else {
+            $rootpath  = $this->getObject('manager')->getClassLoader()->getLocator('com')->getNamespace(ucfirst($identifier['package']));
+        }
+
+        $basepath  = $rootpath.'/components/com_'.strtolower($identifier['package']);
         $filepath  = 'views/'.implode('/', $parts).'/tmpl';
         $fullpath  = $basepath.'/'.$filepath.'/'.$template.'.'.$format.'.php';
 

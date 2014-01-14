@@ -134,9 +134,11 @@ class KBehaviorMixin extends KCommandMixin
                 //Create the complete identifier if a partial identifier was passed
                 if (is_string($behavior) && strpos($behavior, '.') === false)
                 {
-                    $identifier = clone $this->getIdentifier();
-                    $identifier->path = array($identifier->path[0], 'behavior');
-                    $identifier->name = $behavior;
+                    $identifier = $this->getIdentifier()->toArray();
+                    $identifier['path'] = array($identifier['path'][0], 'behavior');
+                    $identifier['name'] = $behavior;
+
+                    $identifier = $this->getIdentifier($identifier);
                 }
                 else $identifier = $this->getIdentifier($behavior);
             }

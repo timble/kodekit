@@ -126,14 +126,14 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
 
             if (!$permission || (is_string($permission) && strpos($permission, '.') === false))
             {
-                $identifier = clone $mixer->getIdentifier();
-                $identifier->path = array('controller', 'permission');
+                $identifier = $mixer->getIdentifier()->toArray();
+                $identifier['path'] = array('controller', 'permission');
 
                 if ($permission) {
-                    $identifier->name = $permission;
+                    $identifier['name'] = $permission;
                 }
 
-                $permission = $identifier;
+                $permission = $this->getIdentifier($identifier);
             }
 
             if (!$permission instanceof KObjectIdentifierInterface) {

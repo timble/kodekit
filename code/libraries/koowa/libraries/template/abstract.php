@@ -429,12 +429,16 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         {
             if(is_null($view) || (is_string($view) && strpos($view, '.') === false))
             {
-                $identifier			= clone $this->getIdentifier();
-                $identifier->path	= array('view');
+                $identifier			= $this->getIdentifier()->toArray();
+                $identifier['path']	= array('view');
+
                 if ($view) {
-                    $identifier->path[] = $view;
+                    $identifier['path'][] = $view;
                 }
-                $identifier->name = 'html';
+
+                $identifier['name'] = 'html';
+
+                $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($view);
 
@@ -468,10 +472,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         {
             if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
             {
-                $identifier = clone $this->getIdentifier();
-                $identifier->path = array();
-                $identifier->name = 'translator';
-            } else $identifier = $this->getIdentifier($translator);
+                $identifier = $this->getIdentifier()->toArray();
+                $identifier['path'] = array();
+                $identifier['name'] = 'translator';
+            }
+            else $identifier = $this->getIdentifier($translator);
 
             $translator = $this->getObject($identifier);
         }
@@ -506,9 +511,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
          //Create the complete identifier if a partial identifier was passed
         if(is_string($filter) && strpos($filter, '.') === false )
         {
-            $identifier = clone $this->getIdentifier();
-            $identifier->path = array('template', 'filter');
-            $identifier->name = $filter;
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['path'] = array('template', 'filter');
+            $identifier['name'] = $filter;
+
+            $identifier = $this->getIdentifier($identifier);
         }
         else $identifier = $this->getIdentifier($filter);
 
@@ -563,9 +570,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 		//Create the complete identifier if a partial identifier was passed
 		if(is_string($helper) && strpos($helper, '.') === false )
 		{
-            $identifier = clone $this->getIdentifier();
-            $identifier->path = array('template','helper');
-            $identifier->name = $helper;
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['path'] = array('template','helper');
+            $identifier['name'] = $helper;
 		}
 		else $identifier = $this->getIdentifier($helper);
 
@@ -655,9 +662,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
                 //Create the complete identifier if a partial identifier was passed
                 if (is_string($locator) && strpos($locator, '.') === false)
                 {
-                    $identifier = clone $this->getIdentifier();
-                    $identifier->path = array('template', 'locator');
-                    $identifier->name = $locator;
+                    $identifier = $this->getIdentifier()->toArray();
+                    $identifier['path'] = array('template', 'locator');
+                    $identifier['name'] = $locator;
                 }
                 else $identifier = $this->getIdentifier($locator);
 

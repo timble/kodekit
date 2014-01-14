@@ -147,9 +147,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                     $model = KStringInflector::pluralize($model);
                 }
 
-                $identifier			= clone $this->getIdentifier();
-                $identifier->path	= array('model');
-                $identifier->name	= $model;
+                $identifier			= $this->getIdentifier()->toArray();
+                $identifier['path']	= array('model');
+                $identifier['name']	= $model;
+
+                $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($model);
 

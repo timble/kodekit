@@ -323,9 +323,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface
                     $model = KStringInflector::pluralize($model);
                 }
 
-                $identifier			= clone $this->getIdentifier();
-                $identifier->path	= array('model');
-                $identifier->name	= $model;
+                $identifier			= $this->getIdentifier()->toArray();
+                $identifier['path']	= array('model');
+                $identifier['name'] = $model;
+
+                $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($model);
 
@@ -359,10 +361,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         {
             if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
             {
-                $identifier = clone $this->getIdentifier();
-                $identifier->path = array();
-                $identifier->name = 'translator';
-            } else $identifier = $this->getIdentifier($translator);
+                $identifier = $this->getIdentifier()->toArray();
+                $identifier['path'] = array();
+                $identifier['name'] = 'translator';
+            }
+            else $identifier = $this->getIdentifier($translator);
 
             $translator = $this->getObject($identifier);
         }

@@ -81,9 +81,11 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
                 //Create the complete identifier if a partial identifier was passed
                 if (is_string($toolbar) && strpos($toolbar, '.') === false)
                 {
-                    $identifier = clone $this->getIdentifier();
-                    $identifier->path = array('controller', 'toolbar');
-                    $identifier->name = $toolbar;
+                    $identifier = $this->getIdentifier()->toArray();
+                    $identifier['path'] = array('controller', 'toolbar');
+                    $identifier['name'] = $toolbar;
+
+                    $identifier = $this->getIdentifier($identifier);
                 }
                 else $identifier = $this->getIdentifier($toolbar);
             }

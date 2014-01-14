@@ -65,10 +65,10 @@ class ModKoowaHtml extends KViewHtml
 
             if (is_string($layout) && strpos($layout, '.') === false)
             {
-                $identifier = clone $this->getIdentifier();
-                $identifier->name = $layout;
+                $identifier = $this->getIdentifier()->toArray();
+                $identifier['name'] = $layout;
 
-                $layout = (string) $identifier;
+                $layout = (string) $this->getIdentifier($identifier);
             }
 
             $this->getTemplate()->load($layout.'.'.$format);

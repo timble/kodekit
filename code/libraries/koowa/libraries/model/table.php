@@ -122,9 +122,11 @@ class KModelTable extends KModelAbstract
 		{
 			if(is_string($table) && strpos($table, '.') === false )
 		    {
-		        $identifier         = clone $this->getIdentifier();
-		        $identifier->path   = array('database', 'table');
-		        $identifier->name   = KStringInflector::tableize($table);
+		        $identifier         = $this->getIdentifier()->toArray();
+		        $identifier['path'] = array('database', 'table');
+		        $identifier['name'] = KStringInflector::tableize($table);
+
+                $identifier = $this->getIdentifier($identifier);
 		    }
 		    else  $identifier = $this->getIdentifier($table);
 

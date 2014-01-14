@@ -451,9 +451,9 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      */
     public function getRow(array $options = array())
     {
-        $identifier = clone $this->getIdentifier();
-        $identifier->path = array('database', 'row');
-        $identifier->name = KStringInflector::singularize($this->getIdentifier()->name);
+        $identifier = $this->getIdentifier()->toArray();
+        $identifier['path'] = array('database', 'row');
+        $identifier['name'] = KStringInflector::singularize($identifier['name']);
 
         //Force the table
         $options['table'] = $this;
@@ -474,8 +474,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
      */
     public function getRowset(array $options = array())
     {
-    	$identifier = clone $this->getIdentifier();
-    	$identifier->path = array('database', 'rowset');
+    	$identifier = $this->getIdentifier()->toArray();
+    	$identifier['path'] = array('database', 'rowset');
     
     	//Force the table
     	$options['table'] = $this;

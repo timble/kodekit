@@ -279,9 +279,9 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      */
     public function getRow(array $options = array())
     {
-        $identifier = clone $this->getIdentifier();
-        $identifier->path = array('database', 'row');
-        $identifier->name = KStringInflector::singularize($this->getIdentifier()->name);
+        $identifier = $this->getIdentifier()->toArray();
+        $identifier['path'] = array('database', 'row');
+        $identifier['name'] = KStringInflector::singularize($identifier['name']);
 
         //The row default options
         $options['identity_column'] = $this->getIdentityColumn();

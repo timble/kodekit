@@ -104,11 +104,11 @@ abstract class KViewTemplate extends KViewAbstract
         //Handle partial layout paths
         if (is_string($layout) && strpos($layout, '.') === false)
         {
-            $identifier = clone $this->getIdentifier();
-            $identifier->name = $layout;
-            unset($identifier->path[0]);
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['name'] = $layout;
+            unset($identifier['path'][0]);
 
-            $layout = (string) $identifier;
+            $layout = (string) KObjectIdentifier::fromArray($identifier);
         }
 
         //Render the template
@@ -199,9 +199,11 @@ abstract class KViewTemplate extends KViewAbstract
         {
             if (is_string($template) && strpos($template, '.') === false)
             {
-                $identifier = clone $this->getIdentifier();
-                $identifier->path = array('template');
-                $identifier->name = $template;
+                $identifier = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('template');
+                $identifier['name'] = $template;
+
+                $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($template);
 

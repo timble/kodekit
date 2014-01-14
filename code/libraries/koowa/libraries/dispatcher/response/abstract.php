@@ -230,9 +230,11 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         //Create the complete identifier if a partial identifier was passed
         if (is_string($transport) && strpos($transport, '.') === false)
         {
-            $identifier = clone $this->getIdentifier();
-            $identifier->path = array('response', 'transport');
-            $identifier->name = $transport;
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['path'] = array('response', 'transport');
+            $identifier['name'] = $transport;
+
+            $identifier = $this->getIdentifier($identifier);
         }
         else $identifier = $this->getIdentifier($transport);
 
