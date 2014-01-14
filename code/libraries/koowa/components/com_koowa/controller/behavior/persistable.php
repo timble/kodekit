@@ -8,12 +8,12 @@
  */
 
 /**
- * Persistable Dispatcher Behavior
+ * Persistable Controller Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class ComKoowaDispatcherBehaviorPersistable extends KDispatcherBehaviorPersistable
+class ComKoowaControllerBehaviorPersistable extends KControllerBehaviorPersistable
 {
     /**
      * Get an object handle
