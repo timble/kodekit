@@ -267,16 +267,12 @@ abstract class KViewTemplate extends KViewAbstract
 
         if (!isset($parts['layout']) && !empty($this->_layout))
         {
-            if (($parts['option'] == $this->getIdentifier()->package) && ($parts['view'] == $this->getName()))
+            if ((substr($parts['option'], 4) == $this->getIdentifier()->package) && ($parts['view'] == $this->getName()))
             {
-                if (is_array($route)) {
-                    $route[] = 'layout=' . $this->getLayout();
-                } else {
-                    $route .= '&layout=' . $this->getLayout();
-                }
+                $parts['layout'] = $this->getLayout();
             }
         }
 
-        return parent::getRoute($route, $fqr, $escape);
+        return parent::getRoute($parts, $fqr, $escape);
     }
 }
