@@ -211,8 +211,14 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
             ));
         }
 
-        if($controller->canDelete()) {
-            $this->addCommand('delete');
+        if($controller->canDelete())
+        {
+            $translator = $this->getObject('translator');
+            $this->addCommand('delete', array(
+                'attribs' => array(
+                    'data-prompt' => $translator->translate('Deleted items will be lost forever. Would you like to continue?')
+                )
+            ));
         }
     }
 }
