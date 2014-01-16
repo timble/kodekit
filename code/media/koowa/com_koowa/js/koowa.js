@@ -385,13 +385,15 @@ Koowa.Controller = Koowa.Class.extend({
             button.on('click.koowa', function(event) {
                 event.preventDefault();
 
-                if (options.prompt && !confirm(options.prompt)) {
-                    return false;
-                }
-
                 context.trigger = button;
 
                 if (!button.hasClass('disabled')) {
+                    var prompt = button.data('prompt');
+
+                    if (prompt && !confirm(prompt)) {
+                        return;
+                    }
+
                     self.setOptions(options);
                     self.trigger('execute', [context]);
                 }
