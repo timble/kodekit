@@ -144,7 +144,11 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         	$html = '<div class="btn-group" id="'.$id.'">';
         	$html .= '<a '.$this->buildAttributes($attribs).'>';
-        	$html .= '<i class="'.$icon.'"></i> ';
+
+            if ($this->_useIcons()) {
+                $html .= '<i class="'.$icon.'"></i> ';
+            }
+
         	$html .= $this->translate($command->label);
         	$html .= '</a>';
         	$html .= '</div>';
@@ -284,6 +288,16 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
     protected function _useBootstrap()
     {
         return version_compare(JVERSION, '3.0', '>=') || JFactory::getApplication()->isSite();
+    }
+
+    /**
+     * Decides if Bootstrap buttons should use icons
+     *
+     * @return bool
+     */
+    protected function _useIcons()
+    {
+        return JFactory::getApplication()->isAdmin();
     }
 
     /**
