@@ -90,7 +90,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['jquery']))
         {
-            if (version_compare(JVERSION, '3.0', 'ge') && $this->getObject('request')->query->get('tmpl', 'cmd') !== 'koowa')
+            if (version_compare(JVERSION, '3.0', 'ge'))
             {
                 JHtml::_('jquery.framework');
                 JHtml::_('script', 'media/koowa/com_koowa/js/koowa.jquery.js', false, false, false, false, false);
@@ -121,17 +121,10 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
 		if (!isset(self::$_loaded['mootools']))
 		{
-            if ($this->getObject('request')->query->get('tmpl', 'cmd') !== 'koowa')
-            {
-                if (version_compare(JVERSION, '3.0', 'ge')) {
-                    JHTML::_('behavior.framework', true);
-                } else {
-                    JHTML::_('behavior.mootools', false);
-                }
-            }
-            else {
-                $html .= '<script src="media://system/js/mootools-core'.($config->debug ? '-uncompressed' : '').'.js" />';
-                $html .= '<script src="media://system/js/mootools-more'.($config->debug ? '-uncompressed' : '').'.js" />';
+            if (version_compare(JVERSION, '3.0', 'ge')) {
+                JHTML::_('behavior.framework', true);
+            } else {
+                JHTML::_('behavior.mootools', false);
             }
 
 			self::$_loaded['mootools'] = true;
