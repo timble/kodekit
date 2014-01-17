@@ -10,6 +10,20 @@
 /**
  * Plugin Class Locator
  *
+ * Plugin class names are case sensitive and use an Upper Camel Case or Pascal Case naming convention. Plugin class
+ * names can be namespaced based on the plugin name to allow loading plugins classes from different locations. If no
+ * namespace is registered for a plugin the class will be located within the global namespace, registered as '\'.
+ *
+ * Class names need to be prefixed with 'Plg'. Each folder in the file structure is represented in the class name.
+ *
+ * Format : Plg[Group][Path][To][File]
+ *
+ * An exception is made for exception class names. Exception class names are only party case sensitive. The part after
+ * the word 'Exception' is transformed to lower case. Exceptions are loaded from the .../Exception folder relative to
+ * their path.
+ *
+ * Format : Plg[Group][Path][To]Exception[FileNameForException]
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
@@ -34,10 +48,10 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
         if (substr($classname, 0, 3) === 'Plg')
         {
             /*
-                 * Exception rule for Exception classes
-                 *
-                 * Transform class to lower case to always load the exception class from the /exception/ folder.
-                 */
+             * Exception rule for Exception classes
+             *
+             * Transform class to lower case to always load the exception class from the /exception/ folder.
+             */
             if ($pos = strpos($classname, 'Exception'))
             {
                 $filename  = substr($classname, $pos + strlen('Exception'));
