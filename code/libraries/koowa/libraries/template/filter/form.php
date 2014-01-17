@@ -103,6 +103,10 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                 }
             }
 
+            if ($tmpl = $this->getObject('request')->getQuery()->get('tmpl', 'cmd')) {
+                $values['tmpl'] = $tmpl;
+            }
+
             $action = $view->getRoute(http_build_query($values, '', '&'));
 
             foreach ($matches as $match)
