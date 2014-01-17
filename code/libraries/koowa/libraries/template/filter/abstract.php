@@ -134,19 +134,25 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     {
         $output = array();
 
-        if ($array instanceof KObjectConfig) {
+        if($array instanceof KObjectConfig) {
             $array = KObjectConfig::unbox($array);
         }
 
-        if (is_array($array))
+        if(is_array($array))
         {
-            foreach ($array as $key => $item)
+            foreach($array as $key => $item)
             {
-                if (is_array($item)) {
+                if(is_array($item)) {
                     $item = implode(' ', $item);
                 }
 
-                $output[] = $key . '="' . str_replace('"', '&quot;', $item) . '"';
+                if (is_bool($item))
+                {
+                    if ($item === false) continue;
+                    $item = $key;
+                }
+
+                $output[] = $key.'="'.str_replace('"', '&quot;', $item).'"';
             }
         }
 
