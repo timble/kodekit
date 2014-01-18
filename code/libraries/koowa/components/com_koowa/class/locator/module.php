@@ -10,19 +10,23 @@
 /**
  * Module Class Locator
  *
- * Module class names are case sensitive and uses a Upper Camel Case or Pascal Case naming convention. Module class
- * names can be namespaced based on the component name to allow loading component classes from different locations. If
- * no namespace is registered for a module the class will be located within the active base path.
+ * Module class names are case sensitive and uses an Upper Camel Case or Pascal Case naming convention. Module class
+ * names can be namespaced based, if no namespace is registered for a component the class will be located from within
+ * the active base path. File and folder names must be lower case.
  *
- * Class names need to be prefixed with 'Mod'. Each folder in the file structure is represented in the class name.
+ * Class names need to be prefixed with 'Mom'. Each folder in the file structure must be represented in the class name.
  *
- * Format : Mod[Name][Path][To][File]
+ * Classname : Mom[Name][Path][To][File]
+ * Location  : .../modules/mod_name/path/to/file.php
  *
- * An exception is made for Exception class names. Exception class names are only party case sensitive. The part after
- * the word 'Exception' is transformed to lower case. Exceptions are loaded from the .../Exception folder relative to
+ * Exceptions
+ *
+ * 1. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
+ * the word 'Exception' is transformed to lower case.  Exceptions are loaded from the .../Exception folder relative to
  * their path.
  *
- * Format : Mod[Name][Path][To]Exception[FileNameForException]
+ * Classname : Mod[Name][Path][To]Exception[FileNameForException]
+ * Location  : .../modules/mod_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa

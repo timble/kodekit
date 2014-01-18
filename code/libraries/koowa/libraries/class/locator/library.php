@@ -11,21 +11,27 @@
  * Library Class Locator
  *
  * Library class names are case sensitive and use an Upper Camel Case or Pascal Case naming convention. Libraries must
- * be namespaced using a class name prefix or namespace.
+ * be namespaced using a class name prefix or namespace. File and folder names must be lower case.
  *
- * Format : [Namespace][Path][File]
+ * Each folder in the file structure must be represented in the class name.
  *
- * Each folder in the file structure must be represented in the class name. An exception is made for files where the
- * last segment of the file path and the file name are the same. In this case class name can use a shorter syntax
- * where the last segment of the path is omitted.
+ * Classname : [Namespace][Path][To][File]
+ * Location  : namespace/.../path/to/file.php
  *
- * Eg,  koowa/.../foo/bar/bar.php would have a short hand class name syntax of KFooBar instead of KFooBarBar
+ *  Exceptions
  *
- * An exception is made for exception class names. Exception class names are only party case sensitive. The part after
- * the word 'Exception' is transformed to lower case. Exceptions are loaded from the .../Exception folder relative to
+ * 1. An exception is made for files where the last segment of the file path and the file name are the same. In this case
+ * class name can use a shorter syntax where the last segment of the path is omitted.
+ *
+ * Location  : koowa/libraries/foo/bar/bar.php
+ * Classname : KFooBar instead KFooBarBar
+ *
+ * 2. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
+ * the word 'Exception' is transformed to lower case.  Exceptions are loaded from the .../Exception folder relative to
  * their path.
  *
- * Format : [Namespace][Path]Exception[FileNameForException]
+ * Classname : [Namespace][Path]Exception[FileNameForException]
+ * Location  : namespace/.../path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader

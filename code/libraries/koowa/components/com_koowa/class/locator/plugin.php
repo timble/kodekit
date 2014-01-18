@@ -16,13 +16,17 @@
  *
  * Class names need to be prefixed with 'Plg'. Each folder in the file structure is represented in the class name.
  *
- * Format : Plg[Group][Path][To][File]
+ * Format    : Plg[Group][Name][Path][To][File]
+ * Location  : .../plugins/group/name/path/to/file.php
  *
- * An exception is made for exception class names. Exception class names are only party case sensitive. The part after
+ * Exceptions
+ *
+ * 1. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
  * the word 'Exception' is transformed to lower case. Exceptions are loaded from the .../Exception folder relative to
  * their path.
  *
- * Format : Plg[Group][Path][To]Exception[FileNameForException]
+ * Classname : Plg[Group][Name][Path][To]Exception[FileNameForException]
+ * Location  : .../plugins/group/name/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa

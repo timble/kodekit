@@ -11,18 +11,31 @@
  * Component Class Locator
  *
  * Component class names are case sensitive and uses an Upper Camel Case or Pascal Case naming convention. Component
- * class names can be namespaced based on the component name to allow loading component classes from different base
- * paths, if no namespace is registered for a component the class will be located within the active base path.
+ * class names can be namespaced based , if no namespace is registered for a component the class will be located from
+ * within the active base path. File and folder names must be lower case.
  *
  * Class names need to be prefixed with 'Com'. Each folder in the file structure must be represented in the class name.
  *
- * Format : Com[Name][Path][To][File]
+ * Classname : Com[Name][Path][To][File]
+ * Location  : .../components/com_name/path/to/file.php
  *
- * An exception is made for exception class names. Exception class names are only party case sensitive. The part after
+ * Exceptions
+ *
+ * 1. An exception is made for files where the last segment of the file path and the file name are the same. In this case
+ * class name can use a shorter syntax where the last segment of the path is omitted.
+ *
+ * Location  : .../components/com_foo/bar/bar.php
+ * Classname : ComFooBar instead of ComFooBarBar
+ *
+ * Note : This only applies to classes that are loaded from a registered component namespace when a class is located in
+ * the global namespace it will follow the default rule eg, ComFooBar will be located in .../components/com_foo/bar.php
+ *
+ * 2. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
  * the word 'Exception' is transformed to lower case.  Exceptions are loaded from the .../Exception folder relative to
  * their path.
  *
- * Format : Com[Name][Path][To]Exception[FileNameForException]
+ * Classname : Com[Name][Path][To]Exception[FileNameForException]
+ * Location  : .../components/com_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
