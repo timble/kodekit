@@ -44,13 +44,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
     protected $_content;
 
     /**
-     * Chain of command object
-     *
-     * @var KCommandChain
-     */
-    protected $_command_chain;
-
-    /**
      * The view data
      *
      * @var boolean
@@ -100,9 +93,9 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $config->append(array(
             'data'              => array(),
             'command_chain'     => 'koowa:command.chain',
-            'dispatch_events'   => true,
-            'event_dispatcher'  => 'event.dispatcher',
+            'event_publisher'   => 'event.publisher',
             'enable_callbacks'  => true,
+            'enable_events'     => true,
             'model'      => 'koowa:model.empty',
             'translator' => null,
 	    	'content'	 => '',
@@ -125,14 +118,14 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $context->data   = $data;
         $context->action = 'render';
 
-        if ($this->getCommandChain()->run('before.render', $context, false) !== false)
+        if ($this->invokeCommand('before.render', $context, false) !== false)
         {
             //Push the data in the view
             $this->setData($context->data);
 
             //Render the view
             $context->result = $this->_actionRender($context);
-            $this->getCommandChain()->run('after.render', $context);
+            $this->invokeCommand('after.render', $context);
         }
 
         return $context->result;
@@ -472,32 +465,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface
 
         return $route;
 	}
-
-    /**
-     * Get the chain of command object
-     *
-     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
-     * to the CommandChain mixin.
-     *
-     * @return  KCommandChainInterface
-     */
-    public function getCommandChain()
-    {
-        if(!$this->_command_chain instanceof KCommandChainInterface)
-        {
-            //Ask the parent the relay the call to the mixin
-            $this->_command_chain = parent::getCommandChain();
-
-            if(!$this->_command_chain instanceof KCommandChainInterface)
-            {
-                throw new UnexpectedValueException(
-                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
-                );
-            }
-        }
-
-        return $this->_command_chain;
-    }
 
     /**
      * Get the view context
