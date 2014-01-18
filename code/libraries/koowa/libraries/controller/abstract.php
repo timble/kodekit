@@ -46,13 +46,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected $_user;
 
     /**
-     * Chain of command object
-     *
-     * @var KCommandChain
-     */
-    protected $_command_chain;
-
-    /**
      * Has the controller been dispatched
      *
      * @var boolean
@@ -108,8 +101,8 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         $config->append(array(
             'command_chain'     => 'koowa:command.chain',
-            'dispatch_events'   => true,
-            'event_dispatcher'  => 'koowa:event.dispatcher',
+            'event_publisher'   => 'event.publisher',
+            'enable_events'     => true,
             'enable_callbacks'  => true,
             'dispatched'		=> false,
             'request'           => 'koowa:controller.request',
@@ -153,21 +146,27 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $context->action  = $action;
 
         //Execute the action
-        if($this->getCommandChain()->run('before.'.$action, $context, false) !== false)
+        if($this->invokeCommand('before.'.$action, $context, false) !== false)
         {
             $method = '_action' . ucfirst($action);
 
             if (!method_exists($this, $method))
             {
-                if (isset($this->_mixed_methods[$action])) {
-                    $context->result = $this->_mixed_methods[$action]->execute('action.' . $action, $context);
-                } else {
-                    throw new KControllerExceptionNotImplemented("Can't execute '$action', method: '$method' does not exist");
+                if (isset($this->_mixed_methods[$action]))
+                {
+                    $context->setName('action.' . $action);
+                    $context->result = $this->_mixed_methods[$action]->execute($context);
+                }
+                else
+                {
+                    throw new KControllerExceptionNotImplemented(
+                        "Can't execute '$action', method: '$method' does not exist"
+                    );
                 }
             }
             else  $context->result = $this->$method($context);
 
-            $this->getCommandChain()->run('after.'.$action, $context);
+            $this->invokeCommand('after.'.$action, $context);
         }
 
         //Reset the context subject
@@ -337,33 +336,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         return $this->_user;
-    }
-
-    /**
-     * Get the chain of command object
-     *
-     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
-     * to the KCommandChain mixin.
-     *
-     * @throws UnexpectedValueException
-     * @return  KCommandChainInterface
-     */
-    public function getCommandChain()
-    {
-        if(!$this->_command_chain instanceof KCommandChainInterface)
-        {
-            //Ask the parent the relay the call to the mixin
-            $this->_command_chain = parent::getCommandChain();
-
-            if(!$this->_command_chain instanceof KCommandChainInterface)
-            {
-                throw new UnexpectedValueException(
-                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
-                );
-            }
-        }
-
-        return $this->_command_chain;
     }
 
     /**
