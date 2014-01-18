@@ -8,53 +8,32 @@
  */
 
 /**
- * Callback Mixin
+ * Callback Object Mixin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object\Mixin
  */
 class KObjectMixinCallback extends KObjectMixinAbstract
 {
- 	/**
- 	 * Array of callbacks
- 	 *
- 	 * $var array
- 	 */
-	protected $_callbacks = array();
+    /**
+     * Array of callbacks
+     *
+     * $var array
+     */
+    protected $_callbacks = array();
 
-	/**
+    /**
      * Config passed to the callbacks
      *
      * @var array
      */
-   	protected $_params = array();
+    protected $_params = array();
 
     /**
-     * Execute the named callbacks
-     *
-     * @param string   $name  The callback name
-     * @return void
-     */
-    public function executeCallbacks($name)
-    {
-        $callbacks = $this->getCallbacks($name);
-
-        foreach($callbacks as $key => $callback)
-        {
-            $params = $this->_params[$name][$key];
-
-            if(is_array($params) && !empty($params)) {
-                call_user_func_array($callback, $params);
-            } else {
-                call_user_func($callback);
-            }
-        }
-    }
-
-	/**
- 	 * Register a named callback
+ 	 * Add a named callback
  	 *
- 	 * If the callback has already been registered. It will not be re-registered.
+ 	 * If the callback has already been added. It will not be re-added but parameters will be merged. This allows to
+     * change or add parameters for existing callbacks.
  	 *
  	 * @param  	string      $name       The callback name to register the callback for
  	 * @param 	callable    $callback   The callback function to register
@@ -94,7 +73,7 @@ class KObjectMixinCallback extends KObjectMixinAbstract
 	}
 
 	/**
- 	 * Unregister a named callback
+ 	 * Remove a named callback
  	 *
  	 * @param  	string|array	$name       The callback name to unregister the callback from
  	 * @param 	callback		$callback   The callback function to unregister
@@ -107,12 +86,50 @@ class KObjectMixinCallback extends KObjectMixinAbstract
         if (isset($this->_callbacks[$name]) )
         {
             $key = array_search($callback, $this->_callbacks[$name], true);
+
             unset($this->_callbacks[$name][$key]);
             unset($this->_params[$name][$key]);
         }
 
 		return $this->getMixer();
 	}
+
+    /**
+     * Call all registered callbacks
+     *
+     * If a callback returns the 'break condition' the executing is halted. If no break condition is specified all
+     * callbacks will be invoked regardless of the callback result returned.
+     *
+     * @param  string    $name       The callback name
+     * @param  mixed     $condition  The break condition
+     * @return array|mixed Returns an array of the callback results in FIFO order. If a callback breaks, and the break
+     *                     condition is not NULL returns the break condition.
+     */
+    public function invokeCallbacks($name, $condition = null)
+    {
+        $results = array();
+        $name    = strtolower($name);
+
+        if (isset($this->_callbacks[$name]) )
+        {
+            foreach( $this->_callbacks[$name] as $key => $callback)
+            {
+                $params = $this->_params[$name][$key];
+
+                if(is_array($params) && !empty($params)) {
+                    $results[] = call_user_func_array($callback, $params);
+                } else {
+                    $results[] = call_user_func($callback);
+                }
+
+                if($condition !== null && current($results) === $condition) {
+                    return $condition;
+                }
+            }
+        }
+
+        return $results;
+    }
 
     /**
      * Get the registered callbacks by name
@@ -125,8 +142,17 @@ class KObjectMixinCallback extends KObjectMixinAbstract
         $result = array();
         $name   = strtolower($name);
 
-        if (isset($this->_callbacks[$name]) ) {
-            $result = $this->_callbacks[$name];
+        if (isset($this->_callbacks[$name]) )
+        {
+            foreach($this->_callbacks[$name] as $key => $callback)
+            {
+                $params = $this->_params[$name][$key];
+
+                $result[] = array(
+                    'callback' => $callback,
+                    'params'   => $params
+                );
+            }
         }
 
         return $result;
