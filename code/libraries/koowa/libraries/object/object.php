@@ -119,13 +119,17 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 
             $class = $this->getObject('manager')->getClass($identifier);
             $mixin = new $class($config);
+        }
 
-            if(!$mixin instanceof KObjectMixinInterface)
-            {
-                throw new UnexpectedValueException(
-                    'Mixin: '.get_class($mixin).' does not implement KObjectMixinInterface'
-                );
-            }
+        /*
+        * Check if the mixin extends from ObjectMixin to ensure it's implementing the
+        * ObjectMixinInterface and ObjectHandable interfaces.
+        */
+        if(!$mixin instanceof KObjectMixinInterface)
+        {
+            throw new UnexpectedValueException(
+                'Mixin: '.get_class($mixin).' does not implement KObjectMixinInterface'
+            );
         }
 
         //Set the mixed methods
@@ -177,17 +181,17 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 
             $class     = $this->getObject('manager')->getClass($identifier);
             $decorator = new $class($config);
+        }
 
-            /*
-             * Check if the decorator extends from KObjectDecorator to ensure it's implementing the
-             * KObjectInterface, KObjectHandable, ObjectMixable and KObjectDecoratable interfaces.
-             */
-            if(!$decorator instanceof KObjectDecorator)
-            {
-                throw new UnexpectedValueException(
-                    'Decorator: '.get_class($decorator).' does not extend from KObjectDecorator'
-                );
-            }
+        /*
+         * Check if the decorator extends from KObjectDecorator to ensure it's implementing the
+         * KObjectInterface, KObjectHandable, ObjectMixable and KObjectDecoratable interfaces.
+         */
+        if(!$decorator instanceof KObjectDecorator)
+        {
+            throw new UnexpectedValueException(
+                'Decorator: '.get_class($decorator).' does not extend from KObjectDecorator'
+            );
         }
 
         //Notify the decorator
@@ -320,37 +324,63 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      */
     public function __call($method, $arguments)
     {
-        if(isset($this->_mixed_methods[$method]))
+        if (isset($this->_mixed_methods[$method]))
         {
-            $mixin = $this->_mixed_methods[$method];
             $result = null;
 
-            //Switch the mixin's attached mixer
-            $mixin->setMixer($this);
-
-            // Call_user_func_array is ~3 times slower than direct method calls.
-            switch(count($arguments))
+            if (class_exists('Closure') && $this->_mixed_methods[$method] instanceof Closure)
             {
-                case 0 :
-                    $result = $mixin->$method();
-                    break;
-                case 1 :
-                    $result = $mixin->$method($arguments[0]);
-                    break;
-                case 2:
-                    $result = $mixin->$method($arguments[0], $arguments[1]);
-                    break;
-                case 3:
-                    $result = $mixin->$method($arguments[0], $arguments[1], $arguments[2]);
-                    break;
-                default:
-                    // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($mixin, $method), $arguments);
-             }
+                $closure = $this->_mixed_methods[$method];
+
+                switch (count($arguments)) {
+                    case 0 :
+                        $result = $closure();
+                        break;
+                    case 1 :
+                        $result = $closure($arguments[0]);
+                        break;
+                    case 2 :
+                        $result = $closure($arguments[0], $arguments[1]);
+                        break;
+                    case 3 :
+                        $result = $closure($arguments[0], $arguments[1], $arguments[2]);
+                        break;
+                    default:
+                        // Resort to using call_user_func_array for many segments
+                        $result = call_user_func_array($closure, $arguments);
+                }
+            }
+            else
+            {
+                $mixin = $this->_mixed_methods[$method];
+
+                //Switch the mixin's attached mixer
+                $mixin->setMixer($this);
+
+                // Call_user_func_array is ~3 times slower than direct method calls.
+                switch (count($arguments))
+                {
+                    case 0 :
+                        $result = $mixin->$method();
+                        break;
+                    case 1 :
+                        $result = $mixin->$method($arguments[0]);
+                        break;
+                    case 2 :
+                        $result = $mixin->$method($arguments[0], $arguments[1]);
+                        break;
+                    case 3 :
+                        $result = $mixin->$method($arguments[0], $arguments[1], $arguments[2]);
+                        break;
+                    default:
+                        // Resort to using call_user_func_array for many segments
+                        $result = call_user_func_array(array($mixin, $method), $arguments);
+                }
+            }
 
             return $result;
         }
 
-        throw new BadMethodCallException('Call to undefined method :'.$method);
+        throw new BadMethodCallException('Call to undefined method :' . $method);
     }
 }
