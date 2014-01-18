@@ -175,11 +175,9 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         }
         else $result = $this->__object_identifier;
 
-        //Get the classname
-        if($autolocate)
-        {
-            $class = $this->getClass($result);
-            $result->setClass($class);
+        //Get the class name and set it in the identifier
+        if($autolocate) {
+            $this->getClass($result);
         }
 
         return $result;
