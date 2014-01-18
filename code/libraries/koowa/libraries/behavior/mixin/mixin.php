@@ -25,7 +25,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      *
      * @var array
      */
-    protected $_behaviors = array();
+    protected $__behaviors = array();
 
     /**
      * Auto mixin behaviors
@@ -123,7 +123,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
             }
 
             //Store the behavior to allow for name lookups
-            $this->_behaviors[$behavior->getName()] = $behavior;
+            $this->__behaviors[$behavior->getName()] = $behavior;
 
             //Force set the mixer
             $behavior->setMixer($this->getMixer());
@@ -148,7 +148,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      */
     public function hasBehavior($name)
     {
-        return isset($this->_behaviors[$name]);
+        return isset($this->__behaviors[$name]);
     }
 
     /**
@@ -161,8 +161,8 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     {
         $result = null;
 
-        if(isset($this->_behaviors[$name])) {
-            $result = $this->_behaviors[$name];
+        if(isset($this->__behaviors[$name])) {
+            $result = $this->__behaviors[$name];
         }
 
         return $result;
@@ -175,6 +175,6 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      */
     public function getBehaviors()
     {
-        return array_values($this->_behaviors);
+        return array_values($this->__behaviors);
     }
 }
