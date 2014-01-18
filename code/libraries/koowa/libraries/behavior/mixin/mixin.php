@@ -175,6 +175,6 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      */
     public function getBehaviors()
     {
-        return $this->_behaviors;
+        return array_values($this->_behaviors);
     }
 }
