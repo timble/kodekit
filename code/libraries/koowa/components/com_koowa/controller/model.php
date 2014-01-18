@@ -31,7 +31,7 @@ abstract class ComKoowaControllerModel extends KControllerModel
         $this->mixin('koowa:controller.toolbar.mixin');
 
         //Attach the toolbars
-        $this->registerCallback('before.render' , array($this, 'attachToolbars'), array($config->toolbars));
+        $this->registerCallback('before.render' , array($this, 'addToolbars'), array($config->toolbars));
 	}
 
 	/**
@@ -64,17 +64,17 @@ abstract class ComKoowaControllerModel extends KControllerModel
     }
 
     /**
-     * Attach the toolbars to the controller
+     * Add the toolbars to the controller
      *
      * @param array $toolbars A list of toolbars
      * @return ComKoowaControllerView
      */
-    public function attachToolbars($toolbars)
+    public function addToolbars($toolbars)
     {
         if($this->getView() instanceof KViewHtml)
         {
             foreach($toolbars as $toolbar) {
-                $this->attachToolbar($toolbar);
+                $this->addToolbar($toolbar);
             }
 
             if($toolbars = $this->getToolbars())
