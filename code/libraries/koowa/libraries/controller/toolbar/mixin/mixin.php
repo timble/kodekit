@@ -22,7 +22,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
      *
      * @var    array
      */
-    protected $_toolbars = array();
+    private $__toolbars = array();
 
     /**
      * Constructor
@@ -100,7 +100,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
         }
 
         //Store the toolbar to allow for type lookups
-        $this->_toolbars[$toolbar->getType()] = $toolbar;
+        $this->__toolbars[$toolbar->getType()] = $toolbar;
 
         if ($this->inherits('KCommandMixin')) {
             $this->addCommandInvoker($toolbar);
@@ -119,7 +119,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
     {
         if($this->hasToolbar($toolbar->getType()))
         {
-            unset($this->_toolbars[$toolbar->getType()]);
+            unset($this->__toolbars[$toolbar->getType()]);
 
             if ($this->inherits('KCommandMixin')) {
                 $this->removeCommandInvoker($toolbar);
@@ -137,7 +137,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
      */
     public function hasToolbar($type = 'actionbar')
     {
-        return isset($this->_toolbars[$type]);
+        return isset($this->__toolbars[$type]);
     }
 
     /**
@@ -150,8 +150,8 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
     {
         $result = null;
 
-        if(isset($this->_toolbars[$type])) {
-            $result = $this->_toolbars[$type];
+        if(isset($this->__toolbars[$type])) {
+            $result = $this->__toolbars[$type];
         }
 
         return $result;
@@ -164,6 +164,6 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
      */
     public function getToolbars()
     {
-        return array_values($this->_toolbars);
+        return array_values($this->__toolbars);
     }
 }
