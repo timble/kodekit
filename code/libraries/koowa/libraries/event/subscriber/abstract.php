@@ -10,9 +10,11 @@
 /**
  * Event Subscriber
  *
- * An EventSubscriber knows himself what events he is interested in. If an EventSubscriber is added to an
- * EventDispatcherInterface, the dispatcher invokes {@link getListeners} and registers the subscriber
- * as a listener for all returned events.
+ * An EventSusbcriber knows himself what events he is interested in. Classes extending the abstract implementation may
+ * be adding listeners to an EventDispatcher through the {@link subscribe()} method.
+ *
+ * Listeners must be public class methods following a camel Case naming convention starting with 'on', eg onFooBar. The
+ * listener priority is usually between 1 (high priority) and 5 (lowest), default is 3 (normal)
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
@@ -27,80 +29,65 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
     private $__listeners;
 
     /**
-     * The event priority
-     *
-     * @var int
-     */
-    protected $_priority;
-
-    /**
-     * Constructor.
-     *
-     * @param KObjectConfig $config 	An optional ObjectConfig object with configuration options.
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_priority = $config->priority;
-    }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param 	KObjectConfig $config 	An optional ObjectConfig object with configuration options.
-     * @return 	void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'priority' => KEvent::PRIORITY_NORMAL
-        ));
-
-        parent::_initialize($config);
-    }
-
-    /**
-     * Get the priority of the handler
-     *
-     * @return	integer The event priority
-     */
-    public function getPriority()
-    {
-        return $this->_priority;
-    }
-
-    /**
-     * Get a list of subscribed events
+     * Attach one or more listeners
      *
      * Event listeners always start with 'on' and need to be public methods.
      *
-     * @return array An array of public methods
+     * @param KEventPublisherInterface $publisher
+     * @param  integer                 $priority   The event priority, usually between 1 (high priority) and 5 (lowest),
+     *                                 default is 3 (normal)
+     * @return array An array of public methods that have been attached
      */
-    public function getListeners()
+    public function subscribe(KEventPublisherInterface $publisher, $priority = KEvent::PRIORITY_NORMAL)
     {
-        if(!$this->__listeners)
-        {
-            $listeners = array();
+        $handle = $publisher->getHandle();
 
+        if(!$this->isSubscribed($publisher));
+        {
             //Get all the public methods
             $reflection = new \ReflectionClass($this);
             foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
             {
                 if(substr($method->name, 0, 2) == 'on')
                 {
-                    $listeners[$method->name] = array(
-                        'listener' => array($this, $method->name),
-                        'priority' => $this->getPriority()
-                    );
+                    $publisher->addListener($method->name, array($this, $method->name), $priority);
+                    $this->__listeners[$handle][] = $method->name;
                 }
             }
-
-            $this->__listeners = $listeners;
         }
 
         return $this->__listeners;
+    }
+
+    /**
+     * Detach all previously attached listeners for the specific dispatcher
+     *
+     * @param KEventPublisherInterface $publisher
+     * @return void
+     */
+    public function unsubscribe(KEventPublisherInterface $publisher)
+    {
+        $handle = $publisher->getHandle();
+
+        if($this->isSubscribed($publisher));
+        {
+            foreach ($this->_listeners[$handle] as $index => $listener)
+            {
+                $publisher->removeListener($listener, array($this, $listener));
+                unset($this->__listeners[$handle][$index]);
+            }
+        }
+    }
+
+    /**
+     * Check if the subscriber is already subscribed to the dispatcher
+     *
+     * @param  KEventPublisherInterface $dispatcher  The event dispatcher
+     * @return boolean TRUE if the subscriber is already subscribed to the dispatcher. FALSE otherwise.
+     */
+    public function isSubscribed(KEventPublisherInterface $publisher)
+    {
+        $handle = $publisher->getHandle();
+        return isset($this->_listeners[$handle]);
     }
 }
