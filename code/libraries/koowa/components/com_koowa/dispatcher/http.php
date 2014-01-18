@@ -178,7 +178,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         try {
             $result =  parent::_actionDispatch($context);
         } catch(Exception $exception) {
-            $result = $this->getEventDispatcher()->dispatchException(array('exception' => $exception));
+            $result = $this->getEventPublisher()->publishException($exception, array('context' => $context), $this);
         }
 
         return $result;
