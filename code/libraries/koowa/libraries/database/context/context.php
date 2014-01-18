@@ -16,31 +16,9 @@
 class KDatabaseContext extends KCommand implements KDatabaseContextInterface
 {
     /**
-     * Get the request object
+     * Get the query object
      *
-     * @return string The database operation
-     */
-    public function getOperation()
-    {
-        return $this->get('operation');
-    }
-
-    /**
-     * Set the database operation
-     *
-     * @param string $operation
-     * @return $this
-     */
-    public function setOperation($operation)
-    {
-        $this->set('operation', $operation);
-        return $this;
-    }
-
-    /**
-     * Get the response object
-     *
-     * @return KDatabaseQueryInterface
+     * @return KDatabaseQueryInterface|string
      */
     public function getQuery()
     {
@@ -51,11 +29,33 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      * Set the query object
      *
      * @param KDatabaseQueryInterface|string $query
-     * @return $this
+     * @return KDatabaseContext
      */
     public function setQuery($query)
     {
         $this->set('query', $query);
+        return $this;
+    }
+
+    /**
+     * Get the number of affected rows
+     *
+     * @return integer
+     */
+    public function getAffected($affected)
+    {
+        return $this->get('affected');
+    }
+
+    /**
+     * Get the number of affected rows
+     *
+     * @param integer $affected
+     * @return KDatabaseContext
+     */
+    public function setAffected($affected)
+    {
+        $this->set('affected', $affected);
         return $this;
     }
 }

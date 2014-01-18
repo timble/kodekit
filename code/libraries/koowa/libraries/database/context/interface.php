@@ -15,5 +15,33 @@
  */
 interface KDatabaseContextInterface extends KCommandInterface
 {
+    /**
+     * Get the query object
+     *
+     * @return KDatabaseQueryInterface|string
+     */
+    public function getQuery();
 
+    /**
+     * Set the query object
+     *
+     * @param KDatabaseQueryInterface|string $query
+     * @return $this
+     */
+    public function setQuery($query);
+
+    /**
+     * Get the number of affected rows
+     *
+     * @return integer
+     */
+    public function getAffected($affected);
+
+    /**
+     * Get the number of affected rows
+     *
+     * @param integer $affected
+     * @return KDatabaseContext
+     */
+    public function setAffected($affected);
 }
