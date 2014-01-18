@@ -10,6 +10,10 @@
 /**
  * Object Set
  *
+ * A set is a data structure that can store objects, without any particular order, and no repeated values.  Unlike most
+ * other collection types, rather than retrieving a specific element from a set, one typically tests if a object is
+ * contained in the set.
+ *
  * KObjectSet implements an associative container that stores objects, and in which the object themselves are the keys.
  * Objects are stored in the set in FIFO order.
  *
@@ -113,11 +117,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      */
     public function offsetExists($object)
     {
-        if($object instanceof KObjectHandlable) {
-            return $this->contains($object);
-        }
-
-        return false;
+        return $this->contains($object);
     }
 
     /**
@@ -130,11 +130,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      */
     public function offsetGet($object)
     {
-        if($object instanceof KObjectHandlable) {
-            return $this->_object_set->offsetGet($object->getHandle());
-        }
-
-        return null;
+        return $this->_object_set->offsetGet($object->getHandle());
     }
 
     /**
@@ -148,9 +144,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      */
     public function offsetSet($object, $data)
     {
-        if($object instanceof KObjectHandlable) {
-            $this->insert($object);
-        }
+        $this->insert($object);
         return $this;
     }
 
@@ -164,10 +158,7 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      */
     public function offsetUnset($object)
     {
-        if($object instanceof KObjectHandlable) {
-            $this->extract($object);
-        }
-
+        $this->extract($object);
         return $this;
     }
 
