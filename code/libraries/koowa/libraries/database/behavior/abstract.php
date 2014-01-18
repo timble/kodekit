@@ -48,17 +48,16 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
      * This function translates the command name to a command handler function of the format '_before[Command]' or
      * '_after[Command]. Command handler functions should be declared protected.
      *
-     * @param     string            $name  The command name
-     * @param     KCommandInterface    $context The command context
+     * @param     KCommandInterface    $command The command
      * @return    boolean   Can return both true or false.
      */
-    public function execute($name, KCommandInterface $context)
+    public function execute(KCommandInterface $command)
     {
-        if ($context->data instanceof KDatabaseRowInterface) {
-            $this->setMixer($context->data);
+        if ($command->data instanceof KDatabaseRowInterface) {
+            $this->setMixer($command->data);
         }
 
-        return parent::execute($name, $context);
+        return parent::execute($command);
     }
 
 	/**
@@ -107,8 +106,7 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
      */
     public function getMixableMethods(KObjectMixable $mixer = null)
     {
-        $methods   = parent::getMixableMethods($mixer);
-
+        $methods = parent::getMixableMethods($mixer);
         return array_diff($methods, array('save', 'delete', 'getInstance'));
     }
 }
