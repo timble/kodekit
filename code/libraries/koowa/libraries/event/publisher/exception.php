@@ -8,12 +8,12 @@
  */
 
 /**
- * Exception Event Dispatcher
+ * Exception Event Publisher
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Exception
  */
-class KEventDispatcherException extends KEventDispatcherAbstract
+class KEventPublisherException extends KEventPublisherAbstract
 {
     /**
      * Error levels
@@ -75,24 +75,25 @@ class KEventDispatcherException extends KEventDispatcherAbstract
     }
 
     /**
-     * Dispatches an exception by dispatching arguments to all listeners that handle the event.
+     * Publish an event by calling all listeners that have registered to receive it.
      *
-     * Function will avoid a recursive loop when an exception is thrown during even dispatching and output a generic
+     * Function will avoid a recursive loop when an exception is thrown during even publishing and output a generic
      * exception instead.
      *
-     * @link    http://www.php.net/manual/en/function.set-exception-handler.php#88082
-     * @param   object|array   $event An array, a KObjectConfig or a KEventException object
+     * @param  KException           $exception  The exception to be published.
+     * @param  array|Traversable    $attributes An associative array or a Traversable object
+     * @param  mixed                $target     The event target
      * @return  KEventException
      */
-    public function dispatchException($event = array())
+    public function publishException(Exception $exception, $attributes = array(), $target = null)
     {
         try
         {
-            if (!$event instanceof KEventException) {
-                $event = new KEventException($event);
-            }
+            //Make sure we have an event object
+            $event = new KEventException('onException', $attributes, $target);
+            $event->setException($exception);
 
-            parent::dispatch('onException', $event);
+            parent::publishEvent($event);
         }
         catch (Exception $e)
         {
@@ -175,7 +176,7 @@ class KEventDispatcherException extends KEventDispatcherAbstract
      */
     public function handleException($exception)
     {
-        $this->dispatchException(array('exception' => $exception));
+        $this->publishException($exception);
         return true;
     }
 
@@ -198,7 +199,7 @@ class KEventDispatcherException extends KEventDispatcherAbstract
             if (error_reporting() & $level && $error_level & $level)
             {
                 $exception = new KExceptionError($message, KHttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line);
-                $this->dispatchException(array('exception' => $exception, 'context'   => $context));
+                $this->publishException($exception, array('context' => $context));
             }
 
             //Let the normal error flow continue
@@ -223,7 +224,7 @@ class KEventDispatcherException extends KEventDispatcherAbstract
         if (error_reporting() & $level && $error_level & $level)
         {
             $exception = new KExceptionError($error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']);
-            $this->dispatchException(array('exception' => $exception));
+            $this->publishException($exception);
         }
 
         return true;
