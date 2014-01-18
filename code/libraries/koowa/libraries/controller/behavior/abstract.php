@@ -20,25 +20,24 @@ abstract class KControllerBehaviorAbstract extends KBehaviorAbstract
 	 * This function translates the command name to a command handler function of the format '_before[Command]' or
      * '_after[Command]. Command handler functions should be declared protected.
 	 *
-	 * @param 	string           $name	    The command name
-	 * @param 	KCommandInterface  $context 	The command context
+	 * @param 	KCommandInterface  $command The command
 	 * @return 	boolean
 	 */
-	public function execute($name, KCommandInterface $context)
+	public function execute(KCommandInterface $command)
 	{
-        $this->setMixer($context->getSubject());
+        $this->setMixer($command->getSubject());
 
-        $parts = explode('.', $name);
+        $parts = explode('.', $command->getName());
         if ($parts[0] == 'action')
         {
             $method = '_action' . ucfirst($parts[1]);
 
             if (method_exists($this, $method)) {
-                return $this->$method($context);
+                return $this->$method($command);
             }
         }
 
-        return parent::execute($name, $context);
+        return parent::execute($command);
 	}
 
     /**
