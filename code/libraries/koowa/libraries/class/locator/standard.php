@@ -10,7 +10,8 @@
 /**
  * Standard Class Locator
  *
- * PSR-0 compliant autoloader. Allows autoloading of namespaced classes.
+ * PSR-0 compliant autoloader. Allows autoloading of namespaced and prefixed classes. Standard class names are not case
+ * sensitive and follow the PSR-0 naming convention. Classes must be namespaced using a class name prefix or namespace.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Class
@@ -27,27 +28,24 @@ class KClassLocatorStandard extends KClassLocatorAbstract
     /**
      * Get the path based on a class name
      *
-     * @param  string   $classname The class name
-     * @param  string $basepath    The base path
+     * @param  string $classname The class name
+     * @param  string $basepath  The base path
      * @return string|false   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-	public function locate($classname, $basepath = null)
+	public function locate($class, $basepath = null)
 	{
         //Find the class
         foreach($this->_namespaces as $namespace => $basepath)
         {
-            if(strpos($classname, $namespace) !== 0) {
+            if(strpos('\\'.$class, '\\'.$namespace) !== 0) {
                 continue;
             }
 
-            if ($pos = strrpos($classname, '\\'))
-            {
-                $namespace = substr($classname, 0, $pos);
-                $class     = substr($classname, $pos + 1);
-            }
+            //Remove the namespace from the class name
+            $class = ltrim(substr($class, strlen($namespace)), '\\');
 
             $path  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-            $path .= str_replace('_', DIRECTORY_SEPARATOR, $classname) . '.php';
+            $path .= str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 
             return $basepath.'/'.$path;
         }
