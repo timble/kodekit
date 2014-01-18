@@ -73,7 +73,11 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
      */
     public function setToolbars(array $toolbars)
     {
-        $this->_toolbars = $toolbars;
+        $this->_toolbars = array();
+        foreach($toolbars as $toolbar) {
+            $this->setToolbar($toolbar);
+        }
+
         return $this;
     }
 

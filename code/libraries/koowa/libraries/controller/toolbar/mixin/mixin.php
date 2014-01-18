@@ -160,10 +160,10 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
     /**
      * Gets the toolbars
      *
-     * @return array  An associative array of toolbars, keys are the toolbar names
+     * @return array  An array of toolbars
      */
     public function getToolbars()
     {
-        return $this->_toolbars;
+        return array_values($this->_toolbars);
     }
 }
