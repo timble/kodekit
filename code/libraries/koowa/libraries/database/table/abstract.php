@@ -60,13 +60,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     protected $_defaults;
 
     /**
-     * Chain of command object
-     *
-     * @var KCommandChain
-     */
-    protected $_command_chain;
-
-    /**
      * Object constructor
      *
      * @param   KObjectConfig $config Configuration options.
@@ -140,7 +133,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             'behaviors'         => array(),
             'identity_column'   => null,
             'command_chain'     => 'koowa:command.chain',
-            'dispatch_events'   => false,
+            'enable_events'     => false,
             'enable_callbacks'  => false,
         ))->append(
             array('base'        => $config->name)
@@ -489,33 +482,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     }
 
     /**
-     * Get the chain of command object
-     *
-     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
-     * to the KCommandChain mixin.
-     *
-     * @throws UnexpectedValueException
-     * @return  KCommandChainInterface
-     */
-    public function getCommandChain()
-    {
-        if(!$this->_command_chain instanceof KCommandChainInterface)
-        {
-            //Ask the parent the relay the call to the mixin
-            $this->_command_chain = parent::getCommandChain();
-
-            if(!$this->_command_chain instanceof KCommandChainInterface)
-            {
-                throw new UnexpectedValueException(
-                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
-                );
-            }
-        }
-
-        return $this->_command_chain;
-    }
-
-    /**
      * Get a database context object
      *
      * @return KDatabaseContext
@@ -575,13 +541,12 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_SELECT;
         $context->table     = $this->getBase();
         $context->query     = $query;
         $context->mode      = $mode;
         $context->options   = $options;
 
-        if ($this->getCommandChain()->run('before.select', $context, false) !== false)
+        if ($this->invokeCommand('before.select', $context, false) !== false)
         {
             $data = null;
 
@@ -637,7 +602,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                     $context->data = $data;
             }
 
-            $this->getCommandChain()->run('after.select', $context);
+            $this->invokeCommand('after.select', $context);
         }
 
         return KObjectConfig::unbox($context->data);
@@ -700,13 +665,12 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_INSERT;
         $context->table     = $this->getBase();
         $context->data      = $row;
         $context->query     = $query;
         $context->affected = false;
 
-        if ($this->getCommandChain()->run('before.insert', $context, false) !== false)
+        if ($this->invokeCommand('before.insert', $context, false) !== false)
         {
             // Filter the data and remove unwanted columns.
             $data = $this->filter($context->data->getData());
@@ -729,7 +693,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                 else $context->data->setStatus(KDatabase::STATUS_FAILED);
             }
 
-            $this->getCommandChain()->run('after.insert', $context);
+            $this->invokeCommand('after.insert', $context);
         }
 
         return $context->affected;
@@ -749,13 +713,12 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         // Create commandchain context.
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_UPDATE;
         $context->table     = $this->getBase();
         $context->data      = $row;
         $context->query     = $query;
         $context->affected  = false;
 
-        if ($this->getCommandChain()->run('before.update', $context, false) !== false)
+        if ($this->invokeCommand('before.update', $context, false) !== false)
         {
             foreach ($this->getPrimaryKey() as $key => $column)
             {
@@ -783,7 +746,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                 }
             }
 
-            $this->getCommandChain()->run('after.update', $context);
+            $this->invokeCommand('after.update', $context);
         }
 
         return $context->affected;
@@ -803,13 +766,12 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         //Create commandchain context
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_DELETE;
         $context->table     = $this->getBase();
         $context->data      = $row;
         $context->query     = $query;
         $context->affected  = false;
 
-        if ($this->getCommandChain()->run('before.delete', $context, false) !== false)
+        if ($this->invokeCommand('before.delete', $context, false) !== false)
         {
             foreach ($this->getPrimaryKey() as $key => $column)
             {
@@ -825,7 +787,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                 $context->data->setStatus($context->affected ? KDatabase::STATUS_DELETED : KDatabase::STATUS_FAILED);
             }
 
-            $this->getCommandChain()->run('after.delete', $context);
+            $this->invokeCommand('after.delete', $context);
         }
 
         return $context->affected;
@@ -843,13 +805,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context = $this->getContext();
         $context->table = $this->getBase();
 
-        if ($this->getCommandChain()->run('before.lock', $context, false) !== false)
+        if ($this->invokeCommand('before.lock', $context, false) !== false)
         {
             if ($this->isConnected()) {
                 $context->result = $this->getDatabase()->lockTable($this->getBase());
             }
 
-            $this->getCommandChain()->run('after.lock', $context);
+            $this->invokeCommand('after.lock', $context);
         }
 
         return $context->result;
@@ -867,13 +829,13 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context = $this->getContext();
         $context->table = $this->getBase();
 
-        if ($this->getCommandChain()->run('before.unlock', $context, false) !== false)
+        if ($this->invokeCommand('before.unlock', $context, false) !== false)
         {
             if ($this->isConnected()) {
                 $context->result = $this->getDatabase()->unlockTable();
             }
 
-            $this->getCommandChain()->run('after.unlock', $context);
+            $this->invokeCommand('after.unlock', $context);
         }
 
         return $context->result;
@@ -923,9 +885,8 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 	/**
 	 * Search the behaviors to see if this table behaves as.
 	 *
-	 * Function is also capable of checking is a behavior has been mixed successfully
-	 * using is[Behavior] function. If the behavior exists the function will return
-	 * TRUE, otherwise FALSE.
+	 * Function is also capable of checking is a behavior has been mixed successfull using is[Behavior] function. If
+     * the behavior exists the function will return TRUE, otherwise FALSE.
 	 *
 	 * @param  string 	$method    The function name
 	 * @param  array  	$arguments The function arguments
