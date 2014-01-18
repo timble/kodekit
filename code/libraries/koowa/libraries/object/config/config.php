@@ -16,16 +16,16 @@
 class KObjectConfig implements KObjectConfigInterface
 {
     /**
-     * The data container
+     * The configuration options
      *
      * @var array
      */
-    protected $_data;
+    private $__options;
 
     /**
      * Constructor.
      *
-     * @param   array|KObjectConfig An associative array of configuration settings or a KObjectConfig instance.
+     * @param   array|KObjectConfig An associative array of configuration options or a KObjectConfig instance.
      */
     public function __construct( $config = array() )
     {
@@ -35,7 +35,7 @@ class KObjectConfig implements KObjectConfigInterface
             $data = $config;
         }
 
-        $this->_data = array();
+        $this->__options = array();
         if (is_array($data))
         {
             foreach ($data as $key => $value) {
@@ -45,7 +45,9 @@ class KObjectConfig implements KObjectConfigInterface
     }
 
     /**
-     * Retrieve a configuration item and return $default if there is no element set.
+     * Retrieve a configuration option
+     *
+     * If the option does not exist return the default
      *
      * @param string
      * @param mixed
@@ -54,15 +56,15 @@ class KObjectConfig implements KObjectConfigInterface
     public function get($name, $default = null)
     {
         $result = $default;
-        if(isset($this->_data[$name])) {
-            $result = $this->_data[$name];
+        if(isset($this->__options[$name])) {
+            $result = $this->__options[$name];
         }
 
         return $result;
     }
 
     /**
-     * Set a configuration item
+     * Set a configuration option
      *
      * @param  string $name
      * @param  mixed  $value
@@ -73,31 +75,31 @@ class KObjectConfig implements KObjectConfigInterface
         if (is_array($value))
         {
             $class = get_class($this);
-            $this->_data[$name] = new $class($value);
+            $this->__options[$name] = new $class($value);
         }
-        else $this->_data[$name] = $value;
+        else $this->__options[$name] = $value;
     }
 
     /**
-     * Check if a configuration item exists
+     * Check if a configuration option exists
      *
-     * @param  	string 	$name The configuration item name.
+     * @param  	string 	$name The configuration option name.
      * @return  boolean
      */
     public function has($name)
     {
-        return isset($this->_data[$name]);
+        return isset($this->__options[$name]);
     }
 
     /**
-     * Remove a configuration item
+     * Remove a configuration option
      *
-     * @param   string $name The configuration item name.
+     * @param   string $name The configuration option name.
      * @return  KObjectConfig
      */
     public function remove( $name )
     {
-        unset($this->_data[$name]);
+        unset($this->__options[$name]);
         return $this;
     }
 
@@ -119,10 +121,10 @@ class KObjectConfig implements KObjectConfigInterface
             {
                 foreach($config as $key => $value)
                 {
-                    if(array_key_exists($key, $this->_data))
+                    if(array_key_exists($key, $this->__options))
                     {
-                        if(!empty($value) && ($this->_data[$key] instanceof KObjectConfig)) {
-                            $this->_data[$key] = $this->_data[$key]->append($value);
+                        if(!empty($value) && ($this->__options[$key] instanceof KObjectConfig)) {
+                            $this->__options[$key] = $this->__options[$key]->append($value);
                         }
                     }
                     else $this->__set($key, $value);
@@ -132,8 +134,8 @@ class KObjectConfig implements KObjectConfigInterface
             {
                 foreach($config as $value)
                 {
-                    if (!in_array($value, $this->_data, true)) {
-                        $this->_data[] = $value;
+                    if (!in_array($value, $this->__options, true)) {
+                        $this->__options[] = $value;
                     }
                 }
             }
@@ -162,7 +164,7 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function getIterator()
     {
-        return new RecursiveArrayIterator($this->_data);
+        return new RecursiveArrayIterator($this->__options);
     }
 
     /**
@@ -174,7 +176,7 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function count()
     {
-        return count($this->_data);
+        return count($this->__options);
     }
 
     /**
@@ -187,7 +189,7 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function offsetExists($offset)
     {
-        return isset($this->_data[$offset]);
+        return isset($this->__options[$offset]);
     }
 
     /**
@@ -201,9 +203,9 @@ class KObjectConfig implements KObjectConfigInterface
     public function offsetGet($offset)
     {
         $result = null;
-        if(isset($this->_data[$offset]))
+        if(isset($this->__options[$offset]))
         {
-            $result = $this->_data[$offset];
+            $result = $this->__options[$offset];
             if($result instanceof KObjectConfig) {
                 $result = $result->toArray();
             }
@@ -224,15 +226,14 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function offsetSet($offset, $value)
     {
-        $this->_data[$offset] = $value;
+        $this->__options[$offset] = $value;
         return $this;
     }
 
     /**
      * Unset an item in the array
      *
-     * All numerical array keys will be modified to start counting from zero while
-     * literal keys won't be touched.
+     * All numerical array keys will be modified to start counting from zero while literal keys won't be touched.
      *
      * Required by interface ArrayAccess
      *
@@ -241,8 +242,7 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function offsetUnset($offset)
     {
-        unset($this->_data[$offset]);
-
+        unset($this->__options[$offset]);
         return $this;
     }
 
@@ -254,7 +254,7 @@ class KObjectConfig implements KObjectConfigInterface
     public function toArray()
     {
         $array = array();
-        $data  = $this->_data;
+        $data  = $this->__options;
         foreach ($data as $key => $value)
         {
             if ($value instanceof KObjectConfig) {
@@ -321,7 +321,7 @@ class KObjectConfig implements KObjectConfigInterface
     public function __clone()
     {
         $array = array();
-        foreach ($this->_data as $key => $value)
+        foreach ($this->__options as $key => $value)
         {
             if ($value instanceof KObjectConfig || $value instanceof stdClass) {
                 $array[$key] = clone $value;
@@ -330,6 +330,6 @@ class KObjectConfig implements KObjectConfigInterface
             }
         }
 
-        $this->_data = $array;
+        $this->__options = $array;
     }
 }
