@@ -22,7 +22,7 @@ class KEventException extends KEvent implements KException
      */
     public function setException(Exception $exception)
     {
-        $this->exception = $exception;
+        $this->set('exception', $exception);
     }
 
     /**
@@ -32,7 +32,7 @@ class KEventException extends KEvent implements KException
      */
     public function getException()
     {
-        return $this->exception;
+        return $this->get('exception');
     }
 
     /**
