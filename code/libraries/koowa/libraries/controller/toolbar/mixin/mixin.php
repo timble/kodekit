@@ -13,12 +13,12 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerToolbarMixin extends KObjectMixinAbstract
+class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMixinInterface
 {
     /**
      * List of toolbars
      *
-     * The key holds the behavior name and the value the behavior object
+     * The key holds the toolbar type and the value the toolbar object
      *
      * @var    array
      */
@@ -39,9 +39,9 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
         foreach ($toolbars as $key => $value)
         {
             if (is_numeric($key)) {
-                $this->attachToolbar($value);
+                $this->addToolbar($value);
             } else {
-                $this->attachToolbar($key, $value);
+                $this->addToolbar($key, $value);
             }
         }
     }
@@ -64,7 +64,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
     }
 
     /**
-     * Attach a toolbar
+     * Add a toolbar
      *
      * @param   mixed $toolbar An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
@@ -72,7 +72,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
      * @throws UnexpectedValueException
      * @return  KObject The mixer object
      */
-    public function attachToolbar($toolbar, $config = array())
+    public function addToolbar($toolbar, $config = array())
     {
         if (!($toolbar instanceof KControllerToolbarInterface))
         {
@@ -93,36 +93,36 @@ class KControllerToolbarMixin extends KObjectMixinAbstract
 
             $config['controller'] = $this->getMixer();
             $toolbar = $this->getObject($identifier, $config);
+        }
 
-            if (!($toolbar instanceof KControllerToolbarInterface)) {
-                throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
-            }
+        if (!($toolbar instanceof KControllerToolbarInterface)) {
+            throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
         }
 
         //Store the toolbar to allow for type lookups
         $this->_toolbars[$toolbar->getType()] = $toolbar;
 
         if ($this->inherits('KCommandMixin')) {
-            $this->getCommandChain()->enqueue($toolbar);
+            $this->addCommandInvoker($toolbar);
         }
 
         return $this->getMixer();
     }
 
     /**
-     * Detach a toolbar
+     * Remove a toolbar
      *
      * @param   KControllerToolbarInterface $toolbar A toolbar instance
      * @return  Object The mixer object
      */
-    public function detachToolbar(KControllerToolbarInterface $toolbar)
+    public function removeToolbar(KControllerToolbarInterface $toolbar)
     {
         if($this->hasToolbar($toolbar->getType()))
         {
             unset($this->_toolbars[$toolbar->getType()]);
 
             if ($this->inherits('KCommandMixin')) {
-                $this->getCommandChain()->dequeue($toolbar);
+                $this->removeCommandInvoker($toolbar);
             }
         }
 
