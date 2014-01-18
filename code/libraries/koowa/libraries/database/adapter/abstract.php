@@ -85,13 +85,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected $_charset;
 
-    /**
-     * Chain of command object
-     *
-     * @var KCommandChain
-     */
-    protected $_command_chain;
-
 	/**
 	 * Constructor.
 	 *
@@ -152,9 +145,9 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
        	 	'table_prefix'  	=> 'jos_',
     	    'table_needle'		=> '#__',
     		'command_chain' 	=> 'koowa:command.chain',
-    		'dispatch_events'   => true,
-            'event_dispatcher'  => 'event.dispatcher',
+            'event_publisher'   => 'event.publisher',
     		'enable_callbacks' 	=> false,
+            'enable_events'     => true,
     		'connection'		=> null,
         ));
 
@@ -280,12 +273,11 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         }
 
         $context  = $this->getContext();
-        $context->query     = $query;
-        $context->operation = KDatabase::OPERATION_SELECT;
-        $context->mode      = $mode;
+        $context->query = $query;
+        $context->mode  = $mode;
 
         // Execute the insert operation
-        if ($this->getCommandChain()->run('before.select', $context, false) !== false)
+        if ($this->invokeCommand('before.select', $context, false) !== false)
         {
             if ($result = $this->execute($context->query, KDatabase::RESULT_USE))
             {
@@ -320,7 +312,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
                 }
             }
 
-            $this->getCommandChain()->run('after.select', $context);
+            $this->invokeCommand('after.select', $context);
         }
 
         return KObjectConfig::unbox($context->result);
@@ -336,11 +328,10 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function insert(KDatabaseQueryInsert $query)
     {
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_INSERT;
         $context->query = $query;
 
         //Execute the insert operation
-        if ($this->getCommandChain()->run('before.insert', $context, false) !== false)
+        if ($this->invokeCommand('before.insert', $context, false) !== false)
         {
             //Check if we have valid data to insert, if not return false
             if ($context->query->values)
@@ -349,7 +340,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
                 $context->result = $this->execute($context->query);
                 $context->affected = $this->_affected_rows;
 
-                $this->getCommandChain()->run('after.insert', $context);
+                $this->invokeCommand('after.insert', $context);
             }
             else $context->affected = false;
         }
@@ -367,19 +358,18 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function update(KDatabaseQueryUpdate $query)
     {
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_UPDATE;
-        $context->query     = $query;
+        $context->query = $query;
 
         //Execute the update operation
-        if ($this->getCommandChain()->run('before.update', $context, false) !== false)
+        if ($this->invokeCommand('before.update', $context, false) !== false)
         {
             if (!empty($context->query->values))
             {
                 //Execute the query
-                $context->result = $this->execute($context->query);
+                $context->result   = $this->execute($context->query);
                 $context->affected = $this->_affected_rows;
 
-                $this->getCommandChain()->run('after.update', $context);
+                $this->invokeCommand('after.update', $context);
             }
             else $context->affected = false;
         }
@@ -396,17 +386,16 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     public function delete(KDatabaseQueryDelete $query)
     {
         $context = $this->getContext();
-        $context->operation = KDatabase::OPERATION_DELETE;
-        $context->query     = $query;
+        $context->query = $query;
 
         //Execute the delete operation
-        if ($this->getCommandChain()->run('before.delete', $context, false) !== false)
+        if ($this->invokeCommand('before.delete', $context, false) !== false)
         {
             //Execute the query
             $context->result = $this->execute($context->query);
             $context->affected = $this->_affected_rows;
 
-            $this->getCommandChain()->run('after.delete', $context);
+            $this->invokeCommand('after.delete', $context);
         }
 
         return $context->affected;
@@ -480,33 +469,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
 	{
 		return $this->_table_needle;
 	}
-
-    /**
-     * Get the chain of command object
-     *
-     * To increase performance the a reference to the command chain is stored in object scope to prevent slower calls
-     * to the KCommandChain mixin.
-     *
-     * @throws UnexpectedValueException
-     * @return  KCommandChainInterface
-     */
-    public function getCommandChain()
-    {
-        if(!$this->_command_chain instanceof KCommandChainInterface)
-        {
-            //Ask the parent the relay the call to the mixin
-            $this->_command_chain = parent::getCommandChain();
-
-            if(!$this->_command_chain instanceof KCommandChainInterface)
-            {
-                throw new UnexpectedValueException(
-                    'CommandChain: '.get_class($this->_command_chain).' does not implement KCommandChainInterface'
-                );
-            }
-        }
-
-        return $this->_command_chain;
-    }
 
     /**
      * Get a database context object

@@ -259,10 +259,10 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		$context->table = $table;
 		$context->query = $query;
 	
-		if($this->getCommandChain()->run('before.lock', $context, false) !== false)
+		if($this->invokeCommand('before.lock', $context, false) !== false)
 		{
 			$context->result = $this->execute($context->query, KDatabase::RESULT_USE);
-			$this->getCommandChain()->run('after.lock', $context);
+			$this->invokeCommand('after.lock', $context);
 		}
 	
 		return $context->result;
@@ -282,10 +282,10 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 		$context->table = null;
 		$context->query = $query;
 	
-		if($this->getCommandChain()->run('before.unlock', $context, false) !== false)
+		if($this->invokeCommand('before.unlock', $context, false) !== false)
 		{
 			$context->result = $this->execute($context->query, KDatabase::RESULT_USE);
-			$this->getCommandChain()->run('after.unlock', $context);
+			$this->invokeCommand('after.unlock', $context);
 		}
 	
 		return $context->result;
