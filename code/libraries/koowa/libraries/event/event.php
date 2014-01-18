@@ -39,26 +39,19 @@ class KEvent extends KObjectConfig implements KEventInterface
     protected $_target;
 
     /**
-     * Dispatcher of the event
+     * Constructor.
      *
-     * @var KEventDispatcherInterface
+     * @param  string              $name       The event name
+     * @param  array|Traversable   $attributes An associative array or a Traversable object instance
+     * @param  KObjectInterface    $target     The event target
      */
-    protected $_dispatcher;
-
-    /**
-     * Set an event property
-     *
-     * @param  string $name
-     * @param  mixed  $value
-     * @return void
-     */
-    public function set($name, $value)
+    public function __construct($name = '', $attributes = array(), $target = null)
     {
-        if (is_array($value)) {
-            $this->_data[$name] = new KObjectConfig($value);
-        } else {
-            $this->_data[$name] = $value;
-        }
+        parent::__construct($attributes);
+
+        $this->setName($name);
+        $this->setTarget($target);
+        $this->setAttributes($attributes);
     }
 
     /**
@@ -96,35 +89,76 @@ class KEvent extends KObjectConfig implements KEventInterface
     /**
      * Set the event target
      *
-     * @param object $target The event target
+     * @param mixed $target The event target
      * @return KEvent
      */
-    public function setTarget(KObjectInterface $target)
+    public function setTarget($target)
     {
         $this->_target = $target;
         return $this;
     }
 
     /**
-     * Stores the EventDispatcher that dispatches this Event
+     * Set attributes
      *
-     * @param KEventDispatcherInterface $dispatcher
+     * Overwrites existing attributes
+     *
+     * @param  array|Traversable $attributes
+     * @throws InvalidArgumentException If the attributes are not an array or are not traversable.
      * @return KEvent
      */
-    public function setDispatcher(KEventDispatcherInterface $dispatcher)
+    public function setAttributes($attributes)
     {
-        $this->_dispatcher = $dispatcher;
+        if (!is_array($attributes) || $attributes instanceof Traversable)
+        {
+            throw new InvalidArgumentException(sprintf(
+                'Event arguments must be an array or an object implementing the Traversable interface; received "%s"', gettype($attributes)
+            ));
+        }
+
+        //Set the arguments.
+        foreach ($attributes as $key => $value) {
+            $this->set($key, $value);
+        }
+
         return $this;
     }
 
     /**
-     * Returns the EventDispatcher that dispatches this Event
+     * Get all arguments
      *
-     * @return KEventDispatcherInterface
+     * @return array
      */
-    public function getDispatcher()
+    public function getAttributes()
     {
-        return $this->_dispatcher;
+        return $this->toArray();
+    }
+
+    /**
+     * Get an attribute
+     *
+     * If the attribute does not exist, the $default value will be returned.
+     *
+     * @param  string $name The attribute name
+     * @param  mixed $default
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null)
+    {
+       return $this->get($name, $default);
+    }
+
+    /**
+     * Set an attribute
+     *
+     * @param  string $name The attribute
+     * @param  mixed $value
+     * @return KEvent
+     */
+    public function setAttribute($name, $value)
+    {
+        $this->set($name, $value);
+        return $this;
     }
 
     /**
@@ -149,5 +183,61 @@ class KEvent extends KObjectConfig implements KEventInterface
     {
         $this->_propagate = false;
         return $this;
+    }
+
+    /**
+     * Set an event attribute
+     *
+     * @param  string $name The attribute name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function set($name, $value)
+    {
+        if (is_array($value)) {
+            $value = new KObjectConfig($value);
+        }
+
+        parent::set($name, $value);
+    }
+
+    /**
+     * Get an event property or attribute
+     *
+     * If an event property exists the property will be returned, otherwise the attribute will be returned. If no
+     * property or attribute can be found the method will return NULL.
+     *
+     * @param  string $name
+     * @return mixed|null  The property value
+     */
+    public function __get($name)
+    {
+        $getter = 'get'.ucfirst($name);
+        if(method_exists($this, $getter)) {
+            $value = $this->$getter();
+        } else {
+            $value = parent::__get($name);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Set an event property or attribute
+     *
+     * If an event property exists the property will be set, otherwise an attribute will be added.
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     */
+    public function __set($name, $value)
+    {
+        $setter = 'set'.ucfirst($name);
+        if(method_exists($this, $setter)) {
+            $this->$setter($value);
+        } else {
+            parent::__set($name, $value);
+        }
     }
 }

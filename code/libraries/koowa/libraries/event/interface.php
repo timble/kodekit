@@ -51,25 +51,48 @@ interface KEventInterface
     /**
      * Set the event target
      *
-     * @param KObjectInterface $target	The event target
+     * @param mixed $target	The event target
      * @return KEvent
      */
-    public function setTarget(KObjectInterface $target);
+    public function setTarget($target);
 
     /**
-     * Stores the EventDispatcher that dispatches this Event
+     * Set attributes
      *
-     * @param KEventDispatcherInterface $dispatcher
+     * Overwrites existing attributes
+     *
+     * @param  array|Traversable $attributes
+     * @throws InvalidArgumentException If the attributes are not an array or are not traversable.
      * @return KEvent
      */
-    public function setDispatcher(KEventDispatcherInterface $dispatcher);
+    public function setAttributes($attributes);
 
     /**
-     * Returns the EventDispatcher that dispatches this Event
+     * Get all arguments
      *
-     * @return KEventDispatcherInterface
+     * @return array
      */
-    public function getDispatcher();
+    public function getAttributes();
+
+    /**
+     * Get an attribute
+     *
+     * If the attribute does not exist, the $default value will be returned.
+     *
+     * @param  string $name The attribute name
+     * @param  mixed $default
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null);
+
+    /**
+     * Set an attribute
+     *
+     * @param  string $name The attribute
+     * @param  mixed $value
+     * @return KEvent
+     */
+    public function setAttribute($name, $value);
 
     /**
      * Returns whether further event listeners should be triggered.
