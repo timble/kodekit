@@ -80,17 +80,16 @@ abstract class KControllerToolbarAbstract extends KCommandInvokerAbstract implem
      * This function translates the command name to a command handler function of the format '_before[Command]' or
      * '_after[Command]. Command handler functions should be declared protected.
      *
-     * @param 	string           $name	    The command name
-     * @param 	KCommandInterface  $context 	The command context
+     * @param 	KCommandInterface  $command The command
      * @return 	boolean Always returns TRUE
      */
-    final public function execute($name, KCommandInterface $context)
+    final public function execute(KCommandInterface $command)
     {
-        $parts  = explode('.', $name);
+        $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);
 
         if(method_exists($this, $method)) {
-            $this->$method($context);
+            $this->$method($command);
         }
 
         return true;
