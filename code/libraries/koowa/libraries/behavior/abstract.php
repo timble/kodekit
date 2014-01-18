@@ -127,21 +127,19 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
      * This function translated the command name to a command handler function of the format '_before[Command]' or
      * '_after[Command]. Command handler functions should be declared protected.
      *
-     * @param   string           $name     The command name
-     * @param   KCommandInterface  $context  The command context
-     *
+     * @param   KCommandInterface  $command  The command
      * @return  mixed  Method result if the method exists, NULL otherwise.
      */
-    public function execute($name, KCommandInterface $context)
+    public function execute(KCommandInterface $command)
     {
         $result = null;
 
-        $parts = explode('.', $name);
+        $parts = explode('.', $command->getName());
         $method = '_' . $parts[0]  . ucfirst($parts[1]);
 
         //If the method exists call the method and return the result
         if (method_exists($this, $method)) {
-            $result = $this->$method($context);
+            $result = $this->$method($command);
         }
 
         return $result;
