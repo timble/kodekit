@@ -167,10 +167,10 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     public function set($name, $value)
     {
         if (is_array($value)) {
-            $this->_data[$name] = new KObjectConfig($value);
-        } else {
-            $this->_data[$name] = $value;
+            $value = new KObjectConfig($value);
         }
+
+        parent::set($name, $value);
     }
 
     /**
