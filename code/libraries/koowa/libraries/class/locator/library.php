@@ -10,6 +10,23 @@
 /**
  * Library Class Locator
  *
+ * Library class names are case sensitive and use an Upper Camel Case or Pascal Case naming convention. Libraries must
+ * be namespaced using a class name prefix or namespace.
+ *
+ * Format : [Namespace][Path][File]
+ *
+ * Each folder in the file structure must be represented in the class name. An exception is made for files where the
+ * last segment of the file path and the file name are the same. In this case class name can use a shorter syntax
+ * where the last segment of the path is omitted.
+ *
+ * Eg,  koowa/.../foo/bar/bar.php would have a short hand class name syntax of KFooBar instead of KFooBarBar
+ *
+ * An exception is made for exception class names. Exception class names are only party case sensitive. The part after
+ * the word 'Exception' is transformed to lower case. Exceptions are loaded from the .../Exception folder relative to
+ * their path.
+ *
+ * Format : [Namespace][Path]Exception[FileNameForException]
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Loader
  */
@@ -25,34 +42,34 @@ class KClassLocatorLibrary extends KClassLocatorAbstract
 	/**
 	 * Get the path based on a class name
 	 *
-     * @param  string $classname    The class name
-     * @param  string $basepath     The base path
-	 * @return string|boolean		Returns the path on success FALSE on failure
+     * @param  string $class     The class name
+     * @param  string $basepath  The base path
+	 * @return string|boolean	 Returns the path on success FALSE on failure
 	 */
-	public function locate($classname, $basepath = null)
+	public function locate($class, $basepath = null)
 	{
         foreach($this->_namespaces as $namespace => $basepath)
         {
-            if(strpos($classname, $namespace) !== 0) {
+            if(strpos('\\'.$class, '\\'.$namespace) !== 0) {
                 continue;
             }
+
+            //Remove the namespace from the class name
+            $class = ltrim(substr($class, strlen($namespace)), '\\');
 
             /*
              * Exception rule for Exception classes
              *
              * Transform class to lower case to always load the exception class from the /exception/ folder.
              */
-            if ($pos = strpos($classname, 'Exception'))
+            if ($pos = strpos($class, 'Exception'))
             {
-                $filename  = substr($classname, $pos + strlen('Exception'));
-                $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
+                $filename = substr($class, $pos + strlen('Exception'));
+                $class    = str_replace($filename, ucfirst(strtolower($filename)), $class);
             }
 
-            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1',  $classname);
+            $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1',  $class);
             $parts = explode(' ', $word);
-
-            // Remove the K prefix
-            array_shift($parts);
 
 		    $path = strtolower(implode('/', $parts));
 
