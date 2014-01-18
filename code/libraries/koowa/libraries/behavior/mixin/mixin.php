@@ -10,13 +10,13 @@
 /**
  * Behavior Mixin
  *
- * Behaviors are attached in FIFO order during construction. Behaviors are added by name and, at runtime behaviors
+ * Behaviors are added in FIFO order during construction. Behaviors are added by name and, at runtime behaviors
  * cannot be overridden by attaching a behaviors with the same.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KBehaviorMixin extends KCommandMixin
+class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
 {
     /**
      * List of behaviors
@@ -52,9 +52,9 @@ class KBehaviorMixin extends KCommandMixin
         foreach ($behaviors as $key => $value)
         {
             if (is_numeric($key)) {
-                $this->attachBehavior($value);
+                $this->addBehavior($value);
             } else {
-                $this->attachBehavior($key, $value);
+                $this->addBehavior($key, $value);
             }
         }
     }
@@ -78,44 +78,6 @@ class KBehaviorMixin extends KCommandMixin
     }
 
     /**
-     * Check if a behavior exists
-     *
-     * @param   string  $name The name of the behavior
-     * @return  boolean TRUE if the behavior exists, FALSE otherwise
-     */
-    public function hasBehavior($name)
-    {
-        return isset($this->_behaviors[$name]);
-    }
-
-    /**
-     * Get a behavior by name
-     *
-     * @param  string  $name   The behavior name
-     * @return KBehaviorInterface
-     */
-    public function getBehavior($name)
-    {
-        $result = null;
-
-        if(isset($this->_behaviors[$name])) {
-            $result = $this->_behaviors[$name];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Gets the behaviors of the table
-     *
-     * @return array An associative array of table behaviors, keys are the behavior names
-     */
-    public function getBehaviors()
-    {
-        return $this->_behaviors;
-    }
-
-    /**
      * Add a behavior
      *
      * @param   mixed $behavior An object that implements BehaviorInterface, an ObjectIdentifier
@@ -124,7 +86,7 @@ class KBehaviorMixin extends KCommandMixin
      * @throws UnexpectedValueException
      * @return  KObject The mixer object
      */
-    public function attachBehavior($behavior, $config = array())
+    public function addBehavior($behavior, $config = array())
     {
         //Get the behavior identifier
         if (!($behavior instanceof KBehaviorInterface))
@@ -167,7 +129,7 @@ class KBehaviorMixin extends KCommandMixin
             $behavior->setMixer($this->getMixer());
 
             //Enqueue the behavior
-            $this->getCommandChain()->enqueue($behavior);
+            $this->addCommandInvoker($behavior);
 
             //Mixin the behavior
             if ($this->_auto_mixin) {
@@ -176,5 +138,43 @@ class KBehaviorMixin extends KCommandMixin
         }
 
         return $this->getMixer();
+    }
+
+    /**
+     * Check if a behavior exists
+     *
+     * @param   string  $name The name of the behavior
+     * @return  boolean TRUE if the behavior exists, FALSE otherwise
+     */
+    public function hasBehavior($name)
+    {
+        return isset($this->_behaviors[$name]);
+    }
+
+    /**
+     * Get a behavior by name
+     *
+     * @param  string  $name   The behavior name
+     * @return KBehaviorInterface
+     */
+    public function getBehavior($name)
+    {
+        $result = null;
+
+        if(isset($this->_behaviors[$name])) {
+            $result = $this->_behaviors[$name];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Gets the behaviors of the table
+     *
+     * @return array An associative array of table behaviors, keys are the behavior names
+     */
+    public function getBehaviors()
+    {
+        return $this->_behaviors;
     }
 }
