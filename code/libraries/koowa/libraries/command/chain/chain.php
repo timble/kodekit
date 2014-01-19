@@ -10,21 +10,14 @@
 /**
  * Command Chain
  *
- * The command queue implements a double linked list. The command handle is used as the key. Each command can have a
- * priority, default priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
+ * The command chain implements a queue. The command handle is used as the key. Each command can have a priority, default
+ * priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandChain extends KObjectQueue implements KCommandChainInterface
+class KCommandChain extends KObject implements KCommandChainInterface
 {
-    /**
-     * Enabled status of the chain
-     *
-     * @var boolean
-     */
-    protected $_enabled = true;
-
     /**
      * The chain stack
      *
@@ -33,6 +26,27 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      * @var KObjectStack
      */
     private $__stack;
+
+    /**
+     * The invoker queue
+     *
+     * @var KObjectQueue
+     */
+    private $__queue;
+
+    /**
+     * Enabled status of the chain
+     *
+     * @var boolean
+     */
+    private $__enabled;
+
+    /**
+     * The chain break condition
+     *
+     * @var boolean
+     */
+    protected $_condition;
 
     /**
      * Constructor
@@ -44,8 +58,14 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     {
         parent::__construct($config);
 
-        $this->_enabled = (boolean) $config->enabled;
+        //Set the chain enabled state
+        $this->__enabled = (boolean) $config->enabled;
+
+        //Set the chain break condition
+        $this->_condition = $config->command_condition;
+
         $this->__stack = $this->getObject('koowa:object.stack');
+        $this->__queue = $this->getObject('koowa:object.queue');
     }
 
     /**
@@ -59,113 +79,11 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'enabled'   => true
+            'command_condition' => false,
+            'enabled'           => true
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Attach a command to the chain
-     *
-     * The priority parameter can be used to override the command priority while enqueueing the command.
-     *
-     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker
-     * @param   integer            $priority The command priority, usually between 1 (high priority) and 5 (lowest),
-     *                                        default is 3. If no priority is set, the command priority will be used
-     *                                        instead.
-     * @return KCommandChain
-     * @throws \InvalidArgumentException if the object does not implement KCommandInvokerInterface
-     */
-    public function enqueue(KObjectHandlable $invoker, $priority = null)
-    {
-        if (!$invoker instanceof KCommandInvokerInterface) {
-            throw new InvalidArgumentException('Invoker needs to implement KCommandInvokerInterface');
-        }
-
-        $priority = is_int($priority) ? $priority : $invoker->getPriority();
-        return parent::enqueue($invoker, $priority);
-    }
-
-    /**
-     * Removes a command from the queue
-     *
-     * @param   KObjectHandlable $invoker
-     * @return  boolean    TRUE on success FALSE on failure
-     * @throws  \InvalidArgumentException if the object does not implement KCommandInvokerInterface
-     */
-    public function dequeue(KObjectHandlable $invoker)
-    {
-        if (!$invoker instanceof KCommandInvokerInterface) {
-            throw new InvalidArgumentException('Invoker needs to implement KCommandInvokerInterface');
-        }
-
-        return parent::dequeue($invoker);
-    }
-
-    /**
-     * Check if the queue does contain a given object
-     *
-     * @param  KObjectHandlable $invoker
-     * @return bool
-     * @throws  \InvalidArgumentException if the object does not implement KCommandInvokerInterface
-     */
-    public function contains(KObjectHandlable $invoker)
-    {
-        if (!$invoker instanceof KCommandInvokerInterface) {
-            throw new InvalidArgumentException('Invoker needs to implement KCommandInvokerInterface');
-        }
-
-        return parent::contains($invoker);
-    }
-
-    /**
-     * Run the commands in the chain
-     *
-     * If a command returns the 'break condition' the executing is halted. If no break condition is specified the
-     * command chain will pass the command invokers, regardless of the invoker result returned.
-     *
-     * @param   string  $name
-     * @param   KCommandInterface $command
-     * @param   mixed   $condition The break condition
-     * @return  void|mixed If the chain breaks, returns the break condition. If the chain is not enabled will void
-     */
-    public function run($name, KCommandInterface $command, $condition = null)
-    {
-        if ($this->isEnabled())
-        {
-            $this->__stack->push(clone $this);
-
-            foreach ($this->__stack->top() as $invoker)
-            {
-                if($condition === self::CONDITION_EXCEPTION)
-                {
-                    try
-                    {
-                        $invoker->execute($name, $command);
-                    }
-                    catch (KCommandExceptionInvoker $e)
-                    {
-                        $this->__stack->pop();
-                        return $e;
-                    }
-                }
-                else
-                {
-                    $result = $invoker->execute($name, $command);
-
-                    if($condition !== null && $result === $condition)
-                    {
-                        $this->__stack->pop();
-                        return $condition;
-                    }
-                }
-            }
-
-            $this->__stack->pop();
-        }
-
-        return null;
     }
 
     /**
@@ -175,8 +93,7 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      */
     public function enable()
     {
-        $this->_enabled = true;
-
+        $this->__enabled = true;
         return $this;
     }
 
@@ -189,27 +106,120 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      */
     public function disable()
     {
-        $this->_enabled = false;
-
+        $this->__enabled = false;
         return $this;
     }
 
-    public function setPriority(KObjectHandlable $invoker, $priority)
+    /**
+     * Invoke a command by calling all registered invokers
+     *
+     * If a command invoker returns the 'break condition' the executing is halted. If no break condition is specified the
+     * the command chain will execute all command invokers, regardless of the invoker result returned.
+     *
+     * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
+     * @param  array|Traversable         $attributes An associative array or a Traversable object
+     * @param  KObjectInterface          $subject    The command subject
+     * @return array|mixed Returns an array of the command results in FIFO order. If the chain breaks, and the break
+     *                     condition is not NULL returns the break condition instead.
+     */
+    public function invokeCommand($command, $attributes = null, $subject = null)
     {
-        if (!$invoker instanceof KCommandInvokerInterface) {
-            throw new InvalidArgumentException('Command needs to implement KCommandInvokerInterface');
+        $result = array();
+
+        if ($this->isEnabled())
+        {
+            $this->__stack->push(clone $this->__queue);
+
+            //Make sure we have an command object
+            if (!$command instanceof KCommandInterface)
+            {
+                if($attributes instanceof KCommandInterface)
+                {
+                    $name    = $command;
+                    $command = $attributes;
+
+                    $command->setName($name);
+                }
+                else $command = new KCommand($command, $attributes, $subject);
+            }
+
+            foreach ($this->__stack->peek() as $invoker)
+            {
+                try {
+                    $result[] = $invoker->executeCommand($command, $this->_condition);
+                } catch (KCommandExceptionInvoker $e) {
+                    $result[] = $e;
+                }
+
+                if($this->_condition !== null && current($result) === $this->_condition)
+                {
+                    $result = current($result);
+                    break;
+                }
+            }
+
+            $this->__stack->pop();
         }
 
-        return parent::setPriority($invoker, $priority);
+        return $result;
     }
 
-    public function getPriority(KObjectHandlable $invoker)
+    /**
+     * Attach a command to the chain
+     *
+     * @param   KCommandInvokerInterface  $invoker  The command invoker
+     * @return KCommandChain
+     */
+    public function addInvoker(KCommandInvokerInterface $invoker)
     {
-        if (!$invoker instanceof KCommandInvokerInterface) {
-            throw new InvalidArgumentException('Command needs to implement KCommandInvokerInterface');
-        }
+        $this->__queue->enqueue($invoker, $invoker->getPriority());
+        return $this;
+    }
 
-        return parent::getPriority($invoker);
+    /**
+     * Removes a command from the chain
+     *
+     * @param   KCommandInvokerInterface  $invoker  The command invoker
+     * @return  KCommandChain
+     */
+    public function removeInvoker(KCommandInvokerInterface $invoker)
+    {
+        $this->__queue->dequeue($invoker);
+        return $this;
+    }
+
+    /**
+     * Get the list of invokers enqueue in the chain
+     *
+     * @return  KObjectQueue   An object queue containing the invokers
+     */
+    public function getInvokers()
+    {
+        return $this->__queue;
+    }
+
+    /**
+     * Set the priority of a command
+     *
+     * @param  KCommandInvokerInterface $invoker   A command invoker
+     * @param integer                   $priority  The command priority
+     * @return KCommandChain
+     */
+    public function setInvokerPriority(KCommandInvokerInterface $invoker, $priority)
+    {
+        $this->__queue->setPriority($invoker, $priority);
+        return $this;
+    }
+
+    /**
+     * Get the priority of a command
+     *
+     * @param   KCommandInvokerInterface $invoker A command invoker
+     * @return integer The command priority
+     */
+    public function getInvokerPriority(KCommandInvokerInterface $invoker)
+    {
+        return $this->__queue->getPriority($invoker);
     }
 
     /**
@@ -219,6 +229,6 @@ class KCommandChain extends KObjectQueue implements KCommandChainInterface
      */
     public function isEnabled()
     {
-        return $this->_enabled;
+        return $this->__enabled;
     }
 }

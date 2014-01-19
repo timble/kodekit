@@ -10,65 +10,14 @@
 /**
  * Command Chain
  *
- * The command queue implements a double linked list. The command handle is used as the key. Each command can have a
- * priority, default priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
+ * The command chain implements a queue. The command handle is used as the key. Each command can have a priority, default
+ * priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
 interface KCommandChainInterface
 {
-    /**
-     * Break conditions
-     */
-    const CONDITION_FALSE     = false; //Stop when first invoker indicates that it has failed
-    const CONDITION_TRUE      = true;  //Stop when first invoker indicates that it has succeeded
-    const CONDITION_EXCEPTION = -1;    //Break when an invoker throws an CommandExceptionInvokerFailed exception
-
-    /**
-     * Run the commands in the chain
-     *
-     * If a command returns the 'break condition' the executing is halted. If no break condition is specified the
-     * command chain will pass the command invokers, regardless of the invoker result returned.
-     *
-     * @param   string  $name
-     * @param   KCommandInterface $command
-     * @param   mixed   $condition The break condition
-     * @return  void|mixed If the chain breaks, returns the break condition. If the chain is not enabled will void
-     */
-    public function run($name, KCommandInterface $command, $condition = null);
-    /**
-     * Attach a command to the chain
-     *
-     * The priority parameter can be used to override the command priority while enqueueing the command.
-     *
-     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker A command invoker
-     * @param   integer            $priority The command priority, usually between 1 (high priority) and 5 (lowest),
-     *                                        default is 3. If no priority is set, the command priority will be used
-     *                                        instead.
-     * @return KCommandChainInterface
-     * @throws InvalidArgumentException if the object does not implement KCommandInvokerInterface
-     */
-    public function enqueue(KObjectHandlable $invoker, $priority = null);
-
-    /**
-     * Removes a command from the queue
-     *
-     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker A command invoker
-     * @return  boolean    TRUE on success FALSE on failure
-     * @throws  \InvalidArgumentException if the object does not implement KCommandInvokerInterface
-     */
-    public function dequeue(KObjectHandlable $invoker);
-
-    /**
-     * Check if the queue does contain a given object
-     *
-     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker A command invoker
-     * @return bool
-     * @throws  InvalidArgumentException if the object does not implement KCommandInvokerInterface
-     */
-    public function contains(KObjectHandlable $invoker);
-
     /**
      * Enable the chain
      *
@@ -86,23 +35,50 @@ interface KCommandChainInterface
     public function disable();
 
     /**
-     * Set the priority of a command
+     * Invoke a command by calling all registered invokers
      *
-     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker A command invoker
-     * @param integer           $priority
-     * @return KCommandChainInterface
-     * @throws InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
+     * If a command invoker returns the 'break condition' the executing is halted. If no break condition is specified the
+     * the command chain will execute all command invokers, regardless of the invoker result returned.
+     *
+     * @param string|KCommandInterface  $command    The command name or a KCommandInterface object
+     * @param array|Traversable         $attributes An associative array or a Traversable object
+     * @param KObjectInterface          $subject    The command subject
+     * @return array|mixed Returns an array of the command results in FIFO order. If the chain breaks, and the break
+     *                     condition is not NULL returns the break condition instead.
      */
-    public function setPriority(KObjectHandlable $invoker, $priority);
+    public function invokeCommand($command, $attributes = array(), $subject = null);
 
     /**
-     * Get the priority of a command
+     * Attach a command to the chain
      *
-     * @param   KCommandInvokerInterface|KObjectHandlable   $invoker A command invoker
-     * @return integer The command priority
-     * @throws InvalidArgumentException if the object doesn't implement KCommandInvokerInterface
+     * @param KCommandInvokerInterface  $invoker  The command invoker
+     * @return KCommandChainInterface
      */
-    public function getPriority(KObjectHandlable $invoker);
+    public function addInvoker(KCommandInvokerInterface $invoker);
+
+    /**
+     * Get the list of invokers enqueue in the chain
+     *
+     * @return  KObjectQueue   An object queue containing the invokers
+     */
+    public function getInvokers();
+
+    /**
+     * Set the priority of a command invoker
+     *
+     * @param KCommandInvokerInterface $invoker   A command invoker
+     * @param integer                   $priority  The command priority
+     * @return KCommandChainInterface
+     */
+    public function setInvokerPriority(KCommandInvokerInterface $invoker, $priority);
+
+    /**
+     * Get the priority of a command invoker
+     *
+     * @param  KCommandInvokerInterface $invoker A command invoker
+     * @return integer The command priority
+     */
+    public function getInvokerPriority(KCommandInvokerInterface $invoker);
 
     /**
      * Check of the command chain is enabled
