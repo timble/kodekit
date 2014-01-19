@@ -8,12 +8,12 @@
  */
 
 /**
- * Event Profiler
+ * Event Publisher Profiler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface, KEventPublisherInterface
+class KEventPublisherProfiler extends KObjectDecorator implements KEventPublisherInterface
 {
     /**
      * Enabled status of the profiler
@@ -32,7 +32,7 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
     /**
      * Enable the profiler
      *
-     * @return  KEventProfiler
+     * @return  KEventPublisherProfiler
      */
     public function enable()
     {
@@ -43,7 +43,7 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
     /**
      * Disable the profiler
      *
-     * @return  KEventProfiler
+     * @return  KEventPublisherProfiler
      */
     public function disable()
     {
@@ -107,7 +107,7 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
      *                                            default is 3 (normal)
      * @throws InvalidArgumentException If the listener is not a callable
      * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @return KEventPublisherProfiler
      */
     public function addListener($event, $listener, $priority = KEventInterface::PRIORITY_NORMAL)
     {
@@ -122,7 +122,7 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
      * @param callable                $listener  The listener
      * @throws InvalidArgumentException If the listener is not a callable
      * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @return KEventPublisherProfiler
      */
     public function removeListener($event, $listener)
     {
@@ -150,7 +150,7 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
      * @param  integer                 $priority  The event priority
      * @throws InvalidArgumentException If the listener is not a callable
      * @throws InvalidArgumentException If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @return KEventPublisherProfiler
      */
     public function setListenerPriority($event, $listener, $priority)
     {
@@ -289,13 +289,13 @@ class KEventProfiler extends KObjectDecorator implements KEventProfilerInterface
      * Set the decorated event dispatcher
      *
      * @param   KEventPublisherInterface $delegate The decorated event publisher
-     * @return  KEventProfiler
+     * @return  KEventPublisherProfiler
      * @throws  InvalidArgumentException If the delegate is not an event publisher
      */
     public function setDelegate($delegate)
     {
         if (!$delegate instanceof KEventPublisherInterface) {
-            throw new InvalidArgumentException('EventPublisher: '.get_class($delegate).' does not implement KEventPublisherInterface');
+            throw new InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement KEventPublisherInterface');
         }
 
         return parent::setDelegate($delegate);
