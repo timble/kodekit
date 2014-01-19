@@ -229,13 +229,7 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
 
         if (!isset($this->__event_subscribers[(string)$identifier]))
         {
-            $subscriber = $this->getObject('manager')->getClass($identifier);
-
-            if(array_key_exists('KObjectMixinInterface', class_implements($subscriber))) {
-                $subscriber = $this->getMixer()->mixin($identifier, $config);
-            } else {
-                $subscriber = $this->getObject($identifier, $config);
-            }
+            $subscriber = $this->getObject($identifier, $config);
 
             //Check the event subscriber interface
             if (!($subscriber instanceof KEventSubscriberInterface))
