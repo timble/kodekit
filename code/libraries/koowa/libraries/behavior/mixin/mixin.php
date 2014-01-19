@@ -25,7 +25,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      *
      * @var array
      */
-    protected $__behaviors = array();
+    private $__behaviors = array();
 
     /**
      * Auto mixin behaviors
