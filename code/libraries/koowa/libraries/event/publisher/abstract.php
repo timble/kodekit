@@ -86,9 +86,10 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * @param  string|KEventInterface  $event     The event name or a KEventInterface object
-     * @param  array|Traversable       $attributes An associative array or a Traversable object
-     * @param  KObjectInterface        $target    The event target
+     * @param  string|KEventInterface             $event      The event name or a KEventInterface object
+     * @param  array|Traversable|KEventInterface  $attributes An associative array, an object implementing the
+     *                                                        KEventInterface or a Traversable object
+     * @param  mixed                              $target     The event target
      * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
      * @return null|KEventInterface Returns the event object. If the chain is not enabled will return NULL.
      */
@@ -104,8 +105,16 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
             }
 
             //Make sure we have an event object
-            if (!$event instanceof KEventInterface) {
-                $event = new KEvent($event, $attributes, $target);
+            if (!$event instanceof KEventInterface)
+            {
+                if($attributes instanceof KEventInterface)
+                {
+                    $name  = $event;
+                    $event = $attributes;
+
+                    $event->setName($name);
+                }
+                else $event = new KEvent($event, $attributes, $target);
             }
 
             //Notify the listeners

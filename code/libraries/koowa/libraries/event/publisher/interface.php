@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-interface KEventPublisherInterface
+interface KEventPublisherInterface extends KObjectHandlable
 {
     /**
      * Enable the publisher
@@ -34,9 +34,10 @@ interface KEventPublisherInterface
     /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * @param  string|KEventInterface  $event     The event name or a KEventInterface object
-     * @param  array|Traversable       $attributes An associative array or a Traversable object
-     * @param  KObjectInterface        $target    The event target
+     * @param  string|KEventInterface             $event      The event name or a KEventInterface object
+     * @param  array|Traversable|KEventInterface  $attributes An associative array, an object implementing the
+     *                                                        KEventInterface or a Traversable object
+     * @param  mixed                              $target     The event target
      * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
      * @return null|KEventInterface Returns the event object. If the chain is not enabled will return NULL.
      */
