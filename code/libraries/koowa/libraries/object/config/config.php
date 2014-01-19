@@ -20,28 +20,16 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * @var array
      */
-    private $__options;
+    private $__options = array();
 
     /**
      * Constructor.
      *
      * @param   array|KObjectConfig An associative array of configuration options or a KObjectConfig instance.
      */
-    public function __construct( $config = array() )
+    public function __construct( $options = array() )
     {
-        if ($config instanceof KObjectConfig) {
-            $data = $config->toArray();
-        } else {
-            $data = $config;
-        }
-
-        $this->__options = array();
-        if (is_array($data))
-        {
-            foreach ($data as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
+        $this->add($options);
     }
 
     /**
@@ -104,22 +92,42 @@ class KObjectConfig implements KObjectConfigInterface
     }
 
     /**
-     * Append values
+     * Add options
      *
-     * This method only adds keys that don't exist and it filters out any duplicate values
+     * This method will overwrite keys that already exist, keys that don't exist yet will be added.
      *
-     * @param  mixed    $config A value of an or array of values to be appended
+     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
      * @return KObjectConfig
      */
-    public function append($config)
+    public function add($options)
     {
-        $config = KObjectConfig::unbox($config);
+        $options = self::unbox($options);
 
-        if(is_array($config))
+        if (is_array($options))
         {
-            if(!is_numeric(key($config)))
+            foreach ($options as $key => $value) {
+                $this->set($key, $value);
+            }
+        }
+    }
+
+    /**
+     * Append values
+     *
+     * This function only adds keys that don't exist and it filters out any duplicate values
+     *
+     * @param  array|KObjectConfig    $config A KObjectConfig object an or array of options to be appended
+     * @return KObjectConfig
+     */
+    public function append($options)
+    {
+        $options = self::unbox($options);
+
+        if(is_array($options))
+        {
+            if(!is_numeric(key($options)))
             {
-                foreach($config as $key => $value)
+                foreach($options as $key => $value)
                 {
                     if(array_key_exists($key, $this->__options))
                     {
@@ -132,7 +140,7 @@ class KObjectConfig implements KObjectConfigInterface
             }
             else
             {
-                foreach($config as $value)
+                foreach($options as $value)
                 {
                     if (!in_array($value, $this->__options, true)) {
                         $this->__options[] = $value;

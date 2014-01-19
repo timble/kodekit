@@ -18,7 +18,9 @@
 interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countable
 {
     /**
-     * Retrieve a configuration item and return $default if there is no element set.
+     * Retrieve a configuration option
+     *
+     * If the option does not exist return the default
      *
      * @param string
      * @param mixed
@@ -27,7 +29,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     public function get($name, $default = null);
 
     /**
-     * Set a configuration item
+     * Set a configuration option
      *
      * @param  string $name
      * @param  mixed  $value
@@ -36,30 +38,40 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     public function set($name, $value);
 
     /**
-     * Check if a configuration item exists
+     * Check if a configuration option exists
      *
-     * @param  	string 	$name The configuration item name.
+     * @param  	string 	$name The configuration option name.
      * @return  boolean
      */
     public function has($name);
 
     /**
-     * Remove a configuration item
+     * Remove a configuration option
      *
-     * @param   string $name The configuration item name.
+     * @param   string $name The configuration option name.
      * @return  KObjectConfigInterface
      */
     public function remove( $name );
+
+    /**
+     * Add options
+     *
+     * This method will overwrite keys that already exist, keys that don't exist yet will be added.
+     *
+     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be added
+     * @return KObjectConfigInterface
+     */
+    public function add($options);
 
     /**
      * Append values
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  mixed    $config A value of an or array of values to be appended
-     * @return KObjectConfig
+     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @return KObjectConfigInterface
      */
-    public function append($config);
+    public function append($options);
 
     /**
      * Return the data
