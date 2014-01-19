@@ -73,19 +73,6 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
     }
 
     /**
-     * Add a new message for a given type.
-     *
-     * @param string    $message
-     * @param string    $type    Message category type. Default is 'success'.
-     * @return KUserSessionContainerMessage
-     */
-    public function add($message, $type = 'success')
-    {
-        $this->set($type, $message);
-        return $this;
-    }
-
-    /**
      * Set current flash messages for a given type.
      *
      * @param string       $type    Message category type.
@@ -141,9 +128,9 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      * @param array $messages An of messages per type
      * @return KUserSessionContainerMessage
      */
-    public function values(array $messages)
+    public function add(array $messages)
     {
-        parent::values($messages);
+        parent::add($messages);
         return $this;
     }
 

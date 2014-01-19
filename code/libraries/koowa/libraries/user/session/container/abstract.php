@@ -144,7 +144,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      * @param array $attributes An array of attributes
      * @return KUserSessionContainerAbstract
      */
-    public function values(array $attributes)
+    public function add(array $attributes)
     {
         foreach ($attributes as $key => $values) {
             $this->set($key, $values);

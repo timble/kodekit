@@ -51,7 +51,7 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
                 $session->start();
             }
 
-            $session->getContainer('message')->values($messages);
+            $session->getContainer('message')->add($messages);
         }
 
         //Set the redirect into the response

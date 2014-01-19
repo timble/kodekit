@@ -62,7 +62,7 @@ interface KUserSessionContainerInterface
      * @param array $attributes An array of attributes
      * @return  KUserSessionContainerInterface
      */
-    public function values(array $attributes);
+    public function add(array $attributes);
 
     /**
      * Get all attributes
