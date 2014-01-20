@@ -67,7 +67,7 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         //Fetch the view data before rendering
-        $this->registerCallback('before.render' , array($this, 'fetchData'));
+        $this->addCommandHandler('before.render', 'fetchData');
     }
 
     /**

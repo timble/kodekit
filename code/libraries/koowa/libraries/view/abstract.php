@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
-abstract class KViewAbstract extends KObject implements KViewInterface
+abstract class KViewAbstract extends KCommandInvokerAbstract implements KViewInterface
 {
     /**
      * Translator object
@@ -76,8 +76,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $this->setTranslator($config->translator);
         $this->setModel($config->model);
 
-        // Mixin the behavior interface
+        // Mixin the behavior (and command) interface
         $this->mixin('koowa:behavior.mixin', $config);
+
+        // Mixin the event interface
+        $this->mixin('koowa:event.mixin', $config);
 	}
 
     /**
@@ -93,9 +96,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $config->append(array(
             'data'              => array(),
             'command_chain'     => 'koowa:command.chain',
-            'event_publisher'   => 'event.publisher',
-            'enable_callbacks'  => true,
-            'enable_events'     => true,
+            'command_invokers'  => array('koowa:command.invoker.event'),
             'model'      => 'koowa:model.empty',
             'translator' => null,
 	    	'content'	 => '',
@@ -118,7 +119,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface
         $context->data   = $data;
         $context->action = 'render';
 
-        if ($this->invokeCommand('before.render', $context, false) !== false)
+        if ($this->invokeCommand('before.render', $context) !== false)
         {
             //Push the data in the view
             $this->setData($context->data);
