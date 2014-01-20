@@ -143,7 +143,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * @param  KControllerContextInterface $context A controller context object
 	 * @return void
 	 */
-	public function _unsetReferrer(KControllerContextInterface $context)
+	protected function _unsetReferrer(KControllerContextInterface $context)
 	{
         $context->response->headers->clearCookie('referrer', $this->_cookie_path);
 	}
