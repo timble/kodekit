@@ -146,10 +146,12 @@ class KCommandChain extends KObject implements KCommandChainInterface
 
             foreach ($this->__stack->peek() as $invoker)
             {
+                $identifier = (string) $invoker->getIdentifier();
+
                 try {
-                    $result[$invoker->getIdentifier()] = $invoker->executeCommand($command, $this->_condition);
+                    $result[$identifier] = $invoker->executeCommand($command, $this->_condition);
                 } catch (KCommandExceptionInvoker $e) {
-                    $result[$invoker->getIdentifier()] = $e;
+                    $result[$identifier] = $e;
                 }
 
                 if($this->_condition !== null && current($result) === $this->_condition)
