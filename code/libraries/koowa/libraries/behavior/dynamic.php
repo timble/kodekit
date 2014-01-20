@@ -10,6 +10,10 @@
 /**
  * Abstract Dynamic Behavior
  *
+ * The dynamic behavior will translate the command name to a method name format (eg, _before[Command] or _after[Command])
+ * and add push it onto the command handlers stack before executing the command. Dynamic command handlers should be
+ * declared protected.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Behavior
  */
@@ -17,9 +21,6 @@ abstract class KBehaviorDynamic extends KBehaviorAbstract
 {
     /**
      * Command handler
-     *
-     *  This function translates the command name to a command handler function of the format '_before[Command]' or
-     * '_after[Command]. Command handler functions should be declared protected.
      *
      * @param KCommandInterface $command    The command
      * @param  mixed            $condition  The break condition
@@ -40,10 +41,6 @@ abstract class KBehaviorDynamic extends KBehaviorAbstract
 
     /**
      * Get an object handle
-     *
-     * This function only returns a valid handle if one or more command handler functions are added or defined in the
-     * behavior interface. An interface command handler function needs to follow the following format : '_after[Command]'
-     * or '_before[Command]' to be recognised.
      *
      * @return string A string that is unique, or NULL
      * @see executeCommand()
