@@ -100,8 +100,8 @@ abstract class PlgKoowaAbstract extends KEventSubscriberAbstract
 		//Inject the object manager
 		$config['object_manager'] = KObjectManager::getInstance();
 
-		//Self subscribe the plugin to the koowa event dispatcher
-        KObjectManager::getInstance()->getObject('event.dispatcher')->addSubscriber($this);
+		//Self subscribe the plugin to the koowa event publisher
+        $this->subscribe(KObjectManager::getInstance()->getObject('event.publisher'));
 
 		parent::__construct(new KObjectConfig($config));
 	}
