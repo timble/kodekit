@@ -8,12 +8,12 @@
  */
 
 /**
- * Event Dispatcher
+ * Event Publisher
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class ComKoowaEventDispatcher extends KEventDispatcher
+class ComKoowaEventPublisher extends KEventPublisher
 {
     /**
      * Initializes the default configuration for the object
@@ -35,24 +35,25 @@ class ComKoowaEventDispatcher extends KEventDispatcher
     }
 
     /**
-     * Dispatches an exception by dispatching arguments to all listeners that handle the event.
+     * Publish an event by calling all listeners that have registered to receive it.
      *
-     * Function will avoid a recursive loop when an exception is thrown during even dispatching and output a generic
+     * Function will avoid a recursive loop when an exception is thrown during even publishing and output a generic
      * exception instead.
      *
-     * @link    http://www.php.net/manual/en/function.set-exception-handler.php#88082
-     * @param   object|array   $event An array, a KObjectConfig or a KEventException object
+     * @param  KException           $exception  The exception to be published.
+     * @param  array|Traversable    $attributes An associative array or a Traversable object
+     * @param  mixed                $target     The event target
      * @return  KEventException
      */
-    public function dispatchException($event = array())
+    public function publishException(Exception $exception, $attributes = array(), $target = null)
     {
         try
         {
-            if (!$event instanceof KEventException) {
-                $event = new KEventException($event);
-            }
+            //Make sure we have an event object
+            $event = new KEventException('onException', $attributes, $target);
+            $event->setException($exception);
 
-            parent::dispatch('onException', $event);
+            parent::publishEvent($event);
         }
         catch (Exception $exception)
         {
