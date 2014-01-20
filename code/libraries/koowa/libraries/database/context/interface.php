@@ -35,7 +35,7 @@ interface KDatabaseContextInterface extends KCommandInterface
      *
      * @return integer
      */
-    public function getAffected($affected);
+    public function getAffected();
 
     /**
      * Get the number of affected rows

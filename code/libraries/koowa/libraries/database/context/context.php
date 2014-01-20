@@ -42,7 +42,7 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      *
      * @return integer
      */
-    public function getAffected($affected)
+    public function getAffected()
     {
         return $this->get('affected');
     }

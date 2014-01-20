@@ -156,7 +156,7 @@ abstract class KControllerAbstract extends KCommandInvokerAbstract implements KC
                 if (isset($this->_mixed_methods[$action]))
                 {
                     $context->setName('action.' . $action);
-                    $context->result = $this->_mixed_methods[$action]->execute($context);
+                    $context->result = $this->_mixed_methods[$action]->executeCommand($context);
                 }
                 else
                 {
