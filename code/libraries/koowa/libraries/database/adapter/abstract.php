@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdapterInterface
+abstract class KDatabaseAdapterAbstract extends KCommandInvokerAbstract implements KDatabaseAdapterInterface
 {
 	/**
 	 * Active state of the connection
@@ -145,9 +145,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
        	 	'table_prefix'  	=> 'jos_',
     	    'table_needle'		=> '#__',
     		'command_chain' 	=> 'koowa:command.chain',
-            'event_publisher'   => 'event.publisher',
-    		'enable_callbacks' 	=> false,
-            'enable_events'     => true,
     		'connection'		=> null,
         ));
 
@@ -277,7 +274,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $context->mode  = $mode;
 
         // Execute the insert operation
-        if ($this->invokeCommand('before.select', $context, false) !== false)
+        if ($this->invokeCommand('before.select', $context) !== false)
         {
             if ($result = $this->execute($context->query, KDatabase::RESULT_USE))
             {
@@ -331,7 +328,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $context->query = $query;
 
         //Execute the insert operation
-        if ($this->invokeCommand('before.insert', $context, false) !== false)
+        if ($this->invokeCommand('before.insert', $context) !== false)
         {
             //Check if we have valid data to insert, if not return false
             if ($context->query->values)
@@ -361,7 +358,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $context->query = $query;
 
         //Execute the update operation
-        if ($this->invokeCommand('before.update', $context, false) !== false)
+        if ($this->invokeCommand('before.update', $context) !== false)
         {
             if (!empty($context->query->values))
             {
@@ -389,7 +386,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $context->query = $query;
 
         //Execute the delete operation
-        if ($this->invokeCommand('before.delete', $context, false) !== false)
+        if ($this->invokeCommand('before.delete', $context) !== false)
         {
             //Execute the query
             $context->result = $this->execute($context->query);
