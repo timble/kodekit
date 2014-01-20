@@ -55,6 +55,8 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
             $config->offset  = 0;
             $config->count   = 0;
             $config->current = 0;
+
+            $config->show_pages = false;
         }
 
         parent::_initialize($config);
