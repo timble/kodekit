@@ -28,15 +28,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
         if($this->isDispatched() && $this->getRequest()->getFormat() == 'html')
         {
-            $this->registerCallback('before.read' , array($this, 'setReferrer'));
-            $this->registerCallback('after.apply' , array($this, '_lockReferrer'));
-            $this->registerCallback('after.read'  , array($this, '_unlockReferrer'));
-            $this->registerCallback('after.save'  , array($this, '_unsetReferrer'));
-            $this->registerCallback('after.cancel', array($this, '_unsetReferrer'));
+            $this->addCommandHandler('before.read' , 'setReferrer');
+            $this->addCommandHandler('after.apply' , '_lockReferrer');
+            $this->addCommandHandler('after.read'  , '_unlockReferrer');
+            $this->addCommandHandler('after.save'  , '_unsetReferrer');
+            $this->addCommandHandler('after.cancel', '_unsetReferrer');
 
-            $this->registerCallback('after.read'  , array($this, '_lockResource'));
-            $this->registerCallback('after.save'  , array($this, '_unlockResource'));
-            $this->registerCallback('after.cancel', array($this, '_unlockResource'));
+            $this->addCommandHandler('after.read'  , '_lockResource');
+            $this->addCommandHandler('after.save'  , '_unlockResource');
+            $this->addCommandHandler('after.cancel', '_unlockResource');
         }
 
         $this->_cookie_path = $config->cookie_path;
