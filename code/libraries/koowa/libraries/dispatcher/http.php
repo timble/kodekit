@@ -35,12 +35,12 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         $this->_limit = $config->limit;
 
         //Authenticate none safe requests
-        $this->registerCallback('before.post'  , array($this, 'authenticateRequest'));
-        $this->registerCallback('before.put'   , array($this, 'authenticateRequest'));
-        $this->registerCallback('before.delete', array($this, 'authenticateRequest'));
+        $this->addCommandHandler('before.post'  , '_authenticateRequest');
+        $this->addCommandHandler('before.put'   , '_authenticateRequest');
+        $this->addCommandHandler('before.delete', '_authenticateRequest');
 
         //Sign GET request with a cookie token
-        $this->registerCallback('after.get' , array($this, 'signResponse'));
+        $this->addCommandHandler('after.get' , '_signResponse');
 	}
 
     /**
@@ -71,7 +71,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * @throws KControllerExceptionForbidden
      * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
-    public function authenticateRequest(KDispatcherContextInterface $context)
+    protected function _authenticateRequest(KDispatcherContextInterface $context)
     {
         $request = $context->request;
         $user    = $context->user;
@@ -104,7 +104,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
      */
-    public function signResponse(KDispatcherContextInterface $context)
+    protected function _signResponse(KDispatcherContextInterface $context)
     {
         if(!$context->response->isError())
         {

@@ -74,12 +74,12 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
      *
      * {@inheritdoc}
      */
-    public function lockResource(KControllerContextInterface $context)
+    protected function _lockResource(KControllerContextInterface $context)
     {
         $domain = $this->getMixer()->getIdentifier()->domain;
 
         if ($domain === 'admin' || $this->getRequest()->query->layout === 'form') {
-            parent::lockResource($context);
+            parent::_lockResource($context);
         }
     }
 
@@ -88,12 +88,12 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
      *
      * {@inheritdoc}
      */
-    public function unlockResource(KControllerContextInterface $context)
+    protected function _unlockResource(KControllerContextInterface $context)
     {
         $domain = $this->getMixer()->getIdentifier()->domain;
 
         if ($domain === 'admin' || $this->getRequest()->query->layout === 'form') {
-            parent::unlockResource($context);
+            parent::_unlockResource($context);
         }
     }
 }

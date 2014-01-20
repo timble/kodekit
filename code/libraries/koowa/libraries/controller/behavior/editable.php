@@ -65,7 +65,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * @param  KControllerContextInterface  $context A controller context object
      * @return void
      */
-    public function lockReferrer(KControllerContextInterface $context)
+    protected function _lockReferrer(KControllerContextInterface $context)
     {
         $cookie = $this->getObject('koowa:http.cookie', array(
             'name'   => 'referrer_locked',
@@ -82,7 +82,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * @param   KControllerContextInterface  $context A controller context object
      * @return void
      */
-    public function unlockReferrer(KControllerContextInterface $context)
+    protected function _unlockReferrer(KControllerContextInterface $context)
     {
         $context->response->headers->clearCookie('referrer_locked', $this->_cookie_path);
     }
@@ -143,7 +143,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * @param  KControllerContextInterface $context A controller context object
 	 * @return void
 	 */
-	public function unsetReferrer(KControllerContextInterface $context)
+	public function _unsetReferrer(KControllerContextInterface $context)
 	{
         $context->response->headers->clearCookie('referrer', $this->_cookie_path);
 	}
@@ -200,7 +200,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * @param   KControllerContextInterface  $context A controller context object
      * @return  void
      */
-    public function lockResource(KControllerContextInterface $context)
+    protected function _lockResource(KControllerContextInterface $context)
     {
         if($this->isLockable() && $this->canEdit()) {
             $context->result->lock();
@@ -213,7 +213,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * @param  KControllerContextInterface  $context A controller context object
      * @return void
      */
-    public function unlockResource(KControllerContextInterface $context)
+    protected function _unlockResource(KControllerContextInterface $context)
     {
         if($this->isLockable() && $this->canEdit()) {
             $context->result->unlock();
