@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerAbstract extends KObject implements KControllerInterface
+abstract class KControllerAbstract extends KCommandInvokerAbstract implements KControllerInterface
 {
     /**
      * The class actions
@@ -85,8 +85,11 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             $this->getRequest()->query->add(KObjectConfig::unbox($config->query));
         }
 
-        // Mixin the behavior interface
+        // Mixin the behavior (and command) interface
         $this->mixin('koowa:behavior.mixin', $config);
+
+        // Mixin the event interface
+        $this->mixin('koowa:event.mixin', $config);
     }
 
     /**
@@ -101,9 +104,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         $config->append(array(
             'command_chain'     => 'koowa:command.chain',
-            'event_publisher'   => 'event.publisher',
-            'enable_events'     => true,
-            'enable_callbacks'  => true,
+            'command_invokers'  => array('koowa:command.invoker.event'),
             'dispatched'		=> false,
             'request'           => 'koowa:controller.request',
             'response'          => 'koowa:controller.response',
@@ -146,7 +147,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $context->action  = $action;
 
         //Execute the action
-        if($this->invokeCommand('before.'.$action, $context, false) !== false)
+        if($this->invokeCommand('before.'.$action, $context) !== false)
         {
             $method = '_action' . ucfirst($action);
 
