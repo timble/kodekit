@@ -154,7 +154,7 @@ class KCommandInvokerEvent extends KCommandInvokerAbstract implements KCommandIn
         }
 
         // Create event object to check for propagation
-        $event = $this->getEventPublisher()->publishEvent($event_specific, $command->getAttributes(), $command->getSubject());
+        $event = $this->getEventPublisher()->publishEvent($event_specific, $event->getAttributes(), $event->getSubject());
 
         // Ensure event can be propagated and event name is different
         if ($event->canPropagate() && $event_specific != $event_generic)
