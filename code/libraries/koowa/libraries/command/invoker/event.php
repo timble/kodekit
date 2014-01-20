@@ -10,28 +10,31 @@
 /**
  * Event Command Invoker
  *
- * The event commend will translate the command name to a onCommandName format and let the event dispatcher dispatch
- * to any registered event handlers.
+ * The event invoker will translate the command name to a onCommandName format and let the event publisher publish
+ * to any registered event listeners.
  *
- * The 'clone_context' config option defines if the context is clone before being passed to the event dispatcher or
- * it passed by reference instead. By default the context is cloned.
+ * The 'immutable' config option defines if the context is clone before being passed to the event publisher or
+ * it passed by reference instead. By default the context is cloned and changes to the event will not impact the
+ * command context.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterface
+class KCommandInvokerEvent extends KCommandInvokerAbstract implements KCommandInvokerInterface
 {
     /**
      * The command priority
      *
-     * @var integer
+     * @var KEventPublisherInterface
      */
-    protected $_priority;
+    private $__event_publisher;
 
     /**
+     * Is the event immutable
+     *
      * @var boolean
      */
-    protected $_clone_context;
+    protected $_immutable;
 
     /**
      * Object constructor
@@ -42,10 +45,16 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
     {
         parent::__construct($config);
 
-        //Set the command priority
-        $this->_priority = $config->priority;
+        if (is_null($config->event_publisher)) {
+            throw new InvalidArgumentException('event_publisher [KEventPublisherInterface] config option is required');
+        }
 
-        $this->_clone_context = $config->clone_context;
+        //Set the event dispatcher
+        $this->__event_publisher = $config->event_publisher;
+
+        //Set the immutable state of the invoker
+        $this->_immutable = $config->immutable;
+
     }
 
     /**
@@ -59,10 +68,47 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'clone_context' => true
+            'priority'        => self::PRIORITY_LOWEST,
+            'event_publisher' => 'event.publisher',
+            'immutable'       => true,
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Get the event publisher
+     *
+     * @throws UnexpectedValueException
+     * @return  KEventPublisherInterface
+     */
+    public function getEventPublisher()
+    {
+        if(!$this->__event_publisher instanceof KEventPublisherInterface)
+        {
+            $this->__event_publisher = $this->getObject($this->__event_publisher);
+
+            if(!$this->__event_publisher instanceof KEventPublisherInterface)
+            {
+                throw new UnexpectedValueException(
+                    'EventPublisher: '.get_class($this->__event_publisher).' does not implement KEventPublisherInterface'
+                );
+            }
+        }
+
+        return $this->__event_publisher;
+    }
+
+    /**
+     * Set the event publisher
+     *
+     * @param   KEventPublisherInterface  $publisher An event publisher object
+     * @return  Object  The mixer object
+     */
+    public function setEventPublisher(KEventPublisherInterface $publisher)
+    {
+        $this->__event_publisher = $publisher;
+        return $this;
     }
 
     /**
@@ -70,19 +116,18 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
      *
      * This functions returns void to prevent is from breaking the chain.
      *
-     * @param   string  $name    The command name
-     * @param   KCommandInterface $context The command context
+     * @param   KCommandInterface $command The command
      * @return  void
      */
-    public function execute($name, KCommandInterface $context)
+    public function executeCommand(KCommandInterface $command, $condition = null)
     {
         $type    = '';
         $package = '';
         $subject = '';
 
-        if ($context->getSubject())
+        if ($command->getSubject())
         {
-            $identifier = $context->getSubject()->getIdentifier()->toArray();
+            $identifier = $command->getSubject()->getIdentifier()->toArray();
             $package    = $identifier['package'];
 
             if ($identifier['path'])
@@ -93,7 +138,7 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
             else $type = $identifier['name'];
         }
 
-        $parts  = explode('.', $name);
+        $parts  = explode('.', $command->getName());
         $when   = array_shift($parts);               // Before or After
         $name   = KStringInflector::implode($parts); // Read Dispatch Select etc.
 
@@ -102,47 +147,30 @@ class KCommandInvokerEvent extends KEventMixin implements KCommandInvokerInterfa
         $event_generic  = 'on'.ucfirst($when).ucfirst($type).$name;
 
         // Clone the context
-        if($this->_clone_context) {
-            $event = clone($context);
+        if($this->_immutable) {
+            $event = clone($command);
         } else {
-            $event = $context;
+            $event = $command;
         }
 
         // Create event object to check for propagation
-        $event = new KEvent($event_specific, $context);
-        $event->setTarget($context->getSubject());
-
-        $this->getEventDispatcher()->dispatch($event_specific, $event);
+        $event = $this->getEventPublisher()->publishEvent($event_specific, $command->getAttributes(), $command->getSubject());
 
         // Ensure event can be propagated and event name is different
-        if ($event->canPropagate() && $event_specific != $event_generic) {
-            $this->getEventDispatcher()->dispatch($event_generic, $event);
+        if ($event->canPropagate() && $event_specific != $event_generic)
+        {
+            $event->setName($event_generic);
+            $this->getEventPublisher()->publishEvent($event);
         }
     }
 
-    /**
-     * Get the methods that are available for mixin.
+    /*
+     * Is the command context immutable
      *
-     * @param  KObjectMixable $mixer Mixer object
-     * @return array An array of methods
+     * @return bool
      */
-    public function getMixableMethods(KObjectMixable $mixer = null)
+    public function isImmutable()
     {
-        $methods = parent::getMixableMethods();
-
-        unset($methods['execute']);
-        unset($methods['getPriority']);
-
-        return $methods;
-    }
-
-    /**
-     * Get the priority of a behavior
-     *
-     * @return	integer The command priority
-     */
-    public function getPriority()
-    {
-        return $this->_priority;
+        return $this->_immutable;
     }
 }
