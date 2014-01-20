@@ -21,10 +21,11 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
      * This function translates the command name to a command handler function of the format '_before[Command]'
      * or '_after[Command]. Command handler functions should be declared protected.
      *
-     * @param 	KCommandInterface  $command 	The command object
+     * @param 	KCommandInterface  $command    The command object
+     * @param   mixed              $condition  The break condition
      * @return 	boolean Always returns TRUE
      */
-    final public function execute(KCommandInterface $command)
+    final public function executeCommand(KCommandInterface $command, $condition = null)
     {
         $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);
@@ -34,8 +35,6 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
         } else {
             $this->getDelegate()->execute($command);
         }
-
-        return true;
     }
 
     /**
