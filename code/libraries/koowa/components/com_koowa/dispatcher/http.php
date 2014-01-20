@@ -25,10 +25,10 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         parent::__construct($config);
 
         //Render the page before sending the response
-        $this->registerCallback('before.send', array($this, 'renderPage'));
+        $this->addCommandHandler('before.send', '_renderPage');
 
         //Render an exception before sending the response
-        $this->registerCallback('before.fail', array($this, 'renderError'));
+        $this->addCommandHandler('before.fail', '_renderError');
 
         //Force the controller to the information found in the request
         if($this->getRequest()->query->has('view')) {
@@ -84,7 +84,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      *
      * @param KDispatcherContextInterface $context
      */
-    public function renderPage(KDispatcherContextInterface $context)
+    protected function _renderPage(KDispatcherContextInterface $context)
     {
         $request   = $context->request;
         $response  = $context->response;
@@ -107,7 +107,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
      * @throws InvalidArgumentException If the action parameter is not an instance of Exception
      * @param KDispatcherContextInterface $context	A dispatcher context object
      */
-    public function renderError(KDispatcherContextInterface $context)
+    protected function _renderError(KDispatcherContextInterface $context)
     {
         $request   = $context->request;
         $response  = $context->response;
