@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KObjectInstantiable
+abstract class KDatabaseBehaviorAbstract extends KBehaviorDynamic implements KObjectInstantiable
 {
     /**
      * Instantiate the object
@@ -45,19 +45,18 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
     /**
      * Command handler
      *
-     * This function translates the command name to a command handler function of the format '_before[Command]' or
-     * '_after[Command]. Command handler functions should be declared protected.
-     *
-     * @param     KCommandInterface    $command The command
-     * @return    boolean   Can return both true or false.
+     * @param KCommandInterface $command    The command
+     * @param  mixed            $condition  The break condition
+     * @return array|mixed Returns an array of the callback results in FIFO order. If a handler breaks and the break
+     *                     condition is not NULL returns the break condition.
      */
-    public function execute(KCommandInterface $command)
+    public function executeCommand(KCommandInterface $command, $condition = null)
     {
         if ($command->data instanceof KDatabaseRowInterface) {
             $this->setMixer($command->data);
         }
 
-        return parent::execute($command);
+        return parent::executeCommand($command, $condition);
     }
 
 	/**

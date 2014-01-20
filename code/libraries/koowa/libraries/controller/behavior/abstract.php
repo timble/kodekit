@@ -12,34 +12,8 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerBehaviorAbstract extends KBehaviorAbstract
+abstract class KControllerBehaviorAbstract extends KBehaviorDynamic
 {
-	/**
-	 * Command handler
-	 *
-	 * This function translates the command name to a command handler function of the format '_before[Command]' or
-     * '_after[Command]. Command handler functions should be declared protected.
-	 *
-	 * @param 	KCommandInterface  $command The command
-	 * @return 	boolean
-	 */
-	public function execute(KCommandInterface $command)
-	{
-        $this->setMixer($command->getSubject());
-
-        $parts = explode('.', $command->getName());
-        if ($parts[0] == 'action')
-        {
-            $method = '_action' . ucfirst($parts[1]);
-
-            if (method_exists($this, $method)) {
-                return $this->$method($command);
-            }
-        }
-
-        return parent::execute($command);
-	}
-
     /**
      * Get the methods that are available for mixin based
      *
