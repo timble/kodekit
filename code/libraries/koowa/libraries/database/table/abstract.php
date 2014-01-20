@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableInterface, KObjectMultiton
+abstract class KDatabaseTableAbstract extends KCommandInvokerAbstract implements KDatabaseTableInterface, KObjectMultiton
 {
     /**
      * Real name of the table in the db schema
@@ -108,7 +108,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             }
         }
 
-        // Mixin the behavior interface
+        // Mixin the behavior (and command) interface
         $this->mixin('koowa:behavior.mixin', $config);
     }
 
@@ -133,8 +133,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             'behaviors'         => array(),
             'identity_column'   => null,
             'command_chain'     => 'koowa:command.chain',
-            'enable_events'     => false,
-            'enable_callbacks'  => false,
         ))->append(
             array('base'        => $config->name)
         );
@@ -546,7 +544,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context->mode      = $mode;
         $context->options   = $options;
 
-        if ($this->invokeCommand('before.select', $context, false) !== false)
+        if ($this->invokeCommand('before.select', $context) !== false)
         {
             $data = null;
 
@@ -670,7 +668,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context->query     = $query;
         $context->affected = false;
 
-        if ($this->invokeCommand('before.insert', $context, false) !== false)
+        if ($this->invokeCommand('before.insert', $context) !== false)
         {
             // Filter the data and remove unwanted columns.
             $data = $this->filter($context->data->getData());
@@ -718,7 +716,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context->query     = $query;
         $context->affected  = false;
 
-        if ($this->invokeCommand('before.update', $context, false) !== false)
+        if ($this->invokeCommand('before.update', $context) !== false)
         {
             foreach ($this->getPrimaryKey() as $key => $column)
             {
@@ -771,7 +769,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context->query     = $query;
         $context->affected  = false;
 
-        if ($this->invokeCommand('before.delete', $context, false) !== false)
+        if ($this->invokeCommand('before.delete', $context) !== false)
         {
             foreach ($this->getPrimaryKey() as $key => $column)
             {
@@ -805,7 +803,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context = $this->getContext();
         $context->table = $this->getBase();
 
-        if ($this->invokeCommand('before.lock', $context, false) !== false)
+        if ($this->invokeCommand('before.lock', $context) !== false)
         {
             if ($this->isConnected()) {
                 $context->result = $this->getDatabase()->lockTable($this->getBase());
@@ -829,7 +827,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $context = $this->getContext();
         $context->table = $this->getBase();
 
-        if ($this->invokeCommand('before.unlock', $context, false) !== false)
+        if ($this->invokeCommand('before.unlock', $context) !== false)
         {
             if ($this->isConnected()) {
                 $context->result = $this->getDatabase()->unlockTable();
