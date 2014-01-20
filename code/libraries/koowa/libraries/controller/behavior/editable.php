@@ -60,34 +60,6 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     }
 
     /**
-     * Lock the referrer from updates
-     *
-     * @param  KControllerContextInterface  $context A controller context object
-     * @return void
-     */
-    protected function _lockReferrer(KControllerContextInterface $context)
-    {
-        $cookie = $this->getObject('koowa:http.cookie', array(
-            'name'   => 'referrer_locked',
-            'value'  => true,
-            'path'   => $this->_cookie_path
-        ));
-
-        $context->response->headers->addCookie($cookie);
-    }
-
-    /**
-     * Unlock the referrer for updates
-     *
-     * @param   KControllerContextInterface  $context A controller context object
-     * @return void
-     */
-    protected function _unlockReferrer(KControllerContextInterface $context)
-    {
-        $context->response->headers->clearCookie('referrer_locked', $this->_cookie_path);
-    }
-
-    /**
      * Get the referrer
      *
      * @param   KControllerContextInterface $context A controller context object
@@ -136,6 +108,34 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             $context->response->headers->addCookie($cookie);
         }
 	}
+
+    /**
+     * Lock the referrer from updates
+     *
+     * @param  KControllerContextInterface  $context A controller context object
+     * @return void
+     */
+    protected function _lockReferrer(KControllerContextInterface $context)
+    {
+        $cookie = $this->getObject('koowa:http.cookie', array(
+            'name'   => 'referrer_locked',
+            'value'  => true,
+            'path'   => $this->_cookie_path
+        ));
+
+        $context->response->headers->addCookie($cookie);
+    }
+
+    /**
+     * Unlock the referrer for updates
+     *
+     * @param   KControllerContextInterface  $context A controller context object
+     * @return void
+     */
+    protected function _unlockReferrer(KControllerContextInterface $context)
+    {
+        $context->response->headers->clearCookie('referrer_locked', $this->_cookie_path);
+    }
 
 	/**
 	 * Unset the referrer
