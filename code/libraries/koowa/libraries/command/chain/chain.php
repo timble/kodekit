@@ -119,8 +119,9 @@ class KCommandChain extends KObject implements KCommandChainInterface
      * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
      * @param  array|Traversable         $attributes An associative array or a Traversable object
      * @param  KObjectInterface          $subject    The command subject
-     * @return array|mixed Returns an array of the command results in FIFO order. If the chain breaks, and the break
-     *                     condition is not NULL returns the break condition instead.
+     * @return array|mixed Returns an array of the command results in FIFO order where the key holds the invoker identifier
+     *                     and the value the result returned by the invoker. If the chain breaks, and the break condition
+     *                     is not NULL returns the break condition instead.
      */
     public function invokeCommand($command, $attributes = null, $subject = null)
     {
@@ -146,9 +147,9 @@ class KCommandChain extends KObject implements KCommandChainInterface
             foreach ($this->__stack->peek() as $invoker)
             {
                 try {
-                    $result[] = $invoker->executeCommand($command, $this->_condition);
+                    $result[$invoker->getIdentifier()] = $invoker->executeCommand($command, $this->_condition);
                 } catch (KCommandExceptionInvoker $e) {
-                    $result[] = $e;
+                    $result[$invoker->getIdentifier()] = $e;
                 }
 
                 if($this->_condition !== null && current($result) === $this->_condition)
