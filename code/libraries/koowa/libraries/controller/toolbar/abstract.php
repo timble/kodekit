@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerToolbarAbstract extends KCommandInvokerAbstract implements KControllerToolbarInterface
+abstract class KControllerToolbarAbstract extends KCommandInvokerDynamic implements KControllerToolbarInterface
 {
     /**
      * Controller object
@@ -72,27 +72,6 @@ abstract class KControllerToolbarAbstract extends KCommandInvokerAbstract implem
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Command handler
-     *
-     * This function translates the command name to a command handler function of the format '_before[Command]' or
-     * '_after[Command]. Command handler functions should be declared protected.
-     *
-     * @param 	KCommandInterface  $command The command
-     * @return 	boolean Always returns TRUE
-     */
-    final public function execute(KCommandInterface $command)
-    {
-        $parts  = explode('.', $command->getName());
-        $method = '_'.$parts[0].ucfirst($parts[1]);
-
-        if(method_exists($this, $method)) {
-            $this->$method($command);
-        }
-
-        return true;
     }
 
     /**
