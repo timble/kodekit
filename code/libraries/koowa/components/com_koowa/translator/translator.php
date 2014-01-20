@@ -263,7 +263,7 @@ class ComKoowaTranslator extends KTranslator implements KObjectMultiton
         $type    = substr($extension, 0, 3);
         $package = substr($extension, 4);
 
-        if ($override = $this->getObject('manager')->getClassLoader()->getLocator('com')->getNamespace($package)) {
+        if ($override = $this->getObject('manager')->getClassLoader()->getLocator('com')->getNamespace(ucfirst($package))) {
             $base = $override;
         }
         else
