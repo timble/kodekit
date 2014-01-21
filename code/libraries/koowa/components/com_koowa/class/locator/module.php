@@ -91,15 +91,18 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
             else $path = $file;
 
             //Switch basepath
-            if(!$this->getNamespace($namespace))
-            {
-                if(!empty($basepath)) {
-                    $this->_basepath = $basepath;
-                } else {
-                    $basepath = $this->_basepath;
-                }
+            if ($this->getNamespace($namespace)) {
+                $basepath = $this->getNamespace($namespace);
             }
-            else $basepath = $this->getNamespace($namespace);
+            elseif (!empty($basepath)) {
+                $this->_basepath = $basepath;
+            }
+            elseif ($this->_basepath) {
+                $basepath = $this->_basepath;
+            }
+            else {
+                $basepath = $this->getNamespace('\\');
+            }
 
             return $basepath.'/modules/'.$module.'/'.$path.'.php';
 		}
