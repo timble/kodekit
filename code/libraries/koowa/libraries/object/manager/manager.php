@@ -188,7 +188,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
      * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
-     * @return string
+     * @return string|false  Returns the class name or false if the class could not be found.
      */
     public function getClass($identifier, $fallback = true)
     {
