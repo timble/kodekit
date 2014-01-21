@@ -15,5 +15,19 @@
  */
 interface KDateInterface extends KObjectHandlable
 {
+    /**
+     * Returns the date formatted according to given format.
+     *
+     * @param  string $format The format to use
+     * @return string
+     */
+    public function format($format);
 
+    /**
+     * Returns human readable date.
+     *
+     * @param  string $period The smallest period to use. Default is 'second'.
+     * @return string Formatted date.
+     */
+    public function humanize($period = 'second');
 }

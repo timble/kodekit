@@ -61,7 +61,6 @@ class KDate extends DateTime implements KDateInterface
         ));
     }
 
-
     /**
      * Returns the date formatted according to given format.
      *
@@ -71,7 +70,6 @@ class KDate extends DateTime implements KDateInterface
     public function format($format)
     {
         $format = preg_replace_callback('/(?<!\\\)[DlFM]/', array($this, '_translate'), $format);
-
         return parent::format($format);
     }
 
