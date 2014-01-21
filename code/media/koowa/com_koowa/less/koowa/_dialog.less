@@ -23,6 +23,7 @@
     font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5em;
+    .box-sizing(border-box);
 
     .koowa_template_container {
         height: 100%;
@@ -472,10 +473,10 @@
 // Keep outside the above so we can copy paste the media querie into the above old-ie namespace
 .old-ie {
 
-    height: @windowHeight;
+    height: @windowHeight - 10px;
 
     .koowa_dialog {
-        height: @windowHeight;
+        height: @windowHeight - 10px;
     }
 }
 
