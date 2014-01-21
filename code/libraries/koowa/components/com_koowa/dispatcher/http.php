@@ -215,6 +215,14 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             //Mimetype
             JFactory::getDocument()->setMimeEncoding($view->mimetype);
 
+            //Messages
+            foreach($this->getObject('response')->getMessages() as $type => $messages)
+            {
+                foreach($messages as $message) {
+                    JFactory::getApplication()->enqueueMessage($message, $type);
+                }
+            };
+
             //Content
             echo $response->getContent();
 
