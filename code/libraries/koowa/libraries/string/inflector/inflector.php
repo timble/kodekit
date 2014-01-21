@@ -10,13 +10,13 @@
 /**
  * String Inflector
  *
- * KStringInflector to pluralize and singularize English nouns.
+ * Inflector to pluralize and singularize English nouns.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\String
  * @static
  */
-class KStringInflector
+class KStringInflector implements KStringInflectorInterface
 {
    	/**
 	 * Rules for pluralizing and singularizing of nouns.
