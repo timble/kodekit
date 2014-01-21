@@ -63,8 +63,17 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
             //Prevent a re-render of the message
             if($context->request->getUrl() != $context->request->getReferrer())
             {
-                $message = $this->getObject('com:koowa.template.helper.message')->lock(array('row' => $entity));
-                $context->response->addMessage($message, 'notice');
+                if($entity->isLockable() && $entity->locked())
+                {
+                    $user = JFactory::getUser($entity->locked_by);
+
+                    $date    = new ComKoowaDate(array('date' => $entity->locked_on));
+                    $message = $this->getObject('translator')->translate(
+                        'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date->humanize())
+                    );
+
+                    $context->response->addMessage($message, 'notice');
+                }
             }
         }
     }
