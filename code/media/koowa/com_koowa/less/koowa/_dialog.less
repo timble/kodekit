@@ -17,7 +17,7 @@
 // Only applicable when the empty template is used, so not for tmpl=component view
 &-html {
     height: 100% !important;
-    padding: 0;
+    padding: 10px;
     margin: 0;
     overflow: auto;
     font-family: Arial, sans-serif;
@@ -34,6 +34,11 @@
     }
 
     * { .box-sizing(border-box); }
+
+    // Joomla modal specific classes
+    &.joomla_modal {
+        padding: 0;
+    }
 }
 
 // Dialog container
