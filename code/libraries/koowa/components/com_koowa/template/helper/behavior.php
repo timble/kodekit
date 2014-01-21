@@ -309,7 +309,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
 
         if($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00') {
-            $config->value = strftime($config->format, strtotime($config->value) /*+ $config->gmt_offset*/);
+            $config->value = strftime($config->format, strtotime($config->value));
         } else {
             $config->value = '';
         }
