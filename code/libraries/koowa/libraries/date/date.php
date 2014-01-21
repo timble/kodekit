@@ -16,6 +16,13 @@
 class KDate extends DateTime implements KDateInterface
 {
     /**
+     * Translator object
+     *
+     * @var KTranslator
+     */
+    private $__translator;
+
+    /**
      * Constructor.
      *
      * @param   array|KObjectConfig An associative array of configuration settings or a ObjectConfig instance.
@@ -32,6 +39,8 @@ class KDate extends DateTime implements KDateInterface
             $config->timezone = new DateTimeZone($config->timezone);
         }
 
+        $this->__translator = $config->translator;
+
         parent::__construct($config->date, $config->timezone);
     }
 
@@ -47,8 +56,123 @@ class KDate extends DateTime implements KDateInterface
     {
         $config->append(array(
             'date'       => 'now',
-            'timezone'   => 'UTC'
+            'timezone'   => 'UTC',
+            'translator' => 'koowa:translator'
         ));
+    }
+
+
+    /**
+     * Returns the date formatted according to given format.
+     *
+     * @param  string $format The format to use
+     * @return string
+     */
+    public function format($format)
+    {
+        $format = preg_replace_callback('/(?<!\\\)[DlFM]/', array($this, '_translate'), $format);
+
+        return parent::format($format);
+    }
+
+    /**
+     * Returns human readable date.
+     *
+     * @param  string $period The smallest period to use. Default is 'second'.
+     * @return string Formatted date.
+     */
+    public function humanize($period = 'second')
+    {
+        $translator = $this->getTranslator();
+
+        $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+        $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
+        $now     = new DateTime();
+
+        if($now != $this)
+        {
+            // TODO: Use DateTime::getTimeStamp().
+            if($now > $this)
+            {
+                $difference = $now->format('U') - $this->format('U');
+                $tense      = 'ago';
+            }
+            else
+            {
+                $difference = $this->format('U') - $now->format('U');
+                $tense      = 'from now';
+            }
+
+            for($i = 0; $difference >= $lengths[$i] && $i < 6; $i++) {
+                $difference /= $lengths[$i];
+            }
+
+            $difference      = round($difference);
+            $period_index    = array_search($period, $periods);
+            $omitted_periods = $periods;
+            array_splice($omitted_periods, $period_index);
+
+            if(in_array($periods[$i], $omitted_periods))
+            {
+                $difference = 1;
+                $i          = $period_index;
+            }
+
+            if($periods[$i] == 'day' && $difference == 1)
+            {
+                // Since we got 1 by rounding it down and if it's less than 24 hours it would say x hours ago, this
+                // is yesterday
+                return $tense == 'ago' ? $translator->translate('Yesterday') : $translator->translate('Tomorrow');
+            }
+
+            $period        = $periods[$i];
+            $period_plural = $period.'s';
+
+            // We do not pass $period or $tense as parameters to replace because some languages use different words
+            // for them based on the time difference.
+            $result = $translator->choose(
+                array("{number} $period $tense", "{number} $period_plural $tense"),
+                $difference,
+                array('number' => $difference)
+            );
+        }
+        else $result = $translator->translate('Just now');
+
+        return $result;
+    }
+
+    /**
+     * Gets the translator object
+     *
+     * @return  KTranslatorInterface
+     */
+    public function getTranslator()
+    {
+        if(!$this->__translator instanceof KTranslatorInterface)
+        {
+            $this->__translator = KObjectManager::getInstance()->getObject($this->__translator);
+
+            if(!$this->__translator instanceof KTranslatorInterface)
+            {
+                throw new UnexpectedValueException(
+                    'Translator: '.get_class($this->__translator).' does not implement KTranslatorInterface'
+                );
+            }
+        }
+
+        return $this->__translator;
+    }
+
+    /**
+     * Sets the translator object
+     *
+     * @param  KTranslatorInterface $translator A translator object
+     * @return ComKoowaDate
+     */
+    public function setTranslator(KTranslatorInterface $translator)
+    {
+        $this->__translator = $translator;
+        return $this;
     }
 
     /**
@@ -62,5 +186,41 @@ class KDate extends DateTime implements KDateInterface
     public function getHandle()
     {
         return spl_object_hash($this);
+    }
+
+    /**
+     * Translates day and month names.
+     *
+     * @param array $matches Matched elements of preg_replace_callback.
+     * @return string
+     */
+    protected function _translate($matches)
+    {
+        $replacement = '';
+        $translator  = $this->getTranslator();
+
+        switch ($matches[0])
+        {
+            case 'D':
+                $replacement = $translator->translate(strtoupper(parent::format('D')));
+                break;
+
+            case 'l':
+                $replacement = $translator->translate(strtoupper(parent::format('l')));
+                break;
+
+            case 'F':
+                $replacement = $translator->translate(strtoupper(parent::format('F')));
+                break;
+
+            case 'M':
+                $replacement = $translator->translate(strtoupper(parent::format('F').'_SHORT'));
+                break;
+        }
+
+        $replacement = preg_replace('/^([0-9])/', '\\\\\\\\\1', $replacement);
+        $replacement = preg_replace('/([a-z])/i', '\\\\\1', $replacement);
+
+        return $replacement;
     }
 }
