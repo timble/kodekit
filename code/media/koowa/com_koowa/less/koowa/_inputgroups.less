@@ -1,0 +1,209 @@
+// Replicating and combining the new Bootstrap 3 input-group styles because they're just better
+.input-group {
+    position: relative;
+    border-collapse: separate;
+    width: 100%;
+    display: table;
+    margin-bottom: 9px;
+    .box-sizing(border-box);
+
+    .input-group {
+        margin: 0;
+    }
+
+    label.control-label {
+        .clearfix();
+    }
+
+    .input-group-addon,
+    .input-group-btn,
+    .input-group-form-control-field,
+    .input-group-form-control,
+    input {
+        display: table-cell;
+        float: none;
+        width: 100%;
+        .box-sizing(border-box);
+        position: relative;
+        min-height: 28px;
+        max-height: 28px;
+        margin: 0;
+    }
+
+    .caret {
+        margin: 7px 0 0 6px;
+    }
+
+    ul {
+        position: absolute;
+        top: auto;
+        left: 0;
+        display: none;
+
+        li {
+            display: block;
+            clear: both;
+        }
+    }
+
+    .open > ul {
+        display: block;
+    }
+
+    .input-group-addon,
+    .input-group-input,
+    .input-group-btn {
+        width: 1%;
+        vertical-align: top;
+        white-space: nowrap;
+        position: relative;
+
+        & .btn {
+            position: relative;
+            min-height: 28px;
+            .box-sizing(border-box);
+            .box-shadow(none);
+            font-size: 13px;
+            padding: 4px 10px;
+            line-height: 18px;
+            vertical-align: middle;
+
+            img {
+                margin: 0;
+                display: inline;
+            }
+
+            img + .caret {
+                margin-right: 8px;
+            }
+        }
+    }
+
+    .input-group-addon:not(:first-child):not(:last-child),
+    .input-group-btn:not(:first-child):not(:last-child),
+    .input-group-form-control:not(:first-child):not(:last-child),
+    .input-group-form-control-field:not(:first-child):not(:last-child) .input-group-addon,
+    .input-group-form-control-field:not(:first-child):not(:last-child) .input-group-form-control {
+        border-radius: 0 !important;
+    }
+
+    // Removing the borders from input fields between appends
+    .input-group-form-control:not(:first-child),
+    .input-group-form-control-field:not(:first-child) .input-group-form-control,
+    .input-group-form-control-field:not(:first-child) .input-group > .input-group-addon,
+    .input-group-form-control-field:not(:first-child) .input-group > .input-group-form-control {
+        border-left: none;
+    }
+
+    .input-group-form-control-field:not(:last-child) .input-group-form-control,
+    .input-group-form-control-field:not(:last-child) .input-group > .input-group-addon,
+    .input-group-form-control-field:not(:last-child) .input-group > .input-group-form-control {
+        border-right: none;
+    }
+
+    .input-group-addon {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1;
+        text-align: center;
+        background-color: #eeeeee;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+    }
+
+    .input-group-img img {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .input-group-form-control:first-child,
+    .input-group-addon:first-child,
+    .input-group-btn:first-child > .btn,
+    .input-group-btn:first-child > * > .btn,
+    .input-group-btn:first-child > .dropdown-toggle,
+    .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .input-group-addon:first-child {
+        border-right: 0;
+    }
+
+    .input-group-form-control:last-child,
+    .input-group-addon:last-child,
+    .input-group-btn:last-child > .btn,
+    .input-group-btn:last-child > .dropdown-toggle,
+    .input-group-btn:first-child > .btn:not(:first-child) {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    .input-group-addon:last-child {
+        border-left: 0;
+    }
+
+    // Validation advice on input-groups
+    .validation-advice {
+        position: absolute;
+        top: auto;
+        left: 0;
+    }
+
+    .input-group-icon {
+        min-width: 16px;
+        width: 16px;
+        max-width: 16px;
+        min-height: 16px;
+        height: 16px;
+        max-height: 16px;
+    }
+
+}
+
+.input-append.datepicker {
+    .box-sizing(border-box);
+    display: table;
+    width: 100%;
+    padding: 0;
+
+    .btn,
+    input {
+        display: table-cell;
+        float: none;
+        width: 100%;
+        .box-sizing(border-box);
+        position: relative;
+        min-height: 28px;
+        margin: 0;
+    }
+
+    .btn {
+        width: 1%;
+        vertical-align: top;
+        white-space: nowrap;
+        position: relative;
+        min-height: 0;
+        height: auto;
+        line-height: 1;
+
+        & > i {
+            display: inline-block;
+            position: relative;
+        }
+    }
+
+    input {
+        display: table-cell;
+        position: relative;
+        .box-sizing(border-box);
+        border-right: none;
+    }
+
+    .datepicker-dropdown {
+        display: block;
+        position: absolute;
+    }
+
+}
