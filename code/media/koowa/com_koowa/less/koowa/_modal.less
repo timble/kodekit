@@ -394,3 +394,122 @@ img.mfp-img {
   top: 0;
   right: 0;
   padding-top: 0; }
+
+
+
+
+
+// Custom classes
+// Namespace them inside bot wrap and container to win from all other mfp styles
+// This makes sure modals in both frontend and backend look the same
+
+.mfp-wrap {
+
+    .mfp-container {
+
+        min-height: 420px;
+
+        &.mfp-inline-holder {
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        .mfp-content {
+            max-width: 960px;
+        }
+
+        .mfp-inline {
+            display: block;
+            width: auto;
+            height: auto;
+            padding: 15px;
+        }
+
+        .mfp-close {
+            margin: 0;
+            padding: 0;
+            color: white;
+            right: -6px;
+            text-align: right;
+            padding-right: 6px;
+            width: 100%;
+            top: -40px;
+            font-size: 24px;
+
+            &:hover {
+                border: none;
+                background: transparent;
+                margin: 0;
+                padding: 0;
+                padding-right: 6px;
+                color: white;
+                right: -6px;
+                text-align: right;
+                padding-right: 6px;
+                top: -40px;
+            }
+        }
+
+        .mfp-iframe-scaler .mfp-iframe,
+        .mfp-inline {
+            background: white;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+        }
+
+    }
+}
+
+
+// Special classes for our file dialog popup
+.koowa_dialog_modal {
+    .mfp-content {
+        max-height: 100%;
+        min-height: 100%;
+        height: 100%;
+    }
+    .mfp-content .mfp-iframe-scaler {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+
+        .mfp-iframe {
+            position: relative;
+        }
+    }
+
+    @media screen and (min-width:712px) {
+        .mfp-content {
+            min-height: 0;
+            height: 530px;
+            max-height: 100% !important;
+        }
+        .mfp-content .mfp-iframe-scaler {
+            height: 530px;
+            max-height: 100% !important;
+
+            iframe {
+                height: 530px;
+                max-height: 100% !important;
+            }
+        }
+    }
+}
+
+
+// Old IE | with hacks to make it work in the joomla backend
+.koowa_dialog_modal {
+    .mfp-content {
+        min-height: 0\9;
+        height: 530px\9;
+        max-height: 530px\9;
+    }
+    .mfp-content .mfp-iframe-scaler {
+        height: 530px\9;
+        max-height: 530px\9;
+
+        iframe {
+            height: 530px\9;
+            max-height: 530px\9;
+        }
+    }
+}
