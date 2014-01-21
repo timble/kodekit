@@ -32,13 +32,13 @@ class ComKoowaViewPageHtml extends ComKoowaViewHtml
         parent::_initialize($config);
     }
 
-    public function fetchData(KViewContext $context)
+    protected function _fetchData(KViewContext $context)
     {
         //Set the language information
         $language = JFactory::getApplication()->getCfg('language');
         $context->data->language  = $language ? $language : 'en-GB';
         $context->data->direction = JFactory::getLanguage()->isRTL() ? 'rtl' : 'ltr';
 
-        return parent::fetchData($context);
+        return parent::_fetchData($context);
     }
 }

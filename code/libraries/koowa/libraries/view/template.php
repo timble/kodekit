@@ -67,7 +67,7 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         //Fetch the view data before rendering
-        $this->addCommandHandler('before.render', 'fetchData');
+        $this->addCommandHandler('before.render', '_fetchData');
     }
 
     /**
@@ -130,7 +130,7 @@ abstract class KViewTemplate extends KViewAbstract
      * @param KViewContext	$context A view context object
      * @return void
      */
-    public function fetchData(KViewContext $context)
+    protected function _fetchData(KViewContext $context)
     {
         $model = $this->getModel();
 
