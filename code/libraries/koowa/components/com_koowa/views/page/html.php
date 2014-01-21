@@ -39,6 +39,6 @@ class ComKoowaViewPageHtml extends ComKoowaViewHtml
         $context->data->language  = $language ? $language : 'en-GB';
         $context->data->direction = JFactory::getLanguage()->isRTL() ? 'rtl' : 'ltr';
 
-        return parent::_fetchData($context);
+        parent::_fetchData($context);
     }
 }
