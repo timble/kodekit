@@ -54,8 +54,12 @@ class KClassLocatorLibrary extends KClassLocatorAbstract
 	 */
 	public function locate($class, $basepath = null)
 	{
-        foreach($this->_namespaces as $namespace => $basepath)
+        foreach($this->getNamespaces() as $namespace => $basepath)
         {
+            if(empty($namespace) && strpos($class, '\\')) {
+                continue;
+            }
+
             if(strpos('\\'.$class, '\\'.$namespace) !== 0) {
                 continue;
             }

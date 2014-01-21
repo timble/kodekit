@@ -35,14 +35,21 @@ class KClassLocatorStandard extends KClassLocatorAbstract
 	public function locate($class, $basepath = null)
 	{
         //Find the class
-        foreach($this->_namespaces as $namespace => $basepath)
+        foreach($this->getNamespaces() as $namespace => $basepath)
         {
+            if(empty($namespace) && strpos($class, '\\')) {
+                continue;
+            }
+
             if(strpos('\\'.$class, '\\'.$namespace) !== 0) {
                 continue;
             }
 
-            //Remove the namespace from the class name
-            $class = ltrim(substr($class, strlen($namespace)), '\\');
+            if ($pos = strrpos($class, '\\'))
+            {
+                $namespace = substr($class, 0, $pos);
+                $class     = substr($class, $pos + 1);
+            }
 
             $path  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
             $path .= str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
