@@ -20,7 +20,9 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
      */
     public function canAdd()
     {
-        return (parent::canAdd() && $this->getObject('user')->authorise('core.create') === true);
+        $component = $this->getIdentifier()->package;
+
+        return (parent::canAdd() && $this->getObject('user')->authorise('core.create', 'com_'.$component) === true);
     }
 
     /**
@@ -28,7 +30,9 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
      */
     public function canEdit()
     {
-        return (parent::canEdit() && $this->getObject('user')->authorise('core.edit') === true);
+        $component = $this->getIdentifier()->package;
+
+        return (parent::canEdit() && $this->getObject('user')->authorise('core.edit', 'com_'.$component) === true);
     }
 
     /**
@@ -36,7 +40,9 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
      */
     public function canDelete()
     {
-        return (parent::canDelete() && $this->getObject('user')->authorise('core.delete') === true);
+        $component = $this->getIdentifier()->package;
+
+        return (parent::canDelete() && $this->getObject('user')->authorise('core.delete', 'com_'.$component) === true);
     }
 
     /**
