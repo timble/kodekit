@@ -1,3 +1,21 @@
+// Remove styling when modal us being used
+&.inside_modal {
+
+    .koowa_template {
+        padding: 0;
+        background: #fff;
+        margin: auto;
+
+        .koowa_template_container {
+            box-shadow: none;
+            background: #fff;
+            margin: auto;
+            max-width: none;
+            .clearfix();
+        }
+    }
+}
+
 // Styling the body.koowa class
 &.koowa_template {
 
@@ -20,6 +38,7 @@
         background: #fff;
         margin: 0 auto;
         max-width: @maxWidth;
+        .clearfix();
     }
 
     label {
@@ -105,6 +124,11 @@
     // Re-aligning the description buttons
     #editor-xtd-buttons .btn-toolbar {
         margin: 0;
+    }
+
+    // Give alert messages some space
+    .alert {
+        margin: 10px;
     }
 }
 

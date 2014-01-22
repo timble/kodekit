@@ -24,11 +24,12 @@ defined('KOOWA') or die; ?>
 
     <script type="text/javascript">
     // Add a "joomla_modal" class to the HTML element if we are rendering inside a Squeezebox modal
-    window.onload = function() {
-        if (window.parent.SqueezeBox && window.parent.SqueezeBox.isOpen) {
-            document.documentElement.className += " joomla_modal";
-        }
-    };
+    if (window.parent && window.parent !== window) {
+        document.documentElement.className += " inside_modal";
+    }
+    if (window.parent.SqueezeBox && window.parent.SqueezeBox.isOpen) {
+        document.documentElement.className += " joomla_modal";
+    }
     </script>
 
     <ktml:title>

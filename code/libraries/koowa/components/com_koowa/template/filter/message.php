@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class KTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
     public function render(&$text)
     {
@@ -38,9 +38,6 @@ class KTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplat
             }
 
             $text = str_replace('<ktml:messages>', $output, $text);
-
-            // Flush messages
-            $this->getObject('response')->getMessages();
         }
     }
 }

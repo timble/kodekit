@@ -1,4 +1,4 @@
-0<?php
+<?php
 /**
  * Koowa Framework - http://developer.joomlatools.com/koowa
  *
