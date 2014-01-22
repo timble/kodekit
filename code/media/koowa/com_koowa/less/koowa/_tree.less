@@ -15,6 +15,12 @@
         list-style-type: none;
     }
 
+    a:hover {
+        .jqtree-title {
+            color: #fff;
+        }
+    }
+
     /* We use different markup to display the toggler, so we hide the old one */
     .jqtree-toggler {
         display: none!important;
@@ -86,9 +92,9 @@
         position: relative;
     }
     li.jqtree-selected > a .jqtree-title,
-    li.jqtree-selected > a:hover .jqtree-title,
-    li.jqtree-selected > a:hover .jqtree-title i {
-        color: white!important;
+    li.jqtree-selected a:hover .jqtree-title,
+    li.jqtree-selected a:hover .jqtree-title i {
+        color: #fff !important;
     }
 
     .koowa-icon-folder, .koowa-icon-folder-open {
