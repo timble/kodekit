@@ -1,7 +1,7 @@
 // Replicating and combining the new Bootstrap 3 input-group styles because they're just better
 .input-group {
     position: relative;
-    border-collapse: collapse;
+    border-collapse: separate;
     width: 100%;
     display: table;
     margin-bottom: 9px;
@@ -57,7 +57,7 @@
     .input-group-input,
     .input-group-btn {
         width: 1%;
-        vertical-align: middle;
+        vertical-align: top;
         white-space: nowrap;
         position: relative;
 
@@ -80,29 +80,6 @@
         }
     }
 
-    .input-group-addon:not(:first-child):not(:last-child),
-    .input-group-btn:not(:first-child):not(:last-child),
-    .input-group-form-control:not(:first-child):not(:last-child),
-    .input-group-form-control-field:not(:first-child):not(:last-child) .input-group-addon,
-    .input-group-form-control-field:not(:first-child):not(:last-child) .input-group-form-control {
-        border-radius: 0 !important;
-    }
-
-    // Removing the borders from input fields between appends
-    .input-group-form-control:not(:first-child),
-    .input-group-form-control-field:not(:first-child) .input-group-form-control,
-    .input-group-form-control-field:not(:first-child) .input-group > .input-group-addon,
-    .input-group-form-control-field:not(:first-child) .input-group > .input-group-form-control {
-        border-left: none;
-    }
-
-    .input-group-form-control-field:not(:last-child) .input-group-form-control,
-    .input-group-form-control:not(:last-child),
-    .input-group-form-control-field:not(:last-child) .input-group > .input-group-addon,
-    .input-group-form-control-field:not(:last-child) .input-group > .input-group-form-control {
-        border-right: none;
-    }
-
     .input-group-addon {
         padding: 6px 12px;
         font-size: 14px;
@@ -117,33 +94,6 @@
     .input-group-img img {
         width: 16px !important;
         height: 16px !important;
-    }
-
-    .input-group-form-control:first-child,
-    .input-group-addon:first-child,
-    .input-group-btn:first-child > .btn,
-    .input-group-btn:first-child > * > .btn,
-    .input-group-btn:first-child > .dropdown-toggle,
-    .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-
-    .input-group-addon:first-child {
-        border-right: 0;
-    }
-
-    .input-group-form-control:last-child,
-    .input-group-addon:last-child,
-    .input-group-btn:last-child > .btn,
-    .input-group-btn:last-child > .dropdown-toggle,
-    .input-group-btn:first-child > .btn:not(:first-child) {
-        border-bottom-left-radius: 0;
-        border-top-left-radius: 0;
-    }
-
-    .input-group-addon:last-child {
-        border-left: 0;
     }
 
     // Validation advice on input-groups
@@ -162,4 +112,48 @@
         max-height: 16px;
     }
 
+}
+
+
+.input-group .input-group-addon:not(:first-child):not(:last-child),
+.input-group .input-group-btn:not(:first-child):not(:last-child),
+.input-group .input-group-form-control:not(:first-child):not(:last-child),
+.input-group .input-group-form-control-field:not(:first-child):not(:last-child) .input-group-addon,
+.input-group .input-group-form-control-field:not(:first-child):not(:last-child) .input-group-form-control {
+    border-radius: 0 !important;
+}
+
+// Removing the borders from input fields between appends
+.input-group .input-group-addon:last-child,
+.input-group .input-group-form-control:not(:first-child),
+.input-group .input-group-form-control-field:not(:first-child) .input-group-form-control,
+.input-group .input-group-form-control-field:not(:first-child) .input-group > .input-group-addon,
+.input-group .input-group-form-control-field:not(:first-child) .input-group > .input-group-form-control {
+    border-left: none;
+}
+
+.input-group .input-group-form-control:last-child,
+.input-group .input-group-addon:last-child,
+.input-group .input-group-btn:last-child > .btn,
+.input-group .input-group-btn:last-child > .dropdown-toggle,
+.input-group .input-group-btn:first-child > .btn:not(:first-child) {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.input-group .input-group-form-control:not(:last-child),
+.input-group .input-group-form-control-field:not(:last-child) .input-group-form-control,
+.input-group .input-group-form-control-field:not(:last-child) .input-group > .input-group-addon,
+.input-group .input-group-form-control-field:not(:last-child) .input-group > .input-group-form-control {
+    border-right: none;
+}
+
+.input-group .input-group-form-control:first-child:not(:last-child),
+.input-group .input-group-addon:first-child,
+.input-group .input-group-btn:first-child > .btn,
+.input-group .input-group-btn:first-child > * > .btn,
+.input-group .input-group-btn:first-child > .dropdown-toggle,
+.input-group .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
