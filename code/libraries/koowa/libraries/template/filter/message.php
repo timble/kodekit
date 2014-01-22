@@ -38,9 +38,6 @@ class KTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplat
             }
 
             $text = str_replace('<ktml:messages>', $output, $text);
-
-            // Flush messages
-            $this->getObject('response')->getMessages();
         }
     }
 }
