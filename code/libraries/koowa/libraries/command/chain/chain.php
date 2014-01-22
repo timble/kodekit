@@ -154,9 +154,9 @@ class KCommandChain extends KObject implements KCommandChainInterface
                     $result[$identifier] = $e;
                 }
 
-                if($this->_condition !== null && current($result) === $this->_condition)
+                if($this->_condition !== null && end($result) === $this->_condition)
                 {
-                    $result = current($result);
+                    $result = end($result);
                     break;
                 }
             }
