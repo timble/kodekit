@@ -94,4 +94,12 @@ interface KExceptionHandlerInterface
      * @return  void
      */
     public function handleException(Exception $exception);
+
+    /**
+     * Check if an exception type is enabled
+     *
+     * @param $type
+     * @return bool
+     */
+    public function isEnabled($type);
 }

@@ -45,12 +45,15 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     {
         parent::__construct($config);
 
-        //Set the error level
+        //Set error level
         $this->setErrorLevel($config->error_level);
 
+        //Add handlers
         foreach($config->exception_handlers as $handler) {
             $this->addHandler($handler);
         }
+
+        $this->enable($config->exception_type);
     }
 
     /**
@@ -65,7 +68,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     {
         $config->append(array(
             'exception_handlers' => array(),
-            'exception_types'    => self::TYPE_ALL,
+            'exception_type'     => self::TYPE_ALL,
             'exception_level'    => self::ERROR_REPORTING,
         ));
 
@@ -241,6 +244,21 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     }
 
     /**
+     * Check if an exception type is enabled
+     *
+     * @param $type
+     * @return bool
+     */
+    public function isEnabled($type)
+    {
+        if($this->_exception_type & $type) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Fatal Exception Handler
      *
      * @return bool
@@ -270,6 +288,9 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     /**
      * Error Handler
      *
+     * Do not call this method directly. Function visibility is public because set_error_handler does not allow for
+     * protected method callbacks.
+     *
      * @param int    $level      The level of the error raised
      * @param string $message    The error message
      * @param string $file       The filename that the error was raised in
@@ -277,9 +298,9 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      * @param array  $context    An array that points to the active symbol table at the point the error occurred
      * @return bool
      */
-    protected function _handleError($level, $message, $file, $line, $context = null)
+    public function _handleError($level, $message, $file, $line, $context = null)
     {
-        if($this->_exception_type & self::TYPE_ERROR)
+        if($this->isEnabled(self::TYPE_ERROR))
         {
             $error_level = $this->getErrorLevel();
 
@@ -302,11 +323,14 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     /**
      * Fatal Error Handler
      *
+     * Do not call this method directly. Function visibility is public because register_shutdown_function does not
+     * allow for protected method callbacks.
+     *
      * @return bool
      */
-    protected function _handleFatalError()
+    public function _handleFatalError()
     {
-        if($this->_exception_type & self::TYPE_FATAL_ERROR)
+        if($this->isEnabled(self::TYPE_FATAL_ERROR))
         {
             $error_level = $this->getErrorLevel();
 
