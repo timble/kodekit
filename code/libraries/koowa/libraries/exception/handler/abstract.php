@@ -53,7 +53,9 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
             $this->addHandler($handler);
         }
 
-        $this->enable($config->exception_type);
+        if($config->exception_type) {
+            $this->enable($config->exception_type);
+        }
     }
 
     /**

@@ -44,6 +44,13 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
     protected $_configs;
 
     /**
+     * The class namespaces
+     *
+     * @var array
+     */
+    protected $_namespaces;
+
+    /**
      * Constructor.
      *
      * @param KObjectConfig $config An optional ObjectConfig object with configuration options
@@ -56,6 +63,7 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
         $this->_mixins     = $config->mixins;
         $this->_decorators = $config->decorators;
         $this->_configs    = $config->configs;
+        $this->_namespaces = $config->namespaces;
     }
 
     /**
@@ -73,6 +81,7 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
             'configs'    => array(),
             'mixins'     => array(),
             'decorators' => array(),
+            'namespaces' => array(),
         ));
 
         parent::_initialize($config);
@@ -86,6 +95,7 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
     public function bootstrap()
     {
         $manager = $this->getObjectManager();
+        $loader  = $this->getClassLoader();
 
         //Aliases
         foreach ($this->_aliases as $alias => $identifier) {
@@ -120,6 +130,14 @@ class KObjectBootstrapperComponent extends KObjectBootstrapperAbstract
                 } else {
                     $manager->registerDecorator($identifier, $key, $value);
                 }
+            }
+        }
+
+        //Namespaces
+        foreach ($this->_namespaces as $type => $namespaces)
+        {
+            if($locator = $loader->getLocator($type)) {
+                $locator->registerNamespaces($namespaces);
             }
         }
     }
