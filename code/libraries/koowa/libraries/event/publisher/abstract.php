@@ -55,7 +55,7 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'enabled'   => true
+            'enabled' => true,
         ));
 
         parent::_initialize($config);

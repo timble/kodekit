@@ -16,18 +16,11 @@
 class KEventPublisherException extends KEventPublisherAbstract
 {
     /**
-     * Error levels
-     */
-    const ERROR_SYSTEM       = null;
-    const ERROR_DEVELOPMENT  = -1; //E_ALL   | E_STRICT  | ~E_DEPRECATED
-    const ERROR_PRODUCTION   = 7;  //E_ERROR | E_WARNING | E_PARSE
-
-    /**
-     * The error level.
+     * The exception handler
      *
-     * @var int
+     * @var KExceptionHandlerInterface
      */
-    protected $_error_level;
+    private $__exception_handler;
 
     /**
      * Constructor.
@@ -38,19 +31,10 @@ class KEventPublisherException extends KEventPublisherAbstract
     {
         parent::__construct($config);
 
-        //Set the error level
-        $this->setErrorLevel($config->error_level);
+        $this->__exception_handler = $config->exception_handler;
 
-        if($config->catch_exceptions) {
-            $this->catchExceptions();
-        }
-
-        if($config->catch_user_errors) {
-            $this->catchUserErrors();
-        }
-
-        if($config->catch_fatal_errors) {
-            $this->catchFatalErrors();
+        if($this->isEnabled()) {
+            $this->enable();
         }
     }
 
@@ -65,168 +49,91 @@ class KEventPublisherException extends KEventPublisherAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'catch_exceptions'   => true,
-            'catch_user_errors'  => false,
-            'catch_fatal_errors' => false,
-            'error_level'        => self::ERROR_SYSTEM,
+           'exception_handler' => 'exception.handler'
         ));
 
         parent::_initialize($config);
     }
 
     /**
+     * Enable the publisher
+     *
+     * @return  KEventPublisherException
+     */
+    public function enable()
+    {
+        $this->getExceptionHandler()->addHandler(array($this, 'publishException'));
+        return parent::enable();
+    }
+
+    /**
+     * Disable the publisher
+     *
+     * @return  KEventPublisherException
+     */
+    public function disable()
+    {
+        $this->getExceptionHandler()->removeHandler(array($this, 'publishException'));
+        return parent::enable();
+    }
+
+    /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * Function will avoid a recursive loop when an exception is thrown during even publishing and output a generic
-     * exception instead.
-     *
-     * @param  KException           $exception  The exception to be published.
+     * @param   Exception           $exception  The exception to be published.
      * @param  array|Traversable    $attributes An associative array or a Traversable object
      * @param  mixed                $target     The event target
      * @return  KEventException
      */
     public function publishException(Exception $exception, $attributes = array(), $target = null)
     {
-        try
+        //Make sure we have an event object
+        $event = new KEventException('onException', $attributes, $target);
+        $event->setException($exception);
+
+        parent::publishEvent($event);
+    }
+
+    /**
+     * Get the chain of command object
+     *
+     * @throws UnexpectedValueException
+     * @return KExceptionHandlerInterface
+     */
+    public function getExceptionHandler()
+    {
+        if(!$this->__exception_handler instanceof KExceptionHandlerInterface)
         {
-            //Make sure we have an event object
-            $event = new KEventException('onException', $attributes, $target);
-            $event->setException($exception);
+            $this->__exception_handler = $this->getObject($this->__exception_handler);
 
-            parent::publishEvent($event);
-        }
-        catch (Exception $e)
-        {
-            $message = "<strong>Exception</strong> '%s' thrown while dispatching error: %s in <strong>%s</strong> on line <strong>%s</strong> %s";
-            $message = sprintf($message, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
-
-            if (ini_get('display_errors')) {
-                echo $message;
-            }
-
-            if (ini_get('log_errors')) {
-                error_log($message);
-            }
-
-            exit(0);
-        }
-
-        return $event;
-    }
-
-    /**
-     * Set the error level
-     *
-     * @param int $level If NULL, will reset the level to the system default.
-     */
-    public function setErrorLevel($level)
-    {
-        $this->_error_level = null === $level ? error_reporting() : $level;
-    }
-
-    /**
-     * Get the error level
-     *
-     * @return int The error level
-     */
-    public function getErrorLevel()
-    {
-        return $this->_error_level;
-    }
-
-    /**
-     * Catch exceptions during runtime
-     *
-     * @return  string|null Returns the name of the previously defined exception handler, or NULL if no previous handler
-     *                      was defined.
-     */
-    public function catchExceptions()
-    {
-        $previous = set_exception_handler(array($this, 'handleException'));
-        return $previous;
-    }
-
-    /**
-     * Catch user errors during runtime
-     *
-     * @return  string|null Returns the name of the previously defined error handler, or NULL if no previous handler
-     *                      was defined.
-     */
-    public function catchUserErrors()
-    {
-        $previous = set_error_handler(array($this, 'handleUserError'));
-        return $previous;
-    }
-
-    /**
-     * Catch fatal errors after shutdown.
-     *
-     * @return  void
-     */
-    public function catchFatalErrors()
-    {
-        register_shutdown_function(array($this, 'handleUserError'));
-    }
-
-    /**
-     * Exception Handler
-     *
-     * @param $exception
-     * @return bool
-     */
-    public function handleException($exception)
-    {
-        $this->publishException($exception);
-        return true;
-    }
-
-    /**
-     * User Error Handler
-     *
-     * @param int    $level      The level of the error raised
-     * @param string $message    The error message
-     * @param string $file       The filename that the error was raised in
-     * @param int    $line       The line number the error was raised at
-     * @param array  $context    An array that points to the active symbol table at the point the error occurred
-     * @return bool
-     */
-    public function handleUserError($level, $message, $file, $line, $context = null)
-    {
-        $error_level = $this->getErrorLevel();
-
-        if (0 !== $level)
-        {
-            if (error_reporting() & $level && $error_level & $level)
+            if(!$this->__exception_handler instanceof KExceptionHandler)
             {
-                $exception = new KExceptionError($message, KHttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line);
-                $this->publishException($exception, array('context' => $context));
+                throw new UnexpectedValueException(
+                    'Exception Handler: '.get_class($this->__exception_handler).' does not implement KExceptionHandlerInterface'
+                );
             }
-
-            //Let the normal error flow continue
-            return false;
         }
 
-        return false;
+        return $this->__exception_handler;
     }
 
     /**
-     * Fatal Error Handler
+     * Set the exception handler object
      *
-     * @return bool
+     * @param   KExceptionHandlerInterface $handler An exception handler object
+     * @return  KEventPublisherException
      */
-    public function handleFatalError()
+    public function setExceptionHandler(KExceptionHandlerInterface $handler)
     {
-        $error_level = $this->_error_level;
+        $this->__exception_handler = $handler;
 
-        $error = error_get_last();
-        $level = $error['type'];
-
-        if (error_reporting() & $level && $error_level & $level)
+        //Re-enable the exception handler
+        if($this->isEnabled())
         {
-            $exception = new KExceptionError($error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']);
-            $this->publishException($exception);
+            $this->disable();
+            $this->enable();
         }
 
-        return true;
+        return $this;
     }
 }
