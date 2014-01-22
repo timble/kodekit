@@ -17,54 +17,30 @@
  */
 class KTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
-    /**
-     * The messages
-     *
-     * @var array
-     */
-    protected $_messages;
-
-    /**
-     * Constructor.
-     *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_messages = $config->messages;
-    }
-
-    /**
-     * Initializes the default configuration for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
-     * @return void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'messages' => $this->getObject('response')->getMessages(),
-        ));
-
-        parent::_initialize($config);
-    }
-
     public function render(&$text)
     {
-        $messages = '';
-        foreach ($this->_messages as $type => $message)
+        if (strpos($text, '<ktml:messages>') !== false)
         {
-            $messages .= '<div class="alert alert-'.strtolower($type).'">';
-            foreach ($message as $line) {
-                $messages .= '<div class="alert__text">'.$line.'</div>';
-            }
-            $messages .= '</div>';
-        }
+            $output   = '';
+            $messages = $this->getObject('response')->getMessages();
 
-        $text = str_replace('<ktml:messages>', $messages, $text);
+            foreach ($messages as $type => $message)
+            {
+                if ($type === 'notice') {
+                    $type = 'info';
+                }
+
+                $output .= '<div class="alert alert-'.strtolower($type).'">';
+                foreach ($message as $line) {
+                    $output .= '<div class="alert__text">'.$line.'</div>';
+                }
+                $output .= '</div>';
+            }
+
+            $text = str_replace('<ktml:messages>', $output, $text);
+
+            // Flush messages
+            $this->getObject('response')->getMessages();
+        }
     }
 }
