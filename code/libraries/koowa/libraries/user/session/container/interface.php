@@ -65,6 +65,18 @@ interface KUserSessionContainerInterface
     public function add(array $attributes);
 
     /**
+     * Load the attributes by reference
+     *
+     * After starting a session, PHP retrieves the session data through the session handler and populates $_SESSION
+     * with the result automatically. This function can load the attributes from the $_SESSION global by reference
+     * by passing the $_SESSION to this function.
+     *
+     * @param array $session The session data to load by reference.
+     * @return KUserSessionContainerAbstract
+     */
+    public function load(array &$session);
+
+    /**
      * Get all attributes
      *
      * @return  array  An array of attributes
@@ -92,15 +104,4 @@ interface KUserSessionContainerInterface
      * @return string The session attribute separator
      */
     public function getSeparator();
-
-    /**
-     * Load the attributes from the $_SESSION global
-     *
-     * After starting a session, PHP retrieves the session data through the session handler and populates $_SESSION
-     * with the result automatically. This function will load the attributes from the $_SESSION global by reference.
-     *
-     * @param array|null $session   The session attributes to load
-     * @return  KUserSessionContainerInterface
-     */
-    public function loadSession(array &$session = null);
 }

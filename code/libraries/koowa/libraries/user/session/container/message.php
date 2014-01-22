@@ -27,20 +27,6 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
     protected $_previous = array();
 
     /**
-     * Constructor
-     *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return  KUserSessionContainerAbstract
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_previous = $this->toArray();
-        $this->clear();
-    }
-
-    /**
      * Get all the previous flash messages and flush them from the container
      *
      * @return array
@@ -131,6 +117,26 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
     public function add(array $messages)
     {
         parent::add($messages);
+        return $this;
+    }
+
+    /**
+     * Load the attributes by reference
+     *
+     * After starting a session, PHP retrieves the session data through the session handler and populates $_SESSION
+     * with the result automatically. This function can load the attributes from the $_SESSION global by reference
+     * by passing the $_SESSION to this function.
+     *
+     * @param array $session The session data to load by reference.
+     * @return KUserSessionContainerAbstract
+     */
+    public function load(array &$session)
+    {
+        parent::load($session);
+
+        $this->_previous = $this->toArray();
+        $this->clear();
+
         return $this;
     }
 
