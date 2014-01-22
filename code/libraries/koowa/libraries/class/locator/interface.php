@@ -46,7 +46,7 @@ interface KClassLocatorInterface
      * @param array $namespaces An array of namespaces (namespaces as keys and location as value)
      * @return KClassLocatorInterface
      */
-    public function registerNamespaces(array $namespaces);
+    public function registerNamespaces($namespaces);
 
     /**
      * Get a the namespace paths
