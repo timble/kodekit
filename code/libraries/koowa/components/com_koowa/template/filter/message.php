@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class KTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
     public function render(&$text)
     {
