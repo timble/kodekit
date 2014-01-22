@@ -332,7 +332,10 @@
             }
 
             if(animate.scrollTop || animate.scrollLeft) {
-                viewport.animate(animate, duration||900);
+                viewport.stop('scroll_into_view', true, false).animate(animate, {
+                    duration: duration||900,
+                    queue: 'scroll_into_view'
+                });
             }
         }
     });
