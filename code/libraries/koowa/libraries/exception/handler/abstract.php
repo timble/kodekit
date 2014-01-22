@@ -88,7 +88,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
 
         if($type && self::TYPE_ERROR && !($this->_exception_type & self::TYPE_ERROR))
         {
-            set_error_handler(array($this, '_handleUserError'));
+            set_error_handler(array($this, '_handleError'));
             $this->_exception_type |= self::TYPE_ERROR;
         }
 
