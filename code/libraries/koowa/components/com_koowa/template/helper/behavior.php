@@ -403,17 +403,19 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                 $loaded[] = $config->id;
             }
 
-            $html .= '<div class="input-append date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
-            $html .= '<input type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
-            $html .= '<span class="add-on btn" >';
+            $html .= '<div class="input-group date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
+            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
+            $html .= '<span class="input-group-btn">';
+            $html .= '<span class="btn" >';
             $html .= '<span class="koowa_icon koowa-icon-calendar"><i>calendar</i></span>';
+            $html .= '</span>';
             $html .= '</span>';
             $html .= '</div>';
         }
         else
         {
             $html = '';
-            $html .= '<div class="input-append">';
+            $html .= '<div>';
             $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$config->value.'" '.$attribs.' />';
             $html .= '</div>';
         }

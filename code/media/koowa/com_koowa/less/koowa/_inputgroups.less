@@ -1,11 +1,14 @@
 // Replicating and combining the new Bootstrap 3 input-group styles because they're just better
 .input-group {
     position: relative;
-    border-collapse: separate;
+    border-collapse: collapse;
     width: 100%;
     display: table;
     margin-bottom: 9px;
-    .box-sizing(border-box);
+
+    * {
+        .box-sizing(border-box);
+    }
 
     .input-group {
         margin: 0;
@@ -22,13 +25,12 @@
     input {
         display: table-cell;
         float: none;
-        width: 100%;
-        position: relative;
+        width: auto;
         min-height: 28px;
         height: 28px;
         max-height: 28px;
         margin: 0;
-        .box-sizing(border-box);
+        width: 100%;
     }
 
     .caret {
@@ -55,18 +57,16 @@
     .input-group-input,
     .input-group-btn {
         width: 1%;
-        vertical-align: top;
+        vertical-align: middle;
         white-space: nowrap;
         position: relative;
 
         & .btn {
-            position: relative;
             min-height: 28px;
             max-height: 28px;
             font-size: 13px;
             padding: 4px 10px;
             vertical-align: middle;
-            .box-sizing(border-box);
             .box-shadow(none);
 
             img {
@@ -97,6 +97,7 @@
     }
 
     .input-group-form-control-field:not(:last-child) .input-group-form-control,
+    .input-group-form-control:not(:last-child),
     .input-group-form-control-field:not(:last-child) .input-group > .input-group-addon,
     .input-group-form-control-field:not(:last-child) .input-group > .input-group-form-control {
         border-right: none;
@@ -159,50 +160,6 @@
         min-height: 16px;
         height: 16px;
         max-height: 16px;
-    }
-
-}
-
-.input-append.datepicker {
-    .box-sizing(border-box);
-    display: table;
-    width: 100%;
-    padding: 0;
-
-    .btn,
-    input {
-        display: table-cell;
-        float: none;
-        width: 100%;
-        .box-sizing(border-box);
-        position: relative;
-        min-height: 28px;
-        margin: 0;
-    }
-
-    .btn {
-        width: 1%;
-        vertical-align: top;
-        white-space: nowrap;
-        position: relative;
-        min-height: 0;
-
-        & > i {
-            display: inline-block;
-            position: relative;
-        }
-    }
-
-    input {
-        display: table-cell;
-        position: relative;
-        border-right: none;
-        .box-sizing(border-box);
-    }
-
-    .datepicker-dropdown {
-        display: block;
-        position: absolute;
     }
 
 }
