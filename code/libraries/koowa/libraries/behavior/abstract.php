@@ -159,9 +159,9 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
                     $result[] = $e;
                 }
 
-                if($condition !== null && current($result) === $condition)
+                if($condition !== null && end($result) === $condition)
                 {
-                    $result = current($result);
+                    $result = end($result);
                     break;
                 }
             }

@@ -90,9 +90,9 @@ abstract class KCommandInvokerAbstract extends KObject implements KCommandInvoke
                     $result[] = $e;
                 }
 
-                if($condition !== null && current($result) === $condition)
+                if($condition !== null && end($result) === $condition)
                 {
-                    $result = current($result);
+                    $result = end($result);
                     break;
                 }
             }
