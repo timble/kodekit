@@ -148,8 +148,10 @@ class PlgSystemKoowa extends JPlugin
 
             //Object aliases
             $manager->registerAlias('com:koowa.database.adapter.mysqli', 'koowa:database.adapter.mysqli');
-            $manager->registerAlias('com:koowa.translator'    , 'translator');
-            $manager->registerAlias('com:koowa.user'          , 'user');
+            $manager->registerAlias('com:koowa.translator'       , 'translator');
+            $manager->registerAlias('com:koowa.user'             , 'user');
+            $manager->registerAlias('com:koowa.exception.handler', 'exception.handler');
+
             $manager->registerAlias('koowa:dispatcher.request', 'request' );
 
             $application = JFactory::getApplication()->getName();
