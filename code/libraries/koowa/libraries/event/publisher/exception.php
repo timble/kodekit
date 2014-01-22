@@ -10,6 +10,9 @@
 /**
  * Exception Event Publisher
  *
+ * Exception publisher will publish an 'onException' event wrapping the Exception as a EventException and passing it to all
+ * the listeners.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Exception
  */
@@ -78,7 +81,7 @@ class KEventPublisherException extends KEventPublisherAbstract
     }
 
     /**
-     * Publish an event by calling all listeners that have registered to receive it.
+     * Publish an 'onException' event by calling all listeners that have registered to receive it.
      *
      * @param   Exception           $exception  The exception to be published.
      * @param  array|Traversable    $attributes An associative array or a Traversable object
