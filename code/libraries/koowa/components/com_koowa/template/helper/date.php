@@ -44,69 +44,26 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'date'              => null,
-            'gmt_offset'        => 0,
-            'smallest_period'   => 'second'
+            'date'      => null,
+            'timezone'  => date_default_timezone_get(),
+            'default'   => $this->translate('Never'),
+            'period'    => 'second',
+
         ));
 
-        $periods    = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-        $lengths    = array(60, 60, 24, 7, 4.35, 12, 10);
-        $now        = strtotime(gmdate("M d Y H:i:s"));
-        $time       = is_numeric($config->date) ? $config->date : strtotime($config->date);
+        $result = $config->default;
 
-        if($time)
+        if(!in_array($config->date, array('0000-00-00 00:00:00', '0000-00-00')))
         {
-            if($config->gmt_offset != 0) {
-                $now =  $now + $config->gmt_offset;
-            }
-
-            if($now != $time)
+            try
             {
-                if($now > $time)
-                {
-                    $difference = $now - $time;
-                    $tense      = 'ago';
-                }
-                else
-                {
-                    $difference = $time - $now;
-                    $tense      = 'from now';
-                }
+                $date = new ComKoowaDate(array('date' => $config->date, 'timezone' => 'UTC'));
+                $date->setTimezone(new DateTimeZone($config->timezone));
 
-                for($i = 0; $difference >= $lengths[$i] && $i < 6; $i++) {
-                    $difference /= $lengths[$i];
-                }
-
-                $difference         = round($difference);
-                $period_index       = array_search($config->smallest_period, $periods);
-                $omitted_periods    = $periods;
-                array_splice($omitted_periods, $period_index);
-
-                if(in_array($periods[$i], $omitted_periods))
-                {
-                    $difference = 1;
-                    $i          = $period_index;
-                }
-
-                if($periods[$i] == 'day' && $difference == 1)
-                {
-                    // Since we got 1 by rounding it down and if it's less than 24 hours it would say x hours ago, this is yesterday
-                    return $tense == 'ago' ? $this->translate('Yesterday') : $this->translate('Tomorrow');
-                }
-
-                $period = $periods[$i];
-                $period_plural = $period.'s';
-
-                // We do not pass $period or $tense as parameters to replace because
-                // some languages use different words for them based on the time difference.
-                $result = $this->getTemplate()->getTranslator()->choose(array("{number} $period $tense", "{number} $period_plural $tense"), $difference, array(
-                    'number' => $difference,
-                ));
+                $result = $date->humanize($config->period);
             }
-            else $result = $this->translate('Just now');
+            catch(Exception $e) {}
         }
-        else $result = $this->translate('Never');
-
         return $result;
     }
 }

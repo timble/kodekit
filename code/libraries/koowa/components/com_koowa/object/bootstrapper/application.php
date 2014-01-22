@@ -65,15 +65,17 @@ class ComKoowaObjectBootstrapperApplication extends KObjectBootstrapperChain
                 continue;
             }
 
-            if(file_exists($dir->getRealPath().'/bootstrapper.php'))
-            {
-                if(JFactory::getApplication()->isAdmin()) {
-                    $application = 'admin';
-                } else {
-                    $application = 'site';
-                }
+            if(JFactory::getApplication()->isAdmin()) {
+                $application = 'admin';
+            } else {
+                $application = 'site';
+            }
 
-                $bootstrapper = $this->getObject('com://'.$application.'/'.substr($dir, 4).'.bootstrapper');
+            $identifier = 'com://'.$application.'/'.substr($dir, 4).'.bootstrapper';
+
+            if($this->getObjectManager()->getClass($identifier))
+            {
+                $bootstrapper = $this->getObject($identifier);
                 $this->addBootstrapper($bootstrapper);
             }
         }

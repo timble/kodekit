@@ -26,7 +26,7 @@ class ComKoowaViewPageHtml extends ComKoowaViewHtml
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'template_filters'	=> array('document', 'module', 'style', 'link', 'meta', 'script', 'title'),
+            'template_filters'	=> array('document', 'module', 'style', 'link', 'meta', 'script', 'title', 'message'),
         ));
 
         parent::_initialize($config);
@@ -36,6 +36,7 @@ class ComKoowaViewPageHtml extends ComKoowaViewHtml
     {
         //Set the language information
         $language = JFactory::getApplication()->getCfg('language');
+
         $context->data->language  = $language ? $language : 'en-GB';
         $context->data->direction = JFactory::getLanguage()->isRTL() ? 'rtl' : 'ltr';
 

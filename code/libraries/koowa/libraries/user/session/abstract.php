@@ -111,11 +111,11 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
             $this->setHandler($config->handler, KObjectConfig::unbox($config));
         }
 
-        //Set lifetime time
-        $this->getContainer('metadata')->setLifetime($config->lifetime);
-
         //Set the session namespace
         $this->setNamespace($config->namespace);
+
+        //Set lifetime time
+        $this->getContainer('metadata')->setLifetime($config->lifetime);
     }
 
     /**
@@ -285,15 +285,9 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      */
     public function setNamespace($namespace)
     {
-        if($namespace != $this->_namespace)
+        if($namespace !== $this->_namespace)
         {
-            //Set the global session namespace
             $this->_namespace = $namespace;
-
-            if(!isset($_SESSION[$namespace])) {
-                $_SESSION[$namespace] = array();
-            }
-
             $this->refresh();
         }
 
@@ -414,7 +408,7 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
 
             //Load the container from the session
             $namespace = $this->getNamespace();
-            $container->loadSession($_SESSION[$namespace]);
+            $container->load($_SESSION[$namespace]);
 
             $this->_containers[$container->getIdentifier()->name] = $container;
         }
@@ -490,11 +484,18 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      */
     public function refresh()
     {
+        //Create the namespace if it doesn't exist
+        $namespace = $this->getNamespace();
+
+        if(!isset($_SESSION[$namespace])) {
+            $_SESSION[$namespace] = array();
+        }
+
         //Re-load the session containers
         foreach($this->_containers as $container)
         {
             $namespace = $this->getNamespace();
-            $container->loadSession($_SESSION[$namespace]);
+            $container->load($_SESSION[$namespace]);
         }
 
         return $this;
@@ -536,7 +537,6 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
         //Clear out the session data
         $namespace = $this->getNamespace();
         unset($_SESSION[$namespace]);
-        $_SESSION[$namespace] = array();
 
         //Re-load the session containers
         $this->refresh();
