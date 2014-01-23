@@ -56,8 +56,9 @@ abstract class ComKoowaControllerModel extends KControllerModel
         }
 
         $config->append(array(
-            'toolbars'  => $toolbars,
-            'user'      => 'com:koowa.user',
+            'toolbars'   => $toolbars,
+            'user'       => 'com:koowa.user',
+            'behaviors'  => array('editable', 'persistable'),
         ));
 
         parent::_initialize($config);
