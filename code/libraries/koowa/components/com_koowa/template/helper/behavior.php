@@ -292,12 +292,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
                  'autoclose' => true, //Same as singleClick in previous js plugin,
                  'keyboardNavigation' => false, //To allow editing timestamps,
                  'calendarWeeks' => true, //Old datepicker used to display these
-                 //'orientation' => 'auto right' //popover arrow set to point at the datepicker icon
+                 //'orientation' => 'auto left', //popover arrow set to point at the datepicker icon,
+                 //'parentEl' => false //this feature breaks if a parent el is position: relative;
              )
-        ))->append(array(
-            'options' => array(
-                'parentEl' => '#'.$config->id
-            )
         ));
 
         // Handle the special case for "now".
@@ -393,11 +390,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             {
                 $html .= "<script>
                     kQuery(function($){
-                        var options = ".$config->options.";
-                        if(!options.hasOwnProperty('parentEl')) {
-                            options.parentEl = $('#".$config->id."').parent();
-                        }
-                        $('#".$config->id."').datepicker(options);
+                        $('#".$config->id."').datepicker(".$config->options.");
                     });
                 </script>";
                 $loaded[] = $config->id;
