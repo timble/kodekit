@@ -190,7 +190,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         if (!empty($title))
         {
-            if (version_compare(JVERSION, '3.2', 'ge'))
+            if (JFactory::getApplication()->isAdmin() && version_compare(JVERSION, '3.2', 'ge'))
             {
 
                 $layout = new JLayoutFile('joomla.toolbar.title');
