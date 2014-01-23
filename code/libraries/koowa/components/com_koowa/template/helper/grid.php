@@ -35,7 +35,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= $this->getTemplate()->renderHelper('behavior.icons');
             $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
-                           title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
+                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
 					</span>';
         }
         else
@@ -70,7 +70,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= $this->getTemplate()->renderHelper('behavior.icons');
             $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
-                           title="'.$this->getTemplate()->renderHelper('message.lock', array('row' => $config->row)).'">
+                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
 					</span>';
         }
         else
@@ -343,5 +343,39 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $html = $db->loadResult();
 
         return $html;
+    }
+
+    /**
+     * Get the locked information
+     *
+     * @param  array|KObjectConfig $config An optional configuration array.
+     * @throws UnexpectedValueException
+     * @return string The locked by "name" "date" message
+     */
+    public function lock_message($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'row' => null
+        ));
+
+        if (!($config->row instanceof KDatabaseRowInterface)) {
+            throw new UnexpectedValueException('$config->row should be a KDatabaseRowInterface instance');
+        }
+
+        $row = $config->row;
+        $message = '';
+
+        if($row->isLockable() && $row->locked())
+        {
+            $user = JFactory::getUser($row->locked_by);
+            $date = new ComKoowaDate(array('date' => $row->locked_on));
+
+            $message = $this->getObject('translator')->translate(
+                'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date->humanize())
+            );
+        }
+
+        return $message;
     }
 }
