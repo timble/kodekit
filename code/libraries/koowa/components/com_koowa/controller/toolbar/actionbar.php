@@ -118,25 +118,28 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     protected function _commandOptions(KControllerToolbarCommand $command)
     {
         $option = $this->getIdentifier()->package;
-        $type   = 'modal';
         $icon   = 'options';
         
         if (version_compare(JVERSION, '3.0', '>='))
         {
-        	$type   = 'link';
         	$return = urlencode(base64_encode(JUri::getInstance()));
         	$link   = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
         }
         else {
+            JHtml::_('behavior.modal');
+
             $link = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
+
+            $command->append(array(
+                'attribs' => array(
+                    'rel'   => "{handler: 'iframe', size: {x: 875, y: 550}, onClose: function() {}}",
+                    'class' => array('modal')
+                )
+            ));
         }
         
         $command->icon = sprintf('icon-32-%s', $icon);
 
         $command->href = JRoute::_($link);
-
-        if ($type === 'modal') {
-        	$this->_commandModal($command);
-        }
     }
 }
