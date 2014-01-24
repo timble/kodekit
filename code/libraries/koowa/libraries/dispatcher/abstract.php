@@ -33,9 +33,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
 		//Set the controller
 		$this->_controller = $config->controller;
-
-        //Register the default exception handler
-        $this->addEventListener('onException', array($this, 'fail'), KEvent::PRIORITY_LOW);
 	}
 
     /**
