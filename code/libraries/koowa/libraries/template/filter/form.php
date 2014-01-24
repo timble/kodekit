@@ -92,22 +92,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
         // All: Add the action if left empty
         if (preg_match_all('#<\s*form.*?action=""#im', $text, $matches, PREG_SET_ORDER))
         {
-            $view   = $this->getTemplate()->getView();
-            $state  = $view->getModel()->getState();
-            $values = $state->getValues($state->isUnique());
-
-            foreach($state as $name => $item)
-            {
-                if($item->default == $item->value || $item->internal) {
-                    unset($values[$name]);
-                }
-            }
-
-            if ($tmpl = $this->getObject('request')->getQuery()->get('tmpl', 'cmd')) {
-                $values['tmpl'] = $tmpl;
-            }
-
-            $action = $view->getRoute(http_build_query($values, '', '&'));
+            $action = $this->getTemplate()->getView()->getRoute('');
 
             foreach ($matches as $match)
             {

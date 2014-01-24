@@ -451,6 +451,10 @@ abstract class KViewAbstract extends KCommandInvokerAbstract implements KViewInt
             $parts = array_merge($states, $parts);
         }
 
+        if (!isset($parts['tmpl']) && $tmpl = $this->getObject('request')->getQuery()->get('tmpl', 'cmd')) {
+            $parts['tmpl'] = $tmpl;
+        }
+
         // Push option and view to the beginning of the array for easy to read URLs
         $parts = array_merge(array(
             'option' => null,
