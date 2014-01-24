@@ -46,7 +46,7 @@ class ComKoowaControllerError extends KControllerView
         $traces = $this->getBackTrace($exception);
 
         //Traverse up the trace stack to find the actual function that was not found
-        if($traces[0]['function'] == '__call')
+        if(isset($traces[0]) && $traces[0]['function'] == '__call')
         {
             foreach($traces as $trace)
             {
@@ -68,10 +68,10 @@ class ComKoowaControllerError extends KControllerView
             $message  = $exception->getMessage();
             $file	  = $exception->getFile();
             $line     = $exception->getLine();
-            $function = $traces[0]['function'];
-            $class    = isset($traces[0]['class']) ? $traces[0]['class'] : '';
-            $args     = isset($traces[0]['args'])  ? $traces[0]['args']  : '';
-            $info     = isset($traces[0]['info'])  ? $traces[0]['info']  : '';
+            $function = isset($traces[0]['function']) ? $traces[0]['class'] : '';
+            $class    = isset($traces[0]['class']) ? $traces[0]['class']    : '';
+            $args     = isset($traces[0]['args'])  ? $traces[0]['args']     : '';
+            $info     = isset($traces[0]['info'])  ? $traces[0]['info']     : '';
         }
 
         //Create the exception message
