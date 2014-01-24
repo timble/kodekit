@@ -151,16 +151,20 @@ class PlgSystemKoowa extends JPlugin
             $manager->registerAlias('com:koowa.translator'       , 'translator');
             $manager->registerAlias('com:koowa.user'             , 'user');
             $manager->registerAlias('com:koowa.exception.handler', 'exception.handler');
-
             $manager->registerAlias('koowa:dispatcher.request', 'request' );
 
+            //Setup request
             $application = JFactory::getApplication()->getName();
             $manager->getObject('request')
                 ->registerApplication('site', '')
                 ->registerApplication('admin', '/administrator')
                 ->setApplication($application === 'administrator' ? 'admin' : $application);
 
+            //Application Bootstrapping
             $manager->getObject('com:koowa.object.bootstrapper.application')->bootstrap($application);
+
+            //Exception Handling
+            $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
 
             //Load the koowa plugins
             JPluginHelper::importPlugin('koowa', null, true);
@@ -203,5 +207,16 @@ class PlgSystemKoowa extends JPlugin
                 $request->query->offset = $request->query->limitstart;
             }
         }
+    }
+
+    /**
+     * Exception event handler
+     *
+     * @param KEventException $event
+     */
+    public function onException(KEventException $event)
+    {
+        KObjectManager::getInstance()->getObject('com:koowa.dispatcher.http')->fail($event);
+        return true;
     }
 }
