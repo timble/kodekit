@@ -169,8 +169,8 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
      * We flush(stream) the data to the output buffer based on the chunk size and range information provided in the
      * request. The default chunk size is 8 MB.
      *
-     * @param DispatcherResponseInterface $response
-     * @return DispatcherResponseTransportRedirect
+     * @param KDispatcherResponseInterface $response
+     * @return KDispatcherResponseTransportRedirect
      */
     public function sendContent(KDispatcherResponseInterface $response)
     {
@@ -191,8 +191,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
                 @set_time_limit(0);
             }
 
-            // Clear buffer
-            while (@ob_end_clean());
+            //Make sure the output buffers are cleared
+            while(ob_get_level()) {
+                ob_end_clean();
+            };
 
             $stream  = $response->getStream();
 
