@@ -315,9 +315,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
              */
             if (!($this->_error_operator && error_reporting() === 0))
             {
-                $error_level = $this->getErrorLevel();
-
-                if (error_reporting() & $level && $error_level & $level)
+                if ($this->getErrorLevel() & $level)
                 {
                     $exception = new KExceptionError($message, KHttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line);
                     $result = $this->handleException($exception);
@@ -342,12 +340,10 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     {
         if($this->isEnabled(self::TYPE_FAILURE))
         {
-            $error_level = $this->getErrorLevel();
-
             $error = error_get_last();
             $level = $error['type'];
 
-            if (error_reporting() & $level && $error_level & $level)
+            if ($this->getErrorLevel() & $level)
             {
                 $exception = new KExceptionFailure($error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']);
                 $this->handleException($exception);
