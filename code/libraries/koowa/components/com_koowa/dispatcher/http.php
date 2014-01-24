@@ -127,6 +127,12 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $exception = $context->param;
         }
 
+        //Make sure the output buffers are cleared
+        while(ob_get_level()) {
+            ob_end_clean();
+        };
+
+        //Render the error
         if(!JDEBUG && $request->getFormat() == 'html')
         {
             if (version_compare(JVERSION, '3.0', '>=')) {
@@ -174,14 +180,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $this->redirect($url);
         }
 
-        //Catch exceptions before Joomla does (JApplication::dispatch())
-        try {
-            $result =  parent::_actionDispatch($context);
-        } catch(Exception $exception) {
-            $result = $this->getObject('exception.handler')->handleException($exception);
-        }
-
-        return $result;
+        $result = parent::_actionDispatch($context);
     }
 
     /**
