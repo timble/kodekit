@@ -11,6 +11,25 @@
 /**
  * Exception Handler
  *
+ * Setup error handler for Joomla context.
+ *
+ * 1. xdebug enabled
+ *
+ * If xdebug is enabled assume we are in local development mode
+ *    - error types   : TYPE_ALL which will trigger an exception for : exceptions, errors and failures
+ *    - error levels  : ERROR_DEVELOPMENT (E_ALL | E_STRICT | ~E_DEPRECATED)
+ *
+ * 2. Joomla debug
+ *
+ * If debug is enabled assume we are in none local debug mode
+ *    - error types   : TYPE_ALL which will trigger an exception for : exceptions, errors and failures
+ *    - error levels  : E_ERROR and E_PARSE
+ *
+ * 3. Joomla default
+ *
+ * Do not try to trigger errors or exceptions automatically. To trigger an exception the implementing code
+ * should call {@link handleException()}
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Exception
  */
