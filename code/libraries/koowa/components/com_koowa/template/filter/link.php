@@ -44,9 +44,7 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        $request = $this->getObject('request');
-
-        if($this->getTemplate()->getView()->getLayout() == 'joomla')
+        if($this->getTemplate()->getView()->getLayout() !== 'koowa')
         {
             $link      = isset($attribs['src']) ? $attribs['src'] : false;
             $relType  = 'rel';

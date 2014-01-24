@@ -25,7 +25,6 @@ class ComKoowaTemplateFilterMeta extends KTemplateFilterMeta
      */
     public function render(&$text)
     {
-        $request = $this->getObject('request');
         $meta    = $this->_parseTags($text);
 
         if($this->getTemplate()->getView()->getLayout() == 'koowa') {
@@ -44,9 +43,7 @@ class ComKoowaTemplateFilterMeta extends KTemplateFilterMeta
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        $request = $this->getObject('request');
-
-        if($this->getTemplate()->getView()->getLayout() == 'joomla')
+        if($this->getTemplate()->getView()->getLayout() !== 'koowa')
         {
             $meta = parent::_renderTag($attribs, $content);
             JFactory::getDocument()->addCustomTag($meta);

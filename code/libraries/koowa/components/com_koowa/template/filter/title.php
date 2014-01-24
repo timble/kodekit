@@ -43,7 +43,7 @@ class ComKoowaTemplateFilterTitle extends KTemplateFilterTitle
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->getView()->getLayout() == 'joomla')
+        if($this->getTemplate()->getView()->getLayout() !== 'koowa')
         {
             if($this->_escape) {
                 $content = $this->getTemplate()->escape($content);

@@ -30,7 +30,6 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
      */
     public function render(&$text)
     {
-        $request = $this->getObject('request');
         $scripts = $this->_parseTags($text);
 
         if($this->getTemplate()->getView()->getLayout() == 'koowa') {
@@ -49,9 +48,7 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        $request = $this->getObject('request');
-
-        if($this->getTemplate()->getView()->getLayout() == 'joomla')
+        if($this->getTemplate()->getView()->getLayout() !== 'koowa')
         {
             $link      = isset($attribs['src']) ? $attribs['src'] : false;
             $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
