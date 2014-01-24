@@ -26,8 +26,20 @@ class ComKoowaExceptionHandler extends KExceptionHandler
      */
     protected function _initialize(KObjectConfig $config)
     {
+        if(extension_loaded('xdebug') && xdebug_is_enabled())
+        {
+            $level = self::ERROR_DEVELOPMENT;
+            $type  = self::TYPE_ALL;
+        }
+        else
+        {
+            $level = JDEBUG ? E_ERROR | E_PARSE : self::ERROR_REPORTING;
+            $type  = JDEBUG ? self::TYPE_ALL : false;
+        }
+
         $config->append(array(
-            'exception_type'     => 0,
+            'exception_type'  => $type,
+            'error_level'     => $level
         ));
 
         parent::_initialize($config);
