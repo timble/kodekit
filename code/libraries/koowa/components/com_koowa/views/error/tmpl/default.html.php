@@ -67,7 +67,7 @@ defined('KOOWA') or die; ?>
     <div class="content">
         <p><span class="file"><?= $file ?>:<?= $line ?></span></p>
         <?= @helper('debug.source', array('file' => $file, 'line' => $line)) ?>
-        <ol class="trace">
+        <ol class="trace" reversed>
             <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
                 <li>
                     <p>
