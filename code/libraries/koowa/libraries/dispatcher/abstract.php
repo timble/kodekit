@@ -292,7 +292,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $context->response->send();
 
         $status = 0;
-        if(!$context->response->isSuccess) {
+        if(!$context->response->isSuccess()) {
             $status = (int) $context->response->getStatusCode();
         }
 
