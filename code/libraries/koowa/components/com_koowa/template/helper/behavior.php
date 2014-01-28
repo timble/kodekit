@@ -600,7 +600,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         $config->append(array(
             'element'  => null,
             'options'  => array(
-                'dropdownCssClass' => 'koowa',
                 'validate'      => false, //Toggle if the forms validation helper is loaded
                 'queryVarName'  => 'search',
                 'width'         => 'resolve',
