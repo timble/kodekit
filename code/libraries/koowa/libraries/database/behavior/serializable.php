@@ -8,7 +8,7 @@
  */
 
 /**
- * Automatically converts row fields between KObjectConfig and serialized strings to easily save objects *
+ * Automatically converts row fields between KObjectConfig and serialized strings to easily save objects
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Database
@@ -34,16 +34,14 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
         parent::__construct($config);
 
         $this->_fields = KObjectConfig::unbox($config->fields);
-
         $this->_format = $config->format;
     }
 
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'fields'     => array(),
-            'format'     => 'json',
-            'auto_mixin' => true
+            'fields' => array(),
+            'format' => 'json',
         ));
 
         parent::_initialize($config);
@@ -57,7 +55,6 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
     public function serializeFields()
     {
         $this->_serialize($this->getMixer());
-
         return $this->getMixer();
     }
 
@@ -69,7 +66,6 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
     public function unserializeFields()
     {
         $this->_unserialize($this->getMixer());
-
         return $this->getMixer();
     }
 
