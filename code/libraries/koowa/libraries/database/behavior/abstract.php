@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KDatabaseBehaviorInterface, KObjectInstantiable
+abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KObjectInstantiable
 {
     /**
      * Instantiate the object
