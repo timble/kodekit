@@ -129,7 +129,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
             $behavior->setMixer($this->getMixer());
 
             //Enqueue the behavior
-            $this->addCommandInvoker($behavior);
+            $this->addCommandHandler($behavior);
 
             //Mixin the behavior
             if ($this->_auto_mixin) {

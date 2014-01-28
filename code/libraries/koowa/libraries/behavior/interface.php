@@ -13,7 +13,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-interface KBehaviorInterface extends KCommandInvokerInterface, KObjectInterface
+interface KBehaviorInterface extends KCommandHandlerInterface, KObjectInterface
 {
     /**
      * Get the behavior name
