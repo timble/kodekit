@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerToolbarAbstract extends KCommandInvokerDynamic implements KControllerToolbarInterface
+abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implements KControllerToolbarInterface
 {
     /**
      * Controller object
