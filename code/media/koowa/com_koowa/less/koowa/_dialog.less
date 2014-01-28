@@ -6,14 +6,6 @@
 @maxColumnHeight: 16em; // Not used for the doclink since it uses standard joomla popup
 @dialogScreenWidth: 700px; // Don't make this bigger then 700px because it will break the doclink view
 
-// Setting the height to 100% so we can use percentages in heights
-// @TODO we use .koowa as a namespace in multiple places, need to investigate how it affects layout. There's a workaround/conflict in select2.less
-& {
-    height: 100% !important;
-    padding: 0;
-    margin: 0;
-}
-
 // Only applicable when the empty template is used, so not for tmpl=component view
 &-html {
     height: 100% !important;
@@ -25,9 +17,22 @@
     line-height: 1.5em;
     .box-sizing(border-box);
 
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
     .koowa_template_container {
         height: 100%;
+        margin: 0;
         padding: 0;
+
+        .koowa.com_docman {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
         .com_files {
             padding: 10px;
