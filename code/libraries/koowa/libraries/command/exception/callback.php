@@ -8,9 +8,9 @@
  */
 
 /**
- * Command Invoker Exception
+ * Command Callback Exception
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandExceptionInvoker extends RuntimeException implements KCommandException {}
+class KCommandExceptionCallback extends RuntimeException implements KCommandException {}

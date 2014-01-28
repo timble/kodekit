@@ -8,9 +8,9 @@
  */
 
 /**
- * Event Command Invoker
+ * Event Command Handler
  *
- * The event invoker will translate the command name to a onCommandName format and let the event publisher publish
+ * The event handler will translate the command name to a onCommandName format and let the event publisher publish
  * to any registered event listeners.
  *
  * The 'immutable' config option defines if the context is clone before being passed to the event publisher or
@@ -20,7 +20,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandInvokerEvent extends KCommandInvokerAbstract implements KCommandInvokerInterface
+class KCommandHandlerEvent extends KCommandHandlerAbstract
 {
     /**
      * The command priority
@@ -52,7 +52,7 @@ class KCommandInvokerEvent extends KCommandInvokerAbstract implements KCommandIn
         //Set the event dispatcher
         $this->__event_publisher = $config->event_publisher;
 
-        //Set the immutable state of the invoker
+        //Set the immutable state of the handler
         $this->_immutable = $config->immutable;
 
     }
@@ -114,12 +114,11 @@ class KCommandInvokerEvent extends KCommandInvokerAbstract implements KCommandIn
     /**
      * Command handler
      *
-     * This functions returns void to prevent is from breaking the chain.
-     *
-     * @param   KCommandInterface $command The command
-     * @return  void
+     * @param KCommandInterface         $command    The command
+     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
-    public function executeCommand(KCommandInterface $command, $condition = null)
+    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
         $type    = '';
         $package = '';
