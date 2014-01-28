@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseBehaviorAbstract extends KBehaviorDynamic implements KObjectInstantiable
+abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KDatabaseBehaviorInterface, KObjectInstantiable
 {
     /**
      * Instantiate the object
@@ -45,18 +45,18 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorDynamic implements KOb
     /**
      * Command handler
      *
-     * @param KCommandInterface $command    The command
-     * @param  mixed            $condition  The break condition
-     * @return array|mixed Returns an array of the callback results in FIFO order. If a handler breaks and the break
-     *                     condition is not NULL returns the break condition.
+     * @param KCommandInterface         $command    The command
+     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @return array|mixed Returns an array of the handler results in FIFO order. If a handler returns not NULL and the
+     *                     returned value equals the break condition of the chain the break condition will be returned.
      */
-    public function executeCommand(KCommandInterface $command, $condition = null)
+    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
         if ($command->data instanceof KDatabaseRowInterface) {
             $this->setMixer($command->data);
         }
 
-        return parent::executeCommand($command, $condition);
+        return parent::execute($command, $chain);
     }
 
 	/**
@@ -106,6 +106,6 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorDynamic implements KOb
     public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods = parent::getMixableMethods($mixer);
-        return array_diff($methods, array('save', 'delete', 'getInstance'));
+        return array_diff_key($methods, array('save', 'delete', 'getInstance'));
     }
 }

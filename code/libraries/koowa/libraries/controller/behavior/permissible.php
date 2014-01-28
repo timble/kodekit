@@ -57,13 +57,13 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      *
      * Only handles before.action commands to check authorization rules.
      *
-     * @param KCommandInterface $command    The command
-     * @param  mixed            $condition  The break condition
+     * @param KCommandInterface         $command    The command
+     * @param KCommandChainInterface    $chain      The chain executing the command
      * @throws  KControllerExceptionForbidden       If the user is authentic and the actions is not allowed.
      * @throws  KControllerExceptionUnauthorized    If the user is not authentic and the action is not allowed.
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function executeCommand(KCommandInterface $command, $condition = null)
+    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
         $parts = explode('.', $command->getName());
 
