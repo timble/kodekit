@@ -169,7 +169,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $locator = $this->getLocator(isset($parts['scheme']) ? $parts['scheme'] : $this->getIdentifier()->type);
 
         if (!$locator) {
-            $locator = $this->getLocator('com');
+            $locator = $this->getLocator('component');
         }
 
         //Check of the file exists

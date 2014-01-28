@@ -38,7 +38,7 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 	 *
 	 * @var string
 	 */
-	protected $_type = 'mod';
+	protected $_type = 'module';
 
     /**
      * The active basepath

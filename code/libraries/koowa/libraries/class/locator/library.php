@@ -43,7 +43,7 @@ class KClassLocatorLibrary extends KClassLocatorAbstract
 	 *
 	 * @var string
 	 */
-	protected $_type = 'lib';
+	protected $_type = 'library';
 
 	/**
 	 * Get the path based on a class name
