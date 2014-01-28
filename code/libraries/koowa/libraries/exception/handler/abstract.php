@@ -259,6 +259,11 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
                 $exception->getTraceAsString()
             );
 
+            //Make sure the output buffers are cleared
+            while(ob_get_level()) {
+                ob_end_clean();
+            };
+
             if (ini_get('display_errors')) {
                 echo $message;
             }
