@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerAbstract extends KCommandInvokerAbstract implements KControllerInterface
+abstract class KControllerAbstract extends KObject implements KControllerInterface, KCommandCallbackDelegate
 {
     /**
      * The class actions
@@ -104,7 +104,7 @@ abstract class KControllerAbstract extends KCommandInvokerAbstract implements KC
     {
         $config->append(array(
             'command_chain'     => 'koowa:command.chain',
-            'command_invokers'  => array('koowa:command.invoker.event'),
+            'command_handlers'  => array('koowa:command.handler.event'),
             'dispatched'		=> false,
             'request'           => 'koowa:controller.request',
             'response'          => 'koowa:controller.response',
@@ -144,7 +144,8 @@ abstract class KControllerAbstract extends KCommandInvokerAbstract implements KC
         $context->setSubject($this);
 
         //Set the context action
-        $context->action  = $action;
+        $context_action = $context->getAction();
+        $context->setAction($action);
 
         //Execute the action
         if($this->invokeCommand('before.'.$action, $context) !== false)
@@ -156,7 +157,7 @@ abstract class KControllerAbstract extends KCommandInvokerAbstract implements KC
                 if (isset($this->_mixed_methods[$action]))
                 {
                     $context->setName('action.' . $action);
-                    $context->result = current($this->_mixed_methods[$action]->executeCommand($context));
+                    $context->result = $this->_mixed_methods[$action]->execute($context, $this->getCommandChain());
                 }
                 else
                 {
@@ -170,10 +171,23 @@ abstract class KControllerAbstract extends KCommandInvokerAbstract implements KC
             $this->invokeCommand('after.'.$action, $context);
         }
 
-        //Reset the context subject
+        //Reset the context
         $context->setSubject($context_subject);
+        $context->setAction($context_action);
 
         return $context->result;
+    }
+
+    /**
+     * Invoke a command handler
+     *
+     * @param string             $method    The name of the method to be executed
+     * @param KCommandInterface  $command   The command
+     * @return mixed Return the result of the handler.
+     */
+    public function invokeCommandCallback($method, KCommandInterface $command)
+    {
+        return $this->$method($command);
     }
 
     /**
