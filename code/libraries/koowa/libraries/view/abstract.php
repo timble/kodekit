@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
-abstract class KViewAbstract extends KCommandInvokerAbstract implements KViewInterface
+abstract class KViewAbstract extends KObject implements KViewInterface, KCommandCallbackDelegate
 {
     /**
      * Translator object
@@ -96,7 +96,7 @@ abstract class KViewAbstract extends KCommandInvokerAbstract implements KViewInt
         $config->append(array(
             'data'              => array(),
             'command_chain'     => 'koowa:command.chain',
-            'command_invokers'  => array('koowa:command.invoker.event'),
+            'command_handlers'  => array('koowa:command.handler.event'),
             'model'      => 'koowa:model.empty',
             'translator' => null,
 	    	'content'	 => '',
@@ -130,6 +130,18 @@ abstract class KViewAbstract extends KCommandInvokerAbstract implements KViewInt
         }
 
         return $context->result;
+    }
+
+    /**
+     * Invoke a command handler
+     *
+     * @param string             $method    The name of the method to be executed
+     * @param KCommandInterface  $command   The command
+     * @return mixed Return the result of the handler.
+     */
+    public function invokeCommandCallback($method, KCommandInterface $command)
+    {
+        return $this->$method($command);
     }
 
     /**
