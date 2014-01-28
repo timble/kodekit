@@ -35,12 +35,12 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         $this->_limit = $config->limit;
 
         //Authenticate none safe requests
-        $this->addCommandHandler('before.post'  , '_authenticateRequest');
-        $this->addCommandHandler('before.put'   , '_authenticateRequest');
-        $this->addCommandHandler('before.delete', '_authenticateRequest');
+        $this->addCommandCallback('before.post'  , '_authenticateRequest');
+        $this->addCommandCallback('before.put'   , '_authenticateRequest');
+        $this->addCommandCallback('before.delete', '_authenticateRequest');
 
         //Sign GET request with a cookie token
-        $this->addCommandHandler('after.get' , '_signResponse');
+        $this->addCommandCallback('after.get' , '_signResponse');
 	}
 
     /**
