@@ -67,7 +67,7 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         //Fetch the view data before rendering
-        $this->addCommandHandler('before.render', '_fetchData');
+        $this->addCommandCallback('before.render', '_fetchData');
     }
 
     /**
@@ -267,8 +267,7 @@ abstract class KViewTemplate extends KViewAbstract
 
         if (!isset($parts['layout']) && !empty($this->_layout))
         {
-            if ((substr($parts['option'], 4) == $this->getIdentifier()->package) && ($parts['view'] == $this->getName()))
-            {
+            if ((substr($parts['option'], 4) == $this->getIdentifier()->package) && ($parts['view'] == $this->getName())) {
                 $parts['layout'] = $this->getLayout();
             }
         }
