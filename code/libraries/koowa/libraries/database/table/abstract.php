@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-abstract class KDatabaseTableAbstract extends KCommandInvokerAbstract implements KDatabaseTableInterface, KObjectMultiton
+abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableInterface, KObjectMultiton
 {
     /**
      * Real name of the table in the db schema
