@@ -549,8 +549,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             'debug' => JFactory::getApplication()->getCfg('debug'),
             'element' => '.select2-listbox',
             'options' => array(
-                'width' => 'resolve',
-                'dropdownCssClass' => 'koowa'
+                'width' => 'resolve'
             )
         ));
 
