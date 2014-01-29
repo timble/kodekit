@@ -19,22 +19,6 @@
 (function ($) {
     "use strict";
 
-    $.fn.koowaDatepicker = function (options) {
-
-        var settings = {
-            beforeShowDay: function(){
-                console.log(this, arguments)
-            }
-        }
-        if (typeof(options) === 'object') {
-            $.extend(true, settings, options);
-        }
-
-        this.each(function() {
-            $(this).datepicker(settings);
-        });
-
-        return this;
-    };
+    $.fn.datepicker.DPGlobal.template = '<div class="koowa">' + $.fn.datepicker.DPGlobal.template + '</div>';
 
 })(kQuery);

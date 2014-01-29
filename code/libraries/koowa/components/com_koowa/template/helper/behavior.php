@@ -358,7 +358,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             {
                 $html .= "<script>
                     kQuery(function($){
-                        $('#".$config->id."').koowaDatepicker(".$config->options.");
+                    console.log($.fn.datepicker.DPGlobal.template);
+                        $('#".$config->id."').datepicker(".$config->options.");
                     });
                 </script>";
                 $loaded[] = $config->id;
