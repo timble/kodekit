@@ -51,7 +51,7 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
         $directory = JPATH_BASE;
         foreach ($this->getComponents($directory) as $component)
         {
-            if($bootstrapper = $this->getBootstrapper($component)) {
+            if($bootstrapper = $this->getBootstrapper($component, false)) {
                 $chain->addBootstrapper($bootstrapper);
             }
         }
@@ -61,7 +61,7 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
         parent::bootstrap();
     }
 
-    public function getBootstrapper($name)
+    public function getBootstrapper($name, $fallback = true)
     {
         $bootstrapper = null;
 
@@ -73,7 +73,7 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
 
         //Register the bootstrapper
         $identifier = 'com://'.$application.'/'.$name.'.bootstrapper';
-        if($this->getObjectManager()->getClass($identifier, false)) {
+        if($this->getObjectManager()->getClass($identifier, $fallback)) {
             $bootstrapper = $this->getObject($identifier);
         }
 
