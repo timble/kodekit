@@ -1,0 +1,5 @@
+// Get rid of the 100% + 30px styling bug in Joomla
+body, html { height: auto !important; }
+
+// Get rid of the nasty jump because of the toolbar fixed position
+@media screen and (min-width:480px) { .subhead-collapse { min-height: 43px; &:after, &:before { content: " "; display: table; } &:after { clear: both; } } }
