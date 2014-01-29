@@ -2415,23 +2415,6 @@ disabled look for disabled choices in the results dropdown
   padding: 0;
   margin: 0 auto;
 }
-body,
-html {
-  height: auto !important;
-}
-@media screen and (min-width: 480px) {
-  .subhead-collapse {
-    min-height: 43px;
-  }
-  .subhead-collapse:after,
-  .subhead-collapse:before {
-    content: " ";
-    display: table;
-  }
-  .subhead-collapse:after {
-    clear: both;
-  }
-}
 .jqtree-tree {
   /* We use different markup to display the toggler, so we hide the old one */
   /* .icon-triangle-hide elements are for indenting folders with no children on the same column as the other folders */
@@ -2795,4 +2778,21 @@ html {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+body,
+html {
+  height: auto !important;
+}
+@media screen and (min-width: 480px) {
+  .subhead-collapse {
+    min-height: 43px;
+  }
+  .subhead-collapse:after,
+  .subhead-collapse:before {
+    content: " ";
+    display: table;
+  }
+  .subhead-collapse:after {
+    clear: both;
+  }
 }
