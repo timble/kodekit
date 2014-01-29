@@ -145,10 +145,11 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * Only public methods can be mixed
      *
-     * @param KObjectMixable $mixer The mixer requesting the mixable methods.
-     * @return array An array of public methods
+     * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
+     * @param array          $exclude   A list of methods to exclude
+     * @return array An array of mixable public methods
      */
-    public function getMixableMethods(KObjectMixable $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
     {
         if(!$this->__mixable_methods)
         {
@@ -172,7 +173,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
             $this->__mixable_methods = $methods;
         }
 
-        return $this->__mixable_methods;
+        return array_diff_key($this->__mixable_methods, array_fill_keys($exclude, $exclude));
     }
 
     /**

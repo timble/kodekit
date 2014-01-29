@@ -21,15 +21,16 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
      * the behavior will be mixed in.
      *
-     * @param KObjectMixable $mixer The mixer requesting the mixable methods.
+     * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
+     * @param  array         $exclude   A list of methods to exclude
      * @return array         An array of methods
      */
-	public function getMixableMethods(KObjectMixable $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
 	{
 		$methods = array();
 
 		if(isset($mixer->ordering)) {
-			$methods = parent::getMixableMethods($mixer);
+			$methods = parent::getMixableMethods($mixer, $exclude);
 		}
 
 		return $methods;

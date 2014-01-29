@@ -187,18 +187,19 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the
      * behavior is callable.
      *
-     * @param  KObjectMixable $mixer The mixer requesting the mixable methods.
+     * @param  KObjectMixable $mixer    The mixer requesting the mixable methods.
+     * @param array          $exclude   A list of methods to exclude
      * @return array An array of methods
      */
-    public function getMixableMethods(KObjectMixable $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
     {
-        $methods   = parent::getMixableMethods($mixer);
-        $methods['is'.ucfirst($this->getIdentifier()->name)] = 'is'.ucfirst($this->getIdentifier()->name);
-
-        $excluded = array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle', 'getName',
+        $exclude += array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle', 'getName',
             'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback', 'removeCommandCallback');
 
-        return array_diff($methods, $excluded);
+        $methods = parent::getMixableMethods($mixer, $exclude);
+        $methods['is'.ucfirst($this->getIdentifier()->name)] = 'is'.ucfirst($this->getIdentifier()->name);
+
+        return $methods;
     }
 
     /**

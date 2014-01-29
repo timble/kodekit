@@ -52,8 +52,9 @@ interface KObjectMixinInterface extends KObjectHandlable
      *
      * Only public methods can be mixed
      *
-     * @param KObjectMixable $mixer The mixer requesting the mixable methods.
+     * @param  KObjectMixable $mixer     The mixer requesting the mixable methods.
+     * @param  array          $exclude   A list of methods to exclude
      * @return array An array of public methods
      */
-    public function getMixableMethods(KObjectMixable $mixer = null);
+    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array());
 }

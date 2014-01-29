@@ -97,18 +97,13 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
     /**
      * Get the methods that are available for mixin based
      *
-     * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the behavior
-     * is callable.
-     *
-     * @param KObjectMixable $mixer  The mixer requesting the mixable methods.
+     * @param KObjectMixable $mixer    The mixer requesting the mixable methods.
+     * @param array          $exclude   A list of methods to exclude
      * @return array  An array of methods
      */
-    public function getMixableMethods(KObjectMixable $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
     {
-        $methods = parent::getMixableMethods($mixer);
-
-        $excluded = array('save', 'delete', 'getInstance');
-
-        return array_diff($methods, $excluded);
+        $exclude += array('save', 'delete', 'getInstance');
+        return parent::getMixableMethods($mixer, $exclude);
     }
 }

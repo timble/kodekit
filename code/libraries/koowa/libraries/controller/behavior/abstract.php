@@ -19,12 +19,13 @@ abstract class KControllerBehaviorAbstract extends KBehaviorAbstract
      *
      *  This function also dynamically adds a function of format _action[Action]
      *
-     * @param KObjectMixable $mixer The mixer requesting the mixable methods.
+     * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
+     * @param  array         $exclude   A list of methods to exclude
      * @return array An array of methods
      */
-    public function getMixableMethods(KObjectMixable $mixer = null)
+    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
     {
-        $methods = parent::getMixableMethods($mixer);
+        $methods = parent::getMixableMethods($mixer, $exclude);
 
         foreach($this->getMethods() as $method)
         {
