@@ -22,7 +22,9 @@
     $.fn.koowaDatepicker = function (options) {
 
         var settings = {
-            //@todo beforeShowDate to wrap dropdown-menu with div.koowa
+            beforeShowDay: function(){
+                console.log(this, arguments)
+            }
         }
         if (typeof(options) === 'object') {
             $.extend(true, settings, options);
