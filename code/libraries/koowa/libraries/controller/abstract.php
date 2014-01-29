@@ -414,17 +414,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
 		if($parts[0] == 'is' && isset($parts[1]))
 		{
-		    //Lazy mix behaviors
-		    $behavior = strtolower($parts[1]);
-
-            if(!isset($this->_mixed_methods[$method]))
-            {
-                if($this->hasBehavior($behavior))
-                {
-                    $this->mixin($this->getBehavior($behavior));
-                    return true;
-		        }
-
+            if(!isset($this->_mixed_methods[$method])) {
 			    return false;
             }
 
