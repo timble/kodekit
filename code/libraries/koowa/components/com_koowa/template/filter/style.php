@@ -11,40 +11,15 @@
 /**
  * Style Template Filter
  *
- * If the current dispatched components has an override it will be instantiated instead
- *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle implements KObjectInstantiable
+class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
 {
     /**
      * An array of MD5 hashes for loaded style strings
      */
     protected $_loaded = array();
-
-    /**
-     * Look for an override in the dispatched component
-     *
-     * {@inheritdoc}
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        $identifier = $config->object_identifier->toArray();
-
-        if ($manager->isRegistered('dispatcher'))
-        {
-            if ($package = $manager->getObject('dispatcher')->getIdentifier()->getPackage())
-            {
-                $identifier['package'] = $package;
-            }
-        }
-
-        $class = $manager->getClass($identifier);
-
-        $instance = new $class($config);
-        return $instance;
-    }
 
     /**
      * Find any virtual tags and render them
