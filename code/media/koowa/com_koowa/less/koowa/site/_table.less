@@ -1,0 +1,28 @@
+// Vertical align everything in tables
+table td {
+    vertical-align: middle;
+
+    * {
+        vertical-align: middle;
+    }
+    input[type="checkbox"] {
+        margin: 0;
+    }
+    a.iconImage {
+        display: inline-block;
+        text-decoration: none;
+    }
+}
+
+table.parameters {
+    td {
+        white-space: normal !important;
+        word-break: break-all;
+
+        &.detail-label {
+            white-space: nowrap !important;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    }
+}
