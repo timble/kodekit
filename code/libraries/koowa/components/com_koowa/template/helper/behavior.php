@@ -50,25 +50,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * Loads icon font
-     *
-     * @param array|KObjectConfig $config
-     * @return string
-     */
-    public function icons($config = array())
-    {
-        $html = '';
-
-        if (!isset(self::$_loaded['icons-css']))
-        {
-            $html .= '<style src="media://koowa/com_koowa/css/icons.css" />';
-            self::$_loaded['icons-css'] = true;
-        }
-
-        return $html;
-    }
-
-    /**
      * Loads jQuery under a global variable called kQuery.
      *
      * Loads it from Joomla in 3.0+ and our own sources in 2.5. If debug config property is set, an uncompressed
@@ -170,13 +151,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script src="media://koowa/com_koowa/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['modal'] = true;
-        }
-
-        if (!isset(self::$_loaded['modal-css']))
-        {
-            $html .= '<style src="media://koowa/com_koowa/css/modal.css" />';
-
-            self::$_loaded['modal-css'] = true;
         }
 
         $options   = json_encode($config->options->toArray());
@@ -374,13 +348,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['calendar'] = true;
         }
 
-        if (!isset(self::$_loaded['calendar-css']))
-        {
-            $html .= '<style src="media://koowa/com_koowa/css/datepicker.css" />';
-
-            self::$_loaded['calendar-css'] = true;
-        }
-
         $attribs = $this->buildAttributes($config->attribs);
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
@@ -565,13 +532,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['select2'] = true;
         }
 
-        if (!isset(self::$_loaded['select2-css']))
-        {
-            $html .= '<style src="media://koowa/com_koowa/css/select2.css" />';
-
-            self::$_loaded['select2-css'] = true;
-        }
-
         $options   = $config->options;
         $signature = md5('select2-'.$config->element.$options);
 
@@ -673,13 +633,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script src="media://koowa/com_koowa/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['tree'] = true;
-        }
-
-        if (!isset(self::$_loaded['tree-css']))
-        {
-            $html .= '<style src="media://koowa/com_koowa/css/tree.css" />';
-
-            self::$_loaded['tree-css'] = true;
         }
 
         /**

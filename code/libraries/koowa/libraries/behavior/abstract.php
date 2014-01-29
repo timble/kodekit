@@ -198,7 +198,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         $excluded = array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle', 'getName',
             'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback', 'removeCommandCallback');
 
-        return array_diff_key($methods, array_fill_keys($excluded, $excluded));
+        return array_diff($methods, $excluded);
     }
 
     /**
