@@ -290,7 +290,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
 
         $excluded = array('execute', 'getPriority', 'setBreakCondition', 'getBreakCondition', 'invokeCommandCallbacks');
 
-        return array_diff_key($methods, array_fill_keys($excluded, $excluded));
+        return array_diff($methods, $excluded);
     }
 
     /**

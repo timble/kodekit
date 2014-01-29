@@ -109,6 +109,6 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
 
         $excluded = array('save', 'delete', 'getInstance');
 
-        return array_diff_key($methods, array_fill_keys($excluded, $excluded));
+        return array_diff($methods, $excluded);
     }
 }
