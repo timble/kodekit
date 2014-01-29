@@ -33,7 +33,6 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         if($config->row->isLockable() && $config->row->locked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
-            $html .= $this->getTemplate()->renderHelper('behavior.icons');
             $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
                            title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
 					</span>';
@@ -68,7 +67,6 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         if($config->row->isLockable() && $config->row->locked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
-            $html .= $this->getTemplate()->renderHelper('behavior.icons');
             $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
                            title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
 					</span>';
@@ -211,7 +209,6 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $html = '<span class="koowa-tooltip koowa_icon koowa-icon-%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
         $html .= $this->getTemplate()->renderHelper('behavior.tooltip');
-        $html .= $this->getTemplate()->renderHelper('behavior.icons');
 
         return $html;
     }
