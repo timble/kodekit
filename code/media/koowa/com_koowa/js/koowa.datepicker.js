@@ -19,6 +19,22 @@
 (function ($) {
     "use strict";
 
-    $.fn.datepicker.DPGlobal.template = '<div class="koowa">' + $.fn.datepicker.DPGlobal.template + '</div>';
+    $.fn.koowaDatepicker = function (options) {
+
+        if(!$.fn.koowaDatepicker.container) $.fn.koowaDatepicker.container = $('<div class="koowa"></div>').appendTo('body');
+
+        var settings = {
+                parentEl: $.fn.koowaDatepicker.container
+            };
+        if (typeof(options) === 'object') {
+            $.extend(true, settings, options);
+        }
+
+        this.each(function() {
+            $(this).datepicker(settings);
+        });
+
+        return this;
+    };
 
 })(kQuery);
