@@ -29,8 +29,8 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
         $class    = $manager->getClass($config->object_identifier);
         $instance = new $class($config);
 
-        //If the behavior is auto mixed also lazy mix it into related row objects.
-        if ($config->auto_mixin)
+        //Lazy mix it into related row objects.
+        if ($config->row_mixin)
         {
             $identifier = $instance->getMixer()->getIdentifier()->toArray();
             $identifier['path'] = array('database', 'row');

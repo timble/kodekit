@@ -28,13 +28,6 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     private $__behaviors = array();
 
     /**
-     * Auto mixin behaviors
-     *
-     * @var boolean
-     */
-    protected $_auto_mixin;
-
-    /**
      * Constructor
      *
      * @param KObjectConfig $config An optional ObjectConfig object with configuration options.
@@ -42,9 +35,6 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
-
-        //Set the auto mixin state
-        $this->_auto_mixin = $config->auto_mixin;
 
         //Add the behaviors in FIFO order
         $behaviors = (array) KObjectConfig::unbox($config->behaviors);
@@ -73,7 +63,6 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
 
         $config->append(array(
             'behaviors'  => array(),
-            'auto_mixin' => true
         ));
     }
 
@@ -132,9 +121,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
             $this->addCommandHandler($behavior);
 
             //Mixin the behavior
-            if ($this->_auto_mixin) {
-                $this->mixin($behavior);
-            }
+            $this->mixin($behavior);
         }
 
         return $this->getMixer();
