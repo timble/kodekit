@@ -52,7 +52,7 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
         if(!empty($identifier['domain'])) {
             $rootpath = $this->getObject('manager')->getClassLoader()->getBasepath($identifier['domain']);
         } else {
-            $rootpath  = $this->getObject('manager')->getClassLoader()->getLocator('com')->getNamespace(ucfirst($identifier['package']));
+            $rootpath  = $this->getObject('manager')->getClassLoader()->getLocator('component')->getNamespace(ucfirst($identifier['package']));
         }
 
         $basepath  = $rootpath.'/components/com_'.strtolower($identifier['package']);

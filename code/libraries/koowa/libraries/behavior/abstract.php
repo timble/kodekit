@@ -10,10 +10,13 @@
 /**
  * Abstract Behavior
  *
+ * The abstract behavior will translate the command name to a method name format (eg, _before[Command] or _after[Command])
+ * and add execute the method. Command handlers should be declared protected.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehaviorInterface
+abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBehaviorInterface
 {
     /**
      * The object identifier
@@ -35,13 +38,6 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
      * @var KObjectConfig
      */
     private $__object_config;
-
-    /**
-     * Array of command handlers
-     *
-     * $var array
-     */
-    private $__command_handlers = array();
 
     /**
      * The behavior priority
@@ -83,11 +79,6 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
 
         //Set the command priority
         $this->_priority = $config->priority;
-
-        //Automatically mixin the behavior
-        if ($config->auto_mixin) {
-            $this->mixin($this);
-        }
     }
 
     /**
@@ -102,10 +93,54 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     {
         $config->append(array(
             'priority'   => self::PRIORITY_NORMAL,
-            'auto_mixin' => false
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Command handler
+     *
+     * @param KCommandInterface         $command    The command
+     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @return mixed If a handler breaks, returns the break condition. Returns the result of the handler otherwise.
+     */
+    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    {
+        $parts  = explode('.', $command->getName());
+        $method = '_'.$parts[0].ucfirst($parts[1]);
+
+        if(method_exists($this, $method)) {
+            $result = $this->$method($command);
+        } else {
+            $result = parent::invokeCallbacks($command, $this);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Add a command callback
+     *
+     * If the handler has already been added. It will not be re-added but parameters will be merged. This allows to
+     * change or add parameters for existing handlers.
+     *
+     * @param  	string          $command  The command name to register the handler for
+     * @param 	string|Closure  $method   The name of the method or a Closure object
+     * @param   array|object    $params   An associative array of config parameters or a KObjectConfig object
+     * @throws  InvalidArgumentException If the method does not exist
+     * @return  KCommandHandlerAbstract
+     */
+    public function addCommandCallback($command, $method, $params = array())
+    {
+        if (is_string($method) && !method_exists($this, $method))
+        {
+            throw new InvalidArgumentException(
+                'Method does not exist '.__CLASS__.'::'.$method
+            );
+        }
+
+        return parent::addCommandCallback($command, $method, $params);
     }
 
     /**
@@ -129,148 +164,21 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
     }
 
     /**
-     * Command handler
-     *
-     * @param KCommandInterface $command    The command
-     * @param  mixed            $condition  The break condition
-     * @return array|mixed Returns an array of the callback results in FIFO order. If a handler breaks and the break
-     *                     condition is not NULL returns the break condition.
-     */
-    public function executeCommand(KCommandInterface $command, $condition = null)
-    {
-        $result = array();
-
-        if(isset($this->__command_handlers[$command->getName()]))
-        {
-            foreach($this->__command_handlers[$command->getName()] as $handler)
-            {
-                $method = $handler['method'];
-                $params = $handler['params'];
-
-                try
-                {
-                    if(class_exists('Closure') && $method instanceof Closure) {
-                        $result[] = $method($command->append($params));
-                    } else {
-                        $result[$method] = $this->$method($command->append($params));
-                    }
-                }
-                catch (KBehaviorExceptionHandler $e) {
-                    $result[] = $e;
-                }
-
-                if($condition !== null && end($result) === $condition)
-                {
-                    $result = end($result);
-                    break;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Add a command handler
-     *
-     * If the handler has already been added. It will not be re-added but parameters will be merged. This allows to
-     * change or add parameters for existing handlers.
-     *
-     * @param  	string          $command  The command name to register the handler for
-     * @param 	string|Closure  $method   The name of the method or a Closure object
-     * @param   array|object    An associative array of config parameters or a KObjectConfig object
-     * @throws  InvalidArgumentException If the callback is not a callable
-     * @return  KCommandInvokerAbstract
-     */
-    public function addCommandHandler($command, $method, $params = array())
-    {
-        if (is_string($method) && !method_exists($this, $method))
-        {
-            throw new InvalidArgumentException(
-                'Method does not exist '.__CLASS__.'::'.$method
-            );
-        }
-
-        $params  = (array) KObjectConfig::unbox($params);
-        $command = strtolower($command);
-
-        if (!isset($this->__command_handlers[$command]) ) {
-            $this->__command_handlers[$command] = array();
-        }
-
-        if(class_exists('Closure') && $method instanceof Closure) {
-            $index = spl_object_hash($method);
-        } else {
-            $index = $method;
-        }
-
-        if(!isset($this->__command_handlers[$command][$index]))
-        {
-            $this->__command_handlers[$command][$index]['method'] = $method;
-            $this->__command_handlers[$command][$index]['params'] = $params;
-        }
-        else  $this->__command_handlers[$command][$index]['params'] = array_merge($this->__command_handlers[$command][$index]['params'], $params);
-
-        return $this;
-    }
-
-    /**
-     * Remove a command handler
-     *
-     * @param  	string	        $command  The command to unregister the handler from
-     * @param 	string|Closure	$method   The name of the method or a Closure object to unregister
-     * @return  KCommandInvokerAbstract
-     */
-    public function removeCommandHandler($command, $method)
-    {
-        $command = strtolower($command);
-
-        if (isset($this->__command_handlers[$command]) )
-        {
-            if(class_exists('Closure') && $method instanceof Closure) {
-                $index = spl_object_hash($method);
-            } else {
-                $index = $method;
-            }
-
-            unset($this->__command_handlers[$command][$index]);
-        }
-
-        return $this;
-    }
-
-    /**
      * Get an object handle
      *
-     * Function will return a valid object handle if one or more command handlers have been registered. If no command
-     * handlers are registered the function will return NULL.
-     *
      * @return string A string that is unique, or NULL
-     * @see executeCommand()
+     * @see execute()
      */
     public function getHandle()
     {
-        if(!empty($this->__command_handlers)) {
-            return KObjectMixinAbstract::getHandle();
+        foreach($this->getMethods() as $method)
+        {
+            if (substr($method, 0, 7) == '_before' || substr($method, 0, 6) == '_after') {
+                return KObjectMixinAbstract::getHandle();
+            }
         }
 
-        return null;
-    }
-
-    /**
-     * Get the handlers for a command
-     *
-     * @param string $command   The command
-     * @return  array An array of command handlers
-     */
-    public function getCommandHandlers($command)
-    {
-        $result = array();
-        if (isset($this->__command_handlers[$command]) ) {
-            $result = array_values($this->__command_handlers[$command]);
-        }
-
-        return $result;
+        return parent::getHandle();
     }
 
     /**
@@ -287,7 +195,8 @@ abstract class KBehaviorAbstract extends KObjectMixinAbstract implements KBehavi
         $methods   = parent::getMixableMethods($mixer);
         $methods['is'.ucfirst($this->getIdentifier()->name)] = 'is'.ucfirst($this->getIdentifier()->name);
 
-        return array_diff($methods, array('executeCommand', 'getIdentifier', 'getPriority', 'getHandle', 'getName', 'getObject', 'getIdentifier', 'addCommandHandler', 'removeCommandHandler', 'getCommandHandlers'));
+        return array_diff_key($methods, array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle',
+            'getName', 'getObject', 'setBreakCondition', 'getBreakCondition'));
     }
 
     /**

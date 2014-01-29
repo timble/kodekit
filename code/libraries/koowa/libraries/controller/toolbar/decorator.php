@@ -13,19 +13,17 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerToolbarDecorator extends KObjectDecorator implements KControllerToolbarInterface, KCommandInvokerInterface
+abstract class KControllerToolbarDecorator extends KObjectDecorator implements KControllerToolbarInterface, KCommandHandlerInterface
 {
     /**
      * Command handler
      *
-     * This function translates the command name to a command handler function of the format '_before[Command]'
-     * or '_after[Command]. Command handler functions should be declared protected.
-     *
-     * @param 	KCommandInterface  $command    The command object
-     * @param   mixed              $condition  The break condition
-     * @return 	boolean Always returns TRUE
+     * @param KCommandInterface         $command    The command
+     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @return array|mixed Returns an array of the handler results in FIFO order. If a handler returns not NULL and the
+     *                     returned value equals the break condition of the chain the break condition will be returned.
      */
-    final public function executeCommand(KCommandInterface $command, $condition = null)
+    final public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
         $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);

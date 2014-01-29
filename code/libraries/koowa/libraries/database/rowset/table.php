@@ -201,14 +201,21 @@ class KDatabaseRowsetTable extends KDatabaseRowsetAbstract
             //Check if a behavior is mixed
             if ($parts[0] == 'is' && isset($parts[1]))
             {
-                //Lazy mix behaviors
-                $behavior = strtolower($parts[1]);
+                if(!isset($this->_mixed_methods[$method]))
+                {
+                    //Lazy mix behaviors
+                    $behavior = strtolower($parts[1]);
 
-                if ($this->getTable()->hasBehavior($behavior)) {
-                    $this->mixin($this->getTable()->getBehavior($behavior));
-                } else {
+                    if ($this->getTable()->hasBehavior($behavior))
+                    {
+                        $this->mixin($this->getTable()->getBehavior($behavior));
+                        return true;
+                    }
+
                     return false;
                 }
+
+                return true;
             }
         }
 

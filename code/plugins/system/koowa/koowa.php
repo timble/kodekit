@@ -101,13 +101,17 @@ class PlgSystemKoowa extends JPlugin
         {
             require_once $path;
 
+            /**
+             * Library Bootstrapping
+             */
             Koowa::getInstance(array(
                 'cache_prefix'  => md5(JFactory::getApplication()->getCfg('secret')).'-cache-koowa',
                 'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            $manager = KObjectManager::getInstance();
-            $loader  = $manager->getClassLoader();
+            $application = JFactory::getApplication()->getName();
+            $manager     = KObjectManager::getInstance();
+            $loader      = $manager->getClassLoader();
 
             //Application basepaths
             $loader->registerBasepath('site' , JPATH_SITE);
@@ -118,8 +122,6 @@ class PlgSystemKoowa extends JPlugin
                 'namespaces' => array(
                     '\\'         => JPATH_BASE,
                     'Koowa'      => JPATH_LIBRARIES.'/koowa',
-                    'Files'      => JPATH_LIBRARIES.'/koowa',
-                    'Activities' => JPATH_LIBRARIES.'/koowa'
                 )
             )));
 
@@ -146,27 +148,23 @@ class PlgSystemKoowa extends JPlugin
 
             $manager->registerLocator($manager->getObject('com:koowa.object.locator.plugin'));
 
-            //Object aliases
-            $manager->registerAlias('com:koowa.database.adapter.mysqli', 'koowa:database.adapter.mysqli');
-            $manager->registerAlias('com:koowa.translator'       , 'translator');
-            $manager->registerAlias('com:koowa.user'             , 'user');
-            $manager->registerAlias('com:koowa.exception.handler', 'exception.handler');
-            $manager->registerAlias('koowa:dispatcher.request', 'request' );
+            /**
+             * Component Bootstrapping
+             */
+            $manager->getObject('com:koowa.bootstrapper')->bootstrap($application);
 
-            //Setup request
-            $application = JFactory::getApplication()->getName();
+            //Setup the request
             $manager->getObject('request')
                 ->registerApplication('site', '')
                 ->registerApplication('admin', '/administrator')
                 ->setApplication($application === 'administrator' ? 'admin' : $application);
 
-            //Application Bootstrapping
-            $manager->getObject('com:koowa.object.bootstrapper.application')->bootstrap($application);
-
             //Exception Handling
             $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
 
-            //Load the koowa plugins
+            /**
+             * Plugin Bootstrapping
+             */
             JPluginHelper::importPlugin('koowa', null, true);
 
             return true;

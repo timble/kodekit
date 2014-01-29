@@ -35,4 +35,11 @@ interface KControllerContextInterface extends KCommandInterface
      * @return KUserInterface
      */
     public function getUser();
+
+    /**
+     * Get the controller action
+     *
+     * @return string
+     */
+    public function getAction();
 }

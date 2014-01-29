@@ -12,7 +12,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-abstract class KControllerBehaviorAbstract extends KBehaviorDynamic
+abstract class KControllerBehaviorAbstract extends KBehaviorAbstract
 {
     /**
      * Get the methods that are available for mixin based

@@ -35,51 +35,72 @@ interface KCommandChainInterface
     public function disable();
 
     /**
-     * Invoke a command by calling all registered invokers
+     * Execute a command by executing all registered handlers
      *
-     * If a command invoker returns the 'break condition' the executing is halted. If no break condition is specified the
-     * the command chain will execute all command invokers, regardless of the invoker result returned.
+     * If a command handler returns the 'break condition' the executing is halted. If no break condition is specified the
+     * the command chain will execute all command handlers, regardless of the handler result returned.
      *
      * @param string|KCommandInterface  $command    The command name or a KCommandInterface object
      * @param array|Traversable         $attributes An associative array or a Traversable object
      * @param KObjectInterface          $subject    The command subject
-     * @return array|mixed Returns an array of the command results in FIFO order where the key holds the invoker identifier
-     *                     and the value the result returned by the invoker. If the chain breaks, and the break condition
-     *                     is not NULL returns the break condition instead.
+     * @return mixed|null If a handlers breaks, returns the break condition. NULL otherwise.
      */
-    public function invokeCommand($command, $attributes = array(), $subject = null);
+    public function execute($command, $attributes = array(), $subject = null);
 
     /**
      * Attach a command to the chain
      *
-     * @param KCommandInvokerInterface  $invoker  The command invoker
+     * @param KCommandHandlerInterface  $handler  The command handler
      * @return KCommandChainInterface
      */
-    public function addInvoker(KCommandInvokerInterface $invoker);
+    public function addHandler(KCommandHandlerInterface $handler);
 
     /**
-     * Get the list of invokers enqueue in the chain
+     * Removes a command from the chain
      *
-     * @return  KObjectQueue   An object queue containing the invokers
+     * @param  KCommandHandlerInterface  $handler  The command handler
+     * @return  KCommandChain
      */
-    public function getInvokers();
+    public function removeHandler(KCommandHandlerInterface $handler);
 
     /**
-     * Set the priority of a command invoker
+     * Get the list of handler enqueue in the chain
      *
-     * @param KCommandInvokerInterface $invoker   A command invoker
+     * @return  KObjectQueue   An object queue containing the handlers
+     */
+    public function getHandlers();
+
+    /**
+     * Set the priority of a command handler
+     *
+     * @param KCommandHandlerInterface $handler   A command handler
      * @param integer                   $priority  The command priority
      * @return KCommandChainInterface
      */
-    public function setInvokerPriority(KCommandInvokerInterface $invoker, $priority);
+    public function setHandlerPriority(KCommandHandlerInterface $handler, $priority);
 
     /**
-     * Get the priority of a command invoker
+     * Get the priority of a command handlers
      *
-     * @param  KCommandInvokerInterface $invoker A command invoker
+     * @param  KCommandHandlerInterface $handler A command handler
      * @return integer The command priority
      */
-    public function getInvokerPriority(KCommandInvokerInterface $invoker);
+    public function getHandlerPriority(KCommandHandlerInterface $handler);
+
+    /**
+     * Set the break condition
+     *
+     * @param mixed|null $condition The break condition, or NULL to set reset the break condition
+     * @return KCommandChainInterface
+     */
+    public function setBreakCondition($condition);
+
+    /**
+     * Get the break condition
+     *
+     * @return mixed|null   Returns the break condition, or NULL if not break condition is set.
+     */
+    public function getBreakCondition();
 
     /**
      * Check of the command chain is enabled

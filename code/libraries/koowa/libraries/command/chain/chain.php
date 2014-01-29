@@ -28,7 +28,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     private $__stack;
 
     /**
-     * The invoker queue
+     * The handler queue
      *
      * @var KObjectQueue
      */
@@ -46,7 +46,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
      *
      * @var boolean
      */
-    protected $_condition;
+    protected $_break_condition;
 
     /**
      * Constructor
@@ -62,7 +62,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
         $this->__enabled = (boolean) $config->enabled;
 
         //Set the chain break condition
-        $this->_condition = $config->command_condition;
+        $this->_break_condition = $config->break_condition;
 
         $this->__stack = $this->getObject('koowa:object.stack');
         $this->__queue = $this->getObject('koowa:object.queue');
@@ -79,8 +79,8 @@ class KCommandChain extends KObject implements KCommandChainInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_condition' => false,
-            'enabled'           => true
+            'break_condition' => false,
+            'enabled'         => true
         ));
 
         parent::_initialize($config);
@@ -111,22 +111,18 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Invoke a command by calling all registered invokers
+     * Execute a command by executing all registered handlers
      *
-     * If a command invoker returns the 'break condition' the executing is halted. If no break condition is specified the
-     * the command chain will execute all command invokers, regardless of the invoker result returned.
+     * If a command handler returns the 'break condition' the executing is halted. If no break condition is specified the
+     * the command chain will execute all command handlers, regardless of the handler result returned.
      *
      * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
      * @param  array|Traversable         $attributes An associative array or a Traversable object
      * @param  KObjectInterface          $subject    The command subject
-     * @return array|mixed Returns an array of the command results in FIFO order where the key holds the invoker identifier
-     *                     and the value the result returned by the invoker. If the chain breaks, and the break condition
-     *                     is not NULL returns the break condition instead.
+     * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
-    public function invokeCommand($command, $attributes = null, $subject = null)
+    public function execute($command, $attributes = null, $subject = null)
     {
-        $result = array();
-
         if ($this->isEnabled())
         {
             $this->__stack->push(clone $this->__queue);
@@ -144,59 +140,49 @@ class KCommandChain extends KObject implements KCommandChainInterface
                 else $command = new KCommand($command, $attributes, $subject);
             }
 
-            foreach ($this->__stack->peek() as $invoker)
+            foreach ($this->__stack->peek() as $handler)
             {
-                $identifier = (string) $invoker->getIdentifier();
+                $result = $handler->execute($command, $this);
 
-                try {
-                    $result[$identifier] = $invoker->executeCommand($command, $this->_condition);
-                } catch (KCommandExceptionInvoker $e) {
-                    $result[$identifier] = $e;
-                }
-
-                if($this->_condition !== null && end($result) === $this->_condition)
-                {
-                    $result = end($result);
-                    break;
+                if($result !== null && $result === $this->getBreakCondition()) {
+                    return $result;
                 }
             }
 
             $this->__stack->pop();
         }
-
-        return $result;
     }
 
     /**
      * Attach a command to the chain
      *
-     * @param   KCommandInvokerInterface  $invoker  The command invoker
+     * @param   KCommandHandlerInterface  $handler  The command handler
      * @return KCommandChain
      */
-    public function addInvoker(KCommandInvokerInterface $invoker)
+    public function addHandler(KCommandHandlerInterface $handler)
     {
-        $this->__queue->enqueue($invoker, $invoker->getPriority());
+        $this->__queue->enqueue($handler, $handler->getPriority());
         return $this;
     }
 
     /**
      * Removes a command from the chain
      *
-     * @param   KCommandInvokerInterface  $invoker  The command invoker
+     * @param  KCommandHandlerInterface  $handler  The command handler
      * @return  KCommandChain
      */
-    public function removeInvoker(KCommandInvokerInterface $invoker)
+    public function removeHandler(KCommandHandlerInterface $handler)
     {
-        $this->__queue->dequeue($invoker);
+        $this->__queue->dequeue($handler);
         return $this;
     }
 
     /**
-     * Get the list of invokers enqueue in the chain
+     * Get the list of handlers enqueue in the chain
      *
-     * @return  KObjectQueue   An object queue containing the invokers
+     * @return  KObjectQueue   An object queue containing the handlers
      */
-    public function getInvokers()
+    public function getHandlers()
     {
         return $this->__queue;
     }
@@ -204,25 +190,47 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Set the priority of a command
      *
-     * @param  KCommandInvokerInterface $invoker   A command invoker
+     * @param  KCommandHandlerInterface $handler   A command handler
      * @param integer                   $priority  The command priority
      * @return KCommandChain
      */
-    public function setInvokerPriority(KCommandInvokerInterface $invoker, $priority)
+    public function setHandlerPriority(KCommandHandlerInterface $handler, $priority)
     {
-        $this->__queue->setPriority($invoker, $priority);
+        $this->__queue->setPriority($handler, $priority);
         return $this;
     }
 
     /**
      * Get the priority of a command
      *
-     * @param   KCommandInvokerInterface $invoker A command invoker
+     * @param   KCommandHandlerInterface $handler A command handler
      * @return integer The command priority
      */
-    public function getInvokerPriority(KCommandInvokerInterface $invoker)
+    public function getHandlerPriority(KCommandHandlerInterface $handler)
     {
-        return $this->__queue->getPriority($invoker);
+        return $this->__queue->getPriority($handler);
+    }
+
+    /**
+     * Set the break condition
+     *
+     * @param mixed|null $condition The break condition, or NULL to set reset the break condition
+     * @return KCommandChain
+     */
+    public function setBreakCondition($condition)
+    {
+        $this->_break_condition = $condition;
+        return $this;
+    }
+
+    /**
+     * Get the break condition
+     *
+     * @return mixed|null   Returns the break condition, or NULL if not break condition is set.
+     */
+    public function getBreakCondition()
+    {
+        return $this->_break_condition;
     }
 
     /**

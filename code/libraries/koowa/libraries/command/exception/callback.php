@@ -8,12 +8,9 @@
  */
 
 /**
- * Controller Behavior Interface
+ * Command Callback Exception
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Command
  */
-interface KControllerBehaviorInterface extends KCommandInvokerInterface, KObjectInterface
-{
-
-}
+class KCommandExceptionCallback extends RuntimeException implements KCommandException {}

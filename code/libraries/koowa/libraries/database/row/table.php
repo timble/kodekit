@@ -276,9 +276,8 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
 	/**
 	 * Search the mixin method map and call the method or trigger an error
 	 *
-	 * This functions overloads KDatabaseRowAbstract::__call and implements
-	 * a just in time mixin strategy. Available table behaviors are only mixed
-	 * when needed.
+	 * This functions overloads KDatabaseRowAbstract::__call and implements a just in time mixin strategy. Available
+     * table behaviors are only mixed when needed.
 	 *
 	 * @param  string 	$method    The function name
 	 * @param  array  	$arguments The function arguments

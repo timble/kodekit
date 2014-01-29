@@ -103,7 +103,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
         $this->__toolbars[$toolbar->getType()] = $toolbar;
 
         if ($this->inherits('KCommandMixin')) {
-            $this->addCommandInvoker($toolbar);
+            $this->addCommandHandler($toolbar);
         }
 
         return $this->getMixer();
@@ -122,7 +122,7 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
             unset($this->__toolbars[$toolbar->getType()]);
 
             if ($this->inherits('KCommandMixin')) {
-                $this->removeCommandInvoker($toolbar);
+                $this->removeCommandHandler($toolbar);
             }
         }
 

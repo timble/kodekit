@@ -47,7 +47,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
 	 *
 	 * @var string
 	 */
-	protected $_type = 'com';
+	protected $_type = 'component';
 
     /**
      * The active basepath
@@ -100,7 +100,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             else
             {
                 //Exception for framework components. Follow library structure. Don't load classes from root.
-                if(isset($this->_namespaces[$namespace])) {
+                if(isset($this->_namespaces[$namespace]) && $file != 'bootstrapper') {
                     $path = $file.'/'.$file;
                 } else {
                     $path = $file;

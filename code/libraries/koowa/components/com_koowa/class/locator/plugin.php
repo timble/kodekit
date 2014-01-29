@@ -38,7 +38,7 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
 	 *
 	 * @var string
 	 */
-	protected $_type = 'plg';
+	protected $_type = 'plugin';
 
 	/**
 	 * Get the path based on a class name

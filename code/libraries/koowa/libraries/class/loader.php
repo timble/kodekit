@@ -65,7 +65,7 @@ class KClassLoader implements KClassLoaderInterface
         $this->registerLocator(new KClassLocatorLibrary());
 
         //Register the Koowa Library namesoace 'K'
-        $this->getLocator('lib')->registerNamespace('K', dirname(dirname(__FILE__)));
+        $this->getLocator('library')->registerNamespace('K', dirname(dirname(__FILE__)));
 
         //Register the loader with the PHP autoloader
         $this->register();

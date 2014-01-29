@@ -76,7 +76,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         $this->__object_identifier = $this->getIdentifier('object.manager');
 
 	    //Auto-load the koowa adapter
-        $this->registerLocator(new KObjectLocatorLibrary($config));
+        $this->registerLocator(new KObjectLocatorKoowa($config));
 
         //Register self and set a 'manager' alias
         $this->setObject('object.manager', $this);
