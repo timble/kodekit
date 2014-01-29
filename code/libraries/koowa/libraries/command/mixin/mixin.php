@@ -287,7 +287,10 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     public function getMixableMethods(KObjectMixable $mixer = null)
     {
         $methods = parent::getMixableMethods($mixer);
-        return array_diff_key($methods, array('execute', 'getPriority', 'setBreakCondition', 'getBreakCondition', 'invokeCommandCallbacks'));
+
+        $excluded = array('execute', 'getPriority', 'setBreakCondition', 'getBreakCondition', 'invokeCommandCallbacks');
+
+        return array_diff_key($methods, array_fill_keys($excluded, $excluded));
     }
 
     /**
