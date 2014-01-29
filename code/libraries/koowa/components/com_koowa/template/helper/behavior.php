@@ -324,6 +324,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['calendar']))
         {
             $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/koowa.datepicker.js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -357,7 +358,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             {
                 $html .= "<script>
                     kQuery(function($){
-                        $('#".$config->id."').datepicker(".$config->options.");
+                        $('#".$config->id."').koowaDatepicker(".$config->options.");
                     });
                 </script>";
                 $loaded[] = $config->id;

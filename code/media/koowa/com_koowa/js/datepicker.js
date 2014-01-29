@@ -46,6 +46,7 @@
 		if(this.component && this.component.length === 0)
 			this.component = false;
 
+        console.log(DPGlobal.template);
 		this.picker = $(DPGlobal.template);
 		this._buildEvents();
 		this._attachEvents();
