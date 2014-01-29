@@ -21,7 +21,16 @@
 
     $.fn.koowaDatepicker = function (options) {
 
-        //@TODO call datepicker plugin
+        var settings = {
+            //@todo beforeShowDate to wrap dropdown-menu with div.koowa
+        }
+        if (typeof(options) === 'object') {
+            $.extend(true, settings, options);
+        }
+
+        this.each(function() {
+            $(this).datepicker(settings);
+        });
 
         return this;
     };
