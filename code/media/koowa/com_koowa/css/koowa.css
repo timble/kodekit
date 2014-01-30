@@ -708,11 +708,11 @@
   height: 16px;
   line-height: 16px;
 }
-#document_list.table td {
+.koowa_dialog #document_list.table td {
   padding: 4px 5px;
   line-height: 16px;
 }
-#document_list.table tr.selected td {
+.koowa_dialog #document_list.table tr.selected td {
   border-top-color: #1b8aff;
   background-color: #1f83eb;
   background-image: -moz-linear-gradient(top, #3497ff, #0064cd);
@@ -734,21 +734,21 @@
   padding: 20px;
   background: #fff;
 }
-#files-preview .details > div {
+.koowa_dialog #files-preview .details > div {
   padding: 16px;
 }
-#files-preview img.icon {
+.koowa_dialog #files-preview img.icon {
   width: auto;
   height: auto;
   max-width: 100%;
 }
-#files-preview table.parameters {
+.koowa_dialog #files-preview table.parameters {
   border-bottom: 1px solid #dddddd;
 }
-#insert-button-container {
+.koowa_dialog #insert-button-container {
   padding: 16px;
 }
-#files-grid .spinner {
+.koowa_dialog #files-grid .spinner {
   margin-top: 30px;
 }
 @media screen and (min-width: 700px) {
@@ -965,7 +965,7 @@
 .old-ie .koowa_dialog {
   height: 500px;
 }
-.uploader-flash-container {
+.koowa_dialog .uploader-flash-container {
   display: none;
 }
 .koowa_dialog__file_dialog_upload #files-upload {

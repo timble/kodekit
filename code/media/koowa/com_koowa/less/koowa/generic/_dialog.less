@@ -188,7 +188,7 @@
     line-height: 16px;
 }
 
-#document_list.table {
+.koowa_dialog #document_list.table {
     td {
         padding: 4px 5px;
         line-height: 16px;
@@ -212,7 +212,7 @@
 }
 
 // Images in details view
-#files-preview {
+.koowa_dialog #files-preview {
 
     .details > div {
         padding: 16px;
@@ -226,12 +226,13 @@
         border-bottom: 1px solid #dddddd;
     }
 }
-#insert-button-container {
+
+.koowa_dialog #insert-button-container {
     padding: 16px;
 }
 
 // The spinner
-#files-grid .spinner {
+.koowa_dialog #files-grid .spinner {
     margin-top: @titleHeight;
 }
 
@@ -483,7 +484,7 @@
 
 // Not showing this element doesnt seem to affect the drag-and-drop uploader
 // But it does solve a weird element width overflow bug...
-.uploader-flash-container {
+.koowa_dialog .uploader-flash-container {
     display: none;
 }
 
