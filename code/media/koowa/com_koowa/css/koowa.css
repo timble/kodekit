@@ -1,3 +1,4 @@
+@import "_modal-ie.css";
 /**
  * Datepicker for Bootstrap
  *
@@ -516,41 +517,6 @@
   margin-left: -5px;
   margin-right: -5px;
 }
--html {
-  height: 100% !important;
-  padding: 10px;
-  margin: 0;
-  overflow: auto;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5em;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
--html body {
-  height: 100% !important;
-  margin: 0;
-  padding: 0;
-}
--html .koowa_template_container {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
--html .koowa_template_container .koowa {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
--html * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
--html.joomla_modal {
-  padding: 0;
-}
 .koowa_dialog {
   width: 100%;
   min-height: 200px;
@@ -558,6 +524,7 @@
   display: block;
   background: #fff;
   position: relative;
+  font-size: 14px;
   *zoom: 1;
 }
 .koowa_dialog:before,
@@ -741,6 +708,7 @@
   width: auto;
   height: auto;
   max-width: 100%;
+  max-height: 150px;
 }
 .koowa_dialog #files-preview table.parameters {
   border-bottom: 1px solid #dddddd;
@@ -754,7 +722,7 @@
 @media screen and (min-width: 700px) {
   .koowa_dialog {
     height: 100%;
-    max-height: 510px;
+    max-height: 100%;
     overflow: hidden;
   }
   .koowa_dialog__menu {
@@ -848,7 +816,7 @@
     margin: 0;
     height: 68px;
     clear: both;
-    float: left;
+    float: none;
     max-width: 100%;
   }
   .koowa_dialog__new_folder input[type=text] {
@@ -960,10 +928,10 @@
   float: left;
 }
 .old-ie {
-  height: 500px;
+  height: 480px;
 }
 .old-ie .koowa_dialog {
-  height: 500px;
+  height: 480px;
 }
 .koowa_dialog .uploader-flash-container {
   display: none;
@@ -1721,9 +1689,6 @@ img.mfp-img {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-.mfp-wrap .mfp-container .mfp-content {
-  max-width: 960px;
-}
 .mfp-wrap .mfp-container .mfp-inline {
   display: block;
   width: auto;
@@ -1775,32 +1740,20 @@ img.mfp-img {
   position: relative;
 }
 @media screen and (min-width: 712px) {
-  .koowa_dialog_modal .mfp-content {
+  .mfp-wrap .mfp-content {
     min-height: 0;
-    height: 530px;
+    height: 100%;
+    max-width: 1200px !important;
+    max-height: 800px !important;
+  }
+  .mfp-wrap .mfp-content .mfp-iframe-scaler {
+    height: 100%;
     max-height: 100% !important;
   }
-  .koowa_dialog_modal .mfp-content .mfp-iframe-scaler {
-    height: 530px;
+  .mfp-wrap .mfp-content .mfp-iframe-scaler iframe {
+    height: 100%;
     max-height: 100% !important;
   }
-  .koowa_dialog_modal .mfp-content .mfp-iframe-scaler iframe {
-    height: 530px;
-    max-height: 100% !important;
-  }
-}
-.koowa_dialog_modal .mfp-content {
-  min-height: 0\9;
-  height: 530px\9;
-  max-height: 530px\9;
-}
-.koowa_dialog_modal .mfp-content .mfp-iframe-scaler {
-  height: 530px\9;
-  max-height: 530px\9;
-}
-.koowa_dialog_modal .mfp-content .mfp-iframe-scaler iframe {
-  height: 530px\9;
-  max-height: 530px\9;
 }
 /*
 Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
@@ -2471,59 +2424,109 @@ disabled look for disabled choices in the results dropdown
   padding: 6px 10px !important;
   width: auto;
 }
-.inside_modal .koowa_template {
+html.koowa-html,
+body.koowa_template {
+  height: 100% !important;
+}
+.koowa-html {
+  margin: auto;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.koowa-html * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.koowa-html.joomla_modal {
+  padding: 0;
+}
+.koowa-html.inside_modal {
+  padding: 10px;
+}
+@media screen and (min-width: 600px) {
+  .koowa-html.inside_modal {
+    overflow: hidden;
+  }
+}
+.koowa-html.inside_modal body {
+  margin: 0;
+}
+.koowa-html.inside_modal.joomla_modal {
+  padding: 0 !important;
+}
+.koowa-html.inside_modal .koowa_template {
   padding: 0;
   background: #fff;
   margin: auto;
+  height: 100%;
 }
-.inside_modal .koowa_template .koowa_template_container {
+.koowa-html.inside_modal .koowa_template .koowa_template_container {
   box-shadow: none;
   background: #fff;
   margin: auto;
   max-width: none;
+  height: 100%;
   *zoom: 1;
 }
-.inside_modal .koowa_template .koowa_template_container:before,
-.inside_modal .koowa_template .koowa_template_container:after {
+.koowa-html.inside_modal .koowa_template .koowa_template_container:before,
+.koowa-html.inside_modal .koowa_template .koowa_template_container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.inside_modal .koowa_template .koowa_template_container:after {
+.koowa-html.inside_modal .koowa_template .koowa_template_container:after {
   clear: both;
 }
-.koowa_template {
+.koowa-html.inside_modal .koowa_template .koowa_template_container .koowa {
+  height: 100%;
+}
+.koowa-html .koowa_template {
   margin: 0;
-  padding: 50px 0 10px;
-  font-family: Arial, sans-serif;
+  padding: 50px 0 20px;
   background: #333;
-  font-size: 13px;
+  height: 100%;
+  overflow: visible;
 }
 @media screen and (min-width: 600px) {
-  .koowa_template {
-    padding: 65px 10px 10px;
+  .koowa-html .koowa_template {
+    padding: 65px 10px 30px;
   }
 }
-.koowa_template .koowa_template_container {
-  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.75);
-  background: #fff;
+.koowa-html .koowa_template .koowa_template_container {
   margin: 0 auto;
   max-width: 1020px;
+  height: 100%;
   *zoom: 1;
 }
-.koowa_template .koowa_template_container:before,
-.koowa_template .koowa_template_container:after {
+.koowa-html .koowa_template .koowa_template_container:before,
+.koowa-html .koowa_template .koowa_template_container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.koowa_template .koowa_template_container:after {
+.koowa-html .koowa_template .koowa_template_container:after {
   clear: both;
 }
-.koowa_template label {
+.koowa-html .koowa_template .koowa_template_container .koowa {
+  height: 100%;
+}
+.koowa-html .koowa_template .koowa_template_container .koowa_form {
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.75);
+  background: #fff;
+}
+.koowa-html .koowa_template #sbox-window iframe {
+  max-width: 100%;
+  max-height: 100%;
+}
+.koowa-html .koowa_template label {
   font-size: 13px;
 }
-.koowa_template .btn {
+.koowa-html .koowa_template .btn {
   display: inline-block;
   padding: 4px 12px;
   font-size: 13px;
@@ -2532,7 +2535,7 @@ disabled look for disabled choices in the results dropdown
   text-align: center;
   vertical-align: middle;
 }
-.koowa_template .koowa_toolbar {
+.koowa-html .koowa_template .koowa_toolbar {
   *zoom: 1;
   position: fixed;
   z-index: 999;
@@ -2546,17 +2549,17 @@ disabled look for disabled choices in the results dropdown
   float: none;
   display: block;
 }
-.koowa_template .koowa_toolbar:before,
-.koowa_template .koowa_toolbar:after {
+.koowa-html .koowa_template .koowa_toolbar:before,
+.koowa-html .koowa_template .koowa_toolbar:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.koowa_template .koowa_toolbar:after {
+.koowa-html .koowa_template .koowa_toolbar:after {
   clear: both;
 }
 @media screen and (min-width: 600px) {
-  .koowa_template .koowa_toolbar {
+  .koowa-html .koowa_template .koowa_toolbar {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -2568,9 +2571,9 @@ disabled look for disabled choices in the results dropdown
     max-width: 1040px;
   }
 }
-.koowa_template .koowa_toolbar .btn-toolbar {
+.koowa-html .koowa_template .koowa_toolbar .btn-toolbar {
   border-bottom: 1px solid #CCC;
-  height: auto;
+  height: 50px;
   margin: 0;
   padding: 10px;
   min-height: 30px;
@@ -2588,41 +2591,41 @@ disabled look for disabled choices in the results dropdown
   float: none;
   text-align: left;
 }
-.koowa_template .koowa_toolbar .btn-toolbar i {
+.koowa-html .koowa_template .koowa_toolbar .btn-toolbar i {
   display: none !important;
 }
-.koowa_template .koowa_form {
+.koowa-html .koowa_template .koowa_form {
   padding: 0 15px;
 }
-.koowa_template .description_container {
+.koowa-html .koowa_template .description_container {
   overflow: auto;
 }
 @media screen and (max-width: 320px) {
-  .koowa_template .description_container {
+  .koowa-html .koowa_template .description_container {
     width: 290px;
   }
 }
-.koowa_template .description_container [class^="icon-"] {
+.koowa-html .koowa_template .description_container [class^="icon-"] {
   display: none !important;
 }
-.koowa_template #editor-xtd-buttons .btn-toolbar {
+.koowa-html .koowa_template #editor-xtd-buttons .btn-toolbar {
   margin: 0;
 }
-.koowa_template .alert {
+.koowa-html .koowa_template .alert {
   margin: 10px;
 }
-.koowa_template #editor-xtd-buttons,
-.koowa_template .toggle-editor {
+.koowa-html .koowa_template #editor-xtd-buttons,
+.koowa-html .koowa_template .toggle-editor {
   margin: 10px 0;
   float: left;
 }
-.koowa_template .toggle-editor {
+.koowa-html .koowa_template .toggle-editor {
   float: right;
 }
-.koowa_template .button2-left {
+.koowa-html .koowa_template .button2-left {
   display: inline-block;
 }
-.koowa_template .button2-left a {
+.koowa-html .koowa_template .button2-left a {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
@@ -2660,25 +2663,25 @@ disabled look for disabled choices in the results dropdown
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-.koowa_template .button2-left a:hover,
-.koowa_template .button2-left a:focus,
-.koowa_template .button2-left a:active,
-.koowa_template .button2-left a.active,
-.koowa_template .button2-left a.disabled,
-.koowa_template .button2-left a[disabled] {
+.koowa-html .koowa_template .button2-left a:hover,
+.koowa-html .koowa_template .button2-left a:focus,
+.koowa-html .koowa_template .button2-left a:active,
+.koowa-html .koowa_template .button2-left a.active,
+.koowa-html .koowa_template .button2-left a.disabled,
+.koowa-html .koowa_template .button2-left a[disabled] {
   color: #333333;
   background-color: #e6e6e6;
   *background-color: #d9d9d9;
 }
-.koowa_template .button2-left a:active,
-.koowa_template .button2-left a.active {
+.koowa-html .koowa_template .button2-left a:active,
+.koowa-html .koowa_template .button2-left a.active {
   background-color: #cccccc \9;
 }
-.koowa_template .button2-left a:first-child {
+.koowa-html .koowa_template .button2-left a:first-child {
   *margin-left: 0;
 }
-.koowa_template .button2-left a:hover,
-.koowa_template .button2-left a:focus {
+.koowa-html .koowa_template .button2-left a:hover,
+.koowa-html .koowa_template .button2-left a:focus {
   color: #333333;
   text-decoration: none;
   background-position: 0 -15px;
@@ -2687,21 +2690,21 @@ disabled look for disabled choices in the results dropdown
   -o-transition: background-position 0.1s linear;
   transition: background-position 0.1s linear;
 }
-.koowa_template .button2-left a:focus {
+.koowa-html .koowa_template .button2-left a:focus {
   outline: thin dotted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
-.koowa_template .button2-left a.active,
-.koowa_template .button2-left a:active {
+.koowa-html .koowa_template .button2-left a.active,
+.koowa-html .koowa_template .button2-left a:active {
   background-image: none;
   outline: 0;
   -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-.koowa_template .button2-left a.disabled,
-.koowa_template .button2-left a[disabled] {
+.koowa-html .koowa_template .button2-left a.disabled,
+.koowa-html .koowa_template .button2-left a[disabled] {
   cursor: default;
   background-image: none;
   opacity: 0.65;
@@ -2709,6 +2712,67 @@ disabled look for disabled choices in the results dropdown
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+ul.sidebar-nav {
+  margin: 0;
+  padding: 0;
+}
+ul.sidebar-nav li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  line-height: 12px;
+}
+ul.sidebar-nav li a {
+  display: block;
+  padding: 6px 0 6px 10px;
+  color: #444;
+  border-top: 1px solid #F9F9F9;
+  line-height: 16px;
+  background-color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ul.sidebar-nav li a:hover,
+ul.sidebar-nav li.active ul li a:hover {
+  color: #fff;
+  border-top-color: #33bbff;
+  background-color: #38bdff;
+  background-image: -moz-linear-gradient(top, #4dc3ff, #1ab2ff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4dc3ff), to(#1ab2ff));
+  background-image: -webkit-linear-gradient(top, #4dc3ff, #1ab2ff);
+  background-image: -o-linear-gradient(top, #4dc3ff, #1ab2ff);
+  background-image: linear-gradient(to bottom, #4dc3ff, #1ab2ff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4dc3ff', endColorstr='#ff1ab2ff', GradientType=0);
+  text-decoration: none;
+}
+ul.sidebar-nav li.active > a,
+ul.sidebar-nav li.active > a:hover {
+  color: #FFF;
+  border-top-color: #0077cc;
+  background-color: #006dcc;
+  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
+  -webkit-box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 inset;
+  -moz-box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 inset;
+  box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 inset;
+  text-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0;
+}
+ul.sidebar-nav li ul li a {
+  padding-left: 32px;
+}
+ul.sidebar-nav li.active ul li a {
+  background: none;
+  background-color: white;
+  color: #444;
+  border-top-color: #F9F9F9;
 }
 body,
 html {
@@ -2773,9 +2837,6 @@ html {
 }
 .table tbody tr td {
   border-top: 1px solid #ddd;
-}
-.table tbody tr td a {
-  font-size: 1.1em;
 }
 .table tbody tr td small {
   display: block;

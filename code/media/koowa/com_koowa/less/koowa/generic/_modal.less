@@ -414,10 +414,6 @@ img.mfp-img {
             padding-bottom: 40px;
         }
 
-        .mfp-content {
-            max-width: 960px;
-        }
-
         .mfp-inline {
             display: block;
             width: auto;
@@ -480,40 +476,26 @@ img.mfp-img {
             position: relative;
         }
     }
+}
 
-    @media screen and (min-width:712px) {
+@media screen and (min-width:712px) {
+    .mfp-wrap {
         .mfp-content {
             min-height: 0;
-            height: 530px;
-            max-height: 100% !important;
+            height: 100%;
+            max-width: 1200px !important;
+            max-height: 800px !important;
         }
         .mfp-content .mfp-iframe-scaler {
-            height: 530px;
+            height: 100%;
             max-height: 100% !important;
 
             iframe {
-                height: 530px;
+                height: 100%;
                 max-height: 100% !important;
             }
         }
     }
 }
 
-
-// Old IE | with hacks to make it work in the joomla backend
-.koowa_dialog_modal {
-    .mfp-content {
-        min-height: 0\9;
-        height: 530px\9;
-        max-height: 530px\9;
-    }
-    .mfp-content .mfp-iframe-scaler {
-        height: 530px\9;
-        max-height: 530px\9;
-
-        iframe {
-            height: 530px\9;
-            max-height: 530px\9;
-        }
-    }
-}
+@import "_modal-ie.css";
