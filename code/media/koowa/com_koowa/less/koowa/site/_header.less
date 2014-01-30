@@ -1,0 +1,36 @@
+// Header
+.koowa_header {
+    .clearfix();
+    margin: 0 0 @smallMargin;
+    line-height: 1.25em;
+    position: relative;
+    display: table;
+    word-break: break-all;
+}
+
+.koowa_header__link {
+    display: table-row;
+}
+
+.koowa_header__image {
+    height: @iconSize;
+    margin-top: -.275em;
+}
+
+.koowa_header__item {
+    display: table-cell;
+    vertical-align: middle;
+    min-width: @iconSize;
+}
+
+.koowa_header__item:first-child {
+    padding-right: .5em;
+}
+
+.koowa_header__item--image_container {
+    text-align: center;
+}
+
+.koowa_header--bottom_margin {
+    margin-bottom: @smallMargin;
+}
