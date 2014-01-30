@@ -25,6 +25,7 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
                 'translator'                    => 'com:koowa.translator',
                 'user'                          => 'com:koowa.user',
                 'exception.handler'             => 'com:koowa.exception.handler',
+                'date'                          => 'com:koowa.date',
             ),
         ));
 

@@ -30,4 +30,76 @@ interface KDateInterface extends KObjectHandlable
      * @return string Formatted date.
      */
     public function humanize($period = 'second');
+
+    /**
+     * Alters the timestamp
+     *
+     * @param string $modify A date/time string
+     * @return KDateInterface or FALSE on failure.
+     */
+    public function modify($modify);
+
+    /**
+     * Resets the current date of the DateTime object to a different date.
+     *
+     * @param integer $year     Year of the date.
+     * @param integer $month    Month of the date.
+     * @param integer $day      Day of the date.
+     * @return KDateInterface or FALSE on failure.
+     */
+    public function setDate($year , $month , $day);
+
+    /**
+     * Resets the current date of the DateTime object to a different date.
+     *
+     * @param integer $hour     Hour of the time.
+     * @param integer $minute   Minute of the time.
+     * @param integer $second  Second of the time.
+     * @return KDateInterface or FALSE on failure.
+     */
+    public function setTime($hour, $minute, $second = 0);
+
+    /**
+     * Return time zone relative to given DateTime
+     *
+     * @return DateTimeZone Return a DateTimeZone object on success or FALSE on failure.
+     */
+    public function getTimezone();
+
+    /**
+     * Sets the date and time based on an Unix timestamp.
+     *
+     * @param DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
+     * @return KDateInterface or FALSE on failure.
+     */
+    public function setTimezone(DateTimeZone $timezone);
+
+    /**
+     * Gets the Unix timestamp.
+     *
+     * @return integer
+     */
+    public function getTimestamp();
+
+    /**
+     * Returns the timezone offset.
+     *
+     * @return integer
+     */
+    public function getOffset();
+
+    /**
+     * Gets the translator object
+     *
+     * @return  KTranslatorInterface
+     */
+    public function getTranslator();
+
+    /**
+     * Sets the translator object
+     *
+     * @param  KTranslatorInterface $translator A translator object
+     * @return ComKoowaDate
+     */
+    public function setTranslator(KTranslatorInterface $translator);
 }

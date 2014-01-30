@@ -67,7 +67,7 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
                 {
                     $user = JFactory::getUser($entity->locked_by);
 
-                    $date    = new ComKoowaDate(array('date' => $entity->locked_on));
+                    $date    = $this->getObject('date', array('date' => $entity->locked_on));
                     $message = $this->getObject('translator')->translate(
                         'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date->humanize())
                     );

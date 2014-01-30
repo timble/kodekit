@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Date
  */
-class KDate extends DateTime implements KDateInterface
+class KDate extends KObject implements KDateInterface
 {
     /**
      * Translator object
@@ -23,25 +23,30 @@ class KDate extends DateTime implements KDateInterface
     private $__translator;
 
     /**
+     * The date object
+     *
+     * @var DateTime
+     */
+    protected $_date;
+
+    /**
      * Constructor.
      *
-     * @param   array|KObjectConfig An associative array of configuration settings or a ObjectConfig instance.
+     * @param  KObjectConfig $config A KObjectConfig object with configuration options
      */
-    public function __construct($config = array())
+    public function __construct($config)
     {
-        if (!$config instanceof KObjectConfig) {
-            $config = new KObjectConfig($config);
-        }
-
-        $this->_initialize($config);
+        parent::__construct($config);
 
         if (!($config->timezone instanceof DateTimeZone)) {
             $config->timezone = new DateTimeZone($config->timezone);
         }
 
+        //Set the translator
         $this->__translator = $config->translator;
 
-        parent::__construct($config->date, $config->timezone);
+        //Set the date
+        $this->_date = new DateTime($config->date, $config->timezone);
     }
 
     /**
@@ -70,7 +75,7 @@ class KDate extends DateTime implements KDateInterface
     public function format($format)
     {
         $format = preg_replace_callback('/(?<!\\\)[DlFM]/', array($this, '_translate'), $format);
-        return parent::format($format);
+        return $this->_date->format($format);
     }
 
     /**
@@ -85,19 +90,18 @@ class KDate extends DateTime implements KDateInterface
 
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
         $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
-        $now     = new DateTime();
+        $now     = $this->getObject('lib.date');
 
-        if($now != $this)
+        if($now != $this->_date)
         {
-            // TODO: Use DateTime::getTimeStamp().
-            if($now > $this)
+            if($now->getTimestamp() > $this->getTimestamp())
             {
-                $difference = $now->format('U') - $this->format('U');
+                $difference = $now->getTimestamp() - $this->getTimestamp();
                 $tense      = 'ago';
             }
             else
             {
-                $difference = $this->format('U') - $now->format('U');
+                $difference = $this->getTimestamp() - $now->getTimestamp();
                 $tense      = 'from now';
             }
 
@@ -140,6 +144,113 @@ class KDate extends DateTime implements KDateInterface
     }
 
     /**
+     * Alters the timestamp
+     *
+     * @param string $modify A date/time string
+     * @return KDate or FALSE on failure.
+     */
+    public function modify($modify)
+    {
+        if($this->_date->modify($modify) === false) {
+            return false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Resets the current time of the DateTime object to a different time.
+     *
+     * @param integer $year     Year of the date.
+     * @param integer $month    Month of the date.
+     * @param integer $day      Day of the date.
+     * @return KDate or FALSE on failure.
+     */
+    public function setDate($year, $month, $day)
+    {
+        if($this->_date->setDate($year, $month, $day) === false) {
+            return false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Resets the current date of the DateTime object to a different date.
+     *
+     * @param integer $hour     Hour of the time.
+     * @param integer $minute   Minute of the time.
+     * @param integer $second  Second of the time.
+     * @return KDate or FALSE on failure.
+     */
+    public function setTime($hour, $minute, $second = 0)
+    {
+        if($this->_date->setTime($hour, $minute, $second) === false) {
+            return false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the date and time based on an Unix timestamp.
+     *
+     * @param DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
+     * @return KDate or FALSE on failure.
+     */
+    public function setTimezone(DateTimeZone $timezone)
+    {
+        if($this->_date->setTimezone($timezone) === false) {
+            return false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Return time zone relative to given DateTime
+     *
+     * @return DateTimeZone Return a DateTimeZone object on success or FALSE on failure.
+     */
+
+    public function getTimezone()
+    {
+        return $this->_date->getTimezone();
+    }
+
+    /**
+     * Sets the date and time based on an Unix timestamp
+     *
+     * @param integer $timestamp Unix timestamp representing the date.
+     * @return KDate or FALSE on failure.
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->_date = new DateTime("@$timestamp");
+        return $this;
+    }
+
+    /**
+     * Gets the Unix timestamp.
+     *
+     * @return integer
+     */
+    public function getTimestamp()
+    {
+        return $this->_date->format('U');
+    }
+
+    /**
+     * Returns the timezone offset.
+     *
+     * @return integer
+     */
+    public function getOffset()
+    {
+        return $this->_date->getOffset();
+    }
+
+    /**
      * Gets the translator object
      *
      * @return  KTranslatorInterface
@@ -165,25 +276,12 @@ class KDate extends DateTime implements KDateInterface
      * Sets the translator object
      *
      * @param  KTranslatorInterface $translator A translator object
-     * @return ComKoowaDate
+     * @return KDate
      */
     public function setTranslator(KTranslatorInterface $translator)
     {
         $this->__translator = $translator;
         return $this;
-    }
-
-    /**
-     * Get a handle for this object
-     *
-     * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
-     * or for identifying an object
-     *
-     * @return string A string that is unique
-     */
-    public function getHandle()
-    {
-        return spl_object_hash($this);
     }
 
     /**
@@ -200,19 +298,19 @@ class KDate extends DateTime implements KDateInterface
         switch ($matches[0])
         {
             case 'D':
-                $replacement = $translator->translate(strtoupper(parent::format('D')));
+                $replacement = $translator->translate(strtoupper($this->_date->format('D')));
                 break;
 
             case 'l':
-                $replacement = $translator->translate(strtoupper(parent::format('l')));
+                $replacement = $translator->translate(strtoupper($this->_date->format('l')));
                 break;
 
             case 'F':
-                $replacement = $translator->translate(strtoupper(parent::format('F')));
+                $replacement = $translator->translate(strtoupper($this->_date->format('F')));
                 break;
 
             case 'M':
-                $replacement = $translator->translate(strtoupper(parent::format('F').'_SHORT'));
+                $replacement = $translator->translate(strtoupper($this->_date->format('F').'_SHORT'));
                 break;
         }
 

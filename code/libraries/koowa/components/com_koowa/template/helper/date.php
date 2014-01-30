@@ -27,8 +27,8 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'date'     => 'now',
-            'timezone'   => true,
-            'format'     => $this->translate('DATE_FORMAT_LC3')
+            'timezone' => true,
+            'format'   => $this->translate('DATE_FORMAT_LC3')
         ));
 
         return JHtml::_('date', $config->date, $config->format, $config->timezone);
@@ -57,7 +57,7 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
         {
             try
             {
-                $date = new ComKoowaDate(array('date' => $config->date, 'timezone' => 'UTC'));
+                $date = $this->getObject('date', array('date' => $config->date, 'timezone' => 'UTC'));
                 $date->setTimezone(new DateTimeZone($config->timezone));
 
                 $result = $date->humanize($config->period);
