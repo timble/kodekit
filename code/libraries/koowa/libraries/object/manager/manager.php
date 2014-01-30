@@ -62,7 +62,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         }
 
         //Set the class loader
-        $this->setClassLoader($config['class_loader']);
+        $this->setClassLoader($config->class_loader);
 
         //Create the object registry
         if($config->cache_enabled)
@@ -75,7 +75,13 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         //Create the object identifier
         $this->__object_identifier = $this->getIdentifier('object.manager');
 
-	    //Auto-load the koowa adapter
+        //Manually register the koowa loader
+        $config = new KObjectConfig(array(
+            'class_loader'      => $config->class_loader,
+            'object_manager'    => $this,
+            'object_identifier' => new KObjectIdentifier('koowa:object.locator.koowa')
+        ));
+
         $this->registerLocator(new KObjectLocatorKoowa($config));
 
         //Register self and set a 'manager' alias
@@ -107,7 +113,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	 */
 	final private function __clone()
     {
-        throw new Exception("An instance of KObjectManager cannot be cloned.");
+        trigger_error("The object manager cannot be cloned.", E_USER_WARNING);
     }
 
 	/**
@@ -197,7 +203,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 
         if(empty($class))
         {
-            $class = $this->_locators[$identifier->type]->locate($identifier, $fallback);
+            $class = $this->_locators[$identifier->getType()]->locate($identifier, $fallback);
             $identifier->setClass($class);
         }
 
@@ -297,10 +303,8 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      */
     public function getConfig($identifier)
     {
-        $objIdentifier = $this->getIdentifier($identifier);
-        $strIdentifier = (string) $objIdentifier;
-
-        return isset($this->_configs[$strIdentifier])  ? $this->_configs[$strIdentifier] : array();
+        $config = $this->getIdentifier($identifier)->getConfig();
+        return $config;
     }
 
     /**
@@ -372,6 +376,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     {
         if(!$identifier instanceof KObjectLocatorInterface)
         {
+            $config['class_loader'] = $this->getClassLoader();
             $locator = $this->getObject($identifier, $config);
 
             if(!$locator instanceof KObjectLocatorInterface)
@@ -617,8 +622,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     {
         $result = null;
 
-        //Load the class manually using the basepath
-        if($this->getClassLoader()->load($identifier->class, $identifier->domain))
+        if($identifier->class && class_exists($identifier->class))
         {
             if (!array_key_exists('KObjectInterface', class_implements($identifier->class, false)))
             {

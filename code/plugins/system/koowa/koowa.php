@@ -125,7 +125,7 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            $manager->registerLocator($manager->getObject('koowa:object.locator.component'));
+            $manager->registerLocator('koowa:object.locator.component');
 
             //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(
@@ -136,7 +136,7 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            $manager->registerLocator($manager->getObject('com:koowa.object.locator.module'));
+            $manager->registerLocator('com:koowa.object.locator.module');
 
             //Plugin Locator
             $loader->registerLocator(new ComKoowaClassLocatorPlugin(array(
@@ -146,7 +146,7 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            $manager->registerLocator($manager->getObject('com:koowa.object.locator.plugin'));
+            $manager->registerLocator('com:koowa.object.locator.plugin');
 
             /**
              * Component Bootstrapping
