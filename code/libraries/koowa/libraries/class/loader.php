@@ -44,6 +44,13 @@ class KClassLoader implements KClassLoaderInterface
     protected $_basepaths = array();
 
     /**
+     * The active basepath name
+     *
+     * @var  string
+     */
+    protected $_basepath = null;
+
+    /**
      * Constructor
      *
      * Prevent creating instances of this class by making the constructor private
@@ -129,17 +136,16 @@ class KClassLoader implements KClassLoaderInterface
      * Load a class based on a class name
      *
      * @param string  $class    The class name
-     *  @param string $basepath The basepath name
      * @return boolean  Returns TRUE on success throws exception on failure
      */
-    public function load($class, $basepath = null)
+    public function load($class)
     {
         $result = true;
 
         if(!$this->isDeclared($class))
         {
             //Get the path
-            $path = $this->getPath( $class, $basepath );
+            $path = $this->getPath( $class, $this->_basepath );
 
             if ($path !== false)
             {
@@ -304,12 +310,24 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Get a basepath by name
      *
-     * @param string $name The name of the application
-     * @return string The path of the application
+     * @param string $name The name of the basepath
+     * @return string The path
      */
     public function getBasepath($name)
     {
         return isset($this->_basepaths[$name]) ? $this->_basepaths[$name] : null;
+    }
+
+    /**
+     * Set the active basepath by name
+     *
+     * @param string $name The name base path
+     * @return KClassLoader
+     */
+    public function setBasepath($name)
+    {
+        $this->_basepath = $name;
+        return $this;
     }
 
     /**

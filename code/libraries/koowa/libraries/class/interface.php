@@ -115,6 +115,14 @@ interface KClassLoaderInterface
     public function getBasepath($name);
 
     /**
+     * Set the active basepath by name
+     *
+     * @param string $name The name base path
+     * @return KClassLoader
+     */
+    public function setBasepath($name);
+
+    /**
      * Get a list of basepaths
      *
      * @return array
