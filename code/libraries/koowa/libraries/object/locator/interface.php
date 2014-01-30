@@ -16,20 +16,6 @@
 interface KObjectLocatorInterface
 {
     /**
-     * Get the locator type
-     *
-     * @return string
-     */
-    public function getType();
-
-    /**
-     * Get the locator fallbacks
-     *
-     * @return array
-     */
-    public function getFallbacks();
-
-    /**
      * Returns a fully qualified class name for a given identifier.
      *
      * @param KObjectIdentifier $identifier An identifier object
@@ -37,4 +23,43 @@ interface KObjectLocatorInterface
      * @return string|false  Return the class name on success, returns FALSE on failure
      */
     public function locate(KObjectIdentifier $identifier, $fallback = true);
+
+    /**
+     * Find a class
+     *
+     * @param array  $info      The class information
+     * @param string $basepath  The basepath name
+     * @param bool   $fallback  If TRUE use the fallback sequence
+     * @return bool|mixed
+     */
+    public function find(array $info, $basepath = null, $fallback = true);
+
+    /**
+     * Get the locator type
+     *
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * Get the locator fallback sequence
+     *
+     * @return array
+     */
+    public function getSequence();
+
+    /**
+     * Get the class loader
+     *
+     * @return KClassLoaderInterface
+     */
+    public function getClassLoader();
+
+    /**
+     * Set the class loader
+     *
+     * @param KClassLoaderInterface $loader
+     * @return KObjectManagerInterface
+     */
+    public function setClassLoader(KClassLoaderInterface $loader);
 }

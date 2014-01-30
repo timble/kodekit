@@ -16,6 +16,13 @@
 abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
 {
     /**
+     * The class loader
+     *
+    * @var KClassLoader
+    */
+    private $__loader;
+
+    /**
      * The locator type
      *
      * @var string
@@ -27,7 +34,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      *
      * @var array
      */
-    protected $_fallbacks = array();
+    protected $_sequence = array();
 
     /**
      * Constructor.
@@ -38,7 +45,10 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     {
         parent::__construct($config);
 
-        $this->_fallbacks = KObjectConfig::unbox($config->fallbacks);
+        $this->_sequence = KObjectConfig::unbox($config->sequence);
+
+        //Set the class loader
+        $this->setClassLoader($config->class_loader);
     }
 
     /**
@@ -52,8 +62,75 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'fallbacks' => array(),
+            'sequence'      => array(),
+            'class_loader'  => null,
         ));
+
+        parent::_initialize($config);
+    }
+
+    /**
+     * Returns a fully qualified class name for a given identifier.
+     *
+     * @param KObjectIdentifier $identifier An identifier object
+     * @param bool  $fallback   Use the fallbacks to locate the identifier
+     * @return string|false  Return the class name on success, returns FALSE on failure
+     */
+    public function locate(KObjectIdentifier $identifier, $fallback = true)
+    {
+        $package = ucfirst($identifier->package);
+        $path    = KStringInflector::camelize(implode('_', $identifier->path));
+        $file    = ucfirst($identifier->name);
+        $class   = $path.$file;
+
+        $info = array(
+            'class'   => $class,
+            'package' => $package,
+            'path'    => $path,
+            'file'    => $file
+        );
+
+        return $this->find($info, $identifier->domain, $fallback);
+    }
+
+    /**
+     * Find a class
+     *
+     * @param array  $info      The class information
+     * @param string $basepath  The basepath name
+     * @param bool   $fallback  If TRUE use the fallback sequence
+     * @return bool|mixed
+     */
+    public function find(array $info, $basepath = null, $fallback = true)
+    {
+        //Set the basepath
+        if(!empty($basepath)) {
+            $this->getClassLoader()->setBasepath($basepath);
+        }
+
+        //Find the class
+        $package = $info['package'];
+        $path    = $info['path'];
+        $file    = $info['file'];
+        $class   = $info['class'];
+
+        $result = false;
+        foreach($this->_sequence as $fallback)
+        {
+            $result = str_replace(
+                array('<Package>', '<Path>', '<File>', '<Class>'),
+                array($package   , $path   , $file   , $class),
+                $fallback
+            );
+
+            if(!class_exists($result) && $fallback) {
+                $result = false;
+            } else {
+                break;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -67,12 +144,34 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     }
 
     /**
-     * Get the locator fallbacks
+     * Get the locator fallback sequence
      *
      * @return array
      */
-    public function getFallbacks()
+    public function getSequence()
     {
-        return $this->_fallbacks;
+        return $this->_sequence;
+    }
+
+    /**
+     * Get the class loader
+     *
+     * @return KClassLoaderInterface
+     */
+    public function getClassLoader()
+    {
+        return $this->__loader;
+    }
+
+    /**
+     * Set the class loader
+     *
+     * @param  KClassLoaderInterface $loader
+     * @return KObjectManagerInterface
+     */
+    public function setClassLoader(KClassLoaderInterface $loader)
+    {
+        $this->__loader = $loader;
+        return $this;
     }
 }

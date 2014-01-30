@@ -25,20 +25,17 @@ class ComKoowaObjectLocatorPlugin extends KObjectLocatorAbstract
     /**
      * Returns a fully qualified class name for a given identifier.
      *
-     * @param KObjectIdentifier $identifier An identifier object
-     * @param bool  $fallback   Use the fallbacks to locate the identifier
-     * @return string|false  Return the class name on success, returns FALSE on failure
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options.
+     * @return  void
      */
-    public function locate(KObjectIdentifier $identifier, $fallback = true)
+    protected function _initialize(KObjectConfig $config)
     {
-	    $classpath = KStringInflector::camelize(implode('_', $identifier->path));
-		$classname = 'Plg'.ucfirst($identifier->package).$classpath.ucfirst($identifier->name);
+        $config->append(array(
+            'sequence' => array(
+                'Plg<Package><Class>',
+            )
+        ));
 
-		//Don't allow the auto-loader to load plugin classes if they don't exists yet
-		if (!class_exists( $classname)) {
-			$classname = false;
-		}
-
-		return $classname;
-	}
+        parent::_initialize($config);
+    }
 }

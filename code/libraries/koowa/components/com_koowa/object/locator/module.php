@@ -33,13 +33,14 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'fallbacks' => array(
-                'Mod<Package><Path><Name>',
-                'ModKoowa<Path><Name>',
+            'sequence' => array(
+                'Mod<Package><Class>',
+                'Mod<Package><Path><File>',
+                'ModKoowa<Path><File>',
                 'ModKoowa<Path>Default',
-                'ComKoowa<Path><Name>',
+                'ComKoowa<Path><File>',
                 'ComKoowa<Path>Default',
-                'K<Path><Name>',
+                'K<Path><File>',
                 'K<Path>Default'
             )
         ));
@@ -59,7 +60,7 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
         $class   = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
 
         $package = ucfirst($identifier->package);
-        $name    = ucfirst($identifier->name);
+        $file    = ucfirst($identifier->name);
 
         //Make an exception for 'view' and 'module' types
         $path  = $identifier->path;
@@ -74,35 +75,17 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
         //Allow locating default classes if $path is empty.
         if(empty($path))
         {
-            $path = $name;
-            $name = '';
+            $path = $file;
+            $file = '';
         }
 
-        //Check if the class exists
-        $result = false;
-        if (!$this->getObject('manager')->getClassLoader()->load('Mod'.$package.$class, $identifier->domain))
-        {
-            //Use the fallbacks
-            if($fallback)
-            {
-                foreach($this->_fallbacks as $fallback)
-                {
-                    $result = str_replace(
-                        array('<Package>', '<Path>', '<Name>', '<Class>'),
-                        array($package   , $path   , $name   , $class),
-                        $fallback
-                    );
+        $info = array(
+            'class'   => $class,
+            'package' => $package,
+            'path'    => $path,
+            'file'    => $file
+        );
 
-                    if(!class_exists($result)) {
-                        $result = false;
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-        else $result = 'Mod'.$package.$class;
-
-        return $result;
+        return $this->find($info, $identifier->domain, $fallback);
     }
 }
