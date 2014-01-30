@@ -108,7 +108,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_data = $config->data;
 
         //Set the filter queue
-        $this->_queue = $this->getObject('koowa:object.queue');
+        $this->_queue = $this->getObject('lib:object.queue');
 
         //Register the loaders
         $this->_locators = KObjectConfig::unbox($config->locators);
@@ -146,7 +146,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             'data'       => array(),
             'view'       => null,
             'filters'    => array(),
-            'locators' => array('com' => 'koowa:template.locator.component')
+            'locators' => array('com' => 'lib:template.locator.component')
         ));
 
         parent::_initialize($config);

@@ -199,7 +199,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	public function getDatabase()
 	{
 	    if(!isset($this->_database)) {
-	        $query = $this->getObject('koowa:database.query.select')
+	        $query = $this->getObject('lib:database.query.select')
 	        	->columns('DATABASE()');
 
 	        $this->_database = $this->select($query, KDatabase::FETCH_FIELD);
@@ -434,7 +434,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	protected function _fetchTableInfo($table)
 	{
 		$return = null;
-		$query  = $this->getObject('koowa:database.query.show')
+		$query  = $this->getObject('lib:database.query.show')
 			->show('TABLE STATUS')
 			->like(':like')
 			->bind(array('like' => $table));
@@ -455,7 +455,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	protected function _fetchTableColumns($table)
 	{
 		$return = array();
-		$query  = $this->getObject('koowa:database.query.show')
+		$query  = $this->getObject('lib:database.query.show')
 			->show('FULL COLUMNS')
 			->from($table);
 	
@@ -483,7 +483,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     protected function _fetchTableIndexes($table)
     {
         $return = array();
-        $query  = $this->getObject('koowa:database.query.show')
+        $query  = $this->getObject('lib:database.query.show')
             ->show('INDEX')
             ->from($table);
 
@@ -505,7 +505,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 */
 	protected function _parseTableInfo($info)
 	{
-		$table              = $this->getObject('koowa:database.schema.table');
+		$table              = $this->getObject('lib:database.schema.table');
 		$table->name        = $info->Name;
 		$table->engine      = $info->Engine;
 		$table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
@@ -528,7 +528,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     {
         list($type, $length, $scope) = $this->_parseColumnType($info->Type);
 
-        $column = $this->getObject('koowa:database.schema.column');
+        $column = $this->getObject('lib:database.schema.column');
         $column->name     = $info->Field;
         $column->type     = $type;
         $column->length   = $length ? $length : null;

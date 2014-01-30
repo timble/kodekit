@@ -71,7 +71,7 @@ class KFilterSlug extends KFilterAbstract implements KFilterTraversable
 	 */
 	public function validate($value)
 	{
-		return $this->getObject('koowa:filter.cmd')->validate($value);
+		return $this->getObject('lib:filter.cmd')->validate($value);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class KFilterSlug extends KFilterAbstract implements KFilterTraversable
 		$value = str_replace($this->_separator, ' ', $value);
 
 		//convert to ascii characters
-		$value = $this->getObject('koowa:filter.ascii')->sanitize($value);
+		$value = $this->getObject('lib:filter.ascii')->sanitize($value);
 
 		//lowercase and trim
 		$value = trim(strtolower($value));

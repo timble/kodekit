@@ -86,10 +86,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         }
 
         // Mixin the behavior (and command) interface
-        $this->mixin('koowa:behavior.mixin', $config);
+        $this->mixin('lib:behavior.mixin', $config);
 
         // Mixin the event interface
-        $this->mixin('koowa:event.mixin', $config);
+        $this->mixin('lib:event.mixin', $config);
     }
 
     /**
@@ -103,12 +103,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => 'koowa:command.chain',
-            'command_handlers'  => array('koowa:command.handler.event'),
+            'command_chain'     => 'lib:command.chain',
+            'command_handlers'  => array('lib:command.handler.event'),
             'dispatched'		=> false,
-            'request'           => 'koowa:controller.request',
-            'response'          => 'koowa:controller.response',
-            'user'              => 'koowa:user',
+            'request'           => 'lib:controller.request',
+            'response'          => 'lib:controller.response',
+            'user'              => 'lib:user',
             'behaviors'         => array('permissible'),
             'query'             => array()
         ));

@@ -52,7 +52,7 @@ class KViewVcard extends KViewAbstract
     protected function _actionRender(KViewContext $context)
     {
         //Set the filename
-        $filename = $this->getObject('koowa:filter.filename')->sanitize($this->_properties['FN']);
+        $filename = $this->getObject('lib:filter.filename')->sanitize($this->_properties['FN']);
         $this->filename = $filename.'.vcf';
 
         //Render the vcard

@@ -420,7 +420,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['overlay'] = true;
         }
 
-        $url = $this->getObject('koowa:http.url', array('url' => $config->url));
+        $url = $this->getObject('lib:http.url', array('url' => $config->url));
 
         if(!isset($url->query['format'])) {
             $url->query['format'] = 'overlay';

@@ -24,7 +24,7 @@
  *     // Create a url object;
  *
  *     $url = 'http://anonymous:guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor'
- *     $url = KObjectManager::getInstance()->get('koowa:http.url', array('url' => $url) );
+ *     $url = KObjectManager::getInstance()->get('lib:http.url', array('url' => $url) );
  *
  *     // the $url properties are ...
  *     //

@@ -82,7 +82,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => 'koowa:command.chain',
+            'command_chain'     => 'lib:command.chain',
             'command_handlers'  => array(),
             'priority'          => self::PRIORITY_NORMAL,
         ));

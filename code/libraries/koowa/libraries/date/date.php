@@ -57,7 +57,7 @@ class KDate extends DateTime implements KDateInterface
         $config->append(array(
             'date'       => 'now',
             'timezone'   => 'UTC',
-            'translator' => 'koowa:translator'
+            'translator' => 'lib:translator'
         ));
     }
 

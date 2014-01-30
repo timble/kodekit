@@ -186,7 +186,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      */
     public function setHeaders($headers)
     {
-        $this->_headers = $this->getObject('koowa:http.response.headers', array('headers' => $headers));
+        $this->_headers = $this->getObject('lib:http.response.headers', array('headers' => $headers));
         return $this;
     }
 

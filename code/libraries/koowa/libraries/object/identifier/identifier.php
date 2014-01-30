@@ -106,7 +106,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             }
 
             // Set the type
-            $this->_type = isset($parts['scheme']) ? $parts['scheme'] : 'koowa';
+            $this->_type = isset($parts['scheme']) ? $parts['scheme'] : 'lib';
 
             //Set the domain
             if(isset($parts['host'])) {

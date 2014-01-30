@@ -77,10 +77,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         $this->setModel($config->model);
 
         // Mixin the behavior (and command) interface
-        $this->mixin('koowa:behavior.mixin', $config);
+        $this->mixin('lib:behavior.mixin', $config);
 
         // Mixin the event interface
-        $this->mixin('koowa:event.mixin', $config);
+        $this->mixin('lib:event.mixin', $config);
 	}
 
     /**
@@ -95,13 +95,13 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     {
         $config->append(array(
             'data'              => array(),
-            'command_chain'     => 'koowa:command.chain',
-            'command_handlers'  => array('koowa:command.handler.event'),
-            'model'      => 'koowa:model.empty',
+            'command_chain'     => 'lib:command.chain',
+            'command_handlers'  => array('lib:command.handler.event'),
+            'model'      => 'lib:model.empty',
             'translator' => null,
 	    	'content'	 => '',
     		'mimetype'	 => '',
-            'url'        =>  $this->getObject('koowa:http.url')
+            'url'        =>  $this->getObject('lib:http.url')
 	  	));
 
         parent::_initialize($config);

@@ -110,7 +110,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         {
             $token = $context->user->getSession()->getToken();
 
-            $context->response->headers->addCookie($this->getObject('koowa:http.cookie', array(
+            $context->response->headers->addCookie($this->getObject('lib:http.cookie', array(
                 'name'   => '_token',
                 'value'  => $token,
                 'path'   => $context->request->getBaseUrl()->getPath() ?: '/'

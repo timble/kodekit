@@ -67,7 +67,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      */
     public function getReferrer(KControllerContextInterface $context)
     {
-        $referrer = $this->getObject('koowa:http.url',
+        $referrer = $this->getObject('lib:http.url',
             array('url' => $context->request->cookies->get('referrer', 'url'))
         );
 
@@ -99,7 +99,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             }
 
             //Add the referrer cookie
-            $cookie = $this->getObject('koowa:http.cookie', array(
+            $cookie = $this->getObject('lib:http.cookie', array(
                 'name'   => 'referrer',
                 'value'  => $referrer,
                 'path'   => $this->_cookie_path
@@ -117,7 +117,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      */
     protected function _lockReferrer(KControllerContextInterface $context)
     {
-        $cookie = $this->getObject('koowa:http.cookie', array(
+        $cookie = $this->getObject('lib:http.cookie', array(
             'name'   => 'referrer_locked',
             'value'  => true,
             'path'   => $this->_cookie_path

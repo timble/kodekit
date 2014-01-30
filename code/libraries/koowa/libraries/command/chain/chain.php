@@ -64,8 +64,8 @@ class KCommandChain extends KObject implements KCommandChainInterface
         //Set the chain break condition
         $this->_break_condition = $config->break_condition;
 
-        $this->__stack = $this->getObject('koowa:object.stack');
-        $this->__queue = $this->getObject('koowa:object.queue');
+        $this->__stack = $this->getObject('lib:object.stack');
+        $this->__queue = $this->getObject('lib:object.queue');
     }
 
     /**

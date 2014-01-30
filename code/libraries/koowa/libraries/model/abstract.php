@@ -67,7 +67,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'state' => 'koowa:model.state',
+            'state' => 'lib:model.state',
         ));
 
         parent::_initialize($config);

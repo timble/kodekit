@@ -52,7 +52,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'adapter'    => 'koowa:database.adapter.mysqli',
+            'adapter'    => 'lib:database.adapter.mysqli',
             'parameters' => array()
         ));
     }
@@ -80,7 +80,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      */
     public function setParameters(array $parameters)
     {
-        $this->_parameters = $this->getObject('koowa:database.query.parameters', array('parameters' => $parameters));
+        $this->_parameters = $this->getObject('lib:database.query.parameters', array('parameters' => $parameters));
         return $this;
     }
 

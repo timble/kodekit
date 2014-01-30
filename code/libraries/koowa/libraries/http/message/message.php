@@ -91,7 +91,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      */
     public function setHeaders($headers)
     {
-        $this->_headers = $this->getObject('koowa:http.message.headers', array('headers' => $headers));
+        $this->_headers = $this->getObject('lib:http.message.headers', array('headers' => $headers));
         return $this;
     }
 

@@ -20,8 +20,8 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
         $config->append(array(
             'priority' => self::PRIORITY_LOW,
             'aliases'  => array(
-                'request'                       => 'koowa:dispatcher.request',
-                'koowa:database.adapter.mysqli' => 'com:koowa.database.adapter.mysqli',
+                'request'                       => 'lib:dispatcher.request',
+                'lib:database.adapter.mysqli'   => 'com:koowa.database.adapter.mysqli',
                 'translator'                    => 'com:koowa.translator',
                 'user'                          => 'com:koowa.user',
                 'exception.handler'             => 'com:koowa.exception.handler',
@@ -33,7 +33,7 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
 
     public function bootstrap()
     {
-        $chain = $this->getObject('koowa:object.bootstrapper.chain');
+        $chain = $this->getObject('lib:object.bootstrapper.chain');
 
         //Framework components
         $directory = JPATH_LIBRARIES.'/koowa';

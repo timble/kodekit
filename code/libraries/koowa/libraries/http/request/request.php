@@ -87,7 +87,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
      */
     public function setHeaders($headers)
     {
-        $this->_headers = $this->getObject('koowa:http.request.headers', array('headers' => $headers));
+        $this->_headers = $this->getObject('lib:http.request.headers', array('headers' => $headers));
         return $this;
     }
 
@@ -128,7 +128,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
      */
     public function setUrl($url)
     {
-        $this->_url = $this->getObject('koowa:http.url', array('url' => $url));
+        $this->_url = $this->getObject('lib:http.url', array('url' => $url));
         return $this;
     }
 

@@ -13,14 +13,14 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObjectLocatorKoowa extends KObjectLocatorAbstract
+class KObjectLocatorLibrary extends KObjectLocatorAbstract
 {
     /**
      * The type
      *
      * @var string
      */
-    protected $_type = 'koowa';
+    protected $_type = 'lib';
 
     /**
      * Initializes the options for the object

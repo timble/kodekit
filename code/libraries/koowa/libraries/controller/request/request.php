@@ -71,7 +71,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      */
     public function setQuery($parameters)
     {
-        $this->_query = $this->getObject('koowa:http.message.parameters', array('parameters' => $parameters));
+        $this->_query = $this->getObject('lib:http.message.parameters', array('parameters' => $parameters));
         return $this;
     }
 
@@ -93,7 +93,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      */
     public function setData($parameters)
     {
-        $this->_data = $this->getObject('koowa:http.message.parameters', array('parameters' => $parameters));
+        $this->_data = $this->getObject('lib:http.message.parameters', array('parameters' => $parameters));
         return $this;
     }
 

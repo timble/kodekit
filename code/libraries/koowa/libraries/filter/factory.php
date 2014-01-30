@@ -33,7 +33,7 @@ class KFilterFactory extends KObject implements KObjectMultiton
         //Create a filter chain
         if(count($filters) > 1)
         {
-            $filter = $this->getObject('koowa:filter.chain');
+            $filter = $this->getObject('lib:filter.chain');
 
             foreach($filters as $name)
             {
@@ -60,7 +60,7 @@ class KFilterFactory extends KObject implements KObjectMultiton
     protected function _createFilter($filter, $config)
     {
         if(is_string($filter) && strpos($filter, '.') === false ) {
-            $filter = 'koowa:filter.'.trim($filter);
+            $filter = 'lib:filter.'.trim($filter);
         }
 
         $filter = $this->getObject($filter, $config);

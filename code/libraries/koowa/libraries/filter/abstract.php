@@ -77,7 +77,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
         $instance = new $class($config);
 
         if($instance instanceof KFilterTraversable) {
-            $instance = $instance->decorate('koowa:filter.iterator');
+            $instance = $instance->decorate('lib:filter.iterator');
         }
 
         return $instance;

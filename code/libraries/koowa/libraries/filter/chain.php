@@ -32,7 +32,7 @@ class KFilterChain extends KFilterAbstract
         parent::__construct($config);
 
         //Create the queue
-        $this->_queue = $this->getObject('koowa:object.queue');
+        $this->_queue = $this->getObject('lib:object.queue');
     }
 
     /**

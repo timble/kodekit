@@ -28,7 +28,7 @@ abstract class ComKoowaControllerModel extends KControllerModel
         $this->getObject('translator')->loadTranslations($this->getIdentifier());
 
         // Mixin the toolbar interface
-        $this->mixin('koowa:controller.toolbar.mixin');
+        $this->mixin('lib:controller.toolbar.mixin');
 
         //Attach the toolbars
         $this->addCommandCallback('before.render', '_addToolbars', array('toolbars' => $config->toolbars));

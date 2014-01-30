@@ -140,7 +140,7 @@ class KUserSessionHandlerDatabase extends KUserSessionHandlerAbstract
 
         if ($this->getTable()->isConnected())
         {
-            $query = $this->getObject('koowa:database.query.select')
+            $query = $this->getObject('lib:database.query.select')
                 ->where('time < :time')
                 ->bind(array('time' => (int)(time() - $maxlifetime)));
 

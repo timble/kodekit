@@ -125,7 +125,7 @@ class PlgSystemKoowa extends JPlugin
                 )
             )));
 
-            $manager->registerLocator('koowa:object.locator.component');
+            $manager->registerLocator('lib:object.locator.component');
 
             //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(

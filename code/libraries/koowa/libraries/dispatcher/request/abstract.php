@@ -310,7 +310,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      */
     public function setCookies($parameters)
     {
-        $this->_cookies = $this->getObject('koowa:http.message.parameters', array('parameters' => $parameters));
+        $this->_cookies = $this->getObject('lib:http.message.parameters', array('parameters' => $parameters));
     }
 
     /**
@@ -331,7 +331,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      */
     public function setFiles($parameters)
     {
-        $this->_files = $this->getObject('koowa:http.message.parameters', array('parameters' => $parameters));
+        $this->_files = $this->getObject('lib:http.message.parameters', array('parameters' => $parameters));
     }
 
     /**
@@ -554,10 +554,10 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             }
 
             // Sanitize the url since we can't trust the server var
-            $url = $this->getObject('koowa:filter.url')->sanitize($url);
+            $url = $this->getObject('lib:filter.url')->sanitize($url);
 
             // Create the URI object
-            $this->_url = $this->getObject('koowa:http.url', array('url' => $url));
+            $this->_url = $this->getObject('lib:http.url', array('url' => $url));
 
             //Set the url port
             $port = $this->getPort();
@@ -593,13 +593,13 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     {
         if(!isset($this->_referrer))
         {
-            $referrer = $this->getObject('koowa:filter.url')->sanitize($this->_headers->get('Referer'));
-            $this->_referrer = $this->getObject('koowa:http.url', array('url' => $referrer));
+            $referrer = $this->getObject('lib:filter.url')->sanitize($this->_headers->get('Referer'));
+            $this->_referrer = $this->getObject('lib:http.url', array('url' => $referrer));
         }
 
         if($isInternal)
         {
-            if(!$this->getObject('koowa:filter.internalurl')->validate($this->_referrer->toString(KHttpUrl::SCHEME | KHttpUrl::HOST))) {
+            if(!$this->getObject('lib:filter.internalurl')->validate($this->_referrer->toString(KHttpUrl::SCHEME | KHttpUrl::HOST))) {
                 return null;
             }
         }
@@ -654,7 +654,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     {
         if(!$this->_base_url instanceof KHttpUrl)
         {
-            $base = $this->getObject('koowa:http.url', array('url' => $this->getUrl()->toString(KHttpUrl::AUTHORITY)));
+            $base = $this->getObject('lib:http.url', array('url' => $this->getUrl()->toString(KHttpUrl::AUTHORITY)));
             $base->setUrl($this->getBasePath());
 
             $this->_base_url = $base;

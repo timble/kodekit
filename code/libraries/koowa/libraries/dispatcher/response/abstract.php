@@ -46,7 +46,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         parent::__construct($config);
 
         //Create the transport queue
-        $this->_queue = $this->getObject('koowa:object.queue');
+        $this->_queue = $this->getObject('lib:object.queue');
 
         //Set the response messages
         $this->_messages = $this->getUser()->getSession()->getContainer('message')->all();
@@ -136,7 +136,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         $stream = $this->getStream();
 
         if(!$stream->isRegistered('buffer')) {
-            $stream->registerWrapper('koowa:filesystem.stream.wrapper.buffer');
+            $stream->registerWrapper('lib:filesystem.stream.wrapper.buffer');
         }
 
         $stream->open('buffer://memory', 'w+b');
@@ -210,7 +210,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     public function getStream()
     {
         if(!isset($this->_stream)) {
-            $this->_stream  = $this->getObject('koowa:filesystem.stream');
+            $this->_stream  = $this->getObject('lib:filesystem.stream');
         }
 
         return $this->_stream;

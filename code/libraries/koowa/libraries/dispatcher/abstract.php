@@ -47,8 +47,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     {
         $config->append(array(
             'controller' => $this->getIdentifier()->package,
-            'request'    => 'koowa:dispatcher.request',
-            'response'   => 'koowa:dispatcher.response',
+            'request'    => 'lib:dispatcher.request',
+            'response'   => 'lib:dispatcher.response',
         ));
 
         parent::_initialize($config);

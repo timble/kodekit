@@ -159,7 +159,7 @@ class KModelTable extends KModelAbstract
 
             if($state->isUnique())
             {
-                $query = $this->getObject('koowa:database.query.select');
+                $query = $this->getObject('lib:database.query.select');
 
                 $this->_buildQueryColumns($query);
                 $this->_buildQueryTable($query);
@@ -191,7 +191,7 @@ class KModelTable extends KModelAbstract
 
             if(!$state->isEmpty())
             {
-                $query = $this->getObject('koowa:database.query.select');
+                $query = $this->getObject('lib:database.query.select');
 
                 $this->_buildQueryColumns($query);
                 $this->_buildQueryTable($query);
@@ -222,7 +222,7 @@ class KModelTable extends KModelAbstract
         {
             $state = $this->getState();
 
-            $query = $this->getObject('koowa:database.query.select');
+            $query = $this->getObject('lib:database.query.select');
             $query->columns('COUNT(*)');
 
             $this->_buildQueryTable($query);

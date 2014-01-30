@@ -49,7 +49,7 @@ class KUser extends KUserAbstract implements KObjectInstantiable, KObjectSinglet
      */
     public function getSession()
     {
-        return $this->getObject('koowa:user.session');
+        return $this->getObject('lib:user.session');
     }
 
     /**

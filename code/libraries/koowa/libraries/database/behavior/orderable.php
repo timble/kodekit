@@ -78,7 +78,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 			$new = $new <= 0 ? 1 : $new;
 
 			$table = $this->getTable();
-			$query = $this->getObject('koowa:database.query.update')
+			$query = $this->getObject('lib:database.query.update')
 			    ->table($table->getBase());
 
 			//Build the where query
@@ -126,7 +126,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $db     = $table->getDatabase();
         $db->execute('SET @order = '.$base);
         
-        $query = $this->getObject('koowa:database.query.update')
+        $query = $this->getObject('lib:database.query.update')
             ->table($table->getBase())
             ->values('ordering = (@order := @order + 1)')
             ->order('ordering', 'ASC');
@@ -153,7 +153,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $table  = $this->getTable();
         $db     = $table->getDatabase();
         
-        $query = $this->getObject('koowa:database.query.select')
+        $query = $this->getObject('lib:database.query.select')
             ->columns('MAX(ordering)')
             ->table($table->getName());
 
