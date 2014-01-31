@@ -184,20 +184,31 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
     /**
      * Get the methods that are available for mixin based
      *
-     * This function also dynamically adds a function of format is[Behavior] to allow client code to check if the
-     * behavior is callable.
+     * This function also dynamically adds a lamda function with function name 'is[Behavior]' to allow client code to
+     * check if the behavior is supported.
      *
-     * @param  KObjectMixable $mixer    The mixer requesting the mixable methods.
-     * @param array          $exclude   A list of methods to exclude
+     * Function will check if the behavior is supported by calling {@link isSupported()}. Is the behavior is not
+     * supported on the mixer no mixable methods will be returned, only an 'is[Behavior]' method will be added which
+     * return FALSE when called.
+     *
+     * @param  array           $exclude     An array of public methods to be exclude
      * @return array An array of methods
      */
-    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
+    public function getMixableMethods($exclude = array())
     {
-        $exclude += array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle', 'getName',
-            'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback', 'removeCommandCallback');
+        $methods = array();
+        if($this->isSupported())
+        {
+            $exclude += array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle',
+                'getName', 'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback',
+                'removeCommandCallback');
 
-        $methods = parent::getMixableMethods($mixer, $exclude);
-        $methods['is'.ucfirst($this->getIdentifier()->name)] = 'is'.ucfirst($this->getIdentifier()->name);
+            $methods = parent::getMixableMethods($exclude);
+        }
+
+        if(!isset($exclude['is' . ucfirst($this->getIdentifier()->name)])) {
+            $methods['is' . ucfirst($this->getIdentifier()->name)] = $this->isSupported();
+        }
 
         return $methods;
     }
@@ -234,4 +245,15 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
 
         return $result;
     }
+
+    /**
+     * Check if the behavior is supported
+     *
+     * @return  boolean  True on success, false otherwise
+     */
+    public function isSupported()
+    {
+        return true;
+    }
+
 }

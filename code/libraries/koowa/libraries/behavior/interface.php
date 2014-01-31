@@ -21,4 +21,11 @@ interface KBehaviorInterface extends KCommandHandlerInterface, KObjectInterface
      * @return string
      */
     public function getName();
+
+    /**
+     * Check if the behavior is supported
+     *
+     * @return  boolean  True on success, false otherwise
+     */
+    public function isSupported();
 }
