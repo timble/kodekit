@@ -132,13 +132,16 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
             );
         }
 
+        //Notify the mixin
+        $mixin->onMixin($this);
+
         //Set the mixed methods
-        $mixed_methods = $mixin->getMixableMethods($this);
+        $mixed_methods = $mixin->getMixableMethods();
 
         if(!empty($mixed_methods))
         {
             foreach($mixed_methods as $name => $method) {
-                $this->_mixed_methods[$name] = $mixin;
+                $this->_mixed_methods[$name] = $method;
             }
 
             //Set the object methods, native methods have precedence over mixed methods
@@ -147,9 +150,6 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 
             $this->__methods = array_merge($mixed_methods, $this->getMethods());
         }
-
-        //Notify the mixin
-        $mixin->onMixin($this);
 
         return $mixin;
     }
@@ -309,8 +309,11 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      */
     public function __clone()
     {
-        foreach($this->_mixed_methods as $method => $object) {
-            $this->_mixed_methods[$method] = clone $object;
+        foreach ($this->_mixed_methods as $method => $object)
+        {
+            if (is_object($object) && !(class_exists('Closure') && $object instanceof \Closure)){
+                $this->_mixed_methods[$method] = clone $object;
+            }
         }
     }
 
@@ -350,7 +353,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
                         $result = call_user_func_array($closure, $arguments);
                 }
             }
-            else
+            elseif(is_object($this->_mixed_methods[$method]))
             {
                 $mixin = $this->_mixed_methods[$method];
 
@@ -377,6 +380,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
                         $result = call_user_func_array(array($mixin, $method), $arguments);
                 }
             }
+            else $result = $this->_mixed_methods[$method];
 
             return $result;
         }
