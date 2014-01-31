@@ -253,13 +253,14 @@ class KDate extends KObject implements KDateInterface
     /**
      * Gets the translator object
      *
+     * @throws UnexpectedValueException
      * @return  KTranslatorInterface
      */
     public function getTranslator()
     {
         if(!$this->__translator instanceof KTranslatorInterface)
         {
-            $this->__translator = KObjectManager::getInstance()->getObject($this->__translator);
+            $this->__translator = $this->getObject($this->__translator);
 
             if(!$this->__translator instanceof KTranslatorInterface)
             {
