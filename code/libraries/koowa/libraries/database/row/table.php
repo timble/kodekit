@@ -290,23 +290,20 @@ class KDatabaseRowTable extends KDatabaseRowAbstract
         {
             $parts = KStringInflector::explode($method);
 
-            if($parts[0] == 'is' && isset($parts[1]))
+            //Check if a behavior is mixed
+            if ($parts[0] == 'is' && isset($parts[1]))
             {
                 if(!isset($this->_mixed_methods[$method]))
                 {
                     //Lazy mix behaviors
                     $behavior = strtolower($parts[1]);
 
-                    if ($this->getTable()->hasBehavior($behavior))
-                    {
+                    if ($this->getTable()->hasBehavior($behavior)) {
                         $this->mixin($this->getTable()->getBehavior($behavior));
-                        return true;
+                    } else {
+                        return false;
                     }
-
-                    return false;
                 }
-
-                return true;
             }
         }
 

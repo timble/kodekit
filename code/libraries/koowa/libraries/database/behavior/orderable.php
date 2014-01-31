@@ -29,7 +29,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
             return true;
         }
 
-        return parent::isSupported();
+        return false;
     }
 	
 	/**
