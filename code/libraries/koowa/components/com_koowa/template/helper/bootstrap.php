@@ -63,16 +63,20 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
         $config->append(array(
             'debug'         => JFactory::getApplication()->getCfg('debug'),
             'javascript'    => false,
-            'wrapper_class' => $identifier->type.'_'.$identifier->package . ' fullHeight',
             'package'       => $identifier->package,
             'file'          => $identifier->type === 'mod' ? 'module' : $identifier->domain,
-            'load_default'  => version_compare(JVERSION, '3.0', '<')
+            'load_default'  => version_compare(JVERSION, '3.0', '<'),
+            'class'         => array(
+                'koowa',
+                $identifier->type.'_'.$identifier->package
+            ),
         ))->append(array(
-            'wrapper'       => sprintf('<div class="koowa %s">
-            <!--[if lte IE 8 ]><div class="old-ie"><![endif]-->
-            %%s
-            <!--[if lte IE 8 ]></div><![endif]-->
-            </div>', $config->wrapper_class)
+            'wrapper' => sprintf('<div class="%s">
+                <!--[if lte IE 8 ]><div class="old-ie"><![endif]-->
+                %%s
+                <!--[if lte IE 8 ]></div><![endif]-->
+                </div>', implode(' ', KObjectConfig::unbox($config->class))
+            )
         ));
 
         $html = '';
