@@ -878,33 +878,31 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     
     	return $data;
     }
-    
 
-	/**
-	 * Search the behaviors to see if this table behaves as.
-	 *
-	 * Function is also capable of checking is a behavior has been mixed successfull using is[Behavior] function. If
-     * the behavior exists the function will return TRUE, otherwise FALSE.
-	 *
-	 * @param  string 	$method    The function name
-	 * @param  array  	$arguments The function arguments
-	 * @throws BadMethodCallException 	If method could not be found
-	 * @return mixed The result of the function
-	 */
-	public function __call($method, $arguments)
-	{
-		// If the method is of the form is[Behavior] handle it.
-		$parts = KStringInflector::explode($method);
 
-		if($parts[0] == 'is' && isset($parts[1]))
-		{
-            if($this->hasBehavior(strtolower($parts[1]))) {
-                 return true;
+    /**
+     * Search the behaviors to see if this table behaves as.
+     *
+     * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function.
+     * If the behavior exists the function will return TRUE, otherwise FALSE.
+     *
+     * @param  string     $method    The function name
+     * @param  array      $arguments The function arguments
+     * @throws BadMethodCallException     If method could not be found
+     * @return mixed The result of the function
+     */
+    public function __call($method, $arguments)
+    {
+        if (!isset($this->_mixed_methods[$method]))
+        {
+            // If the method is of the form is[Bahavior] handle it.
+            $parts = StringInflector::explode($method);
+
+            if ($parts[0] == 'is' && isset($parts[1])) {
+                return false;
             }
+        }
 
-			return false;
-		}
-
-		return parent::__call($method, $arguments);
-	}
+        return parent::__call($method, $arguments);
+    }
 }

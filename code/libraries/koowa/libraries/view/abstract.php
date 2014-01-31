@@ -543,15 +543,25 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      */
     public function __call($method, $args)
     {
-        // If method isn't mixed and only one argument is passed we assume a setter method is being called
-        if (!isset($this->_mixed_methods[$method]) && (count($args) == 1))
+        if (!isset($this->_mixed_methods[$method]))
         {
-            if (!method_exists($this, 'set' . ucfirst($method)))
+            //If one argument is passed we assume a setter method is being called
+            if (count($args) == 1)
             {
-                $this->$method = $args[0];
-                return $this;
+                if (!method_exists($this, 'set' . ucfirst($method)))
+                {
+                    $this->$method = $args[0];
+                    return $this;
+                }
+                else return $this->{'set' . ucfirst($method)}($args[0]);
             }
-            else return $this->{'set' . ucfirst($method)}($args[0]);
+
+            //Check if a behavior is mixed
+            $parts = KStringInflector::explode($method);
+
+            if ($parts[0] == 'is' && isset($parts[1])) {
+                return false;
+            }
         }
 
         return parent::__call($method, $args);

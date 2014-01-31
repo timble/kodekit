@@ -439,22 +439,35 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Search the mixin method map and call the method or trigger an error
      *
-     * @param  string 	$method     The function name
-     * @param  array  	$arguments  The function arguments
+     * This function implements a just in time mixin strategy. Available table behaviors are only mixed when needed.
+     * Lazy mixing is triggered by calling KDatabaseRowsetTable::is[Behaviorable]();
+     *
+     * @param  string     $method   The function name
+     * @param  array      $argument The function arguments
+     * @throws \BadMethodCallException     If method could not be found
      * @return mixed The result of the function
      */
     public function __call($method, $arguments)
     {
-        // If the method is of the form is[Behavior] handle it.
-        $parts = KStringInflector::explode($method);
-
-        if($parts[0] == 'is' && isset($parts[1]))
+        if ($this->isConnected())
         {
-            if(isset($this->_mixed_methods[$method])) {
-                return true;
-            }
+            $parts = KStringInflector::explode($method);
 
-            return false;
+            //Check if a behavior is mixed
+            if ($parts[0] == 'is' && isset($parts[1]))
+            {
+                if(!isset($this->_mixed_methods[$method]))
+                {
+                    //Lazy mix behaviors
+                    $behavior = strtolower($parts[1]);
+
+                    if ($this->getTable()->hasBehavior($behavior)) {
+                        $this->mixin($this->getTable()->getBehavior($behavior));
+                    } else {
+                        return false;
+                    }
+                }
+            }
         }
 
         return parent::__call($method, $arguments);
