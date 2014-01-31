@@ -443,8 +443,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Lazy mixing is triggered by calling KDatabaseRowsetTable::is[Behaviorable]();
      *
      * @param  string     $method   The function name
-     * @param  array      $argument The function arguments
-     * @throws \BadMethodCallException     If method could not be found
+     * @param  array      $arguments The function arguments
      * @return mixed The result of the function
      */
     public function __call($method, $arguments)
@@ -454,19 +453,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             $parts = KStringInflector::explode($method);
 
             //Check if a behavior is mixed
-            if ($parts[0] == 'is' && isset($parts[1]))
+            if($parts[0] == 'is' && isset($parts[1]))
             {
-                if(!isset($this->_mixed_methods[$method]))
-                {
-                    //Lazy mix behaviors
-                    $behavior = strtolower($parts[1]);
-
-                    if ($this->getTable()->hasBehavior($behavior)) {
-                        $this->mixin($this->getTable()->getBehavior($behavior));
-                    } else {
-                        return false;
-                    }
+                if(isset($this->_mixed_methods[$method])) {
+                    return true;
                 }
+
+                return false;
             }
         }
 
