@@ -2852,6 +2852,12 @@ html {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.table tbody tr td .koowa_header__image {
+  width: auto;
+  height: auto;
+  max-height: 16px;
+  max-width: 16px;
+}
 .table tbody tr.selected td,
 .table tbody tr.selected td a,
 .table tbody tr.selected td small,
