@@ -81,16 +81,19 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
             $value = $row->$field;
             if (!is_string($value))
             {
-                if ($value instanceof KObjectConfigInterface) {
-                    $value = $value->toString();
-                }
-                elseif (is_object($value) || is_array($value))
+                if (is_object($value) || is_array($value))
                 {
-                    $config = $this->getObject('lib:object.config.factory')->getFormat($this->_format);
-                    foreach ($value as $key => $val) {
-                        $config->set($key, $val);
+                    if (!$value instanceof KObjectConfigInterface)
+                    {
+                        $config = $this->getObject('lib:object.config.factory')->getFormat($this->_format);
+
+                        foreach ($value as $key => $val) {
+                            $config->set($key, $val);
+                        }
+
+                        $value = $config->toString();
                     }
-                    $value = $config->toString();
+                    else  $value = $value->toString();
                 }
 
                 // Set the data without changing the modified column information
