@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Translator
  */
-class KTranslator extends KObject implements KTranslatorInterface
+abstract class KTranslatorAbstract extends KObject implements KTranslatorInterface
 {
     /**
      * Locale
