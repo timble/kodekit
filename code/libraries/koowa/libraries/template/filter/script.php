@@ -47,8 +47,7 @@ class KTemplateFilterScript extends KTemplateFilterTag
                     $attribs['type'] = 'text/javascript';
                 };
 
-                if($attribs['type'] == 'text/javascript')
-                {
+                if($attribs['type'] == 'text/javascript') {
                     $tags .= $this->_renderTag($attribs);
                 }
             }
@@ -68,12 +67,12 @@ class KTemplateFilterScript extends KTemplateFilterTag
                     $attribs['type'] = 'text/javascript';
                 };
 
-                if($attribs['type'] == 'text/javascript')
-                {
+                if($attribs['type'] == 'text/javascript') {
                     $tags .= $this->_renderTag($attribs, $match);
-                    $text = str_replace($matches[0][$key], '', $text);
                 }
             }
+
+            $text = str_replace($matches[0], '', $text);
         }
 
         return $tags;
