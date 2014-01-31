@@ -107,12 +107,17 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      */
     public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
+        $result = null;
         $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);
 
+        //Call the method
         if(method_exists($this, $method)) {
             $result = $this->$method($command);
-        } else {
+        }
+
+        //Invoke the callbacks
+        if($result !== $this->getBreakCondition()) {
             $result = parent::invokeCallbacks($command, $this);
         }
 
