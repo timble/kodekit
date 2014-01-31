@@ -113,7 +113,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
             return true;
         }
 
-        return parent::isSupported();
+        return false;
     }
 
     /**
