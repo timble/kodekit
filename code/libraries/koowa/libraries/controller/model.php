@@ -169,17 +169,21 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * will be executed, if plural a browse action will be executed.
      *
      * @param KControllerContextInterface $context A command context object
-     * @return    string|bool    The rendered output of the view or FALSE if something went wrong
+     * @return  string|bool The rendered output of the view or FALSE if something went wrong
      */
     protected function _actionRender(KControllerContextInterface $context)
     {
+        $result = false;
+
         //Check if we are reading or browsing
         $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
 
         //Execute the action
-        $this->execute($action, $context);
+        if($this->execute($action, $context) !== false) {
+            $result = parent::_actionRender($context);
+        }
 
-        return parent::_actionRender($context);
+        return $result;
     }
 
 	/**
