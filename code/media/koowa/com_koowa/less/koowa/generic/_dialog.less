@@ -322,9 +322,11 @@
 
 // Internet explorer 8 and below
 .old-ie {
+    height: 100%;
+
     .koowa_dialog {
         height: 100%;
-        max-height: @windowHeight;
+        max-height: 100%;
         overflow: hidden;
     }
 
@@ -428,22 +430,13 @@
         margin: 0;
         height: 68px;
         clear: both;
-        float: left;
+        float: none;
         max-width: 100%;
 
         input[type=text] {
             max-width: 100%;
             float: left;
         }
-    }
-}
-
-// Keep outside the above so we can copy paste the media querie into the above old-ie namespace
-.old-ie {
-    height: @windowHeight - 30px;
-
-    .koowa_dialog {
-        height: @windowHeight - 30px;
     }
 }
 

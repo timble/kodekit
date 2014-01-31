@@ -46,7 +46,9 @@ defined('KOOWA') or die; ?>
 <![endif]-->
 
 <div class="koowa_template_container">
-    <ktml:messages>
+    <div class="koowa_messages">
+        <ktml:messages>
+    </div>
     <ktml:content>
 </div>
 

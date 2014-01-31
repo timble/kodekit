@@ -63,7 +63,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
         $config->append(array(
             'debug'         => JFactory::getApplication()->getCfg('debug'),
             'javascript'    => false,
-            'wrapper_class' => $identifier->type.'_'.$identifier->package,
+            'wrapper_class' => $identifier->type.'_'.$identifier->package . ' fullHeight',
             'package'       => $identifier->package,
             'file'          => $identifier->type === 'mod' ? 'module' : $identifier->domain,
             'load_default'  => version_compare(JVERSION, '3.0', '<')

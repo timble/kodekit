@@ -2,7 +2,9 @@
 @bodyPadding: 15px;
 @maxWidth: 1020px;
 
-html.koowa-html, body.koowa_template {
+html.koowa-html,
+body.koowa_template,
+div.old-ie {
     height: 100% !important;
 }
 .koowa-html {
@@ -41,19 +43,13 @@ html.koowa-html, body.koowa_template {
             padding: 0;
             background: #fff;
             margin: auto;
-            height: 100%;
 
             .koowa_template_container {
                 box-shadow: none;
                 background: #fff;
                 margin: auto;
                 max-width: none;
-                height: 100%;
                 .clearfix();
-
-                .koowa {
-                    height: 100%;
-                }
             }
         }
     }
@@ -77,12 +73,16 @@ html.koowa-html, body.koowa_template {
             .clearfix();
 
             .koowa {
-                height: 100%;
-            }
+                height: auto;
 
-            .koowa_form {
-                box-shadow: 0 5px 8px rgba(0,0,0,.75);
-                background: #fff;
+                &.fullHeight {
+                    height: 100%;
+                }
+
+                .koowa_form {
+                    box-shadow: 0 5px 8px rgba(0,0,0,.75);
+                    background: #fff;
+                }
             }
         }
 
@@ -177,11 +177,14 @@ html.koowa-html, body.koowa_template {
             margin: 0;
         }
 
-        // Give alert messages some space
+        // Give alert messages some styling
+        .koowa_messages {
+            background: #fff;
+            .clearfix();
+        }
         .alert {
             margin: 10px;
         }
-
 
         // Copied the bootstrap button css so styles in Joomla! 2.5 will look the same
         #editor-xtd-buttons,
