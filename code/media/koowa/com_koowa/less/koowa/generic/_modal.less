@@ -412,6 +412,11 @@ img.mfp-img {
         &.mfp-inline-holder {
             padding-top: 40px;
             padding-bottom: 40px;
+
+            .mfp-content {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
         }
 
         .mfp-inline {
@@ -425,24 +430,27 @@ img.mfp-img {
             margin: 0;
             padding: 0;
             color: white;
-            right: -6px;
-            text-align: right;
-            padding-right: 6px;
-            width: 100%;
+            right: 0;
+            text-align: center;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
             top: -40px;
             font-size: 24px;
+            right: -14px;
 
             &:hover {
                 border: none;
                 background: transparent;
                 margin: 0;
                 padding: 0;
-                padding-right: 6px;
                 color: white;
-                right: -6px;
-                text-align: right;
-                padding-right: 6px;
-                top: -40px;
+            }
+        }
+
+        &.mfp-image-holder {
+            .mfp-close {
+                top: 0;
             }
         }
 
@@ -450,11 +458,6 @@ img.mfp-img {
         .mfp-inline {
             background: white;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-        }
-
-        img.mfp-img {
-            padding: 10px;
-            background: white;
         }
     }
 }
@@ -476,13 +479,10 @@ img.mfp-img {
             position: relative;
         }
     }
-}
 
-@media screen and (min-width:712px) {
-    .mfp-wrap {
+    @media screen and (min-width:712px) {
         .mfp-content {
             min-height: 0;
-            height: 100%;
             max-width: 1200px !important;
             max-height: 800px !important;
         }
@@ -497,3 +497,4 @@ img.mfp-img {
         }
     }
 }
+
