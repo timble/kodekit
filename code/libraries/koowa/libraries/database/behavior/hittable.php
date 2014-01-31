@@ -16,24 +16,20 @@
 class KDatabaseBehaviorHittable extends KDatabaseBehaviorAbstract
 {
     /**
-     * Get the methods that are available for mixin based
+     * Check if the behavior is supported
      *
-     * This function conditionally mixes the behavior. Only if the mixer has a 'hits' property the behavior will be
-     * mixed in.
+     * Behavior requires a 'hits'
      *
-     * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
-     * @param  array         $exclude   A list of methods to exclude
-     * @return array An array of methods
+     * @return  boolean  True on success, false otherwise
      */
-    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
+    public function isSupported()
     {
-        $methods = array();
-
-        if(isset($mixer->hits)) {
-            $methods = parent::getMixableMethods($mixer, $exclude);
+        $mixer = $this->getMixer();
+        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('hits')))  {
+            return true;
         }
 
-        return $methods;
+        return parent::isSupported();
     }
 
     /**

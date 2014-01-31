@@ -43,25 +43,21 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
    	}
 
     /**
-     * Get the methods that are available for mixin based
+     * Check if the behavior is supported
      *
-     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
-     * the behavior will be mixed in.
+     * Behavior requires a 'locked_by' or 'locked_on' row property
      *
-     * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
-     * @param  array         $exclude   A list of methods to exclude
-     * @return array         An array of methods
+     * @return  boolean  True on success, false otherwise
      */
-    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
-	{
-		$methods = array();
+    public function isSupported()
+    {
+        $mixer = $this->getMixer();
+        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('locked_by') || $mixer->has('locked_on'))) {
+            return true;
+        }
 
-		if(isset($mixer->locked_by) && isset($mixer->locked_on)) {
-			$methods = parent::getMixableMethods($mixer, $exclude);
-		}
-
-		return $methods;
-	}
+        return parent::isSupported();
+    }
 
 	/**
 	 * Lock a row

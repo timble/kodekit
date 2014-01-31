@@ -15,26 +15,22 @@
  */
 class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 {
-	/**
-	 * Get the methods that are available for mixin based
-	 *
-	 * This function conditionally mixes of the behavior. Only if the mixer has a 'uuid' property the behavior will be
-     * mixed in.
-	 *
-	 * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
-     * @param  array         $exclude   A list of methods to exclude
-	 * @return array An array of methods
-	 */
-    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
-	{
-		$methods = array();
+    /**
+     * Check if the behavior is supported
+     *
+     * Behavior requires a 'uuid' row property
+     *
+     * @return  boolean  True on success, false otherwise
+     */
+    public function isSupported()
+    {
+        $mixer = $this->getMixer();
+        if($mixer instanceof KDatabaseRowInterface && $mixer->has('uuid')) {
+            return true;
+        }
 
-		if(isset($mixer->uuid)) {
-			$methods = parent::getMixableMethods($mixer, $exclude);
-		}
-
-		return $methods;
-	}
+        return parent::isSupported();
+    }
 
 	/**
 	 * Set uuid information

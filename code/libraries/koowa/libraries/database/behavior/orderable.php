@@ -16,25 +16,21 @@
 class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 {
     /**
-     * Get the methods that are available for mixin based
+     * Check if the behavior is supported
      *
-     * This function conditionally mixes the behavior. Only if the mixer has a 'created_by' or 'created_on' property
-     * the behavior will be mixed in.
+     * Behavior requires a 'ordering' row property
      *
-     * @param KObjectMixable $mixer     The mixer requesting the mixable methods.
-     * @param  array         $exclude   A list of methods to exclude
-     * @return array         An array of methods
+     * @return  boolean  True on success, false otherwise
      */
-    public function getMixableMethods(KObjectMixable $mixer = null, $exclude = array())
-	{
-		$methods = array();
+    public function isSupported()
+    {
+        $mixer = $this->getMixer();
+        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('ordering')))  {
+            return true;
+        }
 
-		if(isset($mixer->ordering)) {
-			$methods = parent::getMixableMethods($mixer, $exclude);
-		}
-
-		return $methods;
-	}
+        return parent::isSupported();
+    }
 	
 	/**
 	 * Override to add a custom WHERE clause
