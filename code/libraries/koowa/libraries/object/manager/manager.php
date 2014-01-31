@@ -148,6 +148,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      * If no identifier is passed the object identifier of this object will be returned.
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param bool  $autolocate If TRUE try to locate the identifier class. Default FALSE.
      * @return KObjectIdentifier
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
