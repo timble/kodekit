@@ -13,16 +13,17 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-interface KCommandCallbackInterface
+interface KCommandCallbackInterface extends CommandCallbackDelegate
 {
     /**
-     * Invoke all the registered callback for a specific command
+     * Invoke a command by calling all the registered callbacks
      *
-     * @param KCommandInterface   $command  The command
-     * @param KObjectInterface    $chain    The target object
+     * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
+     * @param  array|Traversable         $attributes An associative array or a Traversable object
+     * @param  KObjectInterface          $subject    The command subject
      * @return mixed|null If a callback break, returns the break condition. NULL otherwise.
      */
-    public function invokeCallbacks(KCommandInterface $command, KObjectInterface $target);
+    public function invokeCallbacks($command, $attributes = null, $subject = null);
 
     /**
      * Add a callback
@@ -46,6 +47,13 @@ interface KCommandCallbackInterface
      * @return  KCommandCallbackAbstract
      */
     public function removeCommandCallback($command, $method);
+
+    /**
+     * Get the command callbacks
+     *
+     * @return array
+     */
+    public function getCommandCallbacks($command = null);
 
     /**
      * Set the break condition
