@@ -69,6 +69,15 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
                 $this->addCommandHandler($key, $value);
             }
         }
+
+        //Add the command callbacks
+        foreach($this->getMixer()->getMethods() as $method)
+        {
+            $match = array();
+            if (preg_match('/_(after|before)([A-Z]\S*)/', $method, $match)) {
+                $this->addCommandCallback($match[1].'.'.strtolower($match[2]), $method);
+            }
+        }
     }
 
     /**
@@ -132,6 +141,26 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     public function invokeCommand($command, $attributes = null, $subject = null)
     {
         return $this->getCommandChain()->execute($command, $attributes, $subject);
+    }
+
+    /**
+     * Invoke a command callback or delegate invocation to the mixer
+     *
+     * @param string             $method    The name of the method to be executed
+     * @param KCommandInterface  $command   The command
+     * @return mixed Return the result of the handler.
+     */
+    public function invokeCommandCallback($method, KCommandInterface $command)
+    {
+        $mixer = $this->getMixer();
+
+        if($mixer instanceof KCommandCallbackDelegate) {
+            $result = $mixer->invokeCommandCallback($method, $command);
+        } else {
+            $result = $mixer->$method($command);
+        }
+
+        return $result;
     }
 
     /**
@@ -286,7 +315,9 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      */
     public function getMixableMethods($exclude = array())
     {
-        $exclude += array('execute', 'getPriority', 'setBreakCondition', 'getBreakCondition', 'invokeCommandCallbacks');
+        $exclude += array('execute', 'getPriority', 'setBreakCondition', 'getBreakCondition',
+            'invokeCommandCallbacks', 'invokeCommandCallback');
+
         return parent::getMixableMethods($exclude);
     }
 
