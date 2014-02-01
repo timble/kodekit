@@ -79,6 +79,15 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
 
         //Set the command priority
         $this->_priority = $config->priority;
+
+        //Add the command callbacks
+        foreach($this->getMethods() as $method)
+        {
+            $matches = array();
+            if (preg_match('/_(after|before)([A-Z]\S*)/', $method, $matches)) {
+                $this->addCommandCallback($matches[1].'.'.strtolower($matches[2]), $method);
+            }
+        }
     }
 
     /**
@@ -107,21 +116,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      */
     public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
-        $result = null;
-        $parts  = explode('.', $command->getName());
-        $method = '_'.$parts[0].ucfirst($parts[1]);
-
-        //Call the method
-        if(method_exists($this, $method)) {
-            $result = $this->$method($command);
-        }
-
-        //Invoke the callbacks
-        if($result !== $this->getBreakCondition()) {
-            $result = parent::invokeCallbacks($command, $this);
-        }
-
-        return $result;
+        return parent::invokeCallbacks($command);
     }
 
     /**
@@ -138,7 +133,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      */
     public function addCommandCallback($command, $method, $params = array())
     {
-        if (is_string($method) && !method_exists($this, $method))
+        if (is_string($method) && !is_callable(array($this, $method)))
         {
             throw new InvalidArgumentException(
                 'Method does not exist '.__CLASS__.'::'.$method
@@ -176,14 +171,13 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      */
     public function getHandle()
     {
-        foreach($this->getMethods() as $method)
-        {
-            if (substr($method, 0, 7) == '_before' || substr($method, 0, 6) == '_after') {
-                return KObjectMixinAbstract::getHandle();
-            }
+        $callbacks = $this->getCommandCallbacks();
+
+        if(!empty($callbacks)) {
+            return parent::getHandle();
         }
 
-        return parent::getHandle();
+        return false;
     }
 
     /**
@@ -206,7 +200,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         {
             $exclude += array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority', 'getHandle',
                 'getName', 'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback',
-                'removeCommandCallback');
+                'removeCommandCallback', 'getCommandCallbacks', 'invokeCommandCallback');
 
             $methods = parent::getMixableMethods($exclude);
         }
