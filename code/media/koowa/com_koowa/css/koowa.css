@@ -2793,6 +2793,22 @@ ul.sidebar-nav li.active ul li a {
   -moz-hyphens: auto;
   hyphens: auto;
 }
+.pagination .pagination-list {
+  margin: 0 16px 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  text-align: center !important;
+  border: none !important;
+}
+.pagination .pagination-list li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  text-align: center !important;
+  border: none !important;
+  display: block !important;
+  float: left !important;
+}
 body,
 html {
   height: auto !important;
