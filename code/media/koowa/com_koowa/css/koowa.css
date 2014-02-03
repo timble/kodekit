@@ -950,6 +950,9 @@
 .subhead .koowa-toolbar .btn-success {
   width: 148px;
 }
+.koowa-toolbar {
+  font-size: inherit !important;
+}
 .toolbar-list a.disabled,
 .toolbar-list .unauthorized span {
   color: gray;
@@ -2808,6 +2811,16 @@ ul.sidebar-nav li.active ul li a {
   border: none !important;
   display: block !important;
   float: left !important;
+}
+input.input-file,
+input[type=file] {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 16px;
+  line-height: 16px;
+  width: auto;
+  height: auto;
 }
 body,
 html {
