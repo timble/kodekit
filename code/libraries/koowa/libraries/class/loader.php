@@ -13,6 +13,7 @@ require_once dirname(__FILE__).'/locator/abstract.php';
 require_once dirname(__FILE__).'/locator/library.php';
 require_once dirname(__FILE__).'/registry/interface.php';
 require_once dirname(__FILE__).'/registry/registry.php';
+require_once dirname(__FILE__).'/registry/cache.php';
 
 /**
  * Loader
@@ -62,8 +63,8 @@ class KClassLoader implements KClassLoaderInterface
         {
             $this->_registry = new KClassRegistryCache();
 
-            if(isset($config['cache_prefix'])) {
-                $this->_registry->setNamespace($config['cache_prefix']);
+            if(isset($config['cache_namespace'])) {
+                $this->_registry->setNamespace($config['cache_namespace']);
             }
         }
         else $this->_registry = new KClassRegistry();
@@ -171,13 +172,12 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function getPath($class, $basepath = null)
     {
-        static $base;
         $result = false;
 
-        //Switch the base
-        $prefix = $basepath ? $basepath.'-' : $base;
+        //Switch the basepath
+        $prefix = $basepath ? $basepath : $this->_basepath;
 
-        if(!$this->_registry->has($prefix.$class))
+        if(!$this->_registry->has($prefix.'-'.$class))
         {
             //Locate the class
             foreach($this->_locators as $locator)
@@ -188,15 +188,10 @@ class KClassLoader implements KClassLoaderInterface
                 };
             }
 
-            if ($result !== false)
-            {
-                //Get the canonicalized absolute pathname
-                if($result = realpath($result)) {
-                    $this->_registry->set($prefix.$class, $result);
-                }
-            }
+            //Also store if the class could not be found to prevent repeated lookups.
+            $this->_registry->set($prefix.'-'.$class, $result);
 
-        } else $result = $this->_registry->get($prefix.$class);
+        } else $result = $this->_registry->get($prefix.'-'.$class);
 
         return $result;
     }
@@ -211,8 +206,8 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function setPath($class, $path, $basepath = null)
     {
-        $prefix = $basepath ? $basepath.'-' : '';
-        $this->_registry->set($prefix.$class, $path);
+        $prefix = $basepath ? $basepath : $this->_basepath;
+        $this->_registry->set($prefix.'-'.$class, $path);
     }
 
     /**
