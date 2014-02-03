@@ -16,21 +16,22 @@
 class KClassRegistryCache extends KClassRegistry
 {
     /**
- 	 * The registry cache namespace
- 	 *
- 	 * @var boolean
- 	 */
-    protected $_namespace = 'koowa-registry-class';
+     * The registry cache namespace
+     *
+     * @var boolean
+     */
+    protected $_namespace = 'nooku';
 
     /**
      * Constructor
      *
-     * @throws \RuntimeException    If the APC PHP extension is not enabled or available
+     * @return KClassRegistryCache
+     * @throws RuntimeException    If the APC PHP extension is not enabled or available
      */
     public function __construct()
     {
         if (!extension_loaded('apc')) {
-            throw new RuntimeException('Unable to use ObjectRegistryCache as APC is not enabled.');
+            throw new RuntimeException('Unable to use KClassRegistryCache as APC is not enabled.');
         }
     }
 
@@ -55,7 +56,7 @@ class KClassRegistryCache extends KClassRegistry
         return $this->_namespace;
     }
 
- 	/**
+    /**
      * Get an item from the array by offset
      *
      * @param   int     $offset The offset
@@ -63,11 +64,13 @@ class KClassRegistryCache extends KClassRegistry
      */
     public function offsetGet($offset)
     {
-        if(!parent::offsetExists($offset)) {
-            $result = apc_fetch($this->_namespace.'-'.$offset);
-        } else {
-            $result = parent::offsetGet($offset);
+        if(!parent::offsetExists($offset))
+        {
+            if($result = apc_fetch($this->_namespace.'-class-'.$offset)) {
+                parent::offsetSet($offset, $result);
+            }
         }
+        else $result = parent::offsetGet($offset);
 
         return $result;
     }
@@ -81,12 +84,12 @@ class KClassRegistryCache extends KClassRegistry
      */
     public function offsetSet($offset, $value)
     {
-        apc_store($this->_namespace.'-'.$offset, $value);
+        apc_store($this->_namespace.'-class-'.$offset, $value);
 
         parent::offsetSet($offset, $value);
     }
 
-	/**
+    /**
      * Check if the offset exists
      *
      * @param   int   $offset The offset
@@ -95,9 +98,21 @@ class KClassRegistryCache extends KClassRegistry
     public function offsetExists($offset)
     {
         if(false === $result = parent::offsetExists($offset)) {
-            $result = apc_exists($this->_namespace.'-'.$offset);
+            $result = apc_exists($this->_namespace.'-class-'.$offset);
         }
 
         return $result;
+    }
+
+    /**
+     * Unset an item from the array
+     *
+     * @param   int     $offset
+     * @return  void
+     */
+    public function offsetUnset($offset)
+    {
+        apc_delete($this->_namespace.'-class-'.$offset);
+        parent::offsetUnset($offset);
     }
 }
