@@ -1044,6 +1044,7 @@
   font-size: 16px;
   line-height: 16px;
   text-align: center;
+  background-size: cover;
 }
 .koowa_icon i {
   position: absolute;
@@ -2912,27 +2913,27 @@ table.parameters td.detail-label {
 .koowa_table .koowa_header {
   margin: 0;
 }
-.koowa_table_list .icon {
+.koowa_table .koowa_table_list .icon {
   margin-right: 0.1em;
 }
-.koowa_table_list .btn-toolbar {
+.koowa_table .koowa_table_list .btn-toolbar {
   margin: 0;
 }
-.koowa_table_list .icon.autosize {
+.koowa_table .koowa_table_list .icon.autosize {
   max-width: 1.75em;
 }
-.koowa_table--pagination {
+.koowa_table .koowa_table--pagination {
   margin-top: 0;
 }
-.koowa_table--documents,
-.koowa_table--files {
+.koowa_table .koowa_table--documents,
+.koowa_table .koowa_table--files {
   margin-bottom: 0;
 }
-.koowa_table__dates {
+.koowa_table .koowa_table__dates {
   text-align: right;
   white-space: nowrap;
 }
-.koowa_table__manage .koowa_toolbar {
+.koowa_table .koowa_table__manage .koowa_toolbar {
   margin: 0;
 }
 .koowa_header {
