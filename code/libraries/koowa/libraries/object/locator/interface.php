@@ -32,7 +32,7 @@ interface KObjectLocatorInterface
      * @param bool   $fallback  If TRUE use the fallback sequence
      * @return bool|mixed
      */
-    public function find(array $info, $basepath = null, $fallback = true);
+    public function find(array $info, $fallback = true);
 
     /**
      * Get the locator type
@@ -47,19 +47,4 @@ interface KObjectLocatorInterface
      * @return array
      */
     public function getSequence();
-
-    /**
-     * Get the class loader
-     *
-     * @return KClassLoaderInterface
-     */
-    public function getClassLoader();
-
-    /**
-     * Set the class loader
-     *
-     * @param KClassLoaderInterface $loader
-     * @return KObjectManagerInterface
-     */
-    public function setClassLoader(KClassLoaderInterface $loader);
 }

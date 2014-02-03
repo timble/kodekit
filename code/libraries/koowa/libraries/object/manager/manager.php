@@ -68,7 +68,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         if($config->cache_enabled)
         {
             $this->_registry = new KObjectRegistryCache();
-            $this->_registry->setCachePrefix($config->cache_prefix);
+            $this->_registry->setNamespace($config->cache_namespace);
         }
         else $this->_registry = new KObjectRegistry();
 
@@ -100,9 +100,9 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'class_loader'  => null,
-            'cache_enabled' => false,
-            'cache_prefix'  => 'koowa-cache-identifier'
+            'class_loader'    => null,
+            'cache_enabled'   => false,
+            'cache_namespace' => 'koowa'
         ));
     }
 
@@ -148,11 +148,10 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      * If no identifier is passed the object identifier of this object will be returned.
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param bool  $autolocate If TRUE try to locate the identifier class. Default FALSE.
      * @return KObjectIdentifier
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function getIdentifier($identifier = null, $autolocate = false)
+    public function getIdentifier($identifier = null)
     {
         //Get the identifier
         if(isset($identifier))
@@ -182,11 +181,6 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         }
         else $result = $this->__object_identifier;
 
-        //Get the class name and set it in the identifier
-        if($autolocate) {
-            $this->getClass($result);
-        }
-
         return $result;
     }
 
@@ -200,19 +194,11 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     public function getClass($identifier, $fallback = true)
     {
         $identifier = $this->getIdentifier($identifier);
-        $class      = $identifier->getClass();
-
-        if(empty($class))
-        {
-            $class = $this->_locators[$identifier->getType()]->locate($identifier, $fallback);
-            $identifier->setClass($class);
-        }
-
-        return $class;
+        return $this->_locate($identifier, $fallback);
     }
 
     /**
-     * Get the identifier class
+     * Set the identifier class
      *
      * @param mixed  $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
      * @param string $class      The class name
@@ -220,8 +206,14 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      */
     public function setClass($identifier, $class)
     {
-        $identifier = $this->getIdentifier($identifier);
-        $identifier->setClass($class);
+        if(!$this->isRegistered($identifier))
+        {
+            $identifier = $this->getIdentifier($identifier);
+            $identifier->setClass($class);
+
+            //Re-set the registry
+            $this->_registry->set($identifier);
+        }
 
         return $this;
     }
@@ -242,7 +234,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      */
     public function getObject($identifier, array $config = array())
 	{
-		$identifier = $this->getIdentifier($identifier, true);
+		$identifier = $this->getIdentifier($identifier);
 
         if (!$this->isRegistered($identifier))
 		{
@@ -612,6 +604,34 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     /**
      * Get an instance of a class based on a class identifier
      *
+     * @param KObjectIdentifier $identifier
+     * @param bool              $fallback   Use fallbacks when locating the class. Default is TRUE.
+     * @return  string  Return the identifier class or FALSE on failure.
+     */
+    protected function _locate(KObjectIdentifier $identifier, $fallback = true)
+    {
+        $class = $identifier->getClass();
+
+        //Set the basepath based on the identifiers domain
+        $this->getClassLoader()->setBasepath($identifier->domain);
+
+        //If the class is FALSE we have tried to locate it already, do not locate it again.
+        if(empty($class) && $class !== false)
+        {
+            $class = $this->_locators[$identifier->getType()]->locate($identifier, $fallback);
+
+            //If we are falling back set the class in the identifier.
+            if($fallback) {
+                $this->setClass($identifier, $class);
+            }
+        }
+
+        return $class;
+    }
+
+    /**
+     * Get an instance of a class based on a class identifier
+     *
      * @param   KObjectIdentifier $identifier
      * @param   array              $config      An optional associative array of configuration settings.
      * @return  object  Return object on success, throws exception on failure
@@ -623,7 +643,10 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     {
         $result = null;
 
-        if($identifier->class && class_exists($identifier->class))
+        //Get the class name and set it in the identifier
+        $class = $this->_locate($identifier);
+
+        if($class && class_exists($class))
         {
             if (!array_key_exists('KObjectInterface', class_implements($identifier->class, false)))
             {

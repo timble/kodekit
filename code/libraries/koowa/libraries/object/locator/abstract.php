@@ -16,13 +16,6 @@
 abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
 {
     /**
-     * The class loader
-     *
-    * @var KClassLoader
-    */
-    private $__loader;
-
-    /**
      * The locator type
      *
      * @var string
@@ -46,9 +39,6 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
         parent::__construct($config);
 
         $this->_sequence = KObjectConfig::unbox($config->sequence);
-
-        //Set the class loader
-        $this->setClassLoader($config->class_loader);
     }
 
     /**
@@ -63,7 +53,6 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     {
         $config->append(array(
             'sequence'      => array(),
-            'class_loader'  => null,
         ));
 
         parent::_initialize($config);
@@ -90,7 +79,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
             'file'    => $file
         );
 
-        return $this->find($info, $identifier->domain, $fallback);
+        return $this->find($info, $fallback);
     }
 
     /**
@@ -104,11 +93,6 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     public function find(array $info, $basepath = null, $fallback = true)
     {
         $result = false;
-
-        //Set the basepath
-        if(!empty($basepath)) {
-            $this->getClassLoader()->setBasepath($basepath);
-        }
 
         //Find the class
         foreach($this->_sequence as $template)
@@ -151,27 +135,5 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     public function getSequence()
     {
         return $this->_sequence;
-    }
-
-    /**
-     * Get the class loader
-     *
-     * @return KClassLoaderInterface
-     */
-    public function getClassLoader()
-    {
-        return $this->__loader;
-    }
-
-    /**
-     * Set the class loader
-     *
-     * @param  KClassLoaderInterface $loader
-     * @return KObjectManagerInterface
-     */
-    public function setClassLoader(KClassLoaderInterface $loader)
-    {
-        $this->__loader = $loader;
-        return $this;
     }
 }
