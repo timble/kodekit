@@ -101,15 +101,17 @@ class PlgSystemKoowa extends JPlugin
         {
             require_once $path;
 
+
+            $application = JFactory::getApplication()->getName();
+
             /**
              * Library Bootstrapping
              */
             Koowa::getInstance(array(
-                'cache_prefix'  => md5(JFactory::getApplication()->getCfg('secret')).'-cache-koowa',
-                'cache_enabled' => false //JFactory::getApplication()->getCfg('caching')
+                'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
+                'cache_enabled'   => false //JFactory::getApplication()->getCfg('caching')
             ));
 
-            $application = JFactory::getApplication()->getName();
             $manager     = KObjectManager::getInstance();
             $loader      = $manager->getClassLoader();
 
@@ -165,7 +167,7 @@ class PlgSystemKoowa extends JPlugin
             /**
              * Plugin Bootstrapping
              */
-            JPluginHelper::importPlugin('koowa', null, true);
+            //JPluginHelper::importPlugin('koowa', null, true);
 
             return true;
         }
