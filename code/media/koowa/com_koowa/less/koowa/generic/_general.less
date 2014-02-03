@@ -10,6 +10,11 @@
     font-size: inherit !important;
 }
 
+// Fix for breadcrums in templates
+.breadcrumb {
+    .wrap_words();
+}
+
 .toolbar-list a.disabled, .toolbar-list .unauthorized span {
   color: gray;
   font-weight: normal;

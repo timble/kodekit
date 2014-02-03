@@ -953,6 +953,15 @@
 .koowa-toolbar {
   font-size: inherit !important;
 }
+.breadcrumb {
+  white-space: normal;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
 .toolbar-list a.disabled,
 .toolbar-list .unauthorized span {
   color: gray;
