@@ -13,14 +13,14 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObjectRegistryCache extends ObjectRegistry
+class KObjectRegistryCache extends KObjectRegistry
 {
     /**
      * The root registry namespace
      *
      * @var string
      */
-    protected $_namespace = 'koowa-registry-object';
+    protected $_namespace = 'koowa';
 
     /**
      * Constructor
@@ -35,28 +35,28 @@ class KObjectRegistryCache extends ObjectRegistry
         }
     }
 
-	/**
+    /**
      * Get the registry cache namespace
      *
      * @param string $namespace
      * @return void
      */
-	public function seNamespace($namespace)
-	{
-	    $this->_namespace = $namespace;
-	}
+    public function setNamespace($namespace)
+    {
+        $this->_namespace = $namespace;
+    }
 
-	/**
+    /**
      * Get the registry cache namespace
      *
      * @return string
      */
-	public function getNamespace()
-	{
-	    return $this->_namespace;
-	}
+    public function getNamespace()
+    {
+        return $this->_namespace;
+    }
 
- 	/**
+    /**
      * Get an item from the array by offset
      *
      * @param   int     $offset The offset
@@ -64,11 +64,15 @@ class KObjectRegistryCache extends ObjectRegistry
      */
     public function offsetGet($offset)
     {
-        if(!parent::offsetExists($offset)) {
-            $result = unserialize(apc_fetch($this->_namespace.'-'.$offset));
-        } else {
-            $result = parent::offsetGet($offset);
+        if(!parent::offsetExists($offset))
+        {
+            if($result = apc_fetch($this->_namespace.'-object-'.$offset))
+            {
+                $result =  unserialize($result);
+                parent::offsetSet($offset, $result);
+            }
         }
+        else $result = parent::offsetGet($offset);
 
         return $result;
     }
@@ -83,13 +87,13 @@ class KObjectRegistryCache extends ObjectRegistry
     public function offsetSet($offset, $value)
     {
         if($value instanceof KObjectIdentifierInterface) {
-            apc_store($this->_namespace.'-'.$offset, serialize($value));
+            apc_store($this->_namespace.'-object-'.$offset, serialize($value));
         }
 
         parent::offsetSet($offset, $value);
     }
 
-	/**
+    /**
      * Check if the offset exists
      *
      * @param   int     $offset The offset
@@ -98,9 +102,21 @@ class KObjectRegistryCache extends ObjectRegistry
     public function offsetExists($offset)
     {
         if(false === $result = parent::offsetExists($offset)) {
-            $result = apc_exists($this->_namespace.'-'.$offset);
+            $result = apc_exists($this->_namespace.'-object-'.$offset);
         }
 
         return $result;
+    }
+
+    /**
+     * Unset an item from the array
+     *
+     * @param   int     $offset
+     * @return  void
+     */
+    public function offsetUnset($offset)
+    {
+        apc_delete($this->_namespace.'-object-'.$offset);
+        parent::offsetUnset($offset);
     }
 }
