@@ -90,8 +90,12 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     protected $_decorators = array();
 
+
     /**
      * Constructor
+     *
+     * If the identifier does not have a type set default type to 'lib'. Eg, event.publisher is the same as
+     * lib:event.publisher.
      *
      * @param   string $identifier Identifier string or object in type://domain/package[.path].name format
      * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
