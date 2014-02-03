@@ -20,7 +20,7 @@ class KClassRegistryCache extends KClassRegistry
      *
      * @var boolean
      */
-    protected $_namespace = 'nooku';
+    protected $_namespace = 'koowa';
 
     /**
      * Constructor
