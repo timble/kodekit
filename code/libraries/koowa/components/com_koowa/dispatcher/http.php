@@ -34,6 +34,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         if($this->getRequest()->query->has('view')) {
             $this->_controller = $this->getRequest()->query->get('view', 'cmd');
         }
+
+        // Attach Joomla transport
+        $this->getResponse()->attachTransport('com:koowa.dispatcher.response.transport.joomla');
     }
 
     /**
@@ -180,60 +183,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
             $this->redirect($url);
         }
 
-        $result = parent::_actionDispatch($context);
-    }
-
-    /**
-     * Send the response
-     *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
-     */
-    protected function _actionSend(KDispatcherContextInterface $context)
-    {
-        $request   = $context->request;
-        $response  = $context->response;
-
-        if($request->isGet() && $response->getContentType() === 'text/html' && !$response->isRedirect() && $request->query->get('tmpl', 'cmd') != 'koowa')
-        {
-            $view = $this->getController()->getView();
-
-            //Cookies
-            foreach ($response->headers->getCookies() as $cookie)
-            {
-                setcookie(
-                    $cookie->name,
-                    $cookie->value,
-                    $cookie->expire,
-                    $cookie->path,
-                    $cookie->domain,
-                    $cookie->isSecure(),
-                    $cookie->isHttpOnly()
-                );
-            }
-
-            //Mimetype
-            JFactory::getDocument()->setMimeEncoding($view->mimetype);
-
-            //Messages
-            $messages = $context->getResponse()->getMessages(false);
-            foreach($messages as $type => $group)
-            {
-                if ($type === 'success') {
-                    $type = 'message';
-                }
-
-                foreach($group as $message) {
-                    JFactory::getApplication()->enqueueMessage($message, $type);
-                }
-            };
-
-            //Content
-            echo $response->getContent();
-
-            //Stop processing and return to Joomla
-            return false;
-        }
-
-        return parent::_actionSend($context);
+        parent::_actionDispatch($context);
     }
 }
