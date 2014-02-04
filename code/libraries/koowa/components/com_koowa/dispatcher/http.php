@@ -50,7 +50,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'event_subscribers' => array('unauthorized'),
+            'event_subscribers' => array('unauthorized', 'notfound'),
             'user'              => 'com:koowa.user',
             'limit'             => array('default' => JFactory::getApplication()->getCfg('list_limit')),
         ));

@@ -8,12 +8,12 @@
  */
 
 /**
- * Unauthorized Event Subscriber
+ * Not found Event Subscriber
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaEventSubscriberUnauthorized extends KEventSubscriberAbstract
+class ComKoowaEventSubscriberNotfound extends KEventSubscriberAbstract
 {
     protected function _initialize(KObjectConfig $config)
     {
@@ -28,28 +28,20 @@ class ComKoowaEventSubscriberUnauthorized extends KEventSubscriberAbstract
     {
         $exception = $event->getException();
 
-        if($exception instanceof KHttpExceptionUnauthorized)
+        if($exception instanceof KHttpExceptionNotFound && JFactory::getApplication()->isSite())
         {
-            $application = JFactory::getApplication();
             $request     = $this->getObject('request');
             $response    = $this->getObject('response');
 
             if ($request->getFormat() == 'html')
             {
-                if($request->isSafe())
-                {
-                    $translator = $this->getObject('translator');
-                    $message    = $translator->translate('You are not authorized to view this resource. Please login and try again.');
+                $url = $request->getReferrer();
 
-                    if($application->isSite()) {
-                        $url = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode((string) $request->getUrl()), false);
-                    } else {
-                        $url = JRoute::_('index.php', false);
-                    }
-
-                    $response->setRedirect($url, $message, 'error');
+                if (!$url) {
+                    $url = JURI::base();
                 }
-                else $response->setRedirect($request->getReferrer(), $event->getMessage(), 'error');
+
+                $response->setRedirect($url, $event->getMessage(), KControllerResponse::FLASH_ERROR);
 
                 $response->send();
 
