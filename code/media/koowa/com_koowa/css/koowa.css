@@ -1588,8 +1588,14 @@ img.mfp-img {
   text-align: left;
   line-height: 18px;
   color: #f3f3f3;
-  word-wrap: break-word;
   padding-right: 36px;
+  white-space: normal;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 .mfp-figure small {
   color: #bdbdbd;
@@ -2937,7 +2943,13 @@ table td a.iconImage {
 }
 table.parameters td {
   white-space: normal !important;
+  white-space: normal;
+  -ms-word-break: break-all;
   word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 table.parameters td.detail-label {
   white-space: nowrap !important;
@@ -2983,7 +2995,13 @@ table.parameters td.detail-label {
   line-height: 1.25em;
   position: relative;
   display: table;
+  white-space: normal;
+  -ms-word-break: break-all;
   word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 .koowa_header:before,
 .koowa_header:after {
