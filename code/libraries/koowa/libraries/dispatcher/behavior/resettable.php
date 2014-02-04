@@ -10,11 +10,11 @@
 /**
  * Resettable Dispatcher Behavior - Post, Redirect, Get
  *
- * When a user sends a POST request (e.g. after submitting a form), their browser will try to protect them from sending
- * the POST again, breaking the back button, causing browser warnings and pop-ups, and sometimes reposting the form.
+ * When a client sends a POST request (e.g. after submitting a form), the browser will try to protect them from sending
+ * the POST again, breaking the back button, causing browser warnings and pop-ups, and sometimes re-posting the form.
  *
- * Instead, when receiving a POST and when we are explicitly asking the browser to reset the form we should redirect the
- * user through a GET request to prevent duplicate form submissions.
+ * Instead, when receiving a POST and when we are not responding with a 204 NO_CONTENT we reset the form by redirecting
+ * the client through a GET request.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
@@ -50,8 +50,11 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 	 */
 	protected function _beforeSend(KDispatcherContextInterface $context)
 	{
-        if(!$context->request->isAjax() && $context->response->getStatusCode() == KHttpResponse::RESET_CONTENT) {
-            $context->response->setRedirect($context->request->getReferrer());
+        $response = $context->response;
+        $request  = $context->request;
+
+        if(!$request->isAjax() && $response->isSuccess() && $response->getStatusCode() != KHttpResponse::NO_CONTENT) {
+            $response->setRedirect($request->getReferrer());
         }
 	}
 }
