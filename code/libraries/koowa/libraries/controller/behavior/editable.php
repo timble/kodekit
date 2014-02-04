@@ -314,26 +314,29 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
         $entity = $context->getSubject()->execute($action, $context);
 
-        //Create the redirect
-        $url = $this->getReferrer($context);
-
-        if ($entity instanceof KDatabaseRowInterface)
+        if($action == 'add')
         {
-            $url = clone $context->request->getUrl();
+            //Create the redirect
+            $url = $this->getReferrer($context);
 
-            if ($this->getModel()->getState()->isUnique())
+            if ($entity instanceof KDatabaseRowInterface)
             {
-                $states = $this->getModel()->getState()->getValues(true);
+                $url = clone $context->request->getUrl();
 
-                foreach ($states as $key => $value) {
-                    $url->query[$key] = $entity->get($key);
+                if ($this->getModel()->getState()->isUnique())
+                {
+                    $states = $this->getModel()->getState()->getValues(true);
+
+                    foreach ($states as $key => $value) {
+                        $url->query[$key] = $entity->get($key);
+                    }
                 }
+                else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
             }
-            else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
-        }
 
-        //Do not force a redirect after post for apply actions.
-        $context->response->setStatus(KHttpResponse::NO_CONTENT);
+            $context->response->setRedirect($url);
+        }
+        else $context->response->setStatus(KHttpResponse::NO_CONTENT);
 
         return $entity;
 	}
