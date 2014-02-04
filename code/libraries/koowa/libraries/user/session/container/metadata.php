@@ -101,14 +101,14 @@ class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
      */
     protected function _createToken($length = 32)
     {
-        static $chars = '0123456789abcdef';
+        static $chars = '0123456789abcdefghijklmnopqrstuvwxyz';
 
         $max   = strlen($chars) - 1;
         $token = '';
         $name  = session_name();
 
         for ($i = 0; $i < $length; ++$i) {
-            $token .= $chars[(rand(0, $max))];
+            $token .= $chars[(mt_rand(0, $max))];
         }
 
         return md5($token . $name);
