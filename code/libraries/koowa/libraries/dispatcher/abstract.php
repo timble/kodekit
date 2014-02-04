@@ -290,12 +290,5 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     protected function _actionSend(KDispatcherContextInterface $context)
     {
         $context->response->send();
-
-        $status = 0;
-        if(!$context->response->isSuccess()) {
-            $status = (int) $context->response->getStatusCode();
-        }
-
-        exit($status);
     }
 }

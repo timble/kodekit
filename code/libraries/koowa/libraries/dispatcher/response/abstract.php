@@ -97,19 +97,6 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
             {
                 if($transport->send($this) == true)
                 {
-                    //Cleanup and flush output to client
-                    if (!function_exists('fastcgi_finish_request'))
-                    {
-                        if (PHP_SAPI !== 'cli')
-                        {
-                            for ($i = 0; $i < ob_get_level(); $i++) {
-                                ob_end_flush();
-                            }
-
-                            flush();
-                        }
-                    }
-                    else fastcgi_finish_request();
 
                     return true;
                 }

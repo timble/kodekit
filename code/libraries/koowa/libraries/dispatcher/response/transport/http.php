@@ -195,6 +195,25 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         $this->sendHeaders($response)
              ->sendContent($response);
 
-        return true;
+        $status = 0;
+        if(!$response->isSuccess()) {
+            $status = (int) $response->getStatusCode();
+        }
+
+        //Cleanup and flush output to client
+        if (!function_exists('fastcgi_finish_request'))
+        {
+            if (PHP_SAPI !== 'cli')
+            {
+                for ($i = 0; $i < ob_get_level(); $i++) {
+                    ob_end_flush();
+                }
+
+                flush();
+            }
+        }
+        else fastcgi_finish_request();
+
+        exit($status);
     }
 }
