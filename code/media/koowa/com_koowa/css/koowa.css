@@ -2974,6 +2974,9 @@ table.parameters td.detail-label {
 .koowa_table .koowa_table__manage .koowa_toolbar {
   margin: 0;
 }
+.koowa_table .detail-label {
+  font-size: .9em;
+}
 .koowa_header {
   *zoom: 1;
   margin: 0 0 10px;
