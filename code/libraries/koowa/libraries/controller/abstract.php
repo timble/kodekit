@@ -52,13 +52,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      */
     protected $_dispatched;
 
-    //Status codes
-    const STATUS_SUCCESS   = KHttpResponse::OK;
-    const STATUS_CREATED   = KHttpResponse::CREATED;
-    const STATUS_ACCEPTED  = KHttpResponse::ACCEPTED;
-    const STATUS_UNCHANGED = KHttpResponse::NO_CONTENT;
-    const STATUS_RESET     = KHttpResponse::RESET_CONTENT;
-
     /**
      * Constructor.
      *

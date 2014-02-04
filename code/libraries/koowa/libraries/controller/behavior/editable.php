@@ -332,7 +332,8 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
         }
 
-        $context->response->setRedirect($url);
+        //Do not force a redirect after post for apply actions.
+        $context->response->setStatus(KHttpResponse::NO_CONTENT);
 
         return $entity;
 	}

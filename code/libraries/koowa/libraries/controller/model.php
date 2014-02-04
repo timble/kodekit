@@ -234,9 +234,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 
             //Only set the reset content status if the action explicitly succeeded
             if($entity->save() === true) {
-                $context->response->setStatus(self::STATUS_RESET);
-            } else {
-                $context->response->setStatus(self::STATUS_UNCHANGED);
+                $context->response->setStatus(KHttpResponse::RESET_CONTENT);
             }
         }
         else throw new KControllerExceptionNotFound('Resource could not be found');
@@ -266,7 +264,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 $error = $entity->getStatusMessage();
                 throw new KControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
             }
-            else $context->response->setStatus(self::STATUS_CREATED);
+            else $context->response->setStatus(KHttpResponse::CREATED);
         }
         else throw new KControllerExceptionBadRequest('Resource Already Exists');
 
@@ -301,7 +299,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 $error = $entity->getStatusMessage();
                 throw new KControllerExceptionActionFailed($error ? $error : 'Delete Action Failed');
             }
-            else $context->response->setStatus(self::STATUS_UNCHANGED);
+            else $context->response->setStatus(KHttpResponse::NO_CONTENT);
         }
         else throw new KControllerExceptionNotFound('Resource Not Found');
 
