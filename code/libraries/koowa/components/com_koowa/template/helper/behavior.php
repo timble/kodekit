@@ -428,7 +428,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $attribs = $this->buildAttributes($config->attribs);
 
-        $id = 'overlay'.rand();
+        $id = 'overlay'.mt_rand();
         if($url->fragment)
         {
             //Allows multiple identical ids, legacy should be considered replaced with #$url->fragment instead
