@@ -90,7 +90,7 @@ class KDate extends KObject implements KDateInterface
 
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
         $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
-        $now     = $this->getObject('lib.date');
+        $now     = $this->getObject('lib:date');
 
         if($now != $this->_date)
         {
