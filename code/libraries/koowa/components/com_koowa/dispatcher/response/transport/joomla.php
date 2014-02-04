@@ -47,10 +47,8 @@ class ComKoowaDispatcherResponseTransportJoomla extends KDispatcherResponseTrans
         if ($request->isGet() && $response->getContentType() === 'text/html'
             && !$response->isRedirect() && $request->query->get('tmpl', 'cmd') != 'koowa')
         {
-            $view = $this->getObject('dispatcher')->getController()->getView();
-
             //Mimetype
-            JFactory::getDocument()->setMimeEncoding($view->mimetype);
+            JFactory::getDocument()->setMimeEncoding($response->getContentType());
 
             //Cookies
             foreach ($response->headers->getCookies() as $cookie)
