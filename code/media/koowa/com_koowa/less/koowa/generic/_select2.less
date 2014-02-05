@@ -34,13 +34,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     border-radius: 4px;
 
     background-clip: padding-box;
-
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    .user-select(none);
 
     background-color: #fff;
     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
@@ -139,9 +133,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     border-top: 0;
 
     border-radius: 0 0 4px 4px;
-
-    -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
-    box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
+    .box-shadow(0 4px 5px rgba(0, 0, 0, .15));
 }
 
 .select2-drop-auto-width {
@@ -227,10 +219,8 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     font-size: 1em;
 
     border: 1px solid #aaa;
-    border-radius: 0;
-
-    -webkit-box-shadow: none;
-    box-shadow: none;
+    .border-radius(0);
+    .box-shadow(none);
 
     background: #fff url('@{koowaPath}/images/select2.png') no-repeat 100% -22px;
     background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
@@ -260,14 +250,12 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     border: 1px solid @linkColor;
     outline: none;
 
-    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+    .box-shadow(0 0 5px rgba(0, 0, 0, .3));
 }
 
 .select2-dropdown-open .select2-choice {
     border-bottom-color: transparent;
-    -webkit-box-shadow: 0 1px 0 #fff inset;
-    box-shadow: 0 1px 0 #fff inset;
+    .box-shadow(0 1px 0 #fff inset);
 
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -464,9 +452,7 @@ disabled look for disabled choices in the results dropdown
 .select2-container-multi.select2-container-active .select2-choices {
     border: 1px solid @linkColor;
     outline: none;
-
-    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+    .box-shadow(0 0 5px rgba(0, 0, 0, .3));
 }
 .select2-container-multi .select2-choices li {
     float: left;
@@ -487,8 +473,7 @@ disabled look for disabled choices in the results dropdown
     color: #666;
     outline: 0;
     border: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
+    .box-shadow(none);
     background: transparent !important;
 }
 
@@ -511,18 +496,11 @@ disabled look for disabled choices in the results dropdown
     border: 1px solid #aaaaaa;
 
     border-radius: 3px;
-
-    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    .box-shadow(~'0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05)');
 
     background-clip: padding-box;
 
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    .user-select(none);
 
     background-color: #e4e4e4;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
@@ -566,10 +544,7 @@ disabled look for disabled choices in the results dropdown
 
 /* disabled styles */
 .select2-container-multi.select2-container-disabled .select2-choices {
-    background-color: #f4f4f4;
-    background-image: none;
-    border: 1px solid #ddd;
-    cursor: default;
+    .select2-container.select2-container-disabled .select2-choice;
 }
 
 .select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice {
