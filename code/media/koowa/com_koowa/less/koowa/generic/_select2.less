@@ -158,10 +158,8 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     border-top: 1px solid #aaa;
     border-bottom: 0;
 
-    border-radius: 4px 4px 0 0;
-
-    -webkit-box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
-    box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
+    .border-radius(4px 4px 0 0);
+    .box-shadow(0 -4px 5px rgba(0, 0, 0, .15));
 }
 
 .select2-drop-active {
@@ -182,7 +180,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     top: 0;
 
     border-left: 1px solid #aaa;
-    border-radius: 0 4px 4px 0;
+    .border-radius(0 4px 4px 0);
 
     background-clip: padding-box;
 
@@ -311,7 +309,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 .select2-results {
     max-height: 200px;
     padding: 0 0 0 4px;
-    margin: 4px 4px 4px 0;
+    margin: 0 4px 4px 0;
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
@@ -357,8 +355,10 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 }
 
 .select2-results .select2-highlighted {
-    background: #3875d7;
-    color: #fff;
+    // extend to use the selected style of .koowa table
+    &:extend(.koowa .table tbody.selected-single tr.selected td);
+    .border-radius(2px);
+    color: white;
 }
 
 .select2-results li em {
