@@ -1053,7 +1053,7 @@
   display: block;
   width: 16px;
   height: 16px;
-  overflow: hidden;
+  overflow: visible;
   font-size: 16px;
   line-height: 16px;
   text-align: center;
