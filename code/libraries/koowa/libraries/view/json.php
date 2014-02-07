@@ -26,6 +26,15 @@ class KViewJson extends KViewAbstract
     protected $_version;
 
     /**
+     * A list of fields to use in the response. Blank for all.
+     *
+     * Comes from the comma separated "fields" value in the request
+     *
+     * @var array
+     */
+    protected $_fields = array();
+
+    /**
      * A list of text fields in the row
      *
      * URLs will be converted to fully qualified ones in these fields.
@@ -54,6 +63,16 @@ class KViewJson extends KViewAbstract
         $this->_plural  = $config->plural;
 
         $this->_text_fields = KObjectConfig::unbox($config->text_fields);
+
+        $this->_fields = KObjectConfig::unbox($config->fields);
+
+        $query = $this->getUrl()->getQuery(true);
+        if (!empty($query['fields']))
+        {
+            $fields = explode(',', $query['fields']);
+
+            $this->_fields = array_merge($this->_fields, $fields);
+        }
     }
 
     /**
@@ -68,6 +87,7 @@ class KViewJson extends KViewAbstract
     {
         $config->append(array(
             'version'     => '1.0',
+            'fields'      => array(),
             'text_fields' => array('description'), // Links are converted to absolute ones in these fields
             'plural'      => KStringInflector::isPlural($this->getName())
         ))->append(array(
@@ -208,6 +228,10 @@ class KViewJson extends KViewAbstract
             $data = $this->$method($row);
         } else {
             $data = $row->toArray();
+        }
+
+        if (!empty($this->_fields)) {
+            $data = array_intersect_key($data, array_flip($this->_fields));
         }
 
         if (!isset($data['links'])) {
