@@ -241,10 +241,6 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
             $config->url = $this->getTemplate()->getView()->getRoute($parts, false, false);
         }
 
-        if ($config->url instanceof KHttpUrl) {
-            $config->url = $config->url->toString();
-        }
-
         $html = '';
 
         // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices

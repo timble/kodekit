@@ -579,6 +579,14 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $html ='';
 
+        if (!$config->options->url instanceof KHttpUrl) {
+            $config->options->url = $this->getObject('lib:http.url', array('url' => $config->options->url));
+        }
+
+        $config->options->url->setQuery(array('fields' => $config->value.','.$config->text), true);
+
+        $config->options->url = (string)$config->options->url;
+
         $options   = $config->options;
         $signature = md5('autocomplete-'.$config->element.$options);
 
