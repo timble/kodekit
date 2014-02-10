@@ -697,4 +697,59 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         return $html;
     }
+
+    /**
+     * Returns an array of month names (short and long) translated to the site language
+     *
+     * JavaScript Date object does not have a public API to do this.
+     *
+     * @param array $config
+     * @return string
+     */
+    public function local_dates($config = array())
+    {
+        $html   = '';
+        $months = array();
+
+        for ($i = 1; $i < 13; $i++)
+        {
+            $month  = strtoupper(date('F', mktime(0, 0, 0, $i, 1, 2000)));
+            $long  = $this->translate($month);
+            $short = $this->translate($month.'_SHORT');
+
+            if (strpos($short, '_SHORT') !== false) {
+                $short = $long;
+            }
+
+            $months[$i] = array('long' => $long, 'short' => $short);
+        }
+
+        if (!isset(self::$_loaded['local_dates']))
+        {
+            $html = sprintf("
+            <script>
+            if(!Koowa) {
+                var Koowa = {};
+            }
+
+            if (!Koowa.Date) {
+                Koowa.Date = {};
+            }
+
+            Koowa.Date.local_month_names = %s;
+            Koowa.Date.getMonthName = function(month, short) {
+                if (month < 1 || month > 12) {
+                    throw 'Month index should be between 1 and 12';
+                }
+
+                return Koowa.Date.local_month_names[month][short ? 'short' : 'long'];
+            };
+            </script>
+            ", json_encode($months));
+
+            self::$_loaded['local_dates'] = true;
+        }
+
+        return $html;
+    }
 }
