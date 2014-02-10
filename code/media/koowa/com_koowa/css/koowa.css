@@ -1043,6 +1043,9 @@
 .koowa-icon-calendar:before {
   content: "\e610";
 }
+.koowa-icon-sort:before {
+  content: "\e611";
+}
 .koowa_icon {
   vertical-align: middle;
   display: inline-block;
@@ -1068,6 +1071,16 @@
   margin: -1px;
   padding: 0;
   border: 0;
+}
+.koowa_icon.koowa_icon--12 {
+  width: 12px;
+  height: 12px;
+}
+.koowa_icon.koowa_icon--12:before {
+  width: 12px;
+  height: 12px;
+  font-size: 12px;
+  line-height: 12px;
 }
 @media screen and (min-width: 600px) {
   .koowa_icon.koowa_icon--24 {

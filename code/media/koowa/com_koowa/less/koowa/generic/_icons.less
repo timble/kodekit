@@ -75,6 +75,9 @@
 .koowa-icon-calendar:before {
     content: "\e610";
 }
+.koowa-icon-sort:before {
+    content: "\e611";
+}
 
 
 // styling the span element
@@ -101,6 +104,18 @@
         clip: rect(0 0 0 0);
         height: 1px; width: 1px;
         margin: -1px; padding: 0; border: 0;
+    }
+
+    &.koowa_icon--12 {
+        width: 12px;
+        height: 12px;
+
+        &:before {
+            width: 12px;
+            height: 12px;
+            font-size: 12px;
+            line-height: 12px;
+        }
     }
 
     @media screen and (min-width: 600px) {
