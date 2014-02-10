@@ -738,6 +738,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
             Koowa.Date.local_month_names = %s;
             Koowa.Date.getMonthName = function(month, short) {
+                month = parseInt(month, 10);
+
                 if (month < 1 || month > 12) {
                     throw 'Month index should be between 1 and 12';
                 }
