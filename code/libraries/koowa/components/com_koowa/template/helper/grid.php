@@ -163,16 +163,20 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         $html  = '<a href="'.$url.'" title="'.$this->translate('Click to sort by this column').'"  '.$class.'>';
         $html .= $this->translate($config->title);
-        $html .= '</a>';
 
         // Mark the current column
         if ($config->column == $config->sort) {
-            $icon = 'sort_'.(strtolower($config->direction) === 'asc' ? 'asc' : 'desc');
-            $html .= ' <img src="media://system/images/'.$icon.'.png">';
+            if (strtolower($config->direction) === 'asc') {
+                $html .= '<span class="arrow_sort_asc">▼</span>';
+            } else {
+                $html .= '<span class="arrow_sort_desc">▲</span>';
+            }
         }
         else {
-            $html .= ' <span class="koowa_icon koowa-icon-sort"><i></i></span>';
+            $html .= ' <span class="koowa_icon koowa-icon-sort koowa_icon--12"><i></i></span>';
         }
+
+        $html .= '</a>';
 
         return $html;
     }
