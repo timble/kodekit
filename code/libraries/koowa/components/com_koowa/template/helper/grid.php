@@ -170,6 +170,9 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $icon = 'sort_'.(strtolower($config->direction) === 'asc' ? 'asc' : 'desc');
             $html .= ' <img src="media://system/images/'.$icon.'.png">';
         }
+        else {
+            $html .= ' <span class="koowa_icon koowa-icon-sort"><i></i></span>';
+        }
 
         return $html;
     }
