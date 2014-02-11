@@ -167,13 +167,13 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         // Mark the current column
         if ($config->column == $config->sort) {
             if (strtolower($config->direction) === 'asc') {
-                $html .= '<span class="arrow_sort_asc">▼</span>';
+                $html .= ' <span class="koowa_icon koowa_icon--12 koowa-icon-sort-up"></span>';
             } else {
-                $html .= '<span class="arrow_sort_desc">▲</span>';
+                $html .= ' <span class="koowa_icon koowa_icon--12 koowa-icon-sort-down"></span>';
             }
         }
         else {
-            $html .= ' <span class="koowa_icon koowa-icon-sort koowa_icon--12"><i></i></span>';
+            $html .= ' <span class="koowa_icon koowa-icon-sort koowa_icon--12"></span>';
         }
 
         $html .= '</a>';

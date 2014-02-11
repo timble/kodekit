@@ -10,7 +10,7 @@
     font-style: normal;
 }
 
-[class^="koowa-icon-"], [class*=" koowa-icon-"] {
+[class^="koowa-icon-"], [class*=" koowa-icon-"], .koowa_icon_font /* Used as mixin */ {
     font-family: 'koowa';
     speak: none;
     font-style: normal;
@@ -78,9 +78,27 @@
 .koowa-icon-sort:before {
     content: "\e611";
 }
+.koowa-icon-caret-down:before {
+    content: "\e612";
+}
+.koowa-icon-caret-up:before {
+    content: "\e613";
+}
+.koowa-icon-caret-left:before {
+    content: "\e614";
+}
+.koowa-icon-caret-right:before {
+    content: "\e615";
+}
+.koowa-icon-sort-down:before {
+    content: "\e616";
+}
+.koowa-icon-sort-up:before {
+    content: "\e617";
+}
 
 // styling the span element
-.koowa_icon {
+.koowa_icon, .koowa_icon_font /* Used as mixin */ {
     vertical-align: middle;
     display: inline-block;
     width: 16px;
@@ -186,15 +204,4 @@
             line-height: 48px;
         }
     }
-}
-
-// Asc and Desc icons for table overviews
-.arrow_sort_asc,
-.arrow_sort_desc {
-    display: inline-block;
-    font-size: 10px;
-    margin-left: 5px;
-    vertical-align: middle;
-
-    .unicode_icon();
 }
