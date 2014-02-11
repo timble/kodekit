@@ -30,7 +30,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
         $mixer   = $this->getMixer();
         $request = $mixer->getRequest();
 
-        if($request->isPost() && !$request->isAjax() && $request->getFormat() == 'html') {
+        if(!$request->isSafe() && !$request->isAjax() && $request->getFormat() == 'html') {
             return true;
         }
 
