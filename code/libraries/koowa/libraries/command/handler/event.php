@@ -19,7 +19,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandHandlerEvent extends KCommandHandlerAbstract
+class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObjectInstantiable, KObjectSingleton
 {
     /**
      * The command priority
@@ -53,7 +53,6 @@ class KCommandHandlerEvent extends KCommandHandlerAbstract
 
         //Set the immutable state of the handler
         $this->_immutable = $config->immutable;
-
     }
 
     /**
@@ -73,6 +72,27 @@ class KCommandHandlerEvent extends KCommandHandlerAbstract
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Force creation of a singleton
+     *
+     * @param  KObjectConfigInterface   $config	  A ObjectConfig object with configuration options
+     * @param  KObjectManagerInterface	$manager  A ObjectInterface object
+     * @return KEventPublisher
+     */
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    {
+        // Check if an instance with this identifier already exists or not
+        if (!$manager->isRegistered($config->object_identifier))
+        {
+            //Create the singleton
+            $class    = $manager->getClass($config->object_identifier);
+            $instance = new $class($config);
+            $manager->setObject($config->object_identifier, $instance);
+        }
+
+        return $manager->getObject($config->object_identifier);
     }
 
     /**
