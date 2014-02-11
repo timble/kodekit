@@ -87,6 +87,15 @@ interface KDatabaseTableInterface
     public function getSchema();
 
     /**
+     * Check if the table column exists
+     *
+     * @param  string  $columnname The name of the column
+     * @param  boolean $base If TRUE, get the column information from the base table. Default is FALSE.
+     * @return bool  Returns TRUE if the column exists, FALSE otherwise.
+     */
+    public function hasColumn($columnname, $base = false);
+
+    /**
      * Get a column by name
      *
      * @param  string  $columnname The name of the column

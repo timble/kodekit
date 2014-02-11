@@ -266,6 +266,18 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     }
 
     /**
+     * Check if the table column exists
+     *
+     * @param  string  $columnname The name of the column
+     * @param  boolean $base If TRUE, get the column information from the base table. Default is FALSE.
+     * @return bool  Returns TRUE if the column exists, FALSE otherwise.
+     */
+    public function hasColumn($columnname, $base = false)
+    {
+        return (bool) $this->getColumn($columnname, $base);
+    }
+
+    /**
      * Get a column by name
      *
      * @param  string  $columnname The name of the column
