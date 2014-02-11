@@ -16,18 +16,19 @@
 class ComKoowaControllerBehaviorPersistable extends KControllerBehaviorPersistable
 {
     /**
-     * Get an object handle
+     * Check if the behavior is supported
      *
-     * @return string A string that is unique, or NULL
-     * @see execute()
+     * @return  boolean  True on success, false otherwise
      */
-    public function getHandle()
+    public function isSupported()
     {
+        $mixer = $this->getMixer();
+
         //Disable controller persistency on requests containing the tmpl variable set to component (modal boxes)
-        if ($this->getRequest()->query->get('tmpl', 'cmd') != 'component') {
-            return parent::getHandle();
+        if ($mixer->getRequest()->query->get('tmpl', 'cmd') != 'component') {
+            return true;
         }
 
-        return null;
+        return false;
     }
 }

@@ -16,25 +16,23 @@
 class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
 {
     /**
-     * Get an object handle
+     * Check if the behavior is supported
      *
-     * Disable dispatcher persistence on non-HTTP requests, e.g. AJAX. This avoids changing the model state session
+     * Disable controller persistency on non-HTTP requests, e.g. AJAX. This avoids changing the model state session
      * variable of the requested model, which is often undesirable under these circumstances.
      *
-     * @return string A string that is unique, or NULL
-     * @see execute()
+     * @return  boolean  True on success, false otherwise
      */
-    public function getHandle()
+    public function isSupported()
     {
-        $result = null;
+        $mixer   = $this->getMixer();
+        $request = $mixer->getRequest();
 
-        if ($this->getMixer() instanceof KControllerModellable && $this->isDispatched()
-            && $this->getRequest()->isGet() && !$this->getRequest()->isAjax()
-        ) {
-            $result = parent::getHandle();
+        if ($mixer instanceof KControllerModellable && $mixer->isDispatched() && $request->isGet() && !$request->isAjax()) {
+            return true;
         }
 
-        return $result;
+        return false;
     }
 
     /**
