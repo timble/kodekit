@@ -896,7 +896,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if (!isset($this->_mixed_methods[$method]))
         {
             // If the method is of the form is[Bahavior] handle it.
-            $parts = StringInflector::explode($method);
+            $parts = KStringInflector::explode($method);
 
             if ($parts[0] == 'is' && isset($parts[1])) {
                 return false;
