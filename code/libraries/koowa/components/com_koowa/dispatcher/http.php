@@ -34,9 +34,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         if($this->getRequest()->query->has('view')) {
             $this->_controller = $this->getRequest()->query->get('view', 'cmd');
         }
-
-        // Attach Joomla transport
-        $this->getResponse()->attachTransport('com:koowa.dispatcher.response.transport.joomla');
     }
 
     /**
@@ -50,6 +47,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'response'          => 'com:koowa.dispatcher.response',
             'event_subscribers' => array('unauthorized', 'notfound'),
             'user'              => 'com:koowa.user',
             'limit'             => array('default' => JFactory::getApplication()->getCfg('list_limit')),
