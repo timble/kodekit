@@ -13,9 +13,8 @@
  * The event handler will translate the command name to a onCommandName format and let the event publisher publish
  * to any registered event listeners.
  *
- * The 'immutable' config option defines if the context is clone before being passed to the event publisher or
- * it passed by reference instead. By default the context is cloned and changes to the event will not impact the
- * command context.
+ * The 'immutable' config option defines if the context is cloned before being passed to the event publisher or
+ * or passed by reference instead. By default the context is passed by reference.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
@@ -70,7 +69,7 @@ class KCommandHandlerEvent extends KCommandHandlerAbstract
         $config->append(array(
             'priority'        => self::PRIORITY_LOWEST,
             'event_publisher' => 'event.publisher',
-            'immutable'       => true,
+            'immutable'       => false,
         ));
 
         parent::_initialize($config);
