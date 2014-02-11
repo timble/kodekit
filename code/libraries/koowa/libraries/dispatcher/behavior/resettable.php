@@ -10,11 +10,10 @@
 /**
  * Resettable Dispatcher Behavior - Post, Redirect, Get
  *
- * When a client sends a POST request (e.g. after submitting a form), the browser will try to protect them from sending
+ * When a browser sends a POST request (e.g. after submitting a form), the browser will try to protect them from sending
  * the POST again, breaking the back button, causing browser warnings and pop-ups, and sometimes re-posting the form.
  *
- * Instead, when receiving a POST and when we are not responding with a 204 NO_CONTENT we reset the form by redirecting
- * the client through a GET request.
+ * Instead, when receiving a none AJAX POST request reset the browser by redirecting it through a GET request.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
@@ -24,7 +23,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
     /**
      * Get an object handle
      *
-     * Only attach this behavior for form (application/x-www-form-urlencoded) POST requests.
+     * Only attach this behavior for none AJAX POST requests.
      *
      * @return string A string that is unique, or NULL
      * @see execute()
@@ -32,7 +31,9 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
     public function getHandle()
     {
         $result = null;
-        if($this->getRequest()->isPost() && $this->getRequest()->getContentType() == 'application/x-www-form-urlencoded') {
+        $request = $this->getRequest();
+
+        if($request->isPost() && !$request->isAjax() && $request->getFormat() == 'html') {
             $result = parent::getHandle();
         }
 
@@ -42,8 +43,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
     /**
 	 * Force a GET after POST using the referrer
      *
-     * Method will only set the redirect for none AJAX requests and only if the controller has a returned a 2xx status
-     * code. In all other cases no redirect will be set.
+     * Redirect if the controller has a returned a 2xx status code.
 	 *
 	 * @param 	KDispatcherContextInterface $context The active command context
 	 * @return 	void
@@ -53,7 +53,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
         $response = $context->response;
         $request  = $context->request;
 
-        if(!$request->isAjax() && $response->isSuccess() && $response->getStatusCode() != KHttpResponse::NO_CONTENT) {
+        if($response->isSuccess()) {
             $response->setRedirect($request->getReferrer());
         }
 	}
