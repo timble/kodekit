@@ -115,15 +115,8 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperAbstract
 
         //Create the href
         $command->attribs->append(array('href' => '#'));
-        if(!empty($command->href))
-        {
-            $href = $command->href;
-
-            if (substr($href, 0, 1) === '&') {
-                $href = $this->getTemplate()->getView()->getRoute($href);
-            }
-
-            $command->attribs['href'] = $href;
+        if(!empty($command->href)) {
+            $command->attribs['href'] = $this->getTemplate()->getView()->getRoute($command->href);
         }
 
         //Create the id

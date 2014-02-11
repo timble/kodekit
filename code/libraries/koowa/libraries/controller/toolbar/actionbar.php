@@ -76,6 +76,86 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     }
 
     /**
+     * Add default action commands and set the action bar title
+     * .
+     *
+     * @param KControllerContextInterface $context A command context object
+     */
+    protected function _afterRead(KControllerContextInterface $context)
+    {
+        $controller = $this->getController();
+        $name       = ucfirst($context->subject->getIdentifier()->name);
+
+        if($controller->getModel()->getState()->isUnique())
+        {
+            $saveable = $controller->canEdit();
+            $title    = 'Edit '.$name;
+        }
+        else
+        {
+            $saveable = $controller->canAdd();
+            $title    = 'New '.$name;
+        }
+
+        if($saveable)
+        {
+            $this->getCommand('title')->title = $title;
+            $this->addCommand('apply');
+            $this->addCommand('save');
+        }
+
+        $this->addCommand('cancel');
+    }
+
+    /**
+     * Add default action commands
+     * .
+     *
+     * @param KControllerContextInterface $context A command context object
+     */
+    protected function _afterBrowse(KControllerContextInterface $context)
+    {
+        $controller = $this->getController();
+
+        if($controller->canAdd()) {
+            $this->addCommand('new');
+        }
+
+        if($controller->canDelete()) {
+            $this->addCommand('delete');
+        }
+    }
+
+    /**
+     * New toolbar command
+     *
+     * @param   KControllerToolbarCommand $command  A ControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandNew(KControllerToolbarCommand $command)
+    {
+        $identifier = $this->getController()->getIdentifier();
+        $command->href = 'option=com_'.$identifier->package.'&view='.$identifier->name;
+    }
+
+    /**
+     * Delete toolbar command
+     *
+     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandDelete(KControllerToolbarCommand $command)
+    {
+        $translator = $this->getObject('translator');
+        $command->append(array(
+            'attribs' => array(
+                'data-action' => 'delete',
+                'data-prompt' => $translator->translate('Deleted items will be lost forever. Would you like to continue?')
+            )
+        ));
+    }
+
+    /**
      * Enable toolbar command
      *
      * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
@@ -132,11 +212,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         $option = $this->getIdentifier()->package;
         $view   = $this->getIdentifier()->name;
 
-        $command->append(array(
-            'attribs' => array(
-                'href' =>  JRoute::_('index.php?option=com_'.$option.'&view='.$view.'&'.$query)
-            )
-        ));
+        $command->href = 'option=com_'.$option.'&view='.$view.'&'.$query;
     }
 
     /**
@@ -158,67 +234,5 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
             ));
 
         $command->attribs['data-koowa-modal'] = json_encode($command->attribs['data-koowa-modal']);
-    }
-
-    /**
-     * Add default action commands and set the action bar title
-     * .
-     *
-     * @param KControllerContextInterface $context A command context object
-     */
-    protected function _afterRead(KControllerContextInterface $context)
-    {
-        $controller = $this->getController();
-        $name       = ucfirst($context->subject->getIdentifier()->name);
-
-        if($controller->getModel()->getState()->isUnique())
-        {
-            $saveable = $controller->canEdit();
-            $title    = 'Edit '.$name;
-        }
-        else
-        {
-            $saveable = $controller->canAdd();
-            $title    = 'New '.$name;
-        }
-
-        if($saveable)
-        {
-            $this->getCommand('title')->title = $title;
-            $this->addCommand('apply');
-            $this->addCommand('save');
-        }
-
-        $this->addCommand('cancel');
-    }
-
-    /**
-     * Add default action commands
-     * .
-     *
-     * @param KControllerContextInterface $context A command context object
-     */
-    protected function _afterBrowse(KControllerContextInterface $context)
-    {
-        $controller = $this->getController();
-
-        if($controller->canAdd())
-        {
-            $identifier = $context->subject->getIdentifier();
-
-            $this->addCommand('new', array(
-                'href' => JRoute::_('index.php?option=com_'.$identifier->package.'&view='.$identifier->name)
-            ));
-        }
-
-        if($controller->canDelete())
-        {
-            $translator = $this->getObject('translator');
-            $this->addCommand('delete', array(
-                'attribs' => array(
-                    'data-prompt' => $translator->translate('Deleted items will be lost forever. Would you like to continue?')
-                )
-            ));
-        }
     }
 }
