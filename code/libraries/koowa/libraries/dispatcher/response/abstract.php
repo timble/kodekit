@@ -95,9 +95,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         {
             if($transport instanceof KDispatcherResponseTransportInterface)
             {
-                if($transport->send($this) == true)
-                {
-
+                if($transport->send($this) == true) {
                     return true;
                 }
             }
