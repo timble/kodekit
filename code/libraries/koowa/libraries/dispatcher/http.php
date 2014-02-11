@@ -349,7 +349,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     }
 
     /**
-     * Return the affected entities in the payload for AJAX POST and PUT requests
+     * Return the affected entities in the payload for none-SAFE requests that return a successful response. Make an
+     * exception for 204 No Content responses which should not return a response body.
      *
      * {@inheritdoc}
      */
@@ -358,7 +359,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         $request  = $this->getRequest();
         $response = $this->getResponse();
 
-        if ($request->isAjax() && !$request->isGet())
+        if (!$request->isSafe())
         {
             if ($response->isSuccess() && $response->getStatusCode() !== KHttpResponse::NO_CONTENT) {
                 $context->result = $this->getController()->execute('render', $context);
