@@ -27,7 +27,7 @@
  * <?php
  *  class plgKoowaFoo extends PlgKoowaAbstract
  * {
- *      public function onBeforeControllerBrowse(KEvent $event)
+ *      public function onBeforeControllerBrowse(KCommandInterface $event)
  *      {
  *          //The caller is a reference to the object that is triggering this event
  *          $caller = $event->subject;
@@ -37,7 +37,7 @@
  *          $result = $event->result;
  *
  *          //The context object can also contain a number of custom properties
- *          print_r($context);
+ *          print_r($event);
  *      }
  * }
  * </code>
