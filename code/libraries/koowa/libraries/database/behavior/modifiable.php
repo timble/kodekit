@@ -42,7 +42,9 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     public function isSupported()
     {
         $mixer = $this->getMixer();
-        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('modified_by') || $mixer->has('modified_on'))) {
+        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+
+        if($table->hasColumn('modified_by') || $table->hasColumn('modified_on')) {
             return true;
         }
 

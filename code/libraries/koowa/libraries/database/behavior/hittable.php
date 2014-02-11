@@ -25,7 +25,9 @@ class KDatabaseBehaviorHittable extends KDatabaseBehaviorAbstract
     public function isSupported()
     {
         $mixer = $this->getMixer();
-        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('hits')))  {
+        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+
+        if($table->hasColumn('hits'))  {
             return true;
         }
 

@@ -109,7 +109,9 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     public function isSupported()
     {
         $mixer = $this->getMixer();
-        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('slug')))  {
+        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+
+        if($table->hasColumn('slug'))  {
             return true;
         }
 

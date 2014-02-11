@@ -25,7 +25,9 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
     public function isSupported()
     {
         $mixer = $this->getMixer();
-        if($mixer instanceof KDatabaseRowInterface && $mixer->has('uuid')) {
+        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+
+        if($table->hasColumn('uuid')) {
             return true;
         }
 

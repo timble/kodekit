@@ -52,7 +52,9 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
     public function isSupported()
     {
         $mixer = $this->getMixer();
-        if($mixer instanceof KDatabaseRowInterface && ($mixer->has('locked_by') || $mixer->has('locked_on'))) {
+        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+
+        if($table->hasColumn('locked_by') || $table->hasColumn('locked_on')) {
             return true;
         }
 
