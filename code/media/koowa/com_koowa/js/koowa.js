@@ -636,6 +636,12 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
         return Koowa.Grid.getIdQuery() || false;
     },
 
+    _actionDelete: function(context) {
+        context.method = 'delete';
+
+        return this._actionDefault(context);
+    },
+
     _actionDefault: function(context) {
         var idQuery = Koowa.Grid.getIdQuery(),
             append  = this.options.url.match(/\?/) ? '&' : '?',
@@ -650,6 +656,10 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             url: this.options.url+(idQuery ? append+idQuery : ''),
             params: $.extend({}, {_action: context.action}, context.data)
         };
+
+        if (context.method) {
+            options.params._method = context.method;
+        }
 
         new Koowa.Form(options).submit();
     }
