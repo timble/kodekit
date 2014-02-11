@@ -318,20 +318,8 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         {
             //Create the redirect
             $url = $this->getReferrer($context);
-
-            if ($entity instanceof KDatabaseRowInterface)
-            {
-                $url = clone $context->request->getUrl();
-
-                if ($this->getModel()->getState()->isUnique())
-                {
-                    $states = $this->getModel()->getState()->getValues(true);
-
-                    foreach ($states as $key => $value) {
-                        $url->query[$key] = $entity->get($key);
-                    }
-                }
-                else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
+            if ($entity instanceof KDatabaseRowInterface) {
+                $url = $context->response->headers->get('Location');
             }
 
             $context->response->setRedirect($url);

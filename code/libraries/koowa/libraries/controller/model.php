@@ -264,7 +264,26 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 $error = $entity->getStatusMessage();
                 throw new KControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
             }
-            else $context->response->setStatus(KHttpResponse::CREATED);
+            else
+            {
+                if ($entity instanceof KDatabaseRowInterface)
+                {
+                    $url = clone $context->request->getUrl();
+
+                    if ($this->getModel()->getState()->isUnique())
+                    {
+                        $states = $this->getModel()->getState()->getValues(true);
+
+                        foreach ($states as $key => $value) {
+                            $url->query[$key] = $entity->get($key);
+                        }
+                    }
+                    else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
+                }
+
+                $context->response->headers->set('Location', (string) $url);
+                $context->response->setStatus(KHttpResponse::CREATED);
+            }
         }
         else throw new KControllerExceptionBadRequest('Resource Already Exists');
 
