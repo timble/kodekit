@@ -368,7 +368,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
             $html .= '<span class="input-group-btn">';
             $html .= '<span class="btn" >';
-            $html .= '<span class="koowa_icon koowa-icon-calendar"><i>calendar</i></span>';
+            $html .= '<span class="koowa_icon--calendar"><i>calendar</i></span>';
             $html .= '</span>';
             $html .= '</span>';
             $html .= '</div>';

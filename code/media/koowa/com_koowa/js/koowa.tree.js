@@ -52,8 +52,8 @@
                     data: [], //Default empty value to avoid errors when there are no items yet
                     autoOpen: 0, //Auto open just "All Categories" by default, this value is the nesting level not the node id
                     useContextMenu: false, //This allows us to right-click menu items again
-                    toggler: [{triangle: ['icon-triangle-right', '&#x25ba;'], folder: 'koowa-icon-folder'},//Styling options for toggler
-                              {triangle: ['icon-triangle-down', '&#x25bc;'], folder: 'koowa-icon-folder-open'}],
+                    toggler: [{triangle: ['icon-triangle-right', '&#x25ba;'], folder: 'koowa_icon--folder'},//Styling options for toggler
+                              {triangle: ['icon-triangle-down', '&#x25bc;'], folder: 'koowa_icon--folder_open'}],
                     onCreateLi: function(node, $li){ //Method for customizing <li> markup
 
                         /**
@@ -102,10 +102,10 @@
                                     }
                                 });
                             // prepend the toggler triangle and the folder icon to the title
-                            $li.find('.jqtree-title').prepend('<span class="koowa_icon '+state.folder+'"><i>'+text+'</i></span> ').prepend(triangle);
+                            $li.find('.jqtree-title').prepend('<span class="'+state.folder+'"><i>'+text+'</i></span> ').prepend(triangle);
                         } else {
                             // prepend the folder icon, and an empty space for the triangle so the indendation is correct
-                            $li.find('.jqtree-title').prepend('<span class="koowa_icon '+self.options.toggler[0].folder+'"><i>folder</i></span> ').prepend('<i class="icon-triangle-hide"></i>');
+                            $li.find('.jqtree-title').prepend('<span class="'+self.options.toggler[0].folder+'"><i>folder</i></span> ').prepend('<i class="icon-triangle-hide"></i>');
                         }
 
                         /**
@@ -249,7 +249,7 @@
                         $(this).find('.active').removeClass('active').find('.icon-white').removeClass('icon-white');
                         if(event.node) { // When event.node is null, it's actually a deselect event
                             //Style the clicked element
-                            $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=koowa-icon-folder]').addClass('icon-white');
+                            $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=koowa_icon--folder]').addClass('icon-white');
                         }
                     },
                 'tree.open':
@@ -281,7 +281,7 @@
                 'tree.refresh': //Refreshes reset the html, and happen on events like setState
                     function() {
                         $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
-                        $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=koowa-icon-folder]').addClass('icon-white');
+                        $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=koowa_icon--folder]').addClass('icon-white');
                     }
             });
 

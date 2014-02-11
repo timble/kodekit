@@ -1,7 +1,7 @@
 {
 	"metadata": {
 		"name": "Koowa icons",
-		"lastOpened": 1392123013088,
+		"lastOpened": 1392131383737,
 		"created": 1383837760918
 	},
 	"iconSets": [
@@ -772,7 +772,7 @@
 					"order": 19,
 					"prevSize": 48,
 					"code": 58898,
-					"name": "caret-down",
+					"name": "caret_down",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -781,7 +781,7 @@
 					"order": 20,
 					"prevSize": 48,
 					"code": 58899,
-					"name": "caret-up",
+					"name": "caret_up",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -790,7 +790,7 @@
 					"order": 21,
 					"prevSize": 48,
 					"code": 58900,
-					"name": "caret-left",
+					"name": "caret_left",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -799,7 +799,7 @@
 					"order": 22,
 					"prevSize": 48,
 					"code": 58901,
-					"name": "caret-right",
+					"name": "caret_right",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -821,7 +821,7 @@
 					"order": 23,
 					"prevSize": 48,
 					"code": 58902,
-					"name": "sort-down",
+					"name": "sort_down",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -830,7 +830,7 @@
 					"order": 24,
 					"prevSize": 48,
 					"code": 58903,
-					"name": "sort-up",
+					"name": "sort_up",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -12125,7 +12125,7 @@
 					"id": 48,
 					"prevSize": 48,
 					"code": 58895,
-					"name": "folder-open",
+					"name": "folder_open",
 					"tempChar": "",
 					"ligatures": ""
 				},
@@ -13843,9 +13843,11 @@
 	],
 	"preferences": {
 		"fontPref": {
-			"prefix": "koowa-icon-",
+			"prefix": "koowa_icon--",
 			"metadata": {
-				"fontFamily": "koowa"
+				"fontFamily": "koowa",
+				"majorVersion": 1,
+				"minorVersion": 0
 			},
 			"showGlyphs": true,
 			"metrics": {

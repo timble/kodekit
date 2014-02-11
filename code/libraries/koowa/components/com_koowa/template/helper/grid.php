@@ -33,7 +33,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         if($config->row->isLockable() && $config->row->locked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
-            $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
+            $html .= '<span class="koowa-tooltip koowa_icon--locked"
                            title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
 					</span>';
         }
@@ -67,7 +67,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         if($config->row->isLockable() && $config->row->locked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
-            $html .= '<span class="koowa-tooltip koowa_icon koowa-icon-locked"
+            $html .= '<span class="koowa-tooltip koowa_icon--locked"
                            title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
 					</span>';
         }
@@ -167,13 +167,13 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         // Mark the current column
         if ($config->column == $config->sort) {
             if (strtolower($config->direction) === 'asc') {
-                $html .= ' <span class="koowa_icon koowa_icon--12 koowa-icon-sort-up"></span>';
+                $html .= ' <span class="koowa_icon--sort_up koowa_icon--12"></span>';
             } else {
-                $html .= ' <span class="koowa_icon koowa_icon--12 koowa-icon-sort-down"></span>';
+                $html .= ' <span class="koowa_icon--sort_down koowa_icon--12"></span>';
             }
         }
         else {
-            $html .= ' <span class="koowa_icon koowa-icon-sort koowa_icon--12"></span>';
+            $html .= ' <span class="koowa_icon--sort koowa_icon--12"></span>';
         }
 
         $html .= '</a>';
@@ -213,7 +213,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $attribs = 'style="color:'.$config->color.'"';
         }
 
-        $html = '<span class="koowa-tooltip koowa_icon koowa-icon-%s" %s><i>%s</i></span>';
+        $html = '<span class="koowa-tooltip koowa_icon--%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
         $html .= $this->getTemplate()->renderHelper('behavior.tooltip');
 
