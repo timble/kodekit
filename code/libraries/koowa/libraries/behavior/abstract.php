@@ -180,7 +180,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
