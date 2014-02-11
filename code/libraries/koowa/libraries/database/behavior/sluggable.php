@@ -127,10 +127,9 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      * @param  KDatabaseContextInterface $context
      * @return void
      */
-    protected function _afterInsert(KDatabaseContextInterface $context)
+    protected function _beforeInsert(KDatabaseContextInterface $context)
     {
         $this->_createSlug();
-        $this->save();
     }
 
     /**
@@ -190,20 +189,13 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
             }
 
             $this->slug = implode($this->_separator, array_filter($slugs));
-
-            //Canonicalize the slug
-            $this->_canonicalizeSlug();
         }
-        else
-        {
-            if(in_array('slug', $this->getModified()))
-            {
-                $this->slug = $filter->sanitize($this->slug);
-
-                //Canonicalize the slug
-                $this->_canonicalizeSlug();
-            }
+        elseif(in_array('slug', $this->getModified())) {
+            $this->slug = $filter->sanitize($this->slug);
         }
+
+        // Canonicalize the slug
+        $this->_canonicalizeSlug();
     }
 
     /**
@@ -224,12 +216,13 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         }
 
         //If the slug needs to be unique and it already exists, make it unique
-
         $query = $this->getObject('lib:database.query.select');
-        $query->where('slug = :slug')
-            ->where($table->getIdentityColumn().' <> :id')
-            ->bind(array('slug' => $this->slug))
-            ->bind(array('id'=> $this->id));
+        $query->where('slug = :slug')->bind(array('slug' => $this->slug));
+
+        if (!$this->isNew()) {
+            $query->where($table->getIdentityColumn().' <> :id')
+                  ->bind(array('id' => $this->id));
+        }
 
         if($this->_unique && $table->count($query))
         {
