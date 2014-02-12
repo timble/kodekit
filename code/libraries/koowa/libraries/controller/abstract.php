@@ -154,7 +154,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
                 }
                 else
                 {
-                    throw new KControllerExceptionNotImplemented(
+                    throw new KControllerExceptionActionNotImplemented(
                         "Can't execute '$action', method: '$method' does not exist"
                     );
                 }

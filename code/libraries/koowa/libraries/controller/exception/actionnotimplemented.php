@@ -8,9 +8,9 @@
  */
 
 /**
- * Not Implemented Controller Exception
+ * Action Not Implemented Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionNotImplemented extends KHttpExceptionNotImplemented implements KControllerException {}
+class KControllerExceptionActionNotImplemented extends KHttpExceptionNotImplemented implements KControllerException {}
