@@ -8,9 +8,9 @@
  */
 
 /**
- * Conflict Controller Exception
+ * Resource Locked Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionConflict extends KHttpExceptionConflict implements KControllerException {}
+class KControllerExceptionResourceLocked extends KHttpExceptionConflict implements KControllerException {}

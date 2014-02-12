@@ -354,7 +354,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * to complete will be added. Clients should wait until at least this time before retrying the request.
      *
      * @param   KControllerContextInterface	$context A controller context object
-     * @throws  KControllerExceptionConflict If the resource is locked
+     * @throws  KControllerExceptionResourceLocked If the resource is locked
      * @return 	void
      */
     protected function _beforeEdit(KControllerContextInterface $context)
@@ -362,7 +362,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         if($this->isLocked())
         {
             $context->response->headers->set('Retry-After', $context->user->getSession()->getLifetime());
-            throw new KControllerExceptionConflict('Resource is locked.');
+            throw new KControllerExceptionResourceLocked('Resource is locked.');
         }
     }
 
@@ -373,7 +373,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * to complete will be added. Clients should wait until at least this time before retrying the request.
      *
      * @param   KControllerContextInterface	$context A controller context object
-     * @throws  KControllerExceptionConflict If the resource is locked
+     * @throws  KControllerExceptionResourceLocked If the resource is locked
      * @return 	void
      */
     protected function _beforeDelete(KControllerContextInterface $context)
@@ -381,7 +381,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         if($this->isLocked())
         {
             $context->response->headers->set('Retry-After', $context->user->getSession()->getLifetime());
-            throw new KControllerExceptionConflict('Resource is locked');
+            throw new KControllerExceptionResourceLocked('Resource is locked');
         }
     }
 }
