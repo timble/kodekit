@@ -14,4 +14,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-interface KObjectException {}
+interface KObjectException extends KException {}

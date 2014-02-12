@@ -13,4 +13,4 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-interface KCommandException {}
+interface KCommandException extends KException {}

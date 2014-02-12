@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Http
  */
-interface KHttpException {}
+interface KHttpException extends KException {}

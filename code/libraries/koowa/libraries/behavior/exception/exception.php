@@ -13,4 +13,4 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Behavior
  */
-interface KBehaviorException {}
+interface KBehaviorException extends KException {}
