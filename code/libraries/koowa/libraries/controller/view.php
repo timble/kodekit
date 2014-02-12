@@ -66,11 +66,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Get the view object attached to the controller
      *
-     * If we are dispatching this controller this function will check if the view folder exists. If not it will throw
-     * an exception. This is a security measure to make sure we can only explicitly get data from views the have been
-     * physically defined.
-     *
-     * @throws  KControllerExceptionNotFound If the view cannot be found. Only when controller is being dispatched.
      * @throws	UnexpectedValueException	If the views doesn't implement the KViewInterface
      * @return	KViewInterface
      */

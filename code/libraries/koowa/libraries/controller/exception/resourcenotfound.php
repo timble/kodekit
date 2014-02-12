@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionNotFound extends KHttpExceptionNotFound implements KControllerException {}
+class KControllerExceptionResourceNotFound extends KHttpExceptionNotFound implements KControllerException {}

@@ -201,9 +201,9 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic read action, fetches an item
      *
-     * @param    KControllerContextInterface $context A command context object
-     * @throws KControllerExceptionNotFound
-     * @return    KDatabaseRowInterface     A row object containing the selected row
+     * @param  KControllerContextInterface $context A command context object
+     * @throws KControllerExceptionResourceNotFound
+     * @return KDatabaseRowInterface     A row object containing the selected row
      */
 	protected function _actionRead(KControllerContextInterface $context)
 	{
@@ -211,7 +211,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 	    $name = ucfirst($this->getView()->getName());
 
 		if($this->getModel()->getState()->isUnique() && $data->isNew()) {
-            throw new KControllerExceptionNotFound($name.' Not Found');
+            throw new KControllerExceptionResourceNotFound($name.' Not Found');
 		}
 
 		return $data;
@@ -221,8 +221,8 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * Generic edit action, saves over an existing item
      *
      * @param	KControllerContextInterface	$context A controller context object
-     * @throws  KControllerExceptionNotFound If the entity could not be found
-     * @return    KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the updated row(s)
+     * @throws  KControllerExceptionResourceNotFound If the entity could not be found
+     * @return  KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the updated row(s)
      */
     protected function _actionEdit(KControllerContextInterface $context)
     {
@@ -237,7 +237,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 $context->response->setStatus(KHttpResponse::RESET_CONTENT);
             }
         }
-        else throw new KControllerExceptionNotFound('Resource could not be found');
+        else throw new KControllerExceptionResourceNotFound('Resource could not be found');
 
         return $entity;
     }
@@ -294,7 +294,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * Generic delete function
      *
      * @param  KControllerContextInterface $context A controller context object
-     * @throws KControllerExceptionNotFound
+     * @throws KControllerExceptionResourceNotFound
      * @throws KControllerExceptionActionFailed
      * @return KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the deleted row(s)
      */
@@ -320,7 +320,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
             }
             else $context->response->setStatus(KHttpResponse::NO_CONTENT);
         }
-        else throw new KControllerExceptionNotFound('Resource Not Found');
+        else throw new KControllerExceptionResourceNotFound('Resource Not Found');
 
         return $entity;
     }

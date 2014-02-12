@@ -41,9 +41,8 @@ class ComKoowaEventSubscriberNotfound extends KEventSubscriberAbstract
                     $url = JURI::base();
                 }
 
-                $response->setRedirect($url, $event->getMessage(), KControllerResponse::FLASH_ERROR);
-
-                $response->send();
+                $response->setRedirect($url, $event->getMessage(), KControllerResponse::FLASH_ERROR)
+                          ->send();
 
                 //Stop event propagation
                 $event->stopPropagation();
