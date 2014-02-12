@@ -464,29 +464,20 @@
 }
 
 
-
-
-
+// Hide certain elements
 .koowa_dialog--file_dialog.koowa_dialog--no_menu {
-    .koowa_dialog__menu {
-        display: none; // Actual markup has to be removed
-    }
     .koowa_dialog__layout {
         padding-top: 0;
     }
 }
-.koowa_dialog--file_dialog.koowa_dialog--no_tree {
-    .koowa_dialog__file_dialog_categories {
-        display: none; // Actual markup has to be removed
+.koowa_dialog--file_dialog.koowa_dialog--no_new_folder {
+    .koowa_dialog__folders_files {
+        padding-bottom: 0;
     }
 }
-.koowa_dialog--file_dialog.koowa_dialog--no_list {
-    .koowa_dialog__file_dialog_files {
-        display: none; // Actual markup has to be removed
-    }
-}
-.koowa_dialog--file_dialog.koowa_dialog--no_insert {
-    .koowa_dialog__file_dialog_insert {
-        display: none; // Actual markup has to be removed
+.koowa_dialog--file_dialog.koowa_dialog--no_categories {
+    .koowa_dialog__file_dialog_upload {
+        width: 100%;
+        border: none;
     }
 }
