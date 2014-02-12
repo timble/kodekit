@@ -8,7 +8,7 @@
  */
 
 /**
- * Controller Not Allowed Exception Interface
+ * Action Not Allowed Controller Exception Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
