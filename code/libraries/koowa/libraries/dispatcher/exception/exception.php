@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-interface KDispatcherException {}
+interface KDispatcherException extends KControllerException {}

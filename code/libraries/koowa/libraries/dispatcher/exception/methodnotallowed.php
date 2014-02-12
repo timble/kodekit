@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherExceptionMethodNotAllowed extends KHttpExceptionMethodNotAllowed implements KDispatcherException {}
+class KDispatcherExceptionMethodNotAllowed extends KHttpExceptionMethodNotAllowed implements KDispatcherException, KControllerExceptionActionNotAllowed {}
