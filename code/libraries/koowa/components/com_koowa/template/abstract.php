@@ -109,7 +109,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
     {
         $result = parent::compile();
 
-        if(isset($this->_cache))
+        if(isset($this->_cache) && $this->getPath())
         {
             $identifier = md5($this->getPath());
 
