@@ -55,10 +55,13 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
     /**
      * Command handler
      *
+     * Only handles before.action commands to check authorization rules.
+     *
      * @param KCommandInterface         $command    The command
      * @param KCommandChainInterface    $chain      The chain executing the command
-     * @return array|mixed Returns an array of the handler results in FIFO order. If a handler returns not NULL and the
-     *                     returned value equals the break condition of the chain the break condition will be returned.
+     * @throws  KControllerExceptionForbidden       If the user is authentic and the actions is not allowed.
+     * @throws  KControllerExceptionUnauthorized    If the user is not authentic and the action is not allowed.
+     * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
     public function execute(KCommandInterface $command, KCommandChainInterface $chain)
     {
