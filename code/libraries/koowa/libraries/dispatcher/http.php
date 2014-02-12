@@ -127,13 +127,19 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * the request and passing along the context.
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @throws  KDispatcherExceptionMethodNotAllowed  If the method is not allowed on the resource.
      * @return	mixed
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
         //Execute the component method
         $method = strtolower($context->request->getMethod());
-        $this->execute($method, $context);
+
+        try {
+            $this->execute($method, $context);
+        } catch(KControllerExceptionForbidden $e) {
+            throw new KDispatcherExceptionMethodNotAllowed('Method: '.$method.' not allowed');
+        }
 
         return parent::_actionDispatch($context);
 	}
@@ -161,8 +167,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     /**
      * Get method
      *
-     * This function translates a GET request into a render action. If the request contains a limit the limit will
-     * be set the enforced to the maximum limit. Default max limit is .
+     * This function translates a GET request into a render action.
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
      * @return KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the modified data
