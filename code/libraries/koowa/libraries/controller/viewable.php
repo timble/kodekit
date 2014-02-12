@@ -30,4 +30,11 @@ interface KControllerViewable
      * @return	KControllerInterface
      */
     public function setView($view);
+
+    /**
+     * Get the supported formats
+     *
+     * @return array
+     */
+    public function getFormats();
 }

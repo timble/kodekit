@@ -22,6 +22,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	 */
 	protected $_view;
 
+    /**
+     * List of formats supported by the controller
+     *
+     * @var array
+     */
+    protected $_formats;
+
 	/**
 	 * Constructor
 	 *
@@ -33,6 +40,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
 		// Set the view identifier
 		$this->_view = $config->view;
+
+        //Set the supported formats
+        $this->_formats = KObjectConfig::unbox($config->formats);
 	}
 
 	/**
@@ -46,7 +56,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'view' => $this->getIdentifier()->name,
+            'formats' => array('html'),
+            'view'    => $this->getIdentifier()->name,
          ));
 
         parent::_initialize($config);
@@ -88,18 +99,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
                     'View: '.get_class($this->_view).' does not implement KViewInterface'
                 );
             }
-
-            //Make sure the view exists if we are dispatching this controller
-            if($this->isDispatched())
-            {
-                $identifier = $this->_view->getIdentifier();
-                $classname = 'Com' . ucfirst($identifier->package) . KStringInflector::camelize(implode('_', $identifier->path)) . ucfirst($identifier->name);
-                $path       = $this->getObject('manager')->getClassLoader()->getLocator('component')->locate($classname);
-
-                if(!file_exists(dirname($path))) {
-                    throw new KControllerExceptionNotFound('View: '.$this->_view->getName().' not found');
-                }
-            }
 		}
 
 		return $this->_view;
@@ -135,33 +134,59 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 	}
 
     /**
+     * Get the supported formats
+     *
+     * Method dynamically adds the 'json' format if the user is authentic.
+     *
+     * @return array
+     */
+    public function getFormats()
+    {
+        $result = $this->_formats;
+        if($this->getUser()->isAuthentic()) {
+            $result[] = 'json';
+        }
+
+        return $result;
+    }
+
+    /**
      * Render action
      *
-     * This function will also set the rendered output in the response.
+     * This function will check if the format is supported and if not throw a 406 Not Accepted exception. It will also
+     * set the rendered output in the response after it has been created.
      *
-     * @param KControllerContextInterface $context A command context object
-     * @return    string|bool    The rendered output of the view or false if something went wrong
+     * @param  KControllerContextInterface $context A command context object
+     * @throws KControllerExceptionFormatNotSupported If the requested format is not supported for the resource
+     * @return string|bool The rendered output of the view or false if something went wrong
      */
 	protected function _actionRender(KControllerContextInterface $context)
 	{
-        $view = $this->getView();
+        $format = $this->getRequest()->getFormat();
 
-        //Push the content in the view, used for view decoration
-        $view->setContent($context->response->getContent());
+        //Check if the format is supported
+        if(in_array($format, $this->getFormats()))
+        {
+            $view = $this->getView();
 
-        //Render the view
-        $param = KObjectConfig::unbox($context->param);
+            //Push the content in the view, used for view decoration
+            $view->setContent($context->response->getContent());
 
-        if(is_array($param)) {
-            $data = (array) $param;
-        } else {
-            $data = array();
+            //Render the view
+            $param = KObjectConfig::unbox($context->param);
+
+            if(is_array($param)) {
+                $data = (array) $param;
+            } else {
+                $data = array();
+            }
+
+            $content = $view->render($data);
+
+            //Set the data in the response
+            $context->response->setContent($content, $view->mimetype);
         }
-
-        $content = $view->render($data);
-
-        //Set the data in the response
-        $context->response->setContent($content, $view->mimetype);
+        else throw new KControllerExceptionFormatNotSupported('Format: '.$format.' not supported');
 
         return $content;
 	}
