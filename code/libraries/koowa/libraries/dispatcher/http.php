@@ -68,7 +68,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * session token check if the user is authentic. If any of the checks fail a forbidden exception is thrown.
      *
      * @param KDispatcherContextInterface $context A dispatcher context object
-     * @throws KControllerExceptionForbidden
+     * @throws KControllerExceptionRequestInvalid   If the request referrer is not valid
+     * @throws KControllerExceptionForbidden        If the cookie token is not valid
+     * @throws KControllerExceptionUnauthorized     If the session token is not valid
      * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
     protected function _authenticateRequest(KDispatcherContextInterface $context)
@@ -80,12 +82,12 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
         {
             //Check referrer
             if(!$request->getReferrer()) {
-                throw new KControllerExceptionForbidden('Invalid Request Referrer');
+                throw new KControllerExceptionRequestInvalid('Invalid Request Referrer');
             }
 
             //Check cookie token
             if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
-                throw new KControllerExceptionForbidden('Invalid Cookie Token');
+                throw new KControllerExceptionUnauthorized('Invalid Cookie Token');
             }
         }
         else
