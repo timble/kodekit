@@ -71,6 +71,13 @@ interface KExceptionHandlerInterface
     public function getHandlers();
 
     /**
+     * Get the handled exception stack
+     *
+     * @return  KObjectStack   An object stack containing the handled exceptions
+     */
+    public function getExceptions();
+
+    /**
      * Set the error level
      *
      * @param int $level If NULL, will reset the level to the system default.

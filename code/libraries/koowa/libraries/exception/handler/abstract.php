@@ -23,6 +23,13 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     private $__handlers = array();
 
     /**
+     * The exception stack
+     *
+     * @var array
+     */
+    private $__exceptions;
+
+    /**
      * The error level.
      *
      * @var int
@@ -66,6 +73,9 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
         }
 
         $this->_error_operator = $config->error_operator;
+
+        //Create the exception stack
+        $this->__exceptions = $this->getObject('lib:object.stack');
     }
 
     /**
@@ -206,6 +216,16 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     }
 
     /**
+     * Get the handled exception stack
+     *
+     * @return  KObjectStack   An object stack containing the handled exceptions
+     */
+    public function getExceptions()
+    {
+        return $this->__exceptions;
+    }
+
+    /**
      * Set the error level
      *
      * @param int $level If NULL, will reset the level to the system default.
@@ -238,12 +258,12 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     {
         try
         {
-            $handled = false;
-
             //Try to handle the exception
             foreach($this->getHandlers() as $handler)
             {
-                if(call_user_func($handler, $exception) === true) {
+                if(call_user_func($handler, $exception) === true)
+                {
+                    $this->__exceptions->push($exception);
                     return true;
                 };
             }
