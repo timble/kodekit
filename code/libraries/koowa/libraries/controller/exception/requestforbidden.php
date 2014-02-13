@@ -8,9 +8,9 @@
  */
 
 /**
- * Action Not Allowed Controller Exception Interface
+ * Request Forbidden Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-interface KControllerExceptionActionNotAllowed extends KControllerException {}
+class KControllerExceptionRequestForbidden extends KHttpExceptionForbidden implements KControllerExceptionRequestNotAllowed {}

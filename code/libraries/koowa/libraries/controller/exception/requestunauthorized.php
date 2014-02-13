@@ -8,9 +8,9 @@
  */
 
 /**
- * Forbidden Controller Exception
+ * Unauthorized Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionForbidden extends KHttpExceptionForbidden implements KControllerExceptionActionNotAllowed {}
+class KControllerExceptionRequestUnauthorized extends KHttpExceptionUnauthorized implements KControllerExceptionRequestNotAllowed {}
