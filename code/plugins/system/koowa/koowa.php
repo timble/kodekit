@@ -167,7 +167,7 @@ class PlgSystemKoowa extends JPlugin
             /**
              * Plugin Bootstrapping
              */
-            //JPluginHelper::importPlugin('koowa', null, true);
+            JPluginHelper::importPlugin('koowa', null, true);
 
             return true;
         }
