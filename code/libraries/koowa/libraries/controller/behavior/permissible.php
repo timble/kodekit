@@ -59,8 +59,8 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      *
      * @param KCommandInterface         $command    The command
      * @param KCommandChainInterface    $chain      The chain executing the command
-     * @throws  KControllerExceptionRequestForbidden     If the user is authentic and the actions is not allowed.
-     * @throws  KControllerExceptionRequestUnauthorized  If the user is not authentic and the action is not allowed.
+     * @throws  KControllerExceptionRequestForbidden      If the user is authentic and the actions is not allowed.
+     * @throws  KControllerExceptionRequestNotAuthorized  If the user is not authentic and the action is not allowed.
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
     public function execute(KCommandInterface $command, KCommandChainInterface $chain)
@@ -76,7 +76,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
                 if($this->getUser()->isAuthentic()) {
                     throw new KControllerExceptionRequestForbidden('Action '.ucfirst($action).' Not Allowed');
                 } else {
-                    throw new KControllerExceptionRequestUnauthorized('Action '.ucfirst($action).' Not Allowed');
+                    throw new KControllerExceptionRequestNotAuthorized('Action '.ucfirst($action).' Not Allowed');
                 }
             }
         }

@@ -8,9 +8,9 @@
  */
 
 /**
- * Unauthorized Controller Exception
+ * Request Not Authenticated Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionRequestUnauthorized extends KHttpExceptionUnauthorized implements KControllerExceptionRequestNotAllowed {}
+class KControllerExceptionRequestNotAuthenticated extends KHttpExceptionUnauthorized implements KControllerExceptionRequestNotAllowed {}
