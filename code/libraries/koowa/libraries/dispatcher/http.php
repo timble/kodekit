@@ -209,7 +209,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * @throws  KDispatcherExceptionMethodNotAllowed  The action specified in the request is not allowed for the
      *          entity identified by the Request-URI. The response MUST include an Allow header containing a list of
      *          valid actions for the requested entity.
-     * @throws  KControllerExceptionInvalidRequest    The action could not be found based on the info in the request.
+     * @throws  KControllerExceptionRequestInvalid    The action could not be found based on the info in the request.
      * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	A row(set) object containing the modified data
      */
     protected function _actionPost(KDispatcherContextInterface $context)
@@ -236,7 +236,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         //Throw exception if no action could be determined from the request
         if(!$action) {
-            throw new KControllerExceptionInvalidRequest('Action not found');
+            throw new KControllerExceptionRequestInvalid('Action not found');
         }
 
         return $controller->execute($action, $context);
@@ -252,7 +252,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      * If the entity already exists it will be completely replaced based on the data available in the request.
      *
      * @param   KDispatcherContextInterface $context	A dispatcher context object
-     * @throws  KControllerExceptionInvalidRequest 	If the model state is not unique
+     * @throws  KControllerExceptionRequestInvalid 	If the model state is not unique
      * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	    A row(set) object containing the modified data
      */
     protected function _actionPut(KDispatcherContextInterface $context)
@@ -278,12 +278,12 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
                 $state = $controller->getModel()->getState()->getValues(true);
                 $entity->setData($state);
             }
-            else throw new KControllerExceptionInvalidRequest('Resource not found');
+            else throw new KControllerExceptionRequestInvalid('Resource not found');
         }
 
         //Throw exception if no action could be determined from the request
         if(!$action) {
-            throw new KControllerExceptionInvalidRequest('Resource not found');
+            throw new KControllerExceptionRequestInvalid('Resource not found');
         }
 
         return $entity = $controller->execute($action, $context);
