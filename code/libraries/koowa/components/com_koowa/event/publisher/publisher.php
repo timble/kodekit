@@ -16,25 +16,6 @@
 class ComKoowaEventPublisher extends KEventPublisher
 {
     /**
-     * Initializes the default configuration for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
-     * @return void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'catch_exceptions'   => false,
-            'catch_user_errors'  => JDEBUG,
-            'catch_fatal_errors' => JDEBUG,
-        ));
-
-        parent::_initialize($config);
-    }
-
-    /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
      * Function will avoid a recursive loop when an exception is thrown during even publishing and output a generic
