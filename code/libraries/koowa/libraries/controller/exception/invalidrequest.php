@@ -8,9 +8,9 @@
  */
 
 /**
- * Bad Request Controller Exception
+ * Inavlid Request Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller
  */
-class KControllerExceptionBadRequest extends KHttpExceptionBadRequest implements KControllerException {}
+class KControllerExceptionInvalidRequest extends KHttpExceptionBadRequest implements KControllerException {}

@@ -247,7 +247,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      *
      * @param	KControllerContextInterface	$context A controller context object
      * @throws  KControllerExceptionActionFailed If the delete action failed on the data entity
-     * @throws  KControllerExceptionBadRequest   If the entity already exists
+     * @throws  KControllerExceptionInvalidRequest   If the resource already exists
      * @return 	KDatabaseRowInterface   A row object containing the new data
      */
     protected function _actionAdd(KControllerContextInterface $context)
@@ -285,7 +285,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 $context->response->setStatus(KHttpResponse::CREATED);
             }
         }
-        else throw new KControllerExceptionBadRequest('Resource Already Exists');
+        else throw new KControllerExceptionInvalidRequest('Resource Already Exists');
 
         return $entity;
     }
