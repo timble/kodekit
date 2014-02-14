@@ -16,6 +16,23 @@
 class ComKoowaControllerError extends KControllerView
 {
     /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'formats' => array('json'),
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Render an error
      *
      * @throws InvalidArgumentException If the action parameter is not an instance of KException
