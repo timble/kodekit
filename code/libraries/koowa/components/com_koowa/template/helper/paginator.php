@@ -72,15 +72,22 @@ class ComKoowaTemplateHelperPaginator extends ComKoowaTemplateHelperSelect
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'limit'	  	=> 0,
-            'attribs'	=> array(),
+            'limit'	  => 0,
+            'attribs' => array(),
+            'values'  => array(5, 10, 15, 20, 25, 30, 50, 100)
         ));
 
         $html     = '';
         $selected = 0;
         $options  = array();
+        $values   = KObjectConfig::unbox($config->values);
 
-        foreach(array(5, 10, 15, 20, 25, 30, 50, 100) as $value)
+        if (!in_array($config->limit, $values)) {
+            $values[] = $config->limit;
+            sort($values);
+        }
+
+        foreach($values as $value)
         {
             if($value == $config->limit) {
                 $selected = $value;
