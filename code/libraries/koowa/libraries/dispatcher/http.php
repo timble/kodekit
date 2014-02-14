@@ -191,6 +191,11 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
                     $limit = $this->_limit->default;
                 }
 
+                if ($this->_limit->max && $limit > $this->_limit->max) {
+                    $limit = $this->_limit->max;
+                }
+
+                $this->getRequest()->query->limit = $limit;
                 $controller->getModel()->getState()->limit = $limit;
             }
         }
