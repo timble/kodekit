@@ -52,6 +52,13 @@ class KClassLoader implements KClassLoaderInterface
     protected $_basepath = null;
 
     /**
+     * Debug
+     *
+     * @var boolean
+     */
+    protected $_debug = false;
+
+    /**
      * Constructor
      *
      * Prevent creating instances of this class by making the constructor private
@@ -68,6 +75,11 @@ class KClassLoader implements KClassLoaderInterface
             }
         }
         else $this->_registry = new KClassRegistry();
+
+        //Set the debug mode
+        if(isset($config['debug'])) {
+            $this->_debug = $config['debug'];
+        }
 
         //Register the library locator
         $this->registerLocator(new KClassLocatorLibrary());
@@ -137,30 +149,55 @@ class KClassLoader implements KClassLoaderInterface
      * Load a class based on a class name
      *
      * @param string  $class    The class name
-     * @return boolean  Returns TRUE on success throws exception on failure
+     * @throws RuntimeException If debug is enabled and the class could not be found in the file.
+     * @return boolean  Returns TRUE if the class could be loaded, otherwise returns FALSE.
      */
     public function load($class)
     {
-        $result = true;
+        $result = false;
 
-        if(!$this->isDeclared($class))
+        //Get the path
+        $path = $this->getPath( $class, $this->_basepath);
+
+        if ($path !== false)
         {
-            //Get the path
-            $path = $this->getPath( $class, $this->_basepath );
-
-            if ($path !== false)
+            if (!in_array($path, get_included_files()) && file_exists($path))
             {
-                if (!in_array($path, get_included_files()) && file_exists($path)){
-                    require $path;
-                } else {
-                    $result = false;
-                }
+                require $path;
 
+                if($this->_debug)
+                {
+                    if(!$this->isDeclared($class))
+                    {
+                        throw new RuntimeException(sprintf(
+                            'The autoloader expected class "%s" to be defined in file "%s".
+                            The file was found but the class was not in it, the class name
+                            or namespace probably has a typo.', $class, $path
+                        ));
+                    }
+                }
             }
             else $result = false;
         }
 
         return $result;
+    }
+
+    /**
+     * Enable or disable class loading
+     *
+     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
+     *
+     * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
+     * @return bool Returns the current debug setting.
+     */
+    public function debug($debug)
+    {
+        if($debug !== null) {
+            $this->_debug = (bool) $debug;
+        }
+
+        return $this->_debug;
     }
 
     /**

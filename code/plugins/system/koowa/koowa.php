@@ -101,13 +101,13 @@ class PlgSystemKoowa extends JPlugin
         {
             require_once $path;
 
-
             $application = JFactory::getApplication()->getName();
 
             /**
              * Library Bootstrapping
              */
             Koowa::getInstance(array(
+                'debug'           => JDEBUG,
                 'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
                 'cache_enabled'   => false //JFactory::getApplication()->getCfg('caching')
             ));
