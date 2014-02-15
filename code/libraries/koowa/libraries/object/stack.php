@@ -26,20 +26,7 @@ class KObjectStack extends KObject implements Iterator, Countable, Serializable
      *
      * @var array
      */
-    protected $_object_stack = null;
-    
-    /**
-     * Constructor
-     *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
-     * @return KObjectStack
-     */
-    public function __construct(KObjectConfig $config)
-    { 
-        parent::__construct($config);
-        
-        $this->_object_stack = array();
-    }
+    protected $_object_stack = array();
     
     /**
      * Peeks at the element from the end of the stack
@@ -168,10 +155,15 @@ class KObjectStack extends KObject implements Iterator, Countable, Serializable
      */
     public function unserialize($data)
     {
-        $data = array_reverse(unserialize($data));
+        $data = unserialize($data);
 
-        foreach ($data as $item) {
-            $this->push($item);
+        if(is_array($data))
+        {
+            $data = array_reverse($data);
+
+            foreach ($data as $item) {
+                $this->push($item);
+            }
         }
     }
 
