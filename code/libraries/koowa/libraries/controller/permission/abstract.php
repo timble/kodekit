@@ -28,7 +28,7 @@ abstract class KControllerPermissionAbstract extends KObjectMixinAbstract implem
     /**
      * Permission handler for read actions
      *
-     * Method returns TRUE iff the controller implements the ControllerModellable interface.
+     * Method returns TRUE iff the controller implements the KControllerModellable interface.
      *
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
@@ -40,7 +40,7 @@ abstract class KControllerPermissionAbstract extends KObjectMixinAbstract implem
     /**
      * Permission handler for browse actions
      *
-     * Method returns TRUE iff the controller implements the ControllerModellable interface.
+     * Method returns TRUE iff the controller implements the KControllerModellable interface.
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
@@ -52,36 +52,62 @@ abstract class KControllerPermissionAbstract extends KObjectMixinAbstract implem
     /**
      * Permission handler for add actions
      *
-     * Method returns TRUE if the controller implements the ControllerModellable interface and the user is authentic.
+     * Method returns TRUE iff the controller implements the KControllerModellable interface and the user is authentic
+     * and the account is enabled.
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
     public function canAdd()
     {
-        return ($this->getMixer() instanceof KControllerModellable);
+        if($this->getMixer() instanceof KControllerModellable)
+        {
+            $user = $this->getUser();
+            if ($user->isAuthentic() && $user->isEnabled()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * Permission handler for edit actions
      *
-     * Method returns TRUE if the controller implements the ControllerModellable interface and the user is authentic.
+     * Method returns TRUE iff the controller implements the KControllerModellable interface and the user is authentic
+     * and the account is enabled.
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
     public function canEdit()
     {
-        return ($this->getMixer() instanceof KControllerModellable);
+        if($this->getMixer() instanceof KControllerModellable)
+        {
+            $user = $this->getUser();
+            if ($user->isAuthentic() && $user->isEnabled()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * Permission handler for delete actions
      *
-     * Method returns true if the controller implements ControllerModellable interface and the user is authentic.
+     * Method returns true of the controller implements KControllerModellable interface and the user is authentic.
      *
      * @return  boolean  Returns TRUE if action is permitted. FALSE otherwise.
      */
     public function canDelete()
     {
-        return ($this->getMixer() instanceof KControllerModellable);
+        if($this->getMixer() instanceof KControllerModellable)
+        {
+            $user = $this->getUser();
+            if ($user->isAuthentic() && $user->isEnabled()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

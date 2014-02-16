@@ -73,11 +73,19 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
 
             if($this->canExecute($action) === false)
             {
-                if($this->getUser()->isAuthentic()) {
-                    throw new KControllerExceptionRequestForbidden('Action '.ucfirst($action).' Not Allowed');
-                } else {
-                    throw new KControllerExceptionRequestNotAuthorized('Action '.ucfirst($action).' Not Allowed');
+                $message = 'Action '.ucfirst($action).' Not Allowed';
+
+                if($this->getUser()->isAuthentic())
+                {
+                    if (!$this->getUser()->isEnabled()) {
+                        $message = 'Account disabled';
+                    }
+
+                    throw new KControllerExceptionRequestForbidden($message);
                 }
+                else throw new KControllerExceptionRequestNotAuthorized($message);
+
+                return false;
             }
         }
 
