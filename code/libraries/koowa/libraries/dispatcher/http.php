@@ -86,7 +86,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
             }
 
             //Check cookie token
-            if($request->getToken() !== $request->cookies->get('_token', 'md5')) {
+            if($request->getToken() !== $request->cookies->get('_token', 'sha1')) {
                 throw new KControllerExceptionRequestNotAuthenticated('Invalid Cookie Token');
             }
         }
