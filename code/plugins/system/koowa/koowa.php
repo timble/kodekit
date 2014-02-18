@@ -188,7 +188,7 @@ class PlgSystemKoowa extends JPlugin
             $request = KObjectManager::getInstance()->getObject('request');
 
             $app = JFactory::getApplication();
-            if ($app->isSite() && $app->getCfg('sef'))
+            if ($app->isSite())
             {
                 $uri     = clone JURI::getInstance();
 
