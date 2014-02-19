@@ -35,7 +35,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KO
 		parent::__construct($config);
 
         if(JFactory::getApplication()->getCfg('caching')) {
-            $this->_cache = JFactory::getCache('database', 'output');
+            $this->_cache = JFactory::getCache('com_koowa.tables', 'output');
         }
 	}
 
