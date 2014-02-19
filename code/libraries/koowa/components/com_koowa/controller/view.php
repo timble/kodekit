@@ -45,18 +45,14 @@ abstract class ComKoowaControllerView extends KControllerView
     protected function _initialize(KObjectConfig $config)
     {
         $toolbars = array();
-        if($config->dispatched && !JFactory::getUser()->guest)
-        {
-            $toolbars[] = $this->getIdentifier()->name;
+        $toolbars[] = $this->getIdentifier()->name;
 
-            if($this->getIdentifier()->domain === 'admin') {
-                $toolbars[] = 'menubar';
-            }
+        if($this->getIdentifier()->domain === 'admin') {
+            $toolbars[] = 'menubar';
         }
 
         $config->append(array(
             'toolbars'  => $toolbars,
-            'user'      => 'com:koowa.user',
         ));
 
         parent::_initialize($config);
@@ -71,16 +67,19 @@ abstract class ComKoowaControllerView extends KControllerView
     {
         if($this->getView() instanceof KViewHtml)
         {
-            foreach($context->toolbars as $toolbar) {
-                $this->addToolbar($toolbar);
-            }
-
-            if($toolbars = $this->getToolbars())
+            if($context->getUser()->isAuthentic() && $this->isDispatched())
             {
-                $this->getView()
-                    ->getTemplate()
-                    ->attachFilter('toolbar', array('toolbars' => $toolbars));
-            };
+                foreach($context->toolbars as $toolbar) {
+                    $this->addToolbar($toolbar);
+                }
+
+                if($toolbars = $this->getToolbars())
+                {
+                    $this->getView()
+                        ->getTemplate()
+                        ->attachFilter('toolbar', array('toolbars' => $toolbars));
+                };
+            }
         }
 
         return $this;

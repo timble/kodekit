@@ -46,18 +46,14 @@ abstract class ComKoowaControllerModel extends KControllerModel
     {
         //Add default toolbars only if the controller is being dispatched and the user is logged in.
         $toolbars = array();
-        if($config->dispatched && !JFactory::getUser()->guest)
-        {
-            $toolbars[] = $this->getIdentifier()->name;
+        $toolbars[] = $this->getIdentifier()->name;
 
-            if($this->getIdentifier()->domain === 'admin') {
-                $toolbars[] = 'menubar';
-            };
-        }
+        if($this->getIdentifier()->domain === 'admin') {
+            $toolbars[] = 'menubar';
+        };
 
         $config->append(array(
             'toolbars'   => $toolbars,
-            'user'       => 'com:koowa.user',
             'behaviors'  => array('editable', 'persistable'),
         ));
 
@@ -73,16 +69,19 @@ abstract class ComKoowaControllerModel extends KControllerModel
     {
         if($this->getView() instanceof KViewHtml)
         {
-            foreach($context->toolbars as $toolbar) {
-                $this->addToolbar($toolbar);
-            }
-
-            if($toolbars = $this->getToolbars())
+            if($context->getUser()->isAuthentic() && $this->isDispatched())
             {
-                $this->getView()
-                    ->getTemplate()
-                    ->attachFilter('toolbar', array('toolbars' => $toolbars));
-            };
+                foreach($context->toolbars as $toolbar) {
+                    $this->addToolbar($toolbar);
+                }
+
+                if($toolbars = $this->getToolbars())
+                {
+                    $this->getView()
+                        ->getTemplate()
+                        ->attachFilter('toolbar', array('toolbars' => $toolbars));
+                };
+            }
         }
     }
 
