@@ -78,7 +78,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
                 if($this->getUser()->isAuthentic())
                 {
                     if (!$this->getUser()->isEnabled()) {
-                        $message = 'Account disabled';
+                        $message = 'User account is disabled';
                     }
 
                     throw new KControllerExceptionRequestForbidden($message);
