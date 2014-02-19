@@ -33,13 +33,6 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
     private $__object_manager;
 
     /**
-     * The object config
-     *
-     * @var KObjectConfig
-     */
-    private $__object_config;
-
-    /**
      * The behavior priority
      *
      * @var integer
@@ -73,9 +66,6 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         else $this->__object_identifier = $config->object_identifier;
 
         parent::__construct($config);
-
-        //Set the object config
-        $this->__object_config = $config;
 
         //Set the command priority
         $this->_priority = $config->priority;
