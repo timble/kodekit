@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\User
  */
-interface KUserInterface
+interface KUserInterface extends KObjectEquatable
 {
     /**
      * Returns the id of the user

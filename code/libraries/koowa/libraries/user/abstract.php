@@ -69,7 +69,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      * Set the user data from an array
      *
      * @param  array $data An associative array of data
-     * @return KUser
+     * @return KUserAbstract
      */
     public function setData($data)
     {
@@ -247,7 +247,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      * Removes an user attribute
      *
      * @param string $identifier Attribute identifier, eg foo.bar
-     * @return KUser
+     * @return KUserAbstract
      */
     public function remove($identifier)
     {
@@ -256,6 +256,27 @@ abstract class KUserAbstract extends KObject implements KUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Check if the user is equal
+     *
+     * @param KUserInterface $user
+     * @return Boolean
+     */
+    public function equals(KObjectInterface $user)
+    {
+        if($user instanceof KUserInterface)
+        {
+            if($user->getEmail() == $this->getEmail())
+            {
+                if($user->getPassword() == $this->getPassword()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
