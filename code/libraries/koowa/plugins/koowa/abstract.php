@@ -8,117 +8,112 @@
  */
 
 /**
- * Default Plugin
- *
- * Koowa plugins can handle a number of events that are dynamically generated. The following is a list of available
- * events. This list is not meant to be exclusive.
- *
- * onBeforeController[Action]
- * onAfterController[Action]
- * where [Action] is Browse, Read, Edit, Add, Delete or any custom controller action
- *
- * onBeforeDatabase[Action]
- * onAfterDatabase[Action]
- * where [Action] is Select, Insert, Update or Delete
- *
- * You can create your own Koowa plugins very easily :
- *
- * <code>
- * <?php
- *  class plgKoowaFoo extends PlgKoowaAbstract
- * {
- *      public function onBeforeControllerBrowse(KCommandInterface $event)
- *      {
- *          //The caller is a reference to the object that is triggering this event
- *          $caller = $event->subject;
- *
- *          //The result is the actual result of the event, if this is an after event
- *          //the result will contain the result of the action.
- *          $result = $event->result;
- *
- *          //The context object can also contain a number of custom properties
- *          print_r($event);
- *      }
- * }
- * </code>
+ * Abstract Plugin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Plugin\Koowa
  */
-abstract class PlgKoowaAbstract extends KEventSubscriberAbstract
+abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
 {
-	/**
-	 * A JRegistry object holding the parameters for the plugin
-	 *
-	 * @var	JRegistry
-	 */
-	protected $_params	= null;
+    /**
+     * The object identifier
+     *
+     * @var KObjectIdentifier
+     */
+    private $__object_identifier;
 
-	/**
-	 * The name of the plugin
-	 *
-	 * @var		string
-	 */
-	protected $_name = null;
-
-	/**
-	 * The plugin type
-	 *
-	 * @var		string
-	 */
-	protected $_type = null;
+    /**
+     * The object manager
+     *
+     * @var KObjectManager
+     */
+    private $__object_manager;
 
     /**
      * Constructor.
      *
-     * @param   object          $dispatcher Event dispatcher
-     * @param   array|KObjectConfig   $config     Configuration options
+     * @param   object  $dispatcher Event dispatcher
+     * @param   array|  $config     Configuration options
      */
-	function __construct($dispatcher, $config = array())
+	public function __construct($dispatcher, $config = array())
 	{
-		if (isset($config['params']))
-		{
-		    if ($config['params'] instanceof JRegistry) {
-				$this->_params = $config['params'];
-			} else {
-				$this->_params = new JRegistry;
-                $this->_params->loadString($config['params'], 'INI');
-			}
-		}
+        // Do not call the parent constructor override it and implement logic ourselves.
+        //parent::__construct($dispatcher, $config);
 
-		if ( isset( $config['name'] ) ) {
-			$this->_name = $config['name'];
-		}
+        // Get the parameters.
+        if (isset($config['params']))
+        {
+            if (!$config['params'] instanceof JRegistry)
+            {
+                $this->params = new JRegistry;
+                $this->params->loadString($config['params']);
+            }
+            else $this->params = $config['params'];
+        }
 
-		if ( isset( $config['type'] ) ) {
-			$this->_type = $config['type'];
-		}
+        // Get the plugin name.
+        if (isset($config['name'])) {
+            $this->_name = $config['name'];
+        }
 
-		//Inject the identifier
-		$config['object_identifier'] = KObjectManager::getInstance()->getIdentifier('plg:koowa.'.$this->_name);
+        // Get the plugin type.
+        if (isset($config['type'])) {
+            $this->_type = $config['type'];
+        }
 
-		//Inject the object manager
-		$config['object_manager'] = KObjectManager::getInstance();
+        //Inject the identifier
+        $this->__object_identifier = KObjectManager::getInstance()->getIdentifier('plg:'.$this->_type.'.'.$this->_name);
 
-		//Self subscribe the plugin to the koowa event publisher
-        $this->subscribe(KObjectManager::getInstance()->getObject('event.publisher'));
+        //Inject the object manager
+        $this->__object_manager = KObjectManager::getInstance();
 
-		parent::__construct(new KObjectConfig($config));
+        //Connect the plugin to the dispatcher
+        $this->connect($dispatcher);
 	}
 
-	/**
-	 * Loads the plugin language file
-	 *
-	 * @param	string 	$extension 	The extension for which a language file should be loaded
-	 * @param	string 	$basePath  	The basepath to use
-	 * @return	boolean	True, if the file has successfully loaded.
-	 */
-	public function loadLanguage($extension = '', $basePath = JPATH_BASE)
-	{
-		if(empty($extension)) {
-			$extension = 'plg_'.$this->_type.'_'.$this->_name;
-		}
+    /**
+     * Get an instance of an object identifier
+     *
+     * @param KObjectIdentifier|string $identifier An ObjectIdentifier or valid identifier string
+     * @param array  			      $config     An optional associative array of configuration settings.
+     * @return KObjectInterface  Return object on success, throws exception on failure.
+     */
+    final public function getObject($identifier, array $config = array())
+    {
+        $result = $this->__object_manager->getObject($identifier, $config);
+        return $result;
+    }
 
-		return JFactory::getLanguage()->load( strtolower($extension), $basePath);
-	}
+    /**
+     * Gets the service identifier.
+     *
+     * If no identifier is passed the object identifier of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     * @param   string|object    $identifier The class identifier or identifier object
+     * @return  KObjectIdentifier
+     */
+    final public function getIdentifier($identifier = null)
+    {
+        if (isset($identifier)) {
+            $result = $this->__object_manager->getIdentifier($identifier);
+        } else {
+            $result = $this->__object_identifier;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Connect the plugin to the dispatcher
+     *
+     * @param $dispatcher
+     */
+    public function connect($dispatcher)
+    {
+        //Self attach the plugin to the joomla event dispatcher
+        if($dispatcher instanceof JDispatcher) {
+            $dispatcher->attach($this);
+        }
+    }
 }
