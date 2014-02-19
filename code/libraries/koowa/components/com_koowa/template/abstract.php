@@ -39,7 +39,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 		parent::__construct($config);
 
 	    if (JFactory::getConfig()->get('caching')) {
-	        $this->_cache = JFactory::getCache('template', 'output');
+	        $this->_cache = JFactory::getCache('com_koowa.templates', 'output');
 		}
 	}
 
