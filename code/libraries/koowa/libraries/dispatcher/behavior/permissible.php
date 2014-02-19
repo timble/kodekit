@@ -71,19 +71,22 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
         {
             $action = $parts[1];
 
-            $message = 'Action '.ucfirst($action).' Not Allowed';
-
-            if($this->getUser()->isAuthentic())
+            if($this->canExecute($action) === false)
             {
-                if (!$this->getUser()->isEnabled()) {
-                    $message = 'Account disabled';
+                $message = 'Action '.ucfirst($action).' Not Allowed';
+
+                if($this->getUser()->isAuthentic())
+                {
+                    if (!$this->getUser()->isEnabled()) {
+                        $message = 'Account disabled';
+                    }
+
+                    throw new ControllerExceptionRequestForbidden($message);
                 }
+                else throw new ControllerExceptionRequestNotAuthorized($message);
 
-                throw new KControllerExceptionRequestForbidden($message);
+                return false;
             }
-            else throw new KControllerExceptionRequestNotAuthorized($message);
-
-            return false;
         }
 
         return true;
