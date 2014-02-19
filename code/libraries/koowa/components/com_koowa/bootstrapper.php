@@ -26,7 +26,8 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
                 'user'                          => 'com:koowa.user',
                 'exception.handler'             => 'com:koowa.exception.handler',
                 'date'                          => 'com:koowa.date',
-                'event.publisher'               => 'com:koowa.event.publisher'
+                'event.publisher'               => 'com:koowa.event.publisher',
+                'user.provider'                 => 'com:koowa.user.provider'
             ),
         ));
 
