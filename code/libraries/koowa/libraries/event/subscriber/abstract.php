@@ -71,7 +71,7 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
 
         if($this->isSubscribed($publisher));
         {
-            foreach ($this->_listeners[$handle] as $index => $listener)
+            foreach ($this->__listeners[$handle] as $index => $listener)
             {
                 $publisher->removeListener($listener, array($this, $listener));
                 unset($this->__listeners[$handle][$index]);
@@ -88,6 +88,6 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
     public function isSubscribed(KEventPublisherInterface $publisher)
     {
         $handle = $publisher->getHandle();
-        return isset($this->_listeners[$handle]);
+        return isset($this->__listeners[$handle]);
     }
 }
