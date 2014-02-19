@@ -372,11 +372,11 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($row->isLockable() && $row->locked())
         {
-            $user = JFactory::getUser($row->locked_by);
+            $user = $this->getObject('user.provider')->load($row->locked_by);
             $date = $this->getObject('date', array('date' => $row->locked_on));
 
             $message = $this->getObject('translator')->translate(
-                'Locked by {name} {date}', array('name' => $user->get('name'), 'date' => $date->humanize())
+                'Locked by {name} {date}', array('name' => $user->getName(), 'date' => $date->humanize())
             );
         }
 
