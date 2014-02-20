@@ -23,30 +23,14 @@ abstract class PlgKoowaSubscriber extends PlgKoowaAbstract implements KEventSubs
     private $__listeners;
 
     /**
-     * Constructor.
-     *
-     * @param   object  $dispatcher Event dispatcher
-     * @param   array   $config     Configuration options
-     */
-    public function __construct($dispatcher, $config = array())
-    {
-        //Change the dispatcher to the koowa dispatcher
-        $dispatcher = $this->getObject('event.publisher');
-
-        parent::__construct($dispatcher, $config);
-    }
-
-    /**
      * Connect the plugin to the dispatcher
      *
      * @param $dispatcher
      */
     public function connect($dispatcher)
     {
-        //Self attach the plugin to the joomla event publisher
-        if($dispatcher instanceof KEventPublisherInterface) {
-            $this->subscribe($dispatcher);
-        }
+        //Self subscribe the plugin to the koowa event publisher
+        $this->subscribe($this->getObject('event.publisher'));
     }
 
     /**
