@@ -136,12 +136,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 	{
         //Execute the component method
         $method = strtolower($context->request->getMethod());
-
-        try {
-            $this->execute($method, $context);
-        } catch(KControllerExceptionRequestForbidden $e) {
-            throw new KDispatcherExceptionMethodNotAllowed('Method: '.$method.' not allowed');
-        }
+        $this->execute($method, $context);
 
         return parent::_actionDispatch($context);
 	}
@@ -221,32 +216,39 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      */
     protected function _actionPost(KDispatcherContextInterface $context)
     {
+        $result     = false;
         $action     = null;
         $controller = $this->getController();
 
-        //Get the action from the request data
-        if($context->request->data->has('_action'))
+        if($controller instanceof KControllerModellable)
         {
-            $action = strtolower($context->request->data->get('_action', 'alnum'));
+            //Get the action from the request data
+            if($context->request->data->has('_action'))
+            {
+                $action = strtolower($context->request->data->get('_action', 'alnum'));
 
-            if(in_array($action, array('browse', 'read', 'render'))) {
-                throw new KDispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
+                if(in_array($action, array('browse', 'read', 'render'))) {
+                    throw new KDispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
+                }
             }
-        }
-        else
-        {
-            //Determine the action based on the model state
-            if($controller instanceof KControllerModellable) {
-                $action = $controller->getModel()->getState()->isUnique() ? 'edit' : 'add';
+            else
+            {
+                //Determine the action based on the model state
+                if($controller instanceof KControllerModellable) {
+                    $action = $controller->getModel()->getState()->isUnique() ? 'edit' : 'add';
+                }
             }
-        }
 
-        //Throw exception if no action could be determined from the request
-        if(!$action) {
-            throw new KControllerExceptionRequestInvalid('Action not found');
-        }
+            //Throw exception if no action could be determined from the request
+            if(!$action) {
+                throw new KControllerExceptionRequestInvalid('Action not found');
+            }
 
-        return $controller->execute($action, $context);
+            $result = $controller->execute($action, $context);
+        }
+        else throw new KDispatcherExceptionMethodNotAllowed('Method POST not allowed');
+
+        return $result;
     }
 
     /**
@@ -286,14 +288,17 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
                 $entity->setData($state);
             }
             else throw new KControllerExceptionRequestInvalid('Resource not found');
-        }
 
-        //Throw exception if no action could be determined from the request
-        if(!$action) {
-            throw new KControllerExceptionRequestInvalid('Resource not found');
-        }
+            //Throw exception if no action could be determined from the request
+            if(!$action) {
+                throw new KControllerExceptionRequestInvalid('Resource not found');
+            }
 
-        return $entity = $controller->execute($action, $context);
+            $result = $controller->execute($action, $context);
+        }
+        else throw new KDispatcherExceptionMethodNotAllowed('Method PUT not allowed');
+
+        return $result;
     }
 
     /**
@@ -306,8 +311,16 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {
+        $result     = false;
         $controller = $this->getController();
-        return $controller->execute('delete', $context);
+
+        if($controller instanceof KControllerModellable) {
+            $result = $controller->execute('delete', $context);
+        } else {
+            throw new KDispatcherExceptionMethodNotAllowed('Method DELETE not allowed');
+        }
+
+        return $result;
     }
 
     /**
@@ -361,8 +374,12 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     }
 
     /**
-     * Return the affected entities in the payload for none-SAFE requests that return a successful response. Make an
+     * Send the response to the client
+     *
+     * - Set the affected entities in the payload for none-SAFE requests that return a successful response. Make an
      * exception for 204 No Content responses which should not return a response body.
+     *
+     * - Add an Allow header to the response if the status code is 405 METHOD NOT ALLOWED.
      *
      * {@inheritdoc}
      */
@@ -373,8 +390,19 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         if (!$request->isSafe())
         {
-            if ($response->isSuccess() && $response->getStatusCode() !== KHttpResponse::NO_CONTENT) {
-                $context->result = $this->getController()->execute('render', $context);
+            if ($response->isSuccess())
+            {
+                //Render the controller and set the result in the response body
+                if($response->getStatusCode() !== KHttpResponse::NO_CONTENT) {
+                    $context->result = $this->getController()->execute('render', $context);
+                }
+            }
+            else
+            {
+                //Add an Allow header to the reponse
+                if($response->getStatusCode() === KHttpResponse::METHOD_NOT_ALLOWED) {
+                    $this->_actionOptions($context);
+                }
             }
         }
 
