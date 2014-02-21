@@ -65,7 +65,7 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
             {
                 if($entity->isLockable() && $entity->locked())
                 {
-                    $user = $this->getObjectt('user.provider')->load($entity->locked_by);
+                    $user = $this->getObject('user.provider')->load($entity->locked_by);
 
                     $date    = $this->getObject('date', array('date' => $entity->locked_on));
                     $message = $this->getObject('translator')->translate(
