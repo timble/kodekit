@@ -54,6 +54,10 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
         $directory = JPATH_BASE;
         foreach ($this->getComponents($directory) as $component)
         {
+            if (!file_exists($directory.'/components/com_'.$component.'/bootstrapper.php')) {
+                continue;
+            }
+
             if($bootstrapper = $this->getBootstrapper($component, false)) {
                 $chain->addBootstrapper($bootstrapper);
             }
