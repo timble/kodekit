@@ -56,8 +56,7 @@ interface KControllerRequestInterface
     /**
      * Return the request format
      *
-     * @param string $default The default format
      * @return  string  The request format or NULL if no format could be found
      */
-    public function getFormat($default = 'html');
+    public function getFormat();
 }

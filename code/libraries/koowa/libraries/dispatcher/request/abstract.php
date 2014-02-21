@@ -58,13 +58,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     protected $_referrer;
 
     /**
-     * The format
-     *
-     * @var string
-     */
-    protected $_format;
-
-    /**
      * The token
      *
      * @var string
@@ -255,6 +248,8 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         $config->append(array(
             'base_url'  => '/',
             'base_path' => null,
+            'format'    => null,
+            'url'       => null,
             'method'   => null,
             'formats'  => array(
                 'html'     => array('text/html', 'application/xhtml+xml'),
@@ -581,6 +576,21 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     }
 
     /**
+     * Set the url for this request
+     *
+     * @param string|array  $url Part(s) of an URL in form of a string or associative array like parse_url() returns
+     * @return HttpRequest
+     */
+    public function setUrl($url)
+    {
+        if(!empty($url)) {
+            $this->_url = $this->getObject('lib:http.url', array('url' => $url));
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns the HTTP referrer.
      *
      * 'referer' a commonly used misspelling word for 'referrer'
@@ -757,10 +767,9 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * 1. Use the the 'format' request parameter
      * 2. Use the accept header with the highest quality apply the reverse format map to find the format.
      *
-     * @param string $format The default format
      * @return  string  The request format or NULL if no format could be found
      */
-    public function getFormat($format = 'html')
+    public function getFormat()
     {
         if (!isset($this->_format))
         {
@@ -804,13 +813,12 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Sets a format
      *
-     * @param $format The format
+     * @param string $format The format
      * @return $this
      */
     public function setFormat($format)
     {
         $this->_format = $format;
-
         return $this;
     }
 
@@ -1059,7 +1067,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     public function registerApplication($application, $path)
     {
         $this->_applications[$application] = $path;
-
         return $this;
     }
 
@@ -1072,7 +1079,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     public function setApplication($application)
     {
         $this->_application = $application;
-
         return $this;
     }
 

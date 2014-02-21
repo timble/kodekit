@@ -30,6 +30,13 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     protected $_data;
 
     /**
+     * The request format
+     *
+     * @var string
+     */
+    protected $_format;
+
+    /**
      * Constructor
      *
      * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
@@ -43,6 +50,9 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
 
         //Set data parameters
         $this->setData($config->data);
+
+        //Set the format
+        $this->setFormat($config->format);
     }
 
     /**
@@ -56,11 +66,27 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'query' => array(),
-            'data'  => array(),
+            'query'  => array(),
+            'data'   => array(),
+            'format' => 'html',
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Return the Url of the request regardless of the server
+     *
+     * @return  KHttpUrl A HttpUrl object
+     */
+    public function getUrl()
+    {
+        $url = parent::getUrl();
+
+        //Add the query to the URL
+        $url->setQuery($this->getQuery()->toArray());
+
+        return $url;
     }
 
     /**
@@ -110,16 +136,11 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Return the request format
      *
-     * @param   string  $format The default format
      * @return  string  The request format
      */
-    public function getFormat($format = 'html')
+    public function getFormat()
     {
-        if($this->_query->has('format')) {
-            $format = $this->_query->get('format', 'alpha');
-        }
-
-        return $format;
+        return $this->_format;
     }
 
     /**
@@ -130,7 +151,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      */
     public function setFormat($format)
     {
-        $this->_query->set('format', $format);
+        $this->_format = $format;
         return $this;
     }
 

@@ -73,11 +73,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         // Set the user identifier
         $this->_user = $config->user;
 
-        //Set the query in the request
-        if(!empty($config->query)) {
-            $this->getRequest()->query->add(KObjectConfig::unbox($config->query));
-        }
-
         // Mixin the behavior (and command) interface
         $this->mixin('lib:behavior.mixin', $config);
 
@@ -103,7 +98,6 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             'response'          => 'lib:controller.response',
             'user'              => 'lib:user',
             'behaviors'         => array('permissible'),
-            'query'             => array()
         ));
 
         parent::_initialize($config);
@@ -258,7 +252,9 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         if(!$this->_request instanceof KControllerRequestInterface)
         {
-            $this->_request = $this->getObject($this->_request);
+            $this->_request = $this->getObject($this->_request,  array(
+                'url'  => $this->getIdentifier(),
+            ));
 
             if(!$this->_request instanceof KControllerRequestInterface)
             {
