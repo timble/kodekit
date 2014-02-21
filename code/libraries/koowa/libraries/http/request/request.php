@@ -51,9 +51,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     {
         parent::__construct($config);
 
-        if(!empty($config->url)) {
-            $this->setUrl($config->url);
-        }
+        $this->setUrl($config->url);
 
         if(!empty($config->method)) {
             $this->setMethod($config->method);
@@ -133,9 +131,9 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     }
 
     /**
-     * Return the url for this request
+     * Return the Url of the request regardless of the server
      *
-     * @return KHttpUrl
+     * @return  KHttpUrl A HttpUrl object
      */
     public function getUrl()
     {
