@@ -421,10 +421,11 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
             // find the last dot in the value
             $pos = strrpos($val, '.');
 
-            if ($pos !== false) {
+            if ($pos !== false)
+            {
                 $key = key($path);
                 $this->format = substr($val, $pos + 1);
-                $path[$key] = substr($val, 0, $pos);
+                $path[$key]   = substr($val, 0, $pos);
             }
         }
 
