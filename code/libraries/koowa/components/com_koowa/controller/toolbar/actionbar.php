@@ -24,6 +24,24 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back', 'options');
 
     /**
+     * Initializes the config for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'title' => KStringInflector::humanize($this->getName()),
+            'icon'  => $this->getName(),
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Load the language strings for toolbar button labels
      *
      * @param KControllerContextInterface $context
@@ -31,6 +49,42 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     protected function _beforeRender(KControllerContextInterface $context)
     {
         JFactory::getLanguage()->load('joomla', JPATH_ADMINISTRATOR);
+    }
+
+    /**
+     * Add default action commands and set the action bar title
+     * .
+     *
+     * @param KControllerContextInterface $context A command context object
+     */
+    protected function _afterRead(KControllerContextInterface $context)
+    {
+        $controller = $this->getController();
+        $name       = ucfirst($context->subject->getIdentifier()->name);
+
+        if($controller->getModel()->getState()->isUnique()) {
+            $title    = 'Edit '.$name;
+        } else {
+            $title    = 'New '.$name;
+        }
+
+        $this->getCommand('title')->title = $title;
+    }
+
+    /**
+     * Add a title command
+     *
+     * @param   string $title   The title
+     * @param   string $icon    The icon
+     * @return  KControllerToolbarAbstract
+     */
+    public function addTitle($title, $icon = '')
+    {
+        $this->_commands['title'] = new KControllerToolbarCommand('title', array(
+            'title' => $title,
+            'icon'  => $icon
+        ));
+        return $this;
     }
     
     /**
@@ -125,7 +179,8 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
         	$return = urlencode(base64_encode(JUri::getInstance()));
         	$link   = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
         }
-        else {
+        else
+        {
             JHtml::_('behavior.modal');
 
             $link = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
@@ -139,7 +194,6 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
         }
         
         $command->icon = sprintf('icon-32-%s', $icon);
-
         $command->href = JRoute::_($link);
     }
 }

@@ -41,8 +41,6 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     {
         $config->append(array(
             'type'  => 'actionbar',
-            'title' => KStringInflector::humanize($this->getName()),
-            'icon'  => $this->getName(),
         ));
 
         parent::_initialize($config);
@@ -60,51 +58,25 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     }
 
     /**
-     * Add a title command
-     *
-     * @param   string $title   The title
-     * @param   string $icon    The icon
-     * @return  KControllerToolbarAbstract
-     */
-    public function addTitle($title, $icon = '')
-    {
-        $this->_commands['title'] = new KControllerToolbarCommand('title', array(
-            'title' => $title,
-            'icon'  => $icon
-        ));
-        return $this;
-    }
-
-    /**
-     * Add default action commands and set the action bar title
+     * Add default toolbar commands and set the toolbar title
      * .
-     *
-     * @param KControllerContextInterface $context A command context object
+     * @param KControllerContextInterface	$context A controller context object
      */
     protected function _afterRead(KControllerContextInterface $context)
     {
         $controller = $this->getController();
-        $name       = ucfirst($context->subject->getIdentifier()->name);
 
-        if($controller->getModel()->getState()->isUnique())
-        {
-            $saveable = $controller->canEdit();
-            $title    = 'Edit '.$name;
-        }
-        else
-        {
-            $saveable = $controller->canAdd();
-            $title    = 'New '.$name;
-        }
-
-        if($saveable)
-        {
-            $this->getCommand('title')->title = $title;
-            $this->addCommand('apply');
+        if($controller->isEditable() && $controller->canSave()) {
             $this->addCommand('save');
         }
 
-        $this->addCommand('cancel');
+        if($controller->isEditable() && $controller->canApply()) {
+            $this->addCommand('apply');
+        }
+
+        if($controller->isEditable() && $controller->canCancel()) {
+            $this->addCommand('cancel',  array('attribs' => array('data-novalidate' => 'novalidate')));
+        }
     }
 
     /**
