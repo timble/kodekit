@@ -26,18 +26,15 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         parent::__construct($config);
 
-        if($this->isDispatched() && $this->getRequest()->getFormat() == 'html')
-        {
-            $this->addCommandCallback('before.read' , 'setReferrer');
-            $this->addCommandCallback('after.apply' , '_lockReferrer');
-            $this->addCommandCallback('after.read'  , '_unlockReferrer');
-            $this->addCommandCallback('after.save'  , '_unsetReferrer');
-            $this->addCommandCallback('after.cancel', '_unsetReferrer');
+        $this->addCommandCallback('before.read' , 'setReferrer');
+        $this->addCommandCallback('after.apply' , '_lockReferrer');
+        $this->addCommandCallback('after.read'  , '_unlockReferrer');
+        $this->addCommandCallback('after.save'  , '_unsetReferrer');
+        $this->addCommandCallback('after.cancel', '_unsetReferrer');
 
-            $this->addCommandCallback('after.read'  , '_lockResource');
-            $this->addCommandCallback('after.save'  , '_unlockResource');
-            $this->addCommandCallback('after.cancel', '_unlockResource');
-        }
+        $this->addCommandCallback('after.read'  , '_lockResource');
+        $this->addCommandCallback('after.save'  , '_unlockResource');
+        $this->addCommandCallback('after.cancel', '_unlockResource');
 
         $this->_cookie_path = $config->cookie_path;
     }
@@ -57,6 +54,23 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Check if the behavior is supported
+     *
+     * @return  boolean  True on success, false otherwise
+     */
+    public function isSupported()
+    {
+        $mixer   = $this->getMixer();
+        $request = $mixer->getRequest();
+
+        if ($mixer instanceof KControllerModellable && $mixer->isDispatched() && $request->getFormat() == 'html') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
