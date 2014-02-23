@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
+class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
      * The limit information
@@ -33,14 +33,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
 
         //Set the limit
         $this->_limit = $config->limit;
-
-        //Authenticate none safe requests
-        $this->addCommandCallback('before.post'  , '_authenticateRequest');
-        $this->addCommandCallback('before.put'   , '_authenticateRequest');
-        $this->addCommandCallback('before.delete', '_authenticateRequest');
-
-        //Sign GET request with a cookie token
-        $this->addCommandCallback('after.get' , '_signResponse');
 	}
 
     /**
@@ -54,73 +46,39 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'behaviors'  => array('resettable'),
-            'limit'      => array('default' => 100)
+            'behaviors'      => array('resettable'),
+            'authenticators' => array('token'),
+            'limit'          => array('default' => 100)
          ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Check the request token to prevent CSRF exploits
+     * Force creation of a singleton
      *
-     * Method will always perform a referrer check and a token cookie token check if the user is not authentic or a
-     * session token check if the user is authentic. If any of the checks fail a forbidden exception is thrown.
-     *
-     * @param KDispatcherContextInterface $context A dispatcher context object
-     * @throws KControllerExceptionRequestInvalid           If the request referrer is not valid
-     * @throws KControllerExceptionRequestForbidden         If the cookie token is not valid
-     * @throws KControllerExceptionRequestNotAuthenticated  If the session token is not valid
-     * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
+     * @param  KObjectConfigInterface  $config  Configuration options
+     * @param  KObjectManagerInterface $manager	A KObjectManagerInterface object
+     * @return KDispatcherDefault
      */
-    protected function _authenticateRequest(KDispatcherContextInterface $context)
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        $request = $context->request;
-        $user    = $context->user;
-
-        if(!$user->isAuthentic())
+        // Check if an instance with this identifier already exists or not
+        if (!$manager->isRegistered($config->object_identifier))
         {
-            //Check referrer
-            if(!$request->getReferrer()) {
-                throw new KControllerExceptionRequestInvalid('Invalid Request Referrer');
-            }
+            //Add the object alias to allow easy access to the singleton
+            $manager->registerAlias($config->object_identifier, 'dispatcher');
 
-            //Check cookie token
-            if($request->getToken() !== $request->cookies->get('_token', 'sha1')) {
-                throw new KControllerExceptionRequestNotAuthenticated('Invalid Cookie Token');
-            }
-        }
-        else
-        {
-            //Check session token
-            if( $request->getToken() !== $user->getSession()->getToken()) {
-                throw new KControllerExceptionRequestForbidden('Invalid Session Token');
-            }
+            //Merge alias configuration into the identifier
+            $config->append($manager->getIdentifier('dispatcher')->getConfig());
+
+            //Create the singleton
+            $class    = $manager->getClass($config->object_identifier);
+            $instance = new $class($config);
+            $manager->setObject($config->object_identifier, $instance);
         }
 
-        return true;
-    }
-
-    /**
-     * Sign the response with a token
-     *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
-     */
-    protected function _signResponse(KDispatcherContextInterface $context)
-    {
-        if(!$context->response->isError())
-        {
-            $token = $context->user->getSession()->getToken();
-            $path  = $context->request->getBaseUrl()->getPath();
-
-            $context->response->headers->addCookie($this->getObject('lib:http.cookie', array(
-                'name'   => '_token',
-                'value'  => $token,
-                'path'   => $path ? $path : '/'
-            )));
-
-            $context->response->headers->set('X-Token', $token);
-        }
+        return $manager->getObject($config->object_identifier);
     }
 
     /**
@@ -135,9 +93,22 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectMultiton
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
-        //Execute the component method
-        $method = strtolower($context->request->getMethod());
-        $this->execute($method, $context);
+        //Redirect if no view information can be found in the request
+        if(!$context->request->query->has('view'))
+        {
+            $url = clone($context->request->getUrl());
+            $url->query['view'] = $this->getController()->getView()->getName();
+
+            $this->redirect($url);
+        }
+        else
+        {
+            $this->setController($this->getRequest()->query->get('view', 'alpha'));
+
+            //Execute the component method
+            $method = strtolower($context->request->getMethod());
+            $this->execute($method, $context);
+        }
 
         return parent::_actionDispatch($context);
 	}

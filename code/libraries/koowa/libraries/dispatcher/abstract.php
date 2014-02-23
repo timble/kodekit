@@ -22,6 +22,16 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 	 */
 	protected $_controller;
 
+    /**
+     * List of authenticators
+     *
+     * Associative array of authenticators, where key holds the authenticator identifier string
+     * and the value is an identifier object.
+     *
+     * @var array
+     */
+    private $__authenticators;
+
 	/**
 	 * Constructor.
 	 *
@@ -33,6 +43,18 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
 		//Set the controller
 		$this->_controller = $config->controller;
+
+        //Add the authenticators
+        $authenticators = (array) KObjectConfig::unbox($config->authenticators);
+
+        foreach ($authenticators as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->addAuthenticator($value);
+            } else {
+                $this->addAuthenticator($key, $value);
+            }
+        }
 	}
 
     /**
@@ -46,9 +68,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'controller' => $this->getIdentifier()->package,
-            'request'    => 'lib:dispatcher.request',
-            'response'   => 'lib:dispatcher.response',
+            'controller'     => $this->getIdentifier()->package,
+            'request'        => 'lib:dispatcher.request',
+            'response'       => 'lib:dispatcher.response',
+            'authenticators' => array()
         ));
 
         parent::_initialize($config);
@@ -188,6 +211,59 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $context->setUser($this->getUser());
 
         return $context;
+    }
+
+    /**
+     * Attach an authenticator
+     *
+     * @param  mixed $authenticator An object that implements KDispatcherAuthenticatorInterface, an KObjectIdentifier
+     *                              or valid identifier string
+     * @param  array  $config  An optional associative array of configuration options
+     * @return KDispatcherAbstract
+     */
+    public function addAuthenticator($authenticator, $config = array())
+    {
+        //Create the complete identifier if a partial identifier was passed
+        if (is_string($authenticator) && strpos($authenticator, '.') === false)
+        {
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['path'] = array('dispatcher', 'authenticator');
+            $identifier['name'] = $authenticator;
+
+            $identifier = $this->getIdentifier($identifier);
+        }
+        else $identifier = $this->getIdentifier($authenticator);
+
+        if (!isset($this->__authenticators[(string)$identifier]))
+        {
+            if(!$authenticator instanceof KDispatcherAuthenticatorInterface) {
+                $authenticator = $this->getObject($identifier, $config);
+            }
+
+            if (!($authenticator instanceof KDispatcherAuthenticatorInterface))
+            {
+                throw new \UnexpectedValueException(
+                    "Authenticator $identifier does not implement KDispatcherAuthenticatorInterface"
+                );
+            }
+
+            $this->getCommandChain()->addHandler($authenticator);
+
+            //Store the authenticator to allow for named lookups
+            $this->__authenticators[(string)$identifier] = $authenticator;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the authenticators
+     *
+     * @return array An array of authenticators
+     */
+    public function getAuthenticators()
+    {
+        return $this->__authenticators;
     }
 
     /**
