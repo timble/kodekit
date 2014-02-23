@@ -90,7 +90,7 @@ interface KObjectManagerInterface
      * @return KObjectManagerInterface
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function setConfig($identifier, array $config);
+    public function setConfig($identifier, $config);
 
     /**
      * Register a mixin for an identifier

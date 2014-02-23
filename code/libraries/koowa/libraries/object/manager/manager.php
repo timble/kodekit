@@ -279,7 +279,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function setConfig($identifier, array $config)
+    public function setConfig($identifier, $config)
     {
         $identifier = $this->getIdentifier($identifier);
         $identifier->setConfig($config, false);
@@ -425,9 +425,13 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	public function registerAlias($identifier, $alias)
 	{
         $identifier = $this->getIdentifier($identifier);
-        $alias      = trim((string) $alias);
+        $alias      = $this->getIdentifier($alias);
 
-        $this->_registry->alias($identifier, $alias);
+        //Register the alias for the identifier
+        $this->_registry->alias($identifier, (string) $alias);
+
+        //Merge alias configuration into the identifier
+        $identifier->getConfig()->append($alias->getConfig());
 
         return $this;
 	}
