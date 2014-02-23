@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantiable
+class ComKoowaDispatcherHttp extends KDispatcherHttp
 {
     /**
      * Constructor.
@@ -29,11 +29,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
 
         //Render an exception before sending the response
         $this->addCommandCallback('before.fail', '_renderError');
-
-        //Force the controller to the information found in the request
-        if($this->getRequest()->query->has('view')) {
-            $this->_controller = $this->getRequest()->query->get('view', 'cmd');
-        }
     }
 
     /**
@@ -57,30 +52,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Force creation of a singleton
-     *
-     * @param  KObjectConfigInterface  $config  Configuration options
-     * @param  KObjectManagerInterface $manager	A KObjectManagerInterface object
-     * @return KDispatcherDefault
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        // Check if an instance with this identifier already exists or not
-        if (!$manager->isRegistered($config->object_identifier))
-        {
-            //Create the singleton
-            $class    = $manager->getClass($config->object_identifier);
-            $instance = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
-
-            //Add the factory map to allow easy access to the singleton
-            $manager->registerAlias($config->object_identifier, 'dispatcher');
-        }
-
-        return $manager->getObject($config->object_identifier);
     }
 
     /**
@@ -163,27 +134,5 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp implements KObjectInstantia
                 $context->request->query->set('tmpl', 'koowa');
             }
         }
-    }
-
-    /**
-     * Dispatch the controller and redirect
-     *
-     * This function divert the standard behavior and will redirect if no view information can be found in the request.
-     *
-     * @param KDispatcherContextInterface $context A command context object
-     * @return  ComKoowaDispatcherHttp
-     */
-    protected function _actionDispatch(KDispatcherContextInterface $context)
-    {
-        //Redirect if no view information can be found in the request
-        if(!$context->request->query->has('view'))
-        {
-            $url = clone($context->request->getUrl());
-            $url->query['view'] = $this->getController()->getView()->getName();
-
-            $this->redirect($url);
-        }
-
-        parent::_actionDispatch($context);
     }
 }
