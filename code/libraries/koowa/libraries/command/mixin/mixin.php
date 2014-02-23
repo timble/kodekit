@@ -226,64 +226,36 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Attach a command to the chain
      *
-     * The priority parameter can be used to override the command priority while enqueueing the command.
-     *
      * @param  mixed $handler An object that implements KCommandHandlerInterface, an KObjectIdentifier
      *                        or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return  KObjectInterface The mixer object
+     * @return KObjectInterface The mixer object
      */
     public function addCommandHandler($handler, $config = array())
     {
-        if (!($handler instanceof KCommandHandlerInterface)) {
-            $handler = $this->getCommandHandler($handler, $config);
-        }
-
-        $this->getCommandChain()->addHandler($handler);
-        return $this->getMixer();
-    }
-
-    /**
-     * Removes a command from the chain
-     *
-     * @param   KCommandHandlerInterface  $handler  The command handler
-     * @return   KObjectInterface The mixer object
-     */
-    public function removeCommandHandler(KCommandHandlerInterface $handler)
-    {
-        $this->getCommandChain()->removeHandler($handler);
-        return $this->getMixer();
-    }
-
-    /**
-     * Get a command handler by identifier
-     *
-     * @param  mixed $handler An object that implements ObjectInterface, ObjectIdentifier object
-     *                        or valid identifier string
-     * @param  array  $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException    If the handler is not implementing the KCommandHandlerInterface
-     * @return KCommandHandlerInterface
-     */
-    public function getCommandHandler($handler, $config = array())
-    {
-        if (!($handler instanceof KObjectIdentifier))
+        //Create the complete identifier if a partial identifier was passed
+        if (is_string($handler) && strpos($handler, '.') === false)
         {
-            //Create the complete identifier if a partial identifier was passed
-            if (is_string($handler) && strpos($handler, '.') === false)
-            {
-                $identifier = $this->getIdentifier()->toArray();
-                $identifier['path'] = array('command', 'handler');
-                $identifier['name'] = $handler;
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['path'] = array('command', 'handler');
+            $identifier['name'] = $handler;
 
-                $identifier = $this->getIdentifier($identifier);
-            }
-            else $identifier = $this->getIdentifier($handler);
+            $identifier = $this->getIdentifier($identifier);
         }
-        else $identifier = $handler;
+        else
+        {
+            if($handler instanceof KCommandHandlerInterface) {
+                $identifier = $handler->getIdentifier();
+            } else {
+                $identifier = $this->getIdentifier($handler);
+            }
+        }
 
         if (!isset($this->__command_handlers[(string)$identifier]))
         {
-            $handler = $this->getObject($identifier, $config);
+            if (!($handler instanceof KCommandHandlerInterface)) {
+                $handler = $this->getObject($identifier, $config);
+            }
 
             if (!($handler instanceof KCommandHandlerInterface))
             {
@@ -291,10 +263,27 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
                     "Command Handler $identifier does not implement KCommandHandlerInterface"
                 );
             }
-        }
-        else $handler = $this->__command_handlers[(string)$identifier];
 
-        return $handler;
+            //Enqueue the handler
+            $this->getCommandChain()->addHandler($handler);
+
+            //Store the command to allow for named lookups
+            $this->__command_handlers[(string)$identifier] = $handler;
+        }
+
+        return $this->getMixer();
+    }
+
+    /**
+     * Removes a command from the chain
+     *
+     * @param  KCommandHandlerInterface  $handler  The command handler
+     * @return KObjectInterface The mixer object
+     */
+    public function removeCommandHandler(KCommandHandlerInterface $handler)
+    {
+        $this->getCommandChain()->removeHandler($handler);
+        return $this->getMixer();
     }
 
     /**
