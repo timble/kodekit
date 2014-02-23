@@ -69,33 +69,30 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     /**
      * Add a behavior
      *
-     * @param   mixed $behavior An object that implements BehaviorInterface, an ObjectIdentifier
+     * @param   mixed $behavior   An object that implements KBehaviorInterface, an KObjectIdentifier
      *                            or valid identifier string
-     * @param   array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
+     * @param   array $config     An optional associative array of configuration settings
      * @return  KObject The mixer object
      */
     public function addBehavior($behavior, $config = array())
     {
-        //Get the behavior identifier
-        if (!($behavior instanceof KBehaviorInterface))
+        //Create the complete identifier if a partial identifier was passed
+        if (is_string($behavior) && strpos($behavior, '.') === false)
         {
-            if (!($behavior instanceof KObjectIdentifier))
-            {
-                //Create the complete identifier if a partial identifier was passed
-                if (is_string($behavior) && strpos($behavior, '.') === false)
-                {
-                    $identifier = $this->getIdentifier()->toArray();
-                    $identifier['path'] = array($identifier['path'][0], 'behavior');
-                    $identifier['name'] = $behavior;
+            $identifier = $this->getIdentifier()->toArray();
+            $identifier['path'] =  array($identifier['path'][0], 'behavior');
+            $identifier['name'] = $behavior;
 
-                    $identifier = $this->getIdentifier($identifier);
-                }
-                else $identifier = $this->getIdentifier($behavior);
-            }
-            else $identifier = $behavior;
+            $identifier = $this->getIdentifier($identifier);
         }
-        else $identifier = $behavior->getIdentifier();
+        else
+        {
+            if($behavior instanceof KBehaviorInterface) {
+                $identifier = $behavior->getIdentifier();
+            } else {
+                $identifier = $this->getIdentifier($behavior);
+            }
+        }
 
         //Attach the behavior if it doesn't exist yet
         if(!$this->hasBehavior($identifier->name))
@@ -111,17 +108,17 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
                 throw new UnexpectedValueException("Behavior $identifier does not implement KBehaviorInterface");
             }
 
-            //Store the behavior to allow for name lookups
-            $this->__behaviors[$behavior->getName()] = $behavior;
-
             //Force set the mixer
             $behavior->setMixer($this->getMixer());
 
-            //Enqueue the behavior
+            //Add the behavior
             $this->addCommandHandler($behavior);
 
             //Mixin the behavior
             $this->mixin($behavior);
+
+            //Store the behavior to allow for named lookups
+            $this->__behaviors[$behavior->getName()] = $behavior;
         }
 
         return $this->getMixer();
