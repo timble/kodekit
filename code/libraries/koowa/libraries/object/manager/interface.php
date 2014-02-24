@@ -86,11 +86,12 @@ interface KObjectManagerInterface
      * Set the configuration options for an identifier
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param array	 $config    An associative array of configuration options
-     * @return KObjectManagerInterface
+     * @param array	$config     An associative array of configuration options
+     * @param  boolean  $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
+     * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function setConfig($identifier, $config);
+    public function setConfig($identifier, $config, $merge = true);
 
     /**
      * Register a mixin for an identifier
