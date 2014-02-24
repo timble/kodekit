@@ -777,6 +777,8 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
 
             if(!$this->query->has('format'))
             {
+                $format = 'html';
+
                 if($this->_headers->has('Accept'))
                 {
                     $accept  = $this->_headers->get('Accept');
