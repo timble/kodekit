@@ -86,36 +86,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * Loads Mootools from Joomla sources
-     *
-     * @param array|KObjectConfig $config
-     * @return string
-     */
-	public function mootools($config = array())
-	{
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'debug' => JFactory::getApplication()->getCfg('debug')
-        ));
-
-        $html = '';
-
-		if (!isset(self::$_loaded['mootools']))
-		{
-            if (version_compare(JVERSION, '3.0', 'ge')) {
-                JHTML::_('behavior.framework', true);
-            } else {
-                JHTML::_('behavior.mootools', false);
-            }
-
-			self::$_loaded['mootools'] = true;
-		}
-
-		return $html;
-	}
-
-
-    /**
      * Keeps session alive
      *
      * @param array|KObjectConfig $config
