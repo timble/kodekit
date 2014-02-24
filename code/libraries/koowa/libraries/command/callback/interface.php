@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-interface KCommandCallbackInterface extends CommandCallbackDelegate
+interface KCommandCallbackInterface extends KCommandCallbackDelegate
 {
     /**
      * Invoke a command by calling all the registered callbacks
