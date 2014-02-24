@@ -567,7 +567,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             // Trigger checkbox when the user clicks anywhere in the row
             tr.on('click.koowa', function(event){
                 var target = $(event.target);
-                if(target.is('[type=checkbox]') || target.is('[type=radio]')) {
+                if(target.is('[type=radio], [type=checkbox], a[href]')) {
                     return;
                 }
 
