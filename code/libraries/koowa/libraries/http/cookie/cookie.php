@@ -215,7 +215,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
         }
         else $str .= 'deleted; expires=' . gmdate(DateTime::COOKIE, time() - 31536001);
 
-        if ($this->path !== '/') {
+        if (!empty($this->path) && $this->path !== '/') {
             $str .= '; path=' . $this->path;
         }
 

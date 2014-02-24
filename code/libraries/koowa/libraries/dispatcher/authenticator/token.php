@@ -65,12 +65,11 @@ class KDispatcherAuthenticatorToken extends KDispatcherAuthenticatorAbstract
         if(!$context->response->isError())
         {
             $token = $context->user->getSession()->getToken();
-            $path  = $context->request->getBaseUrl()->getPath();
 
             $context->response->headers->addCookie($this->getObject('lib:http.cookie', array(
                 'name'   => '_token',
                 'value'  => $token,
-                'path'   => $path ? $path : '/'
+                'path'   => $context->request->getBaseUrl()->getPath(),
             )));
 
             $context->response->headers->set('X-Token', $token);
