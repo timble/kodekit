@@ -96,12 +96,17 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'search'      => null,
-            'placeholder' => $this->translate('Find by title or description&hellip;')
+            'search'          => null,
+            'placeholder'     => $this->translate('Find by title or description&hellip;')
         ));
 
-        $html  = '<label for="search"><i class="icon-search"></i></label>';
-        $html .= '<input type="search" name="search" id="search" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
+        $html = '';
+
+        $html .= '<div class="search__container search__container--has_empty_button">';
+        $html .= '<label for="search"><i class="icon-search"></i></label>';
+        $html .= '<input type="search" name="search" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
+        $html .= '<a class="search_button--empty"><span>X</span></a>';
+        $html .= '</div>';
 
         return $html;
     }
