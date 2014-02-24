@@ -102,8 +102,6 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         $html  = '<label for="search"><i class="icon-search"></i></label>';
         $html .= '<input type="search" name="search" id="search" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
-        $html .= '<button>'.$this->translate('Go').'</button>';
-        $html .= '<button onclick="document.getElementById(\'search\').value=\'\';this.form.submit();">'.$this->translate('Reset').'</button>';
 
         return $html;
     }
