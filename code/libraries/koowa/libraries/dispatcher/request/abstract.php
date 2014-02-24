@@ -773,6 +773,8 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     {
         if (!isset($this->_format))
         {
+            $format = 'html';
+
             if(!$this->query->has('format'))
             {
                 if($this->_headers->has('Accept'))
@@ -799,7 +801,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
                             }
                         }
                     }
-                    else $format = 'html';
                 }
             }
             else $format = $this->query->get('format', 'word');
