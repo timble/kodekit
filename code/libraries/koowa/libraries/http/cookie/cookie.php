@@ -60,7 +60,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * @var string
      */
-    public $path;
+    protected $_path;
 
     /**
      * When TRUE indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
@@ -167,6 +167,23 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
     }
 
     /**
+     * Set the cookie path
+     *
+     * @param string $path The cookie path
+     * @return KHttpCookie
+     */
+    public function setPath($path)
+    {
+        if(empty($path)) {
+            $this->_path = '/';
+        } else {
+            $this->_path = $path;
+        }
+
+        return $this;
+    }
+
+    /**
      * Checks whether the cookie should only be transmitted over a secure HTTPS connection from the client.
      *
      * @return bool
@@ -215,7 +232,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
         }
         else $str .= 'deleted; expires=' . gmdate(DateTime::COOKIE, time() - 31536001);
 
-        if (!empty($this->path) && $this->path !== '/') {
+        if ($this->path !== '/') {
             $str .= '; path=' . $this->path;
         }
 
@@ -250,6 +267,10 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
         if ($key == 'expire') {
             $this->setExpire($value);
         }
+
+        if ($key == 'path') {
+            $this->setPath($value);
+        }
     }
 
     /**
@@ -268,6 +289,10 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
 
         if ($key == 'expire') {
             $result = $this->_expire;
+        }
+
+        if ($key == 'path') {
+            $result = $this->_path;
         }
 
         return $result;
