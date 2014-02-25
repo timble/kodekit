@@ -97,10 +97,35 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'search'          => null,
+            'submit_on_clear' => true,
             'placeholder'     => $this->translate('Find by title or description&hellip;')
         ));
 
         $html = '';
+
+        if ($config->submit_on_clear)
+        {
+            $html .= $this->getTemplate()->renderHelper('behavior.jquery');
+            $html .= '
+            <script>
+            var value = '.json_encode($config->search).';
+            kQuery(function($) {
+                $(".search_button--empty").click(function(event) {
+                    event.preventDefault();
+
+                    var input = $(this).siblings("input");
+                    input.val("");
+
+                    if (value) {
+                        var form = input.parents("form");
+                        if (form.length) {
+                            form[0].submit();
+                        }
+                    }
+                });
+            });
+            </script>';
+        }
 
         $html .= '<div class="search__container search__container--has_empty_button">';
         $html .= '<label for="search"><i class="icon-search"></i></label>';
