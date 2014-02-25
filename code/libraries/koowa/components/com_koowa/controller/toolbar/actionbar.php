@@ -177,13 +177,13 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
         if (version_compare(JVERSION, '3.0', '>='))
         {
         	$return = urlencode(base64_encode(JUri::getInstance()));
-        	$link   = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
+        	$link   = 'option=com_config&view=component&component=com_'.$option.'&path=&return='.$return;
         }
         else
         {
             JHtml::_('behavior.modal');
 
-            $link = 'index.php?option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
+            $link = 'option=com_config&view=component&component=com_'.$option.'&path=&tmpl=component';
 
             $command->append(array(
                 'attribs' => array(
@@ -194,6 +194,6 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
         }
         
         $command->icon = sprintf('icon-32-%s', $icon);
-        $command->href = JRoute::_($link);
+        $command->href = $link;
     }
 }
