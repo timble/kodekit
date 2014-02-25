@@ -79,7 +79,7 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
 	                $view = (string)$menu['view'];
 
 	                $this->addCommand((string)$menu, array(
-	            		'href'   => JRoute::_('index.php?option=com_'.$package.'&view='.$view),
+	            		'href'   => 'option=com_'.$package.'&view='.$view,
 	            		'active' => ($name == KStringInflector::singularize($view))
 	                ));
 	            }
