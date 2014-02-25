@@ -51,12 +51,9 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KO
     {
         $db = JFactory::getDBO();
 
-		$resource = method_exists($db, 'getConnection') ? $db->getConnection() : $db->_resource;
-		$prefix   = method_exists($db, 'getPrefix')     ? $db->getPrefix()     : $db->_table_prefix;
-
         $config->append(array(
-    		'connection'   => $resource,
-            'table_prefix' => $prefix,
+    		'connection'   => $db->getConnection(),
+            'table_prefix' => $db->getPrefix(),
         ));
 
         parent::_initialize($config);
@@ -75,9 +72,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KO
 	{
 	    if(!isset($this->_table_schema[$table]) && isset($this->_cache))
 		{
-		    $database = $this->getDatabase();
-
-		    $identifier = md5($database.$table);
+		    $identifier = md5($this->getDatabase().$table);
 
 	        if (!$schema = $this->_cache->get($identifier))
 	        {
