@@ -29,7 +29,12 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
         	'toolbar' => null
         ));
 
-        foreach ($config->toolbar->getCommands() as $command) {
+        foreach ($config->toolbar->getCommands() as $command)
+        {
+            if(!empty($command->href)) {
+                $command->href = $this->getTemplate()->getView()->getRoute($command->href);
+            }
+
             JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
         }
 
