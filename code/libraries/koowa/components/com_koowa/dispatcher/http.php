@@ -135,4 +135,22 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
             }
         }
     }
+
+    /**
+     * Dispatch the request
+     *
+     * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
+     * the request and passing along the context.
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @throws  KDispatcherExceptionMethodNotAllowed  If the method is not allowed on the resource.
+     * @return	mixed
+     */
+    protected function _actionDispatch(KDispatcherContextInterface $context)
+    {
+        //Set the response messages
+        $context->response->setMessages($this->getUser()->getSession()->getContainer('message')->all());
+
+        return parent::_actionDispatch($context);
+    }
 }

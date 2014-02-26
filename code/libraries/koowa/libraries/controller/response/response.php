@@ -188,6 +188,18 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     }
 
     /**
+     * Set the response messages
+     *
+     * @param array $messages
+     * @return $this
+     */
+    public function setMessages($messages)
+    {
+        $this->_messages = $messages;
+        return $this;
+    }
+
+    /**
      * Get the response messages
      *
      * @param  boolean $flush   If TRUE flush the messages. Default is TRUE.
