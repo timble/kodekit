@@ -97,8 +97,10 @@ class KUserSessionHandlerDatabase extends KUserSessionHandlerAbstract
                 $row->id   = $session_id;
             }
 
-            $row->time = time();
-            $row->data = $session_data;
+            $row->time   = time();
+            $row->data   = $session_data;
+            $row->domain = ini_get('session.cookie_domain');
+            $row->path   = ini_get('session.cookie_path');
 
             $result = $row->save();
         }
