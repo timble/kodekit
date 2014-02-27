@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli implements KObjectMultiton
+class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli
 {
     /**
 	 * The cache object
