@@ -129,7 +129,7 @@ abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFile
         $protocol = $this->getProtocol();
 
         if (!empty($protocol) && !in_array($protocol, stream_get_wrappers())) {
-            $result = stream_wrapper_register($protocol,  get_called_class());
+            $result = stream_wrapper_register($protocol, get_class($this));
         }
 
         return $result;
