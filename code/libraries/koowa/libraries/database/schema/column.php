@@ -135,11 +135,20 @@ class KDatabaseSchemaColumn extends KObject implements Serializable
 
     public function serialize()
     {
-        return KObjectManager::getInstance()->serializeObject($this);
+        $data = KObjectManager::getInstance()->serializeObject($this, true);
+        $data['properties']['filter'] = (string)$this->filter->getIdentifier();
+
+        return serialize($data);
     }
 
     public function unserialize($data)
     {
         KObjectManager::getInstance()->unserializeObject($this, $data);
+
+        $data = unserialize($data);
+
+        if (isset($data['properties']['filter'])) {
+            $this->filter = $data['properties']['filter'];
+        }
     }
 }
