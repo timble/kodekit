@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseSchemaColumn extends KObject
+class KDatabaseSchemaColumn extends KObject implements Serializable
 {
 	/**
 	 * Column name
@@ -131,5 +131,15 @@ class KDatabaseSchemaColumn extends KObject
         }
 
         return null;
+    }
+
+    public function serialize()
+    {
+        return KObjectManager::getInstance()->serializeObject($this);
+    }
+
+    public function unserialize($data)
+    {
+        KObjectManager::getInstance()->unserializeObject($this, $data);
     }
 }
