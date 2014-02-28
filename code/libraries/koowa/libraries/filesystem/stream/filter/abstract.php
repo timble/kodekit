@@ -55,48 +55,6 @@ abstract class KFilesystemStreamFilterAbstract extends php_user_filter implement
     //public $params;
 
     /**
-     * Register the stream filter
-     *
-     * @return bool
-     */
-    public static function register()
-    {
-        $result = false;
-        $name   = self::getName();
-
-        if (!empty($name) && !in_array($name, stream_get_filters())) {
-            $result = stream_filter_register(self::getName(), get_called_class());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Check if the stream filter is registered
-     *
-     * @return bool TRUE if the filter is registeredL, FALSE otherwise.
-     */
-    public static function isRegistered()
-    {
-        $result = false;
-        if($name = self::getName()) {
-            $result = in_array($name, stream_get_wrappers());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the filter name
-     *
-     * @return string The filter name
-     */
-    public static function getName()
-    {
-        return self::$name;
-    }
-
-    /**
      * Called the filter is created
      *
      * @return bool Return FALSE on failure, or TRUE on success.

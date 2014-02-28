@@ -30,28 +30,6 @@ interface KFilesystemStreamFilterInterface
      * @return int
      */
     public function filter($in, $out, &$consumed, $closing);
-
-    /**
-     * Register the stream filter
-     *
-     * @return bool
-     */
-    public static function register();
-
-    /**
-     * Check if the stream filter is registered
-     *
-     * @return bool TRUE if the filter is registeredL, FALSE otherwise.
-     */
-    public static function isRegistered();
-
-    /**
-     * Get the stream filter name
-     *
-     * @return string The stream filter name
-     */
-    public static function getName();
-
     /**
      * Called the filter is created
      *

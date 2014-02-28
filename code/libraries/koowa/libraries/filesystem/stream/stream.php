@@ -623,12 +623,14 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
                 else $identifier = $this->getIdentifier($filter);
 
                 //Make sure the class
-                $filter = $this->getObject('manager')->getClass($identifier);
+                $class = $this->getObject('manager')->getClass($identifier);
 
-                if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($filter)))
+                if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($class)))
                 {
-                    $filter::register();
-                    $filter = $filter::getName();
+                    $filter = $class::$name;
+                    if (!empty($filter) && !in_array($filter, stream_get_filters())) {
+                        stream_filter_register($filter, $class);
+                    }
                 }
             }
 
