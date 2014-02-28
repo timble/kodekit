@@ -304,17 +304,18 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     /**
      * Takes an object's identifier and public properties and serializes them
      *
-     * @param $object object
+     * @param $object  object
+     * @param $toArray boolean Returns a raw array if true
      * @return string
      */
-    public function serializeObject($object)
+    public function serializeObject($object, $toArray = false)
     {
         $data = array(
             'properties' => get_object_vars($object),
             'identifier' => (string) $object->getIdentifier()
         );
 
-        return serialize($data);
+        return $toArray ? $data : serialize($data);
     }
 
     /**
