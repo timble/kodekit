@@ -302,6 +302,56 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     }
 
     /**
+     * Takes an object's identifier and public properties and serializes them
+     *
+     * @param $object object
+     * @return string
+     */
+    public function serializeObject($object)
+    {
+        $data = array(
+            'properties' => get_object_vars($object),
+            'identifier' => (string) $object->getIdentifier()
+        );
+
+        return serialize($data);
+    }
+
+    /**
+     * Unserializes an object and injects the object manager
+     *
+     * @param $object object
+     * @param $data   string serialized string
+     * @throws UnexpectedValueException
+     */
+    public function unserializeObject($object, $data)
+    {
+        $data = unserialize($data);
+
+        if (!is_array($data)) {
+            throw new UnexpectedValueException('Unexpected input. Expected array.');
+        }
+
+        if (empty($data['identifier'])) {
+            throw new UnexpectedValueException('Identifier not found in unserialized data');
+        }
+
+        $config  = new KObjectConfig(array(
+            'object_manager'    => $this,
+            'object_identifier' => $this->getIdentifier($data['identifier'])
+        ));
+
+        $object->__construct($config);
+
+        if (!empty($data['properties']) && is_array($data['properties']))
+        {
+            foreach ($data['properties'] as $key => $value) {
+                $object->$key = $value;
+            }
+        }
+    }
+
+    /**
      * Register a mixin for an identifier
      *
      * The mixin is mixed when the identified object is first instantiated see {@link get} The mixin is also mixed with
