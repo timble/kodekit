@@ -109,8 +109,18 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $html .= '
             <script>
             (function() {
-            var value = '.json_encode($config->search).';
+            var value = '.json_encode($config->search).',
+                send = function(event) {
+                    if (event.which === 13 || event.type === "blur") {
+                        var form = kQuery(this).parents("form");
+                        if (form.length) {
+                            form[0].submit();
+                        }
+                    }
+                };
+
             kQuery(function($) {
+                $(".search_button").keypress(send).blur(send);
                 $(".search_button--empty").click(function(event) {
                     event.preventDefault();
 
@@ -131,7 +141,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         $html .= '<div class="search__container search__container--has_empty_button">';
         $html .= '<label for="search"><i class="icon-search"></i></label>';
-        $html .= '<input type="search" name="search" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
+        $html .= '<input type="search" name="search" class="search_button" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
         $html .= '<a class="search_button--empty"><span>X</span></a>';
         $html .= '</div>';
 
