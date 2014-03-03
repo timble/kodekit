@@ -108,6 +108,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             $html .= $this->getTemplate()->renderHelper('behavior.jquery');
             $html .= '
             <script>
+            (function() {
             var value = '.json_encode($config->search).';
             kQuery(function($) {
                 $(".search_button--empty").click(function(event) {
@@ -124,6 +125,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
                     }
                 });
             });
+            })();
             </script>';
         }
 
