@@ -1,5 +1,5 @@
 // Wrapping words
-.wrap_words {
+@mixin wrap_words() {
     // Re-set white-space to normal if it's nowrap
     white-space: normal;
 

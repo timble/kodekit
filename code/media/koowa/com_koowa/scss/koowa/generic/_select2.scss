@@ -17,7 +17,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
         overflow: hidden;
         position: relative;
 
-        border: 1px solid @grayLight;
+        border: 1px solid $grayLight;
         white-space: nowrap;
         line-height: 26px;
         color: #444;
@@ -26,7 +26,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
         border-radius: 4px;
 
         background-clip: padding-box;
-        .user-select(none);
+      @include user-select(none);
 
         background-color: #fff;
         background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
@@ -50,7 +50,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
             text-decoration: none;
 
             border: 0;
-            background: url('@{koowaPath}/images/select2.png') right top no-repeat;
+            background: url('#{$koowaPath}/images/select2.png') right top no-repeat;
             cursor: pointer;
             outline: 0;
 
@@ -69,7 +69,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
             top: 0;
 
             border-left: 1px solid #aaa;
-            .border-radius(0 4px 4px 0);
+          @include border-radius(0 4px 4px 0);
 
             background-clip: padding-box;
 
@@ -86,7 +86,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
                 display: block;
                 width: 100%;
                 height: 100%;
-                background: url('@{koowaPath}/images/select2.png') no-repeat 0 1px;
+                background: url('#{$koowaPath}/images/select2.png') no-repeat 0 1px;
             }
         }
     }
@@ -149,7 +149,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 .select2-drop,
 .select2-search,
 .select2-search input {
-    .box-sizing(border-box);
+  @include box-sizing(border-box);
 }
 
 .select2-drop-mask {
@@ -185,15 +185,15 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     border-top: 0;
 
     border-radius: 0 0 4px 4px;
-    .box-shadow(0 4px 5px rgba(0, 0, 0, .15));
+  @include box-shadow(0 4px 5px rgba(0, 0, 0, .15));
 
     &.select2-drop-above {
         margin-top: 1px;
         border-top: 1px solid #aaa;
         border-bottom: 0;
 
-        .border-radius(4px 4px 0 0);
-        .box-shadow(0 -4px 5px rgba(0, 0, 0, .15));
+      @include border-radius(4px 4px 0 0);
+      @include box-shadow(0 -4px 5px rgba(0, 0, 0, .15));
     }
 }
 
@@ -207,12 +207,12 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 }
 
 .select2-drop-active {
-    border: 1px solid @linkColor;
+    border: 1px solid $linkColor;
     border-top: none;
 }
 
 .select2-drop.select2-drop-above.select2-drop-active {
-    border-top: 1px solid @linkColor;
+    border-top: 1px solid $linkColor;
 }
 
 .select2-search {
@@ -238,16 +238,16 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
         font-size: 1em;
 
         border: 1px solid #aaa;
-        .border-radius(0);
-        .box-shadow(none);
+      @include border-radius(0);
+      @include box-shadow(none);
 
-        background: #fff url('@{koowaPath}/images/select2.png') no-repeat 100% -22px;
-        background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
-        background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
-        background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
-        background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, -o-linear-gradient(bottom, #fff 85%, #eee 99%);
-        background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, -ms-linear-gradient(top, #fff 85%, #eee 99%);
-        background: url('@{koowaPath}/images/select2.png') no-repeat 100% -22px, linear-gradient(top, #fff 85%, #eee 99%);
+        background: #fff url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px;
+        background: url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
+        background: url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
+        background: url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
+        background: url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px, -o-linear-gradient(bottom, #fff 85%, #eee 99%);
+        background: url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px, -ms-linear-gradient(top, #fff 85%, #eee 99%);
+        background: url('#{$koowaPath}/images/select2.png') no-repeat 100% -22px, linear-gradient(top, #fff 85%, #eee 99%);
     }
 }
 
@@ -256,26 +256,26 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 }
 
 .select2-search input.select2-active {
-    background: #fff url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%;
-    background: url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
-    background: url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%, -o-linear-gradient(bottom, #fff 85%, #eee 99%);
-    background: url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%, -ms-linear-gradient(top, #fff 85%, #eee 99%);
-    background: url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%, linear-gradient(top, #fff 85%, #eee 99%);
+    background: #fff url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%;
+    background: url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
+    background: url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%, -o-linear-gradient(bottom, #fff 85%, #eee 99%);
+    background: url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%, -ms-linear-gradient(top, #fff 85%, #eee 99%);
+    background: url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%, linear-gradient(top, #fff 85%, #eee 99%);
 }
 
 .select2-container-active .select2-choice,
 .select2-container-active .select2-choices {
-    border: 1px solid @linkColor;
+    border: 1px solid $linkColor;
     outline: none;
 
-    .box-shadow(0 0 5px rgba(0, 0, 0, .3));
+  @include box-shadow(0 0 5px rgba(0, 0, 0, .3));
 }
 
 .select2-dropdown-open .select2-choice {
     border-bottom-color: transparent;
-    .box-shadow(0 1px 0 #fff inset);
+  @include box-shadow(0 1px 0 #fff inset);
 
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -292,7 +292,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 
 .select2-dropdown-open.select2-drop-above .select2-choice,
 .select2-dropdown-open.select2-drop-above .select2-choices {
-    border: 1px solid @linkColor;
+    border: 1px solid $linkColor;
     border-top-color: transparent;
 
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.5, #eee));
@@ -344,13 +344,11 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
         margin: 0;
         cursor: pointer;
         min-height: 1em;
-        .user-select(none);
+      @include user-select(none);
     }
 
     .select2-highlighted {
-        // extend to use the selected style of .koowa table
-        &:extend(.koowa .table tbody.selected-single tr.selected td);
-        .border-radius(2px);
+      @include border-radius(2px);
         color: white;
 
         em {
@@ -407,7 +405,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     display: list-item;
 
     &.select2-active {
-        background: #f4f4f4 url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100%;
+        background: #f4f4f4 url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100%;
     }
 }
 
@@ -454,11 +452,11 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
                 color: #666;
                 outline: 0;
                 border: 0;
-                .box-shadow(none);
+              @include box-shadow(none);
                 background: transparent !important;
 
                 &.select2-active {
-                    background: #fff url('@{koowaPath}/images/select2-spinner.gif') no-repeat 100% !important;
+                    background: #fff url('#{$koowaPath}/images/select2-spinner.gif') no-repeat 100% !important;
                 }
             }
         }
@@ -474,11 +472,11 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
             border: 1px solid #aaaaaa;
 
             border-radius: 3px;
-            .box-shadow(~'0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05)');
+          @include box-shadow(0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05));
 
             background-clip: padding-box;
 
-            .user-select(none);
+          @include user-select(none);
 
             background-color: #e4e4e4;
             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
@@ -508,9 +506,9 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
     }
 
     &.select2-container-active .select2-choices {
-        border: 1px solid @linkColor;
+        border: 1px solid $linkColor;
         outline: none;
-        .box-shadow(0 0 5px rgba(0, 0, 0, .3));
+      @include box-shadow(0 0 5px rgba(0, 0, 0, .3));
     }
 
     .select2-search-choice-close {
@@ -536,12 +534,12 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 
     font-size: 1px;
     outline: none;
-    background: url('@{koowaPath}/images/select2.png') right top no-repeat;
+    background: url('#{$koowaPath}/images/select2.png') right top no-repeat;
 }
 
 /* disabled styles */
 .select2-container-multi.select2-container-disabled .select2-choices {
-    &:extend(.select2-container.select2-container-disabled .select2-choice);
+    @extend .select2-choice;
 }
 
 .select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice {
@@ -592,7 +590,7 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi)  {
     .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
-        background-image: url('@{koowaPath}/images/select2x2.png') !important;
+        background-image: url('#{$koowaPath}/images/select2x2.png') !important;
         background-repeat: no-repeat !important;
         background-size: 60px 40px !important;
     }

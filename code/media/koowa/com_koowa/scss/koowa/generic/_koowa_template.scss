@@ -1,6 +1,6 @@
 // Vars for this file only
-@bodyPadding: 15px;
-@maxWidth: 1020px;
+$bodyPadding: 15px;
+$maxWidth: 1020px;
 
 html.koowa-html,
 body.koowa_template,
@@ -12,10 +12,10 @@ div.old-ie {
     font-family: Arial, sans-serif;
     font-size: 13px;
     line-height: 1.5em;
-    .box-sizing(border-box);
+  @include box-sizing(border-box);
 
     * {
-        .box-sizing(border-box);
+      @include box-sizing(border-box);
     }
 
     // Joomla modal specific classes
@@ -45,11 +45,11 @@ div.old-ie {
             margin: auto;
 
             .koowa_template_container {
-                box-shadow: none;
                 background: #fff;
                 margin: auto;
                 max-width: none;
-                .clearfix();
+              @include box-shadow(none);
+              @include clearfix();
             }
         }
     }
@@ -68,9 +68,9 @@ div.old-ie {
 
         .koowa_template_container {
             margin: 0 auto;
-            max-width: @maxWidth;
+            max-width: $maxWidth;
             height: 100%;
-            .clearfix();
+          @include clearfix();
 
             .koowa {
                 height: auto;
@@ -80,8 +80,8 @@ div.old-ie {
                 }
 
                 .koowa_form {
-                    box-shadow: 0 5px 8px rgba(0,0,0,.75);
                     background: #fff;
+                    @include box-shadow(0 5px 8px rgba(0,0,0,.75));
                 }
             }
         }
@@ -107,27 +107,27 @@ div.old-ie {
         }
 
         .koowa_toolbar {
-            .clearfix();
+          @include clearfix();
             position: fixed;
             z-index: 999;
             top: 0;
             left: auto;
             right: auto;
             width: 100%;
-            max-width: @maxWidth;
+            max-width: $maxWidth;
             text-align: center;
             margin: 0 auto;
             float: none;
             display: block;
 
             @media screen and (min-width:600px) {
-                .box-sizing(border-box);
+              @include box-sizing(border-box);
                 border-top: 15px solid #333; // Make the window appear to be 15px from the top
                 border-left: 10px solid #333; // Make the window appear to be 10px from the left
                 border-right: 10px solid #333; // Make the window appear to be 10px from the right
                 margin-left: -10px;
                 margin-right: -10px;
-                max-width: @maxWidth+20;
+                max-width: $maxWidth+20;
             }
 
             .btn-toolbar {
@@ -157,14 +157,14 @@ div.old-ie {
         }
 
         .koowa_form {
-            padding: 0 @bodyPadding;
+            padding: 0 $bodyPadding;
         }
 
         .description_container {
             overflow: auto;
 
             @media screen and (max-width:320px){
-                width: 320px - (@bodyPadding * 2);
+                width: 320px - ($bodyPadding * 2);
             }
 
             [class^="icon-"] {
@@ -180,7 +180,7 @@ div.old-ie {
         // Give alert messages some styling
         .koowa_messages {
             background: #fff;
-            .clearfix();
+          @include clearfix();
         }
         .alert {
             margin: 10px;
@@ -234,9 +234,7 @@ div.old-ie {
             -moz-border-radius: 4px;
             border-radius: 4px;
             *margin-left: .3em;
-            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-            -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+          @include box-shadow(inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05));
         }
         .button2-left a:hover,
         .button2-left a:focus,
@@ -274,9 +272,7 @@ div.old-ie {
         .button2-left a:active {
             background-image: none;
             outline: 0;
-            -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-            -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+            @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
         }
         .button2-left a.disabled,
         .button2-left a[disabled] {
@@ -284,9 +280,7 @@ div.old-ie {
             background-image: none;
             opacity: 0.65;
             filter: alpha(opacity=65);
-            -webkit-box-shadow: none;
-            -moz-box-shadow: none;
-            box-shadow: none;
+          @include box-shadow(none);
         }
     }
 }

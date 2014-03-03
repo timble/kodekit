@@ -7,7 +7,7 @@
     margin-bottom: 9px;
 
     * {
-        .box-sizing(border-box);
+      @include box-sizing(border-box);
     }
 
     .input-group {
@@ -15,7 +15,7 @@
     }
 
     label.control-label {
-        .clearfix();
+      @include clearfix();
     }
 
     .input-group-addon,
@@ -25,7 +25,6 @@
     input {
         display: table-cell;
         float: none;
-        width: auto;
         min-height: 28px;
         height: 28px;
         max-height: 28px;
@@ -67,7 +66,7 @@
             font-size: 13px;
             padding: 4px 10px;
             vertical-align: middle;
-            .box-shadow(none);
+          @include box-shadow(none);
 
             img {
                 margin: 0;

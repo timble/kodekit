@@ -1,11 +1,11 @@
 // Loading the fonts
 @font-face {
     font-family: 'koowa';
-    src:url('@{koowaPath}/fonts/koowa.eot');
-    src:url('@{koowaPath}/fonts/koowa.eot?#iefix') format('embedded-opentype'),
-    url('@{koowaPath}/fonts/koowa.ttf') format('truetype'),
-    url('@{koowaPath}/fonts/koowa.woff') format('woff'),
-    url('@{koowaPath}/fonts/koowa.svg#koowa') format('svg');
+    src:url('#{$koowaPath}/fonts/koowa.eot');
+    src:url('#{$koowaPath}/fonts/koowa.eot?#iefix') format('embedded-opentype'),
+    url('#{$koowaPath}/fonts/koowa.ttf') format('truetype'),
+    url('#{$koowaPath}/fonts/koowa.woff') format('woff'),
+    url('#{$koowaPath}/fonts/koowa.svg#koowa') format('svg');
     font-weight: normal;
     font-style: normal;
 }

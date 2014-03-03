@@ -1,11 +1,11 @@
 // Variables for this file
-@borderColor: #ccc;
-@borderColor-darken: darken(@borderColor, 5%);
-@menuHeight: 40px;
-@titleHeight: 30px;
-@windowHeight: 510px;
-@maxColumnHeight: 16em; // Not used for the doclink since it uses standard joomla popup
-@dialogScreenWidth: 700px; // Don't make this bigger then 700px because it will break the doclink view
+$borderColor: #ccc;
+$borderColor-darken: darken($borderColor, 5%);
+$menuHeight: 40px;
+$titleHeight: 30px;
+$windowHeight: 510px;
+$maxColumnHeight: 16em; // Not used for the doclink since it uses standard joomla popup
+$dialogScreenWidth: 700px; // Don't make this bigger then 700px because it will break the doclink view
 
 // Dialog container
 .koowa_dialog {
@@ -16,21 +16,21 @@
     background: #fff;
     position: relative;
     font-size: 14px; // Bigger font size for clearer lists
-    .clearfix();
+  @include clearfix();
 
     // Assigning here again so it also works on tmpl=component view
-    * { .box-sizing(border-box); }
+    * { @include box-sizing(border-box); }
 }
 
 // Menu
 .koowa_dialog__menu {
-    .clearfix();
+  @include clearfix();
     border: 1px solid transparent;
     border-left: 1px solid transparent;
     border-bottom: none;
     padding-left: 10px;
     margin-bottom: -1px;
-    height: @menuHeight;
+    height: $menuHeight;
     position: relative;
     z-index: 10;
     top: 0;
@@ -45,11 +45,11 @@
         color: #333;
         font-size: 16px;
         text-decoration: none;
-        .border-radius(5px 5px 0 0);
+      @include border-radius(5px 5px 0 0);
         border: 1px solid #ddd;
         background: #f5f5f5;
         margin-right: 10px;
-        height: @menuHeight - 1;
+        height: $menuHeight - 1;
 
         &:hover {
             text-decoration: none;
@@ -58,23 +58,23 @@
     }
 
     a.active {
-        height: @menuHeight;
-        box-shadow: inset 0 2px 3px rgba(0,0,0,0.1);
+        height: $menuHeight;
         background: #eee;
-        border: 1px solid @borderColor-darken;
+        border: 1px solid $borderColor-darken;
         border-bottom: 2px solid #eee;
+        @include box-shadow(inset 0 2px 3px rgba(0,0,0,0.1));
     }
 }
 
 // Layout
 .koowa_dialog__layout {
-    .clearfix();
+  @include clearfix();
 }
 
 // Wrapper
 .koowa_dialog__wrapper {
-    .clearfix();
-    border: 1px solid @borderColor;
+  @include clearfix();
+    border: 1px solid $borderColor;
     height: 100%;
     display: block;
     position: relative;
@@ -93,12 +93,12 @@
 .koowa_dialog__title {
     margin: 0;
     font-size: 12px;
-    height: @titleHeight;
-    line-height: @titleHeight;
+    height: $titleHeight;
+    line-height: $titleHeight;
     text-transform: uppercase;
     background: #eee;
-    border-top: 1px solid @borderColor;
-    border-bottom: 1px solid @borderColor;
+    border-top: 1px solid $borderColor;
+    border-bottom: 1px solid $borderColor;
     color: #666;
     padding: 0 8px;
     text-shadow: 1px 1px 0 white;
@@ -107,12 +107,12 @@
 }
 
 .koowa_dialog__title--child {
-    border-top: 1px solid @borderColor !important;
+    border-top: 1px solid $borderColor !important;
 }
 
 .koowa_dialog__files_tree {
     width: 100%;
-    max-height: @maxColumnHeight;
+    max-height: $maxColumnHeight;
     position: relative;
     z-index: 5;
 
@@ -160,10 +160,10 @@
     }
 
     tr.selected td {
-        border-top-color: lighten(@blueDark, 15%);
-        #gradient > .vertical(lighten(@blueDark, 20%), @blueDark);
-        .box-shadow(hsla(0, 0%, 100%, 0.2) 0 1px 0 inset);
-        text-shadow: hsla(0, 0%, 0%, 0.2) 0 -1px 0;
+      border-top-color: lighten($blueDark, 15%);
+      text-shadow: hsla(0, 0%, 0%, 0.2) 0 -1px 0;
+      @include gradient-vertical(lighten($blueDark, 20%), $blueDark);
+      @include box-shadow(hsla(0, 0%, 100%, 0.2) 0 1px 0 inset);
     }
 }
 
@@ -198,7 +198,7 @@
 }
 
 // Media Queries
-@media screen and (min-width:@dialogScreenWidth) {
+@media screen and (min-width:$dialogScreenWidth) {
     .koowa_dialog {
         height: 100%;
         max-height: 100%;
@@ -215,7 +215,7 @@
 
     .koowa_dialog--file_dialog {
         .koowa_dialog__layout {
-            padding-top: @menuHeight - 1;
+            padding-top: $menuHeight - 1;
         }
     }
 
@@ -227,7 +227,7 @@
 
     .koowa_dialog__wrapper__child {
         display: block;
-        border-left: 1px solid @borderColor;
+        border-left: 1px solid $borderColor;
         height: 100%;
         max-height: 100%;
         float: left;
@@ -237,8 +237,8 @@
         min-height: 100%;
         height: 100%;
         max-height: 100%;
-        margin-top: -@titleHeight;
-        padding-top: @titleHeight;
+        margin-top: -$titleHeight;
+        padding-top: $titleHeight;
     }
 
     .koowa_dialog__files_tree {
@@ -248,8 +248,8 @@
 
     .koowa_dialog--doclink {
         .koowa_dialog__child__content {
-            margin-bottom: -@menuHeight;
-            padding-bottom: @menuHeight;
+            margin-bottom: -$menuHeight;
+            padding-bottom: $menuHeight;
         }
     }
 
@@ -281,10 +281,10 @@
     .koowa_dialog__doclink_insert {
         background: #ddd;
         border: none;
-        border-top: 1px solid @borderColor;
+        border-top: 1px solid $borderColor;
         width: 100%;
         clear: both;
-        height: @menuHeight;
+        height: $menuHeight;
         position: absolute;
         bottom: 0;
         z-index: 15;
@@ -335,7 +335,7 @@
 
     .koowa_dialog--file_dialog {
         .koowa_dialog__layout {
-            padding-top: @menuHeight - 1;
+            padding-top: $menuHeight - 1;
         }
     }
 
@@ -347,7 +347,7 @@
 
     .koowa_dialog__wrapper__child {
         display: block;
-        border-left: 1px solid @borderColor;
+        border-left: 1px solid $borderColor;
         height: 100%;
         max-height: 100%;
         float: left;
@@ -357,8 +357,8 @@
         min-height: 100%;
         height: 100%;
         max-height: 100%;
-        margin-top: -@titleHeight;
-        padding-top: @titleHeight;
+        margin-top: -$titleHeight;
+        padding-top: $titleHeight;
     }
 
     .koowa_dialog__files_tree {
@@ -368,8 +368,8 @@
 
     .koowa_dialog--doclink {
         .koowa_dialog__child__content {
-            margin-bottom: -@menuHeight;
-            padding-bottom: @menuHeight;
+            margin-bottom: -$menuHeight;
+            padding-bottom: $menuHeight;
         }
     }
 
@@ -401,10 +401,10 @@
     .koowa_dialog__doclink_insert {
         background: #ddd;
         border: none;
-        border-top: 1px solid @borderColor;
+        border-top: 1px solid $borderColor;
         width: 100%;
         clear: both;
-        height: @menuHeight;
+        height: $menuHeight;
         position: absolute;
         bottom: 0;
         z-index: 15;
@@ -443,9 +443,9 @@
 
 // Remove border, shadow and radius from uploader within file dialog
 .koowa_dialog__file_dialog_upload #files-upload {
-    .border-radius(0);
-    .box-shadow(none);
-    border: none;
+  border: none;
+  @include border-radius(0);
+  @include box-shadow(none);
 }
 // Make the h2 area smaller within file dialog
 .koowa_dialog__file_dialog_upload .dropzone h2 {

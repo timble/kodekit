@@ -1,30 +1,32 @@
 // Core variables and mixins
-@import (reference) "bootstrap/variables";
-@import (reference) "bootstrap/mixins";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
 
 // Variables
-@koowaPath: '..';
+$koowaPath: '..';
+
+// Mixins
+@import "koowa/generic/mixins";
 
 // Generic
-@import "koowa/generic/_datepicker";
-@import "koowa/generic/_dialog";
-@import "koowa/generic/_general";
-@import "koowa/generic/_icons";
-@import "koowa/generic/_input-file";
-@import "koowa/generic/_inputgroups";
-@import "koowa/generic/_koowa_template";
-@import "koowa/generic/_mixins";
-@import "koowa/generic/_modal";
-@import "koowa/generic/_pagination";
-@import "koowa/generic/_select2";
-@import "koowa/generic/_sidebar-nav";
-@import "koowa/generic/_tree";
-@import "koowa/generic/_variables";
+@import "koowa/generic/datepicker";
+@import "koowa/generic/dialog";
+@import "koowa/generic/general";
+@import "koowa/generic/icons";
+@import "koowa/generic/input-file";
+@import "koowa/generic/inputgroups";
+@import "koowa/generic/koowa_template";
+@import "koowa/generic/modal";
+@import "koowa/generic/pagination";
+@import "koowa/generic/select2";
+@import "koowa/generic/sidebar-nav";
+@import "koowa/generic/tree";
+@import "koowa/generic/variables";
 
 // Admin
-@import "koowa/admin/_admin3x";
-@import "koowa/admin/_table";
+@import "koowa/admin/admin3x";
+@import "koowa/admin/table";
 
 // Site
-@import "koowa/site/_table";
-@import "koowa/site/_header";
+@import "koowa/site/table";
+@import "koowa/site/header";

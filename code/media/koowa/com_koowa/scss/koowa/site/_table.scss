@@ -17,7 +17,7 @@ table td {
 table.parameters {
     td {
         white-space: normal !important;
-        .wrap_words();
+      @include wrap_words();
 
         &.detail-label {
             white-space: nowrap !important;
@@ -29,8 +29,8 @@ table.parameters {
 
 // Table
 .koowa_table {
-    margin-top: @smallMargin;
-    margin-bottom: @smallMargin;
+    margin-top: $smallMargin;
+    margin-bottom: $smallMargin;
 
     .koowa_header {
         margin: 0;

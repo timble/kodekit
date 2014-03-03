@@ -12,7 +12,7 @@
 
 // Fix for breadcrums in templates
 .breadcrumb {
-    .wrap_words();
+  @include wrap_words();
 }
 
 .toolbar-list a.disabled, .toolbar-list .unauthorized span {
@@ -85,9 +85,9 @@
             span {
                 background: #ea9393;
                 border: 1px solid #ce4c4c;
-                box-shadow: inset 1px 2px 1px lighten(#ce4c4c, 10%);
                 color: #fff;
                 text-shadow: 1px 1px 1px #ce4c4c;
+                @include box-shadow(inset 1px 2px 1px lighten(#ce4c4c, 10%));
             }
         }
 

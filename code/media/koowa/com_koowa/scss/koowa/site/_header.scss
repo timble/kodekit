@@ -1,11 +1,11 @@
 // Header
 .koowa_header {
-    .clearfix();
-    margin: 0 0 @smallMargin;
+  @include clearfix();
+    margin: 0 0 $smallMargin;
     line-height: 1.25em;
     position: relative;
     display: table;
-    .wrap_words();
+  @include wrap_words();
 }
 
 .koowa_header__link {
@@ -13,14 +13,14 @@
 }
 
 .koowa_header__image {
-    height: @iconSize;
+    height: $iconSize;
     margin-top: -.275em;
 }
 
 .koowa_header__item {
     display: table-cell;
     vertical-align: middle;
-    min-width: @iconSize;
+    min-width: $iconSize;
 }
 
 .koowa_header__item:first-child {
@@ -32,5 +32,5 @@
 }
 
 .koowa_header--bottom_margin {
-    margin-bottom: @smallMargin;
+    margin-bottom: $smallMargin;
 }
