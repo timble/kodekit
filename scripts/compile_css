@@ -8,5 +8,5 @@ FILES=('koowa')
 
 for FILE in "${FILES[@]}"
 do
-  $SAAS_BIN --style compressed $INPUT_PATH/$FILE.scss $OUTPUT_PATH/$FILE.css
+  $SAAS_BIN --sourcemap --style compressed $INPUT_PATH/$FILE.scss $OUTPUT_PATH/$FILE.css
 done
