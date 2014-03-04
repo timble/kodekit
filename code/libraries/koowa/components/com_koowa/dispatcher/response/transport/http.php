@@ -32,6 +32,19 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
             //Mimetype
             JFactory::getDocument()->setMimeEncoding($response->getContentType());
 
+            //Headers
+            $headers = explode("\r\n", trim((string) $response->headers));
+            foreach ($headers as $header)
+            {
+                $parts = explode(':', $header, 2);
+
+                if (count($parts) !== 2) { // Empty values are not allowed per RFC2616 Sec 4.2
+                    continue;
+                }
+
+                JResponse::setHeader($parts[0], $parts[1]);
+            }
+
             //Cookies
             foreach ($response->headers->getCookies() as $cookie)
             {
