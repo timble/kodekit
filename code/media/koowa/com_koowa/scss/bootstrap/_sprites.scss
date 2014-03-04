@@ -19,7 +19,8 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  @include ie7-restore-right-whitespace();
+  *margin-right: .3em;
+
   line-height: 14px;
   vertical-align: text-top;
   background-image: url($iconSpritePath);
