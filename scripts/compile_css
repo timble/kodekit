@@ -1,12 +1,12 @@
 #!/bin/bash
 
-LESSC_BIN=lessc
+SAAS_BIN=sass
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-INPUT_PATH=$DIR/../code/media/koowa/com_koowa/less
+INPUT_PATH=$DIR/../code/media/koowa/com_koowa/scss
 OUTPUT_PATH=$DIR/../code/media/koowa/com_koowa/css
 FILES=('koowa')
 
 for FILE in "${FILES[@]}"
 do
-  $LESSC_BIN --verbose $INPUT_PATH/$FILE.less $OUTPUT_PATH/$FILE.css -compress
+  $SAAS_BIN --style compressed $INPUT_PATH/$FILE.scss $OUTPUT_PATH/$FILE.css
 done
