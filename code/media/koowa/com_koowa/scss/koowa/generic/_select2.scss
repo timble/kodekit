@@ -348,8 +348,12 @@ Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
   }
 
   .select2-highlighted {
-    @include border-radius(2px);
     color: white;
+    border-top: 1px solid adjust-hue($btnPrimaryBackground, 5%);
+    text-shadow: hsla(0, 0%, 0%, 0.2) 0 -1px 0;
+    @include gradient-vertical($btnPrimaryBackground, $btnPrimaryBackgroundHighlight);
+    @include box-shadow(hsla(0, 0%, 100%, 0.2) 0 1px 0 inset);
+    @include border-radius(2px);
 
     em {
       background: transparent;

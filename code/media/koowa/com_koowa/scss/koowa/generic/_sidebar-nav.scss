@@ -33,7 +33,7 @@ ul.sidebar-nav {
     li.active > a,
     li.active > a:hover {
         color: #FFF;
-        border-top-color: spin($btnPrimaryBackground, 5%);
+        border-top-color: adjust-hue($btnPrimaryBackground, 5%);
       @include gradient-vertical($btnPrimaryBackground, $btnPrimaryBackgroundHighlight);
       @include box-shadow(hsla(0, 0%, 100%, 0.2) 0 1px 0 inset);
         text-shadow: hsla(0, 0%, 0%, 0.2) 0 -1px 0;

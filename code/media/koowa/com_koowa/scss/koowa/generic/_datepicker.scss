@@ -126,8 +126,8 @@
     &.today.disabled,
     &.today.disabled:hover {
       $todayBackground: lighten($orange, 30%);
-      color: #000;
       @include buttonBackground($todayBackground, adjust-hue($todayBackground, 20));
+      color: #000; // add last
     }
     &.today:hover:hover {
       // Thank bootstrap 2.0 for this selector...
