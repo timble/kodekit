@@ -4,8 +4,10 @@ $borderColor-darken: darken($borderColor, 5%);
 $menuHeight: 40px;
 $titleHeight: 30px;
 $windowHeight: 510px;
-$maxColumnHeight: 16em; // Not used for the doclink since it uses standard joomla popup
-$dialogScreenWidth: 700px; // Don't make this bigger then 700px because it will break the doclink view
+$maxColumnHeight: 16em;
+// Not used for the doclink since it uses standard joomla popup
+$dialogScreenWidth: 700px;
+// Don't make this bigger then 700px because it will break the doclink view
 
 // Dialog container
 .koowa_dialog {
