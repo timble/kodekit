@@ -51,20 +51,6 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
             foreach ($headers as $header) {
                 header($header, false);
             }
-
-            //Send the cookies
-            foreach ($response->headers->getCookies() as $cookie)
-            {
-                setcookie(
-                    $cookie->name,
-                    $cookie->value,
-                    $cookie->expire,
-                    $cookie->path,
-                    $cookie->domain,
-                    $cookie->isSecure(),
-                    $cookie->isHttpOnly()
-                );
-            }
         }
 
         return $this;
