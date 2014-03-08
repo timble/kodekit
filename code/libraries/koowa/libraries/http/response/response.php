@@ -210,7 +210,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         }
 
         $this->_status_code    = (int) $code;
-        $this->_status_message = trim($message);
+        $this->_status_message = trim(preg_replace('/\s+/', ' ',  $message));
         return $this;
     }
 
