@@ -20,6 +20,6 @@ for FILE in `find $INPUT_PATH -maxdepth 1 -name '*.scss'`
 do
   base=`basename "$FILE" .scss`
   sass --sourcemap --load-path $FRAMEWORK --load-path $COM_FILES --style compressed $INPUT_PATH/$base.scss $OUTPUT_PATH/$base.css
-  sed -i 's/koowa\/code\///g' $OUTPUT_PATH/$base.css.map
-  sed -i 's/com_files\/code\///g' $OUTPUT_PATH/$base.css.map
+  sed -ix 's/koowa\/code\///g' $OUTPUT_PATH/$base.css.map
+  sed -ix 's/com_files\/code\///g' $OUTPUT_PATH/$base.css.map
 done
