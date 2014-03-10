@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ -z "$FOLDER" ]
+then
+  FOLDER=koowa/com_koowa
+fi
+
+if [ -z "$BASE" ]
+then
+  BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+fi
+
+INPUT_PATH=$BASE/../code/media/$FOLDER/scss
+OUTPUT_PATH=$BASE/../code/media/$FOLDER/css
+
+FRAMEWORK=$BASE/../../koowa/code/media/koowa/com_koowa/scss
+COM_FILES=$BASE/../../com_files/code/media/koowa/com_files/scss
+
+for FILE in `find $INPUT_PATH -maxdepth 1 -name '*.scss'`
+do
+  base=`basename "$FILE" .scss`
+  sass --sourcemap --load-path $FRAMEWORK --load-path $COM_FILES --style compressed $INPUT_PATH/$base.scss $OUTPUT_PATH/$base.css
+  sed -i 's/koowa\/code\///g' $OUTPUT_PATH/$base.css.map
+  sed -i 's/com_files\/code\///g' $OUTPUT_PATH/$base.css.map
+done
