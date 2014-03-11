@@ -24,9 +24,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
     {
         parent::__construct($config);
 
-        //Render the page before sending the response
-        $this->addCommandCallback('before.send', '_renderPage');
-
         //Render an exception before sending the response
         $this->addCommandCallback('before.fail', '_renderError');
     }
@@ -68,11 +65,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
         if(!$response->isRedirect() && $response->getContentType() == 'text/html')
         {
             //Render the page
-            $config = array('response' => $response);
 
-            $this->getObject('com:koowa.controller.page', $config)
-                ->layout($request->query->get('tmpl', 'cmd') == 'koowa' ? 'koowa' : 'joomla')
-                ->render();
+
+
         }
     }
 
