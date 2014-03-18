@@ -10,9 +10,6 @@
 /**
  * Json View
  *
- * The JSON view implements supports for JSONP through the model's callback state. If a callback is present the content
- * will be padded.
- *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
