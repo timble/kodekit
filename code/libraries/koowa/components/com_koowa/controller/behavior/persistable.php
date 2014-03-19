@@ -25,10 +25,10 @@ class ComKoowaControllerBehaviorPersistable extends KControllerBehaviorPersistab
         $mixer = $this->getMixer();
 
         //Disable controller persistency on requests containing the tmpl variable set to component (modal boxes)
-        if ($mixer->getRequest()->query->get('tmpl', 'cmd') != 'component') {
-            return true;
+        if ($mixer->getRequest()->query->get('tmpl', 'cmd') === 'component') {
+            return false;
         }
 
-        return false;
+        return parent::isSupported();
     }
 }
