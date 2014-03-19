@@ -119,4 +119,17 @@ class KObjectRegistryCache extends KObjectRegistry
         apc_delete($this->_namespace.'-object-'.$offset);
         parent::offsetUnset($offset);
     }
+
+    /**
+     * Clears APC cache
+     *
+     * @return $this
+     */
+    public function clear()
+    {
+        // Clear user cache
+        apc_clear_cache('user');
+
+        return parent::clear();
+    }
 }

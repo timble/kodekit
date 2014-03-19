@@ -353,6 +353,16 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     }
 
     /**
+     * Get the class registry object
+     *
+     * @return KObjectRegistryInterface
+     */
+    public function getRegistry()
+    {
+        return $this->_registry;
+    }
+
+    /**
      * Register a mixin for an identifier
      *
      * The mixin is mixed when the identified object is first instantiated see {@link get} The mixin is also mixed with

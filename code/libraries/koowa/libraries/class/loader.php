@@ -250,7 +250,7 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Get the class registry object
      *
-     * @return object KClassRegistry
+     * @return KClassRegistryInterface
      */
     public function getRegistry()
     {
