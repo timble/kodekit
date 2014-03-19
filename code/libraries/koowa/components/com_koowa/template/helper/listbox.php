@@ -254,10 +254,11 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
 
                 var explode = function(e) {
                    if (el.val()) {
-                        if (el.attr("name").search("\\\\[\\\\]") === -1) {
+                        if (el.attr("name").substr(-2) !== "[]") {
                             // Make the input an array.
                             el.attr("name", el.attr("name") + "[]");
                         }
+
                         var values = el.val().split(",");
                         $.each(values, function(idx, value) {
                             form.append(el.clone().val(value));
@@ -272,7 +273,15 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
                 if (form.hasClass("-koowa-form") || form.hasClass("-koowa-grid")) {
                     form.submit(explode);
                 } else {
-                    form.get(0).addEvent("submit", explode);
+                    var element = form.get(0);
+
+                    if (element.addEvent) {
+                        element.addEvent("submit", explode);
+                    } else if (element.addEventListener) {
+                        element.addEventListener("submit", explode, false);
+                    } else if (element.attachEvent) {
+                        element.attachEvent("onsubmit", explode);
+                    }
                 }
             });</script>';
         }
