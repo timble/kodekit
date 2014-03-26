@@ -38,6 +38,7 @@ class KDate extends KObject implements KDateInterface
     {
         parent::__construct($config);
 
+        //Set the date
         if (!($config->timezone instanceof DateTimeZone)) {
             $config->timezone = new DateTimeZone($config->timezone);
         }
@@ -61,7 +62,7 @@ class KDate extends KObject implements KDateInterface
     {
         $config->append(array(
             'date'       => 'now',
-            'timezone'   => 'UTC',
+            'timezone'   => date_default_timezone_get(),
             'translator' => 'lib:translator'
         ));
     }
@@ -70,7 +71,7 @@ class KDate extends KObject implements KDateInterface
      * Returns the date formatted according to given format.
      *
      * @param  string $format The format to use
-     * @return string
+     * @return string The formatted date
      */
     public function format($format)
     {
@@ -90,7 +91,7 @@ class KDate extends KObject implements KDateInterface
 
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
         $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
-        $now     = $this->getObject('lib:date');
+        $now     = new DateTime();
 
         if($now != $this->_date)
         {
@@ -128,14 +129,14 @@ class KDate extends KObject implements KDateInterface
             }
 
             $period        = $periods[$i];
-            $period_plural = $period.'s';
+            $period_plural = $period . 's';
 
             // We do not pass $period or $tense as parameters to replace because some languages use different words
             // for them based on the time difference.
             $result = $translator->choose(
-                array("{number} $period $tense", "{number} $period_plural $tense"),
-                $difference,
-                array('number' => $difference)
+                                 array("{number} $period $tense", "{number} $period_plural $tense"),
+                                     $difference,
+                                     array('number' => $difference)
             );
         }
         else $result = $translator->translate('Just now');
@@ -147,7 +148,7 @@ class KDate extends KObject implements KDateInterface
      * Alters the timestamp
      *
      * @param string $modify A date/time string
-     * @return KDate or FALSE on failure.
+     * @return KDate Returns the KDate object or FALSE on failure.
      */
     public function modify($modify)
     {
@@ -210,9 +211,8 @@ class KDate extends KObject implements KDateInterface
     /**
      * Return time zone relative to given DateTime
      *
-     * @return DateTimeZone Return a DateTimeZone object on success or FALSE on failure.
+     * @return DateTimeZone Returns a DateTimeZone object or FALSE on failure.
      */
-
     public function getTimezone()
     {
         return $this->_date->getTimezone();
@@ -226,7 +226,10 @@ class KDate extends KObject implements KDateInterface
      */
     public function setTimestamp($timestamp)
     {
-        $this->_date = new DateTime("@$timestamp");
+        if($this->_date->setTimestamp($timestamp) === false) {
+            return false;
+        }
+
         return $this;
     }
 
@@ -237,7 +240,7 @@ class KDate extends KObject implements KDateInterface
      */
     public function getTimestamp()
     {
-        return $this->_date->format('U');
+        return $this->_date->getTimestamp();
     }
 
     /**
@@ -254,7 +257,7 @@ class KDate extends KObject implements KDateInterface
      * Gets the translator object
      *
      * @throws UnexpectedValueException
-     * @return  KTranslatorInterface
+     * @return KTranslatorInterface
      */
     public function getTranslator()
     {
@@ -289,12 +292,12 @@ class KDate extends KObject implements KDateInterface
      * Translates day and month names.
      *
      * @param array $matches Matched elements of preg_replace_callback.
-     * @return string
+     * @return string The translated string
      */
     protected function _translate($matches)
     {
         $replacement = '';
-        $translator  = $this->getTranslator();
+        $translator = $this->getTranslator();
 
         switch ($matches[0])
         {
