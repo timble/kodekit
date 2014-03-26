@@ -72,7 +72,7 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli
 	{
 	    if(!isset($this->_table_schema[$table]) && isset($this->_cache))
 		{
-		    $identifier = md5($this->getDatabase().$table);
+		    $identifier = md5($this->getAdapter().$table);
 
 	        if (!$schema = $this->_cache->get($identifier))
 	        {

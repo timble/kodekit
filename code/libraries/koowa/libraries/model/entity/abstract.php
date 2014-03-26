@@ -1,12 +1,19 @@
 <?php
+/**
+ * Nooku Framework - http://www.nooku.org
+ *
+ * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link		git://git.assembla.com/nooku-framework.git for the canonical source repository
+ */
 
 /**
- * Abstract Database Row
+ * Model Entity
  *
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Database
+ * @package NookuLibraryModel
  */
-abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRowInterface
+abstract class KModelEntityAbstract extends KObjectArray implements KModelEntityInterface
 {
     /**
      * List of modified properties
@@ -18,7 +25,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * The status
      *
-     * Available row status values are defined as STATUS_ constants in Database
+     * Available entity status values are defined as STATUS_ constants
      *
      * @var string
      * @see Database
@@ -33,7 +40,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     protected $_status_message = '';
 
     /**
-     * Tracks if row data is new
+     * Tracks if entity data is new
      *
      * @var bool
      */
@@ -44,33 +51,23 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * @var string
      */
-    protected $_identity_column;
-
-    /**
-     * Table object or identifier
-     *
-     * @var    string|object
-     */
-    protected $_table = false;
+    protected $_identity_key;
 
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  KObjectConfig $config  An optional KObjectConfig object with configuration options.
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        //Set the table identifier
-        $this->_table = $config->table;
-
         // Set the table identifier
-        if (isset($config->identity_column)) {
-            $this->_identity_column = $config->identity_column;
+        if (isset($config->identity_key)) {
+            $this->_identity_key = $config->identity_key;
         }
 
-        // Reset the row
+        // Reset the entity
         $this->reset();
 
         //Set the status
@@ -78,7 +75,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             $this->setStatus($config->status);
         }
 
-        // Set the row data
+        // Set the entity data
         if (isset($config->data)) {
             $this->setProperties($config->data->toArray(), $this->isNew());
         }
@@ -94,87 +91,70 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  KObjectConfig $config An optional KObjectConfig object with configuration options.
      * @return void
      */
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'table'           => $this->getIdentifier()->name,
             'data'            => null,
             'status'          => null,
             'status_message'  => '',
-            'identity_column' => null
+            'identity_key'    => null
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Saves the row to the database.
+     * Saves the entity to the data store
      *
-     * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
-     *
-     * @return boolean If successful return TRUE, otherwise FALSE
+     * @return boolean  If successful return TRUE, otherwise FALSE
      */
     public function save()
     {
-        $result = false;
-
-        if ($this->isConnected())
-        {
-            if (!$this->isNew()) {
-                $result = $this->getTable()->update($this);
-            } else {
-                $result = $this->getTable()->insert($this);
-            }
-
-            //Reset the modified array
-            if ($result !== false)
-            {
-                if (((integer) $result) > 0) {
-                    $this->_modified = array();
-                }
-            }
+        if (!$this->isNew()) {
+            $this->setStatus(self::STATUS_UPDATED);
+        } else {
+            $this->setStatus(self::STATUS_CREATED);
         }
 
-        return (bool) $result;
+        $this->_modified = array();
+        return false;
     }
 
     /**
-     * Deletes the row form the database.
+     * Deletes the entity form the data store
      *
-     * @return boolean    If successful return TRUE, otherwise FALSE
+     * @return boolean  If successful return TRUE, otherwise FALSE
      */
     public function delete()
     {
-        $result = false;
-
-        if ($this->isConnected())
-        {
-            if (!$this->isNew()) {
-                $result = $this->getTable()->delete($this);
-            }
-        }
-
-        return (bool) $result;
+        $this->setStatus(self::STATUS_DELETED);
+        return false;
     }
 
     /**
-     * Reset the row data using the defaults
+     * Resets to the default properties
      *
-     * @return KDatabaseRowInterface
+     * @return KModelEntityAbstract
      */
     public function reset()
     {
         $this->_data     = array();
         $this->_modified = array();
 
-        if ($this->isConnected()) {
-            $this->_data = $this->getTable()->getDefaults();
-        }
-
         return $this;
+    }
+
+    /**
+     * Gets the identity key
+     *
+     * @return string
+     */
+    public function getIdentityKey()
+    {
+        return $this->_identity_key;
     }
 
     /**
@@ -198,13 +178,14 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set a property
      *
-     * If the value is the same as the current value and the row is loaded from the database the value will not be set.
-     * If the row is new the value will be (re)set and marked as modified.
+     * If the value is the same as the current value and the entity is loaded from the data store the value will not be
+     * set. If the entity is new the value will be (re)set and marked as modified.
      *
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KDatabaseRowAbstract
+     *
+     * @return  KModelEntityAbstract
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -239,26 +220,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Remove a property
      *
-     * This function will reset required properties to their default value, not required properties will be unset.
-     *
      * @param   string  $name The property name.
-     * @return  KDatabaseRowAbstract
+     * @return  KModelEntityAbstract
      */
     public function removeProperty($name)
     {
-        if ($this->isConnected())
-        {
-            $column = $this->getTable()->getColumn($name);
-
-            if (isset($column) && $column->required) {
-                $this->setProperty($this->_data[$name], $column->default);
-            }
-            else
-            {
-                parent::offsetUnset($name);
-                unset($this->_modified[$name]);
-            }
-        }
+        parent::offsetUnset($name);
+        unset($this->_modified[$name]);
 
         return $this;
     }
@@ -267,7 +235,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Get the properties
      *
      * @param   boolean  $modified If TRUE, only return the modified data.
-     * @return  array   An associative array of the row properties
+     * @return  array   An associative array of the entity properties
      */
     public function getProperties($modified = false)
     {
@@ -283,13 +251,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set the properties
      *
-     * @param   mixed   $properties  Either and associative array, an object or a KDatabaseRow
-     * @param   boolean $modified    If TRUE, update the modified information for each property being set.
-     * @return  KDatabaseRowAbstract
+     * @param   mixed   $data        Either and associative array, an object or a KModelEntityInterface
+     * @param   boolean $modified If TRUE, update the modified information for each property being set.
+     * @return  KModelEntityAbstract
      */
     public function setProperties($properties, $modified = true)
     {
-        if ($properties instanceof KDatabaseRowInterface) {
+        if ($properties instanceof KModelEntityInterface) {
             $properties = $properties->getProperties(false);
         } else {
             $properties = (array) $properties;
@@ -316,7 +284,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KDatabaseRowAbstract
+     * @return  KModelEntityAbstract
      */
     public function setStatus($status)
     {
@@ -350,22 +318,12 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KDatabaseRowAbstract
+     * @return  KModelEntityAbstract
      */
     public function setStatusMessage($message)
     {
         $this->_status_message = $message;
         return $this;
-    }
-
-    /**
-     * Gets the identity key
-     *
-     * @return string
-     */
-    public function getIdentityColumn()
-    {
-        return $this->_identity_column;
     }
 
     /**
@@ -378,8 +336,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function getHandle()
     {
-        if (isset($this->_identity_column)) {
-            $handle = $this->getProperty($this->_identity_column);
+        if (isset($this->_identity_key)) {
+            $handle = $this->getProperty($this->_identity_key);
         } else {
             $handle = parent::getHandle();
         }
@@ -388,71 +346,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     }
 
     /**
-     * Method to get a table object
-     *
-     * Function catches DatabaseTableExceptions that are thrown for tables that
-     * don't exist. If no table object can be created the function will return FALSE.
-     *
-     * @return KDatabaseTableAbstract
-     */
-    public function getTable()
-    {
-        if ($this->_table !== false)
-        {
-            if (!($this->_table instanceof KDatabaseTableInterface))
-            {
-                //Make sure we have a table identifier
-                if (!($this->_table instanceof KObjectIdentifier)) {
-                    $this->setTable($this->_table);
-                }
-
-                try {
-                    $this->_table = $this->getObject($this->_table);
-                } catch (RuntimeException $e) {
-                    $this->_table = false;
-                }
-            }
-        }
-
-        return $this->_table;
-    }
-
-    /**
-     * Method to set a table object attached to the rowset
-     *
-     * @param    mixed    $table An object that implements ObjectInterface, ObjectIdentifier object
-     *                           or valid identifier string
-     * @throws  \UnexpectedValueException    If the identifier is not a table identifier
-     * @return  KDatabaseRowInterface
-     */
-    public function setTable($table)
-    {
-        if (!($table instanceof KDatabaseTableInterface))
-        {
-            if (is_string($table) && strpos($table, '.') === false)
-            {
-                $identifier = $this->getIdentifier()->toArray();
-                $identifier['path'] = array('database', 'table');
-                $identifier['name'] = KStringInflector::tableize($table);
-
-                $identifier = $this->getIdentifier($identifier);
-            }
-            else $identifier = $this->getIdentifier($table);
-
-            if ($identifier->path[1] != 'table') {
-                throw new UnexpectedValueException('Identifier: ' . $identifier . ' is not a table identifier');
-            }
-
-            $table = $identifier;
-        }
-
-        $this->_table = $table;
-
-        return $this;
-    }
-
-    /**
-     * Checks if the row is new or not
+     * Checks if the entity is new or not
      *
      * @return bool
      */
@@ -462,7 +356,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     }
 
     /**
-     * Check if a the row or specific row property has been modified.
+     * Check if a the entity or specific entity property has been modified.
      *
      * If a specific property name is giving method will return TRUE only if this property was modified.
      *
@@ -485,13 +379,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     }
 
     /**
-     * Test the connected status of the row.
+     * Test if the entity is connected to a data store
      *
-     * @return    boolean    Returns TRUE if we have a reference to a live DatabaseTableAbstract object.
+     * @return	bool
      */
     public function isConnected()
     {
-        return (bool)$this->getTable();
+        return false;
     }
 
     /**
@@ -537,42 +431,5 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     final public function offsetUnset($property)
     {
         $this->removeProperty($property);
-    }
-
-    /**
-     * Search the mixin method map and call the method or trigger an error
-     *
-     * This function implements a just in time mixin strategy. Available table behaviors are only mixed when needed.
-     * Lazy mixing is triggered by calling KDatabaseRowsetTable::is[Behaviorable]();
-     *
-     * @param  string     $method   The function name
-     * @param  array      $argument The function arguments
-     * @throws \BadMethodCallException     If method could not be found
-     * @return mixed The result of the function
-     */
-    public function __call($method, $arguments)
-    {
-        if ($this->isConnected())
-        {
-            $parts = KStringInflector::explode($method);
-
-            //Check if a behavior is mixed
-            if ($parts[0] == 'is' && isset($parts[1]))
-            {
-                if(!isset($this->_mixed_methods[$method]))
-                {
-                    //Lazy mix behaviors
-                    $behavior = strtolower($parts[1]);
-
-                    if ($this->getTable()->hasBehavior($behavior)) {
-                        $this->mixin($this->getTable()->getBehavior($behavior));
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return parent::__call($method, $arguments);
     }
 }

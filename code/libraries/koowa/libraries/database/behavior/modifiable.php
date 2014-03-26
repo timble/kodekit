@@ -61,18 +61,18 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 	 */
 	protected function _beforeUpdate(KDatabaseContextInterface $context)
 	{
-		//Get the modified columns
-		$modified = $this->getTable()->filter(array_flip($this->getModified()));
+        //Get the modified columns
+        $modified   = $this->getTable()->filter($this->getProperties(true));
 
-		if(!empty($modified))
-		{
-			if(isset($this->modified_by)) {
-				$this->modified_by = (int) $this->getObject('user')->getId();
-			}
+        if(!empty($modified))
+        {
+            if($this->hasProperty('modified_by')) {
+                $this->modified_by = (int) $this->getObject('user')->getId();
+            }
 
-			if(isset($this->modified_on)) {
-				$this->modified_on = gmdate('Y-m-d H:i:s');
-			}
-		}
+            if($this->hasProperty('modified_on')) {
+                $this->modified_on = gmdate('Y-m-d H:i:s');
+            }
+        }
 	}
 }

@@ -144,12 +144,11 @@ abstract class KViewTemplate extends KViewAbstract
             $name = $this->getName();
 
             //Assign the data of the model to the view
-            if(KStringInflector::isPlural($name))
-            {
-                $context->data->$name = $model->getList();
-                $context->data->total = $model->getTotal();
+            if(KStringInflector::isPlural($name)) {
+                $context->data->total = $model->count();
             }
-            else $context->data->$name = $model->getItem();
+
+            $context->data->$name = $model->fetch();
         }
     }
 

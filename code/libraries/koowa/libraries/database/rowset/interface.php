@@ -1,149 +1,70 @@
 <?php
 /**
- * Koowa Framework - http://developer.joomlatools.com/koowa
+ * Nooku Framework - http://www.nooku.org
  *
  * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ * @link		git://git.assembla.com/nooku-framework.git for the canonical source repository
  */
 
 /**
  * Database Rowset Interface
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package Nooku\Library\Database
  */
-interface KDatabaseRowsetInterface
+interface KDatabaseRowsetInterface extends KDatabaseRowInterface
 {
     /**
-     * Set the value of all the columns
+     * Find a row in the rowset based on a needle
      *
-     * @param   string  $column The column name.
-     * @param   mixed   $value The value for the property.
-     * @return  void
-     */
-    public function set($column, $value);
-
-    /**
-     * Retrieve an array of column values
+     * This functions accepts either a know position or associative array of key/value pairs
      *
-     * @param   string  $column The column name.
-     * @return  array   An array of all the column values
-     */
-    public function get($column);
-	/**
-     * Returns all data as an array.
-     *
-     * @param   boolean $modified If TRUE, only return the modified data. Default FALSE
-     * @return array
-     */
-    public function getData($modified = false);
-
-	/**
-  	 * Set the rowset data based on a named array/hash
-  	 *
-  	 * @param   mixed 	$data       Either and associative array, a KDatabaseRow object or object
-  	 * @param   boolean $modified   If TRUE, update the modified information for each column being set. Default TRUE
- 	 * @return 	KDatabaseRowsetAbstract
-  	 */
-  	 public function setData( $data, $modified = true );
-
-    /**
-     * Add rows to the rowset
-     *
-     * @param  array   $rows    An associative array of row data to be inserted.
-     * @param  string  $status  The row(s) status
-     * @return KDatabaseRowsetInterface
-     * @see __construct
-     */
-    public function addRow(array $rows, $status = null);
-
-    /**
-     * Returns the status message
-     *
-     * @return string The status message
-     */
-    public function getStatusMessage();
-
-    /**
-     * Set the status message
-     *
-     * @param   string $message The status message
-     * @return  KDatabaseRowsetInterface
-     */
-    public function setStatusMessage($message);
-
-    /**
-	 * Gets the identity column of the rowset
-	 *
-	 * @return string
-	 */
-	public function getIdentityColumn();
-
-	/**
-     * Returns a KDatabaseRow
-     *
-     * This functions accepts either a know position or associative
-     * array of key/value pairs
-     *
-     * @param 	string 	$needle     The position or the key to search for
-     * @return KDatabaseRowAbstract
+     * @param 	string $needle The position or the key to search for
+     * @return KDatabaseRowInterface
      */
     public function find($needle);
 
-	/**
-     * Saves all rows in the rowset to the database
+    /**
+     * Create a new row and insert it
      *
-     * @return KDatabaseRowsetAbstract
+     * This function will either clone the row prototype, or create a new instance of the row object for each row
+     * being inserted. By default the prototype will be cloned.
+     *
+     * @param   array   $properties The entity properties
+     * @param   string  $status     The entity status
+     * @return  KModelEntityCollection
      */
-    public function save();
+    public function create(array $properties = array(), $status = null);
 
-	/**
-     * Deletes all rows in the rowset from the database
+    /**
+     * Insert an row into the collection
      *
-     * @return KDatabaseRowsetAbstract
-     */
-    public function delete();
-
-	/**
-     * Reset the rowset
+     * The row will be stored by it's identity_column if set or otherwise by it's object handle.
      *
-     * @return KDatabaseRowsetAbstract
-     */
-    public function reset();
-
-	/**
-     * Insert a row in the rowset
-     *
-     * The row will be stored by its identity_column if set or otherwise by it's object handle.
-     *
-     * @param  KDatabaseRowInterface|KObjectHandlable 	$row A KDatabaseRow object to be inserted
-     * @return KDatabaseRowsetAbstract
+     * @param  KObjectHandlable|KDatabaseRowInterface $row
+     * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
+     * @return boolean    TRUE on success FALSE on failure
      */
     public function insert(KObjectHandlable $row);
 
-	/**
-     * Removes a row
+    /**
+     * Removes a row from the rowset
      *
-     * The row will be removed based on its identity_column if set or otherwise by
-     * it's object handle.
+     * The row will be removed based on it's identity_column if set or otherwise by it's object handle.
      *
-     * @param  KDatabaseRowInterface|KObjectHandlable $row 	A KDatabaseRow object to be removed
+     * @param  KObjectHandlable|KDatabaseRowInterface $row
+     * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
      * @return KDatabaseRowsetAbstract
      */
-    public function extract(KObjectHandlable $row);
+    public function remove(KObjectHandlable $row);
 
     /**
-	 * Test the connected status of the rowset.
-	 *
-	 * @return	bool
-	 */
-    public function isConnected();
-
-    /**
-     * Return an associative array of the data.
+     * Checks if the collection contains a specific row
      *
-     * @return array
+     * @param  KObjectHandlable|KDatabaseRowInterface $row
+     * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
+     * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function toArray();
+    public function contains(KObjectHandlable $row);
 }

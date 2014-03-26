@@ -21,86 +21,101 @@
  * @package Koowa\Library\Object
  * @see		http://www.php.net/manual/en/class.splobjectstorage.php
  */
-class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Serializable
+class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Countable, Serializable
 {
-   /**
-     * Object set
+    /**
+     * The objects
      *
      * @var array
      */
-    protected $_object_set = null;
+    protected $_data = array();
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param KObjectConfig $config  A ObjectConfig object with configuration options
+     * @return KObjectSet
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-         $this->_object_set = new ArrayObject();
+        $this->_data = KObjectConfig::unbox($config->data);
     }
 
-  	/**
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'data' => array(),
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Inserts an object in the set
      *
-     * @param   KObjectHandlable $object	The object to insert
-     * @return  boolean	TRUE on success FALSE on failure
+     * @param   KObjectHandlable $object
+     * @return  boolean TRUE on success FALSE on failure
      */
-    public function insert( KObjectHandlable $object)
+    public function insert(KObjectHandlable $object)
     {
         $result = false;
 
-        if($handle = $object->getHandle())
+        if ($handle = $object->getHandle())
         {
-            $this->_object_set->offsetSet($handle, $object);
+            $this->offsetSet($object);
             $result = true;
         }
 
-       return $result;
+        return $result;
     }
 
     /**
      * Removes an object from the set
      *
-     * All numerical array keys will be modified to start counting from zero while
-     * literal keys won't be touched.
+     * All numerical array keys will be modified to start counting from zero while literal keys won't be touched.
      *
-     * @param   KObjectHandlable $object The object to remove
-     * @return  KObjectQueue
+     * @param   KObjectHandlable $object
+     * @return  KObjectSet
      */
-    public function extract( KObjectHandlable $object)
+    public function remove(KObjectHandlable $object)
     {
-        $handle = $object->getHandle();
-
-        if($this->_object_set->offsetExists($handle)) {
-           $this->_object_set->offsetUnset($handle);
+        if ($this->offsetExists($object)) {
+            $this->offsetUnset($object);
         }
 
         return $this;
     }
 
-	/**
+    /**
      * Checks if the set contains a specific object
      *
-     * @param   KObjectHandlable $object  The object to look for.
-     * @return  bool		Returns TRUE if the object is in the set, FALSE otherwise.
+     * @param   KObjectHandlable $object
+     * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains( KObjectHandlable $object)
+    public function contains(KObjectHandlable $object)
     {
-        return $this->_object_set->offsetExists($object->getHandle());
+        return $this->offsetExists($object);
     }
 
-	/**
-     * Merge-in another set
+    /**
+     * Merge-in another object set
      *
-     * @param   KObjectSet $set The object set to merge
-     * @return  KObjectQueue
+     * @param   KObjectSet  $set
+     * @return  KObjectSet
      */
-    public function merge( KObjectSet $set)
+    public function merge(KObjectSet $set)
     {
-        foreach($set as $object) {
+        foreach ($set as $object) {
             $this->insert($object);
         }
 
@@ -112,12 +127,17 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   KObjectHandlable $object The object to look for.
-     * @return  bool	Returns TRUE if the object exists in the storage, and FALSE otherwise
+     * @param   KObjectHandlable $object
+     * @return  bool Returns TRUE if the object exists in the storage, and FALSE otherwise
+     * @throws  \InvalidArgumentException if the object doesn't implement KObjectHandlable
      */
     public function offsetExists($object)
     {
-        return $this->contains($object);
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
+        return isset($this->_data[$object->getHandle()]);
     }
 
     /**
@@ -125,12 +145,17 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   KObjectHandlable  $object The object to look for.
-     * @return  mixed The object
+     * @param   KObjectHandlable $object
+     * @return  KObjectHandlable
+     * @throws  \InvalidArgumentException if the object doesn't implement KObjectHandlable
      */
     public function offsetGet($object)
     {
-        return $this->_object_set->offsetGet($object->getHandle());
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
+        return $this->_data[$object->getHandle()];
     }
 
     /**
@@ -138,13 +163,18 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   KObjectHandlable  $object The object to store
-     * @param   mixed              $data  The data to associate with the object. [UNUSED]
-     * @return  object  KObjectSet
+     * @param   KObjectHandlable $object
+     * @param   mixed            $data The data to associate with the object [UNUSED]
+     * @throws InvalidArgumentException
+     * @return  KObjectSet
      */
-    public function offsetSet($object, $data)
+    public function offsetSet($object, $data = null)
     {
-        $this->insert($object);
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
+        $this->_data[$object->getHandle()] = $object;
         return $this;
     }
 
@@ -153,37 +183,42 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      *
      * Required by interface ArrayAccess
      *
-     * @param   object $object The object to remove.
+     * @param   KObjectHandlable  $object
      * @return  KObjectSet
+     * @throws  \InvalidArgumentException if the object doesn't implement the KObjectHandlable interface
      */
     public function offsetUnset($object)
     {
-        $this->extract($object);
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
+        unset($this->_data[$object->getHandle()]);
         return $this;
     }
 
     /**
      * Return a string representation of the set
      *
-     * Required by interface Serializable
+     * Required by interface \Serializable
      *
      * @return  string  A serialized object
      */
     public function serialize()
     {
-        return serialize($this->_object_set);
+        return serialize($this->_data);
     }
 
     /**
      * Unserializes a set from its string representation
      *
-     * Required by interface Serializable
+     * Required by interface \Serializable
      *
-     * @param   string $serialized The serialized data
+     * @param   string  $serialized The serialized data
      */
     public function unserialize($serialized)
     {
-        $this->_object_set = unserialize($serialized);
+        $this->_data = unserialize($serialized);
     }
 
     /**
@@ -195,106 +230,43 @@ class KObjectSet extends KObject implements Iterator, ArrayAccess, Countable, Se
      */
     public function count()
     {
-        return $this->_object_set->count();
+        return count($this->_data);
     }
 
-	/**
+    /**
      * Return the first object in the set
      *
-     * @return	KObject or NULL is queue is empty
+     * @return KObjectHandlable or NULL is queue is empty
      */
-	public function top()
-	{
-	    $objects = array_values($this->_object_set->getArrayCopy());
+    public function top()
+    {
+        $objects = array_values($this->_data);
 
-	    $object = null;
-	    if(isset($objects[0])) {
-	        $object  = $objects[0];
-	    }
+        $object = null;
+        if (isset($objects[0])) {
+            $object = $objects[0];
+        }
 
-	    return $object;
-	}
+        return $object;
+    }
 
     /**
      * Defined by IteratorAggregate
      *
-     * @return ArrayIterator
+     * @return \ArrayIterator
      */
     public function getIterator()
     {
-        return $this->_object_set->getIterator();
+        return new ArrayIterator($this->_data);
     }
 
     /**
-     * Rewind the Iterator to the first element
-     *
-     * @return  object KObjectArray
-     */
-    public function rewind()
-    {
-        reset($this->_object_set);
-        return $this;
-    }
-
-    /**
-     * Checks if current position is valid
-     *
-     * @return  boolean
-     */
-    public function valid()
-    {
-        return !is_null(key($this->_object_set));
-    }
-
-    /**
-     * Return the key of the current element
-     *
-     * @return  mixed
-     */
-    public function key()
-    {
-        return key($this->_object_set);
-    }
-
-	/**
-     * Return the current element
-     *
-     * @return  mixed
-     */
-    public function current()
-    {
-        return current($this->_object_set);
-    }
-
-	/**
-     * Move forward to next element
-     *
-     * @return  mixed
-     */
-    public function next()
-    {
-        return next($this->_object_set);
-    }
-
-	/**
      * Return an associative array of the data.
      *
      * @return array
      */
     public function toArray()
     {
-        return $this->_object_set->getArrayCopy();
-    }
-
-    /**
-     * Preform a deep clone of the object
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-
-        $this->_object_set = clone $this->_object_set;
+        return $this->_data;
     }
 }

@@ -186,143 +186,140 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         return $result;
     }
 
-	/**
-	 * Generic browse action, fetches a list
-	 *
-	 * @param	KControllerContextInterface $context A command context object
-	 * @return 	KDatabaseRowsetInterface	A rowset object containing the selected rows
-	 */
-	protected function _actionBrowse(KControllerContextInterface $context)
-	{
-		$data = $this->getModel()->getList();
-		return $data;
-	}
-
     /**
-     * Generic read action, fetches an item
-     *
-     * @param  KControllerContextInterface $context A command context object
-     * @throws KControllerExceptionResourceNotFound
-     * @return KDatabaseRowInterface     A row object containing the selected row
-     */
-	protected function _actionRead(KControllerContextInterface $context)
-	{
-	    $data = $this->getModel()->getItem();
-	    $name = ucfirst($this->getView()->getName());
-
-		if($this->getModel()->getState()->isUnique() && $data->isNew()) {
-            throw new KControllerExceptionResourceNotFound($name.' Not Found');
-		}
-
-		return $data;
-	}
-
-    /**
-     * Generic edit action, saves over an existing item
+     * Generic browse action, fetches an entity collection
      *
      * @param	KControllerContextInterface	$context A controller context object
-     * @throws  KControllerExceptionResourceNotFound If the entity could not be found
-     * @return  KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the updated row(s)
+     * @return 	KModelEntityInterface An entity object containing the selected entities
+     */
+    protected function _actionBrowse(KControllerContextInterface $context)
+    {
+        $entity = $this->getModel()->fetch();
+        return $entity;
+    }
+
+    /**
+     * Generic read action, fetches a single entity
+     *
+     * @param    KControllerContextInterface $context A controller context object
+     * @throws   KControllerExceptionResourceNotFound
+     * @return   KModelEntityInterface
+     */
+    protected function _actionRead(KControllerContextInterface $context)
+    {
+        if($this->getModel()->getState()->isUnique())
+        {
+            $entity = $this->getModel()->fetch();
+
+            if(!count($entity))
+            {
+                $name   = ucfirst($this->getView()->getName());
+                throw new KControllerExceptionResourceNotFound($name.' Not Found');
+            }
+        }
+        else $entity = $this->getModel()->create();
+
+        return $entity;
+    }
+
+    /**
+     * Generic edit action, saves over an existing entity collection
+     *
+     * @param	KControllerContextInterface	$context A command context object
+     * @throws  KControllerExceptionResourceNotFound   If the resource could not be found
+     * @return 	KModelEntityInterface
      */
     protected function _actionEdit(KControllerContextInterface $context)
     {
-        $entity = $this->getModel()->getData();
+        $entities = $this->getModel()->fetch();
 
-        if(count($entity))
+        if(count($entities))
         {
-            $entity->setData($context->request->data->toArray());
+            foreach($entities as $entity) {
+                $entity->setProperties($context->request->data->toArray());
+            }
 
             //Only set the reset content status if the action explicitly succeeded
-            if($entity->save() === true) {
+            if($entities->save() === true) {
                 $context->response->setStatus(KHttpResponse::RESET_CONTENT);
             }
         }
         else throw new KControllerExceptionResourceNotFound('Resource could not be found');
 
-        return $entity;
+        return $entities;
     }
 
     /**
-     * Generic add action, saves a new item
+     * Generic add action, saves a new entity
      *
      * @param	KControllerContextInterface	$context A controller context object
      * @throws  KControllerExceptionActionFailed If the delete action failed on the data entity
-     * @throws  KControllerExceptionRequestInvalid   If the resource already exists
-     * @return 	KDatabaseRowInterface   A row object containing the new data
+     * @return 	KModelEntityInterface
      */
     protected function _actionAdd(KControllerContextInterface $context)
     {
-        $entity = $this->getModel()->getItem();
+        $entity = $this->getModel()->create();
+        $entity->setProperties($context->request->data->toArray());
 
-        if($entity->isNew())
+        //Only throw an error if the action explicitly failed.
+        if($entity->save() === false)
         {
-            $entity->setData($context->request->data->toArray());
+            $error = $entity->getStatusMessage();
+            throw new KControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
+        }
+        else
+        {
+            if ($entity instanceof KModelEntityInterface)
+            {
+                $url = clone $context->request->getUrl();
 
-            //Only throw an error if the action explicitly failed.
-            if($entity->save() === false)
-            {
-                $error = $entity->getStatusMessage();
-                throw new KControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
-            }
-            else
-            {
-                if ($entity instanceof KDatabaseRowInterface)
+                if ($this->getModel()->getState()->isUnique())
                 {
-                    $url = clone $context->request->getUrl();
+                    $states = $this->getModel()->getState()->getValues(true);
 
-                    if ($this->getModel()->getState()->isUnique())
-                    {
-                        $states = $this->getModel()->getState()->getValues(true);
-
-                        foreach ($states as $key => $value) {
-                            $url->query[$key] = $entity->get($key);
-                        }
+                    foreach ($states as $key => $value) {
+                        $url->query[$key] = $entity->getProperty($key);
                     }
-                    else $url->query[$entity->getIdentityColumn()] = $entity->get($entity->getIdentityColumn());
                 }
+                else $url->query[$entity->getIdentityKey()] = $entity->getProperty($entity->getIdentityKey());
 
                 $context->response->headers->set('Location', (string) $url);
                 $context->response->setStatus(KHttpResponse::CREATED);
             }
         }
-        else throw new KControllerExceptionRequestInvalid('Resource Already Exists');
 
         return $entity;
     }
 
     /**
-     * Generic delete function
+     * Generic delete function, deletes an existing entity collection
      *
-     * @param  KControllerContextInterface $context A controller context object
-     * @throws KControllerExceptionResourceNotFound
-     * @throws KControllerExceptionActionFailed
-     * @return KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the deleted row(s)
+     * @param    KControllerContextInterface $context A controller context object
+     * @throws   KControllerExceptionResourceNotFound
+     * @throws   KControllerExceptionActionFailed
+     * @return   KModelEntityInterface An entity object containing the deleted entities
      */
     protected function _actionDelete(KControllerContextInterface $context)
     {
-        $entity = $this->getModel()->getData();
+        $entities = $this->getModel()->fetch();
 
-        if($entity instanceof KDatabaseRowsetInterface)  {
-            $count = count($entity);
-        } else {
-            $count = (int) !$entity->isNew();;
-        }
-
-        if($count)
+        if(count($entities))
         {
-            $entity->setData($context->request->data->toArray());
+            foreach($entities as $entity) {
+                $entity->setProperties($context->request->data->toArray());
+            }
 
             //Only throw an error if the action explicitly failed.
-            if($entity->delete() === false)
+            if($entities->delete() === false)
             {
-                $error = $entity->getStatusMessage();
+                $error = $entities->getStatusMessage();
                 throw new KControllerExceptionActionFailed($error ? $error : 'Delete Action Failed');
             }
             else $context->response->setStatus(KHttpResponse::NO_CONTENT);
         }
         else throw new KControllerExceptionResourceNotFound('Resource Not Found');
 
-        return $entity;
+        return $entities;
     }
 
     /**

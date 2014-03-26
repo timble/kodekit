@@ -8,9 +8,20 @@
  */
 
 /**
- * Default Model
+ * Model Row Entity
  *
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package NookuLibraryModel
  */
-final class KModelDefault extends KModelDatabase { }
+class KModelEntityRow extends KDatabaseRowAbstract implements KModelEntityInterface
+{
+    /**
+     * Get the entity key
+     *
+     * @return string
+     */
+    public function getIdentityKey()
+    {
+        return parent::getIdentityColumn();
+    }
+}

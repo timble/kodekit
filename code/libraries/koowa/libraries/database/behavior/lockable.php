@@ -34,13 +34,29 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
     {
     	$config->append(array(
 			'priority'   => self::PRIORITY_HIGH,
-    	    'lifetime'	 => '900' //in seconds
+            'lifetime'   =>  $this->getObject('user')->getSession()->getLifetime()
 	  	));
 
 	  	$this->_lifetime = $config->lifetime;
 
     	parent::_initialize($config);
    	}
+
+    /**
+     * Get the user that owns the lock on the resource
+     *
+     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     */
+    public function getOwner()
+    {
+        $user = null;
+
+        if($this->hasProperty('locked_by') && !empty($this->locked_by)) {
+            $user = $this->getObject('user.provider')->fetch($this->locked_by);
+        }
+
+        return $user;
+    }
 
     /**
      * Check if the behavior is supported
@@ -104,34 +120,34 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 		return true;
 	}
 
-	/**
-	 * Checks if a row is locked
-	 *
-	 * @return boolean	If the row is locked TRUE, otherwise FALSE
-	 */
-	public function locked()
-	{
-		$result = false;
-		if(!$this->isNew())
-		{
-		    if(isset($this->locked_on) && isset($this->locked_by))
-			{
-			    $locked  = strtotime($this->locked_on);
+    /**
+     * Checks if a row is locked
+     *
+     * @return boolean	If the row is locked TRUE, otherwise FALSE
+     */
+    public function isLocked()
+    {
+        $result = false;
+        if(!$this->isNew())
+        {
+            if(isset($this->locked_on) && isset($this->locked_by))
+            {
+                $locked  = strtotime($this->locked_on);
                 $current = strtotime(gmdate('Y-m-d H:i:s'));
 
                 //Check if the lock has gone stale
                 if($current - $locked < $this->_lifetime)
-			    {
+                {
                     $userid = $this->getObject('user')->getId();
-			        if($this->locked_by != 0 && $this->locked_by != $userid) {
-			            $result= true;
+                    if($this->locked_by != 0 && $this->locked_by != $userid) {
+                        $result= true;
                     }
-			    }
-			}
-		}
+                }
+            }
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
 	/**
 	 * Checks if a row can be updated
@@ -144,7 +160,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	 */
 	protected function _beforeUpdate(KDatabaseContextInterface $context)
 	{
-		return (bool) !$this->locked();
+        return (bool) !$this->isLocked();
 	}
 
 	/**
@@ -158,6 +174,6 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      */
 	protected function _beforeDelete(KDatabaseContextInterface $context)
 	{
-		return (bool) !$this->locked();
+        return (bool) !$this->isLocked();
 	}
 }

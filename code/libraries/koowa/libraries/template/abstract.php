@@ -622,8 +622,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         }
         else
         {
-            if ($item = $view->getModel()->getItem()) {
-                $params = array_merge($item->getData(), $params);
+            if($entity = $view->getModel()->fetch()) {
+                $params = array_merge($entity->getProperties(), $params);
             }
         }
 

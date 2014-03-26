@@ -1,19 +1,19 @@
 <?php
 /**
- * Koowa Framework - http://developer.joomlatools.com/koowa
+ * Nooku Framework - http://www.nooku.org
  *
  * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ * @link		git://git.assembla.com/nooku-framework.git for the canonical source repository
  */
 
 /**
  * Abstract Model
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package NookuLibraryModel
  */
-abstract class KModelAbstract extends KObject implements KModelInterface
+abstract class KModelAbstract extends KObject implements KModelInterface, KCommandCallbackDelegate
 {
     /**
      * A state object
@@ -22,79 +22,166 @@ abstract class KModelAbstract extends KObject implements KModelInterface
      */
     private $__state;
 
-	/**
-	 * List total
-	 *
-	 * @var integer
-	 */
-	protected $_total;
+    /**
+     * Entity count
+     *
+     * @var integer
+     */
+    protected $_count;
 
-	/**
-	 * Model list data
-	 *
-	 * @var array
-	 */
-	protected $_list;
+    /**
+     * Entity object
+     *
+     * @var KModelEntityInterface
+     */
+    protected $_entity;
 
-	/**
-	 * Model item data
-	 *
-	 * @var mixed
-	 */
-	protected $_item;
-
-	/**
-	 * Constructor
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 */
-	public function __construct(KObjectConfig $config = null)
-	{
-		parent::__construct($config);
+    /**
+     * Constructor
+     *
+     * @param  KObjectConfig $config    An optional KObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
 
         // Set the state identifier
         $this->__state = $config->state;
-	}
 
-	/**
-	 * Initializes the options for the object
-	 *
-	 * Called from {@link __construct()} as a first step of object instantiation.
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 * @return  void
-	 */
+        // Mixin the behavior interface
+        $this->mixin('lib:behavior.mixin', $config);
+
+        // Mixin the event interface
+        $this->mixin('lib:event.mixin', $config);
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @return  void
+     */
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'state' => 'lib:model.state',
+            'state'            => 'lib:model.state',
+            'command_chain'    => 'lib:command.chain',
+            'command_handlers' => array('lib:command.handler.event'),
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Reset all cached data and reset the model state to it's default
+     * Fetch an entity from the data store
      *
-     * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
+     * @return KModelEntityInterface
+     */
+    final public function fetch()
+    {
+        if(!isset($this->_entity))
+        {
+            $context = $this->getContext();
+            $context->entity  = null;
+
+            if ($this->invokeCommand('before.fetch', $context) !== false)
+            {
+                $context->entity = $this->_actionFetch($context);
+                $this->invokeCommand('after.fetch', $context);
+            }
+
+            $this->_entity = KObjectConfig::unbox($context->entity);
+        }
+
+        return $this->_entity;
+    }
+
+    /**
+     * Create a new entity for the data source
+     *
+     * @return  KModelEntityInterface
+     */
+    final public function create()
+    {
+        $context = $this->getContext();
+        $context->entity  = null;
+
+        if ($this->invokeCommand('before.create', $context) !== false)
+        {
+            $context->entity = $this->_actionCreate($context);
+            $this->invokeCommand('after.create', $context);
+        }
+
+        $this->_entity = KObjectConfig::unbox($context->entity);
+
+        return $this->_entity;
+    }
+
+    /**
+     * Get the total number of entities
+     *
+     * @return  int
+     */
+    final public function count()
+    {
+        if(!isset($this->_count))
+        {
+            $context = $this->getContext();
+            $context->count = null;
+
+            if ($this->invokeCommand('before.count', $context) !== false)
+            {
+                $context->count = $this->_actionCount($context);
+                $this->invokeCommand('after.count', $context);
+            }
+
+            $this->_count = KObjectConfig::unbox($context->count);
+        }
+
+        return $this->_count;
+    }
+
+    /**
+     * Reset the model data and state
+     *
+     * @param  boolean $default If TRUE use defaults when resetting the state. Default is TRUE
      * @return KModelAbstract
      */
-    public function reset($default = true)
+    final public function reset($default = true)
     {
-        $this->_list  = null;
-        $this->_item  = null;
-        $this->_total = null;
+        $context        = $this->getContext();
+        $context->count = null;
 
-        $this->getState()->reset($default);
+        if ($this->invokeCommand('before.reset', $context) !== false)
+        {
+            $this->_actionReset($context);
+            $this->invokeCommand('after.reset', $context);
+        }
+
+        $this->_count = KObjectConfig::unbox($context->count);
 
         return $this;
+    }
+
+    /**
+     * Invoke a command handler
+     *
+     * @param string            $method   The name of the method to be executed
+     * @param KCommandInterface  $command   The command
+     * @return mixed Return the result of the handler.
+     */
+    public function invokeCommandCallback($method, KCommandInterface $command)
+    {
+        return $this->$method($command);
     }
 
     /**
      * Set the model state values
      *
      * @param  array $values Set the state values
-     * @return $this
+     * @return KModelAbstract
      */
     public function setState(array $values)
     {
@@ -106,7 +193,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
      * Get the model state object
      *
      * @throws UnexpectedValueException
-     * @return  KModelStateInterface  The model state object
+     * @return KModelStateInterface  The model state object
      */
     public function getState()
     {
@@ -117,7 +204,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface
             if(!$this->__state instanceof KModelStateInterface)
             {
                 throw new UnexpectedValueException(
-                    'State: '.get_class($this->__state).' does not implement ModelStateInterface'
+                    'State: '.get_class($this->__state).' does not implement KModelStateInterface'
                 );
             }
         }
@@ -126,77 +213,73 @@ abstract class KModelAbstract extends KObject implements KModelInterface
     }
 
     /**
-     * State Change notifier
+     * Get the model context
      *
-     * This function is called when the state has changed.
+     * @return  KModelContext
+     */
+    public function getContext()
+    {
+        $context = new KModelContext();
+        $context->setSubject($this);
+        $context->setState($this->getState());
+
+        return $context;
+    }
+
+    /**
+     * Create a new entity for the data source
      *
-     * @param  string 	$name  The state name being changed
+     * @param KModelContext $context A model context object
+     *
+     * @return KModelEntityInterface The entity
+     */
+    protected function _actionCreate(KModelContext $context)
+    {
+        return $this->_entity;
+    }
+
+    /**
+     * Fetch a new entity from the data source
+     *
+     * @param KModelContext $context A model context object
+     * @return KModelEntityInterface The entity
+     */
+    protected function _actionFetch(KModelContext $context)
+    {
+        return $this->_entity;
+    }
+
+    /**
+     * Get the total number of entities
+     *
+     * @param KModelContext $context A model context object
+     * @return integer  The total number of entities
+     */
+    protected function _actionCount(KModelContext $context)
+    {
+        return $this->_count;
+    }
+
+    /**
+     * Reset the model
+     *
+     * @param KModelContext $context A model context object
      * @return void
      */
-    public function onStateChange($name)
+    protected function _actionReset(KModelContext $context)
     {
-        $this->_rowset = null;
-        $this->_row    = null;
-        $this->_total  = null;
-    }
-
-    /**
-     * Method to get a item
-     *
-     * @return  KDatabaseRowInterface
-     */
-    public function getItem()
-    {
-        return $this->_item;
-    }
-
-    /**
-     * Get a list of items
-     *
-     * @return  KDatabaseRowsetInterface
-     */
-    public function getList()
-    {
-        return $this->_list;
-    }
-
-    /**
-     * Get the total amount of items
-     *
-     * @return  int
-     */
-    public function getTotal()
-    {
-        return $this->_total;
-    }
-
-	/**
-     * Get the model data
-     *
-     * If the model state is unique this function will call getItem(), otherwise
-     * it will call getList().
-     *
-     * @return KDatabaseRowsetInterface|KDatabaseRowInterface
-     */
-    public function getData()
-    {
-        if($this->getState()->isUnique()) {
-            $data = $this->getItem();
-        } else {
-            $data = $this->getList();
-        }
-
-        return $data;
+        $this->_entity = null;
+        $this->_count  = null;
     }
 
     /**
      * Supports a simple form Fluent Interfaces. Allows you to set states by using the state name as the method name.
      *
-     * For example : $model->sort('name')->limit(10)->getRowset();
+     * For example : $model->sort('name')->limit(10)->fetch();
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return  $this
+     * @return  KModelAbstract
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */
@@ -221,5 +304,15 @@ abstract class KModelAbstract extends KObject implements KModelInterface
         parent::__clone();
 
         $this->__state = clone $this->__state;
+    }
+
+    /**
+     * Fetch the data when model is invoked.
+     *
+     * @return KModelEntityInterface
+     */
+    public function __invoke()
+    {
+        return $this->fetch();
     }
 }

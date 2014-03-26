@@ -1,17 +1,17 @@
 <?php
 /**
- * Koowa Framework - http://developer.joomlatools.com/koowa
+ * Nooku Framework - http://www.nooku.org
  *
  * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ * @link		git://git.assembla.com/nooku-framework.git for the canonical source repository
  */
 
 /**
  * Model State Interface
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package NookuLibraryModel
  */
 interface KModelStateInterface
 {
@@ -25,7 +25,7 @@ interface KModelStateInterface
      * @param   array    $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
      * @param   boolean  $internal If TRUE the state will be considered internal and should not be included in a routes.
      *                             Default FALSE.
-     * @return  $this
+     * @return  KModelStateInterface
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array(), $internal = false);
 
@@ -43,7 +43,7 @@ interface KModelStateInterface
      *
      * @param  	string 	$name The state name.
      * @param  	mixed  	$value The state value.
-     * @return 	$this
+     * @return 	KModelStateInterface
      */
     public function set($name, $value);
 
@@ -59,16 +59,37 @@ interface KModelStateInterface
      * Remove an existing state
      *
      * @param   string $name The name of the state
-     * @return  $this
+     * @return  KModelStateInterface
      */
     public function remove($name);
 
     /**
      * Reset all state data and revert to the default state
      *
-     * @return $this
+     * @return KModelStateInterface
      */
     public function reset();
+
+    /**
+     * Set the state data
+     *
+     * This function will only filter values if we have a value. If the value is an empty string it will be filtered
+     * to NULL.
+     *
+     * @param   array $data An associative array of state values by name
+     * @return  KModelState
+     */
+    public function setValues(array $data);
+
+    /**
+     * Get the state data
+     *
+     * This function only returns states that have been been set.
+     *
+     * @param   boolean $unique If TRUE only retrieve unique state values, default FALSE
+     * @return  array   An associative array of state values by name
+     */
+    public function getValues($unique = false);
 
     /**
      * Set a state property
@@ -76,7 +97,7 @@ interface KModelStateInterface
      * @param string $name      The name of the state
      * @param string $property  The name of the property
      * @param mixed  $value     The value of the property
-     * @return mixed
+     * @return KModelStateInterface
      */
     public function setProperty($name, $property, $value);
 
@@ -97,27 +118,6 @@ interface KModelStateInterface
      * @return boolean   Return TRUE if the the property exists, FALSE otherwise
      */
     public function hasProperty($name, $property);
-
-    /**
-     * Set the state data
-     *
-     * This function will only filter values if we have a value. If the value is an empty string it will be filtered
-     * to NULL.
-     *
-     * @param   array $data An associative array of state values by name
-     * @return  $this
-     */
-    public function setValues(array $data);
-
-    /**
-     * Get the state data
-     *
-     * This function only returns states that have been been set.
-     *
-     * @param   boolean $unique If TRUE only retrieve unique state values, default FALSE
-     * @return  array   An associative array of state values by name
-     */
-    public function getValues($unique = false);
 
     /**
      * Check if the state information is unique

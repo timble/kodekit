@@ -1,72 +1,61 @@
 <?php
 /**
- * Koowa Framework - http://developer.joomlatools.com/koowa
+ * Nooku Framework - http://www.nooku.org
  *
- * @copyright	Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		http://github.com/joomlatools/koowa for the canonical source repository
+ * @copyright      Copyright (C) 2007 - 2013 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license        GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link           git://git.assembla.com/nooku-framework.git for the canonical source repository
  */
 
 /**
  * Model Interface
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
+ * @package NookuLibraryModel
  */
 interface KModelInterface
 {
     /**
-     * Reset all cached data and reset the model state to it's default
+     * Create a new entity for the data source
      *
-     * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
-     * @return KModelAbstract
+     * @return  KModelEntityInterface
      */
-    public function reset($default = true);
+    public function create();
 
     /**
-     * Method to get state object
+     * Fetch an entity from the datasource on the model state
      *
-     * @return  object  The state object
+     * @return KModelEntityInterface
      */
-    public function getState();
-
-    /**
-     * State Change notifier
-     *
-     * This function is called when the state has changed.
-     *
-     * @param  string 	$name  The state name being changed
-     * @return void
-     */
-    public function onStateChange($name);
-
-    /**
-     * Method to get a item
-     *
-     * @return  KDatabaseRowInterface
-     */
-    public function getItem();
-
-    /**
-     * Get a list of items
-     *
-     * @return  KDatabaseRowsetInterface
-     */
-    public function getList();
+    public function fetch();
 
     /**
      * Get the total amount of items
      *
      * @return  int
      */
-    public function getTotal();
+    public function count();
 
-	/**
-     * Get the model data
+    /**
+     * Reset the model data and state
      *
-     * If the model state is unique this function will call getItem(), otherwise it will call getList().
-     *
-     * @return KDatabaseRowsetInterface|KDatabaseRowInterface
+     * @return KModelInterface
      */
-    public function getData();
+    public function reset();
+
+    /**
+     * Set the model state values
+     *
+     * @param  array $values Set the state values
+     *
+     * @return KModelInterface
+     */
+    public function setState(array $values);
+
+    /**
+     * Method to get state object
+     *
+     * @return  KModelStateInterface  The model state object
+     */
+    public function getState();
 }

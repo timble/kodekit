@@ -16,6 +16,42 @@
 class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 {
     /**
+     * Set to true if uuid should be auto-generated
+     *
+     * @var boolean
+     * @see _afterSelect()
+     */
+    protected $_auto_generate;
+
+    /**
+     * Constructor.
+     *
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_auto_generate = $config->auto_generate;
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'auto_generate' => true,
+        ));
+
+        parent::_initialize($config);
+    }
+    /**
      * Check if the behavior is supported
      *
      * Behavior requires a 'uuid' row property
@@ -34,6 +70,31 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
         return false;
     }
 
+    /**
+     * Auto generated the uuid
+     *
+     * If the row exists and does not have a valid 'uuid' value auto generate it.
+     *
+     * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
+     * hex value will be returned.
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _afterSelect(KDatabaseContext $context)
+    {
+        if($this->getMixer() instanceof KDatabaseRowInterface && $this->_auto_generate && !$this->isNew())
+        {
+            if($this->hasProperty('uuid') && empty($this->uuid))
+            {
+                $hex = $this->getTable()->getColumn('uuid')->type == 'char' ? false : true;
+                $this->uuid = $this->_uuid($hex);
+
+                $this->save();
+            }
+        }
+    }
+
 	/**
 	 * Set uuid information
 	 *
@@ -45,11 +106,14 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
 	 */
 	protected function _beforeInsert(KDatabaseContextInterface $context)
 	{
-		if(isset($this->uuid))
-		{
-			$hex = $this->getTable()->getColumn('uuid')->type == 'char' ? false : true;
-			$this->uuid  = $this->_uuid($hex);
-		}
+        if($this->getMixer() instanceof KDatabaseRowInterface)
+        {
+            if($this->hasProperty('uuid') && empty($this->uuid))
+            {
+                $hex = $this->getTable()->getColumn('uuid')->type == 'char' ? false : true;
+                $this->uuid = $this->_uuid($hex);
+            }
+        }
 	}
 
 	/**

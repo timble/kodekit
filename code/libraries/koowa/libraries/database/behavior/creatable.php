@@ -16,6 +16,22 @@
 class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 {
     /**
+     * Get the user that created the resource
+     *
+     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     */
+    public function getAuthor()
+    {
+        $user = null;
+
+        if($this->hasProperty('created_by') && !empty($this->created_by)) {
+            $user = $this->getObject('user.provider')->fetch($this->created_by);
+        }
+
+        return $user;
+    }
+
+    /**
      * Check if the behavior is supported
      *
      * Behavior requires a 'created_by' or 'created_on' row property
@@ -39,16 +55,19 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
      *
      * Requires an 'created_on' and 'created_by' column
      *
-     * @param KDatabaseContextInterface $context
+     * @param KDatabaseContext	$context A database context object
      * @return void
      */
-    protected function _beforeInsert(KDatabaseContextInterface $context)
+    protected function _beforeInsert(KDatabaseContext $context)
     {
-        if(isset($this->created_by) && empty($this->created_by)) {
+        $mixer = $this->getMixer();
+        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+
+        if($this->hasProperty('created_by') && empty($this->created_by)) {
             $this->created_by  = (int) $this->getObject('user')->getId();
         }
 
-        if(isset($this->created_on) && (empty($this->created_on) || $this->created_on == $context->subject->getDefault('created_on'))) {
+        if($this->hasProperty('created_on') && (empty($this->created_on) || $this->created_on == $table->getDefault('created_on'))) {
             $this->created_on  = gmdate('Y-m-d H:i:s');
         }
     }

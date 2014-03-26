@@ -8,43 +8,52 @@
  */
 
 /**
- * Database Row Interface
+ * Model Entity Interface
  *
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Library\Database
+ * @package NookuLibraryModel
  */
-interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializable, Countable
+interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializable, Countable
 {
     /**
-     * Saves the to the database.
+     * Entity States
+     */
+    const STATUS_LOADED   = 'loaded';
+    const STATUS_DELETED  = 'deleted';
+    const STATUS_CREATED  = 'created';
+    const STATUS_UPDATED  = 'updated';
+    const STATUS_FAILED   = 'failed';
+
+    /**
+     * Saves the to the data store
      *
      * This performs an intelligent insert/update and reloads the properties
      * with fresh data from the table on success.
      *
-     * @return KDatabaseRowInterface
+     * @return KModelEntityInterface
      */
     public function save();
 
     /**
-     * Deletes the row form the database.
+     * Deletes the entity form the data store
      *
-     * @return KDatabaseRowInterface
+     * @return KModelEntityInterface
      */
     public function delete();
 
     /**
-     * Resets to the row to it's default properties
+     * Resets to the entity to it's default properties
      *
-     * @return KDatabaseRowInterface
+     * @return KModelEntityInterface
      */
     public function reset();
 
     /**
-     * Gets the identity column
+     * Get the entity key
      *
      * @return string
      */
-    public function getIdentityColumn();
+    public function getIdentityKey();
 
     /**
      * Get a property
@@ -57,13 +66,14 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
     /**
      * Set a property
      *
-     * If the value is the same as the current value and the row is loaded from the database the value will not be reset.
-     * If the row is new the value will be (re)set and marked as modified
+     * If the value is the same as the current value and the entity is loaded from the data store the value will not be
+     * reset. If the entity is new the value will be (re)set and marked as modified
      *
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KDatabaseRowInterface
+     *
+     * @return  KModelEntityInterface
      */
     public function setProperty($name, $value, $modified = true);
 
@@ -79,7 +89,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KDatabaseRowInterface
+     * @return  KModelEntityInterface
      */
     public function removeProperty($name);
 
@@ -87,16 +97,16 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Get the properties
      *
      * @param   boolean  $modified If TRUE, only return the modified data.
-     * @return  array   An associative array of the row properties
+     * @return  array   An associative array of entity properties
      */
     public function getProperties($modified = false);
 
     /**
      * Set the properties
      *
-     * @param   mixed   $properties  Either and associative array, an object or a KDatabaseRow
+     * @param   mixed   $properties  Either and associative array, an object or a KModelEntityInterface
      * @param   boolean $modified    If TRUE, update the modified information for each column being set.
-     * @return  KDatabaseRowInterface
+     * @return  KModelEntityInterface
      */
     public function setProperties($properties, $modified = true);
 
@@ -111,7 +121,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Set the status
      *
      * @param   string|null $status The status value or NULL to reset the status
-     * @return  KDatabaseRowAbstract
+     * @return  KModelEntityInterface
      */
     public function setStatus($status);
     
@@ -126,39 +136,19 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KDatabaseRowInterface
+     * @return  KModelEntityInterface
      */
     public function setStatusMessage($message);
 
     /**
-     * Method to get a table object
-     *
-     * Function catches DatabaseTableExceptions that are thrown for tables that
-     * don't exist. If no table object can be created the function will return FALSE.
-     *
-     * @return KDatabaseTableAbstract
-     */
-    public function getTable();
-
-    /**
-     * Method to set a table object attached to the rowset
-     *
-     * @param    mixed    $table An object that implements ObjectInterface, ObjectIdentifier object
-     *                           or valid identifier string
-     * @throws  \UnexpectedValueException    If the identifier is not a table identifier
-     * @return  KDatabaseRowInterface
-     */
-    public function setTable($table);
-
-    /**
-     * Checks if the row is new or not
+     * Checks if the entity is new or not
      *
      * @return bool
      */
     public function isNew();
 
     /**
-     * Check if a the row or specific row property has been modified.
+     * Check if the entity or specific entity property has been modified.
      *
      * If a specific property name is giving method will return TRUE only if this property was modified.
      *
@@ -168,7 +158,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
     public function isModified($property = null);
 
 	/**
-	 * Test the connected status of the row.
+	 * Test if the entity is connected to a data store
 	 *
 	 * @return	bool
 	 */

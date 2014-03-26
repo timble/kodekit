@@ -8,9 +8,17 @@
  */
 
 /**
- * Default Model
+ * Model Paginator Interface
  *
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package NookuLibraryModel
  */
-final class KModelDefault extends KModelDatabase { }
+interface KModelPaginatorInterface
+{
+    /**
+     * Get the pages
+     *
+     * @return KObjectConfig A KObjectConfig object that holds the page information
+     */
+    public function getPages();
+}

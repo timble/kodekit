@@ -121,7 +121,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         settype($base, 'int');
 
         $table  = $this->getTable();
-        $db     = $table->getDatabase();
+        $db     = $table->getAdapter();
         $db->execute('SET @order = '.$base);
         
         $query = $this->getObject('lib:database.query.update')
@@ -149,7 +149,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     protected function getMaxOrdering()
     {
         $table  = $this->getTable();
-        $db     = $table->getDatabase();
+        $db     = $table->getAdapter();
         
         $query = $this->getObject('lib:database.query.select')
             ->columns('MAX(ordering)')
@@ -170,13 +170,13 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      */
     protected function _beforeInsert(KDatabaseContextInterface $context)
     {
-        if(isset($this->ordering))
+        if($this->hasProperty('ordering'))
         {
             if($this->ordering <= 0) {
                 $this->ordering = $this->getMaxOrdering() + 1;
             } else {
                 $this->reorder($this->ordering);
-            } 
+            }
         }
     }
 
@@ -187,7 +187,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      */
     protected function _beforeUpdate(KDatabaseContextInterface $context)
     {
-        if(isset($this->order) && isset($this->ordering)) {
+        if(isset($this->order) && $this->hasProperty('ordering')) {
             $this->order($this->order);
         }
     }
