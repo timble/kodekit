@@ -87,7 +87,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
 	public function lock()
 	{
 		//Prevent lock take over, only an saved and unlocked row and be locked
-		if(!$this->isNew() && !$this->locked())
+		if(!$this->isNew() && !$this->isLocked())
 		{
 			$this->locked_by = (int) $this->getObject('user')->getId();
 			$this->locked_on = gmdate('Y-m-d H:i:s');

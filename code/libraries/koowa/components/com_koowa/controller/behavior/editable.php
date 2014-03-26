@@ -58,12 +58,12 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
         $entity = $context->result;
 
         //Add the notice if the resource is locked
-        if($this->canEdit() && $entity->isLockable() && $entity->locked())
+        if($this->canEdit() && $entity->isLockable() && $entity->isLocked())
         {
             //Prevent a re-render of the message
             if($context->request->getUrl() != $context->request->getReferrer())
             {
-                if($entity->isLockable() && $entity->locked())
+                if($entity->isLockable() && $entity->isLocked())
                 {
                     $user = $this->getObject('user.provider')->load($entity->locked_by);
 

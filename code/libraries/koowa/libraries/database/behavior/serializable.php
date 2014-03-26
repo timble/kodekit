@@ -98,7 +98,7 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
 
                 // Set the data without changing the modified column information
                 if ($value) {
-                    $row->setData(array($field => $value), false);
+                    $row->setProperties(array($field => $value), false);
                 }
             }
         }
@@ -119,7 +119,7 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
             {
                 // Set the data without changing the modified column information
                 if (is_string($row->$field)) {
-                    $row->setData(array($field => $format->fromString($row->$field)), false);
+                    $row->setProperties(array($field => $format->fromString($row->$field)), false);
                 }
             }
             catch (RuntimeException $e) {}

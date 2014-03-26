@@ -30,7 +30,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             'attribs' => array()
         ));
 
-        if($config->row->isLockable() && $config->row->locked())
+        if($config->row->isLockable() && $config->row->isLocked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
@@ -62,9 +62,11 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $config->append(array(
             'row'  		=> null,
             'attribs' => array()
+        ))->append(array(
+            'column' => $config->row->getIdentityKey()
         ));
 
-        if($config->row->isLockable() && $config->row->locked())
+        if($config->row->isLockable() && $config->row->isLocked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
@@ -73,7 +75,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         }
         else
         {
-            $column = $config->row->getIdentityColumn();
+            $column = $config->column;
             $value  = $config->row->{$column};
 
             $attribs = $this->buildAttributes($config->attribs);
@@ -410,7 +412,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
         $row = $config->row;
         $message = '';
 
-        if($row->isLockable() && $row->locked())
+        if($row->isLockable() && $row->isLocked())
         {
             $user = $this->getObject('user.provider')->load($row->locked_by);
             $date = $this->getObject('date', array('date' => $row->locked_on));
