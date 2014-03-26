@@ -26,7 +26,7 @@ class ComKoowaDate extends KDate
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'timzone'    => 'UTC',
+            'timezone'    => 'UTC',
             'translator' => 'com:koowa.translator'
         ));
 
