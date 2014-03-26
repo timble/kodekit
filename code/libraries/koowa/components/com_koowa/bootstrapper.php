@@ -11,7 +11,7 @@
  * Bootstrapper
  *
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
- * @package Nooku\Component\Files
+ * @package Koowa\Component\Files
  */
 class ComKoowaBootstrapper extends KObjectBootstrapperComponent
 {

@@ -311,7 +311,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     {
         foreach ($this->_mixed_methods as $method => $object)
         {
-            if (is_object($object) && !(class_exists('Closure') && $object instanceof \Closure)){
+            if (is_object($object) && !(class_exists('Closure') && $object instanceof Closure)){
                 $this->_mixed_methods[$method] = clone $object;
             }
         }

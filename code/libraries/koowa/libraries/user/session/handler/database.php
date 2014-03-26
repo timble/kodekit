@@ -33,7 +33,7 @@ class KUserSessionHandlerDatabase extends KUserSessionHandlerAbstract
         parent::__construct($config);
 
         if (is_null($config->table)) {
-            throw new \InvalidArgumentException('table option is required');
+            throw new InvalidArgumentException('table option is required');
         }
 
         $this->_table = $config->table;
@@ -171,7 +171,7 @@ class KUserSessionHandlerDatabase extends KUserSessionHandlerAbstract
 
             if (!($this->_table instanceof KDatabaseTableInterface))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Table: ' . get_class($this->_table) . ' does not implement KDatabaseTableInterface'
                 );
             }

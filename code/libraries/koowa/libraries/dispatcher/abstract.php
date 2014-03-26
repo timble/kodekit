@@ -242,7 +242,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
             if (!($authenticator instanceof KDispatcherAuthenticatorInterface))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     "Authenticator $identifier does not implement KDispatcherAuthenticatorInterface"
                 );
             }

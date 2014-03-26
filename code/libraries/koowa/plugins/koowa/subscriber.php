@@ -50,8 +50,8 @@ abstract class PlgKoowaSubscriber extends PlgKoowaAbstract implements KEventSubs
         if(!$this->isSubscribed($publisher));
         {
             //Get all the public methods
-            $reflection = new \ReflectionClass($this);
-            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
+            $reflection = new ReflectionClass($this);
+            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
             {
                 if(substr($method->name, 0, 2) == 'on')
                 {

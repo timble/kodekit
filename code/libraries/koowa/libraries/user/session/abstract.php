@@ -401,7 +401,7 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
 
             if (!($container instanceof KUserSessionContainerInterface))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Container: '. get_class($container) .' does not implement KUserSessionContainerInterface'
                 );
             }
