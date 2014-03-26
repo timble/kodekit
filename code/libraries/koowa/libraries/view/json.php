@@ -150,7 +150,7 @@ class KViewJson extends KViewAbstract
     protected function _renderData()
     {
         $model  = $this->getModel();
-        $data   = $this->_getList($this->_plural ? $model->getList() : array($model->getItem()));
+        $data   = $this->_getEntities($model->fetch());
         $output = array(
             'version' => $this->_version,
             'links' => array(
@@ -164,7 +164,7 @@ class KViewJson extends KViewAbstract
 
         if ($this->_plural)
         {
-            $total  = $model->getTotal();
+            $total  = $model->count();
             $limit  = (int) $model->getState()->limit;
             $offset = (int) $model->getState()->offset;
 
@@ -197,15 +197,15 @@ class KViewJson extends KViewAbstract
     /**
      * Returns the JSON representation of a rowset
      *
-     * @param  KDatabaseRowsetInterface|array $rowset
+     * @param  KModelEntityInterface $entities
      * @return array
      */
-    protected function _getList($rowset)
+    protected function _getEntities(KModelEntityInterface $entities)
     {
         $result = array();
 
-        foreach ($rowset as $row) {
-            $result[] = $this->_getItem($row);
+        foreach ($entities as $row) {
+            $result[] = $this->_getEntity($row);
         }
 
         return $result;
@@ -214,17 +214,17 @@ class KViewJson extends KViewAbstract
     /**
      * Get the item data
      *
-     * @param KDatabaseRowInterface  $row   Document row
+     * @param KModelEntityInterface  $entity   Document row
      * @return array The array with data to be encoded to json
      */
-    protected function _getItem(KDatabaseRowInterface $row)
+    protected function _getEntity(KModelEntityInterface $entity)
     {
-        $method = '_get'.ucfirst($row->getIdentifier()->name);
+        $method = '_get'.ucfirst($entity->getIdentifier()->name);
 
-        if ($method !== '_getItem' && method_exists($this, $method)) {
-            $data = $this->$method($row);
+        if ($method !== '_getEntity' && method_exists($this, $method)) {
+            $data = $this->$method($entity);
         } else {
-            $data = $row->toArray();
+            $data = $entity->toArray();
         }
 
         if (!empty($this->_fields)) {
@@ -238,7 +238,7 @@ class KViewJson extends KViewAbstract
         if (!isset($data['links']['self']))
         {
             $data['links']['self'] = array(
-                'href' => $this->_getItemLink($row),
+                'href' => $this->_getEntityLink($entity),
                 'type' => $this->mimetype
             );
         }
@@ -249,15 +249,15 @@ class KViewJson extends KViewAbstract
     /**
      * Get the item link
      *
-     * @param KDatabaseRowInterface  $row
+     * @param KModelEntityInterface  $entity
      * @return string
      */
-    protected function _getItemLink(KDatabaseRowInterface $row)
+    protected function _getEntityLink(KModelEntityInterface $entity)
     {
         $package = $this->getIdentifier()->package;
-        $view    = $row->getIdentifier()->name;
+        $view    = $entity->getIdentifier()->name;
 
-        return $this->getRoute(sprintf('option=com_%s&view=%s&slug=%s&format=json', $package, $view, $row->slug));
+        return $this->getRoute(sprintf('option=com_%s&view=%s&slug=%s&format=json', $package, $view, $entity->slug));
     }
 
     /**
