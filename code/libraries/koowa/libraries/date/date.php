@@ -18,7 +18,7 @@ class KDate extends KObject implements KDateInterface
     /**
      * Translator object
      *
-     * @var KTranslator
+     * @var KTranslatorInterface
      */
     private $__translator;
 
