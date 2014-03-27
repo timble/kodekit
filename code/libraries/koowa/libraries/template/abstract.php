@@ -27,7 +27,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Translator object
      *
-     * @var	KTranslator
+     * @var	KTranslatorInterface
      */
     protected $_translator;
 
@@ -77,7 +77,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_stack;
 
     /**
-     * The set of template filters for templates
+     * List of template filters
      *
      * @var array
      */
@@ -114,7 +114,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_locators = KObjectConfig::unbox($config->locators);
 
         //Attach the filters
-        $filters = (array) KObjectConfig::unbox($config->filters);
+        $filters = KObjectConfig::unbox($config->filters);
 
         foreach ($filters as $key => $value)
         {
@@ -146,7 +146,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             'data'       => array(),
             'view'       => null,
             'filters'    => array(),
-            'locators' => array('com' => 'lib:template.locator.component')
+            'locators'   => array('com' => 'lib:template.locator.component')
         ));
 
         parent::_initialize($config);
@@ -159,17 +159,17 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @param   array   $data     An associative array of data to be extracted in local template scope
      * @param   integer $status   The template state
      * @throws \InvalidArgumentException If the template could not be found
-     * @return $this
+     * @return KTemplateAbstract
      */
     public function load($path, $data = array(), $status = self::STATUS_LOADED)
     {
-        $parts   = parse_url($path);
+        $parts = parse_url($path);
 
-        //Set the default type if no scheme can be found
         $locator = $this->getLocator(isset($parts['scheme']) ? $parts['scheme'] : $this->getIdentifier()->type);
 
+        // Set the component locator if none was found.
         if (!$locator) {
-            $locator = $this->getLocator('component');
+            $locator = $this->getLocator('com');
         }
 
         //Check of the file exists
@@ -184,7 +184,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_status = $status;
 
         //Load the file
-        $this->_content = file_get_contents($template);
+        $this->_content = $this->getObject('lib:filesystem.stream')->open($template)->getContent();
 
         //Compile and evaluate partial templates
         if(count($this->_stack) > 1)
@@ -206,7 +206,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * This function passes the template through compile filter queue and returns the result.
      *
-     * @return $this
+     * @return KTemplateInterface
      */
     public function compile()
     {
@@ -232,7 +232,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * This function writes the template to a temporary file and then includes it.
      *
      * @param  array   $data  An associative array of data to be extracted in local template scope
-     * @return $this
+     * @return KTemplateAbstract
      * @see tempnam()
      */
     public function evaluate($data = array())
@@ -274,7 +274,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * This function passes the template through the render filter queue
      *
-     * @return $this
+     * @return KTemplateInterface
      */
     public function render()
     {
@@ -312,12 +312,26 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param string $string String to translate
      * @param array  $parameters An array of parameters
-     *
      * @return string Translated string
      */
     public function translate($string, array $parameters = array())
     {
         return $this->getTranslator()->translate($string, $parameters);
+    }
+
+    /**
+     * Translates a string based on the number parameter passed
+     *
+     * @param array   $strings    Strings to choose from
+     * @param integer $number     The number of items
+     * @param array   $parameters An array of parameters
+     *
+     * @throws InvalidArgumentException
+     * @return string Translated string
+     */
+    public function choose(array $strings, $number, array $parameters = array())
+    {
+        $this->getTranslator()->choose($strings, $number, $parameters);
     }
 
     /**
@@ -354,7 +368,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Set the template data
      *
      * @param  array   $data     The template data
-     * @return $this
+     * @return KTemplateInterface
      */
     public function setData(array $data)
     {
@@ -377,7 +391,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param  string   $content    The template content
      * @param  integer  $status     The template state
-     * @return $this
+     * @return KTemplateInterface
      */
     public function setContent($content, $status = self::STATUS_LOADED)
     {
@@ -421,7 +435,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param	mixed	$view An object that implements ObjectInterface, ObjectIdentifier object
      * 					      or valid identifier string
-     * @return KTemplateAbstract
+     * @return KTemplateInterface
      */
     public function setView($view)
     {
@@ -453,7 +467,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Gets the translator object
      *
-     * @return  KTranslator
+     * @return  KTranslatorInterface
      */
     public function getTranslator()
     {
@@ -463,12 +477,12 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Sets the translator object
      *
-     * @param string|KTranslator $translator A translator object or identifier
-     * @return $this
+     * @param string|KTranslatorInterface $translator A translator object or identifier
+     * @return TemplateInterface
      */
     public function setTranslator($translator)
     {
-        if (!$translator instanceof KTranslator)
+        if (!$translator instanceof KTranslatorInterface)
         {
             if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
             {
@@ -500,16 +514,17 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a filter by identifier
      *
-     * @param   mixed $filter    An object that implements ObjectInterface, ObjectIdentifier object
+     * @param   mixed $filter       An object that implements KObjectInterface, KObjectIdentifier object
      *                              or valid identifier string
-     * @param   array $config    An optional associative array of configuration settings
+     * @param   array $config       An optional associative array of configuration settings
+     *
      * @throws UnexpectedValueException
      * @return KTemplateFilterInterface
      */
  	 public function getFilter($filter, $config = array())
  	 {
          //Create the complete identifier if a partial identifier was passed
-        if(is_string($filter) && strpos($filter, '.') === false )
+        if (is_string($filter) && strpos($filter, '.') === false)
         {
             $identifier = $this->getIdentifier()->toArray();
             $identifier['path'] = array('template', 'filter');
@@ -519,11 +534,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         }
         else $identifier = $this->getIdentifier($filter);
 
-        if (!isset($this->_filters[$identifier->name]))
+        if (!$this->hasFilter($identifier->name))
         {
             $filter = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
-            if(!($filter instanceof KTemplateFilterInterface))
+            if (!($filter instanceof KTemplateFilterInterface))
             {
 			    throw new UnexpectedValueException(
                     "Template filter $identifier does not implement KTemplateFilterInterface"
@@ -538,7 +553,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
  	 }
 
     /**
-     * Attach ar filters for template transformation
+     * Attach a filter for template transformation
      *
      * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
@@ -560,15 +575,16 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get a template helper
      *
-     * @param    mixed $helper ObjectIdentifierInterface
+     * @param    mixed $helper KObjectIdentifierInterface
      * @param    array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
+     *
+     * @throws \UnexpectedValueException
      * @return  KTemplateHelperInterface
      */
     public function getHelper($helper, $config = array())
 	{
 		//Create the complete identifier if a partial identifier was passed
-		if(is_string($helper) && strpos($helper, '.') === false )
+		if (is_string($helper) && strpos($helper, '.') === false)
 		{
             $identifier = $this->getIdentifier()->toArray();
             $identifier['path'] = array('template','helper');
@@ -580,31 +596,40 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $helper = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
 	    //Check the helper interface
-        if(!($helper instanceof KTemplateHelperInterface)) {
+        if (!($helper instanceof KTemplateHelperInterface))
+        {
             throw new UnexpectedValueException("Template helper $identifier does not implement KTemplateHelperInterface");
         }
 
 		return $helper;
 	}
 
-	/**
-	 * Load a template helper
-	 *
-	 * This functions accepts a partial identifier, in the form of helper.function. If a partial
-	 * identifier is passed a full identifier will be created using the template identifier.
-	 *
-	 * @param	string	$identifier Name of the helper, dot separated including the helper function to call
-	 * @param	mixed	$params     Parameters to be passed to the helper
-     * @throws BadMethodCallException
-	 * @return 	string	Helper output
-	 */
+    /**
+     * Load a template helper
+     *
+     * This function accepts a partial identifier, in the form of helper.function or schema:package.helper.function. If
+     * a partial identifier is passed a full identifier will be created using the template identifier.
+     *
+     * If the view state have the same string keys, then the parameter value for that key will overwrite the state.
+     *
+     * @param    string   $identifier Name of the helper, dot separated including the helper function to call
+     * @param    array    $params     An optional associative array of functions parameters to be passed to the helper
+     * @return   string   Helper output
+     * @throws   BadMethodCallException If the helper function cannot be called.
+     */
 	public function renderHelper($identifier, $params = array())
 	{
         //Get the function and helper based on the identifier
-        $parts    = explode('.', $identifier);
-        $function = array_pop($parts);
+        $parts      = explode('.', $identifier);
+        $function   = array_pop($parts);
+        $identifier = array_pop($parts);
 
-        $helper = $this->getHelper(implode('.', $parts), $params);
+        //Handle schema:package.helper.function identifiers
+        if(!empty($parts)) {
+            $identifier = implode('.', $parts).'.template.helper.'.$identifier;
+        }
+
+        $helper = $this->getHelper($identifier, $params);
 
         //Call the helper function
         if (!is_callable(array($helper, $function))) {
@@ -634,7 +659,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Register a template locator
      *
      * @param KTemplateLocatorInterface $locator
-     * @return $this
+     * @return KTemplateInterface
      */
     public function registerLocator(KTemplateLocatorInterface $locator)
     {
