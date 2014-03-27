@@ -311,13 +311,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getFinderItem(KModelEntityInterface $entity)
     {
-        $data = $entity->getData();
+        $data = $entity->getProperties();
 
         //Get the indexer result item
         $item = JArrayHelper::toObject($data, 'FinderIndexerResult');
 
         $item->url = $this->getURL($item->id, $this->extension, $this->layout);
-        $item->route = $this->getLink($row);
+        $item->route = $this->getLink($entity);
         $item->path = FinderIndexerHelper::getContentPath($item->route);
 
         // Trigger the onContentPrepare event.
@@ -346,8 +346,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         $item->layout = $this->layout;
 
         // Set the extension if present
-        if (isset($row->extension)) {
-            $item->extension = $row->extension;
+        if (isset($entity->extension)) {
+            $item->extension = $entity->extension;
         }
 
         // Add the author taxonomy data.

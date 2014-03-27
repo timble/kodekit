@@ -257,7 +257,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
 
                 //Set the row data based on the unique state information
                 $state = $controller->getModel()->getState()->getValues(true);
-                $entity->setData($state);
+                $entity->setProperties($state);
             }
             else throw new KControllerExceptionRequestInvalid('Resource not found');
 

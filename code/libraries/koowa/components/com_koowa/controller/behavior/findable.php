@@ -176,7 +176,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     {
         if ($this->getMixer()->getIdentifier()->name === $this->_category_resource)
         {
-            $rowset = $this->getModel()->getData();
+            $rowset = $this->getModel()->fetch();
 
             foreach ($rowset as $row)
             {
