@@ -139,7 +139,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * This function translates a GET request into a render action.
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @return KDatabaseRowInterface|KDatabaseRowsetInterface A row(set) object containing the modified data
+     * @return KModelEntityInterface
      */
     protected function _actionGet(KDispatcherContextInterface $context)
     {
@@ -184,7 +184,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *          entity identified by the Request-URI. The response MUST include an Allow header containing a list of
      *          valid actions for the requested entity.
      * @throws  KControllerExceptionRequestInvalid    The action could not be found based on the info in the request.
-     * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	A row(set) object containing the modified data
+     * @return 	KModelEntityInterface
      */
     protected function _actionPost(KDispatcherContextInterface $context)
     {
@@ -234,7 +234,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * @param   KDispatcherContextInterface $context	A dispatcher context object
      * @throws  KControllerExceptionRequestInvalid 	If the model state is not unique
-     * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	    A row(set) object containing the modified data
+     * @return 	KModelEntityInterface
      */
     protected function _actionPut(KDispatcherContextInterface $context)
     {
@@ -246,7 +246,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             if($controller->getModel()->getState()->isUnique())
             {
                 $action = 'add';
-                $entity = $controller->getModel()->getItem();
+                $entity = $controller->getModel()->fetch();
 
                 if(!$entity->isNew())
                 {
@@ -279,7 +279,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * This function translates a DELETE request into a delete action.
      *
      * @param   KDispatcherContextInterface $context	A dispatcher context object
-     * @return 	KDatabaseRowInterface|KDatabaseRowsetInterface	A row(set) object containing the modified data
+     * @return 	KModelEntityInterface
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {

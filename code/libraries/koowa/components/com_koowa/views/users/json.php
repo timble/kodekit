@@ -30,13 +30,13 @@ class ComKoowaViewUsersJson extends KViewJson
      *
      * Overridden for un-setting sensible data.
      *
-     * @param KDatabaseRowInterface $row The user row.
+     * @param KModelEntityInterface $entity The user row.
      *
      * @return array Associative array containing the row's data.
      */
-    protected function _getUser(KDatabaseRowInterface $row)
+    protected function _getUser(KModelEntityInterface $entity)
     {
-        $data    = $row->toArray();
+        $data    = $entity->toArray();
         $allowed = $this->_getAllowedKeys();
 
         foreach ($data as $key => $value)
@@ -54,7 +54,7 @@ class ComKoowaViewUsersJson extends KViewJson
      *
      * {@inheritdoc}
      */
-    protected function _getEntityLink(KDatabaseRowInterface $row)
+    protected function _getEntityLink(KModelEntityInterface $row)
     {
         $package = $this->getIdentifier()->package;
         $view    = 'users';

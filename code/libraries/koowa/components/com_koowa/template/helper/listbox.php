@@ -183,10 +183,14 @@ class ComKoowaTemplateHelperListbox extends ComKoowaTemplateHelperSelect
         {
             $options = array();
 
-            $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->getList();
+            $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
 
             //Get the list of items
-            $items = $list->getColumn($config->value);
+            $items = array();
+            foreach($list as $key => $item) {
+                $items[$key] = $item->getProperty($config->value);
+            }
+
             if ($config->unique) {
                 $items = array_unique($items);
             }

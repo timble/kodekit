@@ -405,8 +405,8 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             'row' => null
         ));
 
-        if (!($config->row instanceof KDatabaseRowInterface)) {
-            throw new UnexpectedValueException('$config->row should be a KDatabaseRowInterface instance');
+        if (!($config->row instanceof KModelEntityInterface)) {
+            throw new UnexpectedValueException('$config->row should be a KModelEntityInterface instance');
         }
 
         $row = $config->row;

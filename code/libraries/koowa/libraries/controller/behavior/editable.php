@@ -171,7 +171,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     {
         if($this->getModel()->getState()->isUnique())
         {
-            $entity = $this->getModel()->getItem();
+            $entity = $this->getModel()->fetch();
 
             if($entity->isLockable() && $entity->isLocked()) {
                 return true;
@@ -194,7 +194,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         {
             if($this->getModel()->getState()->isUnique())
             {
-                $entity = $this->getModel()->getItem();
+                $entity = $this->getModel()->fetch();
 
                 if($entity->isLockable()) {
                     return true;
@@ -299,7 +299,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 * This function also sets the redirect to the referrer.
 	 *
 	 * @param   KControllerContextInterface $context  A command context object
-	 * @return 	KDatabaseRowsetInterface  A row object containing the saved data
+	 * @return 	KModelEntityInterface
 	 */
 	protected function _actionSave(KControllerContextInterface $context)
 	{
@@ -321,7 +321,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 * This function also sets the redirect to the current url
 	 *
 	 * @param	KControllerContextInterface $context A command context object
-	 * @return 	KDatabaseRowsetInterface 	      A row object containing the saved data
+	 * @return 	KModelEntityInterface
 	 */
 	protected function _actionApply(KControllerContextInterface $context)
 	{
@@ -332,7 +332,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         {
             //Create the redirect
             $url = $this->getReferrer($context);
-            if ($entity instanceof KDatabaseRowInterface) {
+            if ($entity instanceof KModelEntityInterface) {
                 $url = $context->response->headers->get('Location');
             }
 
@@ -349,7 +349,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 * This function will unlock the row(s) and set the redirect to the referrer
      *
      * @param	KControllerContextInterface $context A command context object
-     * @return 	KDatabaseRowInterface 	 A row object containing the saved data
+     * @return 	KModelEntityInterface
 	 */
 	protected function _actionCancel(KControllerContextInterface $context)
 	{

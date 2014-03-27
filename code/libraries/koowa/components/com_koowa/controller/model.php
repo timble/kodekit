@@ -90,7 +90,7 @@ abstract class ComKoowaControllerModel extends KControllerModel
      *
      * @param  KControllerContextInterface $context A command context object
      * @throws KControllerExceptionResourceNotFound
-     * @return KDatabaseRowInterface     A row object containing the selected row
+     * @return KModelEntityInterface
      */
     protected function _actionRead(KControllerContextInterface $context)
     {

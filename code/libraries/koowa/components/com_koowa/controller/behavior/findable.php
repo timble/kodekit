@@ -108,12 +108,12 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     /**
      * Returns a rowset containing items in the category
      *
-     * @param  KDatabaseRowInterface $category Category
-     * @return KDatabaseRowsetInterface
+     * @param  KModelEntityInterface $category Category
+     * @return KModelEntityInterface
      */
-    protected function _getCategoryChildren(KDatabaseRowInterface $category)
+    protected function _getCategoryChildren(KModelEntityInterface $category)
     {
-        return $this->_getResourceModel()->category($category->id)->getList();
+        return $this->_getResourceModel()->category($category->id)->fetch();
     }
 
     /**
@@ -154,10 +154,10 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     /**
      * Method to update index data on category access level and state changes
      *
-     * @param   KDatabaseRowInterface  $category  A JTable object
+     * @param   KModelEntityInterface  $category
      * @return  void
      */
-    protected function _reindexCategory(KDatabaseRowInterface $category)
+    protected function _reindexCategory(KModelEntityInterface $category)
     {
         $dispatcher = $this->_getDispatcher();
         $rowset     = $this->_getCategoryChildren($category);
@@ -177,9 +177,8 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
         if ($this->getMixer()->getIdentifier()->name === $this->_category_resource)
         {
             $rowset = $this->getModel()->getData();
-            $data   = $rowset instanceof KDatabaseRowInterface ? array($rowset) : $rowset;
 
-            foreach ($data as $row)
+            foreach ($rowset as $row)
             {
                 $row->old_enabled = $row->enabled;
                 $row->old_access  = $row->access;
@@ -197,9 +196,8 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     protected function _afterEdit(KControllerContextInterface $context)
     {
         $name   = $this->getMixer()->getIdentifier()->name;
-        $result = $context->result instanceof KDatabaseRowInterface ? array($context->result) : $context->result;
 
-        foreach ($result as $row)
+        foreach ($context->result as $row)
         {
             if ($row->getStatus() !== KDatabase::STATUS_FAILED)
             {
@@ -241,9 +239,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
 
         if ($name === $this->_resource)
         {
-            $result = $context->result instanceof KDatabaseRowInterface ? array($context->result) : $context->result;
-
-            foreach ($result as $row)
+            foreach ($context->result as $row)
             {
                 if ($row->getStatus() === KDatabase::STATUS_DELETED) {
                     $this->_getDispatcher()->trigger('onFinderAfterDelete', array($this->_event_context, $row));

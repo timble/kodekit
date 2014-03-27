@@ -243,7 +243,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getContentCount()
     {
-        return $this->getModel()->getTotal();
+        return $this->getModel()->count();
     }
 
     /**
@@ -254,7 +254,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getItem($id)
     {
-        $row = $this->getModel()->id($id)->getItem();
+        $row = $this->getModel()->id($id)->fetch();
 
         return $this->getFinderItem($row);
     }
@@ -273,7 +273,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         $rowset = $this->getModel()
             ->limit($limit)
             ->offset($offset)
-            ->getList();
+            ->fetch();
 
         $results = array();
         foreach ($rowset AS $row) {
@@ -304,14 +304,14 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     }
 
     /**
-     * Turns a KDatabaseRowInterface object into a finder item
+     * Turns a KModelEntityInterface object into a finder item
      *
-     * @param KDatabaseRowInterface $row
+     * @param KModelEntityInterface $entity
      * @return object
      */
-    protected function getFinderItem(KDatabaseRowInterface $row)
+    protected function getFinderItem(KModelEntityInterface $entity)
     {
-        $data = $row->getData();
+        $data = $entity->getData();
 
         //Get the indexer result item
         $item = JArrayHelper::toObject($data, 'FinderIndexerResult');
@@ -373,10 +373,10 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     /**
      * Returns a link to a row
      *
-     * @param KDatabaseRowInterface $row
+     * @param KModelEntityInterface $row
      * @return string
      */
-    protected function getLink(KDatabaseRowInterface $row)
+    protected function getLink(KModelEntityInterface $row)
     {
         return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->resource, $row->slug);
     }
