@@ -130,6 +130,14 @@ interface KTemplateInterface
     public function setView($view);
 
     /**
+     * Check if a filter exists
+     *
+     * @param 	string	$filter The name of the filter
+     * @return  boolean	TRUE if the filter exists, FALSE otherwise
+     */
+    public function hasFilter($filter);
+
+    /**
      * Get a filter by identifier
      *
      * @param   mixed    $filter    An object that implements ObjectInterface, ObjectIdentifier object
