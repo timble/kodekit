@@ -67,6 +67,21 @@ interface KTemplateInterface
     public function escape($string);
 
     /**
+     * Sets the translator object
+     *
+     * @param TranslatorInterface $translator A translator object or identifier
+     * @return TemplateInterface
+     */
+    public function setTranslator(KTranslatorInterface $translator);
+
+    /**
+     * Gets the translator object
+     *
+     * @return  TranslatorInterface
+     */
+    public function getTranslator();
+
+    /**
      * Translates a string and handles parameter replacements
      *
      * @param string $string String to translate

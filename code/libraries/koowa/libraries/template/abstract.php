@@ -125,7 +125,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             }
         }
 
-        $this->setTranslator($config->translator);
+        $this->_translator = $config->translator;
 
         //Reset the stack
         $this->_stack = array();
@@ -142,7 +142,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'translator' => null,
+            'translator' => 'translator',
             'data'       => array(),
             'view'       => null,
             'filters'    => array(),
@@ -471,32 +471,23 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function getTranslator()
     {
+        if(!$this->_translator instanceof KTranslatorInterface)
+        {
+            $this->setTranslator($this->getObject($this->_translator));
+        }
+
         return $this->_translator;
     }
 
     /**
      * Sets the translator object
      *
-     * @param string|KTranslatorInterface $translator A translator object or identifier
-     * @return TemplateInterface
+     * @param KTranslatorInterface $translator A translator object or identifier
+     * @return KTemplateInterface
      */
-    public function setTranslator($translator)
+    public function setTranslator(KTranslatorInterface $translator)
     {
-        if (!$translator instanceof KTranslatorInterface)
-        {
-            if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
-            {
-                $identifier = $this->getIdentifier()->toArray();
-                $identifier['path'] = array();
-                $identifier['name'] = 'translator';
-            }
-            else $identifier = $this->getIdentifier($translator);
-
-            $translator = $this->getObject($identifier);
-        }
-
         $this->_translator = $translator;
-
         return $this;
     }
 
