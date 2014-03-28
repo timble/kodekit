@@ -52,6 +52,17 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     protected $_exception_type;
 
     /**
+     * Result of error_get_last() cached before the class registers its handlers
+     *
+     * This is needed to make sure _handleFailure does not handle PHP errors that had happened before
+     * the class started handling them
+     *
+     * @var string
+     * @see _handleFailure
+     */
+    protected $_last_unhandled_error;
+
+    /**
      * Constructor.
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
@@ -59,6 +70,10 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
+
+        if ($error = error_get_last()) {
+            $this->_last_unhandled_error = md5(serialize($error));
+        }
 
         //Set error level
         $this->setErrorLevel($config->error_level);
@@ -374,12 +389,17 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
         if($this->isEnabled(self::TYPE_FAILURE))
         {
             $error = error_get_last();
-            $level = $error['type'];
 
-            if ($this->getErrorLevel() & $level)
+            // Make sure error happened after we started handling them
+            if ($error && md5(serialize($error)) !== $this->_last_unhandled_error)
             {
-                $exception = new KExceptionFailure($error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']);
-                $this->handleException($exception);
+                $level = $error['type'];
+
+                if ($this->getErrorLevel() & $level)
+                {
+                    $exception = new KExceptionFailure($error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']);
+                    $this->handleException($exception);
+                }
             }
         }
     }
