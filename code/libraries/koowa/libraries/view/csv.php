@@ -69,12 +69,12 @@ class KViewCsv extends KViewAbstract
 	{
 		$rows    = '';
 	    $columns = array();
-		$rowset  = $this->getModel()->fetch();
+		$entities  = $this->getModel()->fetch();
 
 		// Get the columns
-		foreach($rowset as $row)
+		foreach($entities as $entity)
 		{
-			$data    = $row->toArray();
+			$data    = $entity->toArray();
 		    $columns = array_merge($columns + array_flip(array_keys($data)));
 		}
 
@@ -84,9 +84,9 @@ class KViewCsv extends KViewAbstract
 		}
 
 		//Create the rows
-	    foreach($rowset as $row)
+	    foreach($entities as $entity)
 		{
-			$data = $row->toArray();
+			$data = $entity->toArray();
 		    $data = array_merge($columns, $data);
 
 		    $rows .= $this->_arrayToString(array_values($data)).$this->eol;

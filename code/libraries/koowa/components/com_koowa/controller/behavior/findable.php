@@ -160,10 +160,10 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     protected function _reindexCategory(KModelEntityInterface $category)
     {
         $dispatcher = $this->_getDispatcher();
-        $rowset     = $this->_getCategoryChildren($category);
+        $collection     = $this->_getCategoryChildren($category);
 
-        foreach ($rowset as $row) {
-            $dispatcher->trigger('onFinderAfterSave', array($this->_event_context, $row, false));
+        foreach ($collection as $entity) {
+            $dispatcher->trigger('onFinderAfterSave', array($this->_event_context, $entity, false));
         }
     }
 
@@ -176,12 +176,12 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     {
         if ($this->getMixer()->getIdentifier()->name === $this->_category_resource)
         {
-            $rowset = $this->getModel()->fetch();
+            $collection = $this->getModel()->fetch();
 
-            foreach ($rowset as $row)
+            foreach ($collection as $entity)
             {
-                $row->old_enabled = $row->enabled;
-                $row->old_access  = $row->access;
+                $entity->old_enabled = $entity->enabled;
+                $entity->old_access  = $entity->access;
             }
         }
     }
@@ -197,18 +197,18 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     {
         $name   = $this->getMixer()->getIdentifier()->name;
 
-        foreach ($context->result as $row)
+        foreach ($context->result as $entity)
         {
-            if ($row->getStatus() !== KDatabase::STATUS_FAILED)
+            if ($entity->getStatus() !== KDatabase::STATUS_FAILED)
             {
                 if ($name === $this->_category_resource)
                 {
-                    if (($row->old_enabled !== $row->enabled) || ($row->old_access !== $row->access)) {
-                        $this->_reindexCategory($row);
+                    if (($entity->old_enabled !== $entity->enabled) || ($entity->old_access !== $entity->access)) {
+                        $this->_reindexCategory($entity);
                     }
                 }
 
-                $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $row, false));
+                $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $entity, false));
             }
         }
     }
@@ -221,10 +221,10 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     protected function _afterAdd(KControllerContextInterface $context)
     {
         $name = $this->getMixer()->getIdentifier()->name;
-        $row  = $context->result;
+        $entity  = $context->result;
 
-        if ($name === $this->_resource && $row->getStatus() !== KDatabase::STATUS_FAILED) {
-            $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $row, true));
+        if ($name === $this->_resource && $entity->getStatus() !== KDatabase::STATUS_FAILED) {
+            $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $entity, true));
         }
     }
 
@@ -239,10 +239,10 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
 
         if ($name === $this->_resource)
         {
-            foreach ($context->result as $row)
+            foreach ($context->result as $entity)
             {
-                if ($row->getStatus() === KDatabase::STATUS_DELETED) {
-                    $this->_getDispatcher()->trigger('onFinderAfterDelete', array($this->_event_context, $row));
+                if ($entity->getStatus() === KDatabase::STATUS_DELETED) {
+                    $this->_getDispatcher()->trigger('onFinderAfterDelete', array($this->_event_context, $entity));
                 }
             }
         }

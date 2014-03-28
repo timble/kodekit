@@ -226,10 +226,10 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
         $attribs = $this->buildAttributes($config->attribs);
 
         $html = array();
-        foreach ($config->list as $row)
+        foreach ($config->list as $entity)
         {
-            $key  = $row->{$config->key};
-            $text = $config->translate ? $this->translate($row->{$config->text}) : $row->{$config->text};
+            $key  = $entity->{$config->key};
+            $text = $config->translate ? $this->translate($entity->{$config->text}) : $entity->{$config->text};
 
             $extra = '';
 
@@ -278,11 +278,11 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
         $attribs = $this->buildAttributes($config->attribs);
 
         $html = array();
-        foreach($config->list as $row)
+        foreach($config->list as $entity)
         {
-            $key  = $row->{$config->key};
-            $text = $config->translate ? $this->translate( $row->{$config->text} ) : $row->{$config->text};
-            $id	  = isset($row->id) ? $row->id : null;
+            $key  = $entity->{$config->key};
+            $text = $config->translate ? $this->translate( $entity->{$config->text} ) : $entity->{$config->text};
+            $id	  = isset($entity->id) ? $entity->id : null;
 
             $extra = '';
 

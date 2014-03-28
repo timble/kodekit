@@ -54,11 +54,11 @@ class ComKoowaViewUsersJson extends KViewJson
      *
      * {@inheritdoc}
      */
-    protected function _getEntityLink(KModelEntityInterface $row)
+    protected function _getEntityLink(KModelEntityInterface $entity)
     {
         $package = $this->getIdentifier()->package;
         $view    = 'users';
 
-        return $this->getRoute(sprintf('option=com_%s&view=%s&id=%s&format=json', $package, $view, $row->id));
+        return $this->getRoute(sprintf('option=com_%s&view=%s&id=%s&format=json', $package, $view, $entity->id));
     }
 }

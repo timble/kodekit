@@ -204,8 +204,8 @@ class KViewJson extends KViewAbstract
     {
         $result = array();
 
-        foreach ($entities as $row) {
-            $result[] = $this->_getEntity($row);
+        foreach ($entities as $entity) {
+            $result[] = $this->_getEntity($entity);
         }
 
         return $result;

@@ -134,15 +134,15 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * Method to determine if the access level of an item changed.
      *
      * @param   string   $context  The context of the content passed to the plugin.
-     * @param   JTable   $row      A JTable object
+     * @param   JTable   $entity      A JTable object
      * @param   boolean  $isNew    If the content has just been created
      * @throws  Exception on database error.
      * @return  boolean  True on success.
      */
-    public function onFinderAfterSave($context, $row, $isNew)
+    public function onFinderAfterSave($context, $entity, $isNew)
     {
         if ($context == $this->extension.'.'.$this->resource) {
-            $this->reindex($row->id);
+            $this->reindex($entity->id);
         }
 
         return true;
@@ -254,9 +254,9 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getItem($id)
     {
-        $row = $this->getModel()->id($id)->fetch();
+        $entity = $this->getModel()->id($id)->fetch();
 
-        return $this->getFinderItem($row);
+        return $this->getFinderItem($entity);
     }
 
     /**
@@ -270,14 +270,14 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getItems($offset, $limit, $query = null)
     {
-        $rowset = $this->getModel()
+        $collection = $this->getModel()
             ->limit($limit)
             ->offset($offset)
             ->fetch();
 
         $results = array();
-        foreach ($rowset AS $row) {
-            $results[] = $this->getFinderItem($row);
+        foreach ($collection AS $entity) {
+            $results[] = $this->getFinderItem($entity);
 
         }
 
@@ -373,11 +373,11 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
     /**
      * Returns a link to a row
      *
-     * @param KModelEntityInterface $row
+     * @param KModelEntityInterface $entity
      * @return string
      */
-    protected function getLink(KModelEntityInterface $row)
+    protected function getLink(KModelEntityInterface $entity)
     {
-        return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->resource, $row->slug);
+        return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->resource, $entity->slug);
     }
 }

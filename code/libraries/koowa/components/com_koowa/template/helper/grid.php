@@ -409,13 +409,13 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
             throw new UnexpectedValueException('$config->entity should be a KModelEntityInterface instance');
         }
 
-        $row = $config->entity;
+        $entity = $config->entity;
         $message = '';
 
-        if($row->isLockable() && $row->isLocked())
+        if($entity->isLockable() && $entity->isLocked())
         {
-            $user = $this->getObject('user.provider')->load($row->locked_by);
-            $date = $this->getObject('date', array('date' => $row->locked_on));
+            $user = $this->getObject('user.provider')->load($entity->locked_by);
+            $date = $this->getObject('date', array('date' => $entity->locked_on));
 
             $message = $this->getObject('translator')->translate(
                 'Locked by {name} {date}', array('name' => $user->getName(), 'date' => $date->humanize())
