@@ -26,21 +26,21 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row'  		=> null,
+            'entity'  		=> null,
             'attribs' => array()
         ));
 
-        if($config->row->isLockable() && $config->row->isLocked())
+        if($config->entity->isLockable() && $config->entity->isLocked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
+                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('entity' => $config->entity)).'">
 					</span>';
         }
         else
         {
-            $column = $config->row->getIdentityColumn();
-            $value  = $config->row->{$column};
+            $column = $config->entity->getIdentityColumn();
+            $value  = $config->entity->{$column};
 
             $attribs = $this->buildAttributes($config->attribs);
 
@@ -60,23 +60,23 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row'  		=> null,
+            'entity'  		=> null,
             'attribs' => array()
         ))->append(array(
-            'column' => $config->row->getIdentityKey()
+            'column' => $config->entity->getIdentityKey()
         ));
 
-        if($config->row->isLockable() && $config->row->isLocked())
+        if($config->entity->isLockable() && $config->entity->isLocked())
         {
             $html = $this->getTemplate()->renderHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('row' => $config->row)).'">
+                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('entity' => $config->entity)).'">
 					</span>';
         }
         else
         {
             $column = $config->column;
-            $value  = $config->row->{$column};
+            $value  = $config->entity->{$column};
 
             $attribs = $this->buildAttributes($config->attribs);
 
@@ -233,12 +233,12 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row'  		=> null,
+            'entity'  		=> null,
             'field'		=> 'enabled',
             'clickable' => true
         ))->append(array(
-            'enabled'   => (bool) $config->row->{$config->field},
-            'data'		=> array($config->field => $config->row->{$config->field} ? 0 : 1),
+            'enabled'   => (bool) $config->entity->{$config->field},
+            'data'		=> array($config->field => $config->entity->{$config->field} ? 0 : 1),
         ))->append(array(
             'alt'       => $config->enabled ? $this->translate('Enabled') : $this->translate('Disabled'),
             'tooltip'   => $config->enabled ? $this->translate('Disable Item') : $this->translate('Enable Item'),
@@ -272,11 +272,11 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row'  		=> null,
+            'entity'  		=> null,
             'field'		=> 'enabled',
             'clickable' => true
         ))->append(array(
-            'enabled'   => (bool) $config->row->{$config->field},
+            'enabled'   => (bool) $config->entity->{$config->field},
         ))->append(array(
             'alt'       => $config->enabled ? $this->translate('Published') : $this->translate('Unpublished'),
             'tooltip'   => $config->enabled ? $this->translate('Unpublish Item') : $this->translate('Publish Item'),
@@ -297,7 +297,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row'  		=> null,
+            'entity'  		=> null,
             'total'		=> null,
             'field'		=> 'ordering',
             'data'		=> array('order' => 0)
@@ -335,14 +335,14 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
                 </span>';
         }
 
-        if ($config->row->{$config->field} > 1) {
+        if ($config->entity->{$config->field} > 1) {
             $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $this->translate('Move up');
             $html .= sprintf($tmpl, $this->translate('Move up'), $updata, 'uparrow', $icon);
         }
 
-        $html .= $config->row->{$config->field};
+        $html .= $config->entity->{$config->field};
 
-        if ($config->row->{$config->field} != $config->total) {
+        if ($config->entity->{$config->field} != $config->total) {
             $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $this->translate('Move down');
             $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow', $icon);
         }
@@ -370,7 +370,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row'  		=> null,
+            'entity'  		=> null,
             'field'		=> 'access'
         ));
 
@@ -379,7 +379,7 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
 
         $query->select('a.title AS text');
         $query->from('#__viewlevels AS a');
-        $query->where('id = '.(int) $config->row->{$config->field});
+        $query->where('id = '.(int) $config->entity->{$config->field});
         $query->group('a.id, a.title, a.ordering');
         $query->order('a.ordering ASC');
         $query->order($query->qn('title') . ' ASC');
@@ -402,14 +402,14 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'row' => null
+            'entity' => null
         ));
 
-        if (!($config->row instanceof KModelEntityInterface)) {
-            throw new UnexpectedValueException('$config->row should be a KModelEntityInterface instance');
+        if (!($config->entity instanceof KModelEntityInterface)) {
+            throw new UnexpectedValueException('$config->entity should be a KModelEntityInterface instance');
         }
 
-        $row = $config->row;
+        $row = $config->entity;
         $message = '';
 
         if($row->isLockable() && $row->isLocked())
