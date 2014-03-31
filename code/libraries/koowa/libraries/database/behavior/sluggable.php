@@ -70,12 +70,12 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     {
         parent::__construct($config);
 
-        foreach($config as $key => $value)
-        {
-            if(property_exists($this, '_'.$key)) {
-                $this->{'_'.$key} = $value;
-            }
-        }
+        $this->_columns   = (array) KObjectConfig::unbox($config->columns);
+        $this->_separator = $config->separator;
+        $this->_updatable = $config->updatable;
+        $this->_length    = $config->length;
+        $this->_unique    = $config->unique;
+        $this->_row_mixin = $config->row_mixin;
     }
 
     /**
@@ -89,7 +89,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'columns'   => array('title'),
+            'columns'   => 'title',
             'separator' => '-',
             'updatable' => true,
             'length'    => null,
