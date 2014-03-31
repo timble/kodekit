@@ -60,12 +60,12 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
      * Get a registered config object.
      *
      * @param  string $format The format name
-     * @param  array  $config A optional array of configuration options
-     * @throws RuntimeException            If the format isn't registered
-     * @throws UnexpectedValueException	If the format object doesn't implement the KObjectConfigSerializable
-     * @return KObjectConfig
+     * @param   array|KObjectConfig $options An associative array of configuration options or a ObjectConfig instance.
+     * @throws \RuntimeException    If the format isn't registered
+     * @throws \UnexpectedValueException	If the format object doesn't implement the ObjectConfigSerializable
+     * @return KObjectConfigFormat
      */
-    public function getFormat($format, $config = array())
+    public function createFormat($format, $options = array())
     {
         $format = strtolower($format);
 
@@ -77,12 +77,12 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
 
         if(!($format instanceof KObjectConfigSerializable))
         {
-            $format = new $format();
+            $format = new $format($options);
 
             if(!$format instanceof KObjectConfigSerializable)
             {
                 throw new UnexpectedValueException(
-                    'Format: '.get_class($format).' does not implement KObjectConfigSerializable Interface'
+                    'Format: '.get_class($format).' does not implement ObjectConfigSerializable Interface'
                 );
             }
 
@@ -97,9 +97,9 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
      * Register config format
      *
      * @param string $format The name of the format
-     * @param mixed  $class A class that implements KObjectInterface, KObjectIdentifier
-     * @throws InvalidArgumentException If the class does not exist.
+     * @param mixed  $class Class name
      * @return $this
+     * @throws \InvalidArgumentException If the class does not exist.
      */
     public function registerFormat($format, $class)
     {
@@ -112,12 +112,27 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
     }
 
     /**
+     * Read a config from a string
+     *
+     * @param  string  $format
+     * @param  string  $config
+     * @return KObjectConfigInterface
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     */
+    public function fromString($format, $config)
+    {
+        $config = $this->createFormat($format)->fromString($config);
+        return $config;
+    }
+
+    /**
      * Read a config from a file.
      *
      * @param  string  $filename
-     * @return KObjectConfig
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
+     * @return KObjectConfigInterface
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function fromFile($filename)
     {
@@ -130,7 +145,7 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
             ));
         }
 
-        $config = $this->getFormat($pathinfo['extension'])->fromFile($filename);
+        $config = $this->createFormat($pathinfo['extension'])->fromFile($filename);
         return $config;
     }
 
@@ -138,11 +153,11 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
      * Writes a config to a file
      *
      * @param string $filename
-     * @param KObjectConfig $config
+     * @param KObjectConfigInterface $config
      * @return boolean TRUE on success. FALSE on failure
      * @throws \RuntimeException
      */
-    public function toFile($filename, KObjectConfig $config)
+    public function toFile($filename, KObjectConfigInterface $config)
     {
         $pathinfo = pathinfo($filename);
 
@@ -153,6 +168,6 @@ class KObjectConfigFactory extends KObject implements KObjectMultiton
             ));
         }
 
-        return $this->getFormat($pathinfo['extension'])->toFile($filename, $config);
+        return $this->createFormat($pathinfo['extension'])->toFile($filename, $config);
     }
 }

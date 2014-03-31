@@ -16,11 +16,11 @@
 interface KObjectConfigSerializable
 {
     /**
-     * Read from a string and create a KObjectConfig object
+     * Read from a string and create a ObjectConfig object
      *
      * @param  string $string
-     * @return KObjectConfig|false   Returns a KObjectConfig object. False on failure.
-     * @throws RuntimeException
+     * @return $this
+     * @throws \RuntimeException
      */
     public function fromString($string);
 
@@ -35,7 +35,7 @@ interface KObjectConfigSerializable
      * Read from a file and create an array
      *
      * @param  string $filename
-     * @return KObjectConfigSerializable
+     * @return $this
      * @throws \RuntimeException
      */
     public function fromFile($filename);

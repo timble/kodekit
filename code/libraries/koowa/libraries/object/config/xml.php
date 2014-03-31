@@ -19,8 +19,8 @@ class KObjectConfigXml extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @return KObjectConfigXml|false   Returns a KObjectConfig object. False on failure.
-     * @throws RuntimeException
+     * @return $this
+     * @throws \RuntimeException
      */
     public function fromString($string)
     {
@@ -28,20 +28,33 @@ class KObjectConfigXml extends KObjectConfigFormat
 
         if(!empty($string))
         {
-            $xml  = @simplexml_load_string($string);
-
-            if(!$xml) {
-                throw new RuntimeException('Cannot decode XML string');
-            }
-
+            $xml  = simplexml_load_string($string);
             foreach ($xml->children() as $node) {
                 $data[(string) $node['name']] = self::_decodeValue($node);
             }
         }
 
-        $config = new self($data);
+        $this->add($data);
 
-        return $config;
+        return $this;
+    }
+
+    protected function _addChildren($value, $key, $node)
+    {
+        if (is_scalar($value))
+        {
+            $n = $node->addChild('option', $value);
+            $n->addAttribute('name', $key);
+            $n->addAttribute('type', gettype($value));
+        }
+        else
+        {
+            $n = $node->addChild('config');
+            $n->addAttribute('name', $key);
+            $n->addAttribute('type', gettype($value));
+
+            array_walk($value, array($this, '_addChildren'), $n);
+        }
     }
 
     /**
@@ -51,27 +64,9 @@ class KObjectConfigXml extends KObjectConfigFormat
      */
     public function toString()
     {
-        $addChildren = function($value, $key, $node)
-        {
-            if (is_scalar($value))
-            {
-                $n = $node->addChild('option', $value);
-                $n->addAttribute('name', $key);
-                $n->addAttribute('type', gettype($value));
-             }
-             else
-             {
-                $n = $node->addChild('config');
-                $n->addAttribute('name', $key);
-                $n->addAttribute('type', gettype($value));
-
-                 array_walk($value, $addChildren, $n);
-            }
-        };
-
         $xml  = simplexml_load_string('<config />');
         $data = $this->toArray();
-        array_walk($data, $addChildren, $xml);
+        array_walk($data, array($this, '_addChildren'), $xml);
 
         return $xml->asXML();
     }

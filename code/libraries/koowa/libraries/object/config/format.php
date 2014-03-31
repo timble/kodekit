@@ -19,8 +19,8 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Read from a file and create a config object
      *
      * @param  string $filename
-     * @return KObjectConfigFormat
-     * @throws RuntimeException
+     * @return $this
+     * @throws \RuntimeException
      */
     public function fromFile($filename)
     {
@@ -29,9 +29,9 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
         }
 
         $string = file_get_contents($filename);
-        $config = $this->fromString($string);
+        $this->fromString($string);
 
-        return $config;
+        return $this;
     }
 
     /**

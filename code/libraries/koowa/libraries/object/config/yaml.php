@@ -19,13 +19,11 @@ class KObjectConfigYaml extends KObjectConfigFormat
      * Read from a YAML string and create a config object
      *
      * @param  string $string
-     * @return KObjectConfigYaml|false   Returns a KObjectConfig object. False on failure.
-     * @throws RuntimeException
+     * @return $this
+     * @throws \RuntimeException
      */
     public function fromString($string)
     {
-        $config = false;
-
         if(function_exists('yaml_parse'))
         {
             $data = array();
@@ -39,10 +37,10 @@ class KObjectConfigYaml extends KObjectConfigFormat
                 }
             }
 
-            $config = new self($data);
+            $this->add($data);
         }
 
-        return $config;
+        return $this;
     }
 
     /**

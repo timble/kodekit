@@ -19,8 +19,8 @@ class KObjectConfigIni extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @return KObjectConfigIni|false   Returns a KObjectConfig object. False on failure.
-     * @throws RuntimeException
+     * @return $this
+     * @throws \RuntimeException
      */
     public function fromString($string)
     {
@@ -35,9 +35,9 @@ class KObjectConfigIni extends KObjectConfigFormat
             }
         }
 
-        $config = new self($data);
+        $this->add($data);
 
-        return $config;
+        return $this;
     }
 
     /**
@@ -109,6 +109,4 @@ class KObjectConfigIni extends KObjectConfigFormat
 
         return $string;
     }
-
-
 }

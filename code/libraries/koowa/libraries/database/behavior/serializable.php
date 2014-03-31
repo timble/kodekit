@@ -85,7 +85,7 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
                 {
                     if (!$value instanceof KObjectConfigInterface)
                     {
-                        $config = $this->getObject('lib:object.config.factory')->getFormat($this->_format);
+                        $config = $this->getObject('lib:object.config.factory')->createFormat($this->_format);
 
                         foreach ($value as $key => $val) {
                             $config->set($key, $val);
@@ -111,7 +111,7 @@ class KDatabaseBehaviorSerializable extends KDatabaseBehaviorAbstract
      */
     protected function _unserialize(KDatabaseRowInterface $row)
     {
-        $format = $this->getObject('lib:object.config.factory')->getFormat($this->_format);
+        $format = $this->getObject('lib:object.config.factory')->createFormat($this->_format);
 
         foreach ($this->_fields as $field)
         {

@@ -19,7 +19,7 @@ class KObjectConfigJson extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @return KObjectConfigJson|false   Returns a KObjectConfig object. False on failure.
+     * @return $this
      * @throws \RuntimeException
      */
     public function fromString($string)
@@ -35,9 +35,9 @@ class KObjectConfigJson extends KObjectConfigFormat
             }
         }
 
-        $config = new self($data);
+        $this->add($data);
 
-        return $config;
+        return $this;
     }
 
     /**
