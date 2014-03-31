@@ -280,15 +280,15 @@ class KModelState extends KObjectArray implements KModelStateInterface
      */
     public function getProperty($name, $property)
     {
-        $value = null;
+        $result = null;
         if($this->has($name))
         {
             if(isset($this->_data[$name]->$property)) {
-                $value = $this->_data[$name]->$property;
+                $result = $this->_data[$name]->$property;
             }
         }
 
-        return $value;
+        return $result;
     }
 
     /**
