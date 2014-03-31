@@ -498,6 +498,16 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
+     * Check if we are rendering an entity collection
+     *
+     * @return bool
+     */
+    public function isCollection()
+    {
+        return KStringInflector::isPlural($this->getName());
+    }
+
+    /**
      * Set a view data property
      *
      * @param   string  $property The property name.
