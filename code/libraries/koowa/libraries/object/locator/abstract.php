@@ -79,7 +79,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
             'file'    => $file
         );
 
-        return $this->find($info, $fallback);
+        return $this->find($info, null, $fallback);
     }
 
     /**
