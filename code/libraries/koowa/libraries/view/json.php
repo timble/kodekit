@@ -41,13 +41,6 @@ class KViewJson extends KViewAbstract
     protected $_text_fields;
 
     /**
-     * True if the view is for a plural resource
-     *
-     * @var boolean
-     */
-    protected $_plural;
-
-    /**
      * Constructor
      *
      * @param   KObjectConfig $config Configuration options
@@ -57,17 +50,14 @@ class KViewJson extends KViewAbstract
         parent::__construct($config);
 
         $this->_version = $config->version;
-        $this->_plural  = $config->plural;
 
         $this->_text_fields = KObjectConfig::unbox($config->text_fields);
-
-        $this->_fields = KObjectConfig::unbox($config->fields);
+        $this->_fields      = KObjectConfig::unbox($config->fields);
 
         $query = $this->getUrl()->getQuery(true);
         if (!empty($query['fields']))
         {
             $fields = explode(',', $query['fields']);
-
             $this->_fields = array_merge($this->_fields, $fields);
         }
     }
@@ -86,7 +76,6 @@ class KViewJson extends KViewAbstract
             'version'     => '1.0',
             'fields'      => array(),
             'text_fields' => array('description'), // Links are converted to absolute ones in these fields
-            'plural'      => KStringInflector::isPlural($this->getName())
         ))->append(array(
             'mimetype' => 'application/json; version=' . $config->version,
         ));
@@ -150,19 +139,19 @@ class KViewJson extends KViewAbstract
     protected function _renderData()
     {
         $model  = $this->getModel();
-        $data   = $this->_getEntities($model->fetch());
+        $data   = $this->_getCollection($model->fetch());
         $output = array(
             'version' => $this->_version,
             'links' => array(
                 'self' => array(
-                    'href' => $this->_getPageLink(),
+                    'href' => $this->_getPageUrl(),
                     'type' => $this->mimetype
                 )
             ),
             'entities' => $data
         );
 
-        if ($this->_plural)
+        if ($this->isCollection())
         {
             $total  = $model->count();
             $limit  = (int) $model->getState()->limit;
@@ -177,7 +166,7 @@ class KViewJson extends KViewAbstract
             if ($limit && $total-($limit + $offset) > 0)
             {
                 $output['links']['next'] = array(
-                    'href' => $this->_getPageLink(array('offset' => $limit+$offset)),
+                    'href' => $this->_getPageUrl(array('offset' => $limit+$offset)),
                     'type' => $this->mimetype
                 );
             }
@@ -185,7 +174,7 @@ class KViewJson extends KViewAbstract
             if ($limit && $offset && $offset >= $limit)
             {
                 $output['links']['previous'] = array(
-                    'href' => $this->_getPageLink(array('offset' => max($offset-$limit, 0))),
+                    'href' => $this->_getPageUrl(array('offset' => max($offset-$limit, 0))),
                     'type' => $this->mimetype
                 );
             }
@@ -195,16 +184,16 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Returns the JSON representation of a rowset
+     * Returns the JSON representation of a collection
      *
-     * @param  KModelEntityInterface $entities
+     * @param  KModelEntityInterface $collection
      * @return array
      */
-    protected function _getEntities(KModelEntityInterface $entities)
+    protected function _getCollection(KModelEntityInterface $collection)
     {
         $result = array();
 
-        foreach ($entities as $entity) {
+        foreach ($collection as $entity) {
             $result[] = $this->_getEntity($entity);
         }
 
@@ -238,7 +227,7 @@ class KViewJson extends KViewAbstract
         if (!isset($data['links']['self']))
         {
             $data['links']['self'] = array(
-                'href' => $this->_getEntityLink($entity),
+                'href' => $this->_getEntityRoute($entity),
                 'type' => $this->mimetype
             );
         }
@@ -252,7 +241,7 @@ class KViewJson extends KViewAbstract
      * @param KModelEntityInterface  $entity
      * @return string
      */
-    protected function _getEntityLink(KModelEntityInterface $entity)
+    protected function _getEntityRoute(KModelEntityInterface $entity)
     {
         $package = $this->getIdentifier()->package;
         $view    = $entity->getIdentifier()->name;
@@ -266,7 +255,7 @@ class KViewJson extends KViewAbstract
      * @param  array  $query Additional query parameters to merge
      * @return string
      */
-    protected function _getPageLink(array $query = array())
+    protected function _getPageUrl(array $query = array())
     {
         $url = $this->getUrl();
 
