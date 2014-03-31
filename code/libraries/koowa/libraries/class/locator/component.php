@@ -110,14 +110,11 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             //Switch basepath
             if ($this->getNamespace($namespace)) {
                 $basepath = $this->getNamespace($namespace);
-            }
-            elseif (!empty($basepath)) {
+            } elseif (!empty($basepath)) {
                 $this->_basepath = $basepath;
-            }
-            elseif ($this->_basepath) {
+            } elseif ($this->_basepath) {
                 $basepath = $this->_basepath;
-            }
-            else {
+            } else {
                 $basepath = $this->getNamespace('\\');
             }
 
