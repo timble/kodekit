@@ -400,6 +400,22 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
     }
 
     /**
+     * Get a list of the computed properties
+     *
+     * @return array An array
+     */
+    public function getComputedProperties()
+    {
+        $result = array();
+
+        if($entity = $this->getIterator()->current()) {
+            $result = $entity->getComputedProperties();
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the status
      *
      * @return string The status

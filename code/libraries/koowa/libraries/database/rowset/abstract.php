@@ -368,8 +368,8 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Set the properties
      *
-     * @param   mixed   $data        Either and associative array, an object or a KDatabaseRow
-     * @param   boolean $modified If TRUE, update the modified information for each column being set.
+     * @param   mixed   $properties Either and associative array, an object or a KDatabaseRow
+     * @param   boolean $modified   If TRUE, update the modified information for each column being set.
      * @return  KDatabaseRowAbstract
      */
     public function setProperties($properties, $modified = true)
@@ -386,7 +386,27 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
         return $this;
     }
 
+
     /**
+     * Get a list of the computed properties
+     *
+     * @return array An array
+     */
+    public function getComputedProperties()
+    {
+        $result = array();
+
+        if($row = $this->getIterator()->current()) {
+            $result = $row->getComputedProperties();
+        }
+
+        return $result;
+    }
+
+    /**
+
+    /**
+     *
      * Returns the status
      *
      * @return string The status
