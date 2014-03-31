@@ -205,8 +205,10 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         //Handle computed properties
         if(!$this->hasProperty($name) && !empty($name))
         {
-            $getter = 'getProperty'.KStringInflector::camelize($name);
-            if(method_exists($this, $getter)) {
+            $getter  = 'getProperty'.KStringInflector::camelize($name);
+            $methods = $this->getMethods();
+
+            if(isset($methods[$getter])) {
                 parent::offsetSet($name, $this->$getter());
             }
         }
@@ -241,11 +243,15 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
                     parent::offsetUnset($property);
                 }
 
-                $setter = 'setProperty'.KStringInflector::camelize($name);
-                if(method_exists($this, $setter)) {
+                //Call the setter if it exists
+                $setter  = 'setProperty'.KStringInflector::camelize($name);
+                $methods = $this->getMethods();
+
+                if(isset($methods[$setter])) {
                     $value = $this->$setter($value);
                 }
 
+                //Set the property value
                 parent::offsetSet($name, $value);
 
                 //Mark the property as modified
