@@ -111,6 +111,13 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
     public function setProperties($properties, $modified = true);
 
     /**
+     * Get a list of the computed properties
+     *
+     * @return array An array
+     */
+    public function getComputedProperties();
+
+    /**
      * Returns the status.
      *
      * @return string The status value.
