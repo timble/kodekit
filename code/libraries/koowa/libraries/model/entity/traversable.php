@@ -33,7 +33,7 @@ interface KModelEntityTraversable
      *
      * @param   array   $properties The entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function create(array $properties = array(), $status = null);
 
@@ -54,7 +54,7 @@ interface KModelEntityTraversable
      * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
      *
      * @param  KObjectHandlable|KModelEntityInterface $entity
-     * @return KModelEntityCollection
+     * @return KModelEntityComposite
      * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
      */
     public function remove(KObjectHandlable $entity);

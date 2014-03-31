@@ -33,7 +33,7 @@ interface KDatabaseRowsetInterface extends KDatabaseRowInterface
      *
      * @param   array   $properties The entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function create(array $properties = array(), $status = null);
 

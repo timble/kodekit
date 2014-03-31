@@ -13,7 +13,7 @@
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelEntityCollection extends KObjectSet implements KModelEntityInterface, KModelEntityTraversable
+class KModelEntityComposite extends KObjectSet implements KModelEntityInterface, KModelEntityTraversable
 {
     /**
      * Name of the identity key in the collection
@@ -40,7 +40,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * Constructor
      *
      * @param KObjectConfig  $config  An optional KObjectConfig object with configuration options
-     * @return KModelEntityCollection
+     * @return KModelEntityComposite
      */
     public function __construct(KObjectConfig $config)
     {
@@ -111,7 +111,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      *
      * @param  KObjectHandlable|KModelEntityInterface $entity
      * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
-     * @return KModelEntityCollection
+     * @return KModelEntityComposite
      */
     public function remove(KObjectHandlable $entity)
     {
@@ -146,7 +146,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      *
      * @param   array   $properties The entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function create(array $properties = array(), $status = null)
     {
@@ -197,7 +197,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * This functions accepts either a know position or associative array of property/value pairs
      *
      * @param   string|array  $needle The position or the key or an associative array of column data to match
-     * @return  KModelEntityCollection Returns a collection if successful. Otherwise NULL.
+     * @return  KModelEntityComposite Returns a collection if successful. Otherwise NULL.
      */
     public function find($needle)
     {
@@ -282,7 +282,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
     /**
      * Reset the collection
      *
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function reset()
     {
@@ -322,7 +322,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -353,7 +353,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function removeProperty($name)
     {
@@ -386,7 +386,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      *
      * @param   mixed   $properties Either and associative array, an object or a KModelEntityInterface
      * @param   boolean $modified   If TRUE, update the modified information for each column being set.
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function setProperties($properties, $modified = true)
     {
@@ -422,7 +422,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function setStatus($status)
     {
@@ -453,7 +453,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function setStatusMessage($message)
     {
@@ -564,7 +564,7 @@ class KModelEntityCollection extends KObjectSet implements KModelEntityInterface
      * Remove a property
      *
      * @param   string  $property The property name.
-     * @return  KModelEntityCollection
+     * @return  KModelEntityComposite
      */
     public function __unset($property)
     {
