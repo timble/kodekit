@@ -37,6 +37,13 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     protected $_entity;
 
     /**
+     * Name of the identity key
+     *
+     * @var    string
+     */
+    protected $_identity_key;
+
+    /**
      * Constructor
      *
      * @param  KObjectConfig $config    An optional KObjectConfig object with configuration options
@@ -47,6 +54,9 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
 
         // Set the state identifier
         $this->__state = $config->state;
+
+        // Set the identity key
+        $this->_identity_key = $config->identity_key;
 
         // Mixin the behavior interface
         $this->mixin('lib:behavior.mixin', $config);
@@ -66,6 +76,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'identity_key'     => null,
             'state'            => 'lib:model.state',
             'command_chain'    => 'lib:command.chain',
             'command_handlers' => array('lib:command.handler.event'),
@@ -222,6 +233,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
         $context = new KModelContext();
         $context->setSubject($this);
         $context->setState($this->getState());
+        $context->setIdentityKey($this->_identity_key);
 
         return $context;
     }
@@ -235,7 +247,15 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      */
     protected function _actionCreate(KModelContext $context)
     {
-        return $this->_entity;
+        $identifier = $this->getIdentifier()->toArray();
+        $identifier['path'] = array('model', 'entity');
+        $identifier['name'] = KStringInflector::singularize($identifier['name']);
+
+        $options = array(
+            'identity_key' => $context->getIdentityKey()
+        );
+
+        return $this->getObject($identifier, $options);
     }
 
     /**
@@ -246,7 +266,15 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      */
     protected function _actionFetch(KModelContext $context)
     {
-        return $this->_entity;
+        $identifier = $this->getIdentifier()->toArray();
+        $identifier['path'] = array('model', 'entity');
+        $identifier['name'] = KStringInflector::pluralize($identifier['name']);
+
+        $options = array(
+            'identity_key' => $context->getIdentityKey()
+        );
+
+        return $this->getObject($identifier, $options);
     }
 
     /**
@@ -257,7 +285,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      */
     protected function _actionCount(KModelContext $context)
     {
-        return $this->_count;
+        return count($this->fetch());
     }
 
     /**

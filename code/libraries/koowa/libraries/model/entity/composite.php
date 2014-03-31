@@ -48,10 +48,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
 
         $this->_prototypable = $config->prototypable;
 
-        // Set the table identifier
-        if (isset($config->identity_key)) {
-            $this->_identity_key = $config->identity_key;
-        }
+        $this->_identity_key = $config->identity_key;
 
         // Reset the collection
         $this->reset();

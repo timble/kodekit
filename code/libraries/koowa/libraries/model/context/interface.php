@@ -28,4 +28,11 @@ interface KModelContextInterface extends KCommandInterface
      * @return KModelEntityInterface
      */
     public function getEntity();
+
+    /**
+     * Get the identity key
+     *
+     * @return mixed
+     */
+    public function getIdentityKey();
 }

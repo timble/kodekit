@@ -69,10 +69,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     {
         parent::__construct($config);
 
-        // Set the table identifier
-        if (isset($config->identity_key)) {
-            $this->_identity_key = $config->identity_key;
-        }
+        $this->_identity_key = $config->identity_key;
 
         // Reset the entity
         $this->reset();

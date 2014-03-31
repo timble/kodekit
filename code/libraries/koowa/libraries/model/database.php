@@ -82,7 +82,12 @@ class KModelDatabase extends KModelAbstract
      */
     protected function _actionCreate(KModelContext $context)
     {
-        return $this->getTable()->createRow();
+        //Entity options
+        $options = array(
+            'identity_column' => $context->getIdentityKey()
+        );
+
+        return $this->getTable()->createRow($options);
     }
 
     /**
@@ -96,6 +101,11 @@ class KModelDatabase extends KModelAbstract
         $state   = $context->state;
         $table   = $this->getTable();
 
+        //Entity options
+        $options = array(
+            'identity_column' => $context->getIdentityKey()
+        );
+
         //Select the rows
         if (!$state->isEmpty())
         {
@@ -107,9 +117,9 @@ class KModelDatabase extends KModelAbstract
             $this->_buildQueryWhere($context->query);
             $this->_buildQueryGroup($context->query);
 
-            $data = $table->select($context->query, KDatabase::FETCH_ROWSET);
+            $data = $table->select($context->query, KDatabase::FETCH_ROWSET, $options);
         }
-        else $data = $table->createRowset();
+        else $data = $table->createRowset($$options);
 
         return $data;
     }

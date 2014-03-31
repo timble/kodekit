@@ -61,4 +61,26 @@ class KModelContext extends KCommand implements KModelContextInterface
     {
         return $this->get('entity');
     }
+
+    /**
+     * Get the identity key
+     *
+     * @return mixed
+     */
+    public function getIdentityKey()
+    {
+        return $this->get('identity_key');
+    }
+
+    /**
+     * Set the identity key
+     *
+     * @param mixed $value
+     * @return ModelContext
+     */
+    public function setIdentityKey($value)
+    {
+        $this->set('identity_key', $value);
+        return $this;
+    }
 }
