@@ -13,7 +13,7 @@
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelEntityComposite extends KObjectSet implements KModelEntityInterface, KModelEntityTraversable
+class KModelEntityComposite extends KObjectSet implements KModelEntityInterface, KModelEntityComposable
 {
     /**
      * Name of the identity key in the collection

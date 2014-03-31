@@ -13,7 +13,7 @@
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package Koowa\Library\Model
  */
-interface KModelEntityTraversable
+interface KModelEntityComposable
 {
     /**
      * Find an entity in the collection based on a needle
