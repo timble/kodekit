@@ -25,7 +25,7 @@ class KFilterFactory extends KObject implements KObjectMultiton
      * @param 	object|array $config     An optional KObjectConfig object with configuration options
      * @return  KFilterInterface
      */
-    public function getFilter($identifier, $config = array())
+    public function createFilter($identifier, $config = array())
     {
         //Get the filter(s) we need to create
         $filters = (array) $identifier;

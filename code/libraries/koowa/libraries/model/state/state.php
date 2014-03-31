@@ -404,7 +404,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
                     $filter = $this->_data[$name]->filter;
 
                     if(!($filter instanceof KFilterInterface)) {
-                        $filter =  $this->getObject('lib:filter.factory')->getFilter($filter);
+                        $filter =  $this->getObject('lib:filter.factory')->createFilter($filter);
                     }
 
                     $value = $filter->sanitize($value);

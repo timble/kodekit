@@ -67,7 +67,7 @@ class KHttpMessageParameters extends KObjectArray
 
             // Filter the data
             if(!($filter instanceof KFilterInterface)) {
-                $filter = $this->getObject('lib:filter.factory')->getFilter($filter);
+                $filter = $this->getObject('lib:filter.factory')->createFilter($filter);
             }
 
             $result = $filter->sanitize($result);
@@ -110,7 +110,7 @@ class KHttpMessageParameters extends KObjectArray
 
             // Filter the data
             if(!($filter instanceof KFilterInterface)) {
-                $filter = $this->getObject('lib:filter.factory')->getFilter($filter);
+                $filter = $this->getObject('lib:filter.factory')->createFilter($filter);
             }
 
             $result = $filter->sanitize($result);
