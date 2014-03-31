@@ -13,4 +13,40 @@
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package Koowa\Library\Model
  */
-final class KModelEmpty extends KModelAbstract { }
+final class KModelEmpty extends KModelAbstract
+{
+
+    /**
+     * Constructor
+     *
+     * @param  KObjectConfig $config    An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_entity = $this->getObject('lib:model.entity.immutable');
+    }
+
+    /**
+     * Get the total number of entities
+     *
+     * @param KModelContext $context A model context object
+     * @return string  The output of the view
+     */
+    protected function _actionCount(KModelContext $context)
+    {
+        return 0;
+    }
+
+    /**
+     * Reset the model
+     *
+     * @param  string $name The state name being changed
+     * @return void
+     */
+    protected function _actionReset(KModelContext $context)
+    {
+
+    }
+}
