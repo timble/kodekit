@@ -73,12 +73,10 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     public function setPropertyParameters($value)
     {
-        $value = trim($value);
-
         if(!empty($value))
         {
             if(is_string($value)) {
-                $this->getParameters()->fromString($value);
+                $this->getParameters()->fromString(trim($value));
             } else {
                 $this->getParameters()->add($value);
             }
