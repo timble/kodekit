@@ -75,14 +75,12 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     {
         if(!empty($value))
         {
-            if(is_string($value)) {
-                $this->getParameters()->fromString(trim($value));
-            } else {
-                $this->getParameters()->add($value);
+            if(!is_string($value)) {
+                $value = $this->getParameters()->add($value)->toString();
             }
         }
 
-        return $this->getParameters()->toString();
+        return $value;
     }
 
     /**
