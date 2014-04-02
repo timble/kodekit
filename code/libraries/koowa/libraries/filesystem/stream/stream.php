@@ -46,7 +46,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      *
      * @var array
      */
-    protected $_context;
+    protected $_context = array();
 
     /**
      * Stream filters
@@ -627,7 +627,9 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
 
                 if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($class)))
                 {
-                    $filter = $class::$name;
+                    $vars = get_class_vars($class);
+                    $filter = $vars['name'];
+
                     if (!empty($filter) && !in_array($filter, stream_get_filters())) {
                         stream_filter_register($filter, $class);
                     }
