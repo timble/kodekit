@@ -24,7 +24,7 @@ class KFilterIni extends KFilterAbstract
     public function validate($value)
     {
         try {
-            $config = $this->getObject('lib:object.config.factory')->fromString('ini', $value);
+            $config = $this->getObject('object.config.factory')->fromString('ini', $value);
         } catch(RuntimeException $e) {
             $config = null;
         }
@@ -43,9 +43,9 @@ class KFilterIni extends KFilterAbstract
         if(!$value instanceof KObjectConfig)
         {
             if(is_string($value)) {
-                $value = $this->getObject('lib:object.config.factory')->fromString('ini', $value);
+                $value = $this->getObject('object.config.factory')->fromString('ini', $value);
             } else {
-                $value = $this->getObject('lib:object.config.factory')->createFormat('ini', $value);
+                $value = $this->getObject('object.config.factory')->createFormat('ini', $value);
             }
         }
 

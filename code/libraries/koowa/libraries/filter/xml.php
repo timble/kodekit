@@ -24,7 +24,7 @@ class KFilterXml extends KFilterAbstract
     public function validate($value)
     {
         try {
-            $config = $this->getObject('lib:object.config.factory')->fromString('xml', $value);
+            $config = $this->getObject('object.config.factory')->fromString('xml', $value);
         } catch(RuntimeException $e) {
             $config = null;
         }
@@ -43,9 +43,9 @@ class KFilterXml extends KFilterAbstract
         if(!$value instanceof KObjectConfig)
         {
             if(is_string($value)) {
-                $value = $this->getObject('lib:object.config.factory')->fromString('xml', $value);
+                $value = $this->getObject('object.config.factory')->fromString('xml', $value);
             } else {
-                $value = $this->getObject('lib:object.config.factory')->createFormat('xml', $value);
+                $value = $this->getObject('object.config.factory')->createFormat('xml', $value);
             }
         }
 

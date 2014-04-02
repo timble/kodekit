@@ -24,7 +24,7 @@ class KFilterJson extends KFilterAbstract
     public function validate($value)
     {
         try {
-            $config = $this->getObject('lib:object.config.factory')->fromString('json', $value);
+            $config = $this->getObject('object.config.factory')->fromString('json', $value);
         } catch(RuntimeException $e) {
             $config = null;
         }
@@ -43,9 +43,9 @@ class KFilterJson extends KFilterAbstract
         if(!$value instanceof KObjectConfigJson)
         {
             if(is_string($value)) {
-                $value = $this->getObject('lib:object.config.factory')->fromString('json', $value);
+                $value = $this->getObject('object.config.factory')->fromString('json', $value);
             } else {
-                $value = $this->getObject('lib:object.config.factory')->createFormat('json', $value);
+                $value = $this->getObject('object.config.factory')->createFormat('json', $value);
             }
         }
 
