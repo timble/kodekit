@@ -20,11 +20,14 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
         $config->append(array(
             'priority' => self::PRIORITY_LOW,
             'aliases'  => array(
+                // TODO take out duplicates when the aliasing issue with lib: prefix is fixed
                 'request'                       => 'lib:dispatcher.request',
                 'lib:database.adapter.mysqli'   => 'com:koowa.database.adapter.mysqli',
                 'translator'                    => 'com:koowa.translator',
                 'user'                          => 'com:koowa.user',
                 'lib:user'                      => 'com:koowa.user',
+                'filter.factory'                => 'com:koowa.filter.factory',
+                'lib:filter.factory'            => 'com:koowa.filter.factory',
                 'exception.handler'             => 'com:koowa.exception.handler',
                 'date'                          => 'com:koowa.date',
                 'event.publisher'               => 'com:koowa.event.publisher',
