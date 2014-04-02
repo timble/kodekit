@@ -124,7 +124,7 @@ class KDatabaseSchemaColumn extends KObject implements Serializable
             }
 
             if(!($this->_filter instanceof KFilterInterface)) {
-                $this->_filter = $this->getObject('lib:filter.factory')->createFilter($this->_filter);
+                $this->_filter = $this->getObject('filter.factory')->createFilter($this->_filter);
             }
 
             return $this->_filter;

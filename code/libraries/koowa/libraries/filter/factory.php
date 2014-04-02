@@ -13,8 +13,29 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterFactory extends KObject implements KObjectMultiton
+class KFilterFactory extends KObject implements KObjectInstantiable, KObjectSingleton
 {
+    /**
+     * Force creation of a singleton
+     *
+     * @param  KObjectConfigInterface   $config	  A ObjectConfig object with configuration options
+     * @param  KObjectManagerInterface	$manager  A ObjectInterface object
+     * @return KDispatcherRequest
+     */
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    {
+        if (!$manager->isRegistered('filter.factory'))
+        {
+            $class    = $manager->getClass($config->object_identifier);
+            $instance = new $class($config);
+            $manager->setObject($config->object_identifier, $instance);
+
+            $manager->registerAlias($config->object_identifier, 'filter.factory');
+        }
+
+        return $manager->getObject('filter.factory');
+    }
+
     /**
      * Factory method for KFilterInterface classes.
      *
