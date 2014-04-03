@@ -115,7 +115,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
             throw new InvalidArgumentException('Row needs to implement KDatabaseRowInterface');
         }
 
-        $this->offsetSet($row);
+        $this->offsetSet($row, null);
 
         return true;
     }

@@ -72,7 +72,7 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
 
         if ($handle = $object->getHandle())
         {
-            $this->offsetSet($object);
+            $this->offsetSet($object, null);
             $result = true;
         }
 
@@ -168,7 +168,7 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      * @throws InvalidArgumentException
      * @return  KObjectSet
      */
-    public function offsetSet($object, $data = null)
+    public function offsetSet($object, $value)
     {
         if (!$object instanceof KObjectHandlable) {
             throw new InvalidArgumentException('Object needs to implement KObjectHandlable');

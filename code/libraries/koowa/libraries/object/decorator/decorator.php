@@ -97,7 +97,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      * @param  array $config     An optional associative array of configuration settings.
      * @return	Object Return object on success, throws exception on failure
      */
-    public function getObject($identifier = null, array $config = array())
+    public function getObject($identifier, array $config = array())
     {
         return $this->getDelegate()->getObject($identifier, $config);
     }

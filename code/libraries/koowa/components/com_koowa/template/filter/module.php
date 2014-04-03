@@ -100,7 +100,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
                 $module->user      = 0;
                 $module->module    = 'mod_koowa_injector';
 
-                $modules = &ComKoowaModuleHelper::getModules();
+                $modules = &ComKoowaModuleHelper::getModules(null);
 
                 if($module->attribs['prepend']) {
                     array_push($modules, $module);
@@ -229,7 +229,7 @@ class ComKoowaModuleHelper extends JModuleHelper
      * @param  string|null $position Module position
      * @return array
      */
-    public static function &getModules($position = null)
+    public static function &getModules($position)
     {
         if($position) {
             $modules =& JModuleHelper::getModules($position);

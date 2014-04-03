@@ -409,7 +409,12 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
         if ($this->_size == null)
         {
             // If the stream is a file based stream and local, then use fstat
-            clearstatcache(true, $this->getPath());
+            if (version_compare(PHP_VERSION, '5.3', '>=')) {
+                clearstatcache(true, $this->getPath());
+            } else {
+                clearstatcache();
+            }
+
             $info = $this->getInfo();
 
             if (isset($info['size'])) {

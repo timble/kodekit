@@ -109,6 +109,8 @@ class KObjectConfig implements KObjectConfigInterface
                 $this->set($key, $value);
             }
         }
+
+        return $this;
     }
 
     /**

@@ -119,7 +119,7 @@ class KModelDatabase extends KModelAbstract
 
             $data = $table->select($context->query, KDatabase::FETCH_ROWSET, $options);
         }
-        else $data = $table->createRowset($$options);
+        else $data = $table->createRowset($options);
 
         return $data;
     }

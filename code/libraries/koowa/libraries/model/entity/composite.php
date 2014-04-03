@@ -96,7 +96,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
             throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
         }
 
-        $this->offsetSet($entity);
+        $this->offsetSet($entity, null);
 
         return true;
     }

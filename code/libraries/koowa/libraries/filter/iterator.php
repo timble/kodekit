@@ -74,7 +74,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
      */
     public function getPriority()
     {
-        return $$this->getDelegate()->getPriority();
+        return $this->getDelegate()->getPriority();
     }
 
     /**

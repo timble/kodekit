@@ -45,7 +45,7 @@ interface KModelStateInterface
      * @param  	mixed  	$value The state value.
      * @return 	KModelStateInterface
      */
-    public function set($name, $value);
+    public function set($name, $value = null);
 
     /**
      * Check if a state exists

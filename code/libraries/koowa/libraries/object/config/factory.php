@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
  */
-class KObjectConfigFactory extends KObject implements ObjectInstantiable, KObjectSingleton
+class KObjectConfigFactory extends KObject implements KObjectInstantiable, KObjectSingleton
 {
     /**
      * Registered config file formats.

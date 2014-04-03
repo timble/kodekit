@@ -57,7 +57,7 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
             if(empty($data)) {
                 $config = $this->getObject('object.config.factory')->createFormat($type);
             } else {
-                $config = $this->getObject('bject.config.factory')->fromString($type, $data);
+                $config = $this->getObject('object.config.factory')->fromString($type, $data);
             }
 
             $this->_parameters = $config;
