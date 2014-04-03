@@ -66,15 +66,15 @@ class KModelBehaviorIndexable extends KModelBehaviorAbstract
 
             if (!empty($states))
             {
-                $fields = array_keys($model->getTable()->getColumns());
-                $states = $model->getTable()->mapColumns($states);
+                $columns = array_intersect_key($states, $model->getTable()->getColumns());
+                $columns = $model->getTable()->mapColumns($columns);
 
-                foreach ($states as $key => $value)
+                foreach ($columns as $column => $value)
                 {
-                    if (in_array($key, $fields) && isset($value))
+                    if (isset($value))
                     {
-                        $context->query->where('tbl.' . $key . ' ' . (is_array($value) ? 'IN' : '=') . ' :' . $key)
-                            ->bind(array($key => $value));
+                        $context->query->where('tbl.' . $column . ' ' . (is_array($value) ? 'IN' : '=') . ' :' . $column)
+                            ->bind(array($column => $value));
                     }
                 }
             }
