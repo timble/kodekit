@@ -37,7 +37,8 @@ class KModelBehaviorIndexable extends KModelBehaviorAbstract
     {
         parent::onMixin($mixer);
 
-        if ($mixer instanceof KModelDatabase) {
+        if ($mixer instanceof KModelDatabase)
+        {
             $table = $mixer->getTable();
 
             // Set the dynamic states based on the unique table keys
@@ -58,16 +59,20 @@ class KModelBehaviorIndexable extends KModelBehaviorAbstract
     {
         $model = $context->getSubject();
 
-        if ($model instanceof KModelDatabase) {
+        if ($model instanceof KModelDatabase)
+        {
             //Get only the unique states
             $states = $context->state->getValues(true);
 
-            if (!empty($states)) {
+            if (!empty($states))
+            {
                 $fields = array_keys($model->getTable()->getColumns());
                 $states = $model->getTable()->mapColumns($states);
 
-                foreach ($states as $key => $value) {
-                    if (in_array($key, $fields) && isset($value)) {
+                foreach ($states as $key => $value)
+                {
+                    if (in_array($key, $fields) && isset($value))
+                    {
                         $context->query->where('tbl.' . $key . ' ' . (is_array($value) ? 'IN' : '=') . ' :' . $key)
                             ->bind(array($key => $value));
                     }
