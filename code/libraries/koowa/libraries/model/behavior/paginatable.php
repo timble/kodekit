@@ -86,7 +86,8 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
      */
     protected function _afterReset(KModelContextInterface $context)
     {
-        if (in_array('limit', $context->modified->toArray()))
+        $modified = (array) KObjectConfig::unbox($context->modified);
+        if (in_array('limit', $modified))
         {
             $limit = $context->state->limit;
 
