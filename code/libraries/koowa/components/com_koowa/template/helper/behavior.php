@@ -41,7 +41,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['koowa']))
         {
             $html .= $this->jquery();
-            $html .= '<script src="media://koowa/com_koowa/js/koowa.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/koowa'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['koowa'] = true;
         }
@@ -210,14 +210,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
      */
     public function calendar($config = array())
     {
-        static $loaded;
-
-        if ($loaded === null) {
-            $loaded = array();
-        }
-
         $config = new KObjectConfigJson($config);
         $config->append(array(
+            'debug'    => JFactory::getApplication()->getCfg('debug'),
             'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
             'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
@@ -255,7 +250,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             $config->value = '';
         }
 
-        // @TODO this is legacy, or bc support, and may not be compitable with strftime and the like
+        // @TODO this is legacy, or bc support, and may not be compatible with strftime and the like
         $config->format = str_replace(
             array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
             array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
@@ -293,7 +288,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['calendar']))
         {
-            $html .= '<script src="media://koowa/com_koowa/js/datepicker.js" />';
+            $html .= '<script src="media://koowa/com_koowa/js/datepicker'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<script src="media://koowa/com_koowa/js/koowa.datepicker.js" />';
 
             $locale = array(
@@ -319,19 +314,23 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['calendar'] = true;
         }
 
+        if (!isset(self::$_loaded['calendar-triggers'])) {
+            self::$_loaded['calendar-triggers'] = array();
+        }
+
         $attribs = $this->buildAttributes($config->attribs);
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
         {
             // Only display the triggers once for each control.
-            if (!in_array($config->id, $loaded))
+            if (!in_array($config->id, self::$_loaded['calendar-triggers']))
             {
                 $html .= "<script>
                     kQuery(function($){
                         $('#".$config->id."').koowaDatepicker(".$config->options.");
                     });
                 </script>";
-                $loaded[] = $config->id;
+                self::$_loaded['calendar-triggers'][] = $config->id;
             }
 
             $html .= '<div class="input-group date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
