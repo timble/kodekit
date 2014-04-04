@@ -94,6 +94,15 @@ interface KDatabaseTableInterface
     public function getColumn($name, $base = false);
 
     /**
+     * Get a column filter
+     *
+     * @param  string   $name  The name of the column
+     * @param  boolean  $base  If TRUE, get the column information from the base table.
+     * @return KFilterInterface
+     */
+    public function getColumnFilter($name, $base = false);
+
+    /**
      * Gets the columns for the table
      *
      * @param   boolean  $base If TRUE, get the column information from the base table.

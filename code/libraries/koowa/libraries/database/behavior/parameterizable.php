@@ -50,7 +50,7 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     {
         if($this->hasProperty('parameters') && !isset($this->_parameters))
         {
-            $type = $this->getTable()->getColumn('parameters')->filter->getIdentifier()->name;
+            $type = $this->getTable()->getColumnFilter('parameters')->getIdentifier()->name;
             $data = trim($this->getProperty('parameters'));
 
             //Create the parameters object
