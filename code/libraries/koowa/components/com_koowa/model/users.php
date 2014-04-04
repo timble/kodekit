@@ -13,7 +13,7 @@
  * @author  Arunas Mazeika <https://github.com/amazeika>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaModelUsers extends KModelTable
+class ComKoowaModelUsers extends KModelDatabase
 {
     public function __construct(KObjectConfig $config)
     {
