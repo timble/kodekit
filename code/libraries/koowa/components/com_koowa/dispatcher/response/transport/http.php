@@ -51,6 +51,11 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
                         continue;
                     }
 
+                    // JResponse doesn't play well with cookie headers for some reason
+                    if ($parts[0] === 'Set-Cookie') {
+                        continue;
+                    }
+
                     JResponse::setHeader($parts[0], $parts[1]);
                 }
 
