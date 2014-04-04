@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseSchemaTable extends KObject implements Serializable
+class KDatabaseSchemaTable
 {
 	/**
 	 * Table name
@@ -92,14 +92,4 @@ class KDatabaseSchemaTable extends KObject implements Serializable
 	 * @var	array
 	 */
 	public $indexes = array();
-
-    public function serialize()
-    {
-        return KObjectManager::getInstance()->serializeObject($this);
-    }
-
-    public function unserialize($data)
-    {
-        KObjectManager::getInstance()->unserializeObject($this, $data);
-    }
 }

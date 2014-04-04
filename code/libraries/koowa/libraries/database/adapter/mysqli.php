@@ -505,7 +505,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 	 */
 	protected function _parseTableInfo($info)
 	{
-		$table              = $this->getObject('lib:database.schema.table');
+		$table              = new KDatabaseSchemaTable();
 		$table->name        = $info->Name;
 		$table->engine      = $info->Engine;
 		$table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
@@ -528,7 +528,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     {
         list($type, $length, $scope) = $this->_parseColumnType($info->Type);
 
-        $column = $this->getObject('lib:database.schema.column');
+        $column           = new KDatabaseSchemaColumn();
         $column->name     = $info->Field;
         $column->type     = $type;
         $column->length   = $length ? $length : null;

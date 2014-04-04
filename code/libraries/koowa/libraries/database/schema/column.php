@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database
  */
-class KDatabaseSchemaColumn extends KObject implements Serializable
+class KDatabaseSchemaColumn
 {
 	/**
 	 * Column name
@@ -84,71 +84,4 @@ class KDatabaseSchemaColumn extends KObject implements Serializable
 	 * @var	bool
 	 */
 	public $related = array();
-
-	/**
-	 * Filter object
-	 *
-	 * Public access is allowed via __get() with $filter.
-	 *
-	 * @var	KFilterInterface
-	 */
-	protected $_filter;
-
-	/**
-     * Implements the virtual $filter property.
-     *
-     * The value can be a KFilter object, a filter name, an array of filter names or a filter identifier
-     *
-     * @param 	string  $key	The virtual property to set, only accepts 'filter'
-     * @param 	string 	$value  Set the virtual property to this value.
-     */
-    public function __set($key, $value)
-    {
-        if ($key == 'filter') {
-        	$this->_filter = $value;
-        }
-    }
-
-    /**
-     * Implements access to $_filter by reference so that it appears to be a public $filter property.
-     *
-     * @param   string  $key The virtual property to return, only accepts 'filter'
-     * @return  mixed   The value of the virtual property.
-     */
-    public function __get($key)
-    {
-        if ($key == 'filter')
-        {
-           if(!isset($this->_filter)) {
-                $this->_filter = $this->type;
-            }
-
-            if(!($this->_filter instanceof KFilterInterface)) {
-                $this->_filter = $this->getObject('filter.factory')->createFilter($this->_filter);
-            }
-
-            return $this->_filter;
-        }
-
-        return null;
-    }
-
-    public function serialize()
-    {
-        $data = KObjectManager::getInstance()->serializeObject($this, true);
-        $data['properties']['filter'] = (string)$this->filter->getIdentifier();
-
-        return serialize($data);
-    }
-
-    public function unserialize($data)
-    {
-        KObjectManager::getInstance()->unserializeObject($this, $data);
-
-        $data = unserialize($data);
-
-        if (isset($data['properties']['filter'])) {
-            $this->filter = $data['properties']['filter'];
-        }
-    }
 }
