@@ -84,4 +84,11 @@ class KDatabaseSchemaColumn
 	 * @var	bool
 	 */
 	public $related = array();
+
+    /**
+     * Filter
+     *
+     * @var	string
+     */
+    public $filter;
 }
