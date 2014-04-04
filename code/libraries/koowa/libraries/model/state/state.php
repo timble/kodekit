@@ -10,7 +10,7 @@
 /**
  * Model State Class
  *
- * A state requires a model object. It will call back to the model upon a state change using the onStateChange notifier.
+ * A state requires a model object. It will call back to the model upon a state change by calling reset method.
  *
  * State values can only be of type scalar or array. Values are only filtered if not NULL. If the value is an empty
  * string it will be filtered to NULL. Values will only be set if the state exists. To insert new states use the
@@ -31,8 +31,9 @@ class KModelState extends KObjectArray implements KModelStateInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
-     * @return KObjectArray
+     * @param KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @throws UnexpectedValueException
+     * @throws InvalidArgumentException
      */
     public function __construct(KObjectConfig $config)
     {
@@ -60,8 +61,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional KObjectConfig object with configuration options
-     * @return  void
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      */
     protected function _initialize(KObjectConfig $config)
     {
@@ -140,7 +140,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
             $this->offsetSet($name, $value);
 
             //Reset the model
-            $this->_model->reset();
+            $this->_model->reset(array($name));
         }
 
         return $this;

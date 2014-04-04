@@ -39,9 +39,10 @@ interface KModelInterface
     /**
      * Reset the model data and state
      *
+     * @param  array $modified List of changed state names
      * @return KModelInterface
      */
-    public function reset();
+    public function reset(array $modified = array());
 
     /**
      * Set the model state values

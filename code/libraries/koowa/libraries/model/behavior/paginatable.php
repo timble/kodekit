@@ -86,7 +86,13 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
      */
     protected function _afterReset(KModelContextInterface $context)
     {
-        $limit                  = $context->state->limit;
-        $context->state->offset = $limit != 0 ? (floor($context->state->offset / $limit) * $limit) : 0;
+        if (in_array('limit', $context->modified->toArray()))
+        {
+            $limit = $context->state->limit;
+
+            if ($limit) {
+                $context->state->offset = floor($context->state->offset / $limit) * $limit;
+            }
+        }
     }
 }
