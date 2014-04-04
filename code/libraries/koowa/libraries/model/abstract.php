@@ -162,8 +162,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      */
     final public function reset(array $modified = array())
     {
-        $context        = $this->getContext();
-        $context->count = null;
+        $context = $this->getContext();
         $context->modified = $modified;
 
         if ($this->invokeCommand('before.reset', $context) !== false)
