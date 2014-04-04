@@ -46,13 +46,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     protected $_column_map = array();
 
     /**
-     * Array of column filters indexed by column name
-     *
-     * @var array
-     */
-    protected $_filters = array();
-
-    /**
      * Database adapter
      *
      * @var KDatabaseAdapterInterface
@@ -273,26 +266,6 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     {
         $columns = $this->getColumns($base);
         return isset($columns[$column]) ? $columns[$column] : null;
-    }
-
-    /**
-     * Get a column filter
-     *
-     * @param  string   $name  The name of the column
-     * @param  boolean  $base  If TRUE, get the column information from the base table.
-     * @return KFilterInterface
-     */
-    public function getColumnFilter($name, $base = false)
-    {
-        if (!isset($this->_filters[$name]))
-        {
-            $column = $this->getColumn($name, $base);
-            $filter = $column && $column->filter ? $column->filter : 'raw';
-
-            $this->_filters[$name] = $this->getObject('filter.factory')->createFilter($filter);
-        }
-
-        return $this->_filters[$name];
     }
 
     /**
@@ -874,7 +847,10 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         foreach ($data as $key => $value)
         {
             $column     = $this->getColumn($key, $base);
-            $data[$key] = $this->getColumnFilter($key, $base)->sanitize($value);
+
+            if ($column->filter) {
+                $data[$key] = $this->getObject('filter.factory')->createFilter($column->filter)->sanitize($value);
+            }
 
             // If NULL is allowed and default is NULL, set value to NULL in the following cases.
             if (!$column->required && is_null($column->default))
