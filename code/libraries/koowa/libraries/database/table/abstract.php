@@ -846,7 +846,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         // Filter data based on column type
         foreach ($data as $key => $value)
         {
-            $column     = $this->getColumn($key, $base);
+            $column = $this->getColumn($key, $base);
 
             if ($column->filter) {
                 $data[$key] = $this->getObject('filter.factory')->createFilter($column->filter)->sanitize($value);
