@@ -83,24 +83,6 @@ interface KObjectManagerInterface
     public function getConfig($identifier);
 
     /**
-     * Takes an object's identifier and public properties and serializes them
-     *
-     * @param $object  object
-     * @param $to_array boolean Returns a raw array if true
-     * @return string
-     */
-    public function serializeObject($object, $to_array = false);
-
-    /**
-     * Unserializes an object and injects the object manager
-     *
-     * @param $object object
-     * @param $data   string serialized string
-     * @throws UnexpectedValueException
-     */
-    public function unserializeObject($object, $data);
-
-    /**
      * Set the configuration options for an identifier
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
