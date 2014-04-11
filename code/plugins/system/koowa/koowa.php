@@ -40,6 +40,9 @@ class PlgSystemKoowa extends JPlugin
 			
 			return;
 		}
+
+        // Try to raise Xdebug nesting level
+        @ini_set('xdebug.max_nesting_level', 200);
  		
  		// Set pcre.backtrack_limit to a larger value
  		// See: https://bugs.php.net/bug.php?id=40846
