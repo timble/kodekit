@@ -207,16 +207,21 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      */
     protected function _actionRead(KControllerContextInterface $context)
     {
-        $entity = $this->getModel()->fetch();
-
-        if($this->getModel()->getState()->isUnique() && !count($entity))
+        if(!$context->result instanceof KModelEntityInterface)
         {
-            $name   = ucfirst($this->getView()->getName());
-            throw new KControllerExceptionResourceNotFound($name.' Not Found');
+            if($this->getModel()->getState()->isUnique())
+            {
+                $entity = $this->getModel()->fetch();
+
+                if(!count($entity))
+                {
+                    $name   = ucfirst($this->getView()->getName());
+                    throw new KControllerExceptionResourceNotFound($name.' Not Found');
+                }
+            }
+            else $entity = $this->getModel()->create();
         }
-        elseif ($entity->isNew()) {
-            $entity = $this->getModel()->create();
-        }
+        else $entity = $context->result;
 
         return $entity;
     }
