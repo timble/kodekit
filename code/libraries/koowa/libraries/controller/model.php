@@ -235,7 +235,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      */
     protected function _actionEdit(KControllerContextInterface $context)
     {
-        $entities = $this->getModel()->fetch();
+        if(!$context->result instanceof KModelEntityInterface) {
+            $entities = $this->getModel()->fetch();
+        } else {
+            $entities = $context->result;
+        }
 
         if(count($entities))
         {
@@ -262,8 +266,12 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      */
     protected function _actionAdd(KControllerContextInterface $context)
     {
-        $entity = $this->getModel()->create();
-        $entity->setProperties($context->request->data->toArray());
+        if(!$context->result instanceof KModelEntityInterface)
+        {
+            $entity = $this->getModel()->create();
+            $entity->setProperties($context->request->data->toArray());
+        }
+        else $entity = $context->result;
 
         //Only throw an error if the action explicitly failed.
         if($entity->save() === false)
@@ -305,7 +313,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      */
     protected function _actionDelete(KControllerContextInterface $context)
     {
-        $entities = $this->getModel()->fetch();
+        if(!$context->result instanceof KModelEntityInterface) {
+            $entities = $this->getModel()->fetch();
+        } else {
+            $entities = $context->result;
+        }
 
         if(count($entities))
         {
