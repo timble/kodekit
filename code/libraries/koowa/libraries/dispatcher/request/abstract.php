@@ -676,8 +676,9 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             // Replace the application name only once since it's possible that
             // we can run from http://localhost/administrator/administrator
             $i = 1;
-            $path  = str_replace($this->getApplicationPath($this->getApplication()), '', $url->getPath(), $i);
-            $path .= $this->getApplicationPath($application);
+            $current = $this->getApplicationPath($this->getApplication());
+            $path    = str_replace($current, '', $url->getPath(), $i);
+            $path   .= $this->getApplicationPath($application);
 
             $url->setPath($path);
 

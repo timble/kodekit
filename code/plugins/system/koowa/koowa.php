@@ -159,10 +159,18 @@ class PlgSystemKoowa extends JPlugin
             $manager->getObject('com:koowa.bootstrapper')->bootstrap($application);
 
             //Setup the request
-            $manager->getObject('request')
-                ->registerApplication('site', '')
+            $request = $manager->getObject('request');
+
+            $request->registerApplication('site', '')
                 ->registerApplication('admin', '/administrator')
                 ->setApplication($application === 'administrator' ? 'admin' : $application);
+
+            // Get the URL from Joomla if live_site is set
+            if (JFactory::getApplication()->getCfg('live_site'))
+            {
+                $request->setBasePath(rtrim(JURI::base(true), '/\\'));
+                $request->setBaseUrl($manager->getObject('lib:http.url', array('url' => JURI::base())));
+            }
 
             //Exception Handling
             $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
