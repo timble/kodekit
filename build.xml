@@ -28,6 +28,16 @@
 				<copy todir="tmp/clone">
 					<fileset dir="." defaultexcludes="no" />
 				</copy>
+
+                <if>
+                    <isset property="framework.branch" />
+                    <then>
+                        <gitcheckout
+                                gitPath="git"
+                                repository="tmp/clone"
+                                branchname="${framework.branch}" />
+                    </then>
+                </if>
 			</then>
             <elseif>
                 <equals arg1="${framework.location}" arg2="self" />
@@ -37,22 +47,11 @@
             </elseif>
 			<else>
 				<echo message="Cloning Joomlatools framework" />
-				<gitclone
-					gitPath="git"
-					repository="git@git.assembla.com:joomlatools-framework.git"
-					targetPath="tmp/clone" />
+                <property name="framework.branch" value="develop" />
+                <exec command="git clone --depth 1 --branch ${framework.branch} git@git.assembla.com:joomlatools-framework.git ${project.basedir}/tmp/clone" />
 			</else>
 		</if>
 
-        <if>
-            <isset property="framework.branch" />
-            <then>
-                <gitcheckout
-                    gitPath="git"
-                    repository="tmp/clone"
-                    branchname="${framework.branch}" />
-            </then>
-        </if>
     </target>
 
     <target name="prepare" depends="clone">
