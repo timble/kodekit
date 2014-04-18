@@ -37,6 +37,6 @@ class KFilterFilename extends KFilterAbstract implements KFilterTraversable
 	public function sanitize($value)
 	{
         // basename does not work if the string starts with a UTF character
-        return ltrim(basename(strtr($value, array('/' => '/ '))));
+        return ltrim(basename(' '.strtr($value, array('/' => '/ '))));
 	}
 }

@@ -108,7 +108,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
 
             $user_agent = $response->getRequest()->getAgent();
             // basename does not work if the string starts with a UTF character
-            $filename   = ltrim(basename(strtr($response->getStream()->getPath(), array('/' => '/ '))));
+            $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
 
             // Android cuts file names after #
             if (stripos($user_agent, 'Android')) {
