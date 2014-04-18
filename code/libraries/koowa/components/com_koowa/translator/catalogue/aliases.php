@@ -10,7 +10,7 @@
 /**
  * Translator Alias Catalogue
  * 
- * Joomla 1.6+ uses some common keys like JALL, JYES. This class is used to map plain words to them.
+ * Joomla uses some common keys like JALL, JYES. This class is used to map them to plain words.
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
@@ -33,34 +33,21 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
             'alias' => 'JFIELD_ALIAS_LABEL',
             'status' => 'JSTATUS',
             'category' => 'JCATEGORY',
-            'categories' => 'JCATEGORIES',
             'access' => 'JGRID_HEADING_ACCESS',
             'date' => 'JDATE',
-            'ordering' => 'JGRID_HEADING_ORDERING',
-            'search' => 'JSEARCH_FILTER_SUBMIT',
-            'clear' => 'JSEARCH_FILTER_CLEAR',
             'details' => 'JDETAILS',
             'description' => 'JGLOBAL_DESCRIPTION',
             'apply' => 'JAPPLY',
             'cancel' => 'JCANCEL',
-            'created date' => 'JGLOBAL_FIELD_CREATED_LABEL',
-            'created by' => 'JGLOBAL_FIELD_CREATED_BY_LABEL',
-            'modified date' => 'JGLOBAL_FIELD_MODIFIED_LABEL',
-            'last modified' => 'JGLOBAL_FIELD_MODIFIED_LABEL',
-            'modified by' => 'JGLOBAL_FIELD_MODIFIED_BY_LABEL',
             'published' => 'JPUBLISHED',
             'unpublished' => 'JUNPUBLISHED',
-            'metadata options' => 'JGLOBAL_FIELDSET_METADATA_OPTIONS',
             'options' => 'JOPTIONS',
-            'unpublish item' => 'JLIB_HTML_UNPUBLISH_ITEM',
-            'publish item' => 'JLIB_HTML_PUBLISH_ITEM',
-            'move down' => 'JLIB_HTML_MOVE_DOWN',
-            'move up' => 'JLIB_HTML_MOVE_UP',
-            'select' => 'JSELECT',
             'yes' => 'JYES',
             'no' => 'JNO',
             'enabled' => 'JENABLED',
             'disabled' => 'JDISABLED',
+            'prev' => 'JPREV',
+            'next' => 'JNEXT',
             'click to sort by this column' => 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN',
             'about the calendar' => 'JLIB_HTML_BEHAVIOR_ABOUT_THE_CALENDAR',
             'go today' => 'JLIB_HTML_BEHAVIOR_GO_TODAY',
@@ -78,17 +65,12 @@ class ComKoowaTranslatorCatalogueAliases extends KTranslatorCatalogue
             '(shift-)click or drag to change value' => 'JLIB_HTML_BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE',
             '%a, %b %e' => 'JLIB_HTML_BEHAVIOR_TT_DATE_FORMAT',
             'start' => 'JLIB_HTML_START',
-            'prev' => 'JPREV',
-            'next' => 'JNEXT',
             'end' => 'JLIB_HTML_END'
         );
 
-        if ($this->getIdentifier()->domain === 'admin')
-        {
-            $config->append(array(
-                'data'  => $defaults
-            ));
-        }
+        $config->append(array(
+            'data'  => $defaults
+        ));
     
         parent::_initialize($config);
     }
