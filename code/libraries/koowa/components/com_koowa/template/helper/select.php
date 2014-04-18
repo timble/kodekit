@@ -51,7 +51,7 @@ class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'prompt'  => '- Select -',
+            'prompt'  => $this->translate('- Select -'),
             'attribs' => array()
         ))->append(array(
             'select2_options' => array(
