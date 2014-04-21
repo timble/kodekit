@@ -21,22 +21,7 @@ class KTemplateHelperTranslator extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'translations' => array(
-                'Bytes', 'KB', 'MB', 'GB', 'TB', 'PB',
-                'An error occurred during request',
-                'You are deleting {item}. Are you sure?',
-                'You are deleting {items}. Are you sure?',
-                '{count} files and folders',
-                '{count} folders',
-                '{count} files',
-                'All Files',
-                'An error occurred with status code: ',
-                'An error occurred: ',
-                'Unknown error',
-                'Uploaded successfully!',
-                'Select files from your computer',
-                'Choose File'
-            )
+            'translations' => array()
         ));
 
         $translations = KObjectConfig::unbox($config->translations);
