@@ -23,6 +23,13 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     protected $_locale;
 
     /**
+     * Catalogue to hold translation keys in JavaScript code
+     *
+     * @var KTranslatorCatalogueInterface
+     */
+    protected $_script_catalogue;
+
+    /**
      * Constructor.
      *
      * @param   KObjectConfig $config Configuration options
@@ -32,6 +39,8 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
         parent::__construct($config);
         
         $this->setLocale($config->locale);
+
+        $this->setScriptCatalogue($this->createCatalogue($config->script_catalogue));
     }
 
     /**
@@ -45,7 +54,8 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'locale' => 'en-GB'
+            'locale' => 'en-GB',
+            'script_catalogue' => 'script'
         ));
         
         parent::_initialize($config);
@@ -134,7 +144,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      * Sets the locale
      *
      * @param string $locale
-     * @return KTranslator
+     * @return $this
      */
     public function setLocale($locale)
     {
@@ -150,5 +160,70 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     public function getLocale()
     {
         return $this->_locale;
+    }
+
+    /**
+     * Add a string and its translation to the script catalogue so that it gets sent to the browser later on
+     *
+     * @param  $string string The translation key
+     * @return $this
+     */
+    public function addScriptTranslation($string)
+    {
+        $this->getScriptCatalogue()->offsetSet($string, $this->translate($string));
+
+        return $this;
+    }
+
+    /**
+     * Return the script catalogue
+     *
+     * @return KTranslatorCatalogueInterface
+     */
+    public function getScriptCatalogue()
+    {
+        return $this->_script_catalogue;
+    }
+
+    /**
+     * Set the default catalogue
+     *
+     * @param KTranslatorCatalogueInterface $catalogue
+     * @return $this
+     */
+    public function setScriptCatalogue(KTranslatorCatalogueInterface $catalogue)
+    {
+        $this->_script_catalogue = $catalogue;
+
+        return $this;
+    }
+
+    /**
+     * Creates and returns a catalogue from the passed identifier
+     *
+     * @param string|null $identifier Full identifier or just the name part
+     * @return KTranslatorCatalogue
+     */
+    public function createCatalogue($identifier = null)
+    {
+        if (strpos($identifier, '.') === false)
+        {
+            $old = $this->getIdentifier()->toArray();
+
+            if ($identifier)
+            {
+                $old['path'] = array('translator', 'catalogue');
+                $old['name'] = $identifier;
+            }
+            else
+            {
+                $old['path'] = array('translator');
+                $old['name'] = 'catalogue';
+            }
+
+            $identifier = $this->getIdentifier($old);
+        }
+
+        return $this->getObject($identifier);
     }
 }

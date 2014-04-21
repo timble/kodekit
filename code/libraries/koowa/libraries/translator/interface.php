@@ -60,7 +60,7 @@ interface KTranslatorInterface
      * Sets the locale
      *
      * @param string $locale
-     * @return KTranslator
+     * @return $this
      */
     public function setLocale($locale);
 
@@ -70,4 +70,35 @@ interface KTranslatorInterface
      * @return string|null
      */
     public function getLocale();
+
+    /**
+     * Add a string and its translation to the script catalogue so that it gets sent to the browser later on
+     *
+     * @param  $string string The translation key
+     * @return $this
+     */
+    public function addScriptTranslation($string);
+
+    /**
+     * Return the script catalogue
+     *
+     * @return KTranslatorCatalogueInterface
+     */
+    public function getScriptCatalogue();
+
+    /**
+     * Set the default catalogue
+     *
+     * @param KTranslatorCatalogueInterface $catalogue
+     * @return $this
+     */
+    public function setScriptCatalogue(KTranslatorCatalogueInterface $catalogue);
+
+    /**
+     * Creates and returns a catalogue from the passed identifier
+     *
+     * @param string|null $identifier Full identifier or just the name part
+     * @return KTranslatorCatalogue
+     */
+    public function createCatalogue($identifier = null);
 }

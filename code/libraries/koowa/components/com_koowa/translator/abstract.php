@@ -324,35 +324,6 @@ abstract class ComKoowaTranslatorAbstract extends KTranslatorAbstract
     }
 
     /**
-     * Creates and returns a catalogue from the passed identifier
-     *
-     * @param string|null $identifier Full identifier or just the name part
-     * @return KTranslatorCatalogue
-     */
-    public function createCatalogue($identifier = null)
-    {
-        if (strpos($identifier, '.') === false)
-        {
-            $old = $this->getIdentifier()->toArray();
-
-            if ($identifier)
-            {
-                $old['path'] = array('translator', 'catalogue');
-                $old['name'] = $identifier;
-            }
-            else
-            {
-                $old['path'] = array('translator');
-                $old['name'] = 'catalogue';
-            }
-
-            $identifier = $this->getIdentifier($old);
-        }
-
-        return $this->getObject($identifier);
-    }
-
-    /**
      * Return the alias catalogue
      *
      * @return KTranslatorCatalogueInterface
