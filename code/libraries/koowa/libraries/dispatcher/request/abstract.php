@@ -500,7 +500,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         if ($this->isProxied() && $this->_headers->has('X-Forwarded-Port')) {
             $port = $this->_headers->has('X-Forwarded-Port');
         } else {
-            $port = $_SERVER['SERVER_PORT'];
+            $port = @$_SERVER['SERVER_PORT'];
         }
 
         return $port;
