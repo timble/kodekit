@@ -173,7 +173,10 @@ class PlgSystemKoowa extends JPlugin
             }
 
             //Exception Handling
-            $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
+            if (PHP_SAPI !== 'cli') {
+                $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
+            }
+
 
             /**
              * Plugin Bootstrapping
