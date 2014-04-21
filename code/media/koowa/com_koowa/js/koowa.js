@@ -190,6 +190,42 @@ Koowa.Class = klass({
     }
 });
 
+if (!Koowa.Translator) {
+    Koowa.Translator = Koowa.Class.extend({
+        translations: {},
+        translate: function(string, parameters) {
+            if (typeof this.translations[string.toLowerCase()] !== 'undefined') {
+                string = this.translations[string.toLowerCase()];
+            }
+
+            if (typeof parameters === 'object' && parameters !== null) {
+                for (var key in parameters) {
+                    if (parameters.hasOwnProperty(key)) {
+                        // Escape for regular expression
+                        var pattern = '{'+key+'}'.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
+                        string  = string.replace(new RegExp(pattern, 'g'), parameters[key]);
+                    }
+                }
+            }
+
+            return string;
+        },
+        loadTranslations: function(object) {
+            for (var string in object) {
+                if (object.hasOwnProperty(string)) {
+                    this.translations[string.toLowerCase()] = object[string];
+                }
+            }
+
+            return this;
+        }
+    });
+
+    Koowa.translator = new Koowa.Translator();
+    Koowa.translate = Koowa.translator.translate.bind(Koowa.translator);
+}
+
 /**
  * Creates a 'virtual form'
  *
