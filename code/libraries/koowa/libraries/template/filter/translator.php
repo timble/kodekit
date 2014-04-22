@@ -33,10 +33,14 @@ class KTemplateFilterTranslator extends KTemplateFilterAbstract implements KTemp
         if (count($translations))
         {
             $text .= $this->getTemplate()->renderHelper('behavior.koowa') .
-            '<script>
-                Koowa.translator.loadTranslations('.json_encode($translations).');
+            "<script>
+            if (typeof Koowa === 'object' && Koowa !== null) {
+                if (typeof Koowa.translator === 'object' && Koowa.translator !== null) {
+                    Koowa.translator.loadTranslations(".json_encode($translations).");
+                }
+            }
             </script>
-            ';
+            ";
         }
     }
 }
