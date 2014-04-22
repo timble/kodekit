@@ -52,26 +52,6 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
     }
 
     /**
-     * Render the page
-     *
-     * @param KDispatcherContextInterface $context
-     */
-    protected function _renderPage(KDispatcherContextInterface $context)
-    {
-        $request   = $context->request;
-        $response  = $context->response;
-
-        //Render the page
-        if(!$response->isRedirect() && $response->getContentType() == 'text/html')
-        {
-            //Render the page
-
-
-
-        }
-    }
-
-    /**
      * Render an exception
      *
      * @throws InvalidArgumentException If the action parameter is not an instance of Exception
