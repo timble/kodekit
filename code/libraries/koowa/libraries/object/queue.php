@@ -15,7 +15,7 @@
  * enqueue, and removal of entities from the front terminal position, known as dequeue. This makes the queue a
  * First-In-First-Out (FIFO) data structure.
  *
- * Additionally each element can have a "priority" associated with it prioritisin the order of the element in the
+ * Additionally each element can have a "priority" associated with it prioritising the order of the element in the
  * queue. An element with high priority is served before an element with low priority. If two elements have the same
  * priority, they are served according to their order in the queue.
  *
@@ -113,7 +113,8 @@ class KObjectQueue extends KObject implements Iterator, Countable
     {
         if($handle = $object->getHandle())
         {
-            if($this->_priority_list->offsetExists($handle)) {
+            if($this->_priority_list->offsetExists($handle))
+            {
                 $this->_priority_list->offsetSet($handle, $priority);
                 $this->_priority_list->asort();
             }
