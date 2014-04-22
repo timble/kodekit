@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterChain extends KFilterAbstract
+class KFilterChain extends KObject implements KFilterInterface
 {
     /**
      * The filter queue
@@ -21,6 +21,37 @@ class KFilterChain extends KFilterAbstract
      * @var	KObjectQueue
      */
     protected $_queue;
+
+    /**
+     * The last filter
+     *
+     * @var KFilterInterface
+     */
+    protected $_last;
+
+    /**
+     * The filter priority
+     *
+     * @var integer
+     */
+    protected $_priority;
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'priority' => self::PRIORITY_NORMAL,
+        ));
+
+        parent::_initialize($config);
+    }
 
     /**
      * Constructor.
@@ -33,6 +64,9 @@ class KFilterChain extends KFilterAbstract
 
         //Create the queue
         $this->_queue = $this->getObject('lib:object.queue');
+
+        //The filter priority
+        $this->_priority = $config->priority;
     }
 
     /**
@@ -84,6 +118,10 @@ class KFilterChain extends KFilterAbstract
      */
     public function addFilter(KFilterInterface $filter, $priority = null)
     {
+        //Store reference to be used for filter chaining
+        $this->_last = $filter;
+
+        //Enqueue the filter
         $this->_queue->enqueue($filter, $priority);
         return $this;
     }
@@ -101,5 +139,35 @@ class KFilterChain extends KFilterAbstract
         }
 
         return $errors;
+    }
+
+    /**
+     * Get the priority of the filter
+     *
+     * @return  integer The priority level
+     */
+    public function getPriority()
+    {
+        return $this->_priority;
+    }
+
+    /**
+     * Allow for filter chaining 
+     *
+     * @param  string   $method    The function name
+     * @param  array    $arguments The function arguments
+     * @return mixed The result of the function
+     * @throws BadMethodCallException   If method could not be found
+     */
+    public function __call($method, $arguments)
+    {
+        if(!($this->_last instanceof KFilterInterface && is_callable(array($this->_last, $method))))
+        {
+            $filter = $this->getObject('filter.factory')->createFilter($method, $arguments);
+            $this->addFilter($filter);
+        }
+        else  call_user_func_array(array($this->_last, $method), $arguments);
+
+        return $this;
     }
 }

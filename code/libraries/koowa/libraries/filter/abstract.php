@@ -17,7 +17,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiable, KObjectMultiton
+abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiable
 {
     /**
      * The filter errors
@@ -43,6 +43,13 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
         parent::__construct($config);
 
         $this->_priority = $config->priority;
+
+        foreach($config as $key => $value)
+        {
+            if(property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
     }
 
     /**

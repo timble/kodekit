@@ -15,17 +15,5 @@
  */
 class ComKoowaFilterFactory extends KFilterFactory
 {
-    /**
-     * Changes the default prefix for filters to com:koowa
-     *
-     * {@inheritdoc}
-     */
-    protected function _createFilter($filter, $config)
-    {
-        if(is_string($filter) && strpos($filter, '.') === false ) {
-            $filter = 'com:koowa.filter.'.trim($filter);
-        }
 
-        return parent::_createFilter($filter, $config);
-    }
 }

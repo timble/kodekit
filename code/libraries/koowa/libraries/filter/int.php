@@ -15,7 +15,39 @@
  */
 class KFilterInt extends KFilterAbstract implements KFilterTraversable
 {
-	/**
+    /**
+     * The maximum value
+     *
+     * @var integer
+     */
+    public $max;
+
+    /**
+     * The minimum value
+     *
+     * @var integer
+     */
+    public $min;
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'max' => null,
+            'min' => null,
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
 	 * Validate a value
 	 *
 	 * @param	mixed	$value Value to be validated
@@ -23,7 +55,12 @@ class KFilterInt extends KFilterAbstract implements KFilterTraversable
 	 */
 	public function validate($value)
 	{
-		return empty($value) || (false !== filter_var($value, FILTER_VALIDATE_INT));
+        $options = array('options' => array(
+            'max_range' => $this->max,
+            'min_range' => $this->min
+        ));
+
+        return empty($value) || (false !== filter_var($value, FILTER_VALIDATE_INT, $options));
 	}
 
 	/**
@@ -34,7 +71,41 @@ class KFilterInt extends KFilterAbstract implements KFilterTraversable
 	 */
 	public function sanitize($value)
 	{
-		return (int) filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        $value = (int) filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+
+        if(isset($this->max) && $value > (int) $this->max) {
+            $value = (int) $this->max;
+        }
+
+        if(isset($this->min) && $value < (int) $this->min) {
+            $value = (int) $this->min;
+        }
+
+        return $value;
 	}
+
+    /**
+     * Set the minimum value
+     *
+     * @param integer	$min
+     * @return KFilterInt
+     */
+    public function min($min)
+    {
+        $this->min = (int) $min;
+        return $this;
+    }
+
+    /**
+     * Set the maximum value
+     *
+     * @param integer	$max
+     * @return KFilterInt
+     */
+    public function max($max)
+    {
+        $this->max = (int) $max;
+        return $this;
+    }
 }
 
