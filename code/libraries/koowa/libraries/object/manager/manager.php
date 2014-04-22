@@ -444,6 +444,12 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         //Merge alias configuration into the identifier
         $identifier->getConfig()->append($alias->getConfig());
 
+        // Register alias mixins.
+        foreach ($alias->getMixins() as $mixin)
+        {
+            $identifier->addMixin($mixin);
+        }
+
         return $this;
 	}
 
