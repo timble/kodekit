@@ -85,6 +85,7 @@ class KFilterChain extends KObject implements KFilterInterface
         {
             if($filter->validate($value) === false) {
                 $result = false;
+                break;
             }
         }
 
