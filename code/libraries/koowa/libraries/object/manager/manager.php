@@ -145,6 +145,9 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
      * string. Function recursively resolves identifier aliases and returns the aliased identifier.
      *
+     * If the identifier does not have a type set default type to 'lib'. Eg, event.publisher is the same as
+     * lib:event.publisher.
+     *
      * If no identifier is passed the object identifier of this object will be returned.
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
@@ -164,6 +167,12 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 
                 if(is_array($identifier)) {
                     $identifier = new KObjectIdentifier($identifier);
+                }
+            }
+            else
+            {
+                if(strpos($identifier, ':') === false ) {
+                    $identifier = 'lib:'.$identifier;
                 }
             }
 
@@ -445,8 +454,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         $identifier->getConfig()->append($alias->getConfig());
 
         // Register alias mixins.
-        foreach ($alias->getMixins() as $mixin)
-        {
+        foreach ($alias->getMixins() as $mixin) {
             $identifier->addMixin($mixin);
         }
 

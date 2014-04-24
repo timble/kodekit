@@ -94,8 +94,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     /**
      * Constructor
      *
-     * If the identifier does not have a type set default type to 'lib'. Eg, event.publisher is the same as
-     * lib:event.publisher.
      *
      * @param   string $identifier Identifier string or object in type://domain/package[.path].name format
      * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
@@ -110,7 +108,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
             }
 
             // Set the type
-            $this->_type = isset($parts['scheme']) ? $parts['scheme'] : 'lib';
+            $this->_type = isset($parts['scheme']) ? $parts['scheme'] : '';
 
             //Set the domain
             if(isset($parts['host'])) {
@@ -458,6 +456,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     final private function __clone()
     {
-        trigger_error("An object identifier is an immutable object and should not be cloned.", E_USER_WARNING);
+        trigger_error("An object identifier is an immutable object and cannot be cloned.", E_USER_WARNING);
     }
 }
