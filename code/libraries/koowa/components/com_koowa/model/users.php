@@ -24,14 +24,13 @@ class ComKoowaModelUsers extends KModelDatabase
             ->insert('username', 'alnum', null, true);
     }
 
-    protected function _buildQueryWhere(KDatabaseQueryInterface $query)
+    protected function _initialize(KObjectConfig $config)
     {
-        $state = $this->getState();
+        $config->append(array(
+            'table'     => $this->getIdentifier()->name,
+            'behaviors' => array('searchable' => array('columns' => array('name', 'username', 'email')))
+        ));
 
-        if ($state->search) {
-            $query->where('tbl.name LIKE :search')->bind(array('search' => '%'.$state->search.'%'));
-        }
-
-        parent::_buildQueryWhere($query);
+        parent::_initialize($config);
     }
 }
