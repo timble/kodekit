@@ -119,20 +119,6 @@ interface KObjectIdentifierInterface extends Serializable
     public function getDecorators();
 
     /**
-     * Check if the object is a singleton
-     *
-     * @return boolean Returns TRUE if the object is a multiton, FALSE otherwise.
-     */
-    public function isMultiton();
-
-    /**
-     * Check if the object is a singleton
-     *
-     * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
-     */
-    public function isSingleton();
-
-    /**
      * Formats the identifier as a [application::]type.component.[.path].name string
      *
      * @return string
