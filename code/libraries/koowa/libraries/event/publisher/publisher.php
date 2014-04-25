@@ -13,27 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Event
  */
-class KEventPublisher extends KEventPublisherException implements KObjectInstantiable, KObjectSingleton
+class KEventPublisher extends KEventPublisherException implements KObjectSingleton
 {
-    /**
-     * Force creation of a singleton
-     *
-     * @param  KObjectConfigInterface   $config	  A ObjectConfig object with configuration options
-     * @param  KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return KEventPublisher
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        if (!$manager->isRegistered('event.publisher'))
-        {
-            $class    = $manager->getClass($config->object_identifier);
-            $instance = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
 
-            //Add the object alias to allow easy access to the singleton
-            $manager->registerAlias($config->object_identifier, 'event.publisher');
-        }
-
-        return $manager->getObject('event.publisher');
-    }
 }

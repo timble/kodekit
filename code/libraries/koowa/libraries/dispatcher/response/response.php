@@ -15,29 +15,19 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherResponse extends KDispatcherResponseAbstract implements KObjectInstantiable, KObjectSingleton
+class KDispatcherResponse extends KDispatcherResponseAbstract implements KObjectSingleton
 {
     /**
-     * Force creation of a singleton
+     * Constructor
      *
-     * @param 	KObjectConfigInterface  $config	  A ObjectConfig object with configuration options
-     * @param 	KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return KDispatcherRequest
+     * @param KObjectConfig  $config  A ObjectConfig object with optional configuration options
+     * @return Object
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public function __construct(KObjectConfig $config)
     {
-        if (!$manager->isRegistered('dispatcher.response'))
-        {
-            //Create the singleton
-            $class    = $manager->getClass($config->object_identifier);
-            $instance = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
+        parent::__construct($config);
 
-            //Add the object alias to allow easy access to the singleton
-            $manager->registerAlias($config->object_identifier, 'dispatcher.response');
-            $manager->registerAlias('dispatcher.response', 'response');
-        }
-
-        return $manager->getObject('dispatcher.response');
+        //Add a global object alias
+        $this->getObject('manager')->registerAlias($this->getIdentifier(), 'response');
     }
 }

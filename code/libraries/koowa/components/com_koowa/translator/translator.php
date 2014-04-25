@@ -13,27 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends ComKoowaTranslatorAbstract implements KObjectInstantiable, KObjectSingleton
+class ComKoowaTranslator extends ComKoowaTranslatorAbstract implements KObjectSingleton
 {
-    /**
-     * Force creation of a singleton
-     *
-     * @param 	KObjectConfigInterface  $config	  A ObjectConfig object with configuration options
-     * @param 	KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return KDispatcherRequest
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        if (!$manager->isRegistered('translator'))
-        {
-            $class     = $manager->getClass($config->object_identifier);
-            $instance  = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
 
-            //Add the service alias to allow easy access to the singleton
-            $manager->registerAlias($config->object_identifier, 'translator');
-        }
-
-        return $manager->getObject('translator');
-    }
 }

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
  */
-class KObjectConfigFactory extends KObject implements KObjectInstantiable, KObjectSingleton
+class KObjectConfigFactory extends KObject implements KObjectSingleton
 {
     /**
      * Registered config file formats.
@@ -32,27 +32,6 @@ class KObjectConfigFactory extends KObject implements KObjectInstantiable, KObje
         parent::__construct($config);
 
         $this->_formats = $config->formats;
-    }
-
-    /**
-     * Force creation of a singleton
-     *
-     * @param  KObjectConfigInterface   $config	  A ObjectConfig object with configuration options
-     * @param  KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return KDispatcherRequest
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        if (!$manager->isRegistered('object.config.factory'))
-        {
-            $class    = $manager->getClass($config->object_identifier);
-            $instance = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
-
-            $manager->registerAlias($config->object_identifier, 'object.config.factory');
-        }
-
-        return $manager->getObject('object.config.factory');
     }
 
     /**

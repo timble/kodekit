@@ -15,26 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\User
  */
-class KUserSession extends KUserSessionAbstract implements KObjectInstantiable, KObjectSingleton
+class KUserSession extends KUserSessionAbstract implements KObjectSingleton
 {
-    /**
-     * Force creation of a singleton
-     *
-     * @param  KObjectConfig            $config	  A KObjectConfigInterface object with configuration options
-     * @param  KObjectManagerInterface	$manager  A KObjectManagerInterface object
-     * @return KDispatcherRequest
-     */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
-    {
-        if (!$manager->isRegistered('user.session'))
-        {
-            $class    = $manager->getClass($config->object_identifier);
-            $instance = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
 
-            $manager->registerAlias($config->object_identifier, 'user.session');
-        }
-
-        return $manager->getObject('user.session');
-    }
 }

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
+class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectSingleton
 {
     /**
      * The limit information
@@ -63,22 +63,17 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        // Check if an instance with this identifier already exists or not
-        if (!$manager->isRegistered($config->object_identifier))
-        {
-            //Add the object alias to allow easy access to the singleton
-            $manager->registerAlias($config->object_identifier, 'dispatcher');
+        //Merge alias configuration into the identifier
+        $config->append($manager->getIdentifier('dispatcher')->getConfig());
 
-            //Merge alias configuration into the identifier
-            $config->append($manager->getIdentifier('dispatcher')->getConfig());
+        //Create the singleton
+        $class    = $manager->getClass($config->object_identifier);
+        $instance = new $class($config);
 
-            //Create the singleton
-            $class    = $manager->getClass($config->object_identifier);
-            $instance = new $class($config);
-            $manager->setObject($config->object_identifier, $instance);
-        }
+        //Add the object alias to allow easy access to the singleton
+        $manager->registerAlias($config->object_identifier, 'dispatcher');
 
-        return $manager->getObject($config->object_identifier);
+        return $instance;
     }
 
     /**
