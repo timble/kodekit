@@ -28,14 +28,23 @@ class ComKoowaUserProvider extends KUserProvider
         if (!is_numeric($identifier))
         {
             if(!$identifier = JUserHelper::getUserId($identifier)) {
-                return null;
+                $identifier = 0;
             }
         }
 
         // Fetch the user
         $user = $this->getObject('user');
-        if ($user->getId() != $identifier) {
+        if ($user->getId() != $identifier)
+        {
             $user = parent::load($identifier, $refresh);
+
+            if (empty($user))
+            {
+                $user = $this->create(array(
+                    'id'   => $identifier,
+                    'name' => $this->getObject('translator')->translate('Anonymous')
+                ));
+            }
         }
 
         return $user;
