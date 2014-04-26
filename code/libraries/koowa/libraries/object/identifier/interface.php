@@ -97,7 +97,7 @@ interface KObjectIdentifierInterface extends Serializable
     /**
      * Get the mixins
      *
-     *  @return array
+     *  @return  KObjectConfig
      */
     public function getMixins();
 
@@ -114,7 +114,7 @@ interface KObjectIdentifierInterface extends Serializable
     /**
      * Get the decorators
      *
-     *  @return array
+     *  @return  KObjectConfig
      */
     public function getDecorators();
 
