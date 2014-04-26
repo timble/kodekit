@@ -77,21 +77,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     protected $_config = null;
 
     /**
-     * The object mixins
-     *
-     * @var array
-     */
-    protected $_mixins = array();
-
-    /**
-     * The object decorators
-     *
-     * @var array
-     */
-    protected $_decorators = array();
-
-
-    /**
      * Constructor
      *
      *
@@ -248,8 +233,12 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function getConfig()
     {
-        if(!isset($this->_config)) {
-            $this->_config = new KObjectConfig();
+        if(!isset($this->_config))
+        {
+            $this->_config = new KObjectConfig(array(
+                'mixins'     => array(),
+                'decorators' => array()
+            ));
         }
 
         return $this->_config;
@@ -286,9 +275,9 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     public function addMixin($mixin, $config = array())
     {
         if ($mixin instanceof KObjectMixinInterface || $mixin instanceof KObjectIdentifier) {
-            $this->_mixins[] = $mixin;
+            $this->getConfig()->mixins->append(array($mixin));
         } else {
-            $this->_mixins[$mixin] = $config;
+            $this->getConfig()->mixins->append(array($mixin => $config));
         }
 
         return $this;
@@ -301,7 +290,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function getMixins()
     {
-        return $this->_mixins;
+        return $this->getConfig()->mixins;
     }
 
     /**
@@ -314,10 +303,10 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function addDecorator($decorator, $config = array())
     {
-        if ($decorator instanceof KObjectDecoratorInterface || $decorator instanceof KObjectIdentifier) {
-            $this->_decorators[] = $decorator;
+        if ($decorator instanceof ObjectDecoratorInterface || $decorator instanceof ObjectIdentifier) {
+            $this->getConfig()->decorators->append(array($decorator));
         } else {
-            $this->_decorators[$decorator] = $config;
+            $this->getConfig()->decorators->append(array($decorator => $config));
         }
 
         return $this;
@@ -330,7 +319,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function getDecorators()
     {
-        return $this->_decorators;
+        return $this->getConfig()->decorators;
     }
 
     /**
