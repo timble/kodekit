@@ -26,30 +26,35 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
 {
     /**
      * Package name
+     *
      * @var string
      */
     protected $package;
 
     /**
      * Resource that the plugin will act on
+     *
      * @var string
      */
     protected $resource;
 
     /**
      * Model identifier/model object
+     *
      * @var KObjectIdentifier
      */
     protected $model;
 
     /**
      * Model identifier/model object
+     *
      * @var KObjectIdentifier
      */
     protected $category_model;
 
     /**
      * Array of instructions. These are used to tell the indexer to include certain properties their importance
+     *
      * @var array
      */
     protected $instructions = array();
