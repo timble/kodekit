@@ -41,9 +41,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
                 JHtml::_('bootstrap.framework');
                 self::$_loaded['bootstrap-javascript'] = true;
             }
-            else {
-                $html .= '<script src="media://koowa/com_koowa/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
-            }
+            else $html .= '<script src="media://koowa/com_koowa/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
         }
 
         return $html;
