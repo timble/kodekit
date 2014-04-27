@@ -31,7 +31,6 @@ class ComKoowaViewUsersJson extends KViewJson
      * Overridden for un-setting sensible data.
      *
      * @param KModelEntityInterface $entity The user row.
-     *
      * @return array Associative array containing the row's data.
      */
     protected function _getUser(KModelEntityInterface $entity)

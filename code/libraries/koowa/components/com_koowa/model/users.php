@@ -20,7 +20,7 @@ class ComKoowaModelUsers extends KModelDatabase
         parent::__construct($config);
 
         $this->getState()
-            ->insert('email', 'email', null, true)
+            ->insert('email'   , 'email', null, true)
             ->insert('username', 'alnum', null, true);
     }
 
