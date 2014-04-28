@@ -111,7 +111,6 @@ class ModKoowaHtml extends KViewHtml
      */
     protected function _parseParams( $string )
     {
-        $params = new KObjectConfig((array) json_decode($string));
-        return $params;
+        return $this->getObject('object.config.factory')->fromString('json', $string);
     }
 }
