@@ -477,7 +477,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
 
         //Add the host and the schema
         if ($fqr === true) {
-            $route = $this->getUrl()->toString(KHttpUrl::AUTHORITY) . '/' . $route;
+            $route = $this->getUrl()->toString(KHttpUrl::AUTHORITY) . '/' . ltrim($route, '/');
         }
 
         return $route;
