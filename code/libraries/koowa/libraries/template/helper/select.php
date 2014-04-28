@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateHelperSelect extends KTemplateHelperAbstract
+class KTemplateHelperSelect extends KTemplateHelperAbstract
 {
     /**
      * Generates an HTML select option
