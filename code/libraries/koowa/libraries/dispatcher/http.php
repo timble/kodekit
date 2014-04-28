@@ -166,6 +166,17 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     }
 
     /**
+     * Head method
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return KModelEntityInterface
+     */
+    protected function _actionHead(KDispatcherContextInterface $context)
+    {
+        return $this->execute('get', $context);
+    }
+
+    /**
      * Post method
      *
      * This function translated a POST request action into an edit or add action. If the model state is unique a edit
