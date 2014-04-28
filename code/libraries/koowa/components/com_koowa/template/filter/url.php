@@ -27,13 +27,13 @@ class ComKoowaTemplateFilterUrl extends KTemplateFilterUrl
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $path = (string)$this->getObject('request')->getBaseUrl('site')->getPath();
+        $path = rtrim($this->getObject('request')->getBaseUrl('site')->getPath(), '/');
 
         $config->append(array(
             'aliases' => array(
                 'media://' => $path.'/media/',
                 'root://'  => $path.'/',
-                'base://'  => $this->getObject('request')->getBaseUrl()->getPath().'/',
+                'base://'  => rtrim($this->getObject('request')->getBaseUrl()->getPath(), '/').'/',
             ),
         ));
 
