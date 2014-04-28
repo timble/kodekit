@@ -66,7 +66,8 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             'load_default'  => version_compare(JVERSION, '3.0', '<'),
             'class'         => array(
                 'koowa',
-                $identifier->type.'_'.$identifier->package
+                $identifier->type.'_'.$identifier->package,
+                JFactory::getLanguage()->isRTL() ? 'koowa--rtl' : '',
             ),
         ))->append(array(
             'wrapper' => sprintf('<div class="%s">
