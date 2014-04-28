@@ -14,7 +14,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
+class ComKoowaTemplateHelperDate extends KTemplateHelperDate
 {
     /**
      * Returns formatted date according to current local
@@ -32,38 +32,5 @@ class ComKoowaTemplateHelperDate extends KTemplateHelperAbstract
         ));
 
         return JHtml::_('date', $config->date, $config->format, $config->timezone);
-    }
-
-    /**
-     * Returns human readable date.
-     *
-     * @param  array $config An optional array with configuration options.
-     * @return string  Formatted date.
-     */
-    public function humanize($config = array())
-    {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'date'      => null,
-            'timezone'  => date_default_timezone_get(),
-            'default'   => $this->translate('Never'),
-            'period'    => 'second',
-
-        ));
-
-        $result = $config->default;
-
-        if(!in_array($config->date, array('0000-00-00 00:00:00', '0000-00-00')))
-        {
-            try
-            {
-                $date = $this->getObject('date', array('date' => $config->date, 'timezone' => 'UTC'));
-                $date->setTimezone(new DateTimeZone($config->timezone));
-
-                $result = $date->humanize($config->period);
-            }
-            catch(Exception $e) {}
-        }
-        return $result;
     }
 }
