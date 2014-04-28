@@ -15,37 +15,21 @@
  */
 class ComKoowaViewUsersJson extends KViewJson
 {
-    /**
-     * Only keys returned by this method will be rendered by the view
-     *
-     * @return array
-     */
-    protected function _getAllowedKeys()
+    public function __construct(KObjectConfig $config)
     {
-        return array('id', 'name');
+        parent::__construct($config);
+
+        // Only allow fields in the config option for security reasons
+        $this->_fields = array_intersect(KObjectConfig::unbox($config->fields), $this->_fields);
     }
 
-    /**
-     * User row data getter.
-     *
-     * Overridden for un-setting sensible data.
-     *
-     * @param KModelEntityInterface $entity The user row.
-     * @return array Associative array containing the row's data.
-     */
-    protected function _getUser(KModelEntityInterface $entity)
+    protected function _initialize(KObjectConfig $config)
     {
-        $data    = $entity->toArray();
-        $allowed = $this->_getAllowedKeys();
-
-        foreach ($data as $key => $value)
-        {
-            if (!in_array($key, $allowed)) {
-                unset($data[$key]);
-            }
+        if (empty($config->fields)) {
+            $config->fields = array('id', 'name');
         }
 
-        return $data;
+        parent::_initialize($config);
     }
 
     /**
