@@ -30,11 +30,25 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     protected $_package;
 
     /**
-     * Resource name for the item to index
+     * Entity name to index
      *
      * @var string
      */
-    protected $_resource;
+    protected $_entity;
+
+    /**
+     * Category entity name
+     *
+     * @var string
+     */
+    protected $_category_entity;
+
+    /**
+     * Entity model
+     *
+     * @var KModelInterface
+     */
+    protected $_model;
 
     /**
      * Event context that is passed to events
@@ -42,20 +56,6 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
      * @var string
      */
     protected $_event_context;
-
-    /**
-     * Category resource name
-     *
-     * @var string
-     */
-    protected $_category_resource;
-
-    /**
-     * Resource model
-     *
-     * @var KModelInterface
-     */
-    protected $_resource_model;
 
     /**
      * Constructor.
@@ -72,13 +72,13 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
             $config->package = $this->getMixer()->getIdentifier()->package;
         }
 
-        $this->_package   = $config->package;
-        $this->_resource  = $config->resource;
-        $this->_resource_model    = $config->resource_model;
-        $this->_event_context     = 'com_'.$config->package.'.'.$this->_resource;
-        $this->_category_resource = $config->category_resource;
+        $this->_package  = $config->package;
+        $this->_entity = $config->entity;
+        $this->_model    = $config->model;
+        $this->_event_context     = 'com_'.$config->package.'.'.$this->_entity;
+        $this->_category_entity = $config->category_resource;
 
-        if (empty($this->_resource)) {
+        if (empty($this->_entity)) {
             throw new UnexpectedValueException('Resource cannot be empty in finder behavior');
         }
     }
@@ -96,10 +96,10 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
         $config->append(array(
             'priority' => self::PRIORITY_LOW,
             'package'  => null,
-            'resource' => null,
+            'entity' => null,
             'category_resource' => 'category'
         ))->append(array(
-            'resource_model' => KStringInflector::pluralize($config->resource)
+            'model' => KStringInflector::pluralize($config->entity)
         ));
 
         parent::_initialize($config);
@@ -113,7 +113,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
      */
     protected function _getCategoryChildren(KModelEntityInterface $category)
     {
-        return $this->_getResourceModel()->category($category->id)->fetch();
+        return $this->_getModel()->category($category->id)->fetch();
     }
 
     /**
@@ -121,18 +121,18 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
      *
      * @return KModelAbstract
      */
-    protected function _getResourceModel()
+    protected function _getModel()
     {
-        if (!$this->_resource_model instanceof KModelInterface)
+        if (!$this->_model instanceof KModelInterface)
         {
-            if (strpos($this->_resource_model, '.') === false) {
-                $this->_resource_model = 'com://admin/'.$this->_package.'.model.'.$this->_resource_model;
+            if (strpos($this->_model, '.') === false) {
+                $this->_model = 'com://admin/'.$this->_package.'.model.'.$this->_model;
             }
 
-            $this->_resource_model = $this->getObject($this->_resource_model);
+            $this->_model = $this->getObject($this->_model);
         }
 
-        return $this->_resource_model;
+        return $this->_model;
     }
 
     /**
@@ -160,7 +160,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     protected function _reindexCategory(KModelEntityInterface $category)
     {
         $dispatcher = $this->_getDispatcher();
-        $collection     = $this->_getCategoryChildren($category);
+        $collection = $this->_getCategoryChildren($category);
 
         foreach ($collection as $entity) {
             $dispatcher->trigger('onFinderAfterSave', array($this->_event_context, $entity, false));
@@ -174,7 +174,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
      */
     protected function _beforeEdit(KControllerContextInterface $context)
     {
-        if ($this->getMixer()->getIdentifier()->name === $this->_category_resource)
+        if ($this->getMixer()->getIdentifier()->name === $this->_category_entity)
         {
             $collection = $this->getModel()->fetch();
 
@@ -201,7 +201,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
         {
             if ($entity->getStatus() !== KDatabase::STATUS_FAILED)
             {
-                if ($name === $this->_category_resource)
+                if ($name === $this->_category_entity)
                 {
                     if (($entity->old_enabled !== $entity->enabled) || ($entity->old_access !== $entity->access)) {
                         $this->_reindexCategory($entity);
@@ -223,7 +223,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
         $name = $this->getMixer()->getIdentifier()->name;
         $entity  = $context->result;
 
-        if ($name === $this->_resource && $entity->getStatus() !== KDatabase::STATUS_FAILED) {
+        if ($name === $this->_entity && $entity->getStatus() !== KDatabase::STATUS_FAILED) {
             $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $entity, true));
         }
     }
@@ -237,7 +237,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     {
         $name = $this->getMixer()->getIdentifier()->name;
 
-        if ($name === $this->_resource)
+        if ($name === $this->_entity)
         {
             foreach ($context->result as $entity)
             {
