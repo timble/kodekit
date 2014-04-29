@@ -25,20 +25,23 @@ class ComKoowaTemplateHelperEvent extends KTemplateHelperAbstract
     public function trigger($config = array())
     {
         // Can't put arguments through KObjectConfig as it loses referenced variables
-        $arguments = isset($config['arguments']) ? $config['arguments'] : array();
-        $config    = new KObjectConfig($config);
+        $attributes = isset($config['attributes']) ? $config['attributes'] : array();
+        $config     = new KObjectConfig($config);
+        $config->append(array(
+            'name'         => null,
+            'import_group' => null
+        ));
+
+        if (empty($config->name)) {
+            throw new InvalidArgumentException('Event name is required');
+        }
 
         if ($config->import_group) {
             JPluginHelper::importPlugin($config->import_group);
         }
 
-        $result  = '';
-
-        if ($config->event)
-        {
-            $results = JDispatcher::getInstance()->trigger($config->event, $arguments);
-            $result  = trim(implode("\n", $results));
-        }
+        $results = JDispatcher::getInstance()->trigger($config->name, $attributes);
+        $result  = trim(implode("\n", $results));
 
         return $result;
     }
