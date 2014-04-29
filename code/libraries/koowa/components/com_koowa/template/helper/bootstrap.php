@@ -88,8 +88,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
         // We assume that the template has either loaded Bootstrap or provided styles for it in 3.0+
         if ($config->load_default && !isset(self::$_loaded['bootstrap-css']))
         {
-            $template = '<style src="media://koowa/com_koowa/css/bootstrap%s.css" />';
-            $html    .= sprintf($template, $config->debug ? '' : '.min');
+            $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
 
             self::$_loaded['bootstrap-css'] = true;
         }
