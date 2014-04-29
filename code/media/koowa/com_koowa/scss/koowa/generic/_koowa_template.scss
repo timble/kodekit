@@ -19,6 +19,15 @@ div.old-ie {
     @include box-sizing(border-box);
   }
 
+  a {
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+
   // Joomla modal specific classes
   &.joomla_modal {
     padding: 0;
