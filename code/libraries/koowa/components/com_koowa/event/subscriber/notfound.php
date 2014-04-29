@@ -35,13 +35,14 @@ class ComKoowaEventSubscriberNotfound extends KEventSubscriberAbstract
 
             if ($request->getFormat() == 'html')
             {
-                $url = $request->getReferrer();
+                $url     = $request->getReferrer();
+                $message = $this->getObject('translator')->translate($event->getMessage());
 
                 if (!$url) {
                     $url = JURI::base();
                 }
 
-                $response->setRedirect($url, $event->getMessage(), KControllerResponse::FLASH_ERROR)
+                $response->setRedirect($url, $message, KControllerResponse::FLASH_ERROR)
                           ->send();
 
                 //Stop event propagation
