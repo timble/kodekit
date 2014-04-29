@@ -26,17 +26,31 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
+            'id'        => null,
+            'name'   	=> 'id',
             'value' 	=> null,
-            'text'   	=> '',
-            'disable'	=> false,
+            'label'   	=> '',
+            'disabled'	=> false,
+            'level'     => 1,
             'attribs'	=> array(),
         ));
 
         $option = new stdClass;
+        $option->id       = $config->id;
+        $option->name     = $config->name;
         $option->value 	  = $config->value;
-        $option->text  	  = trim($config->text) ? $config->text : $config->value;
-        $option->disable  = $config->disable;
-        $option->attribs  = $config->attribs;
+        $option->label    = trim( $config->label ) ? $config->label : $config->value;
+        $option->disabled = $config->disabled;
+        $option->level    = $config->level;
+        $option->attribs  = KObjectConfig::unbox($config->attribs);
+
+        if($config->level) {
+            $option->attribs['class'] = array('level'.$config->level);
+        }
+
+        if($config->disabled) {
+            $option->attribs['class'] = array('disabled');
+        }
 
         return $option;
     }
@@ -87,13 +101,13 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
         $config->append(array(
             'options' 	=> array(),
             'name'   	=> 'id',
-            'attribs'	=> array('size' => 1),
             'selected'	=> null,
+            'disabled'  => null,
             'translate'	=> false,
-            'select2'   => false
+            'select2'   => false,
+            'attribs'	=> array('size' => 1),
         ));
-
-        $name    = $config->name;
+;
         $attribs = $this->buildAttributes($config->attribs);
 
         $html = array();
@@ -102,14 +116,14 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
             if ($config->deselect && !$config->attribs->multiple)
             {
                 // select2 needs the first option empty for placeholders to work on single select boxes
-                $config->options = array_merge(array($this->option(array('text' => ''))),
+                $config->options = array_merge(array($this->option(array('label' => ''))),
                     $config->options->toArray());
             }
 
             $html[] = $this->_optionlistSelect2($config);
         }
 
-        $html[] = '<select name="'. $name .'" '. $attribs .'>';
+        $html[] = '<select name="'. $config->name .'" '. $attribs .'>';
 
         foreach($config->options as $group => $options)
         {
@@ -121,8 +135,8 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 
             foreach ($options as $option)
             {
-                $value  = $option->value;
-                $text   = $config->translate ? $this->translate( $option->text ) : $option->text;
+                $value = $option->value;
+                $label = $config->translate ? $this->translate( $option->label ) : $option->label;
 
                 $extra = '';
                 if(isset($option->disable) && $option->disable) {
@@ -130,7 +144,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
                 }
 
                 if(isset($option->attribs)) {
-                    $extra .= ' '.$this->buildAttributes($option->attribs);;
+                    $extra .= ' '.$this->buildAttributes($option->attribs);
                 }
 
                 if(!is_null($config->selected))
@@ -139,7 +153,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
                     {
                         foreach ($config->selected as $selected)
                         {
-                            $sel = is_object( $selected ) ? $selected->value : $selected;
+                            $sel = is_object($selected) ? $selected->value : $selected;
                             if ((string) $value == (string) $sel)
                             {
                                 $extra .= 'selected="selected"';
@@ -150,7 +164,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
                     else $extra .= ((string) $value == (string) $config->selected ? ' selected="selected"' : '');
                 }
 
-                $html[] = '<option value="'. $value .'" '. $extra .'>' . $text . '</option>';
+                $html[] = '<option value="'. $value .'" '.$extra.'>' . $label . '</option>';
             }
 
             if (!is_numeric($group)) {
@@ -159,6 +173,126 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
         }
 
         $html[] = '</select>';
+
+        return implode(PHP_EOL, $html);
+    }
+
+    /**
+     * Generates an HTML radio list
+     *
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function radiolist($config = array())
+    {
+        $config = new ObjectConfig($config);
+        $config->append(array(
+            'options' 	=> array(),
+            'legend'    => null,
+            'name'   	=> 'id',
+            'selected'	=> null,
+            'translate'	=> false,
+            'attribs'	=> array(),
+        ));
+
+        $attribs = $this->buildAttributes($config->attribs);
+
+        $html   = array();
+        $html[] = '<fieldset  name="'. $config->name .'" '. $attribs .'>';
+
+        if(isset($config->legend)) {
+            $html[] = '<legend>'.$config->translate ? $this->translate( $config->legend ) : $config->legend.'</legend>';
+        }
+
+        foreach($config->options as $option)
+        {
+            $value = $option->value;
+            $label = $config->translate ? $this->translate( $option->label ) : $option->label;
+
+            $extra = ($value == $config->selected ? 'checked="checked"' : '');
+
+            if(isset($option->disabled) && $option->disabled) {
+                $extra .= 'disabled="disabled"';
+            }
+
+            if(isset($option->attribs)) {
+                $attribs = $this->buildAttributes($option->attribs);
+            }
+
+            $html[] = '<label class="radio" for="'.$config->name.$option->id.'">';
+            $html[] = '<input type="radio" name="'.$config->name.'" id="'.$config->name.$option->id.'" value="'.$value.'" '.$extra.' '.$attribs.' />';
+            $html[] = $label;
+            $html[] = '</label>';
+        }
+
+        $html[] = '</fieldset>';
+
+        return implode(PHP_EOL, $html);
+    }
+
+    /**
+     * Generates an HTML check list
+     *
+     * @param 	array|KObjectConfig 	$config An optional array with configuration options
+     * @return	string	Html
+     */
+    public function checklist( $config = array())
+    {
+        $config = new KObjectConfigJson($config);$config->append(array(
+        'options' 	=> array(),
+        'legend'    => null,
+        'name'   	=> 'id',
+        'selected'	=> null,
+        'translate'	=> false,
+        'attribs'	=> array(),
+    ));
+
+        $attribs = $this->buildAttributes($config->attribs);
+
+        $html = array();
+
+        $html[] = '<fieldset  name="'. $config->name .'" '. $attribs .'>';
+
+        if(isset($config->legend)) {
+            $html[] = '<legend>'.$config->translate ? $this->translate( $config->legend ) : $config->legend.'</legend>';
+        }
+
+        foreach($config->options as $option)
+        {
+            $value = $option->value;
+            $label = $config->translate ? $this->translate( $option->label ) : $option->label;
+
+            $extra = '';
+
+            if ($config->selected instanceof KObjectConfig)
+            {
+                foreach ($config->selected as $selected)
+                {
+                    $selected = is_object( $selected ) ? $selected->{$config->value} : $selected;
+                    if ($value == $selected)
+                    {
+                        $extra .= 'checked="checked"';
+                        break;
+                    }
+                }
+            }
+            else $extra .= ($value == $config->selected) ? 'checked="checked"' : '';
+
+            if(isset($option->disabled) && $option->disabled) {
+                $extra .= 'disabled="disabled"';
+            }
+
+            if(isset($option->attribs)) {
+                $attribs = $this->buildAttributes($option->attribs);
+            }
+
+            $html[] = '<label class="checkbox" for="'.$option->name.$option->id.'">';
+            $html[] = '<input type="checkbox" name="'.$option->name.'[]" id="'.$option->name.$option->id.'" value="'.$value.'" '.$extra.' '.$attribs.' />';
+            $html[] = $label;
+            $html[] = '</label>';
+        }
+
+        $html[] = '</fieldset>';
 
         return implode(PHP_EOL, $html);
     }
@@ -199,111 +333,6 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
         $html[] = '<label for="'.$name.'0" class="btn">';
         $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
-
-        return implode(PHP_EOL, $html);
-    }
-    
-    /**
-     * Generates an HTML check list
-     *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
-     * @return	string	Html
-     */    
-    public function checklist( $config = array())
-    {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-                'list' 		=> null,
-                'name'   	=> 'id',
-                'attribs'	=> array(),
-                'key'		=> 'id',
-                'text'		=> 'title',
-                'selected'	=> null,
-                'translate'	=> false
-        ));
-
-        $name    = $config->name;
-        $attribs = $this->buildAttributes($config->attribs);
-
-        $html = array();
-        foreach ($config->list as $entity)
-        {
-            $key  = $entity->{$config->key};
-            $text = $config->translate ? $this->translate($entity->{$config->text}) : $entity->{$config->text};
-
-            $extra = '';
-
-            if ($config->selected instanceof KObjectConfig)
-            {
-                foreach ($config->selected as $value)
-                {
-                    $sel = is_object( $value ) ? $value->{$config->key} : $value;
-                    if ($key == $sel) {
-                        $extra .= 'checked="checked"';
-                        break;
-                    }
-                }
-            }
-            else $extra .= ($key == $config->selected) ? 'checked="checked"' : '';
-
-            $html[] = '<label class="checkbox" for="'.$name.$key.'">';
-            $html[] = '<input type="checkbox" name="'.$name.'[]" id="'.$name.$key.'" value="'.$key.'" '.$extra.' '.$attribs.' />';
-            $html[] = $text;
-            $html[] = '</label>';
-        }
-
-        return implode(PHP_EOL, $html);
-    }
-
-    /**
-     * Generates an HTML radio list
-     *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
-     * @return	string	Html
-     */
-    public function radiolist($config = array())
-    {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'list' 		=> null,
-            'name'   	=> 'id',
-            'attribs'	=> array(),
-            'key'		=> 'id',
-            'text'		=> 'title',
-            'selected'	=> null,
-            'translate'	=> false
-        ));
-
-        $name    = $config->name;
-        $attribs = $this->buildAttributes($config->attribs);
-
-        $html = array();
-        foreach($config->list as $entity)
-        {
-            $key  = $entity->{$config->key};
-            $text = $config->translate ? $this->translate( $entity->{$config->text} ) : $entity->{$config->text};
-            $id	  = isset($entity->id) ? $entity->id : null;
-
-            $extra = '';
-
-            if ($config->selected instanceof KObjectConfig)
-            {
-                foreach ($config->selected as $value)
-                {
-                    $sel = is_object( $value ) ? $value->{$config->key} : $value;
-                    if ($key == $sel)
-                    {
-                        $extra .= 'selected="selected"';
-                        break;
-                    }
-                }
-            }
-            else $extra .= ($key == $config->selected ? 'checked="checked"' : '');
-
-            $html[] = '<input type="radio" name="'.$name.'" id="'.$name.$id.'" value="'.$key.'" '.$extra.' '.$attribs.' />';
-            $html[] = '<label for="'.$name.$id.'">'.$text.'</label>';
-            $html[] = '<br />';
-        }
 
         return implode(PHP_EOL, $html);
     }

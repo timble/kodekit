@@ -29,16 +29,15 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'autocomplete' => true,
             'model'        => 'users',
             'name'         => 'user',
             'value'        => 'id',
-            'text'         => 'name',
+            'label'        => 'name',
             'sort'         => 'name',
             'validate'     => false
         ));
 
-        return $this->_listbox($config);
+        return $this->_autocomplete($config);
     }
 
     /**
@@ -62,11 +61,11 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         $options = array();
 
         if($config->deselect) {
-            $options[] = $this->option(array('text' => $config->prompt, 'value' => ''));
+            $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
         }
 
-        $options[] = $this->option(array('text' => $this->translate( 'Enabled' ) , 'value' => 1 ));
-        $options[] = $this->option(array('text' => $this->translate( 'Disabled' ), 'value' => 0 ));
+        $options[] = $this->option(array('label' => $this->translate( 'Enabled' ) , 'value' => 1 ));
+        $options[] = $this->option(array('label' => $this->translate( 'Disabled' ), 'value' => 0 ));
 
         //Add the options to the config object
         $config->options = $options;
@@ -95,16 +94,47 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         $options = array();
     
         if ($config->deselect) {
-            $options[] = $this->option(array('text' => $config->prompt, 'value' => ''));
+            $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
         }
     
-        $options[] = $this->option(array('text' => $this->translate('Published'), 'value' => 1 ));
-        $options[] = $this->option(array('text' => $this->translate('Unpublished') , 'value' => 0 ));
+        $options[] = $this->option(array('label' => $this->translate('Published'), 'value' => 1 ));
+        $options[] = $this->option(array('label' => $this->translate('Draft') , 'value' => 0 ));
     
         //Add the options to the config object
         $config->options = $options;
     
         return $this->optionlist($config);
+    }
+
+    /**
+     * Generates an HTML optionlist based on the distinct data from a model column.
+     *
+     * The column used will be defined by the name -> value => column options in cascading order.
+     *
+     * If no 'model' name is specified the model identifier will be created using the helper identifier. The model name
+     * will be the pluralised package name.
+     *
+     * If no 'value' option is specified the 'name' option will be used instead. If no 'text'  option is specified the
+     * 'value' option will be used instead.
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     * @see __call()
+     */
+    protected function _render($config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'autocomplete' => false
+        ));
+
+        if($config->autocomplete) {
+            $result = $this->_autocomplete($config);
+        } else {
+            $result = $this->_listbox($config);
+        }
+
+        return $result;
     }
 
     /**
@@ -117,7 +147,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      * the helper identifier. The model name will be the pluralised package name.
      *
      * If no 'value' option is specified the 'name' option will be used instead.
-     * If no 'text'  option is specified the 'value' option will be used instead.
+     * If no 'label' option is specified the 'value' option will be used instead.
      *
      * @param 	array|KObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
@@ -131,53 +161,47 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'attribs'	  => array(),
             'model'		  => KStringInflector::pluralize($this->getIdentifier()->package),
             'deselect'    => true,
-            'prompt'      => '- Select -',
-            'unique'	  => true
+            'prompt'    => '- '.$this->translate('Select').' -',
+            'unique'	  => true,
+            'select2'         => false
         ))->append(array(
-            'select2'         => false,
             'value'		      => $config->name,
             'selected'        => $config->{$config->name},
             'identifier'      => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
-            'text'		      => $config->value,
+            'label'		      => $config->value,
         ))->append(array(
-            'filter' 	      => array('sort' => $config->text),
+            'filter' 	      => array('sort' => $config->label),
         ));
 
-        $html = '';
+        $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
 
-        if ($config->autocomplete) {
-            $html .= $this->_autocomplete($config);
+        //Get the list of items
+        $items = array();
+        foreach($list as $key => $item) {
+            $items[$key] = $item->getProperty($config->value);
         }
-        else
+
+        if ($config->unique) {
+            $items = array_unique($items);
+        }
+
+        //Compose the options array
+        $options = array();
+        if($config->deselect) {
+            $options[] = $this->option(array('label' => $this->translate($config->prompt)));
+        }
+
+        foreach ($items as $key => $value)
         {
-            $options = array();
-
-            $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
-
-            //Get the list of items
-            $items = array();
-            foreach($list as $key => $item) {
-                $items[$key] = $item->getProperty($config->value);
-            }
-
-            if ($config->unique) {
-                $items = array_unique($items);
-            }
-
-            foreach ($items as $key => $value)
-            {
-                $item      = $list->find($key);
-                $options[] = $this->option(array('text' => $item->{$config->text}, 'value' => $item->{$config->value}));
-            }
-
-            //Add the options to the config object
-            $config->options = $options;
-
-            $html .= $this->optionlist($config);
+            $item      = $list->find($key);
+            $options[] = $this->option(array('label' => $item->{$config->label}, 'value' => $item->{$config->value}));
         }
 
-        return $html;
+        //Add the options to the config object
+        $config->options = $options;
+
+        return $this->optionlist($config);
     }
 
     /**
@@ -192,11 +216,26 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
+            'name'	   => '',
             'attribs'  => array(),
+            'model'	   => KStringInflector::pluralize($this->getIdentifier()->package),
             'validate' => true,
             'filter'   => array(),
-            'element' => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
-            'options' => array('multiple' => (bool) $config->attribs->multiple)
+        ))->append(array(
+            'element'    => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
+            'options'    => array('multiple' => (bool) $config->attribs->multiple),
+            'deselect'   => true,
+            'prompt'     => '- '.$this->translate('Select').' -',
+            'unique'     => true,
+            'select2'    => false,
+            'value'	     => $config->name,
+            'selected'   => $config->{$config->name},
+            'identifier' => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
+        ))->append(array(
+            'label'	     => $config->value,
+        ))->append(array(
+            'text'       => $config->label,
+            'filter' 	 => array('sort' => $config->label),
         ));
 
         if (!$config->url)
@@ -262,7 +301,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
 
-        $config->attribs->name  = $config->name;
+        $config->attribs->name = $config->name;
 
         if ($config->selected) {
             $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
@@ -293,9 +332,11 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         if(!in_array($method, $this->getMethods()))
         {
             $config = $arguments[0];
-            $config['name']  = KStringInflector::singularize(strtolower($method));
+            if(!isset($config['name'])) {
+                $config['name']  = KStringInflector::singularize(strtolower($method));
+            }
 
-            return $this->_listbox($config);
+            return $this->_render($config);
         }
 
         return parent::__call($method, $arguments);

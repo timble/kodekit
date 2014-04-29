@@ -471,6 +471,10 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 'url'           => $config->url,
                 'multiple'      => false
             )
+        ))->append(array(
+            'options' => array(
+                'label' => $config->text
+            )
         ));
 
         $html ='';

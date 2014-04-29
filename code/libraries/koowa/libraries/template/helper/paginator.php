@@ -93,11 +93,11 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
                 $selected = $value;
             }
 
-            $options[] = $this->option(array('text' => $value, 'value' => $value));
+            $options[] = $this->option(array('label' => $value, 'value' => $value));
         }
 
         if ($config->limit == $config->total) {
-            $options[] = $this->option(array('text' => $this->translate('All'), 'value' => 0));
+            $options[] = $this->option(array('label' => $this->translate('All'), 'value' => 0));
         }
 
         $html .= $this->optionlist(array('options' => $options, 'name' => 'limit', 'attribs' => $config->attribs, 'selected' => $selected));
