@@ -96,21 +96,10 @@ class ModKoowaHtml extends KViewHtml
             $value = clone $value;
 
             if(is_string($value->params)) {
-                $value->params = $this->_parseParams($value->params);
+                $value->params = $this->getObject('object.config.factory')->fromString('json', $value->params);
             }
         }
 
         parent::__set($property, $value);
-    }
-
-	/**
-     * Method to extract key/value pairs out of a string
-     *
-     * @param   string  String containing the parameters
-     * @return  array   Key/Value pairs for the attributes
-     */
-    protected function _parseParams( $string )
-    {
-        return $this->getObject('object.config.factory')->fromString('json', $string);
     }
 }
