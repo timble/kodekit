@@ -1,0 +1,5 @@
+Joomlatools framework loads Bootstrap by default on Joomla 2.5.
+
+If your template already uses Bootstrap this might lead to inconsistencies in the look and feel of your site.
+
+Rename this file from _no-bootstrap to no-bootstrap to turn off loading Bootstrap.
