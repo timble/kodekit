@@ -112,12 +112,11 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 
         $html = array();
 
-        if ($config->select2) {
-            if ($config->deselect && !$config->attribs->multiple)
-            {
-                // select2 needs the first option empty for placeholders to work on single select boxes
-                $config->options = array_merge(array($this->option(array('label' => ''))),
-                    $config->options->toArray());
+        if ($config->select2)
+        {
+            // select2 needs the first option empty for placeholders to work on single select boxes
+            if ($config->deselect && !$config->attribs->multiple) {
+                $config->options = array_merge(array($this->option(array('label' => ''))), $config->options->toArray());
             }
 
             $html[] = $this->_optionlistSelect2($config);
@@ -185,7 +184,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
      */
     public function radiolist($config = array())
     {
-        $config = new ObjectConfig($config);
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'options' 	=> array(),
             'legend'    => null,
@@ -238,14 +237,15 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
      */
     public function checklist( $config = array())
     {
-        $config = new KObjectConfigJson($config);$config->append(array(
-        'options' 	=> array(),
-        'legend'    => null,
-        'name'   	=> 'id',
-        'selected'	=> null,
-        'translate'	=> false,
-        'attribs'	=> array(),
-    ));
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'options' 	=> array(),
+            'legend'    => null,
+            'name'   	=> 'id',
+            'selected'	=> null,
+            'translate'	=> false,
+            'attribs'	=> array(),
+        ));
 
         $attribs = $this->buildAttributes($config->attribs);
 
