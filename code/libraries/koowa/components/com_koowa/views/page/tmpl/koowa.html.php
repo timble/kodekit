@@ -20,7 +20,7 @@ defined('KOOWA') or die; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 
-    <style src="media://koowa/com_koowa/css/bootstrap.min.css" type="text/css" />
+    <style src="media://koowa/com_koowa/css/bootstrap.css" type="text/css" />
 
     <script type="text/javascript">
     // Add a "joomla_modal" class to the HTML element if we are rendering inside a Squeezebox modal

@@ -68,21 +68,6 @@
     text-decoration: none;
   }
 
-  a.btn-primary {
-    background: #ddd;
-    border-color: #ccc;
-    color: #333;
-    text-shadow: none;
-
-    &:hover,
-    &:focus {
-      background: darken(#ddd, 10%);
-      border-color: darken(#ccc, 10%);
-      color: #333;
-      text-shadow: none;
-    }
-  }
-
   // Custom joomla classes
   .koowa .nav-tabs>li {
     margin-bottom: -1px !important;
