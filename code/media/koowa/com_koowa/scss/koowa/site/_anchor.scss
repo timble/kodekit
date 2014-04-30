@@ -1,15 +1,14 @@
 .koowa_anchor {
   display: block;
+  width: 100%;
   position: absolute;
   top: 100%;
   left: 0;
-  width: auto;
   visibility: hidden;
-  background: #fff;
-  border-top: 5px solid transparent;
+  padding-top: 5px;
 
   a {
-    display: block;
+    display: inline-block;
     width: auto;
     padding: 5px 10px;
     white-space: nowrap;
@@ -20,9 +19,15 @@
     font-weight: 400;
     font-style: normal;
     text-transform: none;
-    text-decoration: none;
+    text-decoration: underline;
     text-align: left;
     text-shadow: none;
     letter-spacing: 0;
+    background: #fff;
+    color: #333;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
