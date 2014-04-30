@@ -207,16 +207,15 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
         $html .= $this->translate($config->title);
 
         // Mark the current column
-        if ($config->column == $config->sort) {
+        if ($config->column == $config->sort)
+        {
             if (strtolower($config->direction) === 'asc') {
                 $html .= ' <span class="koowa_icon--sort_up koowa_icon--12"></span>';
             } else {
                 $html .= ' <span class="koowa_icon--sort_down koowa_icon--12"></span>';
             }
         }
-        else {
-            $html .= ' <span class="koowa_icon--sort koowa_icon--12"></span>';
-        }
+        else $html .= ' <span class="koowa_icon--sort koowa_icon--12"></span>';
 
         $html .= '</a>';
 
@@ -251,9 +250,8 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
             $data    = htmlentities(json_encode($config->data->toArray()));
             $attribs = 'style="cursor: pointer;color:'.$config->color.'" data-action="edit" data-data="'.$data.'"
                 title="'.$config->tooltip.'"';
-        } else {
-            $attribs = 'style="color:'.$config->color.'"';
         }
+        else $attribs = 'style="color:'.$config->color.'"';
 
         $html = '<span class="koowa-tooltip koowa_icon--%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
