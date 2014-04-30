@@ -677,7 +677,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             // we can run from http://localhost/administrator/administrator
             $i = 1;
             $current = $this->getApplicationPath($this->getApplication());
-            $path    = str_replace($current, '', $url->getPath(), $i);
+            $path    = str_ireplace($current, '', $url->getPath(), $i);
             $path   .= $this->getApplicationPath($application);
 
             $url->setPath($path);
