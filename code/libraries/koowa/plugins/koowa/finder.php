@@ -331,7 +331,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
             $item->publish_end_date = $item->unpublish_on;
         }
 
-        // Translate the state. Articles should only be published if the category is published.
         $item->state = $item->enabled;
 
         // Set the item type.
@@ -351,18 +350,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         // Add the author taxonomy data.
         if (!empty($item->created_by_name)) {
             $item->addTaxonomy('Author', $item->created_by_name);
-        }
-
-        // Add the category taxonomy data.
-        if (!empty($item->category_title))
-        {
-            $category_state  = isset($item->category_enabled) ? $item->category_enabled : 1;
-            $category_access = isset($item->category_access) ? $item->category_access   : 1;
-
-            $item->state  = min($item->enabled, $category_state);
-            $item->access = max($item->access,  $category_access);
-
-            $item->addTaxonomy('Category', $item->category_title, $category_state, $category_access);
         }
 
         return $item;
