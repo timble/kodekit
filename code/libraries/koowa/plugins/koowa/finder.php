@@ -36,7 +36,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      *
      * @var string
      */
-    protected $resource;
+    protected $entity;
 
     /**
      * Model identifier/model object
@@ -44,13 +44,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      * @var KObjectIdentifier
      */
     protected $model;
-
-    /**
-     * Model identifier/model object
-     *
-     * @var KObjectIdentifier
-     */
-    protected $category_model;
 
     /**
      * Array of instructions. These are used to tell the indexer to include certain properties their importance
@@ -96,13 +89,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         $config->append(array(
             'package' => strtolower(substr(get_class($this), 9)) // Remove plgFinder from class name
         ))->append(array(
-            'resource' => $config->package,
+            'entity' => $config->package,
         ))->append(array(
-            'layout'     => $config->resource,
-            'model'      => KStringInflector::pluralize($config->resource),
+            'layout'     => $config->entity,
+            'model'      => KStringInflector::pluralize($config->entity),
             'context'    => $config->package,
             'extension'  => 'com_'.$config->package,
-            'type_title' => ucfirst($config->resource),
+            'type_title' => ucfirst($config->entity),
             'instructions' => array(
                 FinderIndexer::TEXT_CONTEXT => array('description'),
                 FinderIndexer::META_CONTEXT => array('created_by_name'),
@@ -121,7 +114,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     public function onFinderAfterDelete($context, $table)
     {
-        if ($context === $this->extension.'.'.$this->resource) {
+        if ($context === $this->extension.'.'.$this->entity) {
             $id = $table->id;
         }
         elseif ($context == 'com_finder.index') {
@@ -146,7 +139,7 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     public function onFinderAfterSave($context, $entity, $isNew)
     {
-        if ($context == $this->extension.'.'.$this->resource) {
+        if ($context == $this->extension.'.'.$this->entity) {
             $this->reindex($entity->id);
         }
 
@@ -383,6 +376,6 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
      */
     protected function getLink(KModelEntityInterface $entity)
     {
-        return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->resource, $entity->slug);
+        return sprintf('index.php?option=%s&view=%s&slug=%s', $this->extension, $this->entity, $entity->slug);
     }
 }
