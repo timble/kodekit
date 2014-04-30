@@ -1,0 +1,18 @@
+.koowa_anchor {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: auto;
+  visibility: hidden;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  a {
+    display: block;
+    width: auto;
+    padding: 5px 10px;
+    white-space: nowrap;
+  }
+}
