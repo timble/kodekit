@@ -19,7 +19,7 @@
             if (label.length == 0) {
                 var railsGenerated = $(element).next('span.help-inline');
                 if (railsGenerated.length) {
-                    railsGenerated.attr('for', this.idOrName(element))
+                    railsGenerated.attr('for', this.idOrName(element));
                     railsGenerated.attr('generated', 'true');
                     label = railsGenerated;
                 }
@@ -80,12 +80,15 @@
             }
         },
         errorPlacement: function(error, element) {
-            var isInputAppend = ($(element).parent('div.input-append').length > 0);
+            var $element      = $(element);
+            var isInputAppend = ($element.parent('div.input-append').length > 0);
             if (isInputAppend) {
-                appendElement = $(element).next('span.add-on');
+                appendElement = $element.next('span.add-on');
                 error.insertAfter(appendElement);
             }else {
-                error.insertAfter(element);
+                // Insert it right out of input-group
+                var parent = $element.parent();
+                error.insertAfter(parent.hasClass('input-group') ? parent : $element);
             }
         }
     });
