@@ -348,8 +348,8 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
         }
 
         // Add the author taxonomy data.
-        if (!empty($item->created_by_name)) {
-            $item->addTaxonomy('Author', $item->created_by_name);
+        if ($entity->isCreatable()) {
+            $item->addTaxonomy('Author', $entity->getAuthor()->getName());
         }
 
         return $item;
