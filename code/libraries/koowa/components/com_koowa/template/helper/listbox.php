@@ -36,8 +36,9 @@ class ComKoowaTemplateHelperListbox extends KTemplateHelperListbox
         ));
 
         $prompt = false;
-        if ($config->deselect) {
-            // without &nbsp; Joomla strips the last hyphen of the prompt
+
+        // without &nbsp; Joomla strips the last hyphen of the prompt
+        if ($config->deselect)  {
             $prompt = array((object) array('value' => $config->deselect_value, 'text'  => $config->prompt.'&nbsp;'));
         }
 
