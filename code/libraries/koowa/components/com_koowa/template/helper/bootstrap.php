@@ -88,7 +88,8 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
         // We assume that the template has either loaded Bootstrap or provided styles for it in 3.0+
         if ($config->load_default && !isset(self::$_loaded['bootstrap-css']))
         {
-            if (!file_exists(JPATH_ROOT.'/media/koowa/com_koowa/css/no-bootstrap')) {
+            $template = JFactory::getApplication()->getTemplate();
+            if (!file_exists(JPATH_THEMES.'/'.$template.'/disable-joomlatools-bootstrap')) {
                 $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
             }
 
