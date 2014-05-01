@@ -17,30 +17,6 @@
 class KTemplateHelperListbox extends KTemplateHelperSelect
 {
     /**
-     * Provides a users select box.
-     *
-     * You have to create a user controller to use autocomplete.
-     * Autocomplete is highly recommended since a site with 10k users can make you run into memory limit issues.
-     *
-     * @param  array|KObjectConfig $config An optional configuration array.
-     * @return string The autocomplete users select box.
-     */
-    public function users($config = array())
-    {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'model'        => 'users',
-            'name'         => 'user',
-            'value'        => 'id',
-            'label'        => 'name',
-            'sort'         => 'name',
-            'validate'     => false
-        ));
-
-        return $this->_autocomplete($config);
-    }
-
-    /**
      * Generates an HTML enabled listbox
      *
      * @param   array   $config An optional array with configuration options
