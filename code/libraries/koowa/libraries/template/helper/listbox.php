@@ -121,7 +121,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         }
     
         $options[] = $this->option(array('label' => $this->translate('Published'), 'value' => 1 ));
-        $options[] = $this->option(array('label' => $this->translate('Draft') , 'value' => 0 ));
+        $options[] = $this->option(array('label' => $this->translate('Unpublished') , 'value' => 0 ));
     
         //Add the options to the config object
         $config->options = $options;
