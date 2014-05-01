@@ -362,6 +362,36 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	}
 
     /**
+     * Add a lock flash message if the resource is locked
+     *
+     * @param   KControllerContext	$context A command context object
+     * @return 	void
+     */
+    protected function _afterRead(KControllerContext $context)
+    {
+        $entity = $context->result;
+
+        //Add the notice if the resource is locked
+        if($this->canEdit() && $entity->isLockable() && $entity->isLocked())
+        {
+            //Prevent a re-render of the message
+            if($context->request->getUrl() != $context->request->getReferrer())
+            {
+                if($entity->isLockable() && $entity->isLocked())
+                {
+                    $user    = $this->getObject('user.provider')->load($entity->locked_by);
+                    $date    = $this->getObject('date', array('date' => $entity->locked_on));
+                    $message = $this->getObject('translator')->translate(
+                        'Locked by {name} {date}', array('name' => $user->getName(), 'date' => $date->humanize())
+                    );
+
+                    $context->response->addMessage($message, 'notice');
+                }
+            }
+        }
+    }
+
+    /**
      * Prevent editing a locked resource
      *
      * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
