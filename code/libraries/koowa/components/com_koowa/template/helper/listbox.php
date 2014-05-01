@@ -17,6 +17,27 @@
 class ComKoowaTemplateHelperListbox extends KTemplateHelperListbox
 {
     /**
+     * Provides a users select box.
+     *
+     * @param  array|KObjectConfig $config An optional configuration array.
+     * @return string The autocomplete users select box.
+     */
+    public function users($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'model'        => 'users',
+            'name'         => 'user',
+            'value'        => 'id',
+            'label'        => 'name',
+            'sort'         => 'name',
+            'validate'     => false
+        ));
+
+        return $this->_autocomplete($config);
+    }
+
+    /**
      * Generates an HTML access listbox
      *
      * @param   array   $config An optional array with configuration options

@@ -17,27 +17,52 @@
 class KTemplateHelperListbox extends KTemplateHelperSelect
 {
     /**
-     * Provides a users select box.
+     * Adds the option to enhance the select box using Select2
      *
-     * You have to create a user controller to use autocomplete.
-     * Autocomplete is highly recommended since a site with 10k users can make you run into memory limit issues.
-     *
-     * @param  array|KObjectConfig $config An optional configuration array.
-     * @return string The autocomplete users select box.
+     * @param array|KObjectConfig $config
+     * @return string
      */
-    public function users($config = array())
+    public function optionlist($config = array())
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'model'        => 'users',
-            'name'         => 'user',
-            'value'        => 'id',
-            'label'        => 'name',
-            'sort'         => 'name',
-            'validate'     => false
+            'prompt'    => '- '.$this->translate('Select').' -',
+            'options' 	=> array(),
+            'select2'   => false,
+            'attribs'	=> array(),
+        ))->append(array(
+            'select2_options' => array(
+                'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
+                'options' => array()
+            )
         ));
 
-        return $this->_autocomplete($config);
+        $html = '';
+
+        if ($config->select2)
+        {
+            if ($config->deselect)
+            {
+                // select2 needs the first option empty for placeholders to work on single select boxes
+                if (!$config->attribs->multiple) {
+                    $config->options = array_merge(array($this->option(array('label' => ''))), $config->options->toArray());
+                }
+
+                // special configuration for select2 placeholder
+                $config->select2_options->append(array(
+                    'options' => array(
+                        'placeholder' => $this->translate($config->prompt),
+                        'allowClear'  => true
+                    )
+                ));
+            }
+
+            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+        }
+
+        $html .= parent::optionlist($config);
+
+        return $html;
     }
 
     /**
@@ -53,7 +78,6 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'name'      => 'enabled',
             'attribs'   => array(),
             'deselect'  => true,
-            'prompt'    => '- '.$this->translate('Select').' -',
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));
@@ -86,7 +110,6 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'name'      => 'enabled',
             'attribs'   => array(),
             'deselect'  => true,
-            'prompt'    => '- '.$this->translate('Select').' -'
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));
@@ -161,9 +184,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'attribs'	  => array(),
             'model'		  => KStringInflector::pluralize($this->getIdentifier()->package),
             'deselect'    => true,
-            'prompt'    => '- '.$this->translate('Select').' -',
-            'unique'	  => true,
-            'select2'         => false
+            'unique'	  => true
         ))->append(array(
             'value'		      => $config->name,
             'selected'        => $config->{$config->name},

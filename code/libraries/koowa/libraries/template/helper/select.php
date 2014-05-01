@@ -56,40 +56,6 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
     }
 
     /**
-     * Enhances a select box using Select2
-     *
-     * @param array|KObjectConfig $config
-     * @return string
-     */
-    protected function _optionlistSelect2($config = array())
-    {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'prompt'    => '- '.$this->translate('Select').' -',
-            'attribs' => array()
-        ))->append(array(
-            'select2_options' => array(
-                'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
-                'options' => array()
-            )
-        ));
-
-        $html = '';
-
-        if ($config->deselect)
-        {
-            $config->select2_options->append(array('options' => array(
-                'placeholder' => $this->translate($config->prompt),
-                'allowClear'  => true
-            )));
-        }
-
-        $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
-
-        return $html;
-    }
-
-    /**
      * Generates an HTML select list
      *
      * @param 	array|KObjectConfig 	$config An optional array with configuration options
@@ -104,25 +70,12 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
             'selected'	=> null,
             'disabled'  => null,
             'translate'	=> false,
-            'select2'   => false,
             'attribs'	=> array('size' => 1),
         ));
-;
-        $attribs = $this->buildAttributes($config->attribs);
 
         $html = array();
 
-        if ($config->select2)
-        {
-            // select2 needs the first option empty for placeholders to work on single select boxes
-            if ($config->deselect && !$config->attribs->multiple) {
-                $config->options = array_merge(array($this->option(array('label' => ''))), $config->options->toArray());
-            }
-
-            $html[] = $this->_optionlistSelect2($config);
-        }
-
-        $html[] = '<select name="'. $config->name .'" '. $attribs .'>';
+        $html[] = '<select name="'. $config->name .'" '. $this->buildAttributes($config->attribs) .'>';
 
         foreach($config->options as $group => $options)
         {
