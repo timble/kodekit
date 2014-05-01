@@ -233,17 +233,6 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
     }
 
     /**
-     * Render an options button
-     *
-     * @param array|KObjectConfig $config
-     * @return string
-     */
-    public function options($config = array())
-    {
-        return $this->dialog($config);
-    }
-
-    /**
      * Decides if the renderers should use Bootstrap markup or not
      *
      * @return bool

@@ -84,6 +84,17 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperActionbar
         return $html;
     }
 
+    /**
+     * Render an options button
+     *
+     * @param array|KObjectConfig $config
+     * @return string
+     */
+    public function options($config = array())
+    {
+        return $this->dialog($config);
+    }
+
 	/**
      * Render a modal button
      *
