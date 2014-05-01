@@ -90,11 +90,11 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperActionbar
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function modal($config = array())
+    public function dialog($config = array())
     {
         JHtml::_('behavior.modal');
 
-        return parent::modal($config);
+        return parent::dialog($config);
     }
 
     /**

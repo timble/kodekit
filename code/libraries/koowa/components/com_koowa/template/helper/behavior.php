@@ -85,14 +85,14 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
      * @param array|KObjectConfig $config
 	 * @return string	The html output
 	 */
-	public function modal($config = array())
+	public function dialog($config = array())
 	{
 		$config = new KObjectConfigJson($config);
         $config->append(array(
             'debug'    => JFactory::getApplication()->getCfg('debug')
         ));
 
-        return parent::modal($config);
+        return parent::dialog($config);
 	}
 
     /**

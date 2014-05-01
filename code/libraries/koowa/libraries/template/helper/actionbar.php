@@ -220,7 +220,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function modal($config = array())
+    public function dialog($config = array())
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
@@ -240,7 +240,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function options($config = array())
     {
-        return $this->modal($config);
+        return $this->dialog($config);
     }
 
     /**

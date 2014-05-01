@@ -195,7 +195,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
      * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandModal(KControllerToolbarCommand $command)
+    protected function _commandDialog(KControllerToolbarCommand $command)
     {
         $command->append(array(
             'href'	  => ''
