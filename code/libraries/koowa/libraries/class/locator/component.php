@@ -118,7 +118,12 @@ class KClassLocatorComponent extends KClassLocatorAbstract
                 $basepath = $this->getNamespace('\\');
             }
 
-            return $basepath.'/components/'.$component.'/'.$path.'.php';
+            $result =  $basepath.'/components/'.$component.'/'.$path.'.php';
+            if(!is_file($result)) {
+                $result = $basepath.'/components/'.$component.'/'.$path.'/'.$file.'.php';
+            }
+
+            return $result;
         }
 
 		return false;
