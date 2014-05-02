@@ -63,7 +63,7 @@
      Setting custom validator defaults to work with twitter bootstrap */
     $.extend($.validator.defaults, {
         errorClass: 'error',
-        errorElement: 'span',
+        errorElement: 'p',
         highlight: function (element, errorClass, validClass) {
             if (element.type === 'radio') {
                 this.findByName(element.name).closest('div.control-group').removeClass(validClass).addClass(errorClass);
