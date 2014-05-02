@@ -40,6 +40,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
     {
         $config->append(array(
             'response'          => 'com:koowa.dispatcher.response',
+            'request'           => 'com:koowa.dispatcher.request',
             'event_subscribers' => array('unauthorized', 'notfound'),
             'user'              => 'com:koowa.user',
             'limit'             => array(

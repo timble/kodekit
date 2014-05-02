@@ -20,7 +20,7 @@ class ComKoowaBootstrapper extends KObjectBootstrapperComponent
         $config->append(array(
             'priority' => self::PRIORITY_LOW,
             'aliases'  => array(
-                'request'                       => 'lib:dispatcher.request',
+                'request'                       => 'com:koowa.dispatcher.request',
                 'lib:database.adapter.mysqli'   => 'com:koowa.database.adapter.mysqli',
                 'translator'                    => 'com:koowa.translator',
                 'user'                          => 'com:koowa.user',

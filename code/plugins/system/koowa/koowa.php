@@ -161,10 +161,6 @@ class PlgSystemKoowa extends JPlugin
             //Setup the request
             $request = $manager->getObject('request');
 
-            $request->registerApplication('site', '')
-                ->registerApplication('admin', '/administrator')
-                ->setApplication($application === 'administrator' ? 'admin' : $application);
-
             // Get the URL from Joomla if live_site is set
             if (JFactory::getApplication()->getCfg('live_site'))
             {
@@ -176,7 +172,6 @@ class PlgSystemKoowa extends JPlugin
             if (PHP_SAPI !== 'cli') {
                 $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
             }
-
 
             /**
              * Plugin Bootstrapping

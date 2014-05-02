@@ -27,7 +27,7 @@ class ComKoowaTemplateFilterUrl extends KTemplateFilterUrl
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $path = rtrim($this->getObject('request')->getBaseUrl('site')->getPath(), '/');
+        $path = rtrim($this->getObject('request')->getSiteUrl()->getPath(), '/');
 
         $config->append(array(
             'aliases' => array(

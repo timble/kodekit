@@ -100,20 +100,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     protected static $_formats;
 
     /**
-     * Registered applications
-     *
-     * @var array
-     */
-    protected $_applications = array();
-
-    /**
-     * Current application
-     *
-     * @var string
-     */
-    protected $_application;
-
-    /**
      * Constructor
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
@@ -657,10 +643,9 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Returns the base URL from which this request is executed.
      *
-     * @param   string    $application Gets the base URL of the specified application, defaults to current one
      * @return  KHttpUrl  A HttpUrl object
      */
-    public function getBaseUrl($application = null)
+    public function getBaseUrl()
     {
         if(!$this->_base_url instanceof KHttpUrl)
         {
@@ -668,21 +653,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             $base->setUrl($this->getBasePath());
 
             $this->_base_url = $base;
-        }
-
-        if ($application && $application !== $this->getApplication())
-        {
-            $url   = clone $this->_base_url;
-            // Replace the application name only once since it's possible that
-            // we can run from http://localhost/administrator/administrator
-            $i = 1;
-            $current = $this->getApplicationPath($this->getApplication());
-            $path    = str_ireplace($current, '', $url->getPath(), $i);
-            $path   .= $this->getApplicationPath($application);
-
-            $url->setPath($path);
-
-            return $url;
         }
 
         return $this->_base_url;
@@ -1057,52 +1027,6 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     public function isStreaming()
     {
         return $this->_headers->has('Range');
-    }
-
-    /**
-     * Register an application with its base path
-     *
-     * @param $application
-     * @param $path
-     * @return $this
-     */
-    public function registerApplication($application, $path)
-    {
-        $this->_applications[$application] = $path;
-        return $this;
-    }
-
-    /**
-     * Set current application
-     *
-     * @param $application
-     * @return $this
-     */
-    public function setApplication($application)
-    {
-        $this->_application = $application;
-        return $this;
-    }
-
-    /**
-     * Get current application
-     *
-     * @return string
-     */
-    public function getApplication()
-    {
-        return $this->_application;
-    }
-
-    /**
-     * Get application path
-     *
-     * @param $application
-     * @return string
-     */
-    public function getApplicationPath($application)
-    {
-        return isset($this->_applications[$application]) ? $this->_applications[$application] : '';
     }
 
     /**
