@@ -60,6 +60,13 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
         return JFactory::getUser()->getParam($key, $default);
     }
 
+    /**
+     * Method to check object authorisation against an access control object and optionally an access extension object
+     *
+     * @param   string  $action     The name of the action to check for permission.
+     * @param   string  $assetname  The name of the asset on which to perform the action.
+     * @return  boolean  True if authorised
+     */
     public function authorise($action, $assetname = null)
     {
         return JFactory::getUser()->authorise($action, $assetname);
