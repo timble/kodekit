@@ -85,7 +85,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
         $html = '';
 
         // Continuing will cause errors
-        if ($file && is_readable($file))
+        if ($file && @is_readable($file))
         {
             // Open the file and set the line position
             $file = fopen($file, 'r');
