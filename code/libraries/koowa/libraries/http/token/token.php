@@ -244,7 +244,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         if(isset($this->_claims['exp']))
         {
             $value = $this->_claims['exp'];
-            $date   = DateTime::createFromFormat('U', $value);
+            $date   = new DateTime(date('U', strtotime($value)));
 
             if ($date === false) {
                 throw new RuntimeException(sprintf('The token expire time is not parseable (%s).', $value));
@@ -286,7 +286,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         if(isset($this->_claims['iat']))
         {
             $value = $this->_claims['iat'];
-            $date  = DateTime::createFromFormat('U', $value);
+            $date  = new DateTime(date('U', strtotime($value)));
 
             if ($date === false) {
                 throw new RuntimeException(sprintf('The token issue time is not parseable (%s).', $value));

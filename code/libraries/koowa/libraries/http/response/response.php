@@ -285,7 +285,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if ($this->_headers->has('Date'))
         {
             $value = $this->_headers->get('Date');
-            $data  = DateTime::createFromFormat(DATE_RFC2822, $value);
+            $data  = new DateTime(date(DATE_RFC2822, strtotime($value)));
 
             if ($date === false) {
                 throw new RuntimeException(sprintf('The Last-Modified HTTP header is not parseable (%s).', $value));
@@ -326,7 +326,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if ($this->_headers->has('Last-Modified'))
         {
             $value = $this->_headers->get('Last-Modified');
-            $data  = DateTime::createFromFormat(DATE_RFC2822, $value);
+            $data  = new DateTime(date(DATE_RFC2822, strtotime($value)));
 
             if ($data === false) {
                 throw new RuntimeException(sprintf('The Last-Modified HTTP header is not parseable (%s).', $value));
@@ -374,7 +374,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if ($this->_headers->has('Expires'))
         {
             $value = $this->_headers->get('Expires');
-            $date  = DateTime::createFromFormat(DATE_RFC2822,  $value);
+            $date  = new DateTime(date(DATE_RFC2822, strtotime($value)));
 
             if ($date === false) {
                 throw new RuntimeException(sprintf('The Expires HTTP header is not parseable (%s).', $value));
