@@ -86,11 +86,20 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
         //Render the error
         if(!JDEBUG && $request->getFormat() == 'html')
         {
-            if (version_compare(JVERSION, '3.0', '>=')) {
-                JErrorPage::render($exception);
+            $message = $this->getObject('translator')->translate($exception->getMessage());
+
+            if (version_compare(JVERSION, '3.0', '>='))
+            {
+                $class = get_class($exception);
+                $error = new $class($message, $exception->getCode());
+                JErrorPage::render($error);
+
+                JFactory::getApplication()->close(0);
             } else {
-                JError::raiseError($exception->getCode(), $exception->getMessage());
+                JError::raiseError($exception->getCode(), $message);
             }
+
+            return false;
         }
         else
         {
