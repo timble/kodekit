@@ -41,7 +41,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
         $config->append(array(
             'response'          => 'com:koowa.dispatcher.response',
             'request'           => 'com:koowa.dispatcher.request',
-            'event_subscribers' => array('unauthorized', 'notfound'),
+            'event_subscribers' => array('unauthorized'),
             'user'              => 'com:koowa.user',
             'limit'             => array(
                 'default' => JFactory::getApplication()->getCfg('list_limit'),
