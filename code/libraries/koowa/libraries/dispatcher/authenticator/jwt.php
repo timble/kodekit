@@ -102,7 +102,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      *
      * @return KHttpToken  The authorisation token or NULL if no token could be found
      */
-    public function getJwtToken()
+    public function getToken()
     {
         if(!isset($this->token))
         {
@@ -150,7 +150,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      */
     protected function _beforeDispatch(KDispatcherContextInterface $context)
     {
-        if(!$context->user->isAuthentic() && $token = $this->getJwtToken())
+        if(!$context->user->isAuthentic() && $token = $this->getToken())
         {
             if($token->verify($this->_secret))
             {
