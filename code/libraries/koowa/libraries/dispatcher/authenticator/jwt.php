@@ -159,12 +159,12 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
 
                 //Ensure the token is not expired
                 if(!$token->getExpireTime() || $token->isExpired()) {
-                    throw new KControllerExceptionRequestNotAuthenticated('JWT Token Expired');
+                    throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
                 }
 
                 //Ensure the token is not too old
                 if(!$token->getIssueTime() || $token->getAge() > $this->_max_age) {
-                    throw new KControllerExceptionRequestNotAuthenticated('JWT Token Expired');
+                    throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
                 }
 
                 //Ensure we have a username
@@ -179,7 +179,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
 
                 return $this->_loginUser($username, $data);
             }
-            else throw new KControllerExceptionRequestNotAuthenticated('Invalid JWT Token');
+            else throw new KControllerExceptionRequestNotAuthenticated('Invalid Token');
         }
 
         return true;
