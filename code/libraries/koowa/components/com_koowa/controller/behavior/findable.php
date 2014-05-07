@@ -76,10 +76,10 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
         $this->_entity = $config->entity;
         $this->_model    = $config->model;
         $this->_event_context     = 'com_'.$config->package.'.'.$this->_entity;
-        $this->_category_entity = $config->category_resource;
+        $this->_category_entity = $config->category_entity;
 
         if (empty($this->_entity)) {
-            throw new UnexpectedValueException('Resource cannot be empty in finder behavior');
+            throw new UnexpectedValueException('Entity cannot be empty');
         }
     }
 
@@ -97,7 +97,7 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
             'priority' => self::PRIORITY_LOW,
             'package'  => null,
             'entity' => null,
-            'category_resource' => 'category'
+            'category_entity' => 'category'
         ))->append(array(
             'model' => KStringInflector::pluralize($config->entity)
         ));
