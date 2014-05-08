@@ -18,7 +18,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Translator object
      *
-     * @var	KTranslator
+     * @var	KTranslatorInterface
      */
     protected $_translator;
 
@@ -348,7 +348,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Gets the translator object
      *
-     * @return  KTranslator
+     * @return  KTranslatorInterface
      */
     public function getTranslator()
     {
@@ -358,12 +358,12 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Sets the translator object
      *
-     * @param string|KTranslator $translator A translator object or identifier
+     * @param string|KTranslatorInterface $translator A translator object or identifier
      * @return $this
      */
     public function setTranslator($translator)
     {
-        if (!$translator instanceof KTranslator)
+        if (!$translator instanceof KTranslatorInterface)
         {
             if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
             {

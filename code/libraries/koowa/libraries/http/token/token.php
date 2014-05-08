@@ -91,7 +91,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     {
         $config->append(array(
             'type'      => 'JWT' ,
-            'algorithm' => 'HS256'
+            'algorithm' => self::HS256
         ));
 
         parent::_initialize($config);
@@ -244,7 +244,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         if(isset($this->_claims['exp']))
         {
             $value = $this->_claims['exp'];
-            $date   = new DateTime(date('U', strtotime($value)));
+            $date   = new DateTime('@'.$value);
 
             if ($date === false) {
                 throw new RuntimeException(sprintf('The token expire time is not parseable (%s).', $value));
@@ -286,7 +286,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         if(isset($this->_claims['iat']))
         {
             $value = $this->_claims['iat'];
-            $date  = new DateTime(date('U', strtotime($value)));
+            $date  = new DateTime('@'.$value);
 
             if ($date === false) {
                 throw new RuntimeException(sprintf('The token issue time is not parseable (%s).', $value));
