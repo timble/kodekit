@@ -30,30 +30,22 @@ class ComKoowaEventSubscriberUnauthorized extends KEventSubscriberAbstract
 
         if($exception instanceof KHttpExceptionUnauthorized)
         {
-            $application = JFactory::getApplication();
             $request     = $this->getObject('request');
             $response    = $this->getObject('response');
-            $translator  = $this->getObject('translator');
 
-            if ($request->getFormat() == 'html')
+            if ($request->getFormat() == 'html' && $request->isSafe())
             {
-                if($request->isSafe())
-                {
-                    $message = $translator->translate('You are not authorized to view this resource. Please login and try again.');
+                $message = $this->getObject('translator')->translate('You are not authorized to view this resource. Please login and try again.');
 
-                    if($application->isSite()) {
-                        $url = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode((string) $request->getUrl()), false);
-                    } else {
-                        $url = JRoute::_('index.php', false);
-                    }
-
-                    $response->setRedirect($url, $message, 'error');
+                if(JFactory::getApplication()->isSite()) {
+                    $url = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode((string) $request->getUrl()), false);
+                } else {
+                    $url = JRoute::_('index.php', false);
                 }
-                else $response->setRedirect($request->getReferrer(), $translator->translate($event->getMessage()), 'error');
 
+                $response->setRedirect($url, $message, 'error');
                 $response->send();
 
-                //Stop event propagation
                 $event->stopPropagation();
             }
             else throw $exception;
