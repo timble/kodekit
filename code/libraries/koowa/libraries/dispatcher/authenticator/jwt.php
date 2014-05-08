@@ -15,14 +15,14 @@
  * Clients should authenticate by passing the token key in the "Authorization" HTTP header, prepended with the string
  * "JWT ". For example: Authorization: JWT [header.payload.signature]
  *
- * Token Requirements :
+ * Token Requirements:
  *
  * - The token SHOULD be signed
- * - The token SHOULD contain a expire time 'exp' claim.
- * - The token SHOULD contain a issue time 'iat' claim.
+ * - The token SHOULD contain an expire time 'exp' claim.
+ * - The token SHOULD contain an issue time 'iat' claim.
  * - The subject 'sub' claim of the token SHOULD contain the user key or user name for the user to be authenticated.
  *
- * A token MAY contain and additional 'user' claim which contains a JSON hash of user field key and values to set on
+ * A token MAY contain an additional 'user' claim which contains a JSON hash of user field key and values to set on
  * the user.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>

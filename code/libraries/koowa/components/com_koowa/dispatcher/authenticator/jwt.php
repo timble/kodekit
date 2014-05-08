@@ -68,6 +68,8 @@ class ComKoowaDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorJwt
      * Log the user in
      *
      * @param string $username
+     * @param array  $data
+     * @return boolean
      */
     protected function _loginUser($username, $data = array())
     {

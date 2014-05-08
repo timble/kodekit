@@ -355,8 +355,8 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     /**
      * Get the token signature
      *
-     * @param string|null $key  The secret key
-     * @return
+     * @param string|null $secret  The secret key
+     * @return string
      */
     public function getSignature($secret = null)
     {
@@ -423,8 +423,6 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * Decode from JWT string
      *
      * @param string      $token  A serialised token
-     * @param string|null $key    The secret key
-     * @param bool        $verify Don't skip verification process
      * @return KHttpToken
      * @throws InvalidArgumentException If the token is invalid
      */
