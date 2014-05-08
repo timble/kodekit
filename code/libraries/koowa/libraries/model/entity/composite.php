@@ -164,6 +164,9 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
             }
 
             $entity = clone $this->_prototype;
+
+            $entity->setStatus($status);
+            $entity->setProperties($properties, $entity->isNew());
         }
         else
         {
@@ -173,14 +176,13 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
 
             //The entity default options
             $options = array(
+                'data'         => $properties,
+                'status'       => $status,
                 'identity_key' => $this->getIdentityKey()
             );
 
             $entity = $this->getObject($identifier, $options);
         }
-
-        $entity->setStatus($status);
-        $entity->setProperties($properties, $entity->isNew());
 
         //Insert the entity into the collection
         $this->insert($entity);

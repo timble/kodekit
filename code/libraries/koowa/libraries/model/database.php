@@ -84,6 +84,7 @@ class KModelDatabase extends KModelAbstract
     {
         //Entity options
         $options = array(
+            'data'            => $context->entity,
             'identity_column' => $context->getIdentityKey()
         );
 

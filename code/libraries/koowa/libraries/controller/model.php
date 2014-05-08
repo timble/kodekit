@@ -266,12 +266,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      */
     protected function _actionAdd(KControllerContextInterface $context)
     {
-        if(!$context->result instanceof KModelEntityInterface)
-        {
-            $entity = $this->getModel()->create();
-            $entity->setProperties($context->request->data->toArray());
+        if(!$context->result instanceof KModelEntityInterface) {
+            $entity = $this->getModel()->create($context->request->data->toArray());
+        } else {
+            $entity = $context->result;
         }
-        else $entity = $context->result;
 
         //Only throw an error if the action explicitly failed.
         if($entity->save() === false)
