@@ -91,7 +91,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     {
         $config->append(array(
             'type'      => 'JWT' ,
-            'algorithm' => 'HS256'
+            'algorithm' => self::HS256
         ));
 
         parent::_initialize($config);
