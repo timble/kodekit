@@ -129,14 +129,14 @@ interface KViewInterface
     /**
      * Gets the translator object
      *
-     * @return  KTranslator
+     * @return  KTranslatorInterface
      */
     public function getTranslator();
 
     /**
      * Sets the translator object
      *
-     * @param string|KTranslator $translator A translator object or identifier
+     * @param string|KTranslatorInterface $translator A translator object or identifier
      * @return KViewInterface
      */
     public function setTranslator($translator);
