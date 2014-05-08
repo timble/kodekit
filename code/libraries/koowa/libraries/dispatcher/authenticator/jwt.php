@@ -104,7 +104,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      */
     public function getToken()
     {
-        if(!isset($this->token))
+        if(!isset($this->_token))
         {
             $token   = false;
             $request = $this->getObject('request');
