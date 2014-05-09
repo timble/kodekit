@@ -40,7 +40,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
         else
         {
             $column = $config->entity->getIdentityColumn();
-            $value  = $config->entity->{$column};
+            $value  = $this->escape($config->entity->{$column});
 
             $attribs = $this->buildAttributes($config->attribs);
 
@@ -76,7 +76,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
         else
         {
             $column = $config->column;
-            $value  = $config->entity->{$column};
+            $value  = $this->escape($config->entity->{$column});
 
             $attribs = $this->buildAttributes($config->attribs);
 

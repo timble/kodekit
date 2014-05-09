@@ -266,6 +266,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         }
 
         $attribs = $this->buildAttributes($config->attribs);
+        $value   = $this->escape($config->value);
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
         {
@@ -281,7 +282,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             }
 
             $html .= '<div class="input-group date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
-            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$config->value.'"  '.$attribs.' />';
+            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
             $html .= '<span class="input-group-btn">';
             $html .= '<span class="btn" >';
             $html .= '<span class="koowa_icon--calendar"><i>calendar</i></span>';
@@ -293,7 +294,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         {
             $html = '';
             $html .= '<div>';
-            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$config->value.'" '.$attribs.' />';
+            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$value.'" '.$attribs.' />';
             $html .= '</div>';
         }
 

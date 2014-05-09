@@ -153,6 +153,9 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                         continue;
                     }
 
+                    $name =  $this->escape($name);
+                    $value = $this->escape($value);
+
                     if (is_array($value))
                     {
                         foreach ($value as $k => $v)
@@ -160,6 +163,8 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                             if (!is_scalar($v)) {
                                 continue;
                             }
+
+                            $v = $this->escape($v);
 
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'['.$k.']" value="'.$v.'" />';
                         }
