@@ -304,7 +304,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function escape($string)
     {
-        return htmlspecialchars($string);
+        return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
 
     /**
