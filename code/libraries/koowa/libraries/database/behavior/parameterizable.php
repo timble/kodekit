@@ -50,14 +50,16 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     {
         if($this->hasProperty('parameters') && !isset($this->_parameters))
         {
-            $type = (array) $this->getTable()->getColumn('parameters')->filter;
-            $data = trim($this->getProperty('parameters'));
+            $type   = (array) $this->getTable()->getColumn('parameters')->filter;
+            $data   = $this->getProperty('parameters');
+            $config = $this->getObject('object.config.factory')->createFormat($type[0]);
 
-            //Create the parameters object
-            if(empty($data)) {
-                $config = $this->getObject('object.config.factory')->createFormat($type[0]);
-            } else {
-                $config = $this->getObject('object.config.factory')->fromString($type[0], $data);
+            if(!empty($data))
+            {
+                if (is_string($data)) {
+                    $config->fromString(trim($data));
+                }
+                else $config->append($data);
             }
 
             $this->_parameters = $config;
