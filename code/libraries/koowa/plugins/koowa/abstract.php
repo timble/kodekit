@@ -111,8 +111,8 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
      */
     public function connect($dispatcher)
     {
-        //Self attach the plugin to the joomla event dispatcher
-        if($dispatcher instanceof JDispatcher) {
+        // Self attach the plugin to the joomla event dispatcher
+        if($dispatcher instanceof JDispatcher || $dispatcher instanceof JEventDispatcher) {
             $dispatcher->attach($this);
         }
     }
