@@ -19,7 +19,7 @@
 interface KObjectInstantiable
 {
     /**
-     * Get the object identifier
+     * Instantiate the object
      *
      * @param   KObjectConfigInterface $config      Configuration options
      * @param 	KObjectManagerInterface $manager	A KObjectManagerInterface object
