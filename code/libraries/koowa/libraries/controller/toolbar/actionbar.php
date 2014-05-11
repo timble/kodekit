@@ -82,7 +82,6 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Add default action commands
      * .
-     *
      * @param KControllerContextInterface $context A command context object
      */
     protected function _afterBrowse(KControllerContextInterface $context)
