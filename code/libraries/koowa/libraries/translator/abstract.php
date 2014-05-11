@@ -39,7 +39,6 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
         parent::__construct($config);
         
         $this->setLocale($config->locale);
-
         $this->setScriptCatalogue($this->createCatalogue($config->script_catalogue));
     }
 
