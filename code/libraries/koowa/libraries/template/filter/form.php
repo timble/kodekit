@@ -154,7 +154,6 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                     }
 
                     $name =  $this->escape($name);
-                    $value = $this->escape($value);
 
                     if (is_array($value))
                     {
@@ -169,7 +168,10 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'['.$k.']" value="'.$v.'" />';
                         }
                     }
-                    else $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+                    else {
+                        $value  = $this->escape($value);
+                        $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+                    }
                 }
 
                 $text = str_replace($matches[2][$key], $input.$matches[2][$key], $text);
