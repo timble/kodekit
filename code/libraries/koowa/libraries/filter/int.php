@@ -40,8 +40,8 @@ class KFilterInt extends KFilterAbstract implements KFilterTraversable
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'max' => PHP_MAX_INT ,
-            'min' => ~PHP_MAX_INT,
+            'max' => PHP_INT_MAX,
+            'min' => ~PHP_INT_MAX,
         ));
 
         parent::_initialize($config);
