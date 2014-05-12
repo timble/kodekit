@@ -25,7 +25,7 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
         $user = null;
 
         if($this->hasProperty('created_by') && !empty($this->created_by)) {
-            $user = $this->getObject('user.provider')->fetch($this->created_by);
+            $user = $this->getObject('user.provider')->load($this->created_by);
         }
 
         return $user;

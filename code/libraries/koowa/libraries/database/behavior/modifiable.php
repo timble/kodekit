@@ -42,7 +42,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
         $user = null;
 
         if($this->has('modified_by') && !empty($this->modified_by)) {
-            $user = $this->getObject('user.provider')->fetch($this->modified_by);
+            $user = $this->getObject('user.provider')->load($this->modified_by);
         }
 
         return $user;

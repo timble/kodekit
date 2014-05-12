@@ -52,7 +52,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
         $user = null;
 
         if($this->hasProperty('locked_by') && !empty($this->locked_by)) {
-            $user = $this->getObject('user.provider')->fetch($this->locked_by);
+            $user = $this->getObject('user.provider')->load($this->locked_by);
         }
 
         return $user;
