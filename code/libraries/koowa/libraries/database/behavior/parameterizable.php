@@ -23,6 +23,25 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     protected $_parameters;
 
     /**
+     * The column name
+     *
+     * @var string
+     */
+    protected $_column;
+
+    /**
+     * Constructor.
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct( KObjectConfig $config = null)
+    {
+        parent::__construct($config);
+
+        $this->_column = $config->column;
+    }
+
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -34,6 +53,7 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     {
         $config->append(array(
             'row_mixin' => true,
+            'column'    => 'parameters'
         ));
 
         parent::_initialize($config);
@@ -48,18 +68,19 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     public function getParameters()
     {
-        if($this->hasProperty('parameters') && !isset($this->_parameters))
+        if($this->hasProperty($this->_column) && !isset($this->_parameters))
         {
-            $type   = (array) $this->getTable()->getColumn('parameters')->filter;
-            $data   = $this->getProperty('parameters');
+            $type   = (array) $this->getTable()->getColumn($this->_column)->filter;
+            $data   = $this->getProperty($this->_column);
             $config = $this->getObject('object.config.factory')->createFormat($type[0]);
 
             if(!empty($data))
             {
                 if (is_string($data)) {
                     $config->fromString(trim($data));
+                } else {
+                    $config->append($data);
                 }
-                else $config->append($data);
             }
 
             $this->_parameters = $config;
@@ -97,7 +118,7 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
         $mixer = $this->getMixer();
         $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
 
-        if($table->hasColumn('parameters'))  {
+        if($table->hasColumn($this->_column))  {
             return true;
         }
 
@@ -112,8 +133,8 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     protected function _beforeInsert(KDatabaseContext $context)
     {
-        if($context->data->getParameters() instanceof KObjectConfigInterface) {
-            $context->data->setProperty('parameters', $context->data->getParameters()->toString());
+        if($this->getParameters() instanceof KObjectConfigInterface) {
+            $context->data->setProperty($this->_column, $this->getParameters()->toString());
         }
     }
 
@@ -125,8 +146,56 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     protected function _beforeUpdate(KDatabaseContext $context)
     {
-        if($context->data->getParameters() instanceof KObjectConfigInterface) {
-            $context->data->setProperty('parameters', $context->data->getParameters()->toString());
+        if($this->getParameters() instanceof KObjectConfigInterface) {
+            $context->data->setProperty($this->_column, $this->getParameters()->toString());
         }
+    }
+
+    /**
+     * Get the methods that are available for mixin based
+     *
+     * @param  array $exclude   A list of methods to exclude
+     * @return array  An array of methods
+     */
+    public function getMixableMethods($exclude = array())
+    {
+        if($this->_column !== 'parameters')
+        {
+            $exclude += array('getParameters');
+            $methods = parent::getMixableMethods($exclude);
+
+            //Add dynamic methods based on the column name
+            $methods['get'.ucfirst($this->_column)] = $this;
+            $methods['setProperty'.ucfirst($this->_column)] = $this;
+        }
+        else $methods = parent::getMixableMethods();
+
+        return $methods;
+    }
+
+    /**
+     * Intercept parameter getter and setter calls
+     *
+     * @param  string   $method     The function name
+     * @param  array    $arguments  The function arguments
+     * @throws BadMethodCallException   If method could not be found
+     * @return mixed The result of the function
+     */
+    public function __call($method, $arguments)
+    {
+        if($this->_column !== 'parameters')
+        {
+            //Call getParameters()
+            if($method == 'get'.ucfirst($this->_column)) {
+                return $this->getParameters();
+            }
+
+            //Call setPropertyParameters()
+            if($method == 'setProperty'.ucfirst($this->_column)) {
+                return $this->setPropertyParameters($arguments[0]);
+            }
+        }
+
+        return parent::__call($method, $arguments);
     }
 }
