@@ -576,19 +576,20 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * @link http://en.wikipedia.org/wiki/HTTP_referrer
      *
      * @param   boolean  $isInternal Only allow internal url's
-     * @return  KHttpUrl  A HttpUrl object
+     * @return  KHttpUrl|null  A HttpUrl object or NULL if no referrer could be found
      */
     public function getReferrer($isInternal = true)
     {
-        if(!isset($this->_referrer))
+        if(!isset($this->_referrer) && $this->_headers->has('Referer'))
         {
             $referrer = $this->getObject('lib:filter.url')->sanitize($this->_headers->get('Referer'));
             $this->_referrer = $this->getObject('lib:http.url', array('url' => $referrer));
         }
 
-        if($isInternal)
+        if(isset($this->_referrer) && $isInternal)
         {
-            if(!$this->getObject('lib:filter.internalurl')->validate($this->_referrer->toString(KHttpUrl::SCHEME | KHttpUrl::HOST))) {
+            $url = $this->_referrer->toString(KHttpUrl::SCHEME | KHttpUrl::HOST);
+            if(!$this->getObject('lib:filter.internalurl')->validate($url)) {
                 return null;
             }
         }
