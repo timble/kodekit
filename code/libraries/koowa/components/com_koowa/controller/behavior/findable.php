@@ -106,17 +106,6 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
     }
 
     /**
-     * Returns a rowset containing items in the category
-     *
-     * @param  KModelEntityInterface $category Category
-     * @return KModelEntityInterface
-     */
-    protected function _getCategoryChildren(KModelEntityInterface $category)
-    {
-        return $this->_getModel()->category($category->id)->fetch();
-    }
-
-    /**
      * Returns the model
      *
      * @return KModelAbstract
@@ -149,22 +138,6 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
         }
 
         return self::$_dispatcher;
-    }
-
-    /**
-     * Method to update index data on category access level and state changes
-     *
-     * @param   KModelEntityInterface  $category
-     * @return  void
-     */
-    protected function _reindexCategory(KModelEntityInterface $category)
-    {
-        $dispatcher = $this->_getDispatcher();
-        $collection = $this->_getCategoryChildren($category);
-
-        foreach ($collection as $entity) {
-            $dispatcher->trigger('onFinderAfterSave', array($this->_event_context, $entity, false));
-        }
     }
 
     /**
@@ -203,12 +176,15 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
             {
                 if ($name === $this->_category_entity)
                 {
-                    if (($entity->old_enabled !== $entity->enabled) || ($entity->old_access !== $entity->access)) {
-                        $this->_reindexCategory($entity);
-                    }
-                }
+                    if (($entity->old_enabled !== $entity->enabled) || ($entity->old_access !== $entity->access))
+                    {
+                        $category_context = 'com_'.$this->_package.'.'.$this->_category_entity;
 
-                $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $entity, false));
+                        $this->_getDispatcher()->trigger('onFinderAfterSave', array($category_context, $entity, false));
+                    }
+                } else {
+                    $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $entity, false));
+                }
             }
         }
     }
