@@ -77,13 +77,17 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * Get the referrer
      *
      * @param   KControllerContextInterface $context A controller context object
-     * @return  KHttpUrl    A HttpUrl object.
+     * @return  KHttpUrl|null    A HttpUrl object or NULL if no referrer can be found
      */
     public function getReferrer(KControllerContextInterface $context)
     {
-        $referrer = $this->getObject('lib:http.url',
-            array('url' => $context->request->cookies->get('referrer', 'url'))
-        );
+        $referrer = null;
+        if($context->request->cookies->has('referrer'))
+        {
+            $referrer = $this->getObject('lib:http.url',
+                array('url' => $context->request->cookies->get('referrer', 'url'))
+            );
+        }
 
         return $referrer;
 	}
