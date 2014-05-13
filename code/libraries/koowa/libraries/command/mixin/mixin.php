@@ -267,7 +267,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
             //Enqueue the handler
             $this->getCommandChain()->addHandler($handler);
 
-            //Store the command to allow for named lookups
+            //Store the command to allow for identifier lookups
             $this->__command_handlers[(string)$identifier] = $handler;
         }
 
@@ -284,6 +284,24 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     {
         $this->getCommandChain()->removeHandler($handler);
         return $this->getMixer();
+    }
+
+    /**
+     * Check if a command handler exists
+     *
+     * @param  mixed $handler An object that implements KCommandHandlerInterface, an KObjectIdentifier
+     *                        or valid identifier string
+     * @return  boolean TRUE if the behavior exists, FALSE otherwise
+     */
+    public function hasCommandHandler($handler)
+    {
+        if($handler instanceof KCommandHandlerInterface) {
+            $identifier = $handler->getIdentifier();
+        } else {
+            $identifier = $this->getIdentifier($handler);
+        }
+
+        return isset($this->__command_handlers[(string) $identifier]);
     }
 
     /**

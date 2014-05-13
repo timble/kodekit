@@ -95,7 +95,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
         }
 
         //Attach the behavior if it doesn't exist yet
-        if(!$this->hasBehavior($identifier->name))
+        if (!$this->hasCommandHandler($identifier))
         {
             //Create the behavior object
             if (!($behavior instanceof KBehaviorInterface))
@@ -108,17 +108,20 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
                 throw new UnexpectedValueException("Behavior $identifier does not implement KBehaviorInterface");
             }
 
-            //Force set the mixer
-            $behavior->setMixer($this->getMixer());
+            if(!$this->hasBehavior($behavior->getName()))
+            {
+                //Force set the mixer
+                $behavior->setMixer($this->getMixer());
 
-            //Add the behavior
-            $this->addCommandHandler($behavior);
+                //Add the behavior
+                $this->addCommandHandler($behavior);
 
-            //Mixin the behavior
-            $this->mixin($behavior);
+                //Mixin the behavior
+                $this->mixin($behavior);
 
-            //Store the behavior to allow for named lookups
-            $this->__behaviors[$behavior->getName()] = $behavior;
+                //Store the behavior to allow for named lookups
+                $this->__behaviors[$behavior->getName()] = $behavior;
+            }
         }
 
         return $this->getMixer();
@@ -155,7 +158,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     /**
      * Gets the behaviors of the table
      *
-     * @return array An associative array of table behaviors, keys are the behavior names
+     * @return array An array of behaviors
      */
     public function getBehaviors()
     {
