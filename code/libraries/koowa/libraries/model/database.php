@@ -82,13 +82,22 @@ class KModelDatabase extends KModelAbstract
      */
     protected function _actionCreate(KModelContext $context)
     {
+        //Get the data
+        $data = KModelContext::unbox($context->entity);
+
         //Entity options
         $options = array(
-            'data'            => $context->entity,
+            'data'            => $data,
             'identity_column' => $context->getIdentityKey()
         );
 
-        return $this->getTable()->createRow($options);
+        if(!is_numeric(key($data))) {
+            $entity = $this->getTable()->createRow($options);
+        } else {
+            $entity = $this->getTable()->createRowset($options);
+        }
+
+        return $entity;
     }
 
     /**

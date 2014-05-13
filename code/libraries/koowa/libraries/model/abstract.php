@@ -248,12 +248,21 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      */
     protected function _actionCreate(KModelContext $context)
     {
+        //Get the data
+        $data = KModelContext::unbox($context->entity);
+
+        //Create the entity identifier
         $identifier = $this->getIdentifier()->toArray();
         $identifier['path'] = array('model', 'entity');
-        $identifier['name'] = KStringInflector::singularize($identifier['name']);
+
+        if(!is_numeric(key($data))) {
+            $identifier['name'] = KStringInflector::singularize($identifier['name']);
+        } else {
+            $identifier['name'] = KStringInflector::pluralize($identifier['name']);
+        }
 
         $options = array(
-            'data'         => $context->entity,
+            'data'         => $data,
             'identity_key' => $context->getIdentityKey()
         );
 
