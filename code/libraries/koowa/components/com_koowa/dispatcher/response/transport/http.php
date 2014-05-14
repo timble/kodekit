@@ -73,24 +73,24 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
                     );
                 }
 
-                //Messages
-                $messages = $response->getMessages(false);
-                foreach($messages as $type => $group)
-                {
-                    if ($type === 'success') {
-                        $type = 'message';
-                    }
-
-                    foreach($group as $message) {
-                        JFactory::getApplication()->enqueueMessage($message, $type);
-                    }
-                }
-
                 //Content
                 echo $response->getContent();
-
-                return true;
             }
+
+            //Set messages for any request method
+            $messages = $response->getMessages(false);
+            foreach($messages as $type => $group)
+            {
+                if ($type === 'success') {
+                    $type = 'message';
+                }
+
+                foreach($group as $message) {
+                    JFactory::getApplication()->enqueueMessage($message, $type);
+                }
+            }
+
+            return true;
         }
 
         return parent::send($response);
