@@ -133,8 +133,9 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     protected function _beforeInsert(KDatabaseContext $context)
     {
-        if($context->data->getParameters() instanceof KObjectConfigInterface) {
-            $context->data->setProperty($this->_column, $context->data->getParameters()->toString());
+        $method = 'get'.ucfirst($this->_column);
+        if($context->data->$method() instanceof KObjectConfigInterface) {
+            $context->data->setProperty($this->_column, $context->data->$method()->toString());
         }
     }
 
@@ -146,8 +147,9 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     protected function _beforeUpdate(KDatabaseContext $context)
     {
-        if($context->data->getParameters() instanceof KObjectConfigInterface) {
-            $context->data->setProperty($this->_column, $context->data->getParameters()->toString());
+        $method = 'get'.ucfirst($this->_column);
+        if($context->data->$method() instanceof KObjectConfigInterface) {
+            $context->data->setProperty($this->_column, $context->data->$method()->toString());
         }
     }
 
