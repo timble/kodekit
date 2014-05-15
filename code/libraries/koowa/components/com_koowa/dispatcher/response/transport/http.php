@@ -73,7 +73,7 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
                 }
 
                 //Set messages for any request method
-                $messages = $response->getMessages(false);
+                $messages = $response->getMessages();
                 foreach($messages as $type => $group)
                 {
                     if ($type === 'success') {
