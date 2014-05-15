@@ -34,6 +34,18 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
                 ->layout($request->query->get('tmpl', 'cmd') == 'koowa' ? 'koowa' : 'joomla')
                 ->render();
 
+            //Set messages for any request method
+            $messages = $response->getMessages(false);
+            foreach($messages as $type => $group)
+            {
+                if ($type === 'success') {
+                    $type = 'message';
+                }
+
+                foreach($group as $message) {
+                    JFactory::getApplication()->enqueueMessage($message, $type);
+                }
+            }
 
             //Pass back to Joomla
             if ($request->isGet() && $request->query->get('tmpl', 'cmd') != 'koowa')
@@ -75,22 +87,8 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
 
                 //Content
                 echo $response->getContent();
+                return true;
             }
-
-            //Set messages for any request method
-            $messages = $response->getMessages(false);
-            foreach($messages as $type => $group)
-            {
-                if ($type === 'success') {
-                    $type = 'message';
-                }
-
-                foreach($group as $message) {
-                    JFactory::getApplication()->enqueueMessage($message, $type);
-                }
-            }
-
-            return true;
         }
 
         return parent::send($response);
