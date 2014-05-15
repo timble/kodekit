@@ -96,6 +96,11 @@ class PlgSystemKoowa extends JPlugin
         }
     }
 
+    /**
+     * Bootstrap the Koowa Framework
+     *
+     * @return bool Returns TRUE if the framework was found and bootstrapped succesfully.
+     */
     public function bootstrap()
     {
         // Koowa: setup
@@ -185,10 +190,10 @@ class PlgSystemKoowa extends JPlugin
     }
 
     /*
-     * Joomla 3.x Compat
+     * Joomla Compatibility
      *
-     * Re-run the routing and add returned keys to the $_GET request
-     * This is done because Joomla 3 sets the results of the router in $_REQUEST and not in $_GET
+     * For Joomla 3.x : Re-run the routing and add returned keys to the $_GET request. This is done because Joomla 3
+     * sets the results of the router in $_REQUEST and not in $_GET
      */
     public function onAfterRoute()
     {
@@ -214,6 +219,31 @@ class PlgSystemKoowa extends JPlugin
 
             if ($request->query->has('limitstart')) {
                 $request->query->offset = $request->query->limitstart;
+            }
+        }
+    }
+
+    /*
+     * Joomla Compatibility
+     *
+     * For Joomla 2.5 and 3.x : Handle session messages if they have not been handled by Koowa for example after a
+     * redirect to a none Koowa component.
+     */
+    public function onAfterDispatch()
+    {
+        if (class_exists('Koowa'))
+        {
+            $messages = KObjectManager::getInstance()->getObject('user')->getSession()->getContainer('message')->all();
+
+            foreach($messages as $type => $group)
+            {
+                if ($type === 'success') {
+                    $type = 'message';
+                }
+
+                foreach($group as $message) {
+                    JFactory::getApplication()->enqueueMessage($message, $type);
+                }
             }
         }
     }
