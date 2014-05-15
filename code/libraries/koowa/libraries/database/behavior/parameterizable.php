@@ -62,31 +62,40 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     /**
      * Get the parameters
      *
-     * Requires an 'parameters' table column
+     * By default requires a 'parameters' table column. Column can be configured using the 'column' config option.
      *
      * @return KObjectConfigInterface
      */
     public function getParameters()
     {
-        if($this->hasProperty($this->_column) && !isset($this->_parameters))
-        {
-            $type   = (array) $this->getTable()->getColumn($this->_column)->filter;
-            $data   = $this->getProperty($this->_column);
-            $config = $this->getObject('object.config.factory')->createFormat($type[0]);
+        $result = false;
 
-            if(!empty($data))
+        if($this->hasProperty($this->_column))
+        {
+            $handle = $this->getMixer()->getHandle();
+
+            if(!isset($this->_parameters[$handle]))
             {
-                if (is_string($data)) {
-                    $config->fromString(trim($data));
-                } else {
-                    $config->append($data);
+                $type   = (array) $this->getTable()->getColumn($this->_column)->filter;
+                $data   = $this->getProperty($this->_column);
+                $config = $this->getObject('object.config.factory')->createFormat($type[0]);
+
+                if(!empty($data))
+                {
+                    if (is_string($data)) {
+                        $config->fromString(trim($data));
+                    } else {
+                        $config->append($data);
+                    }
                 }
+
+                $this->_parameters[$handle] = $config;
             }
 
-            $this->_parameters = $config;
+            $result = $this->_parameters[$handle];
         }
 
-        return $this->_parameters;
+        return $result;
     }
 
     /**
