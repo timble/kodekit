@@ -27,4 +27,29 @@ class ComKoowaViewHtml extends KViewHtml
         //Add alias filter for editor helper
         $this->getTemplate()->getFilter('function')->addFunction('@editor', '$this->renderHelper(\'editor.display\', ');
     }
+
+    /**
+     * Creates a route based on a full or partial query string.
+     *
+     * This function adds the 'tmpl' information to the route if a 'tmpl' has been set
+     *
+     * @param string|array $route   The query string used to create the route
+     * @param boolean $fqr          If TRUE create a fully qualified route. Default TRUE.
+     * @param boolean $escape       If TRUE escapes the route for xml compliance. Default TRUE.
+     * @return KHttpUrl             The route
+     */
+    public function getRoute($route = '', $fqr = true, $escape = true)
+    {
+        if(is_string($route)) {
+            parse_str(trim($route), $parts);
+        } else {
+            $parts = $route;
+        }
+
+        if (!isset($parts['tmpl']) && $tmpl = $this->getObject('request')->getQuery()->get('tmpl', 'cmd')) {
+            $parts['tmpl'] = $tmpl;
+        }
+
+        return parent::getRoute($parts, $fqr, $escape);
+    }
 }
