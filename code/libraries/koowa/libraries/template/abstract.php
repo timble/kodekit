@@ -471,8 +471,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function getTranslator()
     {
-        if(!$this->_translator instanceof KTranslatorInterface)
-        {
+        if(!$this->_translator instanceof KTranslatorInterface) {
             $this->setTranslator($this->getObject($this->_translator));
         }
 
@@ -587,8 +586,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $helper = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
 	    //Check the helper interface
-        if (!($helper instanceof KTemplateHelperInterface))
-        {
+        if (!($helper instanceof KTemplateHelperInterface)) {
             throw new UnexpectedValueException("Template helper $identifier does not implement KTemplateHelperInterface");
         }
 
