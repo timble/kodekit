@@ -202,4 +202,12 @@ interface KHttpUrlInterface
      * @return  string
      */
     //public function toString($parts);
+
+    /**
+     * Check if two url's are equal
+     *
+     * @param KHttpUrlInterface $url
+     * @return Boolean
+     */
+    public function equals(KHttpUrlInterface $url);
 }

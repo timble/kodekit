@@ -625,6 +625,26 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     }
 
     /**
+     * Check if two url's are equal
+     *
+     * @param KHttpUrlInterface $url
+     * @return Boolean
+     */
+    public function equals(KHttpUrlInterface $url)
+    {
+        $parts = array('scheme', 'host', 'port', 'path', 'format', 'query', 'fragment');
+
+        foreach($parts as $part)
+        {
+            if($this->{$part} != $url->{$part}) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Converts an array of path elements into a string.
      *
      * Does not use urlencode(); instead, only converts characters found in HttpUrl::$_encode_path.
