@@ -15,6 +15,11 @@
  */
 class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 {
+    /**
+     * The cookie path
+     *
+     * @var string
+     */
     protected $_cookie_path;
 
     /**
@@ -77,17 +82,16 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      * Get the referrer
      *
      * @param   KControllerContextInterface $context A controller context object
-     * @return  KHttpUrl|null    A HttpUrl object or NULL if no referrer can be found
+     * @return  KHttpUrl    A HttpUrl object
      */
     public function getReferrer(KControllerContextInterface $context)
     {
-        $referrer = null;
         if($context->request->cookies->has('referrer'))
         {
-            $referrer = $this->getObject('lib:http.url',
-                array('url' => $context->request->cookies->get('referrer', 'url'))
-            );
+            $referrer = $context->request->cookies->get('referrer', 'url');
+            $referrer = $this->getObject('lib:http.url', array('url' => $referrer));
         }
+        else $referrer = $this->findReferrer($context);
 
         return $referrer;
 	}
@@ -106,26 +110,37 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             $referrer = $context->request->getReferrer();
 
             //Compare request url and referrer
-            if (!isset($referrer) || ((string)$referrer == (string)$request))
+            if (isset($referrer) && !$request->equals($referrer))
             {
-                $controller = $this->getMixer();
-                $identifier = $controller->getIdentifier();
+                //Add the referrer cookie
+                $cookie = $this->getObject('lib:http.cookie', array(
+                    'name'   => 'referrer',
+                    'value'  => $referrer,
+                    'path'   => $this->_cookie_path
+                ));
 
-                $option   = 'com_' . $identifier->package;
-                $view     = KStringInflector::pluralize($identifier->name);
-                $referrer = $controller->getView()->getRoute('option=' . $option . '&view=' . $view, true, false);
+                $context->response->headers->addCookie($cookie);
             }
-
-            //Add the referrer cookie
-            $cookie = $this->getObject('lib:http.cookie', array(
-                'name'   => 'referrer',
-                'value'  => $referrer,
-                'path'   => $this->_cookie_path
-            ));
-
-            $context->response->headers->addCookie($cookie);
         }
 	}
+
+    /**
+     * Find the referrer based on the context
+     *
+     * @param KControllerContextInterface $context
+     * @return KHttpUrl    A HttpUrl object
+     */
+    public function findReferrer(KControllerContextInterface $context)
+    {
+        $controller = $this->getMixer();
+        $identifier = $controller->getIdentifier();
+
+        $option   = 'com_' . $identifier->package;
+        $view     = KStringInflector::pluralize($identifier->name);
+        $referrer = $controller->getView()->getRoute('option=' . $option . '&view=' . $view, true, false);
+
+        return $this->getObject('lib:http.url', array('url' => $referrer));
+    }
 
     /**
      * Lock the referrer from updates

@@ -16,6 +16,24 @@
 class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
 {
     /**
+     * Find the referrer based on the context
+     *
+     * @param KControllerContextInterface $context
+     * @return KHttpUrl    A HttpUrl object
+     */
+    public function findReferrer(KControllerContextInterface $context)
+    {
+        if(JFactory::getApplication()->isSite())
+        {
+            $redirect = sprintf('index.php?Itemid=%d', $context->request->query->Itemid);
+            $referrer = $this->getObject('lib:http.url', array('url' => JRoute::_($redirect, false)));
+        }
+        else $referrer = parent::findReferrer($context);
+
+        return $referrer;
+    }
+
+    /**
      * Saves the current row and redirects to a new edit form
      *
      * @param KControllerContextInterface $context
