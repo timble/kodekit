@@ -77,7 +77,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperActionbar
 
                 $html = '';
 
-                JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $config->title);
+                JFactory::getDocument()->setTitle($app->getCfg('sitename') . ' - ' . JText::_('JADMINISTRATION') . ' - ' . $title);
             }
         }
 
