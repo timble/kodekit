@@ -78,7 +78,9 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
         $this->__object_manager = KObjectManager::getInstance();
 
         //Connect the plugin to the dispatcher
-        $this->connect($dispatcher);
+        if($config->auto_connect) {
+            $this->connect($dispatcher);
+        }
 	}
 
     /**
@@ -92,7 +94,8 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'params' => array()
+            'auto_connect' => true,
+            'params'       => array()
         ));
     }
 
