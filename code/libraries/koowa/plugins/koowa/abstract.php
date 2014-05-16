@@ -30,6 +30,13 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
     private $__object_manager;
 
     /**
+     * The object configuration.
+     *
+     * @var KObjectConfig
+     */
+    private $__object_config;
+
+    /**
      * Constructor.
      *
      * @param   object  $dispatcher Event dispatcher
@@ -37,29 +44,32 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
      */
 	public function __construct($dispatcher, $config = array())
 	{
+        $config = new KObjectConfig($config);
+
+        $this->_initialize($config);
+
+        // Set the object config.
+        $this->__object_config = $config;
+
         // Do not call the parent constructor override it and implement logic ourselves.
         //parent::__construct($dispatcher, $config);
 
         // Get the parameters.
-        if (isset($config['params']))
+        if ($config->params)
         {
-            if (!$config['params'] instanceof JRegistry)
+            if (!$config->params instanceof JRegistry)
             {
                 $this->params = new JRegistry;
-                $this->params->loadString($config['params']);
+                $this->params->loadString($config->params);
             }
-            else $this->params = $config['params'];
+            else $this->params = $config->params;
         }
 
         // Get the plugin name.
-        if (isset($config['name'])) {
-            $this->_name = $config['name'];
-        }
+        $this->_name = $config->name;
 
         // Get the plugin type.
-        if (isset($config['type'])) {
-            $this->_type = $config['type'];
-        }
+        $this->_type = $config->type;
 
         //Inject the identifier
         $this->__object_identifier = KObjectManager::getInstance()->getIdentifier('plg:'.$this->_type.'.'.$this->_name);
@@ -70,6 +80,23 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
         //Connect the plugin to the dispatcher
         $this->connect($dispatcher);
 	}
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options.
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array('params' => '{}'));
+    }
+
+    public function getConfig() {
+        return $this->__object_config;
+    }
 
     /**
      * Get an instance of an object identifier
