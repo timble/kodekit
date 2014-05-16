@@ -91,10 +91,31 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $config->append(array('params' => '{}'));
+        $config->append(array(
+            'params' => array()
+        ));
     }
 
-    public function getConfig() {
+    /**
+     * Connect the plugin to the dispatcher
+     *
+     * @param $dispatcher
+     */
+    public function connect($dispatcher)
+    {
+        // Self attach the plugin to the joomla event dispatcher
+        if($dispatcher instanceof JDispatcher || $dispatcher instanceof JEventDispatcher) {
+            $dispatcher->attach($this);
+        }
+    }
+
+    /**
+     * Get the plugin configuration
+     *
+     * @return KObjectConfig
+     */
+    public function getConfig()
+    {
         return $this->__object_config;
     }
 
@@ -129,18 +150,5 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Connect the plugin to the dispatcher
-     *
-     * @param $dispatcher
-     */
-    public function connect($dispatcher)
-    {
-        // Self attach the plugin to the joomla event dispatcher
-        if($dispatcher instanceof JDispatcher || $dispatcher instanceof JEventDispatcher) {
-            $dispatcher->attach($this);
-        }
     }
 }

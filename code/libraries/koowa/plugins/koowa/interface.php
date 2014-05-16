@@ -30,4 +30,11 @@ interface PlgKoowaInterface extends KObjectInterface
 	 * @return	boolean	True, if the file has successfully loaded.
 	 */
 	public function loadLanguage($extension = '', $basePath = JPATH_BASE);
+
+    /**
+     * Get the plugin configuration
+     *
+     * @return KObjectConfig
+     */
+    public function getConfig();
 }
