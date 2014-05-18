@@ -335,7 +335,19 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         $config->attribs->name = $config->name;
 
-        if ($config->selected) {
+        if ($config->selected)
+        {
+            //Compose the selected array
+            if($config->selected instanceof KModelEntityInterface)
+            {
+                $selected = array();
+                foreach($config->selected as $entity) {
+                    $selected[] = $entity->{$config->value};
+                }
+
+                $config->selected = $selected;
+            }
+
             $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
         }
 
