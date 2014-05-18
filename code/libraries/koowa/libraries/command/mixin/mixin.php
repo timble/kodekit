@@ -25,16 +25,6 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     private $__command_chain;
 
     /**
-     * List of command handlers
-     *
-     * Associative array of command handlers, where key holds the handlers identifier string
-     * and the value is an identifier object.
-     *
-     * @var array
-     */
-    private $__command_handlers = array();
-
-    /**
      * The command priority
      *
      * @var integer
@@ -251,7 +241,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
             }
         }
 
-        if (!isset($this->__command_handlers[(string)$identifier]))
+        if (!$this->getCommandChain()->getHandlers()->hasIdentifier($identifier))
         {
             if (!($handler instanceof KCommandHandlerInterface)) {
                 $handler = $this->getObject($identifier, $config);
@@ -266,9 +256,6 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
 
             //Enqueue the handler
             $this->getCommandChain()->addHandler($handler);
-
-            //Store the command to allow for identifier lookups
-            $this->__command_handlers[(string)$identifier] = $handler;
         }
 
         return $this->getMixer();
@@ -301,7 +288,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
             $identifier = $this->getIdentifier($handler);
         }
 
-        return isset($this->__command_handlers[(string) $identifier]);
+        return $this->getCommandChain()->getHandlers()->hasIdentifier($identifier);
     }
 
     /**
