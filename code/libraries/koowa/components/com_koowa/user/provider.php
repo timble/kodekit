@@ -20,10 +20,12 @@ class ComKoowaUserProvider extends KUserProvider
      *
      * @param string $identifier A unique user identifier, (i.e a username or user id)
      * @param bool  $refresh     If TRUE and the user has already been loaded it will be re-loaded.
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     * @return KUserInterface Returns a UserInterface object.
      */
     public function load($identifier, $refresh = false)
     {
+        $user = $this->getObject('user');
+
         // Find the user id
         if (!is_numeric($identifier))
         {
@@ -33,12 +35,11 @@ class ComKoowaUserProvider extends KUserProvider
         }
 
         // Fetch the user
-        $user = $this->getObject('user');
-        if ($user->getId() != $identifier)
+        if ($identifier == 0 || $user->getId() != $identifier)
         {
             $user = parent::load($identifier, $refresh);
 
-            if (empty($user))
+            if (!$user instanceof KUserInterface)
             {
                 $user = $this->create(array(
                     'id'   => $identifier,

@@ -63,7 +63,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
      * @param bool  $refresh     If TRUE and the user has already been loaded it will be re-loaded.
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     * @return KUserInterface Returns a UserInterface object
      */
     public function load($identifier, $refresh = false)
     {
