@@ -23,6 +23,13 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     protected $_cookie_path;
 
     /**
+     * The cookie name
+     *
+     * @var string
+     */
+    protected $_cookie_name;
+
+    /**
      * Constructor
      *
      * @param   KObjectConfig $config Configuration options
@@ -42,6 +49,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         $this->addCommandCallback('after.cancel', '_unlockResource');
 
         $this->_cookie_path = $config->cookie_path;
+        $this->_cookie_name = $config->cookie_name;
     }
 
     /**
@@ -55,6 +63,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'cookie_name' => 'referrer',
             'cookie_path' => $this->getObject('request')->getBaseUrl()->toString(KHttpUrl::PATH)
         ));
 
@@ -86,9 +95,9 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      */
     public function getReferrer(KControllerContextInterface $context)
     {
-        if($context->request->cookies->has('referrer'))
+        if($context->request->cookies->has($this->_cookie_name))
         {
-            $referrer = $context->request->cookies->get('referrer', 'url');
+            $referrer = $context->request->cookies->get($this->_cookie_name, 'url');
             $referrer = $this->getObject('lib:http.url', array('url' => $referrer));
         }
         else $referrer = $this->findReferrer($context);
@@ -104,7 +113,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      */
     public function setReferrer(KControllerContextInterface $context)
     {
-        if (!$context->request->cookies->has('referrer_locked'))
+        if (!$context->request->cookies->has($this->_cookie_name.'_locked'))
         {
             $request  = $context->request->getUrl();
             $referrer = $context->request->getReferrer();
@@ -114,7 +123,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             {
                 //Add the referrer cookie
                 $cookie = $this->getObject('lib:http.cookie', array(
-                    'name'   => 'referrer',
+                    'name'   => $this->_cookie_name,
                     'value'  => $referrer,
                     'path'   => $this->_cookie_path
                 ));
@@ -154,7 +163,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
     protected function _lockReferrer(KControllerContextInterface $context)
     {
         $cookie = $this->getObject('lib:http.cookie', array(
-            'name'   => 'referrer_locked',
+            'name'   => $this->_cookie_name.'_locked',
             'value'  => true,
             'path'   => $this->_cookie_path
         ));
@@ -170,7 +179,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
      */
     protected function _unlockReferrer(KControllerContextInterface $context)
     {
-        $context->response->headers->clearCookie('referrer_locked', $this->_cookie_path);
+        $context->response->headers->clearCookie($this->_cookie_name.'_locked', $this->_cookie_path);
     }
 
 	/**
@@ -181,7 +190,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	protected function _unsetReferrer(KControllerContextInterface $context)
 	{
-        $context->response->headers->clearCookie('referrer', $this->_cookie_path);
+        $context->response->headers->clearCookie($this->_cookie_name, $this->_cookie_path);
 	}
 
     /**
