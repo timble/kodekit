@@ -16,6 +16,23 @@
 class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
 {
     /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config A ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'cookie_name' => 'referrer_'.$this->getIdentifier()->domain,
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Find the referrer based on the context
      *
      * @param KControllerContextInterface $context
