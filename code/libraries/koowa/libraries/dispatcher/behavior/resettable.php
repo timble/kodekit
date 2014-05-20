@@ -50,15 +50,8 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
         $response = $context->response;
         $request  = $context->request;
 
-        if($response->isSuccess())
-        {
-            if($this->getController()->isEditable()) {
-                $referrer = $this->getController()->getReferrer($context);
-            } else {
-                $referrer = $request->getReferrer();
-            }
-
-            $response->setRedirect($referrer);
+        if($response->isSuccess()) {
+            $response->setRedirect($request->getReferrer());
         }
 	}
 }
