@@ -13,7 +13,8 @@
     <scriptfile>script.php</scriptfile>
 
 	<fileset>
-		<files>
+		<files folder="../../../">
+            <folder target="administrator/manifests/files/files_koowa">administrator/manifests/files/files_koowa</folder>
             <folder target="libraries/koowa/libraries">libraries/koowa/libraries</folder>
             <folder target="libraries/koowa/components/com_koowa">libraries/koowa/components/com_koowa</folder>
             <folder target="libraries/koowa/modules/mod_koowa">libraries/koowa/modules/mod_koowa</folder>

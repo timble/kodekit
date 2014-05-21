@@ -11,6 +11,7 @@
     <description />
 
     <files folder="plugins/system">
+        <folder>language</folder>
         <filename plugin="koowa">koowa.php</filename>
     </files>
 </extension>

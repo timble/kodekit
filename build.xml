@@ -53,36 +53,19 @@
 		</if>
 
     </target>
-
-    <target name="prepare" depends="clone">
-
-        <move file="tmp/clone/code/administrator/manifests/packages/pkg_koowa.xml"
-              tofile="tmp/pkg_koowa.xml" overwrite="true" />
-
-        <move file="tmp/clone/code/administrator/manifests/files/files_koowa.xml"
-              tofile="tmp/clone/code/files_koowa.xml" overwrite="true" />
-
-        <copy file="tmp/clone/code/administrator/manifests/files/files_koowa/script.php"
-              tofile="tmp/clone/code/script.php" />
-
-        <mkdir dir="tmp/plg_system_koowa" />
-        <copy todir="tmp/plg_system_koowa">
-            <fileset dir="tmp/clone/code/plugins/system/koowa" />
-        </copy>
-
-        <copy file="tmp/clone/code/libraries/koowa/libraries/LICENSE"
-              tofile="tmp/LICENSE" overwrite="true" />
-
-        <delete dir="tmp/clone/code/administrator" />
-        <delete dir="tmp/clone/code/plugins" />
-    </target>
-
-    <target name="build" depends="prepare">
+<!-- -->
+    <target name="build" depends="clone">
         <mkdir dir="tmp/packages" />
 
-        <copy todir="tmp/files_koowa">
+        <copy todir="tmp/code">
             <fileset dir="tmp/clone/code" />
         </copy>
+
+        <copy file="tmp/code/libraries/koowa/libraries/LICENSE"
+              tofile="tmp/LICENSE" overwrite="true" />
+
+        <copy file="tmp/clone/pkg_koowa.xml"
+              tofile="tmp/pkg_koowa.xml" overwrite="true" />
 
         <if>
             <equals arg1="${file.compression}" arg2="gzip" />
@@ -91,10 +74,9 @@
 
                 <tar destfile="koowa${file.extension}" compression="${file.compression}">
                     <fileset dir="tmp">
-                        <include name="plg_system_koowa/**" />
-                        <include name="files_koowa/**" />
-                        <include name="LICENSE" />
+                        <include name="code/**" />
                         <include name="pkg_koowa.xml" />
+                        <include name="LICENSE" />
                     </fileset>
                 </tar>
             </then>
@@ -104,10 +86,9 @@
 
                 <copy todir="koowa">
                     <fileset dir="tmp">
-                        <include name="plg_system_koowa/**" />
-                        <include name="files_koowa/**" />
-                        <include name="LICENSE" />
+                        <include name="code/**" />
                         <include name="pkg_koowa.xml" />
+                        <include name="LICENSE" />
                     </fileset>
                 </copy>
             </else>
