@@ -13,7 +13,7 @@
     <description></description>
 
     <files>
-        <file type="file" id="files_koowa">code/administrator/manifests/files/files_koowa</file>
+        <file type="file" id="files_koowa">code/administrator/manifests/files</file>
         <file type="plugin" id="koowa" group="system">code/plugins/system/koowa</file>
     </files>
 </extension>
