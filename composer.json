@@ -1,0 +1,23 @@
+{
+    "name": "joomlatools/koowa",
+    "type": "joomlatools-installer",
+    "license": "GPLv3",
+    "description": "Koowa: Joomlatools extension framework",
+    "keywords": [
+        "joomla",
+        "extension",
+        "framework",
+        "koowa"
+    ],
+    "homepage": "https://github.com/joomlatools/koowa",
+    "authors": [
+        {
+            "name": "Joomlatools",
+            "email": "info@joomlatools.com",
+            "homepage": "https://www.joomlatools.com"
+        }
+    ],
+    "require": {
+        "joomlatools/installer": "*"
+    }
+}
