@@ -66,7 +66,7 @@ class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
 
         // Re-set the referrer
         $cookie = $this->getObject('lib:http.cookie', array(
-            'name'   => 'referrer',
+            'name'   => $this->_cookie_name,
             'value'  => (string) $referrer,
             'path'   => $this->_cookie_path
         ));
