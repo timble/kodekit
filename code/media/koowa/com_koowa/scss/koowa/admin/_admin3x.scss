@@ -18,8 +18,36 @@ html {
   }
 }
 
+// Fixing joomla padding bug between below media querie widths
+@media screen and (min-width: 738px) and (max-width: 767px) {
+  body {
+    padding-top: 0 !important;
+  }
+}
+
 // Fix annoying hover styling on disabled toolbar buttons
 .btn.disabled, .btn.disabled:hover, .btn.disabled:active {
   color: #333;
   background-color: #e6e6e6;
+}
+
+// Responsive sidebar
+#documents-sidebar,
+#files-sidebar,
+#sidebar {
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    float: none;
+  }
+}
+
+.docman_admin_list_grid,
+#files-canvas,
+.logman_admin_list_grid {
+  @media screen and (max-width: 767px) {
+    margin-left: 0 !important;
+    clear: both !important;
+    border-left: none !important;
+    border-top: 1px solid #ddd !important;
+  }
 }
