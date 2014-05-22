@@ -2,7 +2,7 @@
     "name": "joomlatools/koowa",
     "type": "joomlatools-installer",
     "license": "GPLv3",
-    "description": "Koowa: Joomlatools extension framework",
+    "description": "Koowa - Joomla Extension Framework",
     "keywords": [
         "joomla",
         "extension",
