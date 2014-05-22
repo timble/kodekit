@@ -93,3 +93,10 @@
 
   }
 }
+
+
+// Flash uploader holder for IE
+.uploader-flash-container {
+  display: none;
+  display: block\9; // Only show the container on older IE browsers
+}
