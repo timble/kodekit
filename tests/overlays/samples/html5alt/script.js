@@ -1,1 +1,0 @@
-jQuery('#section2 a').css('position', 'absolute');
