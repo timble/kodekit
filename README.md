@@ -24,12 +24,12 @@ Koowa is built to help Joomlatools create complex Joomla extensions and tries to
 * Create a `composer.json` file in the root directory of your Joomla installation and require the `joomlatools/koowa` package:
 
 ```json
-	{
-    	"require": {    	
-    		"joomlatools/koowa": "dev-develop"
-    	},
-    	"minimum-stability": "dev"
-	}
+{
+    "require": {    	
+        "joomlatools/koowa": "dev-develop"
+    },
+    "minimum-stability": "dev"
+}
 ```
 
 * Install by executing `composer install`.
