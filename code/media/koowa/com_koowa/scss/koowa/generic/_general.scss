@@ -100,3 +100,8 @@
   display: none;
   display: block\9; // Only show the container on older IE browsers
 }
+
+// Spinner positioning
+#spinner_container {
+  position: relative;
+}
