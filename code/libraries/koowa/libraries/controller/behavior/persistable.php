@@ -28,9 +28,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
         $mixer   = $this->getMixer();
         $request = $mixer->getRequest();
 
-        if ($mixer instanceof KControllerModellable && $mixer->isDispatched()
-            && $request->isGet() && $request->getFormat() === 'html'
-        ) {
+        if ($mixer instanceof KControllerModellable && $mixer->isDispatched() && $request->isGet() && $request->getFormat() === 'html') {
             return true;
         }
 
