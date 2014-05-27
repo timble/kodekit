@@ -190,7 +190,9 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 	 */
 	protected function _unsetReferrer(KControllerContextInterface $context)
 	{
-        $context->response->headers->clearCookie($this->_cookie_name, $this->_cookie_path);
+        if($context->result->getStatus() !== KModelEntityInterface::STATUS_FAILED) {
+            $context->response->headers->clearCookie($this->_cookie_name, $this->_cookie_path);
+        }
 	}
 
     /**
@@ -321,58 +323,76 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
         return false;
     }
 
-	/**
-	 * Save action
-	 *
-	 * This function wraps around the edit or add action. If the model state is unique a edit action will be executed,
-     * if not unique an add action will be executed.
-	 *
-	 * This function also sets the redirect to the referrer.
-	 *
-	 * @param   KControllerContextInterface $context  A command context object
-	 * @return 	KModelEntityInterface
-	 */
-	protected function _actionSave(KControllerContextInterface $context)
-	{
+    /**
+     * Save action
+     *
+     * This function wraps around the edit or add action. If the model state is unique a edit action will be
+     * executed, if not unique an add action will be executed.
+     *
+     * This function also sets the redirect to the referrer if the action succeeds and will redirect to the
+     * current url if the edit/add action fails while setting the status message.
+     *
+     * @param   KControllerContextInterface  $context A controller context object
+     * @return  KModelEntityInterface
+     */
+    protected function _actionSave(KControllerContextInterface $context)
+    {
         $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
         $entity = $context->getSubject()->execute($action, $context);
 
         //Create the redirect
-        $context->response->setRedirect($this->getReferrer($context));
+        if($entity->getStatus() === KModelEntityInterface::STATUS_FAILED)
+        {
+            $url     = $context->request->getReferrer();
+            $message = $entity->getStatusMessage() ? $entity->getStatusMessage() : ucfirst($action).' Action Failed';
+
+            $context->response->setRedirect($url, $message, KControllerResponseInterface::FLASH_ERROR);
+        }
+        else  $context->response->setRedirect($this->getReferrer($context));
 
         return $entity;
-	}
+    }
 
-	/**
-	 * Apply action
-	 *
-	 * This function wraps around the edit or add action. If the model state is unique a edit action will be executed,
-     * if not unique an add action will be executed.
-	 *
-	 * This function also sets the redirect to the current url
-	 *
-	 * @param	KControllerContextInterface $context A command context object
-	 * @return 	KModelEntityInterface
-	 */
-	protected function _actionApply(KControllerContextInterface $context)
-	{
+    /**
+     * Apply action
+     *
+     * This function wraps around the edit or add action. If the model state is unique a edit action will be
+     * executed, if not unique an add action will be executed.
+     *
+     * This function also sets the redirect to the current url for 'add' actions and will redirect to current
+     * url if the edit/add action fails while setting the status message.
+     *
+     * @param    KControllerContextInterface  $context A controller context object
+     * @return   KModelEntityInterface
+     */
+    protected function _actionApply(KControllerContextInterface $context)
+    {
         $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
         $entity = $context->getSubject()->execute($action, $context);
 
-        if($action == 'add')
+        if($entity->getStatus() !== KModelEntityInterface::STATUS_FAILED)
         {
-            //Create the redirect
-            $url = $this->getReferrer($context);
-            if ($entity instanceof KModelEntityInterface) {
-                $url = $context->response->headers->get('Location');
-            }
+            if($action == 'add')
+            {
+                $url = $this->getReferrer($context);
+                if ($entity instanceof KModelEntityInterface) {
+                    $url = $context->response->headers->get('Location');
+                }
 
-            $context->response->setRedirect($url);
+                $context->response->setRedirect($url);
+            }
+            else $context->response->setStatus(HttpResponse::NO_CONTENT);
         }
-        else $context->response->setStatus(KHttpResponse::NO_CONTENT);
+        else
+        {
+            $url     = $context->request->getReferrer();
+            $message = $entity->getStatusMessage() ? $entity->getStatusMessage() : ucfirst($action).' Action Failed';
+
+            $context->response->setRedirect($url, $message, KControllerResponseInterface::FLASH_ERROR);
+        }
 
         return $entity;
-	}
+    }
 
 	/**
 	 * Cancel action
