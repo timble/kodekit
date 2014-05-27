@@ -154,7 +154,9 @@ class KViewJson extends KViewAbstract
                     'type' => $this->mimetype
                 )
             ),
-            'entities' => $data
+            'meta'     => array(),
+            'entities' => $data,
+            'linked'   => array()
         );
 
         if ($this->isCollection())
