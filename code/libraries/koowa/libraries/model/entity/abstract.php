@@ -349,7 +349,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
             $this->__new = true;
         }
 
-        if($status === KDatabase::STATUS_LOADED) {
+        if($status === KDatabase::STATUS_FETCHED) {
             $this->__new = false;
         }
 

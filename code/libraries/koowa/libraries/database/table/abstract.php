@@ -565,7 +565,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                     if (isset($data) && !empty($data))
                     {
                         $options['data']   = $data;
-                        $options['status'] = KDatabase::STATUS_LOADED;
+                        $options['status'] = KDatabase::STATUS_FETCHED;
                     }
 
                     $context->data = $this->createRow($options);
@@ -577,7 +577,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                     if (isset($data) && !empty($data))
                     {
                         $options['data']   = $data;
-                        $options['status'] = KDatabase::STATUS_LOADED;
+                        $options['status'] = KDatabase::STATUS_FETCHED;
                     }
 
                     $context->data = $this->createRowset($options);
