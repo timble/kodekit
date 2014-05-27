@@ -33,47 +33,6 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
     }
 
     /**
-     * Sends content for the current web response.
-     *
-     * @param KDispatcherResponseInterface $response
-     * @return KDispatcherResponseTransportRedirect
-     */
-    public function sendContent(KDispatcherResponseInterface $response)
-    {
-        $session  = $response->getUser()->getSession();
-
-        //Set the messages into the session
-        $messages = $response->getMessages();
-        if(count($messages))
-        {
-            //Auto start the session if it's not active.
-            if(!$session->isActive()) {
-                $session->start();
-            }
-
-            $session->getContainer('message')->add($messages);
-        }
-
-        //Set the redirect into the response
-        $response->setContent(sprintf(
-            '<!DOCTYPE html>
-                <html>
-                    <head>
-                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                        <meta http-equiv="refresh" content="1;url=%1$s" />
-                        <title>Redirecting to %1$s</title>
-                    </head>
-                    <body>
-                        Redirecting to <a href="%1$s">%1$s</a>.
-                    </body>
-                </html>'
-            , htmlspecialchars($response->headers->get('Location'), ENT_QUOTES, 'UTF-8')
-        ), 'text/html');
-
-        return parent::sendContent($response);
-    }
-
-    /**
      * Send HTTP response
      *
      * If this is a redirect response, send the response and stop the transport handler chain.
@@ -83,7 +42,38 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
      */
     public function send(KDispatcherResponseInterface $response)
     {
-        if($response->isRedirect()) {
+        if($response->isRedirect())
+        {
+            $session  = $response->getUser()->getSession();
+
+            //Set the messages into the session
+            $messages = $response->getMessages();
+            if(count($messages))
+            {
+                //Auto start the session if it's not active.
+                if(!$session->isActive()) {
+                    $session->start();
+                }
+
+                $session->getContainer('message')->add($messages);
+            }
+
+            //Set the redirect into the response
+            $response->setContent(sprintf(
+                '<!DOCTYPE html>
+                    <html>
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                            <meta http-equiv="refresh" content="1;url=%1$s" />
+                            <title>Redirecting to %1$s</title>
+                        </head>
+                        <body>
+                            Redirecting to <a href="%1$s">%1$s</a>.
+                        </body>
+                    </html>'
+                , htmlspecialchars($response->headers->get('Location'), ENT_QUOTES, 'UTF-8')
+            ), 'text/html');
+
             return parent::send($response);
         }
     }
