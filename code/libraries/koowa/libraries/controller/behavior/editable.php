@@ -381,7 +381,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
 
                 $context->response->setRedirect($url);
             }
-            else $context->response->setStatus(HttpResponse::NO_CONTENT);
+            else $context->response->setStatus(KHttpResponse::NO_CONTENT);
         }
         else
         {
