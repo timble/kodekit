@@ -27,7 +27,7 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
     {
         $request = $response->getRequest();
 
-        if($request->getFormat() == 'html')
+        if(!$response->isDownloadable() && $request->getFormat() == 'html')
         {
             //Render the page
             $this->getObject('com:koowa.controller.page',  array('response' => $response))
