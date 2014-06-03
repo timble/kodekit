@@ -16,18 +16,18 @@
 abstract class KObjectBootstrapperAbstract extends KObject implements KObjectBootstrapperInterface
 {
     /**
+     * The object manager
+     *
+     * @var KObjectManagerInterface
+     */
+    private $__object_manager;
+
+    /**
      * The bootstrapper priority
      *
      * @var integer
      */
     protected $_priority;
-
-    /**
-     * The object manager
-     *
-     * @var KObjectManagerInterface
-     */
-    protected $_object_manager;
 
     /**
      * Constructor.
@@ -38,8 +38,8 @@ abstract class KObjectBootstrapperAbstract extends KObject implements KObjectBoo
     {
         parent::__construct($config);
 
-        $this->_priority       = $config->priority;
-        $this->_object_manager = $config->object_manager;
+        $this->__object_manager = $config->object_manager;
+        $this->_priority        = $config->priority;
     }
 
     /**
@@ -53,8 +53,7 @@ abstract class KObjectBootstrapperAbstract extends KObject implements KObjectBoo
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'       => self::PRIORITY_NORMAL,
-            'object_manager' => null,
+            'priority'    => self::PRIORITY_NORMAL,
         ));
 
         parent::_initialize($config);
@@ -67,17 +66,7 @@ abstract class KObjectBootstrapperAbstract extends KObject implements KObjectBoo
      */
     public function getObjectManager()
     {
-        return $this->_object_manager;
-    }
-
-    /**
-     * Get the class loader
-     *
-     * @return KClassLoaderInterface
-     */
-    public function getClassLoader()
-    {
-        return $this->getObjectManager()->getClassLoader();
+        return $this->__object_manager;
     }
 
     /**
