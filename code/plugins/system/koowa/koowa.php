@@ -112,12 +112,14 @@ class PlgSystemKoowa extends JPlugin
             $application = JFactory::getApplication()->getName();
 
             /**
-             * Library Bootstrapping
+             * Framework Bootstrapping
              */
-            Koowa::getInstance(array(
+            $koowa = Koowa::getInstance(array(
                 'debug'           => JDEBUG,
                 'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
-                'cache_enabled'   => false //JFactory::getApplication()->getCfg('caching')
+                'cache_enabled'   => false, //JFactory::getApplication()->getCfg('caching')
+                'root_path'       => JPATH_ROOT,
+                'base_path'       => JPATH_BASE
             ));
 
             $manager     = KObjectManager::getInstance();
@@ -128,14 +130,10 @@ class PlgSystemKoowa extends JPlugin
             $loader->registerBasepath('admin', JPATH_ADMINISTRATOR);
 
             //Component locator
-            $loader->registerLocator(new KClassLocatorComponent(array(
-                'namespaces' => array(
-                    '\\'         => JPATH_BASE,
-                    'Koowa'      => JPATH_LIBRARIES.'/koowa',
-                )
-            )));
-
-            $manager->registerLocator('lib:object.locator.component');
+            $loader->getLocator('component')->registerNamespaces(array(
+                '\\'     => JPATH_BASE,
+                'Koowa'  => JPATH_LIBRARIES.'/koowa',
+            ));
 
             //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(
@@ -158,12 +156,35 @@ class PlgSystemKoowa extends JPlugin
 
             $manager->registerLocator('com:koowa.object.locator.plugin');
 
+
             /**
              * Component Bootstrapping
              */
-            $manager->getObject('com:koowa.bootstrapper')->bootstrap($application);
 
-            //Setup the request
+            //Namespaces
+            foreach (new DirectoryIterator(JPATH_LIBRARIES.'/koowa/components') as $dir)
+            {
+                //Only get the component directory names
+                if ($dir->isDot() || !$dir->isDir() || !preg_match('/^[a-zA-Z]+/', $dir->getBasename())) {
+                    continue;
+                }
+
+                $component = substr($dir, 4);
+                $loader->getLocator('component')->registerNamespace(ucfirst($component), JPATH_LIBRARIES.'/koowa');
+            }
+
+            //Bootstrappers
+            $manager->getObject('object.bootstrapper')
+                ->registerBootstrapper('com:koowa.object.bootstrapper.directory',
+                    array('directory' => array(
+                        JPATH_LIBRARIES.'/koowa/components',
+                        JPATH_BASE.'/components'
+                    ))
+                )->bootstrap();
+
+            /**
+             * Context Boostrapping
+             */
             $request = $manager->getObject('request');
 
             // Get the URL from Joomla if live_site is set
