@@ -111,8 +111,8 @@ interface KClassLoaderInterface
     /**
      * Register a basepath by name
      *
-     * @param string $name The name of the basepath
-     * @param string $path The path
+     * @param string  $name The name of the basepath
+     * @param string  $path The path
      * @return void
      */
     public function registerBasepath($name, $path);

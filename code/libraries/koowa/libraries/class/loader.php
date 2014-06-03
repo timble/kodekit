@@ -49,7 +49,7 @@ class KClassLoader implements KClassLoaderInterface
      *
      * @var  string
      */
-    protected $_basepath = null;
+    protected $_basepath = 'koowa';
 
     /**
      * Debug
@@ -82,7 +82,7 @@ class KClassLoader implements KClassLoaderInterface
         }
 
         //Register the library locator
-        $this->registerLocator(new KClassLocatorLibrary());
+        $this->registerLocator(new KClassLocatorLibrary($config));
 
         //Register the Koowa Library namesoace 'K'
         $this->getLocator('library')->registerNamespace('K', dirname(dirname(__FILE__)));
@@ -336,8 +336,8 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Register a basepath by name
      *
-     * @param string $name The name of the basepath
-     * @param string $path The path
+     * @param string  $name The name of the basepath
+     * @param string  $path The path
      * @return void
      */
     public function registerBasepath($name, $path)
@@ -357,7 +357,7 @@ class KClassLoader implements KClassLoaderInterface
     }
 
     /**
-     * Set the active basepath by name
+     * Set the default basepath by name
      *
      * @param string $name The name base path
      * @return KClassLoader
