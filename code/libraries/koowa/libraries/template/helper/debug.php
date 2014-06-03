@@ -52,7 +52,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'file'  => '',
-            'root'  => Koowa::getInstance()->getPath()
+            'root'  => Koowa::getInstance()->getRootPath()
         ));
 
         $html = $config->file;
