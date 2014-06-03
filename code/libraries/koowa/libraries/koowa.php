@@ -13,7 +13,7 @@
 define('KOOWA', 1);
 
 /**
- * Koowa
+ * Koowa Framework Loader
  *
  * Loads classes and files, and provides metadata for Koowa such as version info
  *
@@ -30,11 +30,25 @@ class Koowa
     const VERSION = '2.0.0';
 
     /**
-     * Path to Koowa libraries
+     * The root path
      *
      * @var string
      */
-    protected $_path;
+    protected $_root_path;
+
+    /**
+     * The base path
+     *
+     * @var string
+     */
+    protected $_base_path;
+
+    /**
+     * The vendor path
+     *
+     * @var string
+     */
+    protected $_vendor_path;
 
  	/**
      * Constructor
@@ -45,21 +59,53 @@ class Koowa
      */
     final private function __construct($config = array())
     {
-        //Initialize the path
-        $this->_path = dirname(__FILE__);
+        //Initialize the root path
+        if(isset($config['root_path'])) {
+            $this->_root_path = $config['root_path'];
+        } else {
+            $this->_root_path = realpath($_SERVER['DOCUMENT_ROOT']);
+        }
+
+        //Initialize the base path
+        if(isset($config['base_path'])) {
+            $this->_base_path = $config['base_path'];
+        } else {
+            $this->_base_path = $this->_root_path;
+        }
+
+        //Initialize the vendor path
+        if(isset($config['vendor_path'])) {
+            $this->_vendor_path = $config['vendor_path'];
+        } else {
+            $this->_vendor_path = $this->_root_path.'/vendor';
+        }
 
         //Load the legacy functions
-        require_once $this->_path.'/legacy.php';
+        require_once dirname(__FILE__).'/legacy.php';
 
         //Setup the loader
-        require_once $this->_path.'/class/loader.php';
+        require_once dirname(__FILE__).'/class/loader.php';
 
         if (!isset($config['class_loader'])) {
             $config['class_loader'] = KClassLoader::getInstance($config);
         }
 
         //Setup the factory
-        KObjectManager::getInstance($config);
+        $manager = KObjectManager::getInstance($config);
+
+        //Register the component locator
+        $manager->getClassLoader()->registerLocator(new KClassLocatorComponent());
+        $manager->registerLocator('lib:object.locator.component');
+
+        //Register the composer locator
+        if(file_exists($this->getVendorPath()))
+        {
+            $manager->getClassLoader()->registerLocator(new KClassLocatorComposer(
+                array(
+                    'vendor_path' => $this->getVendorPath()
+                )
+            ));
+        }
     }
 
 	/**
@@ -87,7 +133,7 @@ class Koowa
     }
 
     /**
-     * Get the version of the Koowa library
+     * Get the framework version
      *
      * @return string
      */
@@ -97,12 +143,32 @@ class Koowa
     }
 
     /**
-     * Get path to Koowa libraries
+     * Get vendor path
      *
      * @return string
      */
-    public function getPath()
+    public function getVendorPath()
     {
-        return $this->_path;
+        return $this->_vendor_path;
+    }
+
+    /**
+     * Get root path
+     *
+     * @return string
+     */
+    public function getRootPath()
+    {
+        return $this->_root_path;
+    }
+
+    /**
+     * Get base path
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->_base_path;
     }
 }
