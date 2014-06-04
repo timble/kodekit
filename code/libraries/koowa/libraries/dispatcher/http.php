@@ -144,22 +144,20 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         {
             $controller->getModel()->getState()->setProperty('limit', 'default', $this->_limit->default);
 
-            if(!$controller->getModel()->getState()->isUnique())
-            {
-                $limit = $this->getRequest()->query->get('limit', 'int');
+            $limit = $this->getRequest()->query->get('limit', 'int');
 
-                //Allow a zero limit, set to default is limit is not set
-                if(empty($limit)) {
-                    $limit = $this->_limit->default;
-                }
-
-                if ($this->_limit->max && $limit > $this->_limit->max) {
-                    $limit = $this->_limit->max;
-                }
-
-                $this->getRequest()->query->limit = $limit;
-                $controller->getModel()->getState()->limit = $limit;
+            //Allow a zero limit, set to default is limit is not set
+            if(empty($limit)) {
+                $limit = $this->_limit->default;
             }
+
+            if ($this->_limit->max && $limit > $this->_limit->max) {
+                $limit = $this->_limit->max;
+            }
+
+            $this->getRequest()->query->limit = $limit;
+            $controller->getModel()->getState()->limit = $limit;
+
         }
 
         return $controller->execute('render', $context);
