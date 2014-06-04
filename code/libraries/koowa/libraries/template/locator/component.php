@@ -16,18 +16,26 @@
 class KTemplateLocatorComponent extends KTemplateLocatorAbstract
 {
     /**
+     * The type
+     *
+     * @var string
+     */
+    protected $_type = 'com';
+
+    /**
      * Locate the template based on a virtual path
      *
      * @param  string $path  Stream path or resource
-     * @return string The physical stream path for the template
-     * @throws RuntimeException If a partial template path is passed and no base template has been loaded.
+     * @param  string $base  The base path or resource (used to resolved partials).
+     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
+     * @return string   The physical stream path for the template
      */
-    public function locate($path)
+    public function locate($path, $base = null)
     {
         //Qualify partial templates.
         if(strpos($path, ':') === false)
         {
-            if(!$base = $this->getTemplate()->getPath()) {
+            if(empty($base)) {
                 throw new RuntimeException('Cannot qualify partial template path');
             }
 
@@ -49,18 +57,21 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
             $parts     = $identifier['path'];
         }
 
-        if(!empty($identifier['domain'])) {
-            $rootpath = $this->getObject('manager')->getClassLoader()->getBasepath($identifier['domain']);
+        $package   = $identifier['package'];
+        $domain    = $identifier['domain'];
+
+        //Find the base path
+        if(!empty($domain)) {
+            $rootpath = $this->getObject('manager')->getClassLoader()->getBasepath($domain);
         } else {
-            $rootpath  = $this->getObject('manager')->getClassLoader()->getLocator('component')->getNamespace(ucfirst($identifier['package']));
+            $rootpath  = $this->getObject('manager')->getClassLoader()->getLocator('component')->getNamespace(ucfirst($package));
         }
 
-        $basepath  = $rootpath.'/components/com_'.strtolower($identifier['package']);
-        $filepath  = 'views/'.implode('/', $parts).'/tmpl';
-        $fullpath  = $basepath.'/'.$filepath.'/'.$template.'.'.$format.'.php';
+        $basepath  = $rootpath.'/components/com_'.strtolower($package);
+        $filepath  = 'views/'.implode('/', $parts).'/tmpl/'.$template.'.'.$format.'.php';
 
         // Find the template
-        $result = $this->realPath($fullpath);
+        $result = $this->realPath($basepath.'/'.$filepath);
 
         return $result;
     }

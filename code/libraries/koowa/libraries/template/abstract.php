@@ -165,15 +165,20 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     {
         $parts = parse_url($path);
 
-        $locator = $this->getLocator(isset($parts['scheme']) ? $parts['scheme'] : $this->getIdentifier()->type);
+        //Set the default type is not scheme can be found
+        if(!isset($parts['scheme'])) {
+            $type = $this->getIdentifier()->type;
+        } else {
+            $type = $parts['scheme'];
+        }
 
-        // Set the component locator if none was found.
-        if (!$locator) {
+        //Fall back on the component locator if none was found.
+        if (!$locator = $this->getLocator($type)) {
             $locator = $this->getLocator('com');
         }
 
         //Check of the file exists
-        if (!$template = $locator->locate($path)) {
+        if (!$template = $locator->locate($path, $this->getPath())) {
             throw new InvalidArgumentException('Template "' . $path . '" not found');
         }
 

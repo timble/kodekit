@@ -23,43 +23,6 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
     protected $_type = '';
 
     /**
-     * Template object
-     *
-     * @var	KTemplateInterface
-     */
-    protected $_template;
-
-    /**
-     * Constructor
-     *
-     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        // Set the template object
-        $this->setTemplate($config->template);
-    }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
-     * @return void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'template' => null,
-        ));
-
-        parent::_initialize($config);
-    }
-
-    /**
      * Get the type
      *
      * @return string
@@ -70,28 +33,6 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
     }
 
     /**
-     * Set the template object
-     *
-     * @param  KTemplateInterface $template	The template object
-     * @return $this
-     */
-    public function setTemplate(KTemplateInterface $template)
-    {
-        $this->_template = $template;
-        return $this;
-    }
-
-    /**
-     * Get the template object
-     *
-     * @return  object	The template object
-     */
-    public function getTemplate()
-    {
-        return $this->_template;
-    }
-
-    /**
      * Get a path from an file
      *
      * Function will check if the path is an alias and return the real file path
@@ -99,7 +40,7 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
      * @param  string $file The file path
      * @return string The real file path
      */
-    public function realPath($file)
+    final public function realPath($file)
     {
         $result = false;
         $path   = dirname($file);
