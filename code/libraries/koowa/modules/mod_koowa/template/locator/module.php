@@ -18,11 +18,12 @@ class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
     /**
      * Locate the template based on a virtual path
      *
-     * @param  string $path Stream path or resource
-     * @throws RuntimeException
-     * @return string The physical stream path for the template
+     * @param  string $path  Stream path or resource
+     * @param  string $base  The base path or resource (used to resolved partials).
+     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
+     * @return string   The physical stream path for the template
      */
-    public function locate($path)
+    public function locate($path, $base = null)
     {
         if(strpos($path, ':') === false)
         {
