@@ -672,8 +672,8 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      */
     protected function _locate(KObjectIdentifier $identifier, $fallback = true)
     {
-        //Set the basepath based on the identifiers domain
-        $this->getClassLoader()->setBasepath($identifier->domain);
+        //Set the active global namespace. If the namespace is not registered it will not be set.
+        $this->getClassLoader()->setNamespace($identifier->domain);
 
         return $this->_locators[$identifier->getType()]->locate($identifier, $fallback);
     }

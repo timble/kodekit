@@ -52,21 +52,21 @@ interface KClassLoaderInterface
     /**
      * Get the path based on a class name
      *
-     * @param string $class    The class name
-     * @param string $basepath The basepath name
+     * @param string $class     The class name
+     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
      * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function getPath($class, $basepath = null);
+    public function getPath($class, $namespace = null);
 
     /**
-     * Set the path based for a class
+     * Get the path based on a class name
      *
-     * @param string $class    The class name
-     * @param string $path     The class path
-     * @param string $basepath The basepath name
+     * @param string $class     The class name
+     * @param string $path      The class path
+     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
      * @return void
      */
-    public function setPath($class, $path, $basepath = null);
+    public function setPath($class, $path, $namespace = null);
 
     /**
      * Register a class locator
@@ -109,36 +109,38 @@ interface KClassLoaderInterface
     public function getAliases($class);
 
     /**
-     * Register a basepath by name
+     * Register a global namespace
      *
-     * @param string  $name The name of the basepath
-     * @param string  $path The path
-     * @return void
+     * @param  string $namespace
+     * @param  string $path The location of the namespace
+     * @return  KClassLoaderInterface
      */
-    public function registerBasepath($name, $path);
+    public function registerNamespace($namespace, $path);
 
     /**
-     * Get a basepath by name
+     * Set the active global namespace
      *
-     * @param string $name The name of the application
-     * @return string The path of the application
+     * @param string $namespace The namespace
+     * @return KClassLoaderInterface
      */
-    public function getBasepath($name);
+    public function setNamespace($namespace);
 
     /**
-     * Set the active basepath by name
+     * Get a global namespace path by name
      *
-     * @param string $name The name base path
-     * @return KClassLoader
+     * If no namespace is passed in this method will return the active global namespace path
+     *
+     * @param string|null $namespace The namespace.
+     * @return string|false The namespace path or FALSE if the namespace does not exist.
      */
-    public function setBasepath($name);
+    public function getNamespace($namespace = null);
 
     /**
-     * Get a list of basepaths
+     * Get the global namespaces
      *
-     * @return array
+     * @return array An array with namespaces as keys and path as value
      */
-    public function getBasepaths();
+    public function getNamespaces();
 
     /**
      * Tells if a class, interface or trait exists.

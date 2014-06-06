@@ -38,18 +38,18 @@ class KClassLoader implements KClassLoaderInterface
     protected $_registry = null;
 
     /**
-     * An associative array of basepaths
+     * Global namespaces
      *
      * @var array
      */
-    protected $_basepaths = array();
+    protected $_namespaces = array();
 
     /**
-     * The active basepath name
+     * The active global namespace
      *
      * @var  string
      */
-    protected $_basepath = 'koowa';
+    protected $_namespace = 'koowa';
 
     /**
      * Debug
@@ -163,7 +163,7 @@ class KClassLoader implements KClassLoaderInterface
         $result = false;
 
         //Get the path
-        $path = $this->getPath( $class, $this->_basepath);
+        $path = $this->getPath( $class, $this->_namespace);
 
         if ($path !== false)
         {
@@ -209,24 +209,24 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Get the path based on a class name
      *
-     * @param string $class    The class name
-     * @param string $basepath The basepath name
+     * @param string $class     The class name
+     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
      * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function getPath($class, $basepath = null)
+    public function getPath($class, $namespace = null)
     {
         $result = false;
 
-        //Switch the basepath
-        $prefix = $basepath ? $basepath : $this->_basepath;
+        //Switch the namespace
+        $prefix = $namespace ? $namespace : $this->_namespace;
 
         if(!$this->_registry->has($prefix.'-'.$class))
         {
             //Locate the class
             foreach($this->_locators as $locator)
             {
-                $path = $this->getBasepath($basepath);
-                if(false !== $result = $locator->locate($class, $path)) {
+                $basepath = $this->getNamespace($namespace);
+                if(false !== $result = $locator->locate($class, $basepath)) {
                     break;
                 };
             }
@@ -242,14 +242,14 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Get the path based on a class name
      *
-     * @param string $class    The class name
-     * @param string $path     The class path
-     * @param string $basepath The basepath name
+     * @param string $class     The class name
+     * @param string $path      The class path
+     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
      * @return void
      */
-    public function setPath($class, $path, $basepath = null)
+    public function setPath($class, $path, $namespace = null)
     {
-        $prefix = $basepath ? $basepath : $this->_basepath;
+        $prefix = $namespace ? $namespace : $this->_namespace;
         $this->_registry->set($prefix.'-'.$class, $path);
     }
 
@@ -334,48 +334,63 @@ class KClassLoader implements KClassLoaderInterface
     }
 
     /**
-     * Register a basepath by name
+     * Register a global namespace
      *
-     * @param string  $name The name of the basepath
-     * @param string  $path The path
-     * @return void
+     * @param  string $namespace
+     * @param  string $path The location of the namespace
+     * @return  KClassLoaderInterface
      */
-    public function registerBasepath($name, $path)
+    public function registerNamespace($namespace, $path)
     {
-        $this->_basepaths[$name] = $path;
+        $this->_namespaces[$namespace] = $path;
     }
 
     /**
-     * Get a basepath by name
+     * Get a global namespace path
      *
-     * @param string $name The name of the basepath
-     * @return string The path
+     * If no namespace is passed in this method will return the active global namespace.
+     *
+     * @param string|null $namespace The namespace.
+     * @return string|false The namespace path or FALSE if the namespace does not exist.
      */
-    public function getBasepath($name)
+    public function getNamespace($namespace = null)
     {
-        return isset($this->_basepaths[$name]) ? $this->_basepaths[$name] : null;
+        $result = false;
+
+        if(!isset($namespace)) {
+            $result = $this->_namespace;
+        } else {
+            $result = isset($this->_namespaces[$namespace]) ? $this->_namespaces[$namespace] : false;
+        }
+
+        return $result;
     }
 
     /**
-     * Set the default basepath by name
+     * Set the active global namespace
      *
-     * @param string $name The name base path
+     * Method can only set a namespace that previously has been registered.
+     *
+     * @param string $namespace The namespace
      * @return KClassLoader
      */
-    public function setBasepath($name)
+    public function setNamespace($namespace)
     {
-        $this->_basepath = $name;
+        if(isset($this->_namespaces[$namespace])) {
+            $this->_namespace = $namespace;
+        }
+
         return $this;
     }
 
     /**
-     * Get a list of basepaths
+     * Get the global namespaces
      *
-     * @return array
+     * @return array An array with namespaces as keys and path as value
      */
-    public function getBasepaths()
+    public function getNamespaces()
     {
-        return $this->_basepaths;
+        return $this->_namespaces;
     }
 
     /**
