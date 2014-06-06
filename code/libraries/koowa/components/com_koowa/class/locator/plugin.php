@@ -41,7 +41,7 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
 	protected $_type = 'plugin';
 
 	/**
-	 * Get the path based on a class name
+	 * Get a fully qualified based on a class name
 	 *
 	 * @param  string $classname The class name
      * @param  string $basepath  The base path

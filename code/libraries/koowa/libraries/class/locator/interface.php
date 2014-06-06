@@ -16,13 +16,13 @@
 interface KClassLocatorInterface
 {
     /**
-     * Get the path based on a class name
+     * Get a fully qualified path based on a class name
      *
-     * @param  string  $classname The class name
-     * @param  string  $basepath  The basepath to use to find the class
-     * @return string|boolean     Returns the path on success FALSE on failure
+     * @param  string  $class    The class name
+     * @param  string  $basepath The basepath to use to find the class
+     * @return string|boolean    Returns the path on success FALSE on failure
      */
-    public function locate($classname, $basepath = null);
+    public function locate($class, $basepath = null);
 
     /**
 	 * Get the type
@@ -41,18 +41,10 @@ interface KClassLocatorInterface
     public function registerNamespace($namespace, $path);
 
     /**
-     * Registers an array of namespaces
-     *
-     * @param array $namespaces An array of namespaces (namespaces as keys and location as value)
-     * @return KClassLocatorInterface
-     */
-    public function registerNamespaces($namespaces);
-
-    /**
-     * Get a the namespace paths
+     * Get a namespace path
      *
      * @param string $namespace The namespace
-     * @return string The namespace path
+     * @return string|false The namespace path or FALSE if the namespace does not exist.
      */
     public function getNamespace($namespace);
 

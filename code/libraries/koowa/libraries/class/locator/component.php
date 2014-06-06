@@ -57,7 +57,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
     protected $_basepath;
 
 	/**
-	 * Get the path based on a class name
+	 * Get a fully qualified path based on a class name
 	 *
 	 * @param  string $class     The class name
      * @param  string $basepath  The base path
@@ -110,11 +110,14 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             //Switch basepath
             if ($this->getNamespace($namespace)) {
                 $basepath = $this->getNamespace($namespace);
-            } elseif (!empty($basepath)) {
+            }
+            elseif (!empty($basepath)) {
                 $this->_basepath = $basepath;
-            } elseif ($this->_basepath) {
+            }
+            elseif ($this->_basepath) {
                 $basepath = $this->_basepath;
-            } else {
+            }
+            else {
                 $basepath = $this->getNamespace('\\');
             }
 

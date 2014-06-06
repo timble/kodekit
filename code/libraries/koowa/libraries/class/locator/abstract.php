@@ -23,7 +23,7 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
 	protected $_type = '';
 
     /**
-     * Namespace/directory pairs to search
+     * Locator namespaces
      *
      * @var array
      */
@@ -73,30 +73,15 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
     }
 
     /**
-     * Registers an array of namespaces
-     *
-     * @param array $namespaces An array of namespaces (namespaces as keys and location as value)
-     * @return KClassLocatorInterface
-     */
-    public function registerNamespaces($namespaces)
-    {
-        foreach ($namespaces as $namespace => $path) {
-            $this->registerNamespace($namespace, $path);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get a the namespace paths
+     * Get a namespace path
      *
      * @param string $namespace The namespace
-     * @return string The namespace path
+     * @return string|false The namespace path or FALSE if the namespace does not exist.
      */
     public function getNamespace($namespace)
     {
         $namespace = trim($namespace, '\\');
-        return isset($this->_namespaces[$namespace]) ?  $this->_namespaces[$namespace] : null;
+        return isset($this->_namespaces[$namespace]) ?  $this->_namespaces[$namespace] : false;
     }
 
     /**

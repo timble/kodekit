@@ -51,7 +51,7 @@ class KClassLocatorComposer extends KClassLocatorAbstract
     }
 
     /**
-     * Get the path based on a class name
+     * Get a fully qualified path based on a class name
      *
      * @param  string $class     The class name
      * @param  string $basepath  The base path
