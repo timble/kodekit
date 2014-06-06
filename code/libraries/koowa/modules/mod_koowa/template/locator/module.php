@@ -16,47 +16,20 @@
 class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
 {
     /**
-     * Locate the template based on a virtual path
+     * Find a template path
      *
-     * @param  string $path  Stream path or resource
-     * @param  string $base  The base path or resource (used to resolved partials).
-     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
-     * @return string   The physical stream path for the template
+     * @param array  $info      The path information
+     * @return bool|mixed
      */
-    public function locate($path, $base = null)
+    public function find(array $info)
     {
-        if(strpos($path, ':') === false)
-        {
-            if(!$base = $this->getTemplate()->getPath()) {
-                throw new RuntimeException('Cannot qualify partial template path');
-            }
+        $basepath  = $this->getObject('manager')->getClassLoader()->getNamespace($info['domain']);
+        $basepath  = $basepath.'/modules/mod_'.strtolower($info['package']);
 
-            $identifier = $this->getIdentifier($base)->toArray();
-
-            $format    = pathinfo($path, PATHINFO_EXTENSION);
-            $template  = pathinfo($path, PATHINFO_FILENAME);
-
-            $parts     = $identifier['path'];
-            array_pop($parts);
-        }
-        else
-        {
-            // Need to clone here since we use array_pop and it modifies the cached identifier
-            $identifier = $this->getIdentifier($path)->toArray();
-
-            $format    = $identifier['name'];
-            $template  = array_pop($identifier['path']);
-            $parts     = $identifier['path'];
-        }
-
-        $basepath  = $this->getObject('manager')->getClassLoader()->getBasepath($identifier['domain']);
-        $basepath  = $basepath.'/modules/mod_'.strtolower($identifier['package']);
-        $filepath  = (count($parts) ? implode('/', $parts).'/' : '').'tmpl';
-        $fullpath  = $basepath.'/'.$filepath.'/'.$template.'.'.$format.'.php';
+        $filepath   = (count($info['path']) ? implode('/', $info['path']).'/' : '').'tmpl';
+        $filepath  .= $info['file'].'.'.$info['format'].'.php';
 
         // Find the template
-        $result = $this->realPath($fullpath);
-
-        return $result;
+        return $this->realPath($basepath.'/'.$filepath);
     }
 }

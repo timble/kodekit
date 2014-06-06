@@ -23,56 +23,35 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
     protected $_type = 'com';
 
     /**
-     * Locate the template based on a virtual path
+     * Find a template path
      *
-     * @param  string $path  Stream path or resource
-     * @param  string $base  The base path or resource (used to resolved partials).
-     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
-     * @return string   The physical stream path for the template
+     * @param array  $info      The path information
+     * @return bool|mixed
      */
-    public function locate($path, $base = null)
+    public function find(array $info)
     {
-        //Qualify partial templates.
-        if(strpos($path, ':') === false)
-        {
-            if(empty($base)) {
-                throw new RuntimeException('Cannot qualify partial template path');
-            }
+        $loader = $this->getObject('manager')->getClassLoader();
 
-            $identifier = $this->getIdentifier($base)->toArray();
+        //Get the package
+        $package = $info['package'];
 
-            $format    = pathinfo($path, PATHINFO_EXTENSION);
-            $template  = pathinfo($path, PATHINFO_FILENAME);
+        //Get the domain
+        $domain = $info['domain'];
 
-            $parts     = $identifier['path'];
-            array_pop($parts);
-        }
-        else
-        {
-            // Need to clone here since we use array_pop and it modifies the cached identifier
-            $identifier = $this->getIdentifier($path)->toArray();
-
-            $format    = $identifier['name'];
-            $template  = array_pop($identifier['path']);
-            $parts     = $identifier['path'];
-        }
-
-        $package   = $identifier['package'];
-        $domain    = $identifier['domain'];
-
-        //Find the base path
+        //Base path
         if(!empty($domain)) {
-            $rootpath = $this->getObject('manager')->getClassLoader()->getBasepath($domain);
+            $basepath = $loader->getNamespace($domain);
         } else {
-            $rootpath  = $this->getObject('manager')->getClassLoader()->getLocator('component')->getNamespace(ucfirst($package));
+            $basepath = $loader->getLocator('component')->getNamespace(ucfirst($package));
         }
 
-        $basepath  = $rootpath.'/components/com_'.strtolower($package);
-        $filepath  = 'views/'.implode('/', $parts).'/tmpl/'.$template.'.'.$format.'.php';
+        $basepath .= '/components/com_'.strtolower($package);
+
+        //File path
+        $filepath  = 'views/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
+
 
         // Find the template
-        $result = $this->realPath($basepath.'/'.$filepath);
-
-        return $result;
+        return $this->realPath($basepath.'/'.$filepath);
     }
 }

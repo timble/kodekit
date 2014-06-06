@@ -33,6 +33,52 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
     }
 
     /**
+     * Locate the template based on a virtual path
+     *
+     * @param  string $template  Stream path or resource
+     * @param  string $base      The base path or resource (used to resolved partials).
+     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
+     * @return string   The physical stream path for the template
+     */
+    public function locate($template, $base = null)
+    {
+        //Qualify partial templates.
+        if(strpos($template, ':') === false)
+        {
+            if(empty($base)) {
+                throw new RuntimeException('Cannot qualify partial template path');
+            }
+
+            $identifier = $this->getIdentifier($base);
+
+            $format  = pathinfo($template, PATHINFO_EXTENSION);
+            $file    = pathinfo($template, PATHINFO_FILENAME);
+            $path    = $identifier->getPath();
+
+            array_pop($path);
+        }
+        else
+        {
+            $identifier = $this->getIdentifier($template);
+
+            $path    = $identifier->getPath();
+            $file    = array_pop($path);
+            $format  = $identifier->getName();
+        }
+
+        $info = array(
+            'template' => $template,
+            'domain'   => $identifier->getDomain(),
+            'package'  => $identifier->getPackage(),
+            'path'     => $path,
+            'file'     => $file,
+            'format'   => $format,
+        );
+
+        return $this->find($info);
+    }
+
+    /**
      * Get a path from an file
      *
      * Function will check if the path is an alias and return the real file path
