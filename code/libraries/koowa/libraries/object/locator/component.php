@@ -55,13 +55,19 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
      */
     public function locate(KObjectIdentifier $identifier, $fallback = true)
     {
-        $class   = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
+        $class = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
+
+        if(empty($identifier->domain)) {
+            $domain  = ucfirst($this->getPackage($identifier->package));
+        } else {
+            $domain = ucfirst($identifier->domain);
+        }
 
         $package = ucfirst($identifier->package);
         $file    = ucfirst($identifier->name);
+        $path    = $identifier->path;
 
         //Make an exception for 'view' and 'module' types
-        $path  = $identifier->path;
         $type  = !empty($path) ? array_shift($path) : '';
 
         if(!in_array($type, array('view','module'))) {
@@ -80,6 +86,7 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
         $info = array(
             'class'   => $class,
             'package' => $package,
+            'domain'  => $domain,
             'path'    => $path,
             'file'    => $file
         );

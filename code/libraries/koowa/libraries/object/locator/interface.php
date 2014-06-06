@@ -19,7 +19,7 @@ interface KObjectLocatorInterface
      * Returns a fully qualified class name for a given identifier.
      *
      * @param KObjectIdentifier $identifier An identifier object
-     * @param bool  $fallback   Use the fallbacks to locate the identifier
+     * @param bool  $fallback   Use the fallback sequence to locate the identifier
      * @return string|false  Return the class name on success, returns FALSE on failure
      */
     public function locate(KObjectIdentifier $identifier, $fallback = true);
@@ -33,6 +33,32 @@ interface KObjectLocatorInterface
      * @return bool|mixed
      */
     public function find(array $info, $fallback = true);
+
+    /**
+     * Register a package
+     *
+     * @param  string $name    The package name
+     * @param  string $domain  The domain for the package
+     * @return KObjectLocatorInterface
+     */
+    public function registerPackage($name, $domain);
+
+    /**
+     * Get the registered package domain
+     *
+     *  * If no domain has been registered for this package, the default 'Koowa' domain will be returned.
+     *
+     * @param string $package
+     * @return string The registered domain
+     */
+    public function getPackage($package);
+
+    /**
+     * Get the registered packages
+     *
+     * @return array An array with package names as keys and domain names as values
+     */
+    public function getPackages();
 
     /**
      * Get the locator type
