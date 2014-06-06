@@ -70,6 +70,16 @@ abstract class KObjectBootstrapperAbstract extends KObject implements KObjectBoo
     }
 
     /**
+     * Get the class loader
+     *
+     * @return KClassLoaderInterface
+     */
+    public function getClassLoader()
+    {
+        return $this->getObjectManager()->getClassLoader();
+    }
+
+    /**
      * Get the priority of the bootstrapper
      *
      * @return  integer The priority level

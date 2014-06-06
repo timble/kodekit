@@ -42,8 +42,12 @@ class KObjectBootstrapperChain extends KObjectBootstrapperAbstract
      */
     public function bootstrap()
     {
-        foreach($this->_queue as $bootstrapper) {
+        foreach($this->_queue as $bootstrapper)
+        {
             $bootstrapper->bootstrap();
+
+            //Remove the bootstrapper from the queue
+            $this->_queue->dequeue($bootstrapper);
         }
     }
 

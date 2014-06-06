@@ -32,6 +32,20 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
     public function bootstrap();
 
     /**
+     * Get the object manager
+     *
+     * @return KObjectManagerInterface
+     */
+    public function getObjectManager();
+
+    /**
+     * Get the class loader
+     *
+     * @return KClassLoaderInterface
+     */
+    public function getClassLoader();
+
+    /**
      * Get the priority of the bootstrapper
      *
      * @return  integer The priority level
