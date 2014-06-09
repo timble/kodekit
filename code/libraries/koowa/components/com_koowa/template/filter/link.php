@@ -46,10 +46,11 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
     {
         if($this->getTemplate()->getView()->getLayout() !== 'koowa')
         {
-            $link      = isset($attribs['src']) ? $attribs['src'] : false;
+            $link      = isset($attribs['href']) ? $attribs['href'] : false;
             $relType  = 'rel';
             $relValue = $attribs['rel'];
             unset($attribs['rel']);
+            unset($attribs['href']);
 
             JFactory::getDocument()->addHeadLink($link, $relValue, $relType, $attribs);
         }
