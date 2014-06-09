@@ -32,6 +32,16 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         return parent::koowa($config);
     }
 
+    public function modal($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug')
+        ));
+
+        return parent::modal($config);
+    }
+
     /**
      * Loads jQuery under a global variable called kQuery.
      *
