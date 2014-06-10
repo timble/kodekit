@@ -35,7 +35,14 @@ class ComKoowaEventSubscriberUnauthorized extends KEventSubscriberAbstract
 
             if ($request->getFormat() == 'html' && $request->isSafe())
             {
-                $message = $this->getObject('translator')->translate('You are not authorized to view this resource. Please login and try again.');
+                $message = $exception->getMessage();
+
+                if (!$message) {
+                    $message = 'You are not authorized to view this resource';
+                }
+
+                $translator = $this->getObject('translator');
+                $message    = $translator->translate($message);
 
                 if(JFactory::getApplication()->isSite()) {
                     $url = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode((string) $request->getUrl()), false);
@@ -44,6 +51,7 @@ class ComKoowaEventSubscriberUnauthorized extends KEventSubscriberAbstract
                 }
 
                 $response->setRedirect($url, $message, 'error');
+                $response->addMessage($translator->translate('Please login and try again'), 'notice');
                 $response->send();
 
                 $event->stopPropagation();
