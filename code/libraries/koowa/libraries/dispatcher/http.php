@@ -146,7 +146,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
 
             $limit = $this->getRequest()->query->get('limit', 'int');
 
-            //Allow a zero limit, set to default is limit is not set
+            // Set to default if there is no limit. This is done for both unique and non-unique states
+            // so that limit can be transparently used on unique state requests rendering lists.
             if(empty($limit)) {
                 $limit = $this->_limit->default;
             }
@@ -157,7 +158,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
 
             $this->getRequest()->query->limit = $limit;
             $controller->getModel()->getState()->limit = $limit;
-
         }
 
         return $controller->execute('render', $context);
