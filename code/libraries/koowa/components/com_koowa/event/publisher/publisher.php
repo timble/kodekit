@@ -28,22 +28,11 @@ class ComKoowaEventPublisher extends KEventPublisher
      */
     public function publishException(Exception $exception, $attributes = array(), $target = null)
     {
-        try
-        {
-            //Make sure we have an event object
-            $event = new KEventException('onException', $attributes, $target);
-            $event->setException($exception);
+        //Make sure we have an event object
+        $event = new KEventException('onException', $attributes, $target);
+        $event->setException($exception);
 
-            parent::publishEvent($event);
-        }
-        catch (Exception $exception)
-        {
-            if (version_compare(JVERSION, '3.0', '>=')) {
-                JErrorPage::render($exception);
-            } else {
-                JError::raiseError($exception->getCode(), $exception->getMessage());
-            }
-        }
+        parent::publishEvent($event);
 
         return $event;
     }
