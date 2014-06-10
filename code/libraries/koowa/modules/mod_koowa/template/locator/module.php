@@ -26,7 +26,7 @@ class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
         $basepath  = $this->getObject('manager')->getClassLoader()->getNamespace($info['domain']);
         $basepath  = $basepath.'/modules/mod_'.strtolower($info['package']);
 
-        $filepath   = (count($info['path']) ? implode('/', $info['path']).'/' : '').'tmpl';
+        $filepath   = (count($info['path']) ? implode('/', $info['path']).'/' : '').'tmpl/';
         $filepath  .= $info['file'].'.'.$info['format'].'.php';
 
         // Find the template
