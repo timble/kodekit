@@ -56,7 +56,6 @@ class ComKoowaEventSubscriberUnauthorized extends KEventSubscriberAbstract
 
                 $event->stopPropagation();
             }
-            else throw $exception;
         }
     }
 }
