@@ -20,6 +20,7 @@ class ComKoowaTemplateHelperEvent extends KTemplateHelperAbstract
      * Triggers an event and returns the results
      *
      * @param array $config
+     * @throws InvalidArgumentException
      * @return string
      */
     public function trigger($config = array())

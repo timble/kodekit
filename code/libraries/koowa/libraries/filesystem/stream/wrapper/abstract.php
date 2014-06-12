@@ -231,6 +231,7 @@ abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFile
      * Set the stream mode
      *
      * @param $mode
+     * @return boolean|null
      */
     public function setMode($mode)
     {

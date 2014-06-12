@@ -82,7 +82,7 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
     /**
      * Check if the subscriber is already subscribed to the dispatcher
      *
-     * @param  KEventPublisherInterface $dispatcher  The event dispatcher
+     * @param  KEventPublisherInterface $publisher  The event dispatcher
      * @return boolean TRUE if the subscriber is already subscribed to the dispatcher. FALSE otherwise.
      */
     public function isSubscribed(KEventPublisherInterface $publisher)

@@ -39,6 +39,7 @@ class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObjectSin
      * Object constructor
      *
      * @param KObjectConfig $config Configuration options
+     * @throws InvalidArgumentException
      */
     public function __construct(KObjectConfig $config)
     {

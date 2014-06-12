@@ -218,7 +218,8 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      *
      * @param  mixed $handler An object that implements KCommandHandlerInterface, an KObjectIdentifier
      *                        or valid identifier string
-     * @param  array  $config  An optional associative array of configuration options
+     * @param  array $config An optional associative array of configuration options
+     * @throws UnexpectedValueException
      * @return KObjectInterface The mixer object
      */
     public function addCommandHandler($handler, $config = array())

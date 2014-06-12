@@ -247,7 +247,7 @@ class KUser extends KUserAbstract implements KObjectSingleton
     /**
      * Unset a user attribute
      *
-     * @param   string $key  The attribute name.
+     * @param   string $name  The attribute name.
      * @return  void
      */
     public function __unset($name)

@@ -69,15 +69,15 @@ interface KTemplateInterface
     /**
      * Sets the translator object
      *
-     * @param TranslatorInterface $translator A translator object or identifier
-     * @return TemplateInterface
+     * @param KTranslatorInterface $translator A translator object or identifier
+     * @return $this
      */
     public function setTranslator(KTranslatorInterface $translator);
 
     /**
      * Gets the translator object
      *
-     * @return  TranslatorInterface
+     * @return  KTranslatorInterface
      */
     public function getTranslator();
 
