@@ -26,7 +26,6 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      * Constructor
      *
      * @param KObjectConfig $config An optional KObjectConfig object with configuration options.
-     * @return KUser
      */
     public function __construct(KObjectConfig $config)
     {
@@ -80,7 +79,6 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     /**
      * Get the user data
      *
-     * @param  array $data An associative array of data
      * @return KObjectConfig
      */
     public function getData()
@@ -261,7 +259,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     /**
      * Check if the user is equal
      *
-     * @param KUserInterface $user
+     * @param KObjectInterface|KUserInterface $user
      * @return Boolean
      */
     public function equals(KObjectInterface $user)

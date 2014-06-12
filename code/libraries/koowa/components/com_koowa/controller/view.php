@@ -62,6 +62,7 @@ abstract class ComKoowaControllerView extends KControllerView
      * Add the toolbars to the controller
      *
      * @param KControllerContextInterface $context
+     * @return $this
      */
     protected function _addToolbars(KControllerContextInterface $context)
     {

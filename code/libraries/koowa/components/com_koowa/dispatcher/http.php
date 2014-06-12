@@ -57,6 +57,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
      *
      * @throws InvalidArgumentException If the action parameter is not an instance of Exception
      * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return boolean|null
      */
     protected function _renderError(KDispatcherContextInterface $context)
     {

@@ -57,8 +57,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
-     * @return  void
+     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
      */
     protected function _initialize(KObjectConfig $config)
     {

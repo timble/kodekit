@@ -64,7 +64,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
      * be found.
      *
      * @param string $name      The component name
-     * @param string $domain    The vendor name
+     * @param string $vendor    The vendor name
      * @param string $path      The component path
      * @return KObjectBootstrapper
      */

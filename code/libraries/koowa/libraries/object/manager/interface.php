@@ -138,6 +138,7 @@ interface KObjectManagerInterface
      * Register an object locator
      *
      * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectLocatorInterface
+     * @param array $config
      * @return KObjectManagerInterface
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */

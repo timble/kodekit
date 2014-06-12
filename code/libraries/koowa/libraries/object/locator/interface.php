@@ -28,7 +28,6 @@ interface KObjectLocatorInterface
      * Find a class
      *
      * @param array  $info      The class information
-     * @param string $basepath  The basepath name
      * @param bool   $fallback  If TRUE use the fallback sequence
      * @return bool|mixed
      */

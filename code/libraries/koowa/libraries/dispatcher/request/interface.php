@@ -169,7 +169,6 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * 1. Use the the 'format' request parameter
      * 2. Use the accept header with the highest quality apply the reverse format map to find the format.
      *
-     * @param string $format The default format
      * @return  string  The request format or NULL if no format could be found
      */
     public function getFormat();

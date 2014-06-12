@@ -81,9 +81,9 @@ class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
                         $message = 'Account disabled';
                     }
 
-                    throw new ControllerExceptionRequestForbidden($message);
+                    throw new KControllerExceptionRequestForbidden($message);
                 }
-                else throw new ControllerExceptionRequestNotAuthorized($message);
+                else throw new KControllerExceptionRequestNotAuthorized($message);
 
                 return false;
             }

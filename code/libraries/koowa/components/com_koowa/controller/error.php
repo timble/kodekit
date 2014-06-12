@@ -36,7 +36,8 @@ class ComKoowaControllerError extends KControllerView
      * Render an error
      *
      * @throws InvalidArgumentException If the action parameter is not an instance of KException
-     * @param KControllerContextInterface $context	A controller context object
+     * @param  KControllerContextInterface $context	A controller context object
+     * @return string
      */
     protected function _actionRender(KControllerContextInterface $context)
     {

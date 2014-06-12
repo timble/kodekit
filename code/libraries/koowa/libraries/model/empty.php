@@ -42,7 +42,7 @@ final class KModelEmpty extends KModelAbstract
     /**
      * Reset the model
      *
-     * @param  string $name The state name being changed
+     * @param KModelContext $context A model context object
      * @return void
      */
     protected function _actionReset(KModelContext $context)

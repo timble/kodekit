@@ -28,7 +28,8 @@ class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
     /**
      * Load the attributes by reference
      *
-     * @return KUserSessionContainerAbstract
+     * @param  array $session
+     * @return $this
      */
     public function load(array &$session)
     {
@@ -87,7 +88,6 @@ class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
     /**
      * Get a session secret, a secret should never be exposed publicly
      *
-     * @param   boolean $refresh If true, force a new token to be created
      * @return  string  The session token
      */
     public function getSecret()
@@ -214,6 +214,7 @@ class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
      * a secret value.
      *
      * @param string  $secret  String with at least 10 characters. The same value must be passed to _validateNonce().
+     * @param string  $nonce
      * @returns bool Whether the Nonce is valid.
      */
     public static function _validateNonce($secret, $nonce)

@@ -105,8 +105,8 @@ final class KModelEntityImmutable extends KModelEntityAbstract
     /**
      * Set the properties
      *
-     * @param   mixed   $data        Either and associative array, an object or a ModelEntityInterface
-     * @param   boolean $modified If TRUE, update the modified information for each property being set.
+     * @param   mixed   $properties  Either and associative array, an object or a ModelEntityInterface
+     * @param   boolean $modified    If TRUE, update the modified information for each property being set.
      * @return  $this
      */
     public function setProperties($properties, $modified = true)

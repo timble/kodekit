@@ -21,7 +21,6 @@ class KDispatcherRequest extends KDispatcherRequestAbstract implements KObjectSi
      * Constructor
      *
      * @param KObjectConfig  $config  A KObjectConfig object with optional configuration options
-     * @return Object
      */
     public function __construct(KObjectConfig $config)
     {

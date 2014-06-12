@@ -51,6 +51,7 @@ interface KCommandCallbackInterface extends KCommandCallbackDelegate
     /**
      * Get the command callbacks
      *
+     * @param mixed $command
      * @return array
      */
     public function getCommandCallbacks($command = null);

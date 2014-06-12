@@ -164,7 +164,7 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      * Required by interface ArrayAccess
      *
      * @param   KObjectHandlable $object
-     * @param   mixed            $data The data to associate with the object [UNUSED]
+     * @param   mixed            $value The data to associate with the object [UNUSED]
      * @throws InvalidArgumentException
      * @return  KObjectSet
      */

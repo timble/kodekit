@@ -125,7 +125,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * The row will be removed based on it's identity_column if set or otherwise by it's object handle.
      *
-     * @param  KDatabaseRowInterface $row
+     * @param  KObjectHandlable|KDatabaseRowInterface $row
      * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
      * @return KDatabaseRowsetAbstract
      */

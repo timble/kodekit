@@ -87,7 +87,7 @@ interface KObjectIdentifierInterface extends Serializable
     /**
      * Add a mixin
      *
-     *  @param mixed $decorator An object implementing ObjectMixinInterface, an ObjectIdentifier or an identifier string
+     *  @param mixed $mixin     An object implementing ObjectMixinInterface, an ObjectIdentifier or an identifier string
      * @param array $config     An array of configuration options
      * @return KObjectIdentifierInterface
      * @see Object::mixin()

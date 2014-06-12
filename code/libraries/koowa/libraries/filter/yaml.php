@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
  */
-class KFilterXml extends KFilterAbstract
+class KFilterYaml extends KFilterAbstract
 {
     /**
      * Validate a value

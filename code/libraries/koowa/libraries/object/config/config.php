@@ -118,7 +118,7 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfig    $config A KObjectConfig object an or array of options to be appended
+     * @param  array|KObjectConfig    $options A KObjectConfig object an or array of options to be appended
      * @return KObjectConfig
      */
     public function append($options)
