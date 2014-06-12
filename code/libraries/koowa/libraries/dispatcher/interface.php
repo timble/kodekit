@@ -38,7 +38,7 @@ interface KDispatcherInterface extends KControllerInterface
      * @param  mixed $authenticator An object that implements DispatcherAuthenticatorInterface, an ObjectIdentifier
      *                              or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return DispatcherAbstract
+     * @return KDispatcherAbstract
      */
     public function addAuthenticator($authenticator, $config = array());
 

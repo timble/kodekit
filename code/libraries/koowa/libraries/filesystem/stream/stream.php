@@ -158,7 +158,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      * @param resource|string $stream Stream path or resource
      * @param string          $mode   The mode to open the stream with
      * @throws RuntimeException  If the stream could not be opened.
-     * @return Return a file pointer resource on success, or FALSE on error.
+     * @return $this
      */
     public function open($stream, $mode = 'rb')
     {
@@ -258,7 +258,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      * Truncates the stream to a given length
      *
      * @param integer $size The size to truncate
-     * @return Return TRUE on success or FALSE on failure.
+     * @return boolean TRUE on success or FALSE on failure.
      */
     public function truncate($size)
     {
