@@ -16,7 +16,6 @@
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
-  line-height: 1;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
@@ -27,14 +26,16 @@
   display: inline-block;
   width: 16px;
   height: 16px;
+  font-size: 16px;
+  line-height: 16px;
 
   /* Styling the before element */
   &:before {
     font-family: 'koowa' !important;
     display: block;
+    overflow: visible;
     width: 16px;
     height: 16px;
-    overflow: visible;
     font-size: 16px;
     line-height: 16px;
     text-align: center;
@@ -57,6 +58,8 @@
   &.koowa_icon--12 {
     width: 12px;
     height: 12px;
+    font-size: 12px;
+    line-height: 12px;
 
     &:before {
       width: 12px;
@@ -66,23 +69,25 @@
     }
   }
 
-  @media screen and (min-width: 600px) {
-    &.koowa_icon--24 {
+  &.koowa_icon--24 {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 24px;
+
+    &:before {
       width: 24px;
       height: 24px;
-
-      &:before {
-        width: 24px;
-        height: 24px;
-        font-size: 24px;
-        line-height: 24px;
-      }
+      font-size: 24px;
+      line-height: 24px;
     }
   }
 
   &.koowa_icon--48 {
     width: 48px;
     height: 48px;
+    font-size: 48px;
+    line-height: 48px;
 
     &:before {
       width: 48px;
