@@ -24,37 +24,12 @@
   width: 99%;
 }
 
-.koowa_header__item:first-child {
-  padding-right: .5em;
-}
-
 .koowa_header__item--image_container {
   text-align: center;
   width: 1%;
-}
-
-.koowa_header__item--image_container--12 {
-  @extend .koowa_header__item--image_container;
-  font-size: 12px;
-  line-height: 12px;
-}
-
-.koowa_header__item--image_container--16 {
-  @extend .koowa_header__item--image_container;
-  font-size: 16px;
-  line-height: 16px;
-}
-
-.koowa_header__item--image_container--24 {
-  @extend .koowa_header__item--image_container;
-  font-size: 24px;
-  line-height: 24px;
-}
-
-.koowa_header__item--image_container--48 {
-  @extend .koowa_header__item--image_container;
-  font-size: 48px;
-  line-height: 48px;
+  padding-right: 6px;
+  font-size: 0;
+  line-height: 0;
 }
 
 .koowa_header--bottom_margin {
