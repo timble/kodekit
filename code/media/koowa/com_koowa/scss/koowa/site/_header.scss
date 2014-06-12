@@ -5,6 +5,7 @@
   line-height: 1.25em;
   position: relative;
   display: table;
+  width: 100%;
   @include wrap_words();
 }
 
@@ -20,6 +21,7 @@
   display: table-cell;
   vertical-align: middle;
   min-width: $iconSize;
+  width: 99%;
 }
 
 .koowa_header__item:first-child {
@@ -28,6 +30,7 @@
 
 .koowa_header__item--image_container {
   text-align: center;
+  width: 1%;
 }
 
 .koowa_header--bottom_margin {
