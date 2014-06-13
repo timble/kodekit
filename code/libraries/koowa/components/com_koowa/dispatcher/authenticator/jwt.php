@@ -75,6 +75,7 @@ class ComKoowaDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorJwt
     protected function _loginUser($username, $data = array())
     {
         $data['username'] = $username;
+        $data['language'] = null;
         $options = $this->_options;
 
         JPluginHelper::importPlugin('user');
