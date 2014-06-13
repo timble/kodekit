@@ -21,7 +21,6 @@ class KDispatcherResponse extends KDispatcherResponseAbstract implements KObject
      * Constructor
      *
      * @param KObjectConfig  $config  A ObjectConfig object with optional configuration options
-     * @return Object
      */
     public function __construct(KObjectConfig $config)
     {

@@ -78,7 +78,6 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      * Constructor
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KUserSession
      */
     public function __construct(KObjectConfig $config)
     {
@@ -694,7 +693,7 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
     /**
      * Unset a session attribute
      *
-     * @param   string $key  The attribute name.
+     * @param   string $name  The attribute name.
      * @return  void
      */
     public function __unset($name)

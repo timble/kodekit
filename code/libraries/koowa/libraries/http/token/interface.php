@@ -170,7 +170,7 @@ interface KHttpTokenInterface
     /**
      * Get the token signature
      *
-     * @param string|null $key  The secret key
+     * @param string|null $secret  The secret key
      * @return
      */
     public function getSignature($secret = null);
@@ -197,8 +197,6 @@ interface KHttpTokenInterface
      * Decode from JWT string
      *
      * @param string      $token  A serialised token
-     * @param string|null $key    The secret to be used to verify the HMAC signature bytes of the JWT token
-     * @param bool        $verify Don't skip verification process
      * @return KHttpToken
      * @throws InvalidArgumentException If the token is invalid
      */

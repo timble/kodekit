@@ -399,8 +399,9 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      * Register an object locator
      *
      * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectLocatorInterface
+     * @param array $config
+     * @throws UnexpectedValueException
      * @return KObjectManager
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function registerLocator($identifier, array $config = array())
     {
@@ -645,7 +646,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      * Configure an identifier
      *
      * @param KObjectIdentifier $identifier
-     * @param array             $config
+     * @param array             $data
      * @return KObjectConfig
      */
     protected function _configure(KObjectIdentifier $identifier, array $data = array())

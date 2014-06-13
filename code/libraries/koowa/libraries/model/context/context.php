@@ -76,7 +76,7 @@ class KModelContext extends KCommand implements KModelContextInterface
      * Set the identity key
      *
      * @param mixed $value
-     * @return ModelContext
+     * @return $this
      */
     public function setIdentityKey($value)
     {

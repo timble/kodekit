@@ -282,8 +282,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * This function translates a DELETE request into a delete action.
      *
-     * @param   KDispatcherContextInterface $context	A dispatcher context object
-     * @return 	KModelEntityInterface
+     * @param   KDispatcherContextInterface $context A dispatcher context object
+     * @throws KDispatcherExceptionMethodNotAllowed
+     * @return    KModelEntityInterface
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {

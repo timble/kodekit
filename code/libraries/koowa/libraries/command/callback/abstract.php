@@ -40,7 +40,6 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
      * Constructor
      *
      * @param KObjectConfig  $config  An optional KObjectConfig object with configuration options
-     * @return KCommandChain
      */
     public function __construct(KObjectConfig $config)
     {
@@ -184,6 +183,7 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
     /**
      * Get the command callbacks
      *
+     * @param  mixed $command
      * @return array
      */
     public function getCommandCallbacks($command = null)

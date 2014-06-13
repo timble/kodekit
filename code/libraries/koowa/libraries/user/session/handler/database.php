@@ -25,7 +25,8 @@ class KUserSessionHandlerDatabase extends KUserSessionHandlerAbstract
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @throws InvalidArgumentException
      * @return KUserSessionHandlerDatabase
      */
     public function __construct(KObjectConfig $config)
