@@ -62,28 +62,20 @@ abstract class ComKoowaControllerView extends KControllerView
      * Add the toolbars to the controller
      *
      * @param KControllerContextInterface $context
-     * @return $this
      */
     protected function _addToolbars(KControllerContextInterface $context)
     {
         if($this->getView() instanceof KViewHtml)
         {
-            if($context->getUser()->isAuthentic() && $this->isDispatched())
+            if($this->isDispatched())
             {
                 foreach($context->toolbars as $toolbar) {
                     $this->addToolbar($toolbar);
                 }
-
-                if($toolbars = $this->getToolbars())
-                {
-                    $this->getView()
-                        ->getTemplate()
-                        ->attachFilter('toolbar', array('toolbars' => $toolbars));
-                };
             }
-        }
 
-        return $this;
+            $this->getView()->getTemplate()->attachFilter('toolbar', array('toolbars' => $this->getToolbars()));
+        }
     }
 
     /**
