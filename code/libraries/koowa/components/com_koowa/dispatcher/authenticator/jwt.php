@@ -76,10 +76,8 @@ class ComKoowaDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorJwt
     {
         $data['username'] = $username;
 
-        if ($user = JUser::getInstance($username)) {
-            $data['language'] = JFactory::getApplication()
-                                        ->isAdmin() ? $user->getParam('admin_language') : $user->getParam('language');
-        }
+        $parameter        = JFactory::getApplication()->isAdmin() ? 'admin_language' : 'language';
+        $data['language'] = $this->getObject('user.provider')->load($username)->get($parameter);
 
         $options = $this->_options;
 
