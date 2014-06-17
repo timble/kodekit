@@ -3,9 +3,13 @@ $bodyPadding: 20px;
 $maxWidth: 1020px;
 
 html.koowa-html,
-body.koowa_template,
-div.old-ie {
+body.koowa_template {
   height: 100% !important;
+}
+
+// Do not add this to the above selectors.
+// If position: relative is used on the html element nothing will show on IE8 within a modal...
+body.koowa_template {
   position: relative;
 }
 

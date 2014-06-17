@@ -43,7 +43,7 @@ defined('KOOWA') or die; ?>
     <ktml:script>
 
 </head>
-<body class="koowa koowa_template">
+<body class="koowa koowa_template ">
 
 <!--[if lte IE 8 ]>
 <div class="old-ie">
