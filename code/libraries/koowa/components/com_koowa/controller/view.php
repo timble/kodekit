@@ -67,7 +67,8 @@ abstract class ComKoowaControllerView extends KControllerView
     {
         if($this->getView() instanceof KViewHtml)
         {
-            if($this->isDispatched())
+            // Add toolbars on authenticated requests only.
+            if($this->getObject('user')->isAuthentic())
             {
                 foreach($context->toolbars as $toolbar) {
                     $this->addToolbar($toolbar);

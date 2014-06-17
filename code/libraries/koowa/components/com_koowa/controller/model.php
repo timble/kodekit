@@ -69,7 +69,7 @@ abstract class ComKoowaControllerModel extends KControllerModel
     {
         if($this->getView() instanceof KViewHtml)
         {
-            if($this->isDispatched())
+            if($this->getObject('user')->isAuthentic())
             {
                 foreach($context->toolbars as $toolbar) {
                     $this->addToolbar($toolbar);
