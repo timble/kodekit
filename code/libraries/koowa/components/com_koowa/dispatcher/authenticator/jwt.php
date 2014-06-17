@@ -75,6 +75,12 @@ class ComKoowaDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorJwt
     protected function _loginUser($username, $data = array())
     {
         $data['username'] = $username;
+
+        if ($user = JUser::getInstance($username)) {
+            $data['language'] = JFactory::getApplication()
+                                        ->isAdmin() ? $user->getParam('admin_language') : $user->getParam('language');
+        }
+
         $options = $this->_options;
 
         JPluginHelper::importPlugin('user');

@@ -32,6 +32,7 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
                 'authentic'  => !$user->guest,
                 'enabled'    => !$user->block,
                 'expired'    => !$user->activation,
+                'attributes' => $user->getParameters()->toArray()
             )
         ));
 

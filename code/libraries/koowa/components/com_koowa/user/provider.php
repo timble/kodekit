@@ -76,6 +76,7 @@ class ComKoowaUserProvider extends KUserProvider
                 'authentic'  => !$user->guest,
                 'enabled'    => !$user->block,
                 'expired'    => !$user->activation,
+                'attributes' => $user->getParameters()->toArray()
             );
 
            $user = $this->create($data);
