@@ -26,12 +26,6 @@ abstract class ComKoowaControllerModel extends KControllerModel
 		parent::__construct($config);
 
         $this->getObject('translator')->loadTranslations($this->getIdentifier());
-
-        // Mixin the toolbar interface
-        $this->mixin('lib:controller.toolbar.mixin');
-
-        //Attach the toolbars
-        $this->addCommandCallback('before.render', '_addToolbars', array('toolbars' => $config->toolbars));
 	}
 
 	/**
@@ -58,26 +52,6 @@ abstract class ComKoowaControllerModel extends KControllerModel
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Add the toolbars to the controller
-     *
-     * @param KControllerContextInterface $context
-     */
-    protected function _addToolbars(KControllerContextInterface $context)
-    {
-        if($this->getView() instanceof KViewHtml)
-        {
-            if($this->getObject('user')->isAuthentic())
-            {
-                foreach($context->toolbars as $toolbar) {
-                    $this->addToolbar($toolbar);
-                }
-            }
-
-            $this->getView()->getTemplate()->attachFilter('toolbar', array('toolbars' => $this->getToolbars()));
-        }
     }
 
     /**
