@@ -51,18 +51,4 @@ abstract class ComKoowaControllerView extends KControllerView
 
         parent::_initialize($config);
     }
-
-    /**
-     * Display action
-     *
-     * If the controller was not dispatched manually load the languages files
-     *
-     * @param KControllerContextInterface $context A command context object
-     * @return    string|bool    The rendered output of the view or false if something went wrong
-     */
-    protected function _actionRender(KControllerContextInterface $context)
-    {
-        $this->getObject('translator')->loadTranslations($this->getIdentifier());
-        return parent::_actionRender($context);
-    }
 }
