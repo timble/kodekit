@@ -8,12 +8,12 @@
  */
 
 /**
- * Orderable Model Behavior
+ * Sortable Model Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelBehaviorOrderable extends KModelBehaviorAbstract
+class KModelBehaviorSortable extends KModelBehaviorAbstract
 {
     /**
      * Insert the model states
@@ -40,14 +40,16 @@ class KModelBehaviorOrderable extends KModelBehaviorAbstract
     {
         $model = $context->getSubject();
 
-        if ($model instanceof KModelDatabase && !$context->state->isUnique()) {
+        if ($model instanceof KModelDatabase && !$context->state->isUnique())
+        {
             $state = $context->state;
 
             $sort      = $state->sort;
             $direction = strtoupper($state->direction);
             $columns   = array_keys($this->getTable()->getColumns());
 
-            if ($sort) {
+            if ($sort)
+            {
                 $column = $this->getTable()->mapColumns($sort);
 
                 //if(in_array($column, $columns)) {

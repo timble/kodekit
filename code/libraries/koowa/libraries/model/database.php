@@ -68,7 +68,7 @@ class KModelDatabase extends KModelAbstract
     {
         $config->append(array(
             'table'     => $this->getIdentifier()->name,
-            'behaviors' => array('paginatable', 'orderable'),
+            'behaviors' => array('paginatable', 'sortable'),
         ));
 
         parent::_initialize($config);
