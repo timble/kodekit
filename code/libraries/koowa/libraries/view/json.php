@@ -225,7 +225,7 @@ class KViewJson extends KViewAbstract
         }
 
         if (!empty($this->_fields)) {
-            $data = array_intersect_key($data, array_flip($this->_fields));
+            $data = array_intersect_key($data, array_merge(array('links' => 'links'), array_flip($this->_fields)));
         }
 
         if (!isset($data['links'])) {
