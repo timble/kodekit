@@ -59,6 +59,10 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
             $config->show_pages = false;
         }
 
+        if ($config->count === 1) {
+            $config->show_pages = false;
+        }
+
         parent::_initialize($config);
     }
 

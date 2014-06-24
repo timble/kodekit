@@ -34,9 +34,8 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
             'offset'     => 0,
             'limit'      => 0,
             'show_limit' => true,
-		    'show_count' => false
-        ))->append(array(
-            'show_pages' => $config->count !== 1
+    	    'show_count' => false,
+            'show_pages' => true
         ));
 
         $this->_initialize($config);
