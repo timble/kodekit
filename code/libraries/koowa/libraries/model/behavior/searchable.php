@@ -86,12 +86,18 @@ class KModelBehaviorSearchable extends KModelBehaviorAbstract
             $search = $state->search;
 
             if ($search) {
-                $columns = array_keys($this->getTable()->getColumns());
+                $columns    = array_keys($this->getTable()->getColumns());
+                $conditions = array();
 
                 foreach ($this->_columns as $column) {
                     if (in_array($column, $columns)) {
-                        $context->query->where('(tbl.' . $column . ' LIKE :search)', 'OR')->bind(array('search' => '%' . $search . '%'));
+                        $conditions[] = 'tbl.' . $column . ' LIKE :search';
                     }
+                }
+
+                if ($conditions) {
+                    $context->query->where('(' . implode(' OR ', $conditions) . ')')
+                                   ->bind(array('search' => '%' . $search . '%'));
                 }
             }
         }
