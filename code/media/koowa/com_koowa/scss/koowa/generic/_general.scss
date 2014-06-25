@@ -104,4 +104,11 @@
 // Spinner positioning
 #spinner_container {
   position: relative;
+  min-height: 100px;
+
+  .spinner {
+    position: absolute;
+    top: 50px !important;
+    left: 50% !important;
+  }
 }
