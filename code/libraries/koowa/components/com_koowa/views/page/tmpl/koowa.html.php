@@ -34,8 +34,10 @@ defined('KOOWA') or die; ?>
     if (window.parent.SqueezeBox && window.parent.SqueezeBox.isOpen) {
         document.documentElement.className += " joomla_modal";
     }
+    if (navigator.userAgent.match(/Trident|MSIE/)) {
+        document.documentElement.className += " old-ie-html";
+    }
     </script>
-
     <ktml:title>
     <ktml:meta>
     <ktml:link>
