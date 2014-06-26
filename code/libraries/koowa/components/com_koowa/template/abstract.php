@@ -137,6 +137,7 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
             $result     = false;
             $candidates = array(
                 ini_get('upload_tmp_dir'),
+                JFactory::getApplication()->getCfg('tmp_path'),
                 JPATH_ROOT.'/tmp'
             );
 
