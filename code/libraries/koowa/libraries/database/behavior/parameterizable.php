@@ -124,14 +124,17 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
      */
     public function isSupported()
     {
-        $mixer = $this->getMixer();
-        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+        $table = $this->getMixer();
 
-        if($table->hasColumn($this->_column))  {
-            return true;
+        //Only check if we are connected with a table object, otherwise just return true.
+        if($table instanceof KDatabaseTableInterface)
+        {
+            if(!$table->hasColumn($this->_column))  {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
     /**

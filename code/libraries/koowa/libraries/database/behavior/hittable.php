@@ -24,14 +24,17 @@ class KDatabaseBehaviorHittable extends KDatabaseBehaviorAbstract
      */
     public function isSupported()
     {
-        $mixer = $this->getMixer();
-        $table = $mixer instanceof KDatabaseRowInterface ?  $mixer->getTable() : $mixer;
+        $table = $this->getMixer();
 
-        if($table->hasColumn('hits'))  {
-            return true;
+        //Only check if we are connected with a table object, otherwise just return true.
+        if($table instanceof KDatabaseTableInterface)
+        {
+            if(!$table->hasColumn('hits'))  {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
     /**
