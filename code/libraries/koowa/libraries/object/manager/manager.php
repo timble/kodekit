@@ -269,8 +269,8 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 		    //Instantiate the identifier
 			$instance = $this->_instantiate($identifier, $config);
 
-			//Perform the mixin
-			$instance = $this->_mixin($identifier, $instance);
+			//Mixins's are early mixed in KObject::_construct()
+			//$instance = $this->_mixin($identifier, $instance);
 
             //Decorate the object
             $instance = $this->_decorate($identifier, $instance);

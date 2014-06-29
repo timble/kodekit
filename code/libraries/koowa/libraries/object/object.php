@@ -64,6 +64,18 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 
         //Initialise the object
         $this->_initialize($config);
+
+        //Add the mixins
+        $mixins = (array) KObjectConfig::unbox($config->mixins);
+
+        foreach ($mixins as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->mixin($value);
+            } else {
+                $this->mixin($key, $value);
+            }
+        }
     }
 
     /**
