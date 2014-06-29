@@ -35,7 +35,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      *
      * @var KHttpToken
      */
-    protected $_token;
+    private $__token;
 
     /**
      * The secret
@@ -76,6 +76,8 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
         $this->_secret     = $config->secret;
         $this->_max_age    = $config->max_age;
         $this->_check_user = $config->check_user;
+
+        $this->addCommandCallback('before.dispatch', 'authenticateRequest');
     }
 
     /**
@@ -102,9 +104,9 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      *
      * @return KHttpToken  The authorisation token or NULL if no token could be found
      */
-    public function getToken()
+    public function getAuthToken()
     {
-        if(!isset($this->_token))
+        if(!isset($this->__token))
         {
             $token   = false;
             $request = $this->getObject('request');
@@ -135,10 +137,10 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
                 $token = $this->getObject('lib:http.token')->fromString($token);
             }
 
-            $this->_token = $token;
+            $this->__token = $token;
         }
 
-        return $this->_token;
+        return $this->__token;
     }
 
     /**
@@ -148,9 +150,9 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      * @throws KControllerExceptionRequestNotAuthenticated
      * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
-    protected function _beforeDispatch(KDispatcherContextInterface $context)
+    public function authenticateRequest(KDispatcherContextInterface $context)
     {
-        if(!$context->user->isAuthentic() && $token = $this->getToken())
+        if(!$context->user->isAuthentic() && $token = $this->getAuthToken())
         {
             if($token->verify($this->_secret))
             {

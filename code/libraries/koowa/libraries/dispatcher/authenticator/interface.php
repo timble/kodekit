@@ -15,5 +15,19 @@
  */
 interface KDispatcherAuthenticatorInterface
 {
+    /**
+     * Authenticate the request
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return bool Returns TRUE if the request could be authenticated, FALSE otherwise.
+     */
+    public function authenticateRequest(KDispatcherContextInterface $context);
 
+    /**
+     * Sign the response
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return bool Returns TRUE if the response could be signed, FALSE otherwise.
+     */
+    public function signResponse(KDispatcherContextInterface $context);
 }
