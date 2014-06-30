@@ -190,6 +190,26 @@ class PlgSystemKoowa extends JPlugin
         return false;
     }
 
+    /**
+     * Log user in from the JWT token in the request if possible
+     *
+     * onAfterInitialise is used here to make sure that Joomla doesn't display error messages for menu items
+     * with registered and above access levels.
+     */
+    public function onAfterInitialise()
+    {
+        if (JFactory::getUser()->guest && class_exists('Koowa'))
+        {
+            $authenticator = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.authenticator.jwt');
+
+            if ($authenticator->getAuthToken())
+            {
+                $dispatcher = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.http');
+                $authenticator->authenticateRequest($dispatcher->getContext());
+            }
+        }
+    }
+
     /*
      * Joomla Compatibility
      *
