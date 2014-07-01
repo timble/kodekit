@@ -59,12 +59,12 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'debug'         => JFactory::getApplication()->getCfg('debug'),
-            'javascript'    => false,
-            'package'       => $identifier->package,
-            'file'          => $identifier->type === 'mod' ? 'module' : $identifier->domain,
-            'load_default'  => version_compare(JVERSION, '3.0', '<'),
-            'class'         => array(
+            'debug'          => JFactory::getApplication()->getCfg('debug'),
+            'javascript'     => false,
+            'package'        => $identifier->package,
+            'file'           => $identifier->type === 'mod' ? 'module' : $identifier->domain,
+            'load_base'      => version_compare(JVERSION, '3.0', '<'),
+            'class'          => array(
                 'koowa',
                 $identifier->type.'_'.$identifier->package,
                 JFactory::getLanguage()->isRTL() ? 'koowa--rtl' : '',
@@ -86,11 +86,21 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         // Load the generic files
         // We assume that the template has either loaded Bootstrap or provided styles for it in 3.0+
-        if ($config->load_default && !isset(self::$_loaded['bootstrap-css']))
+        if (!isset(self::$_loaded['bootstrap-css']))
         {
-            $template = JFactory::getApplication()->getTemplate();
-            if (!file_exists(JPATH_THEMES.'/'.$template.'/disable-joomlatools-bootstrap')) {
-                $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
+            $template = JPATH_THEMES.'/'.JFactory::getApplication()->getTemplate();
+
+            if ($config->load_base)
+            {
+                if (!file_exists($template.'/disable-joomlatools-bootstrap')) {
+                    $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
+                }
+            }
+            else
+            {
+                if (file_exists($template.'/enable-joomlatools-bootstrap')) {
+                    $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
+                }
             }
 
             self::$_loaded['bootstrap-css'] = true;
