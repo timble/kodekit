@@ -499,7 +499,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     {
         if (isset($this->_claims['exp']) && is_numeric($this->_claims['exp']))
         {
-            $now  = new \DateTime('now');
+            $now  = new DateTime('now');
             return ($now->format('U') - $this->_claims['exp']) > 0;
         }
 

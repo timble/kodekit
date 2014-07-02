@@ -109,9 +109,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
      */
     public function registerDirectory($directory, $domain = null)
     {
-        $components = array();
-
-        foreach (new \DirectoryIterator($directory) as $dir)
+        foreach (new DirectoryIterator($directory) as $dir)
         {
             //Only get the component directory names
             if ($dir->isDot() || !$dir->isDir() || !preg_match('/^[a-zA-Z]+/', $dir->getBasename())) {
