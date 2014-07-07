@@ -32,4 +32,59 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
 
         parent::_initialize($config);
     }
+
+    /**
+     * Get the user that owns the lock on the resource
+     *
+     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     */
+    public function getOwner()
+    {
+        $user     = null;
+        $provider = $this->getObject('user.provider');
+
+        if($this->hasProperty('locked_by') && !empty($this->locked_by))
+        {
+            if($this->_owner_id && !$provider->isLoaded($this->locked_by))
+            {
+                $data = array(
+                    'id'         => $this->_owner_id,
+                    'email'      => $this->_owner_email,
+                    'name'       => $this->_owner_name,
+                    'username'   => $this->_owner_username,
+                    'authentic'  => false,
+                    'enabled'    => !$this->_owner_block,
+                    'expired'    => (bool) $this->_owner_activation,
+                    'attributes' => json_decode($this->_owner_params)
+                );
+
+                $user = $this->getObject('user.provider')->store($this->_owner_id, $data);
+            }
+            else $user = $this->getObject('user.provider')->load($this->locked_by);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Set created information
+     *
+     * Requires a 'locked_by' column
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _beforeSelect(KDatabaseContext $context)
+    {
+        $context->query
+            ->columns(array('_owner_id'         => '_owner.id'))
+            ->columns(array('_owner_name'       => '_owner.name'))
+            ->columns(array('_owner_username'   => '_owner.username'))
+            ->columns(array('_owner_email'      => '_owner.email'))
+            ->columns(array('_owner_params'     => '_owner.params'))
+            ->columns(array('_owner_block'      => '_owner.block'))
+            ->columns(array('_owner_activation' => '_owner.activation'))
+            ->columns(array('locked_by_name'    => '_owner.name'))
+            ->join(array('_owner' => 'users'), 'tbl.locked_by = _owner.id');
+    }
 }
