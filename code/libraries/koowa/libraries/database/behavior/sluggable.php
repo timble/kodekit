@@ -75,7 +75,6 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         $this->_updatable = $config->updatable;
         $this->_length    = $config->length;
         $this->_unique    = $config->unique;
-        $this->_row_mixin = $config->row_mixin;
     }
 
     /**
@@ -224,7 +223,8 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         $query = $this->getObject('lib:database.query.select');
         $query->where('slug = :slug')->bind(array('slug' => $this->slug));
 
-        if (!$this->isNew()) {
+        if (!$this->isNew())
+        {
             $query->where($table->getIdentityColumn().' <> :id')
                   ->bind(array('id' => $this->id));
         }
