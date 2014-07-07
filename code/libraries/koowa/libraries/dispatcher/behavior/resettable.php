@@ -41,6 +41,7 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 	 * Force a GET after POST using the referrer
      *
      * Redirect if the controller has a returned a 2xx status code.
+     * If a base64 encoded _referrer property exists in the request payload, it is used instead of the referrer.
 	 *
 	 * @param 	KDispatcherContextInterface $context The active command context
 	 * @return 	void
@@ -50,8 +51,20 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
         $response = $context->response;
         $request  = $context->request;
 
-        if($response->isSuccess()) {
-            $response->setRedirect($request->getReferrer());
+        if($response->isSuccess())
+        {
+            $redirect = $request->getReferrer();
+
+            if ($referrer = $context->getRequest()->getData()->get('_referrer', 'base64'))
+            {
+                $referrer = base64_decode($referrer);
+
+                if ($this->getObject('lib:filter.internalurl')->validate($referrer)) {
+                    $redirect = $referrer;
+                }
+            }
+
+            $response->setRedirect($redirect);
         }
 	}
 }
