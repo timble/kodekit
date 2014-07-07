@@ -16,6 +16,23 @@
 abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KObjectInstantiable
 {
     /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'row_mixin' => false,
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Instantiate the object
      *
      * If the behavior is auto mixed also lazy mix it into related row objects.
