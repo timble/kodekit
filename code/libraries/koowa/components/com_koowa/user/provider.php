@@ -69,13 +69,11 @@ class ComKoowaUserProvider extends KUserProvider
                 'email'      => $user->email,
                 'name'       => $user->name,
                 'username'   => $user->username,
-                'roles'      => $user->getAuthorisedViewLevels(),
-                'groups'     => $user->getAuthorisedGroups(),
                 'password'   => $user->password,
                 'salt'       => '',
                 'authentic'  => !$user->guest,
                 'enabled'    => !$user->block,
-                'expired'    => !$user->activation,
+                'expired'    => (bool) $user->activation,
                 'attributes' => $user->getParameters()->toArray()
             );
 
@@ -84,5 +82,54 @@ class ComKoowaUserProvider extends KUserProvider
         else $user = null;
 
         return $user;
+    }
+
+    /**
+     * Store a user object in the provider
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @param array $data An associative array of user data
+     * @return KUserInterface     Returns a UserInterface object
+     */
+    public function store($identifier, $data)
+    {
+        $user = $this->getObject('user');
+
+        // Find the user id
+        if (!is_numeric($identifier))
+        {
+            if(!$identifier = JUserHelper::getUserId($identifier)) {
+                $identifier = 0;
+            }
+        }
+
+        return parent::store($identifier, $data);
+    }
+
+    /**
+     * Check if a user has already been loaded for a given user identifier
+     *
+     * @param $identifier
+     * @return boolean TRUE if a user has already been loaded. FALSE otherwise
+     */
+    public function isLoaded($identifier)
+    {
+        $user = $this->getObject('user');
+
+        // Find the user id
+        if (!is_numeric($identifier))
+        {
+            if(!$identifier = JUserHelper::getUserId($identifier)) {
+                $identifier = 0;
+            }
+        }
+
+        if($user->getId() != $identifier) {
+            $result = isset($this->_users[$identifier]);
+        } else {
+            $result = true;
+        }
+
+        return $result;
     }
 }

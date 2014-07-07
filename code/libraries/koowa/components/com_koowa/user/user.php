@@ -25,8 +25,6 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
                 'email'      => $user->email,
                 'name'       => $user->name,
                 'username'   => $user->username,
-                'roles'      => $user->getAuthorisedViewLevels(),
-                'groups'     => $user->getAuthorisedGroups(),
                 'password'   => $user->password,
                 'salt'       => '',
                 'authentic'  => !$user->guest,
@@ -59,6 +57,38 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
     public function getParameter($key, $default = null)
     {
         return JFactory::getUser()->getParam($key, $default);
+    }
+
+    /**
+     * Returns the roles of the user
+     *
+     * @return int The role id
+     */
+    public function getRoles()
+    {
+        $data = $this->getData();
+
+        if(!isset($data->roles)) {
+            $data->roles = JAccess::getAuthorisedViewLevels($this->getId());
+        }
+
+        return parent::getRoles();
+    }
+
+    /**
+     * Returns the groups the user is part of
+     *
+     * @return array An array of group id's
+     */
+    public function getGroups()
+    {
+        $data = $this->getData();
+
+        if(!isset($data->groups)) {
+            $data->groups = JAccess::getGroupsByUser($this->getId());
+        }
+
+        return parent::getGroups();
     }
 
     /**
