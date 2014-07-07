@@ -572,6 +572,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Returns the HTTP referrer.
      *
+     * If a base64 encoded _referrer property exists in the request payload, it is used instead of the referrer.
      * 'referer' a commonly used misspelling word for 'referrer'
      * @link http://en.wikipedia.org/wiki/HTTP_referrer
      *
@@ -580,9 +581,15 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      */
     public function getReferrer($isInternal = true)
     {
-        if(!isset($this->_referrer) && $this->_headers->has('Referer'))
+        if(!isset($this->_referrer) && ($this->_headers->has('Referer') || $this->data->has('_referrer')))
         {
-            $referrer = $this->getObject('lib:filter.url')->sanitize($this->_headers->get('Referer'));
+            if ($this->data->has('_referrer')) {
+                $referrer = base64_decode($this->data->get('_referrer', 'base64'));
+            } else {
+                $referrer = $this->_headers->get('Referer');
+            }
+
+            $referrer = $this->getObject('lib:filter.url')->sanitize($referrer);
             $this->_referrer = $this->getObject('lib:http.url', array('url' => $referrer));
         }
 
