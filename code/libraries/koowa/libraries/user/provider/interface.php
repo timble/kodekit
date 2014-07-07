@@ -35,6 +35,14 @@ interface KUserProviderInterface
     public function load($identifier, $refresh = false);
 
     /**
+     * Fetch the user for the given user identifier from the backend
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     */
+    public function fetch($identifier);
+
+    /**
      * Create a user object
      *
      * @param array $data An associative array of user data
@@ -43,10 +51,19 @@ interface KUserProviderInterface
     public function create($data);
 
     /**
-     * Fetch the user for the given user identifier from the backend
+     * Store a user object in the provider
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     * @param array $data An associative array of user data
+     * @return KUserInterface     Returns a UserInterface object
      */
-    public function fetch($identifier);
+    public function store($identifier, $data);
+
+    /**
+     * Check if a user has already been loaded for a given user identifier
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @return boolean TRUE if a user has already been loaded. FALSE otherwise
+     */
+    public function isLoaded($identifier);
 }
