@@ -26,7 +26,8 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 	protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-			'priority'   => self::PRIORITY_LOW,
+			'priority'  => self::PRIORITY_LOW,
+            'row_mixin' => true,
 	  	));
 
     	parent::_initialize($config);

@@ -16,6 +16,23 @@
 class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 {
     /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'row_mixin' => true,
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Get the user that created the resource
      *
      * @return KUserInterface|null Returns a User object or NULL if no user could be found
