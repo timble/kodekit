@@ -67,13 +67,13 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
     public function load($identifier, $refresh = false)
     {
         //Fetch a user from the backend
-        if($refresh || !isset($this->_users[$identifier]))
+        if($refresh || !$this->isLoaded($identifier))
         {
             $user = $this->fetch($identifier);
             $this->_users[$identifier] = $user;
         }
 
-        return  $this->_users[$identifier];
+        return $this->_users[$identifier];
     }
 
     /**
@@ -102,5 +102,34 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
     {
         $user = $this->getObject('user.default', array('data' => $data));
         return $user;
+    }
+
+    /**
+     * Store a user object in the provider
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @param array $data An associative array of user data
+     * @return KUserInterface     Returns a UserInterface object
+     */
+    public function store($identifier, $data)
+    {
+        if(!$data instanceof KUserInterface) {
+            $data = $this->create($data);
+        }
+
+        $this->_users[$identifier] = $data;
+
+        return $data;
+    }
+
+    /**
+     * Check if a user has already been loaded for a given user identifier
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @return boolean TRUE if a user has already been loaded. FALSE otherwise
+     */
+    public function isLoaded($identifier)
+    {
+        return isset($this->_users[$identifier]);
     }
 }
