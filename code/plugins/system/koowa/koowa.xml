@@ -2,7 +2,7 @@
 <extension version="3.0" type="plugin" group="system" method="upgrade" overwrite="true">
     <name>plg_system_koowa</name>
     <author>Joomlatools</author>
-    <creationDate>June 2013</creationDate>
+    <creationDate>July 2014</creationDate>
     <copyright>Copyright (C) 2007 - 2014 Timble CVBA (http://www.timble.net)</copyright>
     <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
     <authorEmail>support@joomlatools.com</authorEmail>
