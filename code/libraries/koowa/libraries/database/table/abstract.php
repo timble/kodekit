@@ -518,7 +518,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if ($query instanceof KDatabaseQuerySelect)
         {
             if (!$query->columns) {
-                $query->columns('*');
+                $query->columns('tbl.*');
             }
 
             if (!$query->table) {
