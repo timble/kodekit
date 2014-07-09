@@ -27,7 +27,6 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     {
     	$config->append(array(
 			'priority'  => self::PRIORITY_LOW,
-            'row_mixin' => true,
 	  	));
 
     	parent::_initialize($config);
