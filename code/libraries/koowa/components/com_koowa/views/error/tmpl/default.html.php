@@ -9,6 +9,11 @@
 
 defined('KOOWA') or die; ?>
 
+<?php
+$document = JFactory::getDocument();
+$document->addScript('/media/koowa/com_koowa/js/code-highlight.js');
+?>
+
 <title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code];; ?></title>
 
 <style type="text/css">
@@ -118,10 +123,19 @@ defined('KOOWA') or die; ?>
         list-style: decimal;
     }
 
-    pre.source { overflow: auto; word-wrap: break-word; margin: 0 0 20px 0; padding: 15px 0; background: #061F27; border: none; line-height: 1.5em; color: #E1DCC7; border-radius: 0; }
-    pre.source span.line { display: block; padding: 3px 15px; }
-    pre.source span.highlight { background: #0B374C; }
-    pre.source span.line span.number { color: #2e76c5; }
+    pre.source_wrap {
+        word-wrap: normal;
+        margin: 0 0 20px 0;
+        overflow: auto;
+    }
+    pre.source .line {
+        padding: 3px 0;
+        display: block;
+    }
+    pre.source .highlight {
+        padding: 4px 0;
+        background: #0B374C;
+    }
 
     .trace_container, .codes_container {
         display: block;
@@ -220,7 +234,7 @@ defined('KOOWA') or die; ?>
     }
 
     #the_error pre.source {
-        margin-bottom: 0;;
+        margin: 0;
     }
 
     .trace_container .trace__item:before {
@@ -271,7 +285,7 @@ defined('KOOWA') or die; ?>
     table td {
         margin: 1px;
         background: #fff;
-        border: 1px solid #F3F3F3;
+        border: 1px solid #eee;
         padding: 10px;
     }
     table td code {
@@ -323,7 +337,7 @@ div.args {
     padding: 10px 20px;
 }
 
-#the_error pre.source {
+#the_error pre.source_wrap {
     display: block;
 }
 
@@ -350,7 +364,120 @@ div.args {
 }
 
 
+    /*
+
+    Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+
+    */
+
+    .hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 0.5em;
+        background: #002b36;
+        color: #839496;
+    }
+
+    .hljs-comment,
+    .hljs-template_comment,
+    .diff .hljs-header,
+    .hljs-doctype,
+    .hljs-pi,
+    .lisp .hljs-string,
+    .hljs-javadoc {
+        color: #586e75;
+    }
+
+    /* Solarized Green */
+    .hljs-keyword,
+    .hljs-winutils,
+    .method,
+    .hljs-addition,
+    .css .hljs-tag,
+    .hljs-request,
+    .hljs-status,
+    .nginx .hljs-title {
+        color: #859900;
+    }
+
+    /* Solarized Cyan */
+    .hljs-number,
+    .hljs-command,
+    .hljs-string,
+    .hljs-tag .hljs-value,
+    .hljs-rules .hljs-value,
+    .hljs-phpdoc,
+    .tex .hljs-formula,
+    .hljs-regexp,
+    .hljs-hexcolor,
+    .hljs-link_url {
+        color: #2aa198;
+    }
+
+    /* Solarized Blue */
+    .hljs-title,
+    .hljs-localvars,
+    .hljs-chunk,
+    .hljs-decorator,
+    .hljs-built_in,
+    .hljs-identifier,
+    .vhdl .hljs-literal,
+    .hljs-id,
+    .css .hljs-function {
+        color: #268bd2;
+    }
+
+    /* Solarized Yellow */
+    .hljs-attribute,
+    .hljs-variable,
+    .lisp .hljs-body,
+    .smalltalk .hljs-number,
+    .hljs-constant,
+    .hljs-class .hljs-title,
+    .hljs-parent,
+    .haskell .hljs-type,
+    .hljs-link_reference {
+        color: #b58900;
+    }
+
+    /* Solarized Orange */
+    .hljs-preprocessor,
+    .hljs-preprocessor .hljs-keyword,
+    .hljs-pragma,
+    .hljs-shebang,
+    .hljs-symbol,
+    .hljs-symbol .hljs-string,
+    .diff .hljs-change,
+    .hljs-special,
+    .hljs-attr_selector,
+    .hljs-subst,
+    .hljs-cdata,
+    .clojure .hljs-title,
+    .css .hljs-pseudo,
+    .hljs-header {
+        color: #cb4b16;
+    }
+
+    /* Solarized Red */
+    .hljs-deletion,
+    .hljs-important {
+        color: #dc322f;
+    }
+
+    /* Solarized Violet */
+    .hljs-link_label {
+        color: #6c71c4;
+    }
+
+    .tex .hljs-formula {
+        background: #073642;
+    }
+
+
+
 </style>
+
+
 
 <script type="text/javascript">
 
@@ -566,6 +693,8 @@ div.args {
 
 </script>
 
+<script>hljs.initHighlightingOnLoad();</script>
+
 <div class="error_page">
 
     <h1 class="page_header">
@@ -724,7 +853,7 @@ div.args {
                 </div>
                 <?php if (isset($source_id)): ?>
                 <div class="error_container__code">
-                    <pre class="source"><code><?= $step['source'] ?></code></pre>
+                    <pre class="source_wrap"><code><?= $step['source'] ?></code></pre>
                 </div>
                 <?php endif ?>
 
