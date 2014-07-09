@@ -52,8 +52,7 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'row_mixin' => true,
-            'column'    => 'parameters'
+            'column' => 'parameters'
         ));
 
         parent::_initialize($config);
@@ -175,7 +174,7 @@ class KDatabaseBehaviorParameterizable extends KDatabaseBehaviorAbstract
     {
         if($this->_column !== 'parameters')
         {
-            $exclude += array('getParameters');
+            $exclude = array_merge($exclude, array('getParameters'));
             $methods = parent::getMixableMethods($exclude);
 
             //Add dynamic methods based on the column name

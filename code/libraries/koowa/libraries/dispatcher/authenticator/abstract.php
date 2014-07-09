@@ -45,7 +45,7 @@ abstract class KDispatcherAuthenticatorAbstract extends KBehaviorAbstract implem
      */
     public function getMixableMethods($exclude = array())
     {
-        $exclude += array('authenticateRequest', 'signResponse');
+        $exclude = array_merge($exclude, array('authenticateRequest', 'signResponse'));
         return parent::getMixableMethods($exclude);
     }
 }
