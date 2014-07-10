@@ -198,14 +198,17 @@ class PlgSystemKoowa extends JPlugin
      */
     public function onAfterInitialise()
     {
-        if (JFactory::getUser()->guest && class_exists('Koowa'))
+        if (class_exists('Koowa'))
         {
-            $authenticator = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.authenticator.jwt');
-
-            if ($authenticator->getAuthToken())
+            if(JFactory::getUser()->guest)
             {
-                $dispatcher = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.http');
-                $authenticator->authenticateRequest($dispatcher->getContext());
+                $authenticator = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.authenticator.jwt');
+
+                if ($authenticator->getAuthToken())
+                {
+                    $dispatcher = KObjectManager::getInstance()->getObject('com:koowa.dispatcher.http');
+                    $authenticator->authenticateRequest($dispatcher->getContext());
+                }
             }
         }
     }
