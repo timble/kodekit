@@ -1,0 +1,523 @@
+// Vars for this file
+$highlight: #FFF83D;
+$base03:    #002b36;
+$base02:    #073642;
+$base01:    #586e75;
+$base00:    #657b83;
+$base0:     #839496;
+$base1:     #93a1a1;
+$base2:     #eee8d5;
+$base3:     #fdf6e3;
+$yellow:    #b58900;
+$orange:    #cb4b16;
+$red:       #dc322f;
+$magenta:   #d33682;
+$violet:    #6c71c4;
+$blue:      #268bd2;
+$cyan:      #2aa198;
+$green:     #859900;
+
+
+// Box sizing all elements for this page
+body * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+// Main
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background: lighten($base1, 25%);
+  color: $base03;
+}
+
+h2, h3, h4 {
+  margin: 0 0 20px 0;
+  padding: 0;
+  color: $blue;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+table td {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 10px;
+}
+
+table td code {
+  color: $magenta;
+}
+
+table td code,
+table td pre {
+  margin: 0;
+}
+
+pre {
+  margin: 0;
+}
+
+// Sticky class for sidebar
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+// Code font
+.page_message,
+.error_container__header,
+.trace__item .trace__item__file {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.5em;
+}
+
+// Word breaking
+.page_header__exception,
+.page_message__text,
+.arguments,
+.error_container__header {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-all;
+
+  .linenumber {
+    white-space: nowrap;
+    display: inline;
+  }
+}
+
+// Page header & message
+.page_header,
+.page_message {
+  display: table;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+.page_header__exception,
+.page_header__code,
+.page_message__text,
+.page_message__button {
+  display: table-cell;
+  padding: 20px;
+}
+
+.page_header {
+  background: $red;
+  color: #fff;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
+  position: relative;
+  z-index: 2;
+  font-size: 1em;
+  text-shadow: -1px -1px 0 darken($red, 10%);
+
+  @media screen and (min-width: 600px) {
+    font-size: 1.5em;
+  }
+}
+
+.page_header__code,
+.page_message__button {
+  text-align: right;
+  padding-left: 0;
+}
+
+.page_message {
+  background: $base02;
+  color: $base2;
+  text-shadow: -1px -1px 0 $base03;
+  position: relative;
+  z-index: 1;
+}
+
+.page_message__button {
+  cursor: pointer;
+}
+
+// The main error
+#the_error .error_container {
+  padding: 0;
+  border: none;
+}
+
+#the_error .source {
+  margin: 0;
+}
+
+#the_error .error_container__header {
+  background: $blue;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+// Linenumber
+.linenumber {
+  color: $blue;
+  font-weight: bold;
+
+  @media screen and (min-width: 600px) {
+    color: $highlight;
+  }
+}
+
+.visible .linenumber {
+  color: $highlight;
+}
+
+// The source container
+.error_container__code {
+  overflow: auto;
+  margin: 0 0 20px 0;
+}
+
+.source {
+  display: block;
+  width: auto;
+  line-height: 0;
+  font-size: 0;
+
+  code {
+    min-width: 100%;
+    max-width: none;
+    width: auto;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1.5em;
+  }
+}
+
+.source .line {
+  display: block;
+  padding: 3px 0;
+  overflow: visible;
+}
+
+.source .highlight {
+  background: $base02;
+}
+
+.codes_container {
+  width: 67%;
+  background: lighten($base1, 35%);
+  position: relative;
+  border-left: 1px solid lighten($base1, 25%);
+}
+
+// The stacktrace container
+.trace_container {
+  display: none;
+
+  @media screen and (min-width: 600px) {
+    display: block;
+  }
+}
+
+.trace_container, .codes_container {
+  display: block;
+  float: left;
+  margin: 0;
+}
+
+.trace_container {
+  width: 33%;
+  min-height: 10px;
+  overflow: auto;
+  word-wrap: break-word;
+  list-style: none;
+}
+
+.trace_container .trace__item {
+  display: block;
+  counter-increment: trace-counter -1;
+  position: relative;
+  background: #fff;
+  color: $base03;
+  margin-bottom: 1px;
+  padding: 20px;
+  cursor: pointer;
+  line-height: 1.5em;
+  text-decoration: none;
+  -webkit-transition: all .05s ease-in-out;
+  -moz-transition: all .05s ease-in-out;
+  -ms-transition: all .05s ease-in-out;
+  -o-transition: all .05s ease-in-out;
+  transition: all .05s ease-in-out;
+}
+
+.trace__item .trace__item__file {
+  display: block;
+  margin: 0;
+}
+
+.trace__item .linenumber {
+  color: $blue;
+}
+
+.trace__item .trace__item__header {
+  color: $blue;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.trace__item.active_trace_item .linenumber,
+.trace__item.active_trace_item .trace__item__header {
+  color: $highlight;
+}
+
+.trace__item:hover {
+  background: $highlight;
+}
+
+.trace__item.active_trace_item {
+  background: $blue;
+  color: #fff;
+}
+
+.trace_container .trace__item:before {
+  content: counter(trace-counter);
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 12px;
+  color: $base00;
+}
+
+.trace_container .trace__item.active_trace_item:before {
+  color: lighten($blue, 35%);
+}
+
+// The error container
+.codes_container {
+  width: 100%;
+
+  @media screen and (min-width: 600px) {
+    width: 67%;
+  }
+}
+
+.codes_container__item {
+  padding: 20px;
+  position: relative;
+  -webkit-transition: all .05s ease-in-out;
+  -moz-transition: all .05s ease-in-out;
+  -ms-transition: all .05s ease-in-out;
+  -o-transition: all .05s ease-in-out;
+  transition: all .05s ease-in-out;
+
+  @media screen and (min-width: 600px) {
+    .error_container__header {
+      background: $blue;
+      color: #fff;
+      padding: 10px 20px;
+    }
+  }
+}
+
+.codes_container__item.active_source_item {
+  background: #fff;
+}
+
+.codes_container__item.active_source_item:before {
+  display: block;
+  content: " ";
+  position: absolute;
+  width: 4px;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  background: $blue;
+}
+
+.codes_container__item h3 {
+  counter-increment: source-counter -1;
+  cursor: pointer;
+
+  @media screen and (min-width: 600px) {
+    cursor: default;
+  }
+}
+
+.codes_container__item h3:before {
+  content: counter(source-counter) ". ";
+}
+
+.codes_container .codes_container__item {
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid lighten($base1, 25%);
+
+  @media screen and (max-width: 600px) {
+    &:hover {
+      background: #fff;
+      cursor: pointer;
+    }
+  }
+}
+
+.error_container__code,
+div.args {
+  display: none;
+
+  @media screen and (min-width: 600px) {
+    display: block;
+  }
+}
+
+// Page data
+.page_data {
+  background: $base3;
+  z-index: 10;
+  display: none;
+  padding: 30px;
+  height: auto;
+  overflow: auto;
+
+  h2 {
+    color: $red;
+    margin: 0 0 20px 0;
+  }
+
+  table {
+    font-size: 14px;
+
+    td {
+      border: 1px solid $base2;
+    }
+  }
+}
+
+// Visible class
+.visible {
+  display: block !important;
+}
+
+.visible .error_container__code,
+.visible div.args {
+  display: block !important;
+}
+
+.visible .error_container__header {
+  background: $blue;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+/*
+Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: $base03;
+  color: $base0;
+}
+
+.hljs-comment,
+.hljs-template_comment,
+.diff .hljs-header,
+.hljs-doctype,
+.hljs-pi,
+.lisp .hljs-string,
+.hljs-javadoc {
+  color: $base01;
+}
+
+/* Solarized Green */
+.hljs-keyword,
+.hljs-winutils,
+.method,
+.hljs-addition,
+.css .hljs-tag,
+.hljs-request,
+.hljs-status,
+.nginx .hljs-title {
+  color: $green;
+}
+
+/* Solarized Cyan */
+.hljs-number,
+.hljs-command,
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-rules .hljs-value,
+.hljs-phpdoc,
+.tex .hljs-formula,
+.hljs-regexp,
+.hljs-hexcolor,
+.hljs-link_url {
+  color: $cyan;
+}
+
+/* Solarized Blue */
+.hljs-title,
+.hljs-localvars,
+.hljs-chunk,
+.hljs-decorator,
+.hljs-built_in,
+.hljs-identifier,
+.vhdl .hljs-literal,
+.hljs-id,
+.css .hljs-function {
+  color: $blue;
+}
+
+/* Solarized Yellow */
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body,
+.smalltalk .hljs-number,
+.hljs-constant,
+.hljs-class .hljs-title,
+.hljs-parent,
+.haskell .hljs-type,
+.hljs-link_reference {
+  color: $green;
+}
+
+/* Solarized Orange */
+.hljs-preprocessor,
+.hljs-preprocessor .hljs-keyword,
+.hljs-pragma,
+.hljs-shebang,
+.hljs-symbol,
+.hljs-symbol .hljs-string,
+.diff .hljs-change,
+.hljs-special,
+.hljs-attr_selector,
+.hljs-subst,
+.hljs-cdata,
+.clojure .hljs-title,
+.css .hljs-pseudo,
+.hljs-header {
+  color: $orange;
+}
+
+/* Solarized Red */
+.hljs-deletion,
+.hljs-important {
+  color: $red;
+}
+
+/* Solarized Violet */
+.hljs-link_label {
+  color: $violet;
+}
+
+.tex .hljs-formula {
+  background: $base02;
+}
