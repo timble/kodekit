@@ -78,24 +78,17 @@ function debug() {
             apollo.removeClass(trace_wrapper, 'sticky');
             trace_wrapper.style.width = currentstackwidth + "px";
 
-            console.error('Triggering unsticky');
-
         } else if ( trace_wrapper_top < 0 && !apollo.hasClass(trace_wrapper,'sticky') ) {
             apollo.addClass(trace_wrapper, 'sticky');
-
-            console.error('Triggering sticky');
         }
 
         // keep width on resize if trace stack is sticky
         if ( currentstackwidth != stackwidth ) {
             trace_wrapper.style.width = currentstackwidth + "px";
             stackwidth = document.getElementById('trace_container').offsetWidth;
-
-            console.error('Triggering adjust width');
         }
 
-        // Iterate through each source_element
-        source_elements.forEach(function(entry, i) {
+        function defineClasses(entry, i) {
 
             // Settings vars
             var target = 'trace__item--' + i;
@@ -128,17 +121,18 @@ function debug() {
                 apollo.addClass(entry, 'active_source_item');
                 apollo.addClass(realtarget, 'active_trace_item');
 
-                console.error(realtarget, 'Triggering classedit');
-
             } else if ( itemtop > relativescroll && apollo.hasClass(entry, 'active_source_item') ) {
                 apollo.removeClass(entry, 'active_source_item');
                 apollo.removeClass(realtarget, 'active_trace_item');
-
-                console.error('triggering finalclass');
             }
 
             i+=1;
-        });
+        }
+
+        var i = source_elements.length;
+        while(i--) {
+            defineClasses(source_elements[i], i);
+        }
     }
 }
 

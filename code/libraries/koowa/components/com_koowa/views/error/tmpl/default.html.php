@@ -18,6 +18,9 @@ $document->addScript('/media/koowa/com_koowa/js/debugger.js');
 
 <link type="text/css" rel="stylesheet" href="/media/koowa/com_koowa/css/debugger.css" media="" attribs="" type="text/css" />
 
+<!--[if IE 8]>
+<div class="old-ie">
+<![endif]-->
 
 <div id="error_page">
 
@@ -205,3 +208,7 @@ $document->addScript('/media/koowa/com_koowa/js/debugger.js');
         </div>
     </div>
 </div>
+
+<!--[if IE 8]>
+</div>
+<![endif]-->

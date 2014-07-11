@@ -45,476 +45,544 @@ body {
   color: $base03;
 }
 
-h2, h3, h4 {
-  margin: 0 0 $spacing 0;
-  padding: 0;
-  color: $blue;
-}
+// Namespacing so we win until we fixed the page
+#error_page {
 
-table {
-  width: 100%;
-  max-width: 100%;
-  border-collapse: collapse;
-}
-
-table td {
-  background: #fff;
-  border: 1px solid $base1_accent--dark;
-  padding: 10px;
-}
-
-table td code {
-  color: $magenta;
-}
-
-code,
-pre {
-  margin: 0;
-}
-
-// Sticky class for sidebar
-.sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-// Code font
-.page_message,
-.error_container__header,
-.trace__item .trace__item__file {
-  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.5em;
-}
-
-// Word breaking
-.page_header__exception,
-.page_message__text,
-.arguments,
-.error_container__header {
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-all;
-
-  .linenumber {
-    white-space: nowrap;
-    display: inline;
+  h2, h3, h4 {
+    margin: 0 0 $spacing 0;
+    padding: 0;
+    color: $blue;
   }
-}
 
-// Page header & message
-.page_header,
-.page_message {
-  display: table;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  font-weight: normal;
-}
-
-.page_header__exception,
-.page_header__code,
-.page_message__text,
-.page_message__button {
-  display: table-cell;
-  padding: $spacing;
-}
-
-.page_header {
-  background: $red;
-  color: #fff;
-  position: relative;
-  z-index: 2;
-  font-size: 1em;
-  text-shadow: -1px -1px 0 darken($red, 10%);
-  box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
-
-  @media screen and (min-width: 600px) {
-    font-size: 1.5em;
+  table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
   }
-}
 
-.page_header__code,
-.page_message__button {
-  text-align: right;
-  padding-left: 0;
-}
-
-.page_message {
-  background: $base02;
-  color: $base2;
-  text-shadow: -1px -1px 0 $base03;
-  position: relative;
-  z-index: 1;
-}
-
-.page_message__button {
-  cursor: pointer;
-}
-
-// The main error
-#the_error .error_container__header {
-  background: $blue;
-  color: #fff;
-  padding: 10px $spacing;
-
-  .linenumber {
-    color: $highlight;
+  table td {
+    background: #fff;
+    border: 1px solid $base1_accent--dark;
+    padding: 10px;
   }
-}
 
-// Linenumber
-.linenumber {
-  color: $blue;
-  font-weight: bold;
-
-  @media screen and (min-width: 600px) {
-    color: $highlight;
+  table td code {
+    color: $magenta;
   }
-}
 
-// The source container
-.error_container__code {
-  margin: 0 0 $spacing 0;
-}
+  code,
+  pre {
+    margin: 0;
+  }
 
-.source {
-  display: block;
-  width: auto;
-  line-height: 0;
-  font-size: 0;
-  overflow: auto;
+  // Sticky class for sidebar
+  .sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 
-  code {
-    min-width: 100%;
-    max-width: none;
-    width: auto;
-    display: inline-block;
+  // Code font
+  .page_message,
+  .error_container__header,
+  .trace__item .trace__item__file {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
     font-size: 13px;
+    font-weight: normal;
     line-height: 1.5em;
   }
 
-  .line {
-    display: block;
-    padding: 3px 0;
-    overflow: visible;
+  // Word breaking
+  .page_header__exception,
+  .page_message__text,
+  .arguments,
+  .error_container__header {
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+
+    .linenumber {
+      white-space: nowrap;
+      display: inline;
+    }
   }
 
-  .highlight {
+  // Page header & message
+  .page_header,
+  .page_message {
+    display: table;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+  }
+
+  .page_header__exception,
+  .page_header__code,
+  .page_message__text,
+  .page_message__button {
+    display: table-cell;
+    padding: $spacing;
+  }
+
+  .page_header {
+    background: $red;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    font-size: 1em;
+    text-shadow: -1px -1px 0 darken($red, 10%);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
+
+    // Add to old-ie at the bottom as well
+    @media screen and (min-width: 600px) {
+      font-size: 1.5em;
+    }
+  }
+
+  .page_header__code,
+  .page_message__button {
+    text-align: right;
+    padding-left: 0;
+  }
+
+  .page_message {
     background: $base02;
+    color: $base2;
+    text-shadow: -1px -1px 0 $base03;
+    position: relative;
+    z-index: 1;
   }
-}
 
-// Layout
-.trace_container, .codes_container {
-  display: block;
-  float: left;
-  margin: 0;
-}
-
-// The stacktrace container
-.trace_container {
-  display: none;
-
-  @media screen and (min-width: 600px) {
-    display: block;
-  }
-}
-
-.trace_container {
-  width: 33%;
-  min-height: 10px;
-  overflow: auto;
-  word-wrap: break-word;
-  list-style: none;
-}
-
-.trace_container .trace__item {
-  display: block;
-  counter-increment: trace-counter -1;
-  position: relative;
-  background: #fff;
-  color: $base03;
-  margin-bottom: 1px;
-  padding: $spacing;
-  cursor: pointer;
-  line-height: 1.5em;
-  text-decoration: none;
-  @include transition(all .1s ease-in-out);
-}
-
-.trace__item .trace__item__file {
-  display: block;
-  margin: 0;
-}
-
-.trace__item .linenumber {
-  color: $blue;
-}
-
-.trace__item .trace__item__header {
-  display: block;
-  color: $blue;
-  font-weight: bold;
-  margin: 0 0 5px 0;
-}
-
-.trace__item.active_trace_item .linenumber,
-.trace__item.active_trace_item .trace__item__header {
-  color: $highlight;
-}
-
-.trace__item:hover {
-  background: $highlight;
-}
-
-.trace__item.active_trace_item {
-  background: $blue;
-  color: #fff;
-}
-
-.trace_container .trace__item:before {
-  content: counter(trace-counter);
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 12px;
-  color: $base00;
-}
-
-.trace_container .trace__item.active_trace_item:before {
-  color: lighten($blue, 35%);
-}
-
-// The error container
-.codes_container {
-  width: 100%;
-  background: $base1_accent--light;
-  border-left: 1px solid $base1_accent--dark;
-
-  @media screen and (min-width: 600px) {
-    width: 67%;
-  }
-}
-
-.codes_container__item {
-  padding: $spacing;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid $base1_accent--dark;
-  position: relative;
-  @include transition(all .1s ease-in-out);
-
-  &:hover {
-    background: #fff;
+  .page_message__button {
     cursor: pointer;
   }
 
-  @media screen and (min-width: 600px) {
-    &:hover {
-      background: transparent;
-      cursor: default;
+  // The main error
+  #the_error {
+    .error_container__code {
+      overflow: hidden;
     }
 
     .error_container__header {
       background: $blue;
       color: #fff;
       padding: 10px $spacing;
+
+      .linenumber {
+        color: $highlight;
+      }
     }
   }
 
-  &.active_source_item {
-    background: #fff;
+  // Linenumber
+  .linenumber {
+    color: $blue;
+    font-weight: bold;
 
-    &:before {
-      display: block;
-      content: " ";
-      position: absolute;
-      width: 4px;
-      top: -1px;
-      bottom: -1px;
-      left: -1px;
-      background: $blue;
+    // Add to old-ie at the bottom as well
+    @media screen and (min-width: 600px) {
+      color: $highlight;
     }
   }
 
+  // The source container
   .error_container__code {
+    margin: 0 0 $spacing 0;
+  }
+
+  .source {
+    display: block;
+    width: auto;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+    overflow-x: auto;
+    background: $base03;
+    color: $base0;
+    border: none;
+    outline: none;
+
+    code {
+      min-width: 100%;
+      max-width: none;
+      width: auto;
+      display: inline-block;
+      font-size: 13px;
+      line-height: 1.5em;
+      border: none;
+      outline: none;
+    }
+
+    .line {
+      display: block;
+      padding: 3px 0;
+    }
+
+    .highlight {
+      background: $base02;
+    }
+  }
+
+  // Layout
+  .trace_container, .codes_container {
+    display: block;
+    float: left;
+    margin: 0;
+  }
+
+  // The stacktrace container
+  .trace_container {
     display: none;
 
+    // Add to old-ie at the bottom as well
     @media screen and (min-width: 600px) {
       display: block;
     }
   }
 
-  h3 {
-    counter-increment: source-counter -1;
+  .trace_container {
+    width: 33%;
+    min-height: 10px;
+    word-wrap: break-word;
+    list-style: none;
+  }
+
+  .trace_container .trace__item {
+    display: block;
+    counter-increment: trace-counter -1;
+    position: relative;
+    background: #fff;
+    color: $base03;
+    margin-bottom: 1px;
+    padding: $spacing;
     cursor: pointer;
+    line-height: 1.5em;
+    text-decoration: none;
+    @include transition(all .1s ease-in-out);
+  }
 
+  .trace__item .trace__item__file {
+    display: block;
+    margin: 0;
+  }
+
+  .trace__item .linenumber {
+    color: $blue;
+  }
+
+  .trace__item .trace__item__header {
+    display: block;
+    color: $blue;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+  }
+
+  .trace__item.active_trace_item .linenumber,
+  .trace__item.active_trace_item .trace__item__header {
+    color: $highlight;
+  }
+
+  .trace__item:hover {
+    background: $highlight;
+  }
+
+  .trace__item.active_trace_item {
+    background: $blue;
+    color: #fff;
+  }
+
+  .trace_container .trace__item:before {
+    content: counter(trace-counter);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    color: $base00;
+  }
+
+  .trace_container .trace__item.active_trace_item:before {
+    color: lighten($blue, 35%);
+  }
+
+  // The error container
+  .codes_container {
+    width: 100%;
+    background: $base1_accent--light;
+    border-left: 1px solid $base1_accent--dark;
+
+    // Add to old-ie at the bottom as well
     @media screen and (min-width: 600px) {
-      cursor: default;
-    }
-
-    &:before {
-      content: counter(source-counter) ". ";
+      width: 67%;
     }
   }
 
-  // Arguments
-  div.args {
+  .codes_container__item {
+    padding: $spacing;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid $base1_accent--dark;
+    position: relative;
+    @include transition(all .1s ease-in-out);
+
+    &:hover {
+      background: #fff;
+      cursor: pointer;
+    }
+
+    // Add to old-ie at the bottom as well
+    @media screen and (min-width: 600px) {
+      &:hover {
+        background: transparent;
+        cursor: default;
+      }
+
+      .error_container__header {
+        background: $blue;
+        color: #fff;
+        padding: 10px $spacing;
+      }
+    }
+
+    &.active_source_item {
+      background: #fff;
+
+      &:before {
+        display: block;
+        content: " ";
+        position: absolute;
+        width: 4px;
+        top: -1px;
+        bottom: -1px;
+        left: -1px;
+        background: $blue;
+      }
+    }
+
+    .error_container__code {
+      display: none;
+
+      // Add to old-ie at the bottom as well
+      @media screen and (min-width: 600px) {
+        display: block;
+      }
+    }
+
+    h3 {
+      counter-increment: source-counter -1;
+      cursor: pointer;
+
+      // Add to old-ie at the bottom as well
+      @media screen and (min-width: 600px) {
+        cursor: default;
+      }
+
+      &:before {
+        content: counter(source-counter) ". ";
+      }
+    }
+
+    // Arguments
+    div.args {
+      display: none;
+
+      // Add to old-ie at the bottom as well
+      @media screen and (min-width: 600px) {
+        display: block;
+      }
+    }
+  }
+
+  // Page data
+  .page_data {
+    background: $base3;
+    z-index: 10;
     display: none;
+    padding: 30px;
+    height: auto;
 
-    @media screen and (min-width: 600px) {
-      display: block;
+    h2 {
+      color: $red;
+    }
+
+    table {
+      font-size: 14px;
+
+      td {
+        border: 1px solid $base2;
+      }
     }
   }
-}
 
-// Page data
-.page_data {
-  background: $base3;
-  z-index: 10;
-  display: none;
-  padding: 30px;
-  height: auto;
-  overflow: auto;
+  // Visible class
+  .visible {
+    display: block !important;
+  }
 
-  h2 {
+  .visible .error_container__code,
+  .visible div.args {
+    display: block !important;
+  }
+
+  .visible .error_container__header {
+    background: $blue;
+    color: #fff;
+    padding: 10px $spacing;
+  }
+
+  .visible .linenumber {
+    color: $highlight;
+  }
+
+  /*
+  Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+  */
+
+  .hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: $base03;
+    color: $base0;
+  }
+
+  .hljs-comment,
+  .hljs-template_comment,
+  .diff .hljs-header,
+  .hljs-doctype,
+  .hljs-pi,
+  .lisp .hljs-string,
+  .hljs-javadoc {
+    color: $base01;
+  }
+
+  /* Solarized Green */
+  .hljs-keyword,
+  .hljs-winutils,
+  .method,
+  .hljs-addition,
+  .css .hljs-tag,
+  .hljs-request,
+  .hljs-status,
+  .nginx .hljs-title {
+    color: $green;
+  }
+
+  /* Solarized Cyan */
+  .hljs-number,
+  .hljs-command,
+  .hljs-string,
+  .hljs-tag .hljs-value,
+  .hljs-rules .hljs-value,
+  .hljs-phpdoc,
+  .tex .hljs-formula,
+  .hljs-regexp,
+  .hljs-hexcolor,
+  .hljs-link_url {
+    color: $cyan;
+  }
+
+  /* Solarized Blue */
+  .hljs-title,
+  .hljs-localvars,
+  .hljs-chunk,
+  .hljs-decorator,
+  .hljs-built_in,
+  .hljs-identifier,
+  .vhdl .hljs-literal,
+  .hljs-id,
+  .css .hljs-function {
+    color: $blue;
+  }
+
+  /* Solarized Yellow */
+  .hljs-attribute,
+  .hljs-variable,
+  .lisp .hljs-body,
+  .smalltalk .hljs-number,
+  .hljs-constant,
+  .hljs-class .hljs-title,
+  .hljs-parent,
+  .haskell .hljs-type,
+  .hljs-link_reference {
+    color: $green;
+  }
+
+  /* Solarized Orange */
+  .hljs-preprocessor,
+  .hljs-preprocessor .hljs-keyword,
+  .hljs-pragma,
+  .hljs-shebang,
+  .hljs-symbol,
+  .hljs-symbol .hljs-string,
+  .diff .hljs-change,
+  .hljs-special,
+  .hljs-attr_selector,
+  .hljs-subst,
+  .hljs-cdata,
+  .clojure .hljs-title,
+  .css .hljs-pseudo,
+  .hljs-header {
+    color: $orange;
+  }
+
+  /* Solarized Red */
+  .hljs-deletion,
+  .hljs-important {
     color: $red;
   }
 
-  table {
-    font-size: 14px;
+  /* Solarized Violet */
+  .hljs-link_label {
+    color: $violet;
+  }
 
-    td {
-      border: 1px solid $base2;
-    }
+  .tex .hljs-formula {
+    background: $base02;
   }
 }
 
-// Visible class
-.visible {
-  display: block !important;
-}
+// Old ie specific classes
+.old-ie {
+  #error_page {
+    .page_header {
+      font-size: 1.5em;
+    }
 
-.visible .error_container__code,
-.visible div.args {
-  display: block !important;
-}
+    .trace_container {
+      display: block;
+    }
 
-.visible .error_container__header {
-  background: $blue;
-  color: #fff;
-  padding: 10px $spacing;
-}
+    .codes_container {
+      width: 67%;
+    }
 
-.visible .linenumber {
-  color: $highlight;
-}
+    .codes_container__item {
+      &:hover {
+        background: transparent;
+        cursor: default;
+      }
 
-/*
-Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
-*/
+      .error_container__header {
+        background: $blue;
+        color: #fff;
+        padding: 10px $spacing;
 
-.hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 0.5em;
-  background: $base03;
-  color: $base0;
-}
+        .linenumber {
+          color: $highlight;
+        }
+      }
 
-.hljs-comment,
-.hljs-template_comment,
-.diff .hljs-header,
-.hljs-doctype,
-.hljs-pi,
-.lisp .hljs-string,
-.hljs-javadoc {
-  color: $base01;
-}
+      .error_container__code {
+        display: block;
+      }
 
-/* Solarized Green */
-.hljs-keyword,
-.hljs-winutils,
-.method,
-.hljs-addition,
-.css .hljs-tag,
-.hljs-request,
-.hljs-status,
-.nginx .hljs-title {
-  color: $green;
-}
+      h3 {
+        cursor: default;
+      }
 
-/* Solarized Cyan */
-.hljs-number,
-.hljs-command,
-.hljs-string,
-.hljs-tag .hljs-value,
-.hljs-rules .hljs-value,
-.hljs-phpdoc,
-.tex .hljs-formula,
-.hljs-regexp,
-.hljs-hexcolor,
-.hljs-link_url {
-  color: $cyan;
-}
-
-/* Solarized Blue */
-.hljs-title,
-.hljs-localvars,
-.hljs-chunk,
-.hljs-decorator,
-.hljs-built_in,
-.hljs-identifier,
-.vhdl .hljs-literal,
-.hljs-id,
-.css .hljs-function {
-  color: $blue;
-}
-
-/* Solarized Yellow */
-.hljs-attribute,
-.hljs-variable,
-.lisp .hljs-body,
-.smalltalk .hljs-number,
-.hljs-constant,
-.hljs-class .hljs-title,
-.hljs-parent,
-.haskell .hljs-type,
-.hljs-link_reference {
-  color: $green;
-}
-
-/* Solarized Orange */
-.hljs-preprocessor,
-.hljs-preprocessor .hljs-keyword,
-.hljs-pragma,
-.hljs-shebang,
-.hljs-symbol,
-.hljs-symbol .hljs-string,
-.diff .hljs-change,
-.hljs-special,
-.hljs-attr_selector,
-.hljs-subst,
-.hljs-cdata,
-.clojure .hljs-title,
-.css .hljs-pseudo,
-.hljs-header {
-  color: $orange;
-}
-
-/* Solarized Red */
-.hljs-deletion,
-.hljs-important {
-  color: $red;
-}
-
-/* Solarized Violet */
-.hljs-link_label {
-  color: $violet;
-}
-
-.tex .hljs-formula {
-  background: $base02;
+      div.args {
+        display: block;
+      }
+    }
+  }
 }
