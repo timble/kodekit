@@ -299,12 +299,18 @@ pre {
   padding: $spacing;
   border-top: 1px solid #fff;
   border-bottom: 1px solid $base1_accent--dark;
+  position: relative;
   @include transition(all .1s ease-in-out);
+
+  &:hover {
+    background: #fff;
+    cursor: pointer;
+  }
 
   @media screen and (min-width: 600px) {
     &:hover {
-      background: #fff;
-      cursor: pointer;
+      background: transparent;
+      cursor: default;
     }
 
     .error_container__header {
