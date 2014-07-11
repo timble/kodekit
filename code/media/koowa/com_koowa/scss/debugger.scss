@@ -159,6 +159,10 @@ pre {
   background: $blue;
   color: #fff;
   padding: 10px $spacing;
+
+  .linenumber {
+    color: $highlight;
+  }
 }
 
 // Linenumber
@@ -181,6 +185,7 @@ pre {
   width: auto;
   line-height: 0;
   font-size: 0;
+  overflow: auto;
 
   code {
     min-width: 100%;
@@ -202,6 +207,13 @@ pre {
   }
 }
 
+// Layout
+.trace_container, .codes_container {
+  display: block;
+  float: left;
+  margin: 0;
+}
+
 // The stacktrace container
 .trace_container {
   display: none;
@@ -209,12 +221,6 @@ pre {
   @media screen and (min-width: 600px) {
     display: block;
   }
-}
-
-.trace_container, .codes_container {
-  display: block;
-  float: left;
-  margin: 0;
 }
 
 .trace_container {
@@ -287,10 +293,8 @@ pre {
   width: 100%;
   background: $base1_accent--light;
   border-left: 1px solid $base1_accent--dark;
-  display: none;
 
   @media screen and (min-width: 600px) {
-    display: block;
     width: 67%;
   }
 }
@@ -332,6 +336,14 @@ pre {
       bottom: -1px;
       left: -1px;
       background: $blue;
+    }
+  }
+
+  .error_container__code {
+    display: none;
+
+    @media screen and (min-width: 600px) {
+      display: block;
     }
   }
 
