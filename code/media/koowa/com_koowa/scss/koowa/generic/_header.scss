@@ -9,6 +9,11 @@
   @include wrap_words();
 }
 
+table .koowa_header {
+  margin: 0;
+  padding: 0;
+}
+
 .koowa_header__link {
   display: table-row;
 }
