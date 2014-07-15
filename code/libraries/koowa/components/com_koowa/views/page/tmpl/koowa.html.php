@@ -21,10 +21,6 @@ defined('KOOWA') or die; ?>
 
     <style src="media://koowa/com_koowa/css/bootstrap.css" type="text/css" />
 
-    <? if (JFactory::getLanguage()->isRTL()) : ?>
-        <style src="media://jui/css/bootstrap-rtl.css" type="text/css" />
-    <? endif; ?>
-
     <script type="text/javascript">
     // Add a "joomla_modal" class to the HTML element if we are rendering inside a Squeezebox modal
     if (window.parent && window.parent != window) {
