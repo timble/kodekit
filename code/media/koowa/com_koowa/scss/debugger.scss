@@ -543,6 +543,8 @@ body {
 
 // Old ie specific classes
 .old-ie {
+  min-width: 600px;
+
   #error_page {
     .page_header {
       font-size: 1.5em;

@@ -9,7 +9,7 @@ function removeafterfix() {
     // Disabling bootstrap CSS file with JS for now
     document.styleSheets[0].disabled = true;
     // Deleting end of message with JS for now
-    var message = document.getElementsByClassName('page_message__text');
+    var message = document.querySelector('.page_message__text');
     var temp = message.length;
     // Iterating
     while(temp--) {
@@ -100,21 +100,19 @@ function debug() {
             // Add & remove active classes
             if ( itemtop < relativescroll && itemtop+itemheight > scrolleroffset+relativescroll && !apollo.hasClass(entry, 'active_source_item') ) {
 
-                var allsources = document.getElementsByClassName('active_source_item');
-                var as = allsources.length;
+                var allsources = document.querySelectorAll('.active_source_item');
                 // Iterating
-                while(as--) {
+                for( var i = 0; i < allsources.length; i++ ) {
                     // Setting vars
-                    var target = document.getElementById(allsources[as].id);
+                    var target = document.getElementById(allsources[i].id);
                     apollo.removeClass(target, 'active_source_item');
                 }
 
-                var alltraces = document.getElementsByClassName('active_trace_item');
-                var as = alltraces.length;
+                var alltraces = document.querySelectorAll('.active_trace_item');
                 // Iterating
-                while(as--) {
+                for( var i = 0; i < alltraces.length; i++ ) {
                     // Setting vars
-                    var target = document.getElementById(alltraces[as].id);
+                    var target = document.getElementById(alltraces[i].id);
                     apollo.removeClass(target, 'active_trace_item');
                 }
 
@@ -125,12 +123,9 @@ function debug() {
                 apollo.removeClass(entry, 'active_source_item');
                 apollo.removeClass(realtarget, 'active_trace_item');
             }
-
-            i+=1;
         }
 
-        var i = source_elements.length;
-        while(i--) {
+        for( var i = 0; i < source_elements.length; i++ ) {
             defineClasses(source_elements[i], i);
         }
     }
@@ -155,6 +150,7 @@ function show_source_on_small_screens() {
 
 // On initial load
 window.onload = function() {
+    apollo.removeClass(document.body, 'koowa');
     debug();
     show_page_data();
     show_source_on_small_screens();

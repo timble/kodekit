@@ -19,7 +19,6 @@ defined('KOOWA') or die; ?>
     <meta content="chrome=1" http-equiv="X-UA-Compatible" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-
     <style src="media://koowa/com_koowa/css/bootstrap.css" type="text/css" />
 
     <? if (JFactory::getLanguage()->isRTL()) : ?>
