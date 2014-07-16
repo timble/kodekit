@@ -32,9 +32,9 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
-            $html = $this->getTemplate()->renderHelper('behavior.tooltip');
+            $html = $this->getTemplate()->invokeHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('entity' => $config->entity)).'">
+                           title="'.$this->getTemplate()->invokeHelper('grid.lock_message', array('entity' => $config->entity)).'">
 					</span>';
         }
         else
@@ -68,9 +68,9 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
-            $html = $this->getTemplate()->renderHelper('behavior.tooltip');
+            $html = $this->getTemplate()->invokeHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->renderHelper('grid.lock_message', array('entity' => $config->entity)).'">
+                           title="'.$this->getTemplate()->invokeHelper('grid.lock_message', array('entity' => $config->entity)).'">
 					</span>';
         }
         else
@@ -107,7 +107,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if ($config->submit_on_clear)
         {
-            $html .= $this->getTemplate()->renderHelper('behavior.jquery');
+            $html .= $this->getTemplate()->invokeHelper('behavior.jquery');
             $html .= '
             <script>
             (function() {
@@ -255,7 +255,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         $html = '<span class="koowa-tooltip koowa_icon--%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
-        $html .= $this->getTemplate()->renderHelper('behavior.tooltip');
+        $html .= $this->getTemplate()->invokeHelper('behavior.tooltip');
 
         return $html;
     }
