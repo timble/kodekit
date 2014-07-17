@@ -45,3 +45,16 @@ if(extension_loaded('apc') && !function_exists('apc_exists'))
 		return $result;
     }
 }
+
+/**
+ * PHP5.4 compatibility
+ * @link http://nikic.github.io/2012/01/28/htmlspecialchars-improvements-in-PHP-5-4.html
+ */
+if (!defined('ENT_SUBSTITUTE'))
+{
+    if(!defined('ENT_IGNORE')) {
+        define('ENT_SUBSTITUTE', 0);          //PHP 5.2 behavior
+    } else {
+        define('ENT_SUBSTITUTE', ENT_IGNORE); //PHP 5.3 behavior
+    }
+}
