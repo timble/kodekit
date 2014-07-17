@@ -19,9 +19,13 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * Returns an HTML string of information about a single variable.
      *
      * @param array $config
+     *
      * @internal param mixed $value variable to dump
-     * @internal param int $length maximum length of strings
-     * @internal param int $level_recursion recursion limit
+     * @internal param int $string_length Maximum length of strings
+     * @internal param int $object_level  Object recursion limit
+     * @internal param int $array_level   Array recursion limit
+     * @internal param int $resources     List of supported resources, where the keys are the resources names and the
+     *                                    values a Callable used to get the resource info.
      * @return  string
      */
     public function dump($config = array())
@@ -32,11 +36,17 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
 
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'length'          => 128,
-            'level_recursion' => 0
+            'string_length'  => 128,
+            'object_depth'   => 4,
+            'array_depth'    => 4,
+            'resources'      => array(
+                'stream'         => 'stream_get_meta_data',
+                'stream-context' => 'stream_context_get_options',
+                'curl'           => 'curl_getinfo',
+            )
         ));
 
-        return $this->_dump($value, $config->length, $config->level_recursion);
+        return $this->_dumpVar($value, $config);
     }
 
     /**
@@ -57,7 +67,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
 
         $html = $config->file;
         if (strpos($config->file, $config->root) === 0) {
-            $html = 'ROOT'.DIRECTORY_SEPARATOR.trim(substr($config->file, strlen($config->root)), DIRECTORY_SEPARATOR);
+            $html = '...'.DIRECTORY_SEPARATOR.trim(substr($config->file, strlen($config->root)), DIRECTORY_SEPARATOR);
         }
 
         return $html;
@@ -107,7 +117,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
                 if ($line >= $range['start'])
                 {
                     // Make the row safe for output
-                    $row = htmlspecialchars($row, ENT_NOQUOTES, 'utf-8');
+                    $row = $this->getTemplate()->escape($row);
 
                     // Trim whitespace and sanitize the row
                     $row = '<span class="number">'.sprintf($format, $line).'</span> '.$row;
@@ -256,158 +266,297 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
     }
 
     /**
-     * Helper for dump() handles recursion in arrays and objects.
+     * Dump a variable
      *
+     * Used to handles recursion in arrays and objects.
      *
-     * @param   mixed   $var    variable to dump
-     * @param   integer $length maximum length of strings
-     * @param   integer $limit  recursion limit
-     * @param   integer $level  current recursion level (internal usage only!)
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dump(&$var, $length = 128, $limit = 10, $level = 0)
+    protected function _dumpVar($var, $config, $level = 0)
     {
         $output = array();
 
-        if ($var === NULL) {
-            return '<small>NULL</small>';
-        }
-
-        if (is_bool($var)) {
-            return '<small>bool</small> '.($var ? 'TRUE' : 'FALSE');
-        }
-
-        if (is_float($var)) {
-            return '<small>float</small> '.$var;
-        }
-
-        if (is_resource($var))
+        if(!$var instanceof KObjectIdentifierInterface)
         {
-            if (($type = get_resource_type($var)) === 'stream' AND $meta = stream_get_meta_data($var))
-            {
-                $meta = stream_get_meta_data($var);
-
-                if (isset($meta['uri']))
-                {
-                    $file = $meta['uri'];
-
-                    if (function_exists('stream_is_local'))
-                    {
-                        // Only exists on PHP >= 5.2.4
-                        if (stream_is_local($file)) {
-                            $file = $this->path($file);
-                        }
-                    }
-
-                    return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, 'utf-8');
-                }
-            }
-            else return '<small>resource</small><span>('.$type.')</span>';
-        }
-
-        if (is_string($var))
-        {
-            if (mb_strlen($var) > $length) {
-                $str = htmlspecialchars(mb_substr($var, 0, $length), ENT_NOQUOTES, 'utf-8').'&nbsp;&hellip;';
+            if (method_exists($this, $method = '_dump' . strtoupper(gettype($var)))) {
+                $result = $this->$method($var, $config, $level);
             } else {
-                $str = htmlspecialchars($var, ENT_NOQUOTES, 'utf-8');
+                $result = "<span>Unknown Type</span>\n";
             }
+        }
+        else $result = $this->_dumpIdentifier($var, $config);
 
-            return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
+        return $result;
+    }
+
+    /**
+     * Dump a NULL
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpNull($var, $config, $level = 0)
+    {
+        return '<span class="koowa-dump-null">NULL</span>'."\n";
+    }
+
+    /**
+     * Dump a boolean
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpBoolean($var, $config, $level = 0)
+    {
+        return '<span class="koowa-dump-bool">bool</span> '.($var ? 'TRUE' : 'FALSE');
+    }
+
+    /**
+     * Dump an integer
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpInteger($var, $config, $level = 0)
+    {
+        return '<span class="koowa-dump-integer">'.$var.'</span>';
+    }
+
+    /**
+     * Dump a float
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpDouble($var, $config, $level = 0)
+    {
+        $var = is_finite($var) ? ($tmp = json_encode($var)) . (strpos($tmp, '.') === FALSE ? '.0' : '') : var_export($var, TRUE);
+
+        return '<span class="koowa-dump-float">'.$var.'</span>';
+    }
+
+    /**
+     * Dump a string
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpString($var, $config, $level = 0)
+    {
+        if (mb_strlen($var) > $config->string_length) {
+            $str = $this->getTemplate()->escape(mb_substr($var, 0, $config->string_length)).'&nbsp;&hellip;';
+        } else {
+            $str = $this->getTemplate()->escape($var);
         }
 
-        if (is_array($var))
+        return '<span class="koowa-dump-string">string</span><span>('.strlen($var).')</span> "'.$str.'"';
+    }
+
+    /**
+     * Dump an array
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpArray($var, $config, $level = 0)
+    {
+        static $marker;
+
+        if ($marker === NULL) {
+            $marker = uniqid("\x00", TRUE);
+        }
+
+        $result = '<span class="koowa-dump-array">array</span> (';
+
+        if (!empty($var))
         {
-            static $marker;
-
-            // Indentation for this variable
-            $space = str_repeat($s = '    ', $level);
-
-            // Make a unique marker
-            if ($marker === NULL) {
-                $marker = uniqid("\x00");
-            }
-
-            if (!empty($var))
+            if (!isset($var[$marker]))
             {
-                if (!isset($var[$marker]))
+                if ($level < $config->array_depth)
                 {
-                    if ($level < $limit)
+                    $collapsed = $level ? count($var) >= 7 : false;
+
+                    $result .= '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">' . $result . count($var) . ')</span>';
+                    $result .= '<div' . ($collapsed ? ' class="koowa-collapsed"' : '') . '>';
+
+                    $var[$marker] = true;
+
+                    foreach ($var as $key => $value)
                     {
-                        $output[] = "<span>(";
-
-                        $var[$marker] = TRUE;
-                        foreach ($var as $key => & $val)
+                        if ($key !== $marker)
                         {
-                            if ($key === $marker) {
-                                continue;
-                            }
-
-                            if ( ! is_int($key)) {
-                                $key = '"'.htmlspecialchars($key, ENT_NOQUOTES, 'utf-8').'"';
-                            }
-
-                            $output[] = "$space$s$key => ".$this->_dump($val, $length, $limit, $level + 1);
+                            $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
+                            $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : $this->getTemplate()->escape($key)) . '</span> => ';
+                            $result .= $this->_dumpVar($value, $config, $level + 1);
                         }
-                        unset($var[$marker]);
-
-                        $output[] = "$space)</span>";
                     }
-                    else $output[] = "(\n$space$s...\n$space)";
+
+                    unset($var[$marker]);
+                    $result .= '</div>';
                 }
-                else  $output[] = "(\n$space$s*RECURSION*\n$space)";
+                else $result .= count($var) . ") [ ... ]\n";
             }
-
-            return '<small>array</small><span>('.count($var).')</span> '.implode("\n", $output);
+            else $result .= (count($var) - 1) . ") [ <i>RECURSION</i> ]\n";
         }
+        else $result .= ')'."\n";
 
-        if (is_object($var))
+        return $result;
+    }
+
+    /**
+     * Dump an object
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpObject($var, $config, $level = 0)
+    {
+        $fields = (array) $var;
+
+        if ($var instanceof \Closure)
         {
-            // Objects that are being dumped
-            static $objects = array();
+            $rc     = new \ReflectionFunction($var);
+            $fields = array();
 
-            // Copy the object as an array
-            $array = (array) $var;
-
-            // Indentation for this variable
-            $space = str_repeat($s = '    ', $level);
-            $hash  = spl_object_hash($var);
-
-            if (!empty($var))
-            {
-                if (!isset($objects[$hash]))
-                {
-                    if ($level < $limit)
-                    {
-                        $output[] = "<code>{";
-
-                        $objects[$hash] = TRUE;
-                        foreach ($array as $key => & $val)
-                        {
-                            if ($key[0] === "\x00")
-                            {
-                                // Determine if the access is protected or protected
-                                $access = '<small>'.(($key[1] === '*') ? 'protected' : 'private').'</small>';
-
-                                // Remove the access level from the variable name
-                                $key = substr($key, strrpos($key, "\x00") + 1);
-                            }
-                            else $access = '<small>public</small>';
-
-                            $output[] = "$space$s$access $key => ".$this->_dump($val, $length, $limit, $level + 1);
-                        }
-                        unset($objects[$hash]);
-
-                        $output[] = "$space}</code>";
-                    }
-                    else $output[] = "{\n$space$s...\n$space}";
-                }
-                else $output[] = "{\n$space$s*RECURSION*\n$space}";
-
+            foreach ($rc->getParameters() as $param) {
+                $fields[] = '$' . $param->getName();
             }
 
-            return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
+            $fields = array(
+                'file'      => $rc->getFileName(),
+                'line'      => $rc->getStartLine(),
+                'variables' => $rc->getStaticVariables(),
+                'parameters' => implode(', ', $fields)
+            );
         }
-        else return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, TRUE), ENT_NOQUOTES, 'utf-8');
+
+        if ($var instanceof \SplFileInfo) {
+            $fields = array('path' => $var->getPathname());
+        }
+
+        if ($var instanceof \SplObjectStorage)
+        {
+            $fields = array();
+            foreach (clone $var as $obj) {
+                $fields[] = array('object' => $obj, 'data' => $var[$obj]);
+            }
+        }
+
+        if($var instanceof KObjectInterface)
+        {
+            unset($fields['__object_manager']);
+            unset($fields['__object_identifier']);
+        }
+
+        $result = '';
+        $result .= '<span class="koowa-dump-object">' . get_class($var) . '</span>';
+
+        if($var instanceof KObjectInterface) {
+            $result .= '<span class="koowa-dump-identifier">(' . $var->getIdentifier() . ')</span>';
+        }
+
+        $result .= '<span class="koowa-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
+
+
+
+        static $list = array();
+
+        if (!empty($fields))
+        {
+            if (!in_array($var, $list, true))
+            {
+                if ($level < $config->object_depth || $var instanceof \Closure)
+                {
+                    $collapsed = $level ? count($var) >= 7 : false;
+
+                    $result  = '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">' . $result . '</span>';
+                    $result .= '<div' . ($collapsed ? ' class="koowa-collapsed"' : '') . '>';
+
+                    $list[] = $var;
+
+                    foreach ($fields as $key => $value)
+                    {
+                        $vis = '';
+                        if ($key[0] === "\x00")
+                        {
+                            $vis = ' <span class="koowa-dump-visibility">' . ($key[1] === '*' ? 'protected' : 'private') . '</span>';
+                            $key = substr($key, strrpos($key, "\x00") + 1);
+                        }
+
+                        $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
+                        $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : $this->getTemplate()->escape($key)) . '</span> '.$vis.' => ';
+                        $result .= $this->_dumpVar($value, $config, $level + 1);
+                    }
+
+                    array_pop($list);
+                    $result .= '</div>';
+                }
+                else $result .= ' { ... }'."\n";
+            }
+            else $result .= ' { <i>RECURSION</i> }'."\n";
+        }
+        else $result .= "\n";
+
+        return $result;
+    }
+
+    /**
+     * Dump an object
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpResource($var, $config, $level = 0)
+    {
+        $type = get_resource_type($var);
+
+        $result = '<span class="koowa-dump-resource">' . $this->getTemplate()->escape($type) . ' resource</span>';
+
+        if (isset($config->resources[$type]))
+        {
+            $result  = '<span class="koowa-toggle koowa-collapsed">'.$result.'</span>';
+            $result .= '<div class="koowa-collapsed">';
+
+            foreach (call_user_func($config->resources[$type], $var) as $key => $value)
+            {
+                $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
+                $result .= '<span class="koowa-dump-key">' . $this->getTemplate()->escape($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
+            }
+            return $result .= '</div>';
+        }
+
+        return $result .= "\n";
+    }
+
+    /**
+     * Dump an identifier
+     *
+     * @param   mixed         $var    Variable to dump
+     * @param   KObjectConfig $config The configuration options
+     * @param   integer       $level  Current recursion level (internal usage only)
+     * @return  string
+     */
+    protected function _dumpIdentifier($var, $config, $level = 0)
+    {
+        return '<span class="koowa-dump-identifier">'.$var.'</span>'."\n";
     }
 }
