@@ -50,7 +50,7 @@ defined('KOOWA') or die; ?>
         <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?php echo $num+2; ?>">
             <div id="trace_wrapper">
                 <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
-                <a id="trace__item--<?= $i; ?>" class="trace__item" data-scroll href="#source<?= $i ?>">
+                <a id="trace__item--<?= $i; ?>" class="trace__item" href="#source<?= $i ?>">
                     <span class="trace__item__header">
                         <?= $step['function'] ?>(<?php if ($step['args']): $args_id = 'args'.$i; ?><?php endif ?>)
                     </span>
