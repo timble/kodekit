@@ -4,13 +4,6 @@
 /** smooth-scroll v4.8.2, by Chris Ferdinandi | http://github.com/cferdinandi/smooth-scroll | Licensed under MIT: http://gomakethings.com/mit/ */
 !function(e,t){"function"==typeof define&&define.amd?define("smoothScroll",t(e)):"object"==typeof exports?module.smoothScroll=t(e):e.smoothScroll=t(e)}(this,function(e){"use strict";var t,n={},o=!!document.querySelector&&!!e.addEventListener,a={speed:500,easing:"easeInOutCubic",offset:0,updateURL:!1,callbackBefore:function(){},callbackAfter:function(){}},r=function(e,t,n){if("[object Object]"===Object.prototype.toString.call(e))for(var o in e)Object.prototype.hasOwnProperty.call(e,o)&&t.call(n,e[o],o,e);else for(var a=0,r=e.length;r>a;a++)t.call(n,e[a],a,e)},u=function(e,t){var n={};return r(e,function(t,o){n[o]=e[o]}),r(t,function(e,o){n[o]=t[o]}),n},c=function(e,t){var n;return"easeInQuad"===e&&(n=t*t),"easeOutQuad"===e&&(n=t*(2-t)),"easeInOutQuad"===e&&(n=.5>t?2*t*t:-1+(4-2*t)*t),"easeInCubic"===e&&(n=t*t*t),"easeOutCubic"===e&&(n=--t*t*t+1),"easeInOutCubic"===e&&(n=.5>t?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1),"easeInQuart"===e&&(n=t*t*t*t),"easeOutQuart"===e&&(n=1- --t*t*t*t),"easeInOutQuart"===e&&(n=.5>t?8*t*t*t*t:1-8*--t*t*t*t),"easeInQuint"===e&&(n=t*t*t*t*t),"easeOutQuint"===e&&(n=1+--t*t*t*t*t),"easeInOutQuint"===e&&(n=.5>t?16*t*t*t*t*t:1+16*--t*t*t*t*t),n||t},i=function(e,t,n){var o=0;if(e.offsetParent)do o+=e.offsetTop,e=e.offsetParent;while(e);return o=o-t-n,o>=0?o:0},l=function(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,document.body.offsetHeight,document.documentElement.offsetHeight,document.body.clientHeight,document.documentElement.clientHeight)},f=function(e){return e.replace(/^\s+|\s+$/g,"")},s=function(e){var t={};return e&&(e=e.split(";"),e.forEach(function(e){e=f(e),""!==e&&(e=e.split(":"),t[e[0]]=f(e[1]))})),t},d=function(e,t){history.pushState&&(t||"true"===t)&&history.pushState({pos:e.id},"",e)};return n.animateScroll=function(t,n,o,r){var f=u(f||a,o||{}),p=s(t?t.getAttribute("data-options"):null);f=u(f,p);var h,m,b,g=document.querySelector("[data-scroll-header]"),v=null===g?0:g.offsetHeight+g.offsetTop,O=e.pageYOffset,y=i(document.querySelector(n),v,parseInt(f.offset,10)),I=y-O,S=l(),Q=0;t&&"a"===t.tagName.toLowerCase()&&r&&r.preventDefault(),d(n,f.updateURL);var H=function(o,a,r){var u=e.pageYOffset;(o==a||u==a||e.innerHeight+u>=S)&&(clearInterval(r),f.callbackAfter(t,n))},E=function(){Q+=16,m=Q/parseInt(f.speed,10),m=m>1?1:m,b=O+I*c(f.easing,m),e.scrollTo(0,Math.floor(b)),H(b,y,h)},j=function(){f.callbackBefore(t,n),h=setInterval(E,16)};0===e.pageYOffset&&e.scrollTo(0,0),j()},n.init=function(e){if(o){t=u(a,e||{});var c=document.querySelectorAll("[data-scroll]");r(c,function(e){e.addEventListener("click",n.animateScroll.bind(null,e,e.hash,t),!1)})}},n});
 
-// @TODO: fix page so below script is not needed anymore
-function removeafterfix() {
-    var message = document.querySelector('.page_message__text');
-    var html = message.innerHTML.split(' in ').shift();
-    message.innerHTML = html;
-}
-
 // Get all elements with certain ID
 function getElementsStartsWithId( id ) {
     var children = document.body.getElementsByTagName('*');
@@ -31,6 +24,12 @@ var scrollamount = 0;
 function debug() {
 
     // Variables
+    var page = document.getElementById('error_page');
+    var page_top = page.getBoundingClientRect().top;
+    var page_height = page.offsetHeight;
+    var header = document.getElementsByClassName('page_header')[0];
+    var header_height = header.offsetHeight;
+    var page_padding = page.style.paddingTop;
     var trace_container = document.getElementById('trace_container');
     var trace_wrapper = document.getElementById('trace_wrapper');
     var codes_container = document.getElementById('codes_container');
@@ -49,30 +48,40 @@ function debug() {
         var divideby = (codes_container_height+viewportheight)/traceheight;
         var amount = codes_container_top/divideby;
         var amount2 = -(traceheight-viewportheight);
-        var relativescroll = viewportheight/ 4.5;
+        var relativescroll = viewportheight / 6;
+        var scrollposition = Math.round(-((page_top / (page_height/100)) * (viewportheight/100)));
+
+        if ( scrollposition <= viewportheight/4 ) {
+            scrollposition = viewportheight/4
+        } else if ( scrollposition <= header_height ) {
+            scrollposition = header_height
+        } else if ( scrollposition >= viewportheight ) {
+            scrollposition = viewportheight
+        }
 
         if ( codes_container_top <= -relativescroll && (amount2-(relativescroll)) <= amount ) {
 
             scrollamount = (codes_container_top/divideby)+(relativescroll);
 
-            if ( scrollamount > 0 ) { scrollamount = 0 }
+            if ( scrollamount > header_height ) { scrollamount = header_height }
 
             trace_wrapper.style.top = scrollamount + 'px';
         }
         else if ( codes_container_top < -relativescroll ) {
 
-            if ( amount2 > 0 ) { amount2 = 0 }
+            if ( amount2 > header_height ) { amount2 = header_height }
 
             trace_wrapper.style.top = amount2 + 'px';
         }
 
         // add & remove sticky class
-        if ( codes_container_top >= 0 && apollo.hasClass(trace_wrapper, 'sticky') ) {
+        if ( codes_container_top >= header_height && apollo.hasClass(trace_wrapper, 'sticky') ) {
             apollo.removeClass(trace_wrapper, 'sticky');
             trace_wrapper.style.width = currentstackwidth + "px";
 
-        } else if ( trace_wrapper_top < 0 && !apollo.hasClass(trace_wrapper,'sticky') ) {
+        } else if ( trace_wrapper_top < header_height && !apollo.hasClass(trace_wrapper,'sticky') ) {
             apollo.addClass(trace_wrapper, 'sticky');
+            trace_wrapper.style.top = '68px';
         }
 
         // keep width on resize if trace stack is sticky
@@ -81,17 +90,22 @@ function debug() {
             stackwidth = document.getElementById('trace_container').offsetWidth;
         }
 
+        // Fixed header
+        if ( header_height + 'px' != page_padding ) {
+            header.style.position = 'fixed';
+            header.style.top = '0';
+            page.style.paddingTop = header_height + 'px';
+        }
+
         function defineClasses(entry, i) {
 
             // Settings vars
             var target = 'trace__item--' + i;
             var realtarget = document.getElementById(target);
             var itemtop = entry.getBoundingClientRect().top;
-            var itemheight = entry.offsetHeight;
-            var scrolleroffset = trace_wrapper.scrollTop;
 
             // Add & remove active classes
-            if ( itemtop < relativescroll && itemtop+itemheight > scrolleroffset+relativescroll && !apollo.hasClass(entry, 'active_source_item') ) {
+            if ( itemtop < scrollposition ) {
 
                 var allsources = document.querySelectorAll('.active_source_item');
                 // Iterating
@@ -112,7 +126,8 @@ function debug() {
                 apollo.addClass(entry, 'active_source_item');
                 apollo.addClass(realtarget, 'active_trace_item');
 
-            } else if ( itemtop > relativescroll && apollo.hasClass(entry, 'active_source_item') ) {
+            }
+            else if ( itemtop > scrollposition ) {
                 apollo.removeClass(entry, 'active_source_item');
                 apollo.removeClass(realtarget, 'active_trace_item');
             }
@@ -121,13 +136,9 @@ function debug() {
         for( var i = 0; i < source_elements.length; i++ ) {
             defineClasses(source_elements[i], i);
         }
-    }
-}
-
-// Show additional page data
-function show_page_data() {
-    document.getElementById('page_data__button').onclick = function() {
-        apollo.toggleClass(document.getElementById('page_data'), 'visible');
+    } else {
+        header.style.position = 'static';
+        page.style.paddingTop = '0';
     }
 }
 
@@ -145,10 +156,11 @@ function show_source_on_small_screens() {
 window.onload = function() {
     apollo.removeClass(document.body, 'koowa'); // By removing koowa we can disable all stylesheets that are being loaded
     debug();
-    show_page_data();
     show_source_on_small_screens();
-    removeafterfix();
-    smoothScroll.init();
+
+    smoothScroll.init({
+        offset: 68
+    });
 }
 
 // When scrolling

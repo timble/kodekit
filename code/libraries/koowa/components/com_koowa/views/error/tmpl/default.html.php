@@ -9,7 +9,6 @@
 
 defined('KOOWA') or die; ?>
 
-
 <title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code];; ?></title>
 
 <style src="media://koowa/com_koowa/css/debugger.css" />
@@ -21,16 +20,16 @@ defined('KOOWA') or die; ?>
 
 <div id="error_page">
 
-    <h1 class="page_header">
-        <span class="page_header__exception"><?= $exception ?></span>
-        <span class="page_header__code">[<?= $code ?>]</span>
-    </h1>
+    <div class="error_page__head">
 
-    <div class="page_message">
-        <div class="page_message__text"><?= $message ?></div>
-    </div>
+        <h1 class="page_header">
+            <span class="page_header__exception"><?= $exception ?></span>
+            <span class="page_header__code">[<?= $code ?>]</span>
+        </h1>
 
-    <div class="page_content">
+        <div class="page_message">
+            <div class="page_message__text"><?= $message ?></div>
+        </div>
 
         <div id="the_error">
             <div class="error_container">
@@ -42,6 +41,9 @@ defined('KOOWA') or die; ?>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="page_content">
 
         <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $num => $step): endforeach; // Getting the total amount ?>
 

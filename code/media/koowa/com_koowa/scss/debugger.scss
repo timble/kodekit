@@ -47,6 +47,15 @@ body {
 
 // Namespacing so we win until we fixed the page
 #error_page {
+  &:before,
+  &:after {
+    display: table;
+    content: " ";
+  }
+
+  &:after {
+    clear: both;
+  }
 
   h2, h3, h4 {
     margin: 0 0 $spacing 0;
