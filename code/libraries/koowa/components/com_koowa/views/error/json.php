@@ -17,6 +17,10 @@ class ComKoowaViewErrorJson extends KViewJson
 {
     protected function _actionRender(KViewContext $context)
     {
+        if(ini_get('display_errors')) {
+            $this->message = $this->exception ." with message '".$this->message."' in ".$this->file.":".$this->line;
+        }
+
         $properties = array(
             'message' => $this->message,
             'code'    => $this->code

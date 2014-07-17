@@ -93,9 +93,7 @@ class ComKoowaControllerError extends KControllerView
         }
 
         //Create the exception message
-        if(ini_get('display_errors')) {
-            $message = get_class($exception) ." with message '".$message."' in ".$file.":".$line;
-        } else {
+        if(!ini_get('display_errors')) {
             $traces = array();
         }
 
