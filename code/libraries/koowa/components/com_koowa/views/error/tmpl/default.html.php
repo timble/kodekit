@@ -55,7 +55,7 @@ document.body.className = ''; document.documentElement.className = '';
         <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?php echo $num+2; ?>">
             <div id="trace_wrapper">
                 <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
-                <a id="trace__item--<?= $i; ?>" class="trace__item" href="#source<?= $i ?>">
+                <a id="trace__item--<?= $i; ?>" class="trace__item" data-scroll href="#source<?= $i ?>">
                     <span class="trace__item__header">
                         <?= $step['function'] ?>(<?php if ($step['args']): $args_id = 'args'.$i; ?><?php endif ?>)
                     </span>
@@ -111,9 +111,111 @@ document.body.className = ''; document.documentElement.className = '';
             <?php endif ?>
             <?php unset($args_id, $source_id); ?>
             <?php endforeach ?>
+
+            <div class="page_data">
+                <h2>Page / Server Data</h2>
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <td class="data-table-k">Key</td>
+                        <td class="data-table-v">Value</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>DOCUMENT_ROOT</td>
+                        <td>/demo/dev/whoops/examples</td>
+                    </tr>
+                    <tr>
+                        <td>REMOTE_ADDR</td>
+                        <td>127.0.0.1</td>
+                    </tr>
+                    <tr>
+                        <td>REMOTE_PORT</td>
+                        <td>42317</td>
+                    </tr>
+                    <tr>
+                        <td>SERVER_SOFTWARE</td>
+                        <td>PHP 5.4.6-1ubuntu1.2 Development Server</td>
+                    </tr>
+                    <tr>
+                        <td>SERVER_PROTOCOL</td>
+                        <td>HTTP/1.1</td>
+                    </tr>
+                    <tr>
+                        <td>SERVER_NAME</td>
+                        <td>localhost</td>
+                    </tr>
+                    <tr>
+                        <td>SERVER_PORT</td>
+                        <td>8080</td>
+                    </tr>
+                    <tr>
+                        <td>REQUEST_URI</td>
+                        <td>/example-silex.php</td>
+                    </tr>
+                    <tr>
+                        <td>REQUEST_METHOD</td>
+                        <td>GET</td>
+                    </tr>
+                    <tr>
+                        <td>SCRIPT_NAME</td>
+                        <td>/example-silex.php</td>
+                    </tr>
+                    <tr>
+                        <td>SCRIPT_FILENAME</td>
+                        <td>/demo/dev/whoops/examples/example-silex.php</td>
+                    </tr>
+                    <tr>
+                        <td>PHP_SELF</td>
+                        <td>/example-silex.php</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_HOST</td>
+                        <td>localhost:8080</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_CONNECTION</td>
+                        <td>keep-alive</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_ACCEPT</td>
+                        <td>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_USER_AGENT</td>
+                        <td>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Ubuntu
+                            Chromium/25.0.1364.160 Chrome/25.0.1364.160 Safari/537.22
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_ACCEPT_ENCODING</td>
+                        <td>gzip,deflate,sdch</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_ACCEPT_LANGUAGE</td>
+                        <td>en-US,en;q=0.8</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP_ACCEPT_CHARSET</td>
+                        <td>ISO-8859-1,utf-8;q=0.7,*;q=0.3</td>
+                    </tr>
+                    <tr>
+                        <td>REQUEST_TIME_FLOAT</td>
+                        <td>1365585072.0011</td>
+                    </tr>
+                    <tr>
+                        <td>REQUEST_TIME</td>
+                        <td>1365585072</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 <!--[if IE 8]>
 </div>

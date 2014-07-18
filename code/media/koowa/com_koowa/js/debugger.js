@@ -1,6 +1,9 @@
 /*! apollo.js v1.7.0 | (c) 2014 @toddmotto | https://github.com/toddmotto/apollo */
 !function(n,t){"function"==typeof define&&define.amd?define(t):"object"==typeof exports?module.exports=t:n.apollo=t()}(this,function(){"use strict";var n,t,s,e,o={},c=function(n,t){"[object Array]"!==Object.prototype.toString.call(n)&&(n=n.split(" "));for(var s=0;s<n.length;s++)t(n[s],s)};return"classList"in document.documentElement?(n=function(n,t){return n.classList.contains(t)},t=function(n,t){n.classList.add(t)},s=function(n,t){n.classList.remove(t)},e=function(n,t){n.classList.toggle(t)}):(n=function(n,t){return new RegExp("(^|\\s)"+t+"(\\s|$)").test(n.className)},t=function(t,s){n(t,s)||(t.className+=(t.className?" ":"")+s)},s=function(t,s){n(t,s)&&(t.className=t.className.replace(new RegExp("(^|\\s)*"+s+"(\\s|$)*","g"),""))},e=function(e,o){(n(e,o)?s:t)(e,o)}),o.hasClass=function(t,s){return n(t,s)},o.addClass=function(n,s){c(s,function(s){t(n,s)})},o.removeClass=function(n,t){c(t,function(t){s(n,t)})},o.toggleClass=function(n,t){c(t,function(t){e(n,t)})},o});
 
+/** smooth-scroll v4.8.2, by Chris Ferdinandi | http://github.com/cferdinandi/smooth-scroll | Licensed under MIT: http://gomakethings.com/mit/ */
+!function(e,t){"function"==typeof define&&define.amd?define("smoothScroll",t(e)):"object"==typeof exports?module.smoothScroll=t(e):e.smoothScroll=t(e)}(this,function(e){"use strict";var t,n={},o=!!document.querySelector&&!!e.addEventListener,a={speed:500,easing:"easeInOutCubic",offset:0,updateURL:!1,callbackBefore:function(){},callbackAfter:function(){}},r=function(e,t,n){if("[object Object]"===Object.prototype.toString.call(e))for(var o in e)Object.prototype.hasOwnProperty.call(e,o)&&t.call(n,e[o],o,e);else for(var a=0,r=e.length;r>a;a++)t.call(n,e[a],a,e)},u=function(e,t){var n={};return r(e,function(t,o){n[o]=e[o]}),r(t,function(e,o){n[o]=t[o]}),n},c=function(e,t){var n;return"easeInQuad"===e&&(n=t*t),"easeOutQuad"===e&&(n=t*(2-t)),"easeInOutQuad"===e&&(n=.5>t?2*t*t:-1+(4-2*t)*t),"easeInCubic"===e&&(n=t*t*t),"easeOutCubic"===e&&(n=--t*t*t+1),"easeInOutCubic"===e&&(n=.5>t?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1),"easeInQuart"===e&&(n=t*t*t*t),"easeOutQuart"===e&&(n=1- --t*t*t*t),"easeInOutQuart"===e&&(n=.5>t?8*t*t*t*t:1-8*--t*t*t*t),"easeInQuint"===e&&(n=t*t*t*t*t),"easeOutQuint"===e&&(n=1+--t*t*t*t*t),"easeInOutQuint"===e&&(n=.5>t?16*t*t*t*t*t:1+16*--t*t*t*t*t),n||t},i=function(e,t,n){var o=0;if(e.offsetParent)do o+=e.offsetTop,e=e.offsetParent;while(e);return o=o-t-n,o>=0?o:0},l=function(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,document.body.offsetHeight,document.documentElement.offsetHeight,document.body.clientHeight,document.documentElement.clientHeight)},f=function(e){return e.replace(/^\s+|\s+$/g,"")},s=function(e){var t={};return e&&(e=e.split(";"),e.forEach(function(e){e=f(e),""!==e&&(e=e.split(":"),t[e[0]]=f(e[1]))})),t},d=function(e,t){history.pushState&&(t||"true"===t)&&history.pushState({pos:e.id},"",e)};return n.animateScroll=function(t,n,o,r){var f=u(f||a,o||{}),p=s(t?t.getAttribute("data-options"):null);f=u(f,p);var h,m,b,g=document.querySelector("[data-scroll-header]"),v=null===g?0:g.offsetHeight+g.offsetTop,O=e.pageYOffset,y=i(document.querySelector(n),v,parseInt(f.offset,10)),I=y-O,S=l(),Q=0;t&&"a"===t.tagName.toLowerCase()&&r&&r.preventDefault(),d(n,f.updateURL);var H=function(o,a,r){var u=e.pageYOffset;(o==a||u==a||e.innerHeight+u>=S)&&(clearInterval(r),f.callbackAfter(t,n))},E=function(){Q+=16,m=Q/parseInt(f.speed,10),m=m>1?1:m,b=O+I*c(f.easing,m),e.scrollTo(0,Math.floor(b)),H(b,y,h)},j=function(){f.callbackBefore(t,n),h=setInterval(E,16)};0===e.pageYOffset&&e.scrollTo(0,0),j()},n.init=function(e){if(o){t=u(a,e||{});var c=document.querySelectorAll("[data-scroll]");r(c,function(e){e.addEventListener("click",n.animateScroll.bind(null,e,e.hash,t),!1)})}},n});
+
 // Get all elements with certain ID
 function getElementsStartsWithId( id ) {
     var children = document.body.getElementsByTagName('*');
@@ -19,53 +22,6 @@ function getElementsStartsWithId( id ) {
 
 
 
-
-
-
-
-
-
-// Function to animate the scroll
-var smoothScroll = function (anchor, duration) {
-
-    // Calculate how far and how fast to scroll
-    var startLocation = window.pageYOffset;
-    var endLocation = (anchor.offsetTop);
-    var distance = endLocation - startLocation;
-    var increments = distance/(duration/16);
-    var stopAnimation;
-
-    // Scroll the page by an increment, and check if it's time to stop
-    var animateScroll = function () {
-        window.scrollBy(0, increments);
-        stopAnimation();
-    };
-
-    // If scrolling down
-    if ( increments >= 0 ) {
-        // Stop animation when you reach the anchor OR the bottom of the page
-        stopAnimation = function () {
-            var travelled = window.pageYOffset;
-            if ( (travelled >= (endLocation - increments)) || ((window.innerHeight + travelled) >= document.body.offsetHeight) ) {
-                clearInterval(runAnimation);
-            }
-        };
-    }
-    // If scrolling up
-    else {
-        // Stop animation when you reach the anchor OR the top of the page
-        stopAnimation = function () {
-            var travelled = window.pageYOffset;
-            if ( travelled <= (endLocation || 0) ) {
-                clearInterval(runAnimation);
-            }
-        };
-    }
-
-    // Loop the animation function
-    var runAnimation = setInterval(animateScroll, 16);
-
-};
 
 
 
@@ -114,8 +70,6 @@ function debug() {
 
     // Variables
     var page = document.getElementById('error_page');
-    var page_top = page.getBoundingClientRect().top;
-    var page_height = page.offsetHeight;
     var header = document.getElementsByClassName('page_header')[0];
     var header_height = header.offsetHeight;
     var page_padding = page.style.paddingTop;
@@ -123,6 +77,7 @@ function debug() {
     var trace_wrapper = document.getElementById('trace_wrapper');
     var codes_container = document.getElementById('codes_container');
     var source_elements = getElementsStartsWithId('source');
+    var page_data = document.getElementsByClassName('page_data')[0];
     var viewportwidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var viewportheight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -138,15 +93,22 @@ function debug() {
         var amount = codes_container_top/divideby;
         var amount2 = -(traceheight-viewportheight);
         var relativescroll = viewportheight / 6;
-        var scrollposition = Math.round(-((page_top / (page_height/100)) * (viewportheight/100)));
 
-        if ( scrollposition <= viewportheight/4 ) {
-            scrollposition = viewportheight/4
-        } else if ( scrollposition <= header_height ) {
-            scrollposition = header_height
-        } else if ( scrollposition >= viewportheight ) {
-            scrollposition = viewportheight
+
+
+
+        // Make server data at least as tall as viewportheight - last code_item - headerheight
+        var page_data_height = page_data.offsetHeight;
+        var restheight = viewportheight - header_height;
+        if ( page_data_height != restheight ) {
+            console.log('I aint the same yo');
+            page_data.style.minHeight = restheight + 'px';
         }
+
+
+
+
+
 
         if ( codes_container_top <= -relativescroll && (amount2-(relativescroll)) <= amount ) {
 
@@ -162,6 +124,8 @@ function debug() {
 
             trace_wrapper.style.top = amount2 + 'px';
         }
+        
+        
 
         // add & remove sticky class
         if ( codes_container_top >= header_height && apollo.hasClass(trace_wrapper, 'sticky') ) {
@@ -194,7 +158,7 @@ function debug() {
             var itemtop = entry.getBoundingClientRect().top;
 
             // Add & remove active classes
-            if ( itemtop < scrollposition ) {
+            if ( itemtop < relativescroll ) {
 
                 var allsources = document.querySelectorAll('.active_source_item');
                 // Iterating
@@ -216,14 +180,37 @@ function debug() {
                 apollo.addClass(realtarget, 'active_trace_item');
 
             }
-            else if ( itemtop > scrollposition ) {
+            else if ( itemtop > relativescroll ) {
+                apollo.removeClass(entry, 'active_source_item');
+                apollo.removeClass(realtarget, 'active_trace_item');
+            }
+        }
+
+        function defineClasses2(entry, i, next) {
+
+            // Settings vars
+            var target = 'trace__item--' + i;
+            var realtarget = document.getElementById(target);
+            var itemtop = entry.getBoundingClientRect().top;
+            if ( next == undefined ) { next = entry }
+            var nextitemtop = next.getBoundingClientRect().top;
+            if ( nextitemtop == itemtop ) { nextitemtop = itemtop + 9999 }
+
+            // Add & remove active classes
+            if ( itemtop < relativescroll && nextitemtop >= relativescroll ) {
+                apollo.addClass(entry, 'active_source_item');
+                apollo.addClass(realtarget, 'active_trace_item');
+
+            }
+            else {
                 apollo.removeClass(entry, 'active_source_item');
                 apollo.removeClass(realtarget, 'active_trace_item');
             }
         }
 
         for( var i = 0; i < source_elements.length; i++ ) {
-            defineClasses(source_elements[i], i);
+            //defineClasses(source_elements[i], i);
+            defineClasses2(source_elements[i], i, source_elements[i+1]);
         }
     } else {
         header.style.position = 'static';
@@ -241,43 +228,6 @@ function show_source_on_small_screens() {
     });
 }
 
-// Click trace items
-function click_trace_items() {
-    // Define smooth scroll links
-    var scrollToggle = document.querySelectorAll('.trace__item');
-
-    // For each smooth scroll link
-    [].forEach.call(scrollToggle, function (toggle) {
-
-        // When the smooth scroll link is clicked
-        toggle.addEventListener('click', function(e) {
-
-            var id = toggle.id;
-            var source = id.replace('trace__item--', 'source');
-            source = document.getElementById(source);
-            var viewportheight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-            var source_top = source.offsetTop;
-
-            console.log(id, source, viewportheight, source_top);
-
-            // Prevent the default link behavior
-            e.preventDefault();
-
-            // Get anchor link and calculate distance from the top
-            var dataID = toggle.getAttribute('href');
-            var dataTarget = document.querySelector(dataID);
-            var dataSpeed = toggle.getAttribute('data-speed');
-
-            // If the anchor exists
-            if (dataTarget) {
-                // Scroll to the anchor
-                smoothScroll(dataTarget, dataSpeed || 500);
-            }
-
-        }, false);
-
-    });
-}
 
 // Dumper
 function dumper() {
@@ -313,18 +263,21 @@ function dumper() {
 window.onload = function() {
     debug();
     show_source_on_small_screens();
-    click_trace_items();
     dumper();
-}
 
-// When scrolling
-window.onscroll = function() {
-    debug();
-}
+    smoothScroll.init({
+        offset: 68
+    });
 
-// When resizing
-window.onresize = function() {
-    debug();
+    // When scrolling
+    window.onscroll = function() {
+        debug();
+    }
+
+    // When resizing
+    window.onresize = function() {
+        debug();
+    }
 }
 
 // highlight.js by isagalaev | https://github.com/isagalaev/highlight.js
