@@ -550,6 +550,123 @@ body {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+/**
+ * Dumper
+ *
+ * This file is part of the Tracy (http://tracy.nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ */
+
+/* toggle */
+.koowa-collapsed {
+  display: none;
+}
+
+.koowa-toggle.koowa-collapsed {
+  display: inline;
+}
+
+.koowa-toggle {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.koowa-toggle:after {
+  content: " ▼";
+  opacity: .4;
+}
+
+.koowa-toggle.koowa-collapsed:after {
+  content: " ►";
+}
+
+
+/* dump */
+pre.arguments {
+  text-align: left;
+  color: #444;
+  background: white;
+}
+
+pre.arguments div {
+  padding-left: 3ex;
+}
+
+pre.arguments div div {
+  border-left: 1px solid rgba(0, 0, 0, .1);
+  margin-left: .5ex;
+}
+
+.koowa-dump-array, .koowa-dump-object {
+  color: #C22;
+}
+
+.koowa-dump-string {
+  color: #35D;
+}
+
+.koowa-dump-number {
+  color: #090;
+}
+
+.koowa-dump-null, .koowa-dump-bool {
+  color: #850;
+}
+
+.koowa-dump-visibility, .koowa-dump-hash {
+  font-size: 85%; color: #999;
+}
+
+.koowa-dump-indent {
+  display: none;
+}
+
+span[data-koowa-href] {
+  border-bottom: 1px dotted rgba(0, 0, 0, .2);
+}
+
+
+
+
+.arguments_wrapper {
+  max-width: 100%;
+  overflow: auto;
+  white-space: nowrap !important;
+
+  pre.arguments {
+    white-space: nowrap !important;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+// New lines for the dumps
+.koowa-dump-key {
+  &:before {
+    display: block;
+    content: " ";
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+
+
+
+
 // Old ie specific classes
 .old-ie {
   min-width: 600px;

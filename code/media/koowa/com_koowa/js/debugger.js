@@ -17,6 +17,14 @@ function getElementsStartsWithId( id ) {
 
 
 
+
+
+
+
+
+
+
+
 // Function to animate the scroll
 var smoothScroll = function (anchor, duration) {
 
@@ -58,6 +66,12 @@ var smoothScroll = function (anchor, duration) {
     var runAnimation = setInterval(animateScroll, 16);
 
 };
+
+
+
+
+
+
 
 
 
@@ -265,12 +279,42 @@ function click_trace_items() {
     });
 }
 
+// Dumper
+function dumper() {
+
+    // Get all links
+    var dumpees = document.getElementsByClassName('koowa-toggle');
+
+    // Iterate through them
+    for( var i = 0; i < dumpees.length; i++ ) {
+        var next = dumpees[i].nextSibling;
+        apollo.addClass(dumpees[i], 'koowa-collapsed');
+        apollo.addClass(next, 'koowa-collapsed');
+
+        dumpees[i].onclick = function(){
+            useItem(this);
+        };
+    }
+
+    // The fuction for the link
+    function useItem(el){
+        var next = el.nextSibling;
+        if ( apollo.hasClass(next, 'koowa-collapsed') ) {
+            apollo.removeClass(el, 'koowa-collapsed');
+            apollo.removeClass(next, 'koowa-collapsed');
+        } else {
+            apollo.addClass(el, 'koowa-collapsed');
+            apollo.addClass(next, 'koowa-collapsed');
+        }
+    }
+}
+
 // On initial load
 window.onload = function() {
-    apollo.removeClass(document.body, 'koowa'); // By removing koowa we can disable all stylesheets that are being loaded
     debug();
     show_source_on_small_screens();
     click_trace_items();
+    dumper();
 }
 
 // When scrolling

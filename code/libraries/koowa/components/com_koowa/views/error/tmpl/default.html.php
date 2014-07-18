@@ -14,6 +14,11 @@ defined('KOOWA') or die; ?>
 <style src="media://koowa/com_koowa/css/debugger.css" />
 <script src="media://koowa/com_koowa/js/debugger.js" />
 
+<script data-inline type="text/javascript">
+// Remove all classes fomr html and body
+document.body.className = ''; document.documentElement.className = '';
+</script>
+
 <!--[if IE 8]>
 <div class="old-ie">
 <![endif]-->
@@ -88,14 +93,16 @@ defined('KOOWA') or die; ?>
                 <?php if (isset($args_id)): ?>
                 <div id="<?= $args_id ?>" class="args">
                     <h4>Arguments</h4>
-                    <table cellspacing="0">
-                        <?php foreach ($step['args'] as $name => $arg): ?>
-                            <tr>
-                                <td><code><?= $name ?></code></td>
-                                <td><pre class="arguments"><?= @helper('debug.dump', array('value' => $arg)) ?></pre></td>
-                            </tr>
-                        <?php endforeach ?>
-                    </table>
+                    <div class="arguments_wrapper">
+                        <table cellspacing="0">
+                            <?php foreach ($step['args'] as $name => $arg): ?>
+                                <tr>
+                                    <td width="1"><code><?= $name ?></code></td>
+                                    <td><pre class="arguments"><?= @helper('debug.dump', array('value' => $arg)) ?></pre></td>
+                                </tr>
+                            <?php endforeach ?>
+                        </table>
+                    </div>
                 </div>
                 <?php endif ?>
             </div>
