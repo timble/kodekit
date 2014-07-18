@@ -100,7 +100,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             else
             {
                 //Exception for framework components. Follow library structure. Don't load classes from root.
-                if(isset($this->_namespaces[$namespace]) && $file != 'bootstrapper') {
+                if(isset($this->_namespaces[$namespace])) {
                     $path = $file.'/'.$file;
                 } else {
                     $path = $file;
