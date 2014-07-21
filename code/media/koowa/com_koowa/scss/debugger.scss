@@ -36,6 +36,11 @@ body * {
   box-sizing: border-box;
 }
 
+// Hidden class to hide stuff
+.hidden {
+  display: none !important;
+}
+
 // Main
 body {
   margin: 0;
@@ -45,203 +50,328 @@ body {
   color: $base03;
 }
 
-// Namespacing so we win until we fixed the page
 #error_page {
   &:before,
   &:after {
     display: table;
     content: " ";
   }
-
   &:after {
     clear: both;
   }
+}
 
-  h2, h3, h4 {
-    margin: 0 0 $spacing 0;
-    padding: 0;
-    color: $blue;
+// Base styling
+h2, h3, h4 {
+  margin: 0 0 $spacing 0;
+  padding: 0;
+  color: $blue;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+table td {
+  background: #fff;
+  border: 1px solid $base1_accent--dark;
+  padding: 10px;
+}
+
+table td code {
+  color: $magenta;
+}
+
+code,
+pre {
+  margin: 0;
+}
+
+// Sticky class for sidebar
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+// Code font
+.page_message,
+.error_container__header,
+.trace__item .trace__item__file {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.5em;
+}
+
+// Word breaking
+.page_header__exception,
+.page_message__text,
+.arguments,
+.error_container__header {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-all;
+
+  .linenumber {
+    white-space: nowrap;
+    display: inline;
+  }
+}
+
+// Page header & message
+.page_header,
+.page_message {
+  display: table;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+.page_header__exception,
+.page_header__code,
+.page_message__text,
+.page_message__button {
+  display: table-cell;
+  padding: $spacing;
+}
+
+.page_header {
+  background: $red;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  font-size: 1em;
+  text-shadow: -1px -1px 0 darken($red, 10%);
+  box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
+
+  // Add to old-ie at the bottom as well
+  @media screen and (min-width: 600px) {
+    font-size: 1.5em;
+  }
+}
+
+.page_header__code,
+.page_message__button {
+  text-align: right;
+  padding-left: 0;
+}
+
+.page_message {
+  background: $base02;
+  color: $base2;
+  text-shadow: -1px -1px 0 $base03;
+  position: relative;
+  z-index: 1;
+}
+
+.page_message__button {
+  cursor: pointer;
+}
+
+// The main error
+#the_error {
+  .error_container__code {
+    overflow: hidden;
   }
 
-  table {
-    width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-  }
-
-  table td {
-    background: #fff;
-    border: 1px solid $base1_accent--dark;
-    padding: 10px;
-  }
-
-  table td code {
-    color: $magenta;
-  }
-
-  code,
-  pre {
-    margin: 0;
-  }
-
-  // Sticky class for sidebar
-  .sticky {
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
-
-  // Code font
-  .page_message,
-  .error_container__header,
-  .trace__item .trace__item__file {
-    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-    font-size: 13px;
-    font-weight: normal;
-    line-height: 1.5em;
-  }
-
-  // Word breaking
-  .page_header__exception,
-  .page_message__text,
-  .arguments,
   .error_container__header {
-    white-space: normal;
-    word-wrap: break-word;
-    word-break: break-all;
+    background: $blue;
+    color: #fff;
+    padding: 10px $spacing;
 
     .linenumber {
-      white-space: nowrap;
-      display: inline;
+      color: $highlight;
     }
   }
+}
 
-  // Page header & message
-  .page_header,
-  .page_message {
-    display: table;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
+// Linenumber
+.linenumber {
+  color: $blue;
+  font-weight: bold;
+
+  // Add to old-ie at the bottom as well
+  @media screen and (min-width: 600px) {
+    color: $highlight;
+  }
+}
+
+// The source container
+.error_container__code {
+  margin: 0 0 $spacing 0;
+}
+
+.source {
+  display: block;
+  width: auto;
+  line-height: 0;
+  font-size: 0;
+  overflow: hidden;
+  overflow-x: auto;
+  background: $base03;
+  color: $base0;
+  border: none;
+  outline: none;
+
+  code {
+    min-width: 100%;
+    max-width: none;
+    width: auto;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1.5em;
+    border: none;
+    outline: none;
   }
 
-  .page_header__exception,
-  .page_header__code,
-  .page_message__text,
-  .page_message__button {
-    display: table-cell;
-    padding: $spacing;
+  .line {
+    display: block;
+    padding: 3px 0;
   }
 
-  .page_header {
-    background: $red;
-    color: #fff;
-    position: relative;
-    z-index: 2;
-    font-size: 1em;
-    text-shadow: -1px -1px 0 darken($red, 10%);
-    box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
-
-    // Add to old-ie at the bottom as well
-    @media screen and (min-width: 600px) {
-      font-size: 1.5em;
-    }
-  }
-
-  .page_header__code,
-  .page_message__button {
-    text-align: right;
-    padding-left: 0;
-  }
-
-  .page_message {
+  .highlight {
     background: $base02;
-    color: $base2;
-    text-shadow: -1px -1px 0 $base03;
-    position: relative;
-    z-index: 1;
+  }
+}
+
+// Layout
+.trace_container, .codes_container {
+  display: block;
+  float: left;
+  margin: 0;
+}
+
+// The stacktrace container
+.trace_container {
+  display: none;
+
+  // Add to old-ie at the bottom as well
+  @media screen and (min-width: 600px) {
+    display: block;
+  }
+}
+
+.trace_container {
+  width: 33%;
+  min-height: 10px;
+  word-wrap: break-word;
+  list-style: none;
+}
+
+.trace_container .trace__item {
+  display: block;
+  counter-increment: trace-counter -1;
+  position: relative;
+  background: #fff;
+  color: $base03;
+  margin-bottom: 1px;
+  padding: $spacing;
+  cursor: pointer;
+  line-height: 1.5em;
+  text-decoration: none;
+  @include transition(all .1s ease-in-out);
+}
+
+.trace__item .trace__item__file {
+  display: block;
+  margin: 0;
+}
+
+.trace__item .linenumber {
+  color: $blue;
+}
+
+.trace__item .trace__item__header {
+  display: block;
+  color: $blue;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+}
+
+.trace__item.active_trace_item .linenumber,
+.trace__item.active_trace_item .trace__item__header {
+  color: $highlight;
+}
+
+.trace__item:hover {
+  background: $highlight;
+}
+
+.trace__item.active_trace_item {
+  background: $blue;
+  color: #fff;
+}
+
+.trace_container .trace__item:before {
+  content: counter(trace-counter);
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 12px;
+  color: $base00;
+}
+
+.trace_container .trace__item.active_trace_item:before {
+  color: lighten($blue, 35%);
+}
+
+// The error container
+.codes_container {
+  width: 100%;
+  background: $base1_accent--light;
+  border-left: 1px solid $base1_accent--dark;
+
+  // Add to old-ie at the bottom as well
+  @media screen and (min-width: 600px) {
+    width: 67%;
+  }
+}
+
+.codes_container__item {
+  padding: $spacing;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid $base1_accent--dark;
+  position: relative;
+  @include transition(all .1s ease-in-out);
+
+  &:hover {
+    background: #fff;
   }
 
-  .page_message__button {
-    cursor: pointer;
-  }
-
-  // The main error
-  #the_error {
-    .error_container__code {
-      overflow: hidden;
+  // Add to old-ie at the bottom as well
+  @media screen and (min-width: 600px) {
+    &:hover {
+      background: transparent;
+      cursor: default;
     }
 
     .error_container__header {
       background: $blue;
       color: #fff;
       padding: 10px $spacing;
-
-      .linenumber {
-        color: $highlight;
-      }
     }
   }
 
-  // Linenumber
-  .linenumber {
-    color: $blue;
-    font-weight: bold;
+  &.active_source_item {
+    background: #fff;
 
-    // Add to old-ie at the bottom as well
-    @media screen and (min-width: 600px) {
-      color: $highlight;
-    }
-  }
-
-  // The source container
-  .error_container__code {
-    margin: 0 0 $spacing 0;
-  }
-
-  .source {
-    display: block;
-    width: auto;
-    line-height: 0;
-    font-size: 0;
-    overflow: hidden;
-    overflow-x: auto;
-    background: $base03;
-    color: $base0;
-    border: none;
-    outline: none;
-
-    code {
-      min-width: 100%;
-      max-width: none;
-      width: auto;
-      display: inline-block;
-      font-size: 13px;
-      line-height: 1.5em;
-      border: none;
-      outline: none;
-    }
-
-    .line {
+    &:before {
       display: block;
-      padding: 3px 0;
-    }
-
-    .highlight {
-      background: $base02;
+      content: " ";
+      position: absolute;
+      width: 4px;
+      top: -1px;
+      bottom: -1px;
+      left: -1px;
+      background: $blue;
     }
   }
 
-  // Layout
-  .trace_container, .codes_container {
-    display: block;
-    float: left;
-    margin: 0;
-  }
-
-  // The stacktrace container
-  .trace_container {
+  .error_container__code {
     display: none;
 
     // Add to old-ie at the bottom as well
@@ -250,404 +380,272 @@ body {
     }
   }
 
-  .trace_container {
-    width: 33%;
-    min-height: 10px;
-    word-wrap: break-word;
-    list-style: none;
-  }
-
-  .trace_container .trace__item {
-    display: block;
-    counter-increment: trace-counter -1;
-    position: relative;
-    background: #fff;
-    color: $base03;
-    margin-bottom: 1px;
-    padding: $spacing;
+  h3 {
+    counter-increment: source-counter -1;
     cursor: pointer;
-    line-height: 1.5em;
-    text-decoration: none;
-    @include transition(all .1s ease-in-out);
-  }
 
-  .trace__item .trace__item__file {
-    display: block;
-    margin: 0;
-  }
-
-  .trace__item .linenumber {
-    color: $blue;
-  }
-
-  .trace__item .trace__item__header {
-    display: block;
-    color: $blue;
-    font-weight: bold;
-    margin: 0 0 5px 0;
-  }
-
-  .trace__item.active_trace_item .linenumber,
-  .trace__item.active_trace_item .trace__item__header {
-    color: $highlight;
-  }
-
-  .trace__item:hover {
-    background: $highlight;
-  }
-
-  .trace__item.active_trace_item {
-    background: $blue;
-    color: #fff;
-  }
-
-  .trace_container .trace__item:before {
-    content: counter(trace-counter);
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    font-size: 12px;
-    color: $base00;
-  }
-
-  .trace_container .trace__item.active_trace_item:before {
-    color: lighten($blue, 35%);
-  }
-
-  // The error container
-  .codes_container {
-    width: 100%;
-    background: $base1_accent--light;
-    border-left: 1px solid $base1_accent--dark;
-
-    // Add to old-ie at the bottom as well
-    @media screen and (min-width: 600px) {
-      width: 67%;
+    &:before {
+      content: counter(source-counter) ". ";
     }
-  }
 
-  .codes_container__item {
-    padding: $spacing;
-    border-top: 1px solid #fff;
-    border-bottom: 1px solid $base1_accent--dark;
-    position: relative;
-    @include transition(all .1s ease-in-out);
-
-    &:hover {
-      background: #fff;
-      cursor: pointer;
+    &:after {
+      content: " ☰";
     }
 
     // Add to old-ie at the bottom as well
     @media screen and (min-width: 600px) {
-      &:hover {
-        background: transparent;
-        cursor: default;
-      }
+      cursor: default;
 
-      .error_container__header {
-        background: $blue;
-        color: #fff;
-        padding: 10px $spacing;
-      }
-    }
-
-    &.active_source_item {
-      background: #fff;
-
-      &:before {
-        display: block;
-        content: " ";
-        position: absolute;
-        width: 4px;
-        top: -1px;
-        bottom: -1px;
-        left: -1px;
-        background: $blue;
-      }
-    }
-
-    .error_container__code {
-      display: none;
-
-      // Add to old-ie at the bottom as well
-      @media screen and (min-width: 600px) {
-        display: block;
-      }
-    }
-
-    h3 {
-      counter-increment: source-counter -1;
-      cursor: pointer;
-
-      // Add to old-ie at the bottom as well
-      @media screen and (min-width: 600px) {
-        cursor: default;
-      }
-
-      &:before {
-        content: counter(source-counter) ". ";
-      }
-    }
-
-    // Arguments
-    div.args {
-      display: none;
-
-      // Add to old-ie at the bottom as well
-      @media screen and (min-width: 600px) {
-        display: block;
+      &:after {
+        display: none;
       }
     }
   }
 
-  // Page data
-  .page_data {
-    background: $base3;
-    padding: 30px;
-    height: auto;
+  // Arguments
+  div.args {
+    display: none;
 
-    h2 {
-      color: $red;
+    // Add to old-ie at the bottom as well
+    @media screen and (min-width: 600px) {
+      display: block;
     }
-
-    table {
-      font-size: 14px;
-
-      td {
-        border: 1px solid $base2;
-      }
-    }
-  }
-
-  // Visible class
-  .visible {
-    display: block !important;
-  }
-
-  .visible .error_container__code,
-  .visible div.args {
-    display: block !important;
-  }
-
-  .visible .error_container__header {
-    background: $blue;
-    color: #fff;
-    padding: 10px $spacing;
-  }
-
-  .visible .linenumber {
-    color: $highlight;
-  }
-
-  /*
-  Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
-  */
-
-  .hljs {
-    display: block;
-    overflow-x: auto;
-    padding: 0.5em;
-    background: $base03;
-    color: $base0;
-  }
-
-  .hljs-comment,
-  .hljs-template_comment,
-  .diff .hljs-header,
-  .hljs-doctype,
-  .hljs-pi,
-  .lisp .hljs-string,
-  .hljs-javadoc {
-    color: $base01;
-  }
-
-  /* Solarized Green */
-  .hljs-keyword,
-  .hljs-winutils,
-  .method,
-  .hljs-addition,
-  .css .hljs-tag,
-  .hljs-request,
-  .hljs-status,
-  .nginx .hljs-title {
-    color: $green;
-  }
-
-  /* Solarized Cyan */
-  .hljs-number,
-  .hljs-command,
-  .hljs-string,
-  .hljs-tag .hljs-value,
-  .hljs-rules .hljs-value,
-  .hljs-phpdoc,
-  .tex .hljs-formula,
-  .hljs-regexp,
-  .hljs-hexcolor,
-  .hljs-link_url {
-    color: $cyan;
-  }
-
-  /* Solarized Blue */
-  .hljs-title,
-  .hljs-localvars,
-  .hljs-chunk,
-  .hljs-decorator,
-  .hljs-built_in,
-  .hljs-identifier,
-  .vhdl .hljs-literal,
-  .hljs-id,
-  .css .hljs-function {
-    color: $blue;
-  }
-
-  /* Solarized Yellow */
-  .hljs-attribute,
-  .hljs-variable,
-  .lisp .hljs-body,
-  .smalltalk .hljs-number,
-  .hljs-constant,
-  .hljs-class .hljs-title,
-  .hljs-parent,
-  .haskell .hljs-type,
-  .hljs-link_reference {
-    color: $green;
-  }
-
-  /* Solarized Orange */
-  .hljs-preprocessor,
-  .hljs-preprocessor .hljs-keyword,
-  .hljs-pragma,
-  .hljs-shebang,
-  .hljs-symbol,
-  .hljs-symbol .hljs-string,
-  .diff .hljs-change,
-  .hljs-special,
-  .hljs-attr_selector,
-  .hljs-subst,
-  .hljs-cdata,
-  .clojure .hljs-title,
-  .css .hljs-pseudo,
-  .hljs-header {
-    color: $orange;
-  }
-
-  /* Solarized Red */
-  .hljs-deletion,
-  .hljs-important {
-    color: $red;
-  }
-
-  /* Solarized Violet */
-  .hljs-link_label {
-    color: $violet;
-  }
-
-  .tex .hljs-formula {
-    background: $base02;
   }
 }
 
+// Page data
+.page_data {
+  background: $base3;
+  padding: 30px;
+  height: auto;
+  max-width: 100%;
 
+  .data_table_wrapper {
+    max-width: 100%;
+    overflow: auto;
+  }
 
+  h2 {
+    color: $red;
+  }
 
+  table {
+    font-size: 14px;
 
+    td {
+      border: 1px solid $base2;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+  }
+}
 
+// Visible class
+.visible {
+  display: block !important;
+}
 
+.visible .error_container__code,
+.visible div.args {
+  display: block !important;
+}
 
+.visible .error_container__header {
+  background: $blue;
+  color: #fff;
+  padding: 10px $spacing;
+}
 
+.visible .linenumber {
+  color: $highlight;
+}
+
+/*
+Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: $base03;
+  color: $base0;
+}
+
+.hljs-comment,
+.hljs-template_comment,
+.diff .hljs-header,
+.hljs-doctype,
+.hljs-pi,
+.lisp .hljs-string,
+.hljs-javadoc {
+  color: $base01;
+}
+
+/* Solarized Green */
+.hljs-keyword,
+.hljs-winutils,
+.method,
+.hljs-addition,
+.css .hljs-tag,
+.hljs-request,
+.hljs-status,
+.nginx .hljs-title {
+  color: $green;
+}
+
+/* Solarized Cyan */
+.hljs-number,
+.hljs-command,
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-rules .hljs-value,
+.hljs-phpdoc,
+.tex .hljs-formula,
+.hljs-regexp,
+.hljs-hexcolor,
+.hljs-link_url {
+  color: $cyan;
+}
+
+/* Solarized Blue */
+.hljs-title,
+.hljs-localvars,
+.hljs-chunk,
+.hljs-decorator,
+.hljs-built_in,
+.hljs-identifier,
+.vhdl .hljs-literal,
+.hljs-id,
+.css .hljs-function {
+  color: $blue;
+}
+
+/* Solarized Yellow */
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body,
+.smalltalk .hljs-number,
+.hljs-constant,
+.hljs-class .hljs-title,
+.hljs-parent,
+.haskell .hljs-type,
+.hljs-link_reference {
+  color: $green;
+}
+
+/* Solarized Orange */
+.hljs-preprocessor,
+.hljs-preprocessor .hljs-keyword,
+.hljs-pragma,
+.hljs-shebang,
+.hljs-symbol,
+.hljs-symbol .hljs-string,
+.diff .hljs-change,
+.hljs-special,
+.hljs-attr_selector,
+.hljs-subst,
+.hljs-cdata,
+.clojure .hljs-title,
+.css .hljs-pseudo,
+.hljs-header {
+  color: $orange;
+}
+
+/* Solarized Red */
+.hljs-deletion,
+.hljs-important {
+  color: $red;
+}
+
+/* Solarized Violet */
+.hljs-link_label {
+  color: $violet;
+}
+
+.tex .hljs-formula {
+  background: $base02;
+}
 
 
 /**
- * Dumper
- *
- * This file is part of the Tracy (http://tracy.nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- */
+ Orginal Style from http://tracy.nette.org (c) 2004 David Grudl <http://davidgrudl.com>
+*/
 
 /* toggle */
 .koowa-collapsed {
   display: none;
 }
 
-.koowa-toggle.koowa-collapsed {
-  display: inline;
-}
-
 .koowa-toggle {
   cursor: pointer;
-  text-decoration: underline;
+  border-bottom: 1px dotted #bbb;
+
+  &:after {
+    content: " ▼";
+    font-size: 10px;
+    color: #888;
+  }
 }
 
-.koowa-toggle:after {
-  content: " ▼";
-  opacity: .4;
-}
+.koowa-toggle.koowa-collapsed {
+  display: inline;
 
-.koowa-toggle.koowa-collapsed:after {
-  content: " ►";
+  &:after {
+    content: " ►";
+  }
 }
-
 
 /* dump */
-pre.arguments {
-  text-align: left;
-  color: #444;
-  background: white;
-}
-
-pre.arguments div {
-  padding-left: 3ex;
-}
-
-pre.arguments div div {
-  border-left: 1px solid rgba(0, 0, 0, .1);
-  margin-left: .5ex;
-}
-
-.koowa-dump-array, .koowa-dump-object {
-  color: #C22;
-}
-
-.koowa-dump-string {
-  color: #35D;
-}
-
-.koowa-dump-number {
-  color: #090;
-}
-
-.koowa-dump-null, .koowa-dump-bool {
-  color: #850;
-}
-
-.koowa-dump-visibility, .koowa-dump-hash {
-  font-size: 85%; color: #999;
-}
-
-.koowa-dump-indent {
-  display: none;
-}
-
-span[data-koowa-href] {
-  border-bottom: 1px dotted rgba(0, 0, 0, .2);
-}
-
-
-
-
 .arguments_wrapper {
   max-width: 100%;
   overflow: auto;
   white-space: nowrap !important;
 
   pre.arguments {
+    text-align: left;
+    background: white;
+    color: #555;
+    line-height: 1.5em;
     white-space: nowrap !important;
+
+    div {
+      padding-left: 3ex;
+
+      div {
+        border-left: 1px solid rgba(0, 0, 0, .1);
+        margin-left: .5ex;
+      }
+    }
   }
 }
 
-.hidden {
-  display: none !important;
+.koowa-dump-array,
+.koowa-dump-object {
+  color: $red;
+}
+
+.koowa-dump-string {
+  color: $blue;
+}
+
+.koowa-dump-number {
+  color: $green;
+}
+
+.koowa-dump-null,
+.koowa-dump-bool {
+  color: $yellow;
+}
+
+.koowa-dump-visibility,
+.koowa-dump-hash {
+  font-size: 85%;
+  color: $base00;
+}
+
+.koowa-dump-indent {
+  display: none;
 }
 
 // New lines for the dumps
@@ -660,10 +658,6 @@ span[data-koowa-href] {
     overflow: hidden;
   }
 }
-
-
-
-
 
 // Old ie specific classes
 .old-ie {

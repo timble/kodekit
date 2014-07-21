@@ -5,33 +5,7 @@
 !function(e,t){"function"==typeof define&&define.amd?define("smoothScroll",t(e)):"object"==typeof exports?module.smoothScroll=t(e):e.smoothScroll=t(e)}(this,function(e){"use strict";var t,n={},o=!!document.querySelector&&!!e.addEventListener,a={speed:500,easing:"easeInOutCubic",offset:0,updateURL:!1,callbackBefore:function(){},callbackAfter:function(){}},r=function(e,t,n){if("[object Object]"===Object.prototype.toString.call(e))for(var o in e)Object.prototype.hasOwnProperty.call(e,o)&&t.call(n,e[o],o,e);else for(var a=0,r=e.length;r>a;a++)t.call(n,e[a],a,e)},u=function(e,t){var n={};return r(e,function(t,o){n[o]=e[o]}),r(t,function(e,o){n[o]=t[o]}),n},c=function(e,t){var n;return"easeInQuad"===e&&(n=t*t),"easeOutQuad"===e&&(n=t*(2-t)),"easeInOutQuad"===e&&(n=.5>t?2*t*t:-1+(4-2*t)*t),"easeInCubic"===e&&(n=t*t*t),"easeOutCubic"===e&&(n=--t*t*t+1),"easeInOutCubic"===e&&(n=.5>t?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1),"easeInQuart"===e&&(n=t*t*t*t),"easeOutQuart"===e&&(n=1- --t*t*t*t),"easeInOutQuart"===e&&(n=.5>t?8*t*t*t*t:1-8*--t*t*t*t),"easeInQuint"===e&&(n=t*t*t*t*t),"easeOutQuint"===e&&(n=1+--t*t*t*t*t),"easeInOutQuint"===e&&(n=.5>t?16*t*t*t*t*t:1+16*--t*t*t*t*t),n||t},i=function(e,t,n){var o=0;if(e.offsetParent)do o+=e.offsetTop,e=e.offsetParent;while(e);return o=o-t-n,o>=0?o:0},l=function(){return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,document.body.offsetHeight,document.documentElement.offsetHeight,document.body.clientHeight,document.documentElement.clientHeight)},f=function(e){return e.replace(/^\s+|\s+$/g,"")},s=function(e){var t={};return e&&(e=e.split(";"),e.forEach(function(e){e=f(e),""!==e&&(e=e.split(":"),t[e[0]]=f(e[1]))})),t},d=function(e,t){history.pushState&&(t||"true"===t)&&history.pushState({pos:e.id},"",e)};return n.animateScroll=function(t,n,o,r){var f=u(f||a,o||{}),p=s(t?t.getAttribute("data-options"):null);f=u(f,p);var h,m,b,g=document.querySelector("[data-scroll-header]"),v=null===g?0:g.offsetHeight+g.offsetTop,O=e.pageYOffset,y=i(document.querySelector(n),v,parseInt(f.offset,10)),I=y-O,S=l(),Q=0;t&&"a"===t.tagName.toLowerCase()&&r&&r.preventDefault(),d(n,f.updateURL);var H=function(o,a,r){var u=e.pageYOffset;(o==a||u==a||e.innerHeight+u>=S)&&(clearInterval(r),f.callbackAfter(t,n))},E=function(){Q+=16,m=Q/parseInt(f.speed,10),m=m>1?1:m,b=O+I*c(f.easing,m),e.scrollTo(0,Math.floor(b)),H(b,y,h)},j=function(){f.callbackBefore(t,n),h=setInterval(E,16)};0===e.pageYOffset&&e.scrollTo(0,0),j()},n.init=function(e){if(o){t=u(a,e||{});var c=document.querySelectorAll("[data-scroll]");r(c,function(e){e.addEventListener("click",n.animateScroll.bind(null,e,e.hash,t),!1)})}},n});
 
 // Get all elements with certain ID
-function getElementsStartsWithId( id ) {
-    var children = document.body.getElementsByTagName('*');
-    var elements = [], child;
-    for (var i = 0, length = children.length; i < length; i++) {
-        child = children[i];
-        if (child.id.substr(0, id.length) == id)
-            elements.push(child);
-    }
-    return elements;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function getElementsStartsWithId(e){var t=document.body.getElementsByTagName("*");var n=[],r;for(var i=0,s=t.length;i<s;i++){r=t[i];if(r.id.substr(0,e.length)==e)n.push(r)}return n}
 
 // Variables that need to be set outside of the function
 var stackwidth = 0;
@@ -40,39 +14,10 @@ var scrollamount = 0;
 // The script that does (almost) everything
 function debug() {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Variables
     var page = document.getElementById('error_page');
-    var header = document.getElementsByClassName('page_header')[0];
-    var header_height = header.offsetHeight;
     var page_padding = page.style.paddingTop;
+    var header = document.getElementsByClassName('page_header')[0];
     var trace_container = document.getElementById('trace_container');
     var trace_wrapper = document.getElementById('trace_wrapper');
     var codes_container = document.getElementById('codes_container');
@@ -81,67 +26,22 @@ function debug() {
     var viewportwidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var viewportheight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
+    // Only if viewport is large enough
     if ( viewportwidth >= 600 ) {
 
         // Setting variables
+        var header_height = header.offsetHeight;
         var trace_wrapper_top = trace_wrapper.getBoundingClientRect().top;
         var codes_container_top = codes_container.getBoundingClientRect().top;
         var codes_container_height = codes_container.offsetHeight;
-        var currentstackwidth = trace_container.offsetWidth;
-        var traceheight = trace_wrapper.offsetHeight;
-        var divideby = (codes_container_height+viewportheight)/traceheight;
-        var amount = codes_container_top/divideby;
-        var amount2 = -(traceheight-viewportheight);
-        var relativescroll = viewportheight / 6;
-
-
-
-
-        // Make server data at least as tall as viewportheight - last code_item - headerheight
+        var trace_container_width = trace_container.offsetWidth;
+        var trace_container_height = trace_wrapper.offsetHeight;
         var page_data_height = page_data.offsetHeight;
         var restheight = viewportheight - header_height;
-        if ( page_data_height != restheight ) {
-            console.log('I aint the same yo');
-            page_data.style.minHeight = restheight + 'px';
-        }
-
-
-
-
-
-
-        if ( codes_container_top <= -relativescroll && (amount2-(relativescroll)) <= amount ) {
-
-            scrollamount = (codes_container_top/divideby)+(relativescroll);
-
-            if ( scrollamount > header_height ) { scrollamount = header_height }
-
-            trace_wrapper.style.top = scrollamount + 'px';
-        }
-        else if ( codes_container_top < -relativescroll ) {
-
-            if ( amount2 > header_height ) { amount2 = header_height }
-
-            trace_wrapper.style.top = amount2 + 'px';
-        }
-        
-        
-
-        // add & remove sticky class
-        if ( codes_container_top >= header_height && apollo.hasClass(trace_wrapper, 'sticky') ) {
-            apollo.removeClass(trace_wrapper, 'sticky');
-            trace_wrapper.style.width = currentstackwidth + "px";
-
-        } else if ( trace_wrapper_top < header_height && !apollo.hasClass(trace_wrapper,'sticky') ) {
-            apollo.addClass(trace_wrapper, 'sticky');
-            trace_wrapper.style.top = '68px';
-        }
-
-        // keep width on resize if trace stack is sticky
-        if ( currentstackwidth != stackwidth ) {
-            trace_wrapper.style.width = currentstackwidth + "px";
-            stackwidth = document.getElementById('trace_container').offsetWidth;
-        }
+        var divideby = codes_container_height/trace_container_height;
+        var amount = codes_container_top/divideby;
+        var amount2 = -(trace_container_height-viewportheight);
+        var relativescroll = viewportheight / 6;
 
         // Fixed header
         if ( header_height + 'px' != page_padding ) {
@@ -150,43 +50,34 @@ function debug() {
             page.style.paddingTop = header_height + 'px';
         }
 
-        function defineClasses(entry, i) {
-
-            // Settings vars
-            var target = 'trace__item--' + i;
-            var realtarget = document.getElementById(target);
-            var itemtop = entry.getBoundingClientRect().top;
-
-            // Add & remove active classes
-            if ( itemtop < relativescroll ) {
-
-                var allsources = document.querySelectorAll('.active_source_item');
-                // Iterating
-                for( var i = 0; i < allsources.length; i++ ) {
-                    // Setting vars
-                    var target = document.getElementById(allsources[i].id);
-                    apollo.removeClass(target, 'active_source_item');
-                }
-
-                var alltraces = document.querySelectorAll('.active_trace_item');
-                // Iterating
-                for( var i = 0; i < alltraces.length; i++ ) {
-                    // Setting vars
-                    var target = document.getElementById(alltraces[i].id);
-                    apollo.removeClass(target, 'active_trace_item');
-                }
-
-                apollo.addClass(entry, 'active_source_item');
-                apollo.addClass(realtarget, 'active_trace_item');
-
-            }
-            else if ( itemtop > relativescroll ) {
-                apollo.removeClass(entry, 'active_source_item');
-                apollo.removeClass(realtarget, 'active_trace_item');
-            }
+        // Scroll trace container with codes container
+        if ( codes_container_top <= -relativescroll && (amount2-(relativescroll*2)) <= amount ) {
+            scrollamount = (codes_container_top/divideby)+(relativescroll*2);
+            if ( scrollamount > header_height ) { scrollamount = header_height }
+            trace_wrapper.style.top = scrollamount + 'px';
+        }
+        else if ( codes_container_top < -relativescroll ) {
+            if ( amount2 > header_height ) { amount2 = header_height }
+            trace_wrapper.style.top = amount2 + 'px';
         }
 
-        function defineClasses2(entry, i, next) {
+        // add & remove sticky classes
+        if ( codes_container_top >= header_height && apollo.hasClass(trace_wrapper, 'sticky') ) {
+            apollo.removeClass(trace_wrapper, 'sticky');
+            trace_wrapper.style.width = trace_container_width + "px";
+        }
+        else if ( trace_wrapper_top < header_height && !apollo.hasClass(trace_wrapper,'sticky') ) {
+            apollo.addClass(trace_wrapper, 'sticky');
+            trace_wrapper.style.top = '68px';
+        }
+
+        // keep width on resize if trace stack is sticky
+        if ( trace_container_width != stackwidth ) {
+            trace_wrapper.style.width = trace_container_width + "px";
+            stackwidth = document.getElementById('trace_container').offsetWidth;
+        }
+
+        function defineClasses(entry, i, next) {
 
             // Settings vars
             var target = 'trace__item--' + i;
@@ -196,41 +87,63 @@ function debug() {
             var nextitemtop = next.getBoundingClientRect().top;
             if ( nextitemtop == itemtop ) { nextitemtop = itemtop + 9999 }
 
-            // Add & remove active classes
+            // Add active classes
             if ( itemtop < relativescroll && nextitemtop >= relativescroll ) {
                 apollo.addClass(entry, 'active_source_item');
                 apollo.addClass(realtarget, 'active_trace_item');
 
             }
+            // Remove active classes
             else {
                 apollo.removeClass(entry, 'active_source_item');
                 apollo.removeClass(realtarget, 'active_trace_item');
             }
         }
 
+        // Iterate through each source element
         for( var i = 0; i < source_elements.length; i++ ) {
-            //defineClasses(source_elements[i], i);
-            defineClasses2(source_elements[i], i, source_elements[i+1]);
+            defineClasses(source_elements[i], i, source_elements[i+1]);
         }
-    } else {
+
+        // Make server data at least as tall as viewportheight - headerheight
+        if ( page_data_height != restheight ) {
+            page_data.style.minHeight = restheight + 'px';
+        }
+
+    }
+    // If viewport is smaller then 600px
+    else {
         header.style.position = 'static';
         page.style.paddingTop = '0';
     }
 }
 
-// More clicking
+// Show source on smaller screens
 function show_source_on_small_screens() {
+
+    // Get all links
     var source_elements = getElementsStartsWithId('source');
-    source_elements.forEach(function(entry, num) {
-        entry.onclick = function() {
-            apollo.toggleClass(entry, 'visible');
-        }
-    });
+
+    // Iterate through them
+    for( var i = 0; i < source_elements.length; i++ ) {
+
+        var source_header = source_elements[i].getElementsByTagName('h3')[0];
+
+        source_header.onclick = function() {
+            openItem(this);
+        };
+    }
+
+    // The fuction for the link
+    function openItem(el) {
+        var parent = el.parentNode;
+        apollo.toggleClass(parent, 'visible');
+    }
 }
 
 
 // Dumper
-function dumper() {
+function toggle_trace() {
 
     // Get all links
     var dumpees = document.getElementsByClassName('koowa-toggle');
@@ -241,7 +154,7 @@ function dumper() {
         apollo.addClass(dumpees[i], 'koowa-collapsed');
         apollo.addClass(next, 'koowa-collapsed');
 
-        dumpees[i].onclick = function(){
+        dumpees[i].onclick = function() {
             useItem(this);
         };
     }
@@ -263,7 +176,7 @@ function dumper() {
 window.onload = function() {
     debug();
     show_source_on_small_screens();
-    dumper();
+    toggle_trace();
 
     smoothScroll.init({
         offset: 68
