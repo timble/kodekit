@@ -15,7 +15,7 @@ defined('KOOWA') or die; ?>
 <script src="media://koowa/com_koowa/js/debugger.js" />
 
 <script data-inline type="text/javascript">
-// Remove all classes fomr html and body
+// Remove all classes from html and body
 document.body.className = ''; document.documentElement.className = '';
 </script>
 
