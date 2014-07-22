@@ -391,7 +391,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
                 {
                     $collapsed = $level ? count($var) >= 7 : false;
 
-                    $result .= '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">' . $result . count($var) . ')</span>';
+                    $result .= '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">'  . count($var) . ')</span>';
                     $result .= '<div' . ($collapsed ? ' class="koowa-collapsed"' : '') . '>';
 
                     $var[$marker] = true;
@@ -428,7 +428,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      */
     protected function _dumpObject($var, $config, $level = 0)
     {
-        $fields = (array) $var;
+        $fields = $this->_getObjectVars($var);
 
         if ($var instanceof \Closure)
         {
@@ -459,10 +459,12 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
             }
         }
 
-        if($var instanceof KObjectInterface)
-        {
-            unset($fields['__object_manager']);
-            unset($fields['__object_identifier']);
+        if ($var instanceof KObjectManager) {
+            $fields = array();
+        }
+
+        if ($var instanceof KObjectConfigInterface) {
+            $fields = $var->toArray();
         }
 
         $result = '';
@@ -473,7 +475,6 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
         }
 
         $result .= '<span class="koowa-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
-
 
 
         static $list = array();
@@ -558,5 +559,29 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
     protected function _dumpIdentifier($var, $config, $level = 0)
     {
         return '<span class="koowa-dump-identifier">'.$var.'</span>'."\n";
+    }
+
+    /**
+     * Gets the properties of the given object
+     *
+     * Returns an associative array of defined object properties for the specified object. If a property has not been
+     * assigned a value, it will be returned with a NULL value. Scope is not taken into acccount.
+     *
+     * @param   object   $object
+     * @return  array
+     */
+    protected function _getObjectVars ( $object )
+    {
+        $vars = array();
+
+        foreach((array) $object as $key => $value)
+        {
+            $aux  = explode ("\0", $key);
+            $name = $aux[count($aux)-1];
+
+            $vars[$name] = $value;
+        }
+
+        return $vars;
     }
 }
