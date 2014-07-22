@@ -19,8 +19,8 @@ class KObjectConfigIni extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @return $this
-     * @throws \RuntimeException
+     * @throws \DomainException
+     * @return KObjectConfigIni
      */
     public function fromString($string)
     {
@@ -31,7 +31,7 @@ class KObjectConfigIni extends KObjectConfigFormat
             $data = @parse_ini_string($string, true);
 
             if($data === false) {
-                throw new RuntimeException('Cannot parse INI string');
+                throw new DomainException('Cannot parse INI string');
             }
         }
 
