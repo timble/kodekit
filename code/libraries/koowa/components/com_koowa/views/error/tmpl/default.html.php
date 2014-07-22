@@ -90,7 +90,7 @@ document.body.className = ''; document.documentElement.className = '';
                             <?php foreach ($step['args'] as $name => $arg): ?>
                                 <tr>
                                     <td width="1"><code><?= $name ?></code></td>
-                                    <td><pre class="arguments"><?= @helper('debug.dump', array('value' => $arg)) ?></pre></td>
+                                    <td><pre class="arguments"><?= @helper('debug.dump', array('value' => $arg, 'object_depth' => $i ? 1 : 4)) ?></pre></td>
                                 </tr>
                             <?php endforeach ?>
                         </table>

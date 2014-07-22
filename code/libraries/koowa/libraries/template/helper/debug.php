@@ -459,6 +459,10 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
             }
         }
 
+        if ($var instanceof KObjectInterface) {
+            unset($fields['__methods']);
+        }
+
         if ($var instanceof KObjectManager) {
             $fields = array();
         }
