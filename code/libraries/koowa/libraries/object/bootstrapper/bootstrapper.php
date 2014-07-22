@@ -91,9 +91,10 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
         //Register the component bootstrapper
         if(!isset($this->_bootstrappers[$identifier]) && $path)
         {
-            $config_path = $path .'/components/com_'.$name.'/resources/config/bootstrapper.php';
-            if(file_exists($config_path)) {
-                $this->_bootstrappers[$identifier] = include $config_path;
+            $config = $path .'/components/com_'.$name.'/resources/config/bootstrapper.php';
+
+            if(file_exists($config)) {
+                $this->_bootstrappers[$identifier] = include $config;
             }
         }
 
