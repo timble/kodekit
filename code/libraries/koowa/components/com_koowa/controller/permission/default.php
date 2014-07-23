@@ -11,6 +11,6 @@
  * Default Controller Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Component\Koowa
  */
 final class ComKoowaControllerPermissionDefault extends ComKoowaControllerPermissionAbstract { }

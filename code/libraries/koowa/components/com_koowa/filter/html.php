@@ -6,11 +6,12 @@
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link		http://github.com/joomlatools/koowa for the canonical source repository
  */
+
 /**
  * Html Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaFilterHtml extends KFilterAbstract implements KFilterTraversable
 {

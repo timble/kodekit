@@ -11,7 +11,7 @@
  * Filter Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaFilterFactory extends KFilterFactory
 {

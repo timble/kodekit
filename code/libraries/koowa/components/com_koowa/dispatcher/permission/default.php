@@ -11,6 +11,6 @@
  * Default Dispatcher Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Component\Koowa
  */
 final class ComKoowaDispatcherPermissionDefault extends ComKoowaDispatcherPermissionAbstract { }

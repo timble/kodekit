@@ -11,7 +11,7 @@
  * Error Controller Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerPermissionError extends KControllerPermissionAbstract
 {

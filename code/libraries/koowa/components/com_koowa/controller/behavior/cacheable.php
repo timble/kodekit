@@ -10,7 +10,7 @@
  * Default Controller Cacheable Behavior
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 {

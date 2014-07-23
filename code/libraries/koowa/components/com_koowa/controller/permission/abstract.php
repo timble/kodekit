@@ -11,7 +11,7 @@
  * Abstract Controller Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Component\Koowa
  */
 abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissionAbstract
 {

@@ -11,7 +11,7 @@
  * Editable Controller Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerBehaviorEditable extends KControllerBehaviorEditable
 {

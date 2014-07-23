@@ -11,7 +11,7 @@
  * Event Publisher
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaEventPublisher extends KEventPublisher
 {
