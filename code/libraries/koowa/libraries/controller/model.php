@@ -176,7 +176,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         $result = false;
 
         //Check if we are reading or browsing
-        $action = KStringInflector::isSingular($this->getView()->getName()) ? 'read' : 'browse';
+        $action = $this->getView()->isCollection() ? 'browse' : 'read';
 
         //Execute the action
         if($this->execute($action, $context) !== false) {
