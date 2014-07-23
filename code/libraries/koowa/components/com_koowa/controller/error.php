@@ -107,6 +107,7 @@ class ComKoowaControllerError extends KControllerView
         $this->getView()->args      = $args;
         $this->getView()->info      = $info;
         $this->getView()->trace     = $traces;
+        $this->getView()->level     = $exception instanceof KExceptionError ? $exception->getSeverityMessage() : false;
 
         //Render the exception
         $result = parent::_actionRender($context);

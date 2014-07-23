@@ -9,7 +9,7 @@
 
 defined('KOOWA') or die; ?>
 
-<title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code];; ?></title>
+<title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code]; ?></title>
 
 <style src="media://koowa/com_koowa/css/debugger.css" />
 <script src="media://koowa/com_koowa/js/debugger.js" />
@@ -27,6 +27,9 @@ document.body.className = ''; document.documentElement.className = '';
     <div class="error_page__head">
         <h1 class="page_header">
             <span class="page_header__exception"><?= $exception ?></span>
+            <? if($level !== false) : ?>
+            <span class="page_header__level"> | <?= $level ?></span>
+            <? endif ?>
             <span class="page_header__code">[<?= $code ?>]</span>
         </h1>
         <div class="page_message">
@@ -35,7 +38,7 @@ document.body.className = ''; document.documentElement.className = '';
         <div id="the_error">
             <div class="error_container">
                 <div class="error_container__header">
-                    <span class="file"><?= $file ?></span>:<span class="linenumber"><?= $line ?></span>
+                    <?= @helper('debug.path', array('file' => $file)) ?>:<span class="linenumber"><?= $line ?></span>
                 </div>
                 <div class="error_container_code">
                     <?= @helper('debug.source', array('file' => $file, 'line' => $line)) ?>
@@ -44,65 +47,65 @@ document.body.className = ''; document.documentElement.className = '';
         </div>
     </div>
     <div class="page_content">
-        <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $num => $step): endforeach; // Getting the total amount ?>
+        <? foreach (@helper('debug.trace', array('trace' => $trace)) as $num => $step): endforeach; // Getting the total amount ?>
         <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?php echo $num+2; ?>">
             <div id="trace_wrapper">
-                <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
+                <? foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
                 <a id="trace__item--<?= $i; ?>" class="trace__item" data-scroll href="#source<?= $i ?>">
                     <span class="trace__item__header">
-                        <?= $step['function'] ?>(<?php if ($step['args']): $args_id = 'args'.$i; ?><?php endif ?>)
+                        <?= $step['function'] ?>(<? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>)
                     </span>
                     <span class="trace__item__file">
-                        <?php if ($step['file']): $source_id = 'source'.$i; ?>
+                        <? if ($step['file']): $source_id = 'source'.$i; ?>
                             <?= @helper('debug.path', array('file' => $step['file'])) ?>:<span class="linenumber"><?= $step['line'] ?></span>
-                        <?php else: ?>
+                        <? else: ?>
                             {<?= 'PHP internal call' ?>}
-                        <?php endif ?>
+                        <? endif ?>
                     </span>
                 </a>
-                <?php unset($args_id, $source_id); ?>
-                <?php endforeach ?>
+                <? unset($args_id, $source_id); ?>
+                <? endforeach ?>
             </div>
         </div>
         <div id="codes_container" class="codes_container" style="counter-reset: source-counter <?php echo $num+2; ?>">
-            <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
-            <?php if ($step['file']): $source_id = 'source'.$i; ?>
+            <? foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
+            <? if ($step['file']): $source_id = 'source'.$i; ?>
             <div id="<?= $source_id ?>" class="codes_container__item">
                 <h3>
-                    <?= $step['function'] ?>(<?php if ($step['args']): $args_id = 'args'.$i; ?><?php endif ?>)
+                    <?= $step['function'] ?>(<? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>)
                 </h3>
                 <div class="error_container">
                     <div class="error_container__header">
                         <span class="file"><?= @helper('debug.path', array('file' => $step['file'])) ?></span>:<span class="linenumber"><?= $step['line'] ?></span>
                     </div>
-                    <?php if (isset($source_id)): ?>
+                    <? if (isset($source_id)): ?>
                     <div class="error_container__code">
                         <pre class="source_wrap"><code class="hljs php"><?= $step['source'] ?></code></pre>
                     </div>
-                    <?php endif ?>
+                    <? endif ?>
                 </div>
-                <?php if ($step['args']): $args_id = 'args'.$i; ?><?php endif ?>
-                <?php if (isset($args_id)): ?>
+                <? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>
+                <? if (isset($args_id)): ?>
                 <div id="<?= $args_id ?>" class="args">
                     <h4>Arguments</h4>
                     <div class="arguments_wrapper">
                         <table cellspacing="0">
-                            <?php foreach ($step['args'] as $name => $arg): ?>
+                            <? foreach ($step['args'] as $name => $arg): ?>
                                 <tr>
                                     <td width="1"><code><?= $name ?></code></td>
                                     <td><pre class="arguments"><?= @helper('debug.dump', array('value' => $arg, 'object_depth' => $i ? 1 : 4)) ?></pre></td>
                                 </tr>
-                            <?php endforeach ?>
+                            <? endforeach ?>
                         </table>
                     </div>
                 </div>
-                <?php endif ?>
+                <? endif ?>
             </div>
-            <?php else: ?>
+            <? else: ?>
             {<?= 'PHP internal call' ?>}
-            <?php endif ?>
-            <?php unset($args_id, $source_id); ?>
-            <?php endforeach ?>
+            <? endif ?>
+            <? unset($args_id, $source_id); ?>
+            <? endforeach ?>
             <div class="page_data">
                 <h2>Page / Server Data</h2>
                 <div class="data_table_wrapper">
