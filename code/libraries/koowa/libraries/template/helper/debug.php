@@ -16,9 +16,68 @@
 class KTemplateHelperDebug extends KTemplateHelperAbstract
 {
     /**
+     * A string identifier for a known IDE/text editor,
+     *
+     * @var string
+     */
+    protected $_editor;
+
+    /**
+     * A list of known editor strings
+     *
+     * @var array
+     */
+    protected $_editors;
+
+    /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        //Set the editors
+        $this->_editor  = $config->editor;
+        $this->_editors = $config->editors;
+
+        if (ini_get('xdebug.file_link_format') || extension_loaded('xdebug'))
+        {
+            // Register editor using xdebug's file_link_format option.
+            $this->_editors['xdebug'] = function($file, $line) {
+                return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
+            };
+        }
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options.
+     * @return  void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'editor'   => 'textmate',
+            'editors'  => array(
+                'editor'   => 'editor://open/?file=%file&line=%line',
+                'sublime'  => 'subl://open?url=file://%file&line=%line',
+                'textmate' => 'txmt://open?url=file://%file&line=%line',
+                'emacs'    => 'emacs://open?url=file://%file&line=%line',
+                'macvim'   => 'mvim://open/?url=file://%file&line=%line',
+                'phpstorm' => 'phpstorm://open?file=$file&line=$line',      //Only available in PHPStorm 8+
+            ),
+        ));
+    }
+
+    /**
      * Returns an HTML string of information about a single variable.
      *
-     * @param array $config
+     * @param 	array 	$config An optional array with configuration options
      *
      * @internal param mixed $value variable to dump
      * @internal param int $string_length Maximum length of strings
@@ -26,7 +85,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @internal param int $array_level   Array recursion limit
      * @internal param int $resources     List of supported resources, where the keys are the resources names and the
      *                                    values a Callable used to get the resource info.
-     * @return  string
+     * @return  string Html
      */
     public function dump($config = array())
     {
@@ -61,13 +120,29 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'file'  => '',
-            'root'  => Koowa::getInstance()->getRootPath()
+            'file'   => '',
+            'line'   => '',
+            'root'   => Koowa::getInstance()->getRootPath(),
+            'editor' => $this->_editor,
         ));
 
         $html = $config->file;
         if (strpos($config->file, $config->root) === 0) {
             $html = '...'.DIRECTORY_SEPARATOR.trim(substr($config->file, strlen($config->root)), DIRECTORY_SEPARATOR);
+        }
+
+        if($config->editor && isset($this->_editors[$config->editor]))
+        {
+            $editor = $this->_editors[$config->editor];
+
+            if(is_callable($editor)) {
+                $editor = call_user_func($editor, $config->file, $config->line);
+            }
+
+            $editor = str_replace("%line", rawurlencode($config->line), $editor);
+            $editor = str_replace("%file", rawurlencode($config->file), $editor);
+
+            $html = '<a href="'.$editor.'" title="'.$html.'">'.$html.'</a>';
         }
 
         return $html;
@@ -153,7 +228,8 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'trace' => null
+            'trace'      => null,
+            'statements' => array('include', 'include_once', 'require', 'require_once')
         ));
 
         $trace = $config->trace;
@@ -162,9 +238,6 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
         if ($trace === NULL) {
             $trace = debug_backtrace();
         }
-
-        // Non-standard function calls
-        $statements = array('include', 'include_once', 'require', 'require_once');
 
         $output = array();
         foreach ($trace as $step)
@@ -191,7 +264,8 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
             // function()
             $function = $step['function'];
 
-            if (in_array($step['function'], $statements))
+            // Non-standard function calls
+            if (in_array($step['function'], $config->statements->toArray()))
             {
                 // No arguments
                 if (empty($step['args'])) {
@@ -275,7 +349,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpVar($var, $config, $level = 0)
+    protected function _dumpVar($var, KObjectConfig $config, $level = 0)
     {
         $output = array();
 
@@ -300,7 +374,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpNull($var, $config, $level = 0)
+    protected function _dumpNull($var, KObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-null">NULL</span>'."\n";
     }
@@ -313,7 +387,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpBoolean($var, $config, $level = 0)
+    protected function _dumpBoolean($var, KObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-bool">bool</span> '.($var ? 'TRUE' : 'FALSE');
     }
@@ -326,7 +400,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpInteger($var, $config, $level = 0)
+    protected function _dumpInteger($var, KObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-integer">'.$var.'</span>';
     }
@@ -339,7 +413,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpDouble($var, $config, $level = 0)
+    protected function _dumpDouble($var, KObjectConfig $config, $level = 0)
     {
         $var = is_finite($var) ? ($tmp = json_encode($var)) . (strpos($tmp, '.') === FALSE ? '.0' : '') : var_export($var, TRUE);
 
@@ -354,7 +428,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpString($var, $config, $level = 0)
+    protected function _dumpString($var, KObjectConfig $config, $level = 0)
     {
         if (mb_strlen($var) > $config->string_length) {
             $str = $this->getTemplate()->escape(mb_substr($var, 0, $config->string_length)).'&nbsp;&hellip;';
@@ -373,7 +447,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpArray($var, $config, $level = 0)
+    protected function _dumpArray($var, KObjectConfig $config, $level = 0)
     {
         static $marker;
 
@@ -426,7 +500,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpObject($var, $config, $level = 0)
+    protected function _dumpObject($var, KObjectConfig $config, $level = 0)
     {
         $fields = $this->_getObjectVars($var);
 
@@ -530,7 +604,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpResource($var, $config, $level = 0)
+    protected function _dumpResource($var, KObjectConfig $config, $level = 0)
     {
         $type = get_resource_type($var);
 
@@ -560,7 +634,7 @@ class KTemplateHelperDebug extends KTemplateHelperAbstract
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpIdentifier($var, $config, $level = 0)
+    protected function _dumpIdentifier($var, KObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-identifier">'.$var.'</span>'."\n";
     }
