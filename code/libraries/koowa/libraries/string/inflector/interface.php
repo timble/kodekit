@@ -73,50 +73,6 @@ interface KStringInflectorInterface
 	 */
 	public static function implode($words);
 
-   	/**
-	 * Returns a human-readable string from $word
-	 *
-	 * Returns a human-readable string from $word, by replacing underscores with a space, and by upper-casing the
-     * initial character by default.
-	 *
-	 * @param  string $word String to "humanize"
-	 * @return string Human-readable word
-     */
-	public static function humanize($word);
-
-   	/**
-	 * Converts a class name to its table name according to Koowa naming conventions.
-	 *
-	 * Converts "Person" to "people"
-	 *
-	 * @param  string $className    Class name for getting related table_name.
-	 * @return string plural_table_name
-	 * @see classify
-	 */
-	public static function tableize($className);
-
-   	/**
-	 * Converts a table name to its class name according to Koowa naming conventions.
-	 *
-	 * Converts "people" to "Person"
-	 *
-	 * @see tableize()
-	 * @param   string $table_name Table name for getting related ClassName.
-	 * @return  string
-	 */
-	public static function classify($table_name);
-
-	/**
-	 * Returns camelBacked version of a string.
-	 *
-	 * Same as camelize but first char is lowercased.
-	 *
-	 * @param string $string
-	 * @return string
-	 * @see camelize
-	 */
-	public static function variablize($string);
-
 	/**
 	 * Check to see if an English word is singular
 	 *

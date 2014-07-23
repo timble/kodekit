@@ -312,7 +312,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
             {
                 if (substr($method, 0, 11) == 'getProperty' && $method !== 'getProperty')
                 {
-                    $property = KStringInflector::variablize(substr($method, 11));
+                    $property = KStringInflector::underscore(substr($method, 11));
                     $properties[$property] = $property;
                 }
             }
