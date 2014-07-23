@@ -324,18 +324,10 @@ class KViewVcard extends KViewAbstract
      */
     protected function _encode($string)
     {
-        return $this->escape($this->_quoted_printable_encode($string));
-    }
+        $result = $this->_quoted_printable_encode($string);
+        $result = str_replace(';',"\;",$string);
 
-    /**
-     * Escape
-     *
-     * @param   string  String to escape
-     * @return  string  Escaped string
-     */
-    protected function _escape($string)
-    {
-        return str_replace(';',"\;",$string);
+        return $result;
     }
 
     /**
