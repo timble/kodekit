@@ -276,7 +276,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         }
 
         $attribs = $this->buildAttributes($config->attribs);
-        $value   = $this->escape($config->value);
+        $value   = $this->getTemplate()->escape($config->value);
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
         {

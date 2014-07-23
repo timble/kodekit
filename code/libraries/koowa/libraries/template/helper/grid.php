@@ -40,7 +40,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
         else
         {
             $column = $config->entity->getIdentityColumn();
-            $value  = $this->escape($config->entity->{$column});
+            $value  = $this->getTemplate()->escape($config->entity->{$column});
 
             $attribs = $this->buildAttributes($config->attribs);
 
@@ -76,10 +76,9 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
         else
         {
             $column = $config->column;
-            $value  = $this->escape($config->entity->{$column});
+            $value  = $this->getTemplate()->escape($config->entity->{$column});
 
             $attribs = $this->buildAttributes($config->attribs);
-
 
             $html = '<input type="checkbox" class="-koowa-grid-checkbox" name="%s[]" value="%s" %s />';
             $html = sprintf($html, $column, $value, $attribs);
@@ -143,7 +142,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         $html .= '<div class="search__container search__container--has_empty_button">';
         $html .= '<label for="search"><i class="icon-search"></i></label>';
-        $html .= '<input type="search" name="search" class="search_button" placeholder="'.$config->placeholder.'" value="'.$this->escape($config->search).'" />';
+        $html .= '<input type="search" name="search" class="search_button" placeholder="'.$config->placeholder.'" value="'.$this->getTemplate()->escape($config->search).'" />';
         $html .= '<a class="search_button--empty"><span>X</span></a>';
         $html .= '</div>';
 

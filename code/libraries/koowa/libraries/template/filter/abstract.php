@@ -74,19 +74,6 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     }
 
     /**
-     * Escape a string
-     *
-     * By default the function uses htmlspecialchars to escape the string
-     *
-     * @param string $string String to to be escape
-     * @return string Escaped string
-     */
-    public function escape($string)
-    {
-        return $this->getTemplate()->escape($string);
-    }
-
-    /**
      * Get the priority of a behavior
      *
      * @return  integer The command priority

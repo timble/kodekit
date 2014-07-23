@@ -153,7 +153,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                         continue;
                     }
 
-                    $name =  $this->escape($name);
+                    $name =  $this->getTemplate()->escape($name);
 
                     if (is_array($value))
                     {
@@ -163,13 +163,13 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
                                 continue;
                             }
 
-                            $v = $this->escape($v);
+                            $v = $this->getTemplate()->escape($v);
 
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'['.$k.']" value="'.$v.'" />';
                         }
                     }
                     else {
-                        $value  = $this->escape($value);
+                        $value  = $this->getTemplate()->escape($value);
                         $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
                     }
                 }
