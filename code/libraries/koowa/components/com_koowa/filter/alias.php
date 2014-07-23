@@ -35,12 +35,6 @@ class ComKoowaFilterAlias extends KFilterAbstract implements KFilterTraversable
 	 */
 	public function sanitize($value)
 	{
-		if (JFactory::getApplication()->getCfg('unicodeslugs') == 1) {
-            $value = JFilterOutput::stringURLUnicodeSlug($value);
-		} else {
-            $value = JFilterOutput::stringURLSafe($value);
-		}
-
-		return $value;
+        return JApplication::stringURLSafe($value);
 	}
 }
