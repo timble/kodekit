@@ -613,8 +613,11 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
             }
         }
 
-        if (($parts & self::QUERY) && !empty($this->_query)) {
-            $url .= '?' . $this->getQuery(false, $this->_escape);
+        if (($parts & self::QUERY) && !empty($this->_query))
+        {
+            if($query = $this->getQuery(false, $this->_escape)) {
+                $url .= '?' . $query;
+            }
         }
 
         if (($parts & self::FRAGMENT) && trim($this->fragment) !== '') {
