@@ -22,11 +22,30 @@ class ComKoowaDispatcherRouterRoute extends KDispatcherRouterRoute
         //Add the option to the query for compatibility with the Joomla router
         if(isset($query['component']))
         {
-            if(!isset($this->query['option'])) {
+            if(!isset($query['option'])) {
                 $query['option'] = 'com_'.$query['component'];
             }
 
             unset($query['component']);
+        }
+
+        if (isset($query['format']) && JFactory::getApplication()->getCfg('sef_suffix'))
+        {
+            // Convert format=rss to format=feed for compatibility with the Joomla router
+            if ($query['format'] === 'rss') {
+                $query['format'] = 'feed';
+            }
+            // Make sure .htaccess file can handle the format. Only a handful of formats are allowed before 3.3.1
+            else
+            {
+                $allowed = array('php', 'html', 'htm', 'feed', 'pdf', 'vcf', 'raw');
+
+                if (!in_array($query['format'], $allowed))
+                {
+                    $append_format = $query['format'];
+                    $query['format'] = 'raw';
+                }
+            }
         }
 
         //Push option and view to the beginning of the array for easy to read URLs
@@ -35,9 +54,14 @@ class ComKoowaDispatcherRouterRoute extends KDispatcherRouterRoute
         //Let Joomla build the route
         $route = JRoute::_('index.php?'.http_build_query($query), $this->_escape);
 
+        // We had to change the format in the URL above so that .htaccess file can catch it
+        if (isset($append_format)) {
+            $route .= (strpos($route, '?') !== false ? '&' : '?').'format='.$append_format;
+        }
+
         //Create a fully qualified route
         if(!empty($this->host) && !empty($this->scheme)) {
-            $route = $authority = parent::toString(self::AUTHORITY) . '/' . ltrim($route, '/');
+            $route = parent::toString(self::AUTHORITY) . '/' . ltrim($route, '/');
         }
 
         return $route;
