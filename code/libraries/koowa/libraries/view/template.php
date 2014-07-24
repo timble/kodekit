@@ -244,7 +244,7 @@ abstract class KViewTemplate extends KViewAbstract
      * @param string|array $route   The query string used to create the route
      * @param boolean $fqr          If TRUE create a fully qualified route. Default TRUE.
      * @param boolean $escape       If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return KHttpUrl             The route
+     * @return  KDispatcherRouterRoute The route
      */
     public function getRoute($route = '', $fqr = true, $escape = true)
     {
@@ -255,8 +255,8 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         //Check to see if there is component information in the route if not add it
-        if (!isset($parts['option'])) {
-            $parts['option'] = 'com_' . $this->getIdentifier()->package;
+        if (!isset($parts['component'])) {
+            $parts['component'] = $this->getIdentifier()->package;
         }
 
         //Add the view information to the route if it's not set
@@ -266,7 +266,7 @@ abstract class KViewTemplate extends KViewAbstract
 
         if (!isset($parts['layout']) && !empty($this->_layout))
         {
-            if ((substr($parts['option'], 4) == $this->getIdentifier()->package) && ($parts['view'] == $this->getName())) {
+            if (($parts['component'] == $this->getIdentifier()->package) && ($parts['view'] == $this->getName())) {
                 $parts['layout'] = $this->getLayout();
             }
         }

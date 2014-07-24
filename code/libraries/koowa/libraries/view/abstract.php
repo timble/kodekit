@@ -413,21 +413,20 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
      *
      * - foo=bar
-     * - option=com_mycomp&view=myview&foo=bar
+     * - component=[package]&view=[name]&foo=bar
 	 *
 	 * In templates, use @route()
 	 *
      * @param   string|array $route  The query string or array used to create the route
-     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to FALSE.
+     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  KHttpUrl     The route
+     * @return  KDispatcherRouterRoute The route
 	 */
 	public function getRoute($route = '', $fqr = true, $escape = true)
 	{
         //Parse route
         $parts = array();
 
-        //@TODO : Check if $route if valid. Throw exception if not.
         if(is_string($route)) {
             parse_str(trim($route), $parts);
         } else {
@@ -435,8 +434,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         }
 
         //Check to see if there is component information in the route if not add it
-        if (!isset($parts['option'])) {
-            $parts['option'] = 'com_' . $this->getIdentifier()->package;
+        if (!isset($parts['component'])) {
+            $parts['component'] = $this->getIdentifier()->package;
         }
 
         //Add the view information to the route if it's not set
@@ -450,7 +449,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         }
 
         //Add the model state only for routes to the same view
-        if ($parts['option'] == 'com_'.$this->getIdentifier()->package && $parts['view'] == $this->getName())
+        if ($parts['component'] == $this->getIdentifier()->package && $parts['view'] == $this->getName())
         {
             $states = array();
             foreach($this->getModel()->getState() as $name => $state)
@@ -463,17 +462,15 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
             $parts = array_merge($states, $parts);
         }
 
-        // Push option and view to the beginning of the array for easy to read URLs
-        $parts = array_merge(array(
-            'option' => null,
-            'view'   => null
-        ), $parts);
-
-        $route = JRoute::_('index.php?'.http_build_query($parts), $escape);
+        //Create the route
+        $route = $this->getObject('lib:dispatcher.router.route', array('escape' =>  $escape))
+                      ->setQuery($parts);
 
         //Add the host and the schema
-        if ($fqr === true) {
-            $route = $this->getUrl()->toString(KHttpUrl::AUTHORITY) . '/' . ltrim($route, '/');
+        if ($fqr === true)
+        {
+            $route->scheme = $this->getUrl()->scheme;
+            $route->host   = $this->getUrl()->host;
         }
 
         return $route;

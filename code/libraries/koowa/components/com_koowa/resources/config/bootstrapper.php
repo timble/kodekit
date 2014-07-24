@@ -19,6 +19,7 @@ return array(
         'exception.handler'             => 'com:koowa.exception.handler',
         'date'                          => 'com:koowa.date',
         'event.publisher'               => 'com:koowa.event.publisher',
-        'user.provider'                 => 'com:koowa.user.provider'
+        'user.provider'                 => 'com:koowa.user.provider',
+        'lib:dispatcher.router.route'   => 'com:koowa.dispatcher.router.route'
     ),
 );

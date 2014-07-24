@@ -162,16 +162,16 @@ interface KViewInterface
      * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
      *
      * - foo=bar
-     * - option=com_mycomp&view=myview&foo=bar
+     * - component=[package]&view=[name]&foo=bar
      *
      * In templates, use @route()
      *
      * @param   string|array $route  The query string or array used to create the route
-     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to FALSE.
+     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  KHttpUrl     The route
+     * @return  KDispatcherRouterRoute The route
      */
-    //public function getRoute($route, $fqr = null, $escape = null);
+    //public function getRoute($route, $fqr = true, $escape = true);
 
     /**
      * Get the view context
