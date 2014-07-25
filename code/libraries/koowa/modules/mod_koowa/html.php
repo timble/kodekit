@@ -84,6 +84,22 @@ class ModKoowaHtml extends KViewHtml
     }
 
     /**
+     * Accepts Joomla style module layout formats such as _:default.html
+     *
+     * {@inheritdoc}
+     */
+    public function setLayout($layout)
+    {
+        if (strpos($layout, ':'))
+        {
+            $layout = explode(':', $layout);
+            $layout = str_replace('.html', '', array_pop($layout));
+        }
+
+        return parent::setLayout($layout);
+    }
+
+    /**
      * Set a view properties
      *
      * @param   string  $property The property name.
