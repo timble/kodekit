@@ -20,9 +20,9 @@ defined('KOOWA') or die; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 
-    <style src="media://koowa/com_koowa/css/bootstrap.css" type="text/css" />
+    <ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />
 
-    <script type="text/javascript">
+    <script>
     // Add a "joomla_modal" class to the HTML element if we are rendering inside a Squeezebox modal
     if (window.parent && window.parent != window) {
         document.documentElement.className += " inside_modal";

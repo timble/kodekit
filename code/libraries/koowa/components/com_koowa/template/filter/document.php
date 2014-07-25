@@ -27,82 +27,80 @@ class ComKoowaTemplateFilterDocument extends KTemplateFilterAbstract implements 
 
     public function render(&$text)
     {
-        if($this->getTemplate()->getView()->getLayout() !== 'koowa') {
-            return;
-        }
-
-        $head = JFactory::getDocument()->getHeadData();
-        $mime = JFactory::getDocument()->getMimeEncoding();
-
-        ob_start();
-
-        echo '<title>'.$head['title'].'</title>';
-
-        // Generate stylesheet links
-        foreach ($head['styleSheets'] as $source => $attributes)
+        if($this->getTemplate()->getView()->getLayout() == 'koowa')
         {
-            $attributes['type'] = $attributes['mime'];
-            unset($attributes['mime']);
+            $head = JFactory::getDocument()->getHeadData();
+            $mime = JFactory::getDocument()->getMimeEncoding();
 
-            echo sprintf('<style src="%s" %s />', $source, $this->buildAttributes($attributes));
-        }
+            ob_start();
 
-        // Generate stylesheet declarations
-        foreach ($head['style'] as $type => $content)
-        {
-            // This is for full XHTML support.
-            if ($mime != 'text/html') {
-                $content = "<![CDATA[\n".$content."\n]]>";
+            echo '<title>'.$head['title'].'</title>';
+
+            // Generate stylesheet links
+            foreach ($head['styleSheets'] as $source => $attributes)
+            {
+                $attributes['type'] = $attributes['mime'];
+                unset($attributes['mime']);
+
+                echo sprintf('<ktml:style src="%s" %s />', $source, $this->buildAttributes($attributes));
             }
 
-            echo sprintf('<style type="%s">%s</style>', $type, $content);
-        }
+            // Generate stylesheet declarations
+            foreach ($head['style'] as $type => $content)
+            {
+                // This is for full XHTML support.
+                if ($mime != 'text/html') {
+                    $content = "<![CDATA[\n".$content."\n]]>";
+                }
 
-        // Generate script file links
-        foreach ($head['scripts'] as $path => $attributes)
-        {
-            $attributes['type'] = $attributes['mime'];
-            unset($attributes['mime']);
-
-            echo sprintf('<script src="%s" %s />', $path, $this->buildAttributes($attributes));
-        }
-
-        // Generate script declarations
-        foreach ($head['script'] as $type => $content)
-        {
-            // This is for full XHTML support.
-            if ($mime != 'text/html') {
-                $content = "<![CDATA[\n".$content."\n]]>";
+                echo sprintf('<style type="%s">%s</style>', $type, $content);
             }
 
-            echo sprintf('<script type="%s">%s</script>', $type, $content);
+            // Generate script file links
+            foreach ($head['scripts'] as $path => $attributes)
+            {
+                $attributes['type'] = $attributes['mime'];
+                unset($attributes['mime']);
+
+                echo sprintf('<ktml:script src="%s" %s />', $path, $this->buildAttributes($attributes));
+            }
+
+            // Generate script declarations
+            foreach ($head['script'] as $type => $content)
+            {
+                // This is for full XHTML support.
+                if ($mime != 'text/html') {
+                    $content = "<![CDATA[\n".$content."\n]]>";
+                }
+
+                echo sprintf('<script type="%s">%s</script>', $type, $content);
+            }
+
+            foreach ($head['custom'] as $custom) {
+                echo $custom."\n";
+            }
+
+
+            // Generate script language declarations.
+            if (count(JText::script()))
+            {
+                echo '<script type="text/javascript">';
+                echo '(function() {';
+                echo 'var strings = ' . json_encode(JText::script()) . ';';
+                echo 'if (typeof Joomla == \'undefined\') {';
+                echo 'Joomla = {};';
+                echo 'Joomla.JText = strings;';
+                echo '}';
+                echo 'else {';
+                echo 'Joomla.JText.load(strings);';
+                echo '}';
+                echo '})();';
+                echo '</script>';
+            }
+
+            $head = ob_get_clean();
+
+            $text = $head.$text;
         }
-
-        foreach ($head['custom'] as $custom)
-        {
-            echo $custom."\n";
-        }
-
-
-        // Generate script language declarations.
-        if (count(JText::script()))
-        {
-            echo '<script type="text/javascript">';
-            echo '(function() {';
-            echo 'var strings = ' . json_encode(JText::script()) . ';';
-            echo 'if (typeof Joomla == \'undefined\') {';
-            echo 'Joomla = {};';
-            echo 'Joomla.JText = strings;';
-            echo '}';
-            echo 'else {';
-            echo 'Joomla.JText.load(strings);';
-            echo '}';
-            echo '})();';
-            echo '</script>';
-        }
-
-        $head = ob_get_clean();
-
-        $text = $head.$text;
     }
 }

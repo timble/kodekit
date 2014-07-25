@@ -11,7 +11,7 @@ defined('KOOWA') or die; ?>
 
 <title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code];; ?></title>
 
-<script type="text/javascript">
+<script>
     document.documentElement.className = document.documentElement.className + ' js';
     function toggleElement(elem)
     {
@@ -37,7 +37,7 @@ defined('KOOWA') or die; ?>
     }
 </script>
 
-<style type="text/css">
+<style>
     .error { background: #ddd; font-size: 1em; font-family:sans-serif; text-align: left; color: #111; }
     .error h1,
     .error h2 { margin: 0; padding: 1em 1em 0.5em; font-size: 1em; font-weight: normal; background: #DA2121; color: #fff; }

@@ -8,22 +8,22 @@
  */
 
 /**
- * Url Template Filter
+ * Asset Template Filter
  *
- * Filter allows to create url aliases that are replaced on compile and render. A default media:// alias is
+ * Filter allows to define asset url schemes that are replaced on compile and render. A default media:// scheme is
  * added that is rewritten to '/media/'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateFilterUrl extends KTemplateFilterAbstract implements KTemplateFilterCompiler, KTemplateFilterRenderer
+class KTemplateFilterAsset extends KTemplateFilterAbstract implements KTemplateFilterCompiler, KTemplateFilterRenderer
 {
     /**
-     * The alias map
+     * The schemes
      *
      * @var array
      */
-    protected $_aliases;
+    protected $_schemes;
 
     /**
      * Constructor.
@@ -34,8 +34,8 @@ class KTemplateFilterUrl extends KTemplateFilterAbstract implements KTemplateFil
     {
         parent::__construct($config);
 
-        foreach($config->aliases as $alias => $path) {
-            $this->addAlias($alias, $path);
+        foreach($config->schemes as $alias => $path) {
+            $this->addScheme($alias, $path);
         }
     }
 
@@ -50,27 +50,27 @@ class KTemplateFilterUrl extends KTemplateFilterAbstract implements KTemplateFil
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'aliases' => array('media://' => '/media/'),
+            'schemes' => array('media://' => '/media/'),
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Add a path alias
+     * Add a url scheme
      *
-     * @param string $alias Alias to be appended
-     * @param mixed  $value Value
-     * @return KTemplateFilterUrl
+     * @param string $scheme Scheme to be appended
+     * @param mixed  $path   The path to replace the scheme
+     * @return KTemplateFilterAsset
      */
-    public function addAlias($alias, $value)
+    public function addScheme($alias, $path)
     {
-        $this->_aliases[$alias] = $value;
+        $this->_schemes[$alias] = $path;
         return $this;
     }
 
     /**
-     * Convert the schemas to their real paths
+     * Convert the schemes to their real paths
      *
      * @param string $text  The text to parse
      * @return void
@@ -78,13 +78,13 @@ class KTemplateFilterUrl extends KTemplateFilterAbstract implements KTemplateFil
     public function compile(&$text)
     {
         $text = str_replace(
-            array_keys($this->_aliases),
-            array_values($this->_aliases),
+            array_keys($this->_schemes),
+            array_values($this->_schemes),
             $text);
     }
 
     /**
-     * Convert the schemas to their real paths
+     * Convert the schemes to their real paths
      *
      * @param string $text  The text to parse
      * @return void
@@ -92,8 +92,8 @@ class KTemplateFilterUrl extends KTemplateFilterAbstract implements KTemplateFil
     public function render(&$text)
     {
         $text = str_replace(
-            array_keys($this->_aliases),
-            array_values($this->_aliases),
+            array_keys($this->_schemes),
+            array_values($this->_schemes),
             $text);
     }
 }
