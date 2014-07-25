@@ -19,8 +19,8 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Read from a file and create a config object
      *
      * @param  string $filename
-     * @return $this
      * @throws \RuntimeException
+     * @return KObjectConfigFormat
      */
     public function fromFile($filename)
     {
@@ -38,9 +38,9 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Write a config object to a file.
      *
      * @param  string  $filename
-     * @return void
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     * @return void
      */
     public function toFile($filename)
     {
@@ -58,7 +58,6 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
             throw new RuntimeException(sprintf("Cannot write in directory : %s", $directory));
         }
 
-        //Try to write the file
         $result = file_put_contents($filename, $this->toString(), LOCK_EX);
 
         if($result === false) {

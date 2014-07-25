@@ -33,6 +33,9 @@ class KTemplateFilterFunction extends KTemplateFilterAbstract implements KTempla
         '@escape('    => '$this->escape(',
         '@title('     => '$this->getView()->getTitle(',
         '@url('       => '$this->getView()->getUrl()->toString(',
+        '@json('      => 'json_encode(',
+        '@format('    => 'sprintf(',
+        '@replace('   => 'strtr(',
     );
 
     /**

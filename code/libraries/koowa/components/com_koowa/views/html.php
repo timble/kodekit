@@ -38,7 +38,7 @@ class ComKoowaViewHtml extends KViewHtml
      * @param boolean $escape       If TRUE escapes the route for xml compliance. Default TRUE.
      * @return KHttpUrl             The route
      */
-    public function getRoute($route = '', $fqr = true, $escape = true)
+    public function getRoute($route = '', $fqr = false, $escape = true)
     {
         if(is_string($route)) {
             parse_str(trim($route), $parts);

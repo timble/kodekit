@@ -245,8 +245,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
 
         if (!isset(self::$_loaded['calendar']))
         {
-            $html .= '<script src="media://koowa/com_koowa/js/datepicker'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<script src="media://koowa/com_koowa/js/koowa.datepicker.js" />';
+            $html .= '<ktml:script src="media://koowa/com_koowa/js/datepicker'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://koowa/com_koowa/js/koowa.datepicker.js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -276,7 +276,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         }
 
         $attribs = $this->buildAttributes($config->attribs);
-        $value   = $this->escape($config->value);
+        $value   = $this->getTemplate()->escape($config->value);
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
         {

@@ -187,7 +187,7 @@ class KModelDatabase extends KModelAbstract
 		    {
 		        $identifier         = $this->getIdentifier()->toArray();
 		        $identifier['path'] = array('database', 'table');
-		        $identifier['name'] = KStringInflector::tableize($table);
+		        $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
 
                 $identifier = $this->getIdentifier($identifier);
 		    }

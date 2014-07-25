@@ -8,12 +8,12 @@
  */
 
 /**
- * Filter Factory
+ * Dispatcher Route
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Library\Dispatcher
  */
-class ComKoowaFilterFactory extends KFilterFactory
+class KDispatcherRouterRoute extends KHttpUrl
 {
 
 }

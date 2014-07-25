@@ -10,12 +10,12 @@
 /**
  * Url Template Filter
  *
- * Filter allows to create url aliases that are replaced on compile and render.
+ * Filter allows to create url schemes that are replaced on compile and render.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class ComKoowaTemplateFilterUrl extends KTemplateFilterUrl
+class ComKoowaTemplateFilterAsset extends KTemplateFilterAsset
 {
     /**
      * Initializes the options for the object
@@ -30,7 +30,7 @@ class ComKoowaTemplateFilterUrl extends KTemplateFilterUrl
         $path = rtrim($this->getObject('request')->getSiteUrl()->getPath(), '/');
 
         $config->append(array(
-            'aliases' => array(
+            'schemes' => array(
                 'media://' => $path.'/media/',
                 'root://'  => $path.'/',
                 'base://'  => rtrim($this->getObject('request')->getBaseUrl()->getPath(), '/').'/',

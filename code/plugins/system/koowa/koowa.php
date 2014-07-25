@@ -126,8 +126,8 @@ class PlgSystemKoowa extends JPlugin
             $loader      = $manager->getClassLoader();
 
             //Application basepaths
-            $loader->registerNamespace('site' , JPATH_SITE);
-            $loader->registerNamespace('admin', JPATH_ADMINISTRATOR);
+            $loader->registerNamespace('site' , JPATH_SITE, JFactory::getApplication()->isSite());
+            $loader->registerNamespace('admin', JPATH_ADMINISTRATOR, JFactory::getApplication()->isAdmin());
 
             /**
              * Component Bootstrapping

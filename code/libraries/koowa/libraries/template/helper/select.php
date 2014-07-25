@@ -82,7 +82,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
             if (is_numeric($group)) {
                 $options = array($options);
             } else {
-                $html[] = '<optgroup label="' . $this->escape($group) . '">';
+                $html[] = '<optgroup label="' . $this->getTemplate()->escape($group) . '">';
             }
 
             foreach ($options as $option)

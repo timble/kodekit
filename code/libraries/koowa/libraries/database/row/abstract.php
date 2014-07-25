@@ -356,7 +356,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             {
                 if (substr($method, 0, 11) == 'getProperty' && $method !== 'getProperty')
                 {
-                    $property = KStringInflector::variablize(substr($method, 11));
+                    $property = KStringInflector::underscore(substr($method, 11));
                     $properties[$property] = $property;
                 }
             }
@@ -508,7 +508,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             {
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('database', 'table');
-                $identifier['name'] = KStringInflector::tableize($table);
+                $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
 
                 $identifier = $this->getIdentifier($identifier);
             }

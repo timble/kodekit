@@ -216,10 +216,10 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
      *  Seek to a specific position in the stream.
      *
      * @param int $offset
-     * @param int $whence Can be SEEK_SET, SEEK_CUR or SEEK_END
+     * @param int $whence Can be SEEK_SET, SEEK_CUR or SEEK_END. Default SEEK_SET
      * @return boolean
      */
-    public function stream_seek($offset, $whence)
+    public function stream_seek($offset, $whence = SEEK_SET)
     {
         if(!is_resource($this->_data))
         {
@@ -313,5 +313,10 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
     public function url_stat($path, $options)
     {
         return $this->stream_stat();
+    }
+
+    public function realpath()
+    {
+        return 'test';
     }
 }

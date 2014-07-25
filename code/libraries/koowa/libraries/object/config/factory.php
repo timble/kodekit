@@ -8,7 +8,7 @@
  */
 
 /**
- * KObjectConfig provides a property based interface to an array
+ * Object Config Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
@@ -46,6 +46,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
     {
         $config->append(array(
             'formats' => array(
+                'php'  => 'KObjectConfigPhp',
                 'ini'  => 'KObjectConfigIni',
                 'json' => 'KObjectConfigJson',
                 'xml'  => 'KObjectConfigXml',
@@ -61,7 +62,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      *
      * @param  string $format The format name
      * @param   array|KObjectConfig $options An associative array of configuration options or a ObjectConfig instance.
-     * @throws \RuntimeException    If the format isn't registered
+     * @throws \RuntimeException            If the format isn't registered
      * @throws \UnexpectedValueException	If the format object doesn't implement the ObjectConfigSerializable
      * @return KObjectConfigFormat
      */
@@ -98,8 +99,8 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      *
      * @param string $format The name of the format
      * @param mixed  $class Class name
-     * @return $this
-     * @throws \InvalidArgumentException If the class does not exist.
+     * @throws \InvalidArgumentException If the class does not exist
+     * @return KObjectConfigFactory
      */
     public function registerFormat($format, $class)
     {
@@ -116,9 +117,9 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      *
      * @param  string  $format
      * @param  string  $config
-     * @return KObjectConfigInterface
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     * @return KObjectConfigInterface
      */
     public function fromString($format, $config)
     {
@@ -130,9 +131,9 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      * Read a config from a file.
      *
      * @param  string  $filename
-     * @return KObjectConfigInterface
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     * @return KObjectConfigInterface
      */
     public function fromFile($filename)
     {
@@ -154,8 +155,8 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      *
      * @param string $filename
      * @param KObjectConfigInterface $config
-     * @return boolean TRUE on success. FALSE on failure
      * @throws \RuntimeException
+     * @return boolean TRUE on success. FALSE on failure
      */
     public function toFile($filename, KObjectConfigInterface $config)
     {

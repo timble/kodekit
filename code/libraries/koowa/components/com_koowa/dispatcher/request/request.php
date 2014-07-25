@@ -35,4 +35,20 @@ class ComKoowaDispatcherRequest extends KDispatcherRequest
 
         return $url;
     }
+
+    /**
+     * Forces format to "rss" if it comes in as "feed" per Joomla conventions if SEF suffixes are enabled
+     *
+     * {@inheritdoc}
+     */
+    public function getFormat()
+    {
+        $format = parent::getFormat();
+
+        if (JFactory::getApplication()->getCfg('sef_suffix') && $format === 'feed') {
+            $format = 'rss';
+        }
+
+        return $format;
+    }
 }

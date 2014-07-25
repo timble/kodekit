@@ -46,14 +46,6 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     public function has($name);
 
     /**
-     * Remove a configuration option
-     *
-     * @param   string $name The configuration option name.
-     * @return  KObjectConfigInterface
-     */
-    public function remove( $name );
-
-    /**
      * Add options
      *
      * This method will overwrite keys that already exist, keys that don't exist yet will be added.
@@ -62,6 +54,14 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @return KObjectConfigInterface
      */
     public function add($options);
+
+    /**
+     * Remove a configuration option
+     *
+     * @param   string $name The configuration option name.
+     * @return  KObjectConfigInterface
+     */
+    public function remove( $name );
 
     /**
      * Append values

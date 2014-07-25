@@ -41,7 +41,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
                 JHtml::_('bootstrap.framework');
                 self::$_loaded['bootstrap-javascript'] = true;
             }
-            else $html .= '<script src="media://koowa/com_koowa/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
+            else $html .= '<ktml:script src="media://koowa/com_koowa/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
         }
 
         return $html;
@@ -93,13 +93,13 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             if ($config->load_base)
             {
                 if (!file_exists($template.'/disable-joomlatools-bootstrap')) {
-                    $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
+                    $html .= '<ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />';
                 }
             }
             else
             {
                 if (file_exists($template.'/enable-joomlatools-bootstrap')) {
-                    $html .= '<style src="media://koowa/com_koowa/css/bootstrap.css" />';
+                    $html .= '<ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />';
                 }
             }
 
@@ -121,7 +121,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             {
                 if (file_exists(JPATH_ROOT.'/media/'.$file))
                 {
-                    $html .= sprintf('<style src="media://%s" />', $file);
+                    $html .= sprintf('<ktml:style src="media://%s" />', $file);
 
                     self::$_loaded[$config->package.'-'.$config->file] = true;
                     break;

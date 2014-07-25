@@ -274,9 +274,9 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         {
             $identifier = $this->getIdentifier($config->identifier);
             $parts      = array(
-                'option' => 'com_'.$identifier->package,
-                'view'   => $identifier->name,
-                'format' => 'json'
+                'component' => $identifier->package,
+                'view'      => $identifier->name,
+                'format'    => 'json'
             );
 
             if ($config->filter) {

@@ -34,7 +34,7 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'title' => KStringInflector::humanize($this->getName()),
+            'title' => ucfirst($this->getName()),
             'icon'  => $this->getName(),
         ));
 

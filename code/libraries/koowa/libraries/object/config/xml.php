@@ -19,8 +19,8 @@ class KObjectConfigXml extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @return $this
-     * @throws \RuntimeException
+     * @throws \DomainException
+     * @return KObjectConfigXml
      */
     public function fromString($string)
     {
@@ -28,7 +28,12 @@ class KObjectConfigXml extends KObjectConfigFormat
 
         if(!empty($string))
         {
-            $xml  = simplexml_load_string($string);
+            $xml = simplexml_load_string($string);
+
+            if($xml === false) {
+                throw new DomainException('Cannot parse XML string');
+            }
+
             foreach ($xml->children() as $node) {
                 $data[(string) $node['name']] = self::_decodeValue($node);
             }
@@ -37,6 +42,20 @@ class KObjectConfigXml extends KObjectConfigFormat
         $this->add($data);
 
         return $this;
+    }
+
+    /**
+     * Write a config object to a string.
+     *
+     * @return string|false   Returns a XML encoded string on success. False on failure.
+     */
+    public function toString()
+    {
+        $xml  = simplexml_load_string('<config />');
+        $data = $this->toArray();
+        array_walk($data, array($this, '_addChildren'), $xml);
+
+        return $xml->asXML();
     }
 
     protected function _addChildren($value, $key, $node)
@@ -55,20 +74,6 @@ class KObjectConfigXml extends KObjectConfigFormat
 
             array_walk($value, array($this, '_addChildren'), $n);
         }
-    }
-
-    /**
-     * Write a config object to a string.
-     *
-     * @return string|false   Returns a XML encoded string on success. False on failure.
-     */
-    public function toString()
-    {
-        $xml  = simplexml_load_string('<config />');
-        $data = $this->toArray();
-        array_walk($data, array($this, '_addChildren'), $xml);
-
-        return $xml->asXML();
     }
 
     /**

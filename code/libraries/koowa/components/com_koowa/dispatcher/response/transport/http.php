@@ -13,7 +13,7 @@
  * Pass all 'html' GET requests rendered outside of 'koowa' context on to Joomla.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTransportHttp
 {

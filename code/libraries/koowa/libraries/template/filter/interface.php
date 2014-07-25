@@ -42,16 +42,6 @@ interface KTemplateFilterInterface extends KObjectHandlable
     public function translate($string, array $parameters = array());
 
     /**
-     * Escape a string
-     *
-     * By default the function uses htmlspecialchars to escape the string
-     *
-     * @param string $string String to to be escape
-     * @return string Escaped string
-     */
-    public function escape($string);
-
-    /**
      * Get the template object
      *
      * @return  object	The template object

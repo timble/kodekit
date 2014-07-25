@@ -11,7 +11,7 @@
  * Persistable Controller Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Component\Koowa
  */
 class ComKoowaControllerBehaviorPersistable extends KControllerBehaviorPersistable
 {
