@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class KTemplateHelperDebug extends KTemplateHelperAbstract
+class KTemplateHelperDebug extends KTemplateHelperBehavior
 {
     /**
      * A string identifier for a known IDE/text editor,
