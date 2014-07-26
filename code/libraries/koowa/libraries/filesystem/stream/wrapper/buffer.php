@@ -75,7 +75,7 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
         //Open the file or create a temp file
         if($this->_type == 'temp')
         {
-            $this->_path = $this->_getTemporaryFile();
+            $this->_path = $this->getTemporaryFile();
             $this->_data = fopen($this->_path, $this->getMode());
 
             if ($options & STREAM_USE_PATH) {
