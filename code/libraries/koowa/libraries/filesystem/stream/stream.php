@@ -386,10 +386,10 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      */
     public function getPath()
     {
-        if($this->getData('wrapper_data') instanceof KFilesystemStreamWrapperInterface) {
-            $path = $this->getData('wrapper_data')->getPath();
+        if($this->getMetaData('wrapper_data') instanceof KFilesystemStreamWrapperInterface) {
+            $path = $this->getMetaData('wrapper_data')->getPath();
         } else {
-            $path = $this->getData('uri');
+            $path = $this->getMetaData('uri');
         }
 
         return $path;
@@ -484,14 +484,14 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     public function getType()
     {
         $type = self::TYPE_UNKNOWN;
-        if(!$this->getData('wrapper_data') instanceof KFilesystemStreamWrapperInterface)
+        if(!$this->getMetaData('wrapper_data') instanceof KFilesystemStreamWrapperInterface)
         {
             if($path = $this->getPath()) {
                 $type = filetype($path);
             }
 
         }
-        else $type = $this->getData('wrapper_data')->getType();
+        else $type = $this->getMetaData('wrapper_data')->getType();
 
         return $type;
     }
@@ -513,10 +513,10 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      *
      * @link http://php.net/manual/en/function.stream-get-meta-data.php
      *
-     * @param string $key Specific metadata to retrieve
+     * @param string $key Specific metadata option to retrieve
      * @return array|mixed|null
      */
-    public function getData($key = null)
+    public function getMetaData($key = null)
     {
         $result = null;
 
@@ -533,13 +533,13 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     }
 
     /**
-     * Set custom options on the stream
+     * Set a custom metadata option on the stream
      *
      * @param string $name   Name of the option to set
      * @param mixed  $value  Value to set
      * @return KFilesystemStreamInterface
      */
-    public function setData($name, $value)
+    public function setMetaData($name, $value)
     {
         if(is_resource($this->_resource))
         {
@@ -724,16 +724,16 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      */
     public function getWrapper()
     {
-        if(! $this->getData('wrapper_data') instanceof KFilesystemStreamWrapperInterface)
+        if(! $this->getMetaData('wrapper_data') instanceof KFilesystemStreamWrapperInterface)
         {
-            $protocol = $this->getData('wrapper_type');
+            $protocol = $this->getMetaData('wrapper_type');
 
             //PHP reports a wrapper_type of 'plainfile' for the 'file' protocol.
             if($protocol == 'plainfile') {
                 $protocol = 'file';
             }
         }
-        else $protocol = $this->getData('wrapper_data')->getName();
+        else $protocol = $this->getMetaData('wrapper_data')->getName();
 
         return $protocol;
     }
@@ -774,7 +774,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     public function isReadable()
     {
         $result = false;
-        if($mode = $this->getData('mode')) {
+        if($mode = $this->getMetaData('mode')) {
             $result =  isset(self::$modes['read'][$mode]);
         }
 
@@ -789,7 +789,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     public function isWritable()
     {
         $result = false;
-        if($mode = $this->getData('mode')) {
+        if($mode = $this->getMetaData('mode')) {
             $result =  isset(self::$modes['write'][$mode]);
         }
 
@@ -817,7 +817,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      */
     public function isSeekable()
     {
-        return (boolean) $this->getData('seekable');
+        return (boolean) $this->getMetaData('seekable');
     }
 
     /**

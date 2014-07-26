@@ -211,19 +211,19 @@ interface KFilesystemStreamInterface
      *
      * @link http://php.net/manual/en/function.stream-get-meta-data.php
      *
-     * @param string $key Specific metadata to retrieve
+     * @param string $key Specific metadata option to retrieve
      * @return array|mixed|null
      */
-    public function getData($key = null);
+    public function getMetaData($key = null);
 
     /**
-     * Set custom options on the stream
+     * Set a custom metadata option on the stream
      *
      * @param string $name   Name of the option to set
      * @param mixed  $value  Value to set
      * @return KFilesystemStreamInterface
      */
-    public function setData($name, $value);
+    public function setMetaData($name, $value);
 
     /**
      * Get the stream context
