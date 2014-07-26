@@ -126,9 +126,16 @@ interface KFilesystemStreamInterface
     /**
      * Close the underlying stream
      *
-     * @return KFilesystemStreamInterface
+     * @return bool Returns TRUE on success, FALSE on failure
      */
     public function close();
+
+    /**
+     * Delete the resource and close the underlying stream
+     *
+     * @return bool Returns TRUE on success, FALSE on failure
+     */
+    public function delete();
 
     /**
      * Convert the stream to a string if the stream is readable and the stream is seekable.
@@ -152,13 +159,6 @@ interface KFilesystemStreamInterface
      * @return bool|string Returns false on failure or a hash string on success
      */
     public function getHash($algo = 'sha1', $raw = false);
-
-    /**
-     * Get the stream wrapper type
-     *
-     * @return string
-     */
-    public function getProtocol();
 
     /**
      * Get the path or uri associated with this stream
@@ -282,30 +282,19 @@ interface KFilesystemStreamInterface
     public function getFilters();
 
     /**
-     * Register the stream wrapper
+     * Get the stream wrapper name
      *
-     * Function prevents from registering the wrapper twice
-     *
-     * @param mixed $wrapper An ObjectIdentifier object or valid identifier string
-     * @param array $config A config object
-     * @return bool Returns TRUE on success, FALSE on failure.
+     * @return string
      */
-    public function registerWrapper($wrapper, $config = array());
+    public function getWrapper();
 
     /**
-     * Un Register a stream wrapper
+     * Register a stream wrapper
      *
-     * @param mixed $wrapper An ObjectIdentifier object or valid identifier string
+     * @param string $identifier A wrapper object identifier string
      * @return bool Returns TRUE on success, FALSE on failure.
      */
-    public function unregisterWrapper($wrapper);
-
-    /**
-     * Get a list of all the registered stream wrappers
-     *
-     * @return array
-     */
-    public function getWrappers();
+    public function registerWrapper($identifier);
 
     /**
      * Check if the stream is a local stream vs a remote stream
@@ -352,21 +341,4 @@ interface KFilesystemStreamInterface
      * @return bool
      */
     public function isConsumed();
-
-    /**
-    /**
-     * Check if the stream wrapper is registered for a specific protocol
-     *
-     * @param string $protocol
-     * @return bool TRUE if the path is a registered stream URL, FALSE otherwise.
-     */
-    public function isRegistered($protocol);
-
-    /**
-     * Check if the stream wrapper for a registered protocol is supported
-     *
-     * @param string $protocol
-     * @return bool TRUE if the protocol is a registered stream wrapper and is supported, FALSE otherwise.
-     */
-    public function isSupported($protocol);
 }

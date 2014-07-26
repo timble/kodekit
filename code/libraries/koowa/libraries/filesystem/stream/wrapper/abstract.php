@@ -16,13 +16,6 @@
 abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFilesystemStreamWrapperInterface
 {
     /**
-     * The wrapper protocol
-     *
-     * @var string
-     */
-    protected $_protocol;
-
-    /**
      * The wrapper type
      *
      * @var string
@@ -42,20 +35,6 @@ abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFile
      * @var int
      */
     protected $_position;
-
-    /**
-     * The stream length
-     *
-     * @var int
-     */
-    protected $_length;
-
-    /**
-     * Content of stream
-     *
-     * @var string
-     */
-    protected $_data;
 
     /**
      * The stream mode
@@ -97,8 +76,7 @@ abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFile
         {
             parent::__construct($config);
 
-            $this->_protocol = $config->protocol;
-            $this->_type     = $config->type;
+            $this->_type = $config->type;
         }
     }
 
@@ -113,58 +91,8 @@ abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFile
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'protocol' => '',
-            'type'     => KFilesystemStreamInterface::TYPE_UNKNOWN
+            'type' => KFilesystemStreamInterface::TYPE_UNKNOWN
         ));
-    }
-
-    /**
-     * Register the stream wrapper
-     *
-     * @return bool
-     */
-    public function register()
-    {
-        $result   = false;
-        $protocol = $this->getProtocol();
-
-        if (!empty($protocol) && !in_array($protocol, stream_get_wrappers())) {
-            $result = stream_wrapper_register($protocol, get_class($this));
-        }
-
-        return $result;
-    }
-
-    /**
-     * Un Register the stream wrapper
-     *
-     * @return bool
-     */
-    public function unregister()
-    {
-        $result   = false;
-        $protocol = $this->getProtocol();
-
-        if ($this->isRegistered()){
-            $result = stream_wrapper_unregister($protocol);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Check if the stream wrapper is registered
-     *
-     * @return bool TRUE if the path is a registered stream URL, FALSE otherwise.
-     */
-    public function isRegistered()
-    {
-        $result = false;
-        if($protocol = $this->getProtocol()) {
-            $result = in_array($protocol, stream_get_wrappers());
-        }
-
-        return $result;
     }
 
     /**
@@ -175,16 +103,6 @@ abstract class KFilesystemStreamWrapperAbstract extends KObject implements KFile
     public function getType()
     {
         return $this->_type;
-    }
-
-    /**
-     * Get the stream protocol used to register the stream with
-     *
-     * @return string The stream protocol
-     */
-    public function getProtocol()
-    {
-        return $this->_protocol;
     }
 
     /**

@@ -16,25 +16,11 @@
 interface KFilesystemStreamWrapperInterface extends KObjectInterface, KObjectMultiton
 {
     /**
-     * Register the stream wrapper
+     * Get the stream wrapper name used to register the stream with
      *
-     * @return bool
+     * @return string The stream wrapper name
      */
-    public function register();
-
-    /**
-     * Un Register the stream wrapper
-     *
-     * @return bool
-     */
-    public function unregister();
-
-    /**
-     * Check if the stream wrapper is registered
-     *
-     * @return bool TRUE if the path is a registered stream URL, FALSE otherwise.
-     */
-    public function isRegistered();
+    public static function getName();
 
     /**
      * Get the stream type
@@ -44,16 +30,9 @@ interface KFilesystemStreamWrapperInterface extends KObjectInterface, KObjectMul
     public function getType();
 
     /**
-     * Get the stream protocol used to register the stream with
-     *
-     * @return string The stream protocol
-     */
-    public function getProtocol();
-
-    /**
      * Get the stream path
      *
-     * @return string The stream protocol
+     * @return string The stream path
      */
     public function getPath();
 
@@ -81,7 +60,7 @@ interface KFilesystemStreamWrapperInterface extends KObjectInterface, KObjectMul
     /**
      * Set the stream mode
      *
-     * @param $mode
+     * @param $mode The stream mode
      */
     public function setMode($mode);
 }

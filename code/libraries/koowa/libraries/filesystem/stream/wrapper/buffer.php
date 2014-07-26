@@ -16,18 +16,34 @@
 class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
 {
     /**
-     * Initializes the options for the object
+     * The wrapper name
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
-     * @return void
+     * @var string
      */
-    protected function _initialize(KObjectConfig $config)
+    const NAME = 'buffer';
+
+    /**
+     * The stream length
+     *
+     * @var int
+     */
+    protected $_length;
+
+    /**
+     * Content of stream
+     *
+     * @var string
+     */
+    protected $_data;
+
+    /**
+     * Get the stream wrapper name used to register the stream with
+     *
+     * @return string The stream wrapper name
+     */
+    public static function getName()
     {
-        $config->append(array(
-            'protocol' => 'buffer',
-        ));
+        return self::NAME;
     }
 
     /**
@@ -59,7 +75,7 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
         //Open the file or create a temp file
         if($this->_type == 'temp')
         {
-            $this->_path = tempnam(sys_get_temp_dir(), 'temp');
+            $this->_path = $this->_getTemporaryFile();
             $this->_data = fopen($this->_path, $this->getMode());
 
             if ($options & STREAM_USE_PATH) {
@@ -315,8 +331,33 @@ class KFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperAbstract
         return $this->stream_stat();
     }
 
-    public function realpath()
+    /**
+     * Creates a file with a unique file name
+     *
+     * @param string|null $directory Uses the result of _getTemporaryDirectory() by default
+     * @return string File path
+     */
+    public function getTemporaryFile($directory = null)
     {
-        return 'test';
+        if ($directory === null) {
+            $directory = $this->getTemporaryDirectory();
+        }
+
+        $name = str_replace('.', '', uniqid('buffer', true));
+        $path = $directory.'/'.$name;
+
+        touch($path);
+
+        return $path;
+    }
+
+    /**
+     * Returns a directory path for temporary files
+     *
+     * @return string Folder path
+     */
+    public function getTemporaryDirectory()
+    {
+        return sys_get_temp_dir();
     }
 }
