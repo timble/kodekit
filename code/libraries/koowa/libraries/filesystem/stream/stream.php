@@ -835,8 +835,18 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      *
      * @return string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->getContent();
+    }
+
+    /**
+     * Cast the object to a string
+     *
+     * @return string
+     */
+    final public function __toString()
+    {
+        return $this->toString();
     }
 }

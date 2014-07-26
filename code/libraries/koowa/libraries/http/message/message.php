@@ -208,7 +208,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      *
      * @return string
      */
-    public function __toString()
+    final public function __toString()
     {
         return $this->toString();
     }

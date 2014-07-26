@@ -491,6 +491,16 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
+     * Returns the views output
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->render();
+    }
+
+    /**
      * Check if we are rendering an entity collection
      *
      * @return bool
@@ -527,9 +537,9 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      *
      * @return string
      */
-    public function __toString()
+    final public function __toString()
     {
-        return $this->render();
+        return $this->toString();
     }
 
     /**

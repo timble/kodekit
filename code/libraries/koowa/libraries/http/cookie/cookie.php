@@ -303,7 +303,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * @return string
      */
-    public function __toString()
+    final public function __toString()
     {
         return $this->toString();
     }

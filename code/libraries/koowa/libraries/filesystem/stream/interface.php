@@ -297,6 +297,13 @@ interface KFilesystemStreamInterface
     public function registerWrapper($identifier);
 
     /**
+     * Convert the stream to a string if the stream is readable and the stream is seekable.
+     *
+     * @return string
+     */
+    public function toString();
+
+    /**
      * Check if the stream is a local stream vs a remote stream
      *
      * @return bool

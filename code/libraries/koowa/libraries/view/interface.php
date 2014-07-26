@@ -181,6 +181,13 @@ interface KViewInterface
     public function getContext();
 
     /**
+     * Returns the views output
+     *
+     * @return string
+     */
+    public function toString();
+
+    /**
      * Check if we are rendering an entity collection
      *
      * @return bool
