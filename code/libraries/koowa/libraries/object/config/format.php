@@ -19,7 +19,7 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Read from a file and create a config object
      *
      * @param  string $filename
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @return KObjectConfigFormat
      */
     public function fromFile($filename)
@@ -38,8 +38,8 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Write a config object to a file.
      *
      * @param  string  $filename
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      * @return void
      */
     public function toFile($filename)

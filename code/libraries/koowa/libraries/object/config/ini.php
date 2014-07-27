@@ -19,7 +19,7 @@ class KObjectConfigIni extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @throws \DomainException
+     * @throws DomainException
      * @return KObjectConfigIni
      */
     public function fromString($string)
