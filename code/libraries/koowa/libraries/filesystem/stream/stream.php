@@ -46,7 +46,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      *
      * @var array
      */
-    protected $_context = array();
+    protected $_context;
 
     /**
      * Stream filters
@@ -99,7 +99,7 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
         }
 
         //Create or set the context
-        $this->setContext($config->params);
+        $this->setContext(KObjectConfig::unbox($config->context));
 
         //Attach stream filters
         foreach($config->filters as $key => $filter)
@@ -133,9 +133,10 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'mode'    => 'rb',
-            'params'  => array(
-                'options' => array()
+            'mode'     => 'rb',
+            'context'  => array(
+                'notification' => null,
+                'options'      => array(),
             ),
             'filters'    => array(),
             'wrappers'   => array(),
@@ -560,36 +561,35 @@ class KFilesystemStream extends KObject implements KFilesystemStreamInterface
      */
     public function getContext()
     {
-        return stream_context_create($this->_context);
+        return stream_context_create($this->_context['options']);
     }
 
     /**
-     * Set the stream context params
+     * Set the stream context
      *
      * @param array|resource $context An stream, wrapper or context resource or  an array of context parameters
      * @return bool
      */
     public function setContext($context)
     {
-        $result = false;
+        $result = true;
 
-        if(is_resource($this->_resource))
+        //Get the context params from the resource
+        if(is_resource($context)) {
+            $context = (array) stream_context_get_params($context);
+        }
+
+        if(is_array($context))
         {
-            //Get the context params from the resource
-            if(is_resource($context)) {
-                $context = (array) stream_context_get_params($context);
+            if(!isset($this->_context)) {
+                $this->_context = $context;
+            } else {
+                $this->_context = array_merge($this->_context, $context);
             }
+        }
 
-            if(is_array($context))
-            {
-                if(!isset($this->_context)) {
-                    $this->_context = $context;
-                } else {
-                    $this->_context = array_merge($this->_context, $context);
-                }
-
-                $result = stream_context_set_params($this->_resource, $this->_context);
-            }
+        if(is_resource($this->_resource)) {
+            $result = stream_context_set_params($this->_resource, $this->_context);
         }
 
         return $result;
