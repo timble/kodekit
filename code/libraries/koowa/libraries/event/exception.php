@@ -112,6 +112,6 @@ class KEventException extends KEvent implements KException
      */
     final public function __toString()
     {
-        return $this->__toString();
+        return $this->toString();
     }
 }
