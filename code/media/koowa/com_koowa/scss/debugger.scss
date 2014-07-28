@@ -1,24 +1,6 @@
-// Vars for this file
-$highlight: #FFF83D;
-$base03: #002b36;
-$base02: #073642;
-$base01: #586e75;
-$base00: #657b83;
-$base0: #839496;
-$base1: #93a1a1;
-$base2: #eee8d5;
-$base3: #fdf6e3;
-$yellow: #b58900;
-$orange: #cb4b16;
-$red: #dc322f;
-$magenta: #d33682;
-$violet: #6c71c4;
-$blue: #268bd2;
-$cyan: #2aa198;
-$green: #859900;
-$base1_accent--dark: lighten($base1, 25%);
-$base1_accent--light: lighten($base1, 35%);
-$spacing: 20px;
+@import "debugger/variables";
+@import "debugger/highlight";
+@import "dumper";
 
 // Mixins
 @mixin transition($content) {
@@ -122,6 +104,11 @@ pre {
 }
 
 // Page header & message
+.error_page__head {
+  position: relative;
+  z-index: 9;
+}
+
 .page_header,
 .page_message {
   display: table;
@@ -336,94 +323,111 @@ pre {
 }
 
 .codes_container__item {
+
+  margin-top: -68px;
+  padding-top: 68px;
+
+  .codes_container__content {
   padding: $spacing;
   border-top: 1px solid #fff;
   border-bottom: 1px solid $base1_accent--dark;
   position: relative;
   @include transition(all .1s ease-in-out);
 
-  &:hover {
-    background: #fff;
-  }
-
-  // Add to old-ie at the bottom as well
-  @media screen and (min-width: 600px) {
     &:hover {
-      background: transparent;
-      cursor: default;
-    }
-
-    .error_container__header {
-      background: $blue;
-      color: #fff;
-      padding: 10px $spacing;
-    }
-  }
-
-  &.active_source_item {
-    background: #fff;
-
-    &:before {
-      display: block;
-      content: " ";
-      position: absolute;
-      width: 4px;
-      top: -1px;
-      bottom: -1px;
-      left: -1px;
-      background: $blue;
-    }
-  }
-
-  .error_container__code {
-    display: none;
-
-    // Add to old-ie at the bottom as well
-    @media screen and (min-width: 600px) {
-      display: block;
-    }
-  }
-
-  h3 {
-    counter-increment: source-counter -1;
-    cursor: pointer;
-
-    &:before {
-      content: counter(source-counter) ". ";
-    }
-
-    &:after {
-      content: " ☰";
+      background: #fff;
     }
 
     // Add to old-ie at the bottom as well
     @media screen and (min-width: 600px) {
-      cursor: default;
+      &:hover {
+        background: transparent;
+        cursor: default;
+      }
 
-      &:after {
-        display: none;
+      .error_container__header {
+        background: $blue;
+        color: #fff;
+        padding: 10px $spacing;
       }
     }
-  }
 
-  // Arguments
-  div.args {
-    display: none;
+    &.active_source_item {
+      background: #fff;
 
-    // Add to old-ie at the bottom as well
-    @media screen and (min-width: 600px) {
-      display: block;
+      &:before {
+        display: block;
+        content: " ";
+        position: absolute;
+        width: 4px;
+        top: -1px;
+        bottom: -1px;
+        left: -1px;
+        background: $blue;
+      }
+    }
+
+    .error_container__code {
+      display: none;
+
+      // Add to old-ie at the bottom as well
+      @media screen and (min-width: 600px) {
+        display: block;
+      }
+    }
+
+    h3 {
+      counter-increment: source-counter -1;
+      cursor: pointer;
+
+      &:before {
+        content: counter(source-counter) ". ";
+      }
+
+      &:after {
+        content: " ☰";
+      }
+
+      // Add to old-ie at the bottom as well
+      @media screen and (min-width: 600px) {
+        cursor: default;
+
+        &:after {
+          display: none;
+        }
+      }
+    }
+
+    // Arguments
+    div.args {
+      display: none;
+
+      // Add to old-ie at the bottom as well
+      @media screen and (min-width: 600px) {
+        display: block;
+      }
     }
   }
 }
 
 .error_container__header {
   a {
-    color: #fff;
+    color: $base03;
 
     &:hover {
       text-decoration: none;
     }
+
+    @media screen and (min-width: 600px) {
+      color: #fff;
+    }
+  }
+}
+
+.error_page__head,
+.codes_container__content.visible {
+  a {
+    color: #fff;
   }
 }
 
@@ -458,204 +462,6 @@ pre {
   color: $highlight;
 }
 
-/*
-Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
-*/
-
-.hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 0.5em;
-  background: $base03;
-  color: $base0;
-}
-
-.hljs-comment,
-.hljs-template_comment,
-.diff .hljs-header,
-.hljs-doctype,
-.hljs-pi,
-.lisp .hljs-string,
-.hljs-javadoc {
-  color: $base01;
-}
-
-/* Solarized Green */
-.hljs-keyword,
-.hljs-winutils,
-.method,
-.hljs-addition,
-.css .hljs-tag,
-.hljs-request,
-.hljs-status,
-.nginx .hljs-title {
-  color: $green;
-}
-
-/* Solarized Cyan */
-.hljs-number,
-.hljs-command,
-.hljs-string,
-.hljs-tag .hljs-value,
-.hljs-rules .hljs-value,
-.hljs-phpdoc,
-.tex .hljs-formula,
-.hljs-regexp,
-.hljs-hexcolor,
-.hljs-link_url {
-  color: $cyan;
-}
-
-/* Solarized Blue */
-.hljs-title,
-.hljs-localvars,
-.hljs-chunk,
-.hljs-decorator,
-.hljs-built_in,
-.hljs-identifier,
-.vhdl .hljs-literal,
-.hljs-id,
-.css .hljs-function {
-  color: $blue;
-}
-
-/* Solarized Yellow */
-.hljs-attribute,
-.hljs-variable,
-.lisp .hljs-body,
-.smalltalk .hljs-number,
-.hljs-constant,
-.hljs-class .hljs-title,
-.hljs-parent,
-.haskell .hljs-type,
-.hljs-link_reference {
-  color: $green;
-}
-
-/* Solarized Orange */
-.hljs-preprocessor,
-.hljs-preprocessor .hljs-keyword,
-.hljs-pragma,
-.hljs-shebang,
-.hljs-symbol,
-.hljs-symbol .hljs-string,
-.diff .hljs-change,
-.hljs-special,
-.hljs-attr_selector,
-.hljs-subst,
-.hljs-cdata,
-.clojure .hljs-title,
-.css .hljs-pseudo,
-.hljs-header {
-  color: $orange;
-}
-
-/* Solarized Red */
-.hljs-deletion,
-.hljs-important {
-  color: $red;
-}
-
-/* Solarized Violet */
-.hljs-link_label {
-  color: $violet;
-}
-
-.tex .hljs-formula {
-  background: $base02;
-}
-
-
-/**
- Orginal Style from http://tracy.nette.org (c) 2004 David Grudl <http://davidgrudl.com>
-*/
-
-/* toggle */
-.koowa-collapsed {
-  display: none;
-}
-
-.koowa-toggle {
-  cursor: pointer;
-  border-bottom: 1px dotted #bbb;
-
-  &:after {
-    content: " ▼";
-    font-size: 10px;
-    color: #888;
-  }
-}
-
-.koowa-toggle.koowa-collapsed {
-  display: inline;
-
-  &:after {
-    content: " ►";
-  }
-}
-
-/* dump */
-.arguments_wrapper {
-  max-width: 100%;
-  overflow: auto;
-  white-space: nowrap !important;
-
-  pre.arguments {
-    text-align: left;
-    background: white;
-    color: #555;
-    line-height: 1.5em;
-    white-space: nowrap !important;
-
-    div {
-      padding-left: 3ex;
-
-      div {
-        border-left: 1px solid rgba(0, 0, 0, .1);
-        margin-left: .5ex;
-      }
-    }
-  }
-}
-
-.koowa-dump-array,
-.koowa-dump-object {
-  color: $red;
-}
-
-.koowa-dump-string {
-  color: $blue;
-}
-
-.koowa-dump-number {
-  color: $green;
-}
-
-.koowa-dump-null,
-.koowa-dump-bool {
-  color: $yellow;
-}
-
-.koowa-dump-visibility,
-.koowa-dump-hash {
-  font-size: 85%;
-  color: $base00;
-}
-
-.koowa-dump-indent {
-  display: none;
-}
-
-// New lines for the dumps
-.koowa-dump-key {
-  &:before {
-    display: block;
-    content: " ";
-    width: 100%;
-    height: 0;
-    overflow: hidden;
-  }
-}
 
 // Old ie specific classes
 .old-ie {
