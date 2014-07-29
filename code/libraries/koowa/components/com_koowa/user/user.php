@@ -66,10 +66,11 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
      */
     public function getRoles()
     {
-        $data = $this->getData();
+        $data  = $this->getData();
+        $roles = KObjectConfig::unbox($data->rules);
 
-        if(!isset($data->roles)) {
-            $data->roles = JAccess::getAuthorisedViewLevels($this->getId());
+        if(empty($roles)) {
+            $this->getSession()->set('user.roles', JAccess::getAuthorisedViewLevels($this->getId()));
         }
 
         return parent::getRoles();
@@ -82,10 +83,11 @@ class ComKoowaUser extends KUser implements ComKoowaUserInterface
      */
     public function getGroups()
     {
-        $data = $this->getData();
+        $data  = $this->getData();
+        $groups = KObjectConfig::unbox($data->groups);
 
-        if(!isset($data->groups)) {
-            $data->groups = JAccess::getGroupsByUser($this->getId());
+        if(empty($groups)) {
+            $this->getSession()->set('user.groups', JAccess::getGroupsByUser($this->getId()));
         }
 
         return parent::getGroups();
