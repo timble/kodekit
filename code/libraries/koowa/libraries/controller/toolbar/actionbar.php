@@ -182,11 +182,11 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         $states['format'] = 'csv';
 
         //Get the query options
-        $query     = http_build_query($states, '', '&');
-        $component = $this->getIdentifier()->package;
-        $view      = $this->getIdentifier()->name;
+        $query  = http_build_query($states, '', '&');
+        $option = $this->getIdentifier()->package;
+        $view   = $this->getIdentifier()->name;
 
-        $command->href = 'component='.$component.'&view='.$view.'&'.$query;
+        $command->href = 'option=com_'.$option.'&view='.$view.'&'.$query;
     }
 
     /**

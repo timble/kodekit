@@ -9,96 +9,103 @@
 
 defined('KOOWA') or die; ?>
 
-<title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code];; ?></title>
+<title content="replace"><?= @translate('Error').' '.$code.' - '. KHttpResponse::$status_messages[$code]; ?></title>
 
-<script>
-    document.documentElement.className = document.documentElement.className + ' js';
-    function toggleElement(elem)
-    {
-        var disp;
-        elem = document.getElementById(elem);
+<ktml:style src="media://koowa/com_koowa/css/debugger.css" />
+<ktml:script src="media://koowa/com_koowa/js/debugger.js" />
+<ktml:script src="media://koowa/com_koowa/js/dumper.js" />
 
-        if (elem.style && elem.style['display']) {
-            // Only works with the "style" attr
-            disp = elem.style['display'];
-        }
-        else if (elem.currentStyle) {
-            // For MSIE, naturally
-            disp = elem.currentStyle['display'];
-        }
-        else if (window.getComputedStyle) {
-            // For most other browsers
-            disp = document.defaultView.getComputedStyle(elem, null).getPropertyValue('display');
-        }
-
-        // Toggle the state of the "display" style
-        elem.style.display = disp == 'block' ? 'none' : 'block';
-        return false;
-    }
+<script data-inline type="text/javascript">
+// Remove all classes from html and body
+document.body.className = ''; document.documentElement.className = '';
 </script>
 
-<style>
-    .error { background: #ddd; font-size: 1em; font-family:sans-serif; text-align: left; color: #111; }
-    .error h1,
-    .error h2 { margin: 0; padding: 1em 1em 0.5em; font-size: 1em; font-weight: normal; background: #DA2121; color: #fff; }
-    .error h1 a,
-    .error h2 a { color: #fff; }
-    .error h2 { background: #222; }
-    .error h3 { margin: 0; padding: 0.4em 0 0; font-size: 1em; font-weight: normal; }
-    .error p { margin: 0; padding: 0.2em 0; }
-    .error a { color: #1b323b; }
-    .error pre { overflow: auto; white-space: pre-wrap; }
-    .error table { width: 100%; display: block; margin: 0 0 0.4em; padding: 0; border-collapse: collapse; background: #fff; }
-    .error table td { border: solid 1px #ddd; text-align: left; vertical-align: top; padding: 0.4em; }
-    .error div.content { padding: 0.4em 1em 1em; overflow: hidden; }
-    .error pre.source { margin: 0 0 1em; padding: 0.4em; background: #fff; border: dotted 1px #b7c680; line-height: 1.2em; }
-    .error pre.source span.line { display: block; }
-    .error pre.source span.highlight { background: #f0eb96; }
-    .error pre.source span.line span.number { color: #666; }
-    .error ol.trace { display: block; margin: 0 0 0 2em; padding: 0; list-style: decimal; }
-    .error ol.trace li { margin: 0; padding: 0; }
-    .js .collapsed { display: none; }
-</style>
+<!--[if IE 8]>
+<div class="old-ie">
+<![endif]-->
 
-
-<div class="error">
-    <h1><span class="type"><?= $exception ?> [<?= $code ?>]</span></h1>
-    <h1><span class="message"><?= $message ?></span></h1>
-    <div class="content">
-        <p><span class="file"><?= $file ?>:<?= $line ?></span></p>
-        <?= @helper('debug.source', array('file' => $file, 'line' => $line)) ?>
-        <ol class="trace" reversed>
-            <?php foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
-                <li>
-                    <p>
-                        <?= $step['function'] ?>(<?php if ($step['args']): $args_id = 'args'.$i; ?><a href="#<?= $args_id ?>" onclick="return toggleElement('<?= $args_id ?>')"><?= 'arguments' ?></a><?php endif ?>)
-                        &raquo;
-                        <span class="file">
-                            <?php if ($step['file']): $source_id = 'source'.$i; ?>
-                                <a href="#<?= $source_id ?>" onclick="return toggleElement('<?= $source_id ?>')"><?= @helper('debug.path', array('file' => $step['file'])) ?>:<?= $step['line'] ?></a>
-                            <?php else: ?>
-                                {<?= 'PHP internal call' ?>}
-                            <?php endif ?>
-                        </span>
-                    </p>
-                    <?php if (isset($args_id)): ?>
-                        <div id="<?= $args_id ?>" class="collapsed">
+<div id="error_page">
+    <div class="error_page__head">
+        <h1 class="page_header">
+            <a href="#error_page" class="page_header__exception"><?= $exception ?><? if($level !== false) : ?> | <?= $level ?><? endif ?></a>
+            <span class="page_header__code">[<?= $code ?>]</span>
+        </h1>
+        <div class="page_message">
+            <div class="page_message__text"><?= $message ?></div>
+        </div>
+        <div id="the_error">
+            <div class="error_container">
+                <div class="error_container__header">
+                    <?= @helper('debug.path', array('file' => $file)) ?>:<span class="linenumber"><?= $line ?></span>
+                </div>
+                <div class="error_container_code">
+                    <?= @helper('debug.source', array('file' => $file, 'line' => $line)) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page_content">
+        <? foreach (@helper('debug.trace', array('trace' => $trace)) as $num => $step): endforeach; // Getting the total amount ?>
+        <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?php echo $num+2; ?>">
+            <div id="trace_wrapper">
+                <? foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
+                <a id="trace__item--<?= $i; ?>" class="trace__item" href="#source<?= $i ?>">
+                    <span class="trace__item__header">
+                        <?= $step['function'] ?>(<? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>)
+                    </span>
+                </a>
+                <? unset($args_id, $source_id); ?>
+                <? endforeach ?>
+            </div>
+        </div>
+        <div id="codes_container" class="codes_container" style="counter-reset: source-counter <?php echo $num+2; ?>">
+            <? foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
+            <? if ($step['file']): $source_id = 'source'.$i; ?>
+            <div id="<?= $source_id ?>" class="codes_container__item">
+                <div class="codes_container__content">
+                    <h3>
+                        <?= $step['function'] ?>(<? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>)
+                    </h3>
+                    <div class="error_container">
+                        <div class="error_container__header">
+                            <span class="file"><?= @helper('debug.path', array('file' => $step['file'])) ?></span>:<span class="linenumber"><?= $step['line'] ?></span>
+                        </div>
+                        <? if (isset($source_id)): ?>
+                        <div class="error_container__code">
+                            <pre class="source_wrap"><code class="hljs php"><?= $step['source'] ?></code></pre>
+                        </div>
+                        <? endif ?>
+                    </div>
+                    <? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>
+                    <? if (isset($args_id)): ?>
+                    <div id="<?= $args_id ?>" class="args">
+                        <h4>Arguments</h4>
+                        <div class="arguments_wrapper">
                             <table cellspacing="0">
-                                <?php foreach ($step['args'] as $name => $arg): ?>
+                                <? foreach ($step['args'] as $name => $arg): ?>
                                     <tr>
-                                        <td><code><?= $name ?></code></td>
-                                        <td><pre><?= @helper('debug.dump', array('value' => $arg)) ?></pre></td>
+                                        <td width="1"><code><?= $name ?></code></td>
+                                        <td><pre class="arguments"><?= @helper('debug.dump', array('value' => $arg, 'object_depth' => $i ? 1 : 4)) ?></pre></td>
                                     </tr>
-                                <?php endforeach ?>
+                                <? endforeach ?>
                             </table>
                         </div>
-                    <?php endif ?>
-                    <?php if (isset($source_id)): ?>
-                        <pre id="<?= $source_id ?>" class="source collapsed"><code><?= $step['source'] ?></code></pre>
-                    <?php endif ?>
-                </li>
-                <?php unset($args_id, $source_id); ?>
-            <?php endforeach ?>
-        </ol>
+                    </div>
+                    <? endif ?>
+                </div>
+            </div>
+            <? else: ?>
+            {<?= 'PHP internal call' ?>}
+            <? endif ?>
+            <? unset($args_id, $source_id); ?>
+            <? endforeach ?>
+            <div class="page_data">
+                - That's it! -
+            </div>
+        </div>
     </div>
 </div>
+
+<!--[if IE 8]>
+</div>
+<![endif]-->

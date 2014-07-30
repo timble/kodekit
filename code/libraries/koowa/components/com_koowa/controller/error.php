@@ -93,9 +93,7 @@ class ComKoowaControllerError extends KControllerView
         }
 
         //Create the exception message
-        if(ini_get('display_errors')) {
-            $message = get_class($exception) ." with message '".$message."' in ".$file.":".$line;
-        } else {
+        if(!ini_get('display_errors')) {
             $traces = array();
         }
 
@@ -109,6 +107,7 @@ class ComKoowaControllerError extends KControllerView
         $this->getView()->args      = $args;
         $this->getView()->info      = $info;
         $this->getView()->trace     = $traces;
+        $this->getView()->level     = $exception instanceof KExceptionError ? $exception->getSeverityMessage() : false;
 
         //Render the exception
         $result = parent::_actionRender($context);
