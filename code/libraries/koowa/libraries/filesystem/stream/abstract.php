@@ -340,13 +340,27 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     /**
      * Copy data from one stream to another stream
      *
-     * @param resource $stream The stream resource to copy the data too
+     * @param resource|KFilesystemStreamInterface $stream The stream resource to copy the data too
      * @return bool Returns TRUE on success, FALSE on failure
      */
     public function copy($stream)
     {
-        if($this->getResource()) {
-            return fwrite($stream, $this->read());
+        if($this->getResource())
+        {
+            if (!$stream instanceof KFilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
+            {
+                throw new InvalidArgumentException(sprintf(
+                    'Stream must be on object implementing the FilesystemStreamInterface or a resource of type "stream".'
+                ));
+            }
+
+            if($stream instanceof KFilesystemStreamInterface) {
+                $resource = $stream->getResource();
+            } else {
+                $resource = $stream;
+            }
+
+            return fwrite($resource, $this->read());
         }
 
         return false;
@@ -410,21 +424,34 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * If no target stream is being passed and you have cached data that is not yet stored into the underlying storage,
      * you should do so now
      *
-     * @param resource|null $stream The stream resource to flush the data too
-     * @param int           $length  The total bytes to flush, if -1 the stream will be flushed until eof. The limit should
-     *                         lie within the total size of the stream.
+     * @param resource|KFilesystemStreamInterface|null $stream The stream resource to flush the data too
+     * @param int  $length  The total bytes to flush, if -1 the stream will be flushed until eof. The limit should
+     *                      lie within the total size of the stream.
      * @return boolean Should return TRUE if the cached data was successfully stored (or if there was no data to store),
      *                 or FALSE if the data could not be stored.
      */
     public function flush($stream = null, $length = -1)
     {
-        if($this->getResource() && is_resource($stream))
+        if($this->getResource() && $stream !== NULL)
         {
+            if (!$stream instanceof KFilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
+            {
+                throw new \InvalidArgumentException(sprintf(
+                    'Stream must be on object implementing the KFilesystemStreamInterface or a resource of type "stream".'
+                ));
+            }
+
+            if($stream instanceof KFilesystemStreamInterface) {
+                $resource = $stream->getResource();
+            } else {
+                $resource = $stream;
+            }
+
             $range = $length < 0 ? $this->getSize() : $length;
 
             //Send data chunk
             while (!$this->eof() && $this->peek() <= $range) {
-                $this->copy($stream);
+                $this->copy($resource);
             }
 
             return true;
