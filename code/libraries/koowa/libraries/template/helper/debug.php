@@ -48,6 +48,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             $this->_editors['xdebug'] = function($file, $line) {
                 return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
             };
+
+            //If no editor is set use xdebug
+            if(!empty($this->_editor)) {
+                $this->_editor = 'xdebug';
+            }
         }
     }
 
@@ -62,7 +67,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'editor'   => 'textmate',
+            'editor'   => '',
             'editors'  => array(
                 'editor'   => 'editor://open/?file=%file&line=%line',
                 'sublime'  => 'subl://open?url=file://%file&line=%line',
