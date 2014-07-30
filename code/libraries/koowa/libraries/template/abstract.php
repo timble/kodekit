@@ -188,8 +188,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         //Set the status
         $this->_status = $status;
 
-        //Load the file
-        $this->_content = $this->getObject('lib:filesystem.stream')->open($template)->getContent();
+        //Load the file content
+        $this->_content = file_get_contents($template);
 
         //Compile and evaluate partial templates
         if(count($this->_stack) > 1)
@@ -247,22 +247,18 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             //Merge the data
             $this->_data = array_merge((array) $this->_data, $data);
 
-            //Create temporary file
-            $tempfile = $this->_getTemporaryFile();
-
-            //Write the template to the file
-            $handle = fopen($tempfile, "w+");
-            fwrite($handle, $this->_content);
-            fclose($handle);
+            //Write the template to a temp file
+            $stream = $this->getObject('filesystem.stream.factory')->createStream('buffer://temp', 'w+b');
+            $stream->write($this->_content);
 
             //Include the file
             extract($this->_data, EXTR_SKIP);
 
             ob_start();
-            include $tempfile;
+            include $stream->getPath();
             $this->_content = ob_get_clean();
 
-            unlink($tempfile);
+            $stream->close();
 
             //Remove the path from the stack
             array_pop($this->_stack);
@@ -748,44 +744,24 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     }
 
     /**
-     * Returns a directory path for temporary files
-     *
-     * @return string Folder path
-     */
-    protected function _getTemporaryDirectory()
-    {
-        return sys_get_temp_dir();
-    }
-
-    /**
-     * Creates a file with a unique file name
-     *
-     * @param string|null $directory Uses the result of _getTemporaryDirectory() by default
-     * @return string File path
-     */
-    protected function _getTemporaryFile($directory = null)
-    {
-        if ($directory === null) {
-            $directory = $this->_getTemporaryDirectory();
-        }
-
-        $name = str_replace('.', '', uniqid('tmpl', true));
-        $path = $directory.'/'.$name;
-
-        touch($path);
-
-        return $path;
-    }
-
-    /**
      * Returns the template contents
      *
      * When casting to a string the template content will be compiled, evaluated and rendered.
      *
      * @return  string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->getContent();
+    }
+
+    /**
+     * Cast the object to a string
+     *
+     * @return  string
+     */
+    final public function __toString()
+    {
+        return $this->toString();
     }
 }

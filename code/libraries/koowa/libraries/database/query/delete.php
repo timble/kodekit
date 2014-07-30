@@ -143,7 +143,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      *
      * @return  string  The query string.
      */
-    public function __toString()
+    public function toString()
     {
         $adapter = $this->getAdapter();
         $prefix  = $adapter->getTablePrefix();

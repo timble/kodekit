@@ -19,7 +19,7 @@ class KObjectConfigPhp extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @throws \DomainException
+     * @throws DomainException
      * @return KObjectConfigPhp
      */
     public function fromString($string)
@@ -56,8 +56,8 @@ class KObjectConfigPhp extends KObjectConfigFormat
      * Read from a file and create a config object
      *
      * @param  string $filename
-     * @return $this
-     * @throws \RuntimeException
+     * @throws RuntimeException
+     * @return KObjectConfigPhp
      */
     public function fromFile($filename)
     {

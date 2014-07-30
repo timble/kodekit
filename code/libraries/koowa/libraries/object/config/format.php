@@ -19,7 +19,7 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Read from a file and create a config object
      *
      * @param  string $filename
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @return KObjectConfigFormat
      */
     public function fromFile($filename)
@@ -38,8 +38,8 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Write a config object to a file.
      *
      * @param  string  $filename
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      * @return void
      */
     public function toFile($filename)
@@ -70,8 +70,17 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      *
      * @return string
      */
-    public function __toString()
+    final public function __toString()
     {
-        return $this->toString();
+        $result = '';
+
+        //Not allowed to throw exceptions in __toString() See : https://bugs.php.net/bug.php?id=53648
+        try {
+            $result = $this->toString();
+        } catch (Exception $e) {
+            trigger_error('KObjectConfigFormat::__toString exception: '. (string) $e, E_USER_ERROR);
+        }
+
+        return $result;
     }
 }

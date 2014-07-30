@@ -20,7 +20,7 @@ abstract class KFilesystemStreamFilterAbstract extends php_user_filter implement
      *
      * @var string
      */
-    public static $name = '';
+    protected static $_name = '';
 
     /**
      * The filter name
@@ -31,7 +31,7 @@ abstract class KFilesystemStreamFilterAbstract extends php_user_filter implement
      * @var string
      * @see php_user_filter
      */
-    //public $filtername;
+    public $filtername;
 
     /**
      * The stream being filtered
@@ -42,7 +42,7 @@ abstract class KFilesystemStreamFilterAbstract extends php_user_filter implement
      * @var resource
      * @see php_user_filter
      */
-    //public $stream;
+    public $stream;
 
     /**
      * The filter params
@@ -52,7 +52,17 @@ abstract class KFilesystemStreamFilterAbstract extends php_user_filter implement
      * @var array
      * @see php_user_filter
      */
-    //public $params;
+    public $params;
+
+    /**
+     * Get the stream name used to register the stream with
+     *
+     * @return string The stream name
+     */
+    public static function getName()
+    {
+        return self::$_name;
+    }
 
     /**
      * Called the filter is created

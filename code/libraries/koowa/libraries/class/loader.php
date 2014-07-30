@@ -129,8 +129,7 @@ class KClassLoader implements KClassLoaderInterface
         // Prepend parameter was added in 5.3.0 and the call does not work in 5.2 with it
         if (version_compare(PHP_VERSION, '5.3', '>=')) {
             spl_autoload_register(array($this, 'load'), true, $prepend);
-        }
-        else {
+        } else {
             spl_autoload_register(array($this, 'load'), true);
         }
 

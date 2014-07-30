@@ -52,4 +52,11 @@ interface KDatabaseQueryInterface
      * @return KDatabaseQueryInterface
      */
     public function setAdapter(KDatabaseAdapterInterface $adapter);
+
+    /**
+     * Render the query to a string.
+     *
+     * @return  string  The query string.
+     */
+    public function toString();
 }

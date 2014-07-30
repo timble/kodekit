@@ -11,15 +11,17 @@ return array(
     'priority' => KObjectBootstrapper::PRIORITY_LOW,
 
     'aliases'  => array(
-        'request'                       => 'com:koowa.dispatcher.request',
-        'lib:database.adapter.mysqli'   => 'com:koowa.database.adapter.mysqli',
-        'translator'                    => 'com:koowa.translator',
-        'user'                          => 'com:koowa.user',
-        'filter.factory'                => 'com:koowa.filter.factory',
-        'exception.handler'             => 'com:koowa.exception.handler',
-        'date'                          => 'com:koowa.date',
-        'event.publisher'               => 'com:koowa.event.publisher',
-        'user.provider'                 => 'com:koowa.user.provider',
-        'lib:dispatcher.router.route'   => 'com:koowa.dispatcher.router.route'
+        'request'           => 'com:koowa.dispatcher.request',
+        'translator'        => 'com:koowa.translator',
+        'user'              => 'com:koowa.user',
+        'filter.factory'    => 'com:koowa.filter.factory',
+        'exception.handler' => 'com:koowa.exception.handler',
+        'date'              => 'com:koowa.date',
+        'event.publisher'   => 'com:koowa.event.publisher',
+        'user.provider'     => 'com:koowa.user.provider',
+
+        'lib:database.adapter.mysqli'  => 'com:koowa.database.adapter.mysqli',
+        'lib:dispatcher.router.route'  => 'com:koowa.dispatcher.router.route',
+        'lib:filesystem.stream.buffer' => 'com:koowa.filesystem.stream.buffer'
     ),
 );

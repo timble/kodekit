@@ -257,7 +257,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      *
      * @return  string  The completed query
      */
-    public function __toString()
+    public function toString()
     {
         $adapter = $this->getAdapter();
         $prefix  = $adapter->getTablePrefix();

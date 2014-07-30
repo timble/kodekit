@@ -491,6 +491,16 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
+     * Returns the views output
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->render();
+    }
+
+    /**
      * Check if we are rendering an entity collection
      *
      * @return bool
@@ -527,9 +537,18 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      *
      * @return string
      */
-    public function __toString()
+    final public function __toString()
     {
-        return $this->render();
+        $result = '';
+
+        //Not allowed to throw exceptions in __toString() See : https://bugs.php.net/bug.php?id=53648
+        try {
+            $result = $this->toString();
+        } catch (Exception $e) {
+            trigger_error('KViewAbstract::__toString exception: '. (string) $e, E_USER_ERROR);
+        }
+
+        return $result;
     }
 
     /**

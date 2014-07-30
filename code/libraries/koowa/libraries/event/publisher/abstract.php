@@ -190,7 +190,7 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
             );
         }
 
-        if (!is_string($event) || !$event instanceof KEventInterface)
+        if (!is_string($event) && !$event instanceof KEventInterface)
         {
             throw new InvalidArgumentException(
                 'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
