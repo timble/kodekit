@@ -298,6 +298,11 @@ abstract class ComKoowaTranslatorAbstract extends KTranslatorAbstract
         }
         else $folder = sprintf('%s/%ss/%s', $base, $type_folder, $extension);
 
+        // Special case for Koowa components
+        if (is_dir($folder.'/resources/language')) {
+            $folder .= '/resources';
+        }
+
         return $folder;
     }
 
