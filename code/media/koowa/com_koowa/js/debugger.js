@@ -147,30 +147,36 @@ function keydowns(e) {
     e = e || window.event;
 
     var doc = document.documentElement;
-    var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+    var window_top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
     var source_elements = getElementsStartsWithId('source');
 
-    // Up
+    // Up key
     if (e.keyCode == '38') {
         for( var i = 0; i < source_elements.length; i++ ) {
 
             var next_offsettop = source_elements[i+1].offsetTop;
             var element_offsettop = source_elements[i].offsetTop;
 
-            if ( next_offsettop >= top ) {
+            if ( top == element_offsettop ) {
+                element_offsettop = 0;
+            } else if ( top == 0 ) {
+                return false;
+            }
+
+            if ( next_offsettop >= window_top ) {
                 window.scrollTo(0,element_offsettop);
                 return false;
             }
         }
         return false;
     }
-    // Down
+    // Down key
     else if (e.keyCode == '40') {
         for( var i = 0; i < source_elements.length; i++ ) {
 
             var element_offsettop = source_elements[i].offsetTop;
 
-            if ( element_offsettop > top ) {
+            if ( element_offsettop > window_top ) {
                 window.scrollTo(0,element_offsettop);
                 return false;
             }
@@ -185,7 +191,6 @@ domready(function() {
     debug();
     show_source_on_small_screens();
     toggle_trace();
-
     document.onkeydown = keydowns;
 
     // When scrolling
