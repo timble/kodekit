@@ -110,7 +110,18 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             )
         ));
 
-        return $this->_dumpVar($value, $config);
+        $html = '';
+        if (!isset(self::$_loaded['dump']))
+        {
+            $html .= '<ktml:script src="media://koowa/com_koowa/js/dumper.js" />';
+            $html .= '<ktml:style src="media://koowa/com_koowa/css/dumper.css" />';
+
+            self::$_loaded['dump'] = true;
+        }
+
+        $html .= $this->_dumpVar($value, $config);
+
+        return $html;
     }
 
     /**
