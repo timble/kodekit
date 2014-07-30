@@ -15,9 +15,10 @@
  */
 class ComKoowaDispatcherRouterRoute extends KDispatcherRouterRoute
 {
-    public function toString($parts = self::FULL)
+    public function toString($parts = self::FULL, $escape = null)
     {
-        $query = $this->getQuery(true);
+        $query  = $this->getQuery(true);
+        $escape = isset($escape) ? $escape : $this->_escape;
 
         //Add the option to the query for compatibility with the Joomla router
         if(isset($query['component']))
@@ -52,7 +53,7 @@ class ComKoowaDispatcherRouterRoute extends KDispatcherRouterRoute
         $query = array_merge(array('option' => null, 'view'   => null), $query);
 
         //Let Joomla build the route
-        $route = JRoute::_('index.php?'.http_build_query($query), $this->_escape);
+        $route = JRoute::_('index.php?'.http_build_query($query), $escape);
 
         // We had to change the format in the URL above so that .htaccess file can catch it
         if (isset($append_format)) {
