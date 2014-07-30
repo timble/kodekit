@@ -102,6 +102,28 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     }
 
     /**
+     * Sets the response content.
+     *
+     * If new content is set and a stream exists also reset the content in the stream.
+     *
+     * @param mixed  $content   The content
+     * @param string $type      The content type
+     * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
+     * @return HttpMessage
+     */
+    public function setContent($content, $type = null)
+    {
+        //Refresh the buffer
+        if($this->__stream instanceof KFilesystemStreamInterface)
+        {
+            $this->__stream->truncate(0);
+            $this->__stream->write($content);
+        }
+
+        return parent::setContent($content, $type);
+    }
+
+    /**
      * Get the response stream
      *
      * The buffer://memory stream wrapper will be used when the response content is a string. If the response content
