@@ -157,9 +157,9 @@ function keydowns(e) {
             var next_offsettop = source_elements[i+1].offsetTop;
             var element_offsettop = source_elements[i].offsetTop;
 
-            if ( top == element_offsettop ) {
+            if ( window_top == element_offsettop ) {
                 element_offsettop = 0;
-            } else if ( top == 0 ) {
+            } else if ( window_top == 0 ) {
                 return false;
             }
 
