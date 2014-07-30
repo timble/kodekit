@@ -109,7 +109,7 @@ class KEvent extends KObjectConfig implements KEventInterface
      */
     public function setAttributes($attributes)
     {
-        if (!is_array($attributes) || $attributes instanceof Traversable)
+        if (!is_array($attributes) && !$attributes instanceof Traversable)
         {
             throw new InvalidArgumentException(sprintf(
                 'Event attributes must be an array or an object implementing the Traversable interface; received "%s"', gettype($attributes)
