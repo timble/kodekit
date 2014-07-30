@@ -328,11 +328,11 @@ pre {
   padding-top: 68px;
 
   .codes_container__content {
-  padding: $spacing;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid $base1_accent--dark;
-  position: relative;
-  @include transition(all .1s ease-in-out);
+    padding: $spacing;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid $base1_accent--dark;
+    position: relative;
+    @include transition(all .1s ease-in-out);
 
     &:hover {
       background: #fff;
@@ -418,6 +418,7 @@ pre {
       text-decoration: none;
     }
 
+    // Add to old-ie at the bottom as well
     @media screen and (min-width: 600px) {
       color: #fff;
     }
@@ -506,6 +507,12 @@ pre {
 
       div.args {
         display: block;
+      }
+    }
+
+    .error_container__header {
+      a {
+        color: #fff;
       }
     }
   }

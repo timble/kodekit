@@ -17,7 +17,7 @@ function debug() {
     // Variables
     var page = document.getElementById('error_page');
     var page_padding = page.style.paddingTop;
-    var header = document.getElementsByClassName('page_header')[0];
+    var header = document.getElementById('page_header')[0];
     var trace_container = document.getElementById('trace_container');
     var trace_wrapper = document.getElementById('trace_wrapper');
     var codes_container = document.getElementById('codes_container');
