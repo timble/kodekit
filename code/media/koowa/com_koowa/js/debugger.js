@@ -141,11 +141,52 @@ function show_source_on_small_screens() {
     }
 }
 
+
+// Keydowns
+function keydowns(e) {
+    e = e || window.event;
+
+    var doc = document.documentElement;
+    var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+    var source_elements = getElementsStartsWithId('source');
+
+    // Up
+    if (e.keyCode == '38') {
+        for( var i = 0; i < source_elements.length; i++ ) {
+
+            var next_offsettop = source_elements[i+1].offsetTop;
+            var element_offsettop = source_elements[i].offsetTop;
+
+            if ( next_offsettop >= top ) {
+                window.scrollTo(0,element_offsettop);
+                return false;
+            }
+        }
+        return false;
+    }
+    // Down
+    else if (e.keyCode == '40') {
+        for( var i = 0; i < source_elements.length; i++ ) {
+
+            var element_offsettop = source_elements[i].offsetTop;
+
+            if ( element_offsettop > top ) {
+                window.scrollTo(0,element_offsettop);
+                return false;
+            }
+        }
+        return false;
+    }
+}
+
+
 // On initial load
 domready(function() {
     debug();
     show_source_on_small_screens();
     toggle_trace();
+
+    document.onkeydown = keydowns;
 
     // When scrolling
     window.onscroll = function() {
