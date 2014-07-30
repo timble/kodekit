@@ -8,12 +8,12 @@
  */
 
 /**
- * Buffer FileSystem Stream Wrapper
+ * Buffer FileSystem Stream
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaFilesystemStreamWrapperBuffer extends KFilesystemStreamWrapperBuffer
+class ComKoowaFilesystemStreamBuffer extends KFilesystemStreamBuffer
 {
     /**
      * Temporary directory

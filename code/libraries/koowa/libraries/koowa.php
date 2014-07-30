@@ -115,6 +115,9 @@ class Koowa
                 )
             ));
         }
+
+        //Warm-up the stream factory
+        $manager->getObject('lib:filesystem.stream.factory');
     }
 
 	/**

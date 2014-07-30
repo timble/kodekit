@@ -20,8 +20,8 @@ return array(
         'event.publisher'   => 'com:koowa.event.publisher',
         'user.provider'     => 'com:koowa.user.provider',
 
-        'lib:database.adapter.mysqli'          => 'com:koowa.database.adapter.mysqli',
-        'lib:dispatcher.router.route'          => 'com:koowa.dispatcher.router.route',
-        'lib:filesystem.stream.wrapper.buffer' => 'com:koowa.filesystem.stream.wrapper.buffer'
+        'lib:database.adapter.mysqli'  => 'com:koowa.database.adapter.mysqli',
+        'lib:dispatcher.router.route'  => 'com:koowa.dispatcher.router.route',
+        'lib:filesystem.stream.buffer' => 'com:koowa.filesystem.stream.buffer'
     ),
 );

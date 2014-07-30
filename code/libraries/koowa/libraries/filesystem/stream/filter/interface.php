@@ -30,6 +30,14 @@ interface KFilesystemStreamFilterInterface
      * @return int
      */
     public function filter($in, $out, &$consumed, $closing);
+
+    /**
+     * Get the filter name used to register the stream with
+     *
+     * @return string The filter name
+     */
+    public static function getName();
+
     /**
      * Called the filter is created
      *
