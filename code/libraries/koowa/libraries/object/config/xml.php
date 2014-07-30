@@ -39,7 +39,7 @@ class KObjectConfigXml extends KObjectConfigFormat
             }
         }
 
-        $this->add($data);
+        $this->merge($data);
 
         return $this;
     }

@@ -35,7 +35,7 @@ class KObjectConfigPhp extends KObjectConfigFormat
             }
         }
 
-        $this->add($data);
+        $this->merge($data);
 
         return $this;
     }
@@ -65,7 +65,7 @@ class KObjectConfigPhp extends KObjectConfigFormat
             throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
-        $this->add(include $filename);
+        $this->merge(include $filename);
 
         return $this;
     }

@@ -35,7 +35,7 @@ class KObjectConfigJson extends KObjectConfigFormat
             }
         }
 
-        $this->add($data);
+        $this->merge($data);
 
         return $this;
     }

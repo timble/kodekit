@@ -35,7 +35,7 @@ class KObjectConfigIni extends KObjectConfigFormat
             }
         }
 
-        $this->add($data);
+        $this->merge($data);
 
         return $this;
     }

@@ -29,7 +29,7 @@ class KObjectConfig implements KObjectConfigInterface
      */
     public function __construct( $options = array() )
     {
-        $this->add($options);
+        $this->merge($options);
     }
 
     /**
@@ -80,14 +80,14 @@ class KObjectConfig implements KObjectConfigInterface
     }
 
     /**
-     * Add options
+     * Merge options
      *
      * This method will overwrite keys that already exist, keys that don't exist yet will be added.
      *
      * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
      * @return KObjectConfig
      */
-    public function add($options)
+    public function merge($options)
     {
         $options = self::unbox($options);
 

@@ -46,14 +46,14 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     public function has($name);
 
     /**
-     * Add options
+     * Merge options
      *
      * This method will overwrite keys that already exist, keys that don't exist yet will be added.
      *
      * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be added
      * @return KObjectConfigInterface
      */
-    public function add($options);
+    public function merge($options);
 
     /**
      * Remove a configuration option
@@ -61,7 +61,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @param   string $name The configuration option name.
      * @return  KObjectConfigInterface
      */
-    public function remove( $name );
+    public function remove($name);
 
     /**
      * Append values

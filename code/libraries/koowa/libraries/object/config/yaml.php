@@ -122,7 +122,7 @@ class KObjectConfigYaml extends KObjectConfigFormat
                 }
             }
 
-            $this->add($data);
+            $this->merge($data);
         }
         else throw new RuntimeException("No Yaml decoder specified");
 
