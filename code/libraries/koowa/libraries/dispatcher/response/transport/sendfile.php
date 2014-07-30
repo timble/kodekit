@@ -73,7 +73,7 @@ class KDispatcherResponseTransportSendfile extends KDispatcherResponseTransportH
             $path = $response->headers->get('X-Sendfile');
 
             if($path === true || $path === 1) {
-                $path = $response->getContent()->getPathname();
+                $path = $response->getStream()->getPath();
             }
 
             if(is_file($path))
@@ -83,7 +83,7 @@ class KDispatcherResponseTransportSendfile extends KDispatcherResponseTransportH
                 //Nginx uses X-Accel-Redirect header
                 if(strpos($server, 'nginx') !== FALSE)
                 {
-                    $path = preg_replace('/'.preg_quote(JPATH_ROOT, '/').'/', '', $path, 1);
+                    $path = preg_replace('/'.preg_quote(Koowa::getRootPath(), '/').'/', '', $path, 1);
                     $response->headers->set('X-Accel-Redirect', $path);
                     $response->headers->remove('X-Sendfile');
                 }

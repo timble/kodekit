@@ -64,7 +64,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
      */
     public function sendContent(KDispatcherResponseInterface $response)
     {
-        echo $response->getStream()->getContent();
+        echo $response->getStream()->toString();
         return $this;
     }
 
@@ -102,7 +102,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         if($response->isDownloadable())
         {
             //Last-Modified header
-            if($time = $response->getStream()->getTime(KFilesystemStream::TIME_MODIFIED)) {
+            if($time = $response->getStream()->getTime(KFilesystemStreamInterface::TIME_MODIFIED)) {
                 $response->setLastModified($time);
             };
 

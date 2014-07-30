@@ -16,18 +16,18 @@
 abstract class KDispatcherResponseAbstract extends KControllerResponse implements KDispatcherResponseInterface
 {
     /**
+     * Stream resource
+     *
+     * @var KFilesystemStreamInterface
+     */
+    private $__stream;
+
+    /**
      * The transport queue
      *
      * @var	KObjectQueue
      */
     protected $_queue;
-
-    /**
-     * Stream resource
-     *
-     * @var KFilesystemStreamInterface
-     */
-    protected $_stream;
 
     /**
      * List of transport handlers
@@ -102,70 +102,35 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     }
 
     /**
-     * Sets the response content
+     * Get the response stream
      *
-     * The buffer:// stream wrapper will be used when setting content as a string. This wrapper allows to pass a
-     * string directly to the response transport and send it to the client.
+     * The buffer://memory stream wrapper will be used when the response content is a string. If the response content
+     * is of the form "scheme://..." a stream based on the scheme will be created.
      *
-     * @param mixed  $content   The content
-     * @param string $type      The content type
-     * @return KDispatcherResponseAbstract
+     * See @link http://www.php.net/manual/en/wrappers.php for a list of default PHP stream protocols and wrappers.
+     *
+     * @return KFilesystemStreamInterface
      */
-    public function setContent($content, $type = null)
+    public function getStream()
     {
-        parent::setContent($content, $type);
+        if(!isset($this->__stream))
+        {
+            $content = $this->getContent();
+            $factory = $this->getObject('filesystem.stream.factory');
 
-        $stream = $this->getStream();
-        $stream->open('buffer://memory', 'w+b');
-        $stream->write($content);
+            if(!$this->getObject('filter.path')->validate($content))
+            {
+                $stream = $factory->createStream('buffer://memory', 'w+b');
+                $stream->write($content);
+            }
+            else $stream = $factory->createStream($content, 'rb');
 
-        return $this;
-    }
-
-    /**
-     * Get the response content from the stream
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        $content = $this->getStream()->getContent();
-        return $content;
-    }
-
-    /**
-     * Sets the response path
-     *
-     * Path needs to be of the form "scheme://..." and a wrapper for that protocol need to be registered. See @link
-     * http://www.php.net/manual/en/wrappers.php for a list of default PHP stream protocols and wrappers.
-     *
-     * @param mixed  $path   The path
-     * @param string $type   The content type
-     * @throws InvalidArgumentException If the path is not a valid stream or no stream wrapper is registered for the
-     *                                   stream protocol
-     * @return KDispatcherResponseAbstract
-     */
-    public function setPath($path, $type = null)
-    {
-        if($this->getStream()->open($path) === false) {
-            throw new InvalidArgumentException('Path: '.$path.' is not a valid stream or no stream wrapper is registered.');
+            $this->__stream = $stream;
         }
 
-        $this->setContentType($type);
-
-        return $this;
+        return $this->__stream;
     }
 
-    /**
-     * Get the response path
-     *
-     * @return string The response stream path.
-     */
-    public function getPath()
-    {
-        $path = $this->getStream()->getPath();
-        return $path;
-    }
 
     /**
      * Sets the response content using a stream
@@ -175,25 +140,8 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      */
     public function setStream(KFilesystemStreamInterface $stream)
     {
-        $this->_stream = $stream;
+        $this->__stream = $stream;
         return $this;
-    }
-
-    /**
-     * Get the stream resource
-     *
-     * @return KFilesystemStreamInterface
-     */
-    public function getStream()
-    {
-        if(!isset($this->_stream))
-        {
-            $this->_stream = $this->getObject('lib:filesystem.stream', array(
-                'wrappers' => array('lib:filesystem.stream.wrapper.buffer')
-            ));
-        }
-
-        return $this->_stream;
     }
 
     /**
