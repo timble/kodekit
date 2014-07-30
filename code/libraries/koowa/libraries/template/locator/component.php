@@ -48,10 +48,19 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
         $basepath .= '/components/com_'.strtolower($package);
 
         //File path
-        $filepath  = 'views/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
-
+        $filepath  = 'view/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
 
         // Find the template
-        return $this->realPath($basepath.'/'.$filepath);
+        $result = $this->realPath($basepath.'/'.$filepath);
+
+        // Check for a views/ folder as well
+        if ($result === false)
+        {
+            $filepath = 'views/'.substr($filepath, 5);
+
+            $result = $this->realPath($basepath.'/'.$filepath);
+        }
+
+        return $result;
     }
 }
