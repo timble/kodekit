@@ -89,12 +89,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             $component = 'com_'.$package;
             $file 	   = array_pop($parts);
 
-            if(count($parts))
-            {
-                if($parts[0] === 'view') {
-                    $parts[0] = KStringInflector::pluralize($parts[0]);
-                }
-
+            if(count($parts)) {
                 $path = implode('/', $parts).'/'.$file;
             }
             else
@@ -124,6 +119,18 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             $result =  $basepath.'/components/'.$component.'/'.$path.'.php';
             if(!is_file($result)) {
                 $result = $basepath.'/components/'.$component.'/'.$path.'/'.$file.'.php';
+            }
+
+            // Check plural views/ folder for view classes
+            if (!is_file($result) && strpos($result, '/view/') !== false)
+            {
+                $count         = 1;
+                $singular_path = str_replace('view/', 'views/', $path, $count);
+
+                $result =  $basepath.'/components/'.$component.'/'.$singular_path.'.php';
+                if(!is_file($result)) {
+                    $result = $basepath.'/components/'.$component.'/'.$singular_path.'/'.$file.'.php';
+                }
             }
 
             return $result;
