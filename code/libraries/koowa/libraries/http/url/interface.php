@@ -175,6 +175,21 @@ interface KHttpUrlInterface
     public function setFragment($fragment);
 
     /**
+     * Enable/disable URL escaping
+     *
+     * @param bool $escape
+     * @return KHttpUrlInterface
+     */
+    public function setEscape($escape);
+
+    /**
+     * Get the escape setting
+     *
+     * @return bool
+     */
+    public function getEscape();
+
+    /**
      * Build the url from an array
      *
      * @param   array  $parts Associative array like parse_url() returns.
@@ -203,14 +218,6 @@ interface KHttpUrlInterface
      * @return  string
      */
     //public function toString($parts = self::FULL, $escape = false);
-
-    /**
-     * Enable/disable URL escaping
-     *
-     * @param bool $escape
-     * return KHttpUrlInterface
-     */
-    public function escape($escape);
 
     /**
      * Check if two url's are equal

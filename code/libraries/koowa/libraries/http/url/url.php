@@ -210,7 +210,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
         parent::__construct($config);
 
         //Set the escaping behavior
-        $this->_escape = $config->escape;
+        $this->setEscape($config->escape);
 
         //Set the url
         $this->setUrl($config->url);
@@ -443,7 +443,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     public function getQuery($toArray = false, $escape = null)
     {
         $result = $this->_query;
-        $escape = isset($escape) ? (bool) $escape : $this->_escape;
+        $escape = isset($escape) ? (bool) $escape : $this->getEscape();
 
         if(!$toArray)
         {
@@ -533,6 +533,28 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     }
 
     /**
+     * Enable/disable URL escaping
+     *
+     * @param bool $escape
+     * @return KHttpUrl
+     */
+    public function setEscape($escape)
+    {
+        $this->_escape = (bool) $escape;
+        return $this;
+    }
+
+    /**
+     * Get the escape setting
+     *
+     * @return bool
+     */
+    public function getEscape()
+    {
+        return $this->_escape;
+    }
+
+    /**
      * Build the url from an array
      *
      * @param   array  $parts Associative array like parse_url() returns.
@@ -578,7 +600,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
     public function toString($parts = self::FULL, $escape = null)
     {
         $url    = '';
-        $escape = isset($escape) ? (bool) $escape : $this->_escape;
+        $escape = isset($escape) ? (bool) $escape : $this->getEscape();
 
         //Add the scheme
         if (($parts & self::SCHEME) && !empty($this->scheme)) {
@@ -628,18 +650,6 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
         }
 
         return $url;
-    }
-
-    /**
-     * Enable/disable URL escaping
-     *
-     * @param bool $escape
-     * return KHttpUrl
-     */
-    public function escape($escape)
-    {
-        $this->_escape = (bool) $escape;
-        return $this;
     }
 
     /**
