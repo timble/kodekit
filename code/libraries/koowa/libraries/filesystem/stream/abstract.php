@@ -436,7 +436,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         {
             if (!$stream instanceof KFilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
             {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'Stream must be on object implementing the KFilesystemStreamInterface or a resource of type "stream".'
                 ));
             }
@@ -825,7 +825,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
 
                 if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($class)))
                 {
-                    $filter = $class::getName();
+                    $filter = call_user_func(array($class, 'getName'));//$class::getName();
 
                     if (!empty($filter) && !in_array($filter, stream_get_filters())) {
                         stream_filter_register($filter, $class);

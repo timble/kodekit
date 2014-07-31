@@ -45,9 +45,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         if (ini_get('xdebug.file_link_format') || extension_loaded('xdebug'))
         {
             // Register editor using xdebug's file_link_format option.
-            $this->_editors['xdebug'] = function($file, $line) {
-                return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
-            };
+            $this->_editors['xdebug'] = array($this, '_getXdebugPath');
 
             //If no editor is set use xdebug
             if(!empty($this->_editor)) {
@@ -77,6 +75,18 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
                 'phpstorm' => 'phpstorm://open?file=$file&line=$line',      //Only available in PHPStorm 8+
             ),
         ));
+    }
+
+    /**
+     * Register editor using xdebug's file_link_format option.
+     *
+     * @param $file
+     * @param $line
+     * @return mixed
+     */
+    protected function _getXdebugPath($file, $line)
+    {
+        return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
     }
 
     /**
@@ -520,9 +530,9 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     {
         $fields = $this->_getObjectVars($var);
 
-        if ($var instanceof \Closure)
+        if ($var instanceof Closure)
         {
-            $rc     = new \ReflectionFunction($var);
+            $rc     = new ReflectionFunction($var);
             $fields = array();
 
             foreach ($rc->getParameters() as $param) {
@@ -537,11 +547,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             );
         }
 
-        if ($var instanceof \SplFileInfo) {
+        if ($var instanceof SplFileInfo) {
             $fields = array('path' => $var->getPathname());
         }
 
-        if ($var instanceof \SplObjectStorage)
+        if ($var instanceof SplObjectStorage)
         {
             $fields = array();
             foreach (clone $var as $obj) {
@@ -577,7 +587,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         {
             if (!in_array($var, $list, true))
             {
-                if ($level < $config->object_depth || $var instanceof \Closure)
+                if ($level < $config->object_depth || $var instanceof Closure)
                 {
                     $collapsed = $level ? count($var) >= 7 : false;
 
