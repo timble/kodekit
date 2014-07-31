@@ -84,6 +84,12 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * This method will overwrite keys that already exist, keys that don't exist yet will be added.
      *
+     * For duplicate keys, the following will be performed:
+     *
+     * - Nested configs will be recursively merged.
+     * - Items in $options with INTEGER keys will be appended.
+     * - Items in $options with STRING keys will overwrite current values.
+     *
      * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
      * @return KObjectConfig
      */
