@@ -1022,7 +1022,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * Reads all data from the stream into a string, from the beginning to end.
      *
      * This method MUST attempt to seek to the beginning of the stream before reading data and read the stream until
-     * the end is reached.
+     * the end is reached. The file pointer should stay at it's original position.
      *
      * Warning: This could attempt to load a large amount of data into memory.
      *
