@@ -1,6 +1,8 @@
-## Nooku Framework
+Nooku Framework
+===============
 
-### What is Nooku Framework ?
+What is Nooku Framework?
+-------------------------
 
 Nooku Framework is an open-source extension framework for Joomla. Developed and maintained by [Timble](http://timble.net) with the help of contributors from far and beyond. 
 
@@ -10,7 +12,8 @@ Nooku Framework provides you with excellent out-of-the-box security features. Th
 
 Nooku Framework uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering) and includes everything needed to create Joomla extensions according to the [Hierarchical Model-View-Contoller](http://en.wikipedia.org/wiki/Hierarchical_model%E2%80%93view%E2%80%93controller) (HMVC) pattern.
 
-### Why Nooku Framework?
+Why Nooku Framework?
+--------------------
 
 Nooku Framework is built to help developers create complex Joomla extensions and tries to solve following problems:
 
@@ -18,11 +21,15 @@ Nooku Framework is built to help developers create complex Joomla extensions and
 * Act as a solid base for building extensions.
 * Allow extensions to be extended easily.
 
-### Requirements
-* Joomla 2.5 or newer
-* PHP 5.2 or newer
+Requirements
+------------
 
-### Installation
+* Joomla 2.5 and 3.x 
+* PHP 5.2 or newer
+* MySQL 5.x
+
+Installation
+------------
 
 * Create a `composer.json` file in the root directory of your Joomla installation and require the `nooku/nooku-framework` package:
 
@@ -38,6 +45,7 @@ Nooku Framework is built to help developers create complex Joomla extensions and
 * Install by executing `composer install`.
 * Enable the plugin called `System - Nooku Framework` in Joomla.
 
-### License
+License
+-------
 
 Nooku Framework is open-source software licensed under the [GPLv3 license](develop/LICENSE.md).
