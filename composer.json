@@ -1,20 +1,20 @@
 {
-    "name": "joomlatools/koowa",
+    "name": "nooku/nooku-framework",
     "type": "joomlatools-installer",
     "license": "GPLv3",
-    "description": "Koowa - Joomla Extension Framework",
+    "description": "Nooku Framework is an open-source extension framework for Joomla",
     "keywords": [
         "joomla",
         "extension",
         "framework",
-        "koowa"
+        "nooku"
     ],
     "homepage": "https://github.com/nooku/nooku-framework",
     "authors": [
         {
-            "name": "Joomlatools",
-            "email": "info@joomlatools.com",
-            "homepage": "https://www.joomlatools.com"
+            "name": "Timble",
+            "email": "info@timble.net",
+            "homepage": "http://www.timble.net"
         }
     ],
     "require": {
