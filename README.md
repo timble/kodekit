@@ -4,7 +4,7 @@ Nooku Framework
 What is Nooku Framework?
 -------------------------
 
-Nooku Framework is an open-source extension framework for Joomla. Developed and maintained by [Timble](http://timble.net) with the help of passionate developers from all over the world.
+Nooku Framework is an open-source extension framework for [Joomla](http://www.joomla.orh). Developed and maintained by [Timble](http://timble.net) with the help of passionate developers from all over the world.
 
 Nooku Framework can be installed in Joomla as a plugin and lets you focus on the "business" logic of your extension. By doing most of the repetitive work for you [boilerplate code](http://en.wikipedia.org/wiki/Boilerplate_code) is eliminated which greatly reduces the time to develop Joomla extensions. 
 
