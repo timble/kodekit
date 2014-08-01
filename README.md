@@ -1,15 +1,18 @@
-## Koowa Framework
+## Nooku Framework
 
-### What is Koowa?
-Koowa is an open-source extension framework for Joomla. Developed and maintained by [Joomlatools](http://joomlatools.com).  
+### What is Nooku Framework ?
 
-By doing most of the repetitive work, Koowa greatly reduces the time to develop Joomla extensions, allowing you to focus on the things that matter: features.
+Nooku Framework is an open-source extension framework for Joomla. Developed and maintained by [Timble](http://timble.net) with the help of contributors from far and beyond. 
 
-Koowa uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering) and includes everything needed to create Joomla components according to the [Hierarchical Model-View-Contoller](http://en.wikipedia.org/wiki/Hierarchical_model%E2%80%93view%E2%80%93controller) (HMVC) pattern.
+Nooku Framework can be installed in Joomla as a plugin and lets you focus on the "business" logic of your extension. By doing most of the repetitive work for you [boilerplate code](http://en.wikipedia.org/wiki/Boilerplate_code) is eliminated whuch greatly reduces the time to develop Joomla extensions. 
 
-### Why Koowa?
+Nooku Framework provides you with excellent out-of-the-box security features. The design pattern based architecture also makes your extension very flexible: all your code to becomes re-usable, extensible and more easily replaceable. 
 
-Koowa is built to help Joomlatools create complex Joomla extensions and tries to solve following problems:
+Nooku Framework uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering) and includes everything needed to create Joomla extensions according to the [Hierarchical Model-View-Contoller](http://en.wikipedia.org/wiki/Hierarchical_model%E2%80%93view%E2%80%93controller) (HMVC) pattern.
+
+### Why Nooku Framework?
+
+Nooku Framework is built to help developers create complex Joomla extensions and tries to solve following problems:
 
 * Abstract differences between Joomla versions 2.x and 3.x.
 * Act as a solid base for building extensions.
@@ -21,20 +24,20 @@ Koowa is built to help Joomlatools create complex Joomla extensions and tries to
 
 ### Installation
 
-* Create a `composer.json` file in the root directory of your Joomla installation and require the `joomlatools/koowa` package:
+* Create a `composer.json` file in the root directory of your Joomla installation and require the `nooku/nooku-framework` package:
 
 ```json
 {
     "require": {    	
-        "joomlatools/koowa": "dev-develop"
+        "nooku/nooku-framework": "dev-develop"
     },
     "minimum-stability": "dev"
 }
 ```
 
 * Install by executing `composer install`.
-* Enable the plugin called `System - Joomlatools framework` in Joomla.
+* Enable the plugin called `System - Nooku Framework` in Joomla.
 
 ### License
 
-Koowa framework is open-source software licensed under the [GPLv3 license](develop/LICENSE.md).
+Nooku Framework is open-source software licensed under the [GPLv3 license](develop/LICENSE.md).
