@@ -23,8 +23,7 @@ class KViewContext extends KCommand implements KViewContextInterface
      */
     public function setData($data)
     {
-        $this->set('data', $data);
-        return $this;
+        return KObjectConfig::set('data', $data);
     }
 
     /**
@@ -34,6 +33,6 @@ class KViewContext extends KCommand implements KViewContextInterface
      */
     public function getData()
     {
-        return $this->get('data');
+        return KObjectConfig::get('data');
     }
 }

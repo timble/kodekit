@@ -24,9 +24,7 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function setState($state)
     {
-        $this->set('state', $state);
-
-        return $this;
+        return KObjectConfig::set('state', $state);
     }
 
     /**
@@ -36,7 +34,7 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function getState()
     {
-        return $this->get('state');
+        return KObjectConfig::get('state');
     }
 
     /**
@@ -47,9 +45,7 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function setEntity($entity)
     {
-        $this->set('entity', $entity);
-
-        return $this;
+        return KObjectConfig::set('entity', $entity);
     }
 
     /**
@@ -59,7 +55,7 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function getEntity()
     {
-        return $this->get('entity');
+        return KObjectConfig::get('entity');
     }
 
     /**
@@ -69,18 +65,17 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function getIdentityKey()
     {
-        return $this->get('identity_key');
+        return KObjectConfig::get('identity_key');
     }
 
     /**
      * Set the identity key
      *
      * @param mixed $value
-     * @return $this
+     * @return KModelContext
      */
     public function setIdentityKey($value)
     {
-        $this->set('identity_key', $value);
-        return $this;
+        return KObjectConfig::set('identity_key', $value);
     }
 }

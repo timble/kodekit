@@ -22,7 +22,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function getRequest()
     {
-        return $this->get('request');
+        return KObjectConfig::get('request');
     }
 
     /**
@@ -33,8 +33,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function setRequest(KControllerRequestInterface $request)
     {
-        $this->set('request', $request);
-        return $this;
+        return KObjectConfig::set('request', $request);
     }
 
     /**
@@ -44,7 +43,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function getResponse()
     {
-        return $this->get('response');
+        return KObjectConfig::get('response');
     }
 
     /**
@@ -55,8 +54,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function setResponse(KControllerResponseInterface $response)
     {
-        $this->set('response', $response);
-        return $this;
+        return KObjectConfig::set('response', $response);
     }
 
     /**
@@ -66,7 +64,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function getUser()
     {
-        return $this->get('user');
+        return KObjectConfig::get('user');
     }
 
     /**
@@ -77,8 +75,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function setUser(KUserInterface $user)
     {
-        $this->set('user', $user);
-        return $this;
+        return KObjectConfig::set('user', $user);
     }
 
     /**
@@ -88,7 +85,7 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function getAction()
     {
-        return $this->get('action');
+        return KObjectConfig::get('action');
     }
 
     /**
@@ -99,7 +96,6 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function setAction($action)
     {
-        $this->set('action', $action);
-        return $this;
+        return KObjectConfig::set('action', $action);
     }
 }

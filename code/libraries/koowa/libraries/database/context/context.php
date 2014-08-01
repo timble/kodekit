@@ -22,7 +22,7 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      */
     public function getQuery()
     {
-        return $this->get('query');
+        return KObjectConfig::get('query');
     }
 
     /**
@@ -33,8 +33,7 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      */
     public function setQuery($query)
     {
-        $this->set('query', $query);
-        return $this;
+        return KObjectConfig::set('query', $query);
     }
 
     /**
@@ -44,7 +43,7 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      */
     public function getAffected()
     {
-        return $this->get('affected');
+        return KObjectConfig::get('affected');
     }
 
     /**
@@ -55,7 +54,6 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      */
     public function setAffected($affected)
     {
-        $this->set('affected', $affected);
-        return $this;
+        return KObjectConfig::set('affected', $affected);
     }
 }

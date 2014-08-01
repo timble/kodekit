@@ -68,13 +68,13 @@ class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
      * @param string 
      * @return mixed
      */
-    public function __get($name)
+    public function get($name, $default = null)
     {
         if($name == 'pages' && !isset($this->pages)) {
             $this->pages = $this->_pages();
         }
         
-        return $this->get($name);
+        return parent::get($name);
     }
    
  	/**

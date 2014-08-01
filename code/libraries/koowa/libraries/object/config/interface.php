@@ -10,7 +10,8 @@
 /**
  * Config Interface
  *
- * KObjectConfig provides a property based interface to an array
+ * KObjectConfig provides a property based interface to an array. Data is can be modified unless the object is marked
+ * as readonly.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
@@ -20,10 +21,10 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     /**
      * Retrieve a configuration option
      *
-     * If the option does not exist return the default
+     * If the option does not exist return the default.
      *
-     * @param string
-     * @param mixed
+     * @param string  $name
+     * @param mixed   $default
      * @return mixed
      */
     public function get($name, $default = null);
@@ -33,7 +34,8 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      *
      * @param  string $name
      * @param  mixed  $value
-     * @return void
+     * @throws RuntimeException If the config is read only
+     * @return KObjectConfig
      */
     public function set($name, $value);
 
@@ -44,6 +46,15 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @return  boolean
      */
     public function has($name);
+
+    /**
+     * Remove a configuration option
+     *
+     * @param   string $name The configuration option name.
+     * @throws  RuntimeException If the config is read only
+     * @return  KObjectConfig
+     */
+    public function remove( $name );
 
     /**
      * Merge options
@@ -57,17 +68,10 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * - Items in $options with STRING keys will overwrite current values.
      *
      * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be added
+     * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
     public function merge($options);
-
-    /**
-     * Remove a configuration option
-     *
-     * @param   string $name The configuration option name.
-     * @return  KObjectConfigInterface
-     */
-    public function remove($name);
 
     /**
      * Append values
@@ -75,6 +79,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
      * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @throws \RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
     public function append($options);
@@ -96,4 +101,28 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @return array
      */
     public function toArray();
+
+    /**
+     * Prevent any more modifications being made to this instance.
+     *
+     * Useful after merge() has been used to merge multiple Config objects into one object which should then not be
+     * modified again.
+     *
+     * @return KObjectConfigInterface
+     */
+    public function setReadOnly();
+
+    /**
+     * Returns whether this ObjectConfig object is read only or not.
+     *
+     * @return bool
+     */
+    public function isReadOnly();
+
+    /**
+     * Get a new instance
+     *
+     * @return KObjectConfigInterface
+     */
+    public function getInstance();
 }
