@@ -24,7 +24,7 @@
         <if>
             <equals arg1="${framework.location}" arg2="local" />
             <then>
-				<echo message="Using local checkout of Joomlatools framework" />
+				<echo message="Using local checkout of Nooku framework" />
 				<copy todir="tmp/clone">
 					<fileset dir="." defaultexcludes="no" />
 				</copy>
@@ -46,7 +46,7 @@
                 </then>
             </elseif>
 			<else>
-				<echo message="Cloning Joomlatools framework" />
+				<echo message="Cloning Nooku framework" />
                 <property name="framework.branch" value="develop" />
                 <exec command="git clone --depth 1 --branch ${framework.branch} git@git.assembla.com:joomlatools-framework.git ${project.basedir}/tmp/clone" />
 			</else>
