@@ -52,6 +52,6 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 
         if($response->isSuccess()) {
             $response->setRedirect($request->getReferrer());
-        }
+        } 
 	}
 }
