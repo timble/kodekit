@@ -21,7 +21,7 @@ class ComKoowaTranslatorCatalogue extends KTranslatorCatalogue
      * @param string $key
      * @return string Generated key
      */
-    public function __get($key)
+    public function get($key)
     {
         if (!isset($this->_data[$key])) {
             $this->_data[$key] = $this->generateKey($key);

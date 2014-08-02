@@ -547,7 +547,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
      * @param   string  $property The property name.
      * @return  mixed
      */
-    public function __get($property)
+    final public function __get($property)
     {
         return $this->getProperty($property);
     }
@@ -559,7 +559,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
      * @param   mixed   $value      The property value.
      * @return  void
      */
-    public function __set($property, $value)
+    final public function __set($property, $value)
     {
         $this->setProperty($property, $value);
     }
@@ -570,7 +570,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
      * @param  string  $property The property name.
      * @return boolean
      */
-    public function __isset($property)
+    final public function __isset($property)
     {
         return $this->hasProperty($property);
     }
@@ -581,7 +581,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
      * @param   string  $property The property name.
      * @return  KModelEntityComposite
      */
-    public function __unset($property)
+    final public function __unset($property)
     {
         $this->removeProperty($property);
     }

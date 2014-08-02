@@ -185,7 +185,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      * @param  string $key The variable name
      * @return boolean
      */
-    public function __isset($key)
+    final public function __isset($key)
     {
         return isset($this->getDelegate()->$key);
     }
@@ -198,7 +198,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      * @param string $key The variable name.
      * @return void
      */
-    public function __unset($key)
+    final public function __unset($key)
     {
         if (isset($this->getDelegate()->$key)) {
             unset($this->getDelegate()->$key);
