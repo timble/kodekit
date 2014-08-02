@@ -105,7 +105,7 @@ class ModKoowaHtml extends KViewHtml
      * @param   string  $property The property name.
      * @param   mixed   $value    The property value.
      */
-    public function __set($property, $value)
+    public function set($property, $value)
     {
         if($property == 'module')
         {
@@ -116,6 +116,6 @@ class ModKoowaHtml extends KViewHtml
             }
         }
 
-        parent::__set($property, $value);
+        parent::set($property, $value);
     }
 }
