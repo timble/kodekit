@@ -33,7 +33,7 @@ The framework uses a conservative development approach focussed on the lowest co
 
 The framework follows the [semantic versioning standard](http://semver.org/). Rest assured : it's designed for stability and compatibility. We promise that all minor versions will be 100% backwards compatible. Only in major versions backwards compatibility is not guarenteed.
 
-Note : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform](https://github.com/nooku/nooku-platform), a fork from Joomla 1.5 that we are completely rebuilding using Nooku Framework. 
+Note : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform](https://github.com/nooku/nooku-platform), a fork from Joomla 1.5 that is being completely rebuild using Nooku Framework. 
 
 Requirements
 ------------
