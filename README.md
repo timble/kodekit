@@ -21,6 +21,11 @@ Nooku Framework is built to help developers create complex custom Joomla extensi
 * Provide a solid modern architecture for building extensions.
 * Allow extensions to be extended easily.
 
+Who is Nooku Framework for ?
+----------------------------
+
+Nooku Framework is for developers creating custom Joomla extensions. The framework can only be installed using Composer and cannot be installed using the Joomla installer. If you are a developer who wishes to distribute the framework as part of an installable package please [contact us](http://www.timble.net/contact/) first. 
+
 Requirements
 ------------
 
