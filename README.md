@@ -18,7 +18,7 @@ Why Nooku Framework?
 Nooku Framework is built to help developers create complex custom Joomla extensions and tries to solve following problems:
 
 * Abstract differences between Joomla versions 2.x and 3.x.
-* Provide a solid modern architecture for building extensions.
+* Provide a solid modern and lean architecture for building extensions.
 * Allow extensions to be extended easily.
 
 Who is Nooku Framework for ?
