@@ -26,6 +26,15 @@ Who is Nooku Framework for ?
 
 Nooku Framework is for developers creating custom Joomla extensions. The framework can only be installed using Composer and cannot be installed using the Joomla installer. If you are a developer who wishes to distribute the framework as part of an installable package please [contact us](http://www.timble.net/contact/) first. 
 
+Production
+----------
+
+The framework uses a conservative development approach focussed on the lowest common denominator, at time of writing this is Joomla 2.5 and PHP 5.2. The framework is fully forwards compatible with Joomla 3.x and PHP 5.x. 
+
+The framework follows the [semantic versioning standard](http://semver.org/). Under this schema version numbers and the way they change convey meaning about the underlying code and what has been modified from one version to the next.
+
+Note : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform](https://github.com/nooku/nooku-platform), a fork from Joomla 1.5 that we are completely rebuilding using Nooku Framework. 
+
 Requirements
 ------------
 
