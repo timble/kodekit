@@ -31,7 +31,7 @@ Production
 
 The framework uses a conservative development approach focussed on the lowest common denominator, at time of writing this is Joomla 2.5 and PHP 5.2. The framework is fully forwards compatible with Joomla 3.x and PHP 5.x. 
 
-The framework follows the [semantic versioning standard](http://semver.org/). Under this schema version numbers and the way they change convey meaning about the underlying code and what has been modified from one version to the next.
+The framework follows the [semantic versioning standard](http://semver.org/). Rest assured : it's designed for stability and compatibility. We promise that all minor versions will be 100% backwards compatible. Only in major versions backwards compatibility is not guarenteed.
 
 Note : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform](https://github.com/nooku/nooku-platform), a fork from Joomla 1.5 that we are completely rebuilding using Nooku Framework. 
 
