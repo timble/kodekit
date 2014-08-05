@@ -74,7 +74,7 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         $name   = !empty($scheme) ? $scheme : 'file';
 
         //Invalid context
-        if (!is_array($context) && !is_resource($context) && !get_resource_type($context) == 'stream-context')
+        if (!is_null($context) && !is_array($context) && !is_resource($context) && !get_resource_type($context) == 'stream-context')
         {
             throw new InvalidArgumentException(sprintf(
                 'Context must be an array or a resource of type stream-context; received "%s"', gettype($context)
@@ -93,7 +93,7 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if (is_resource($context)) {
             $options = stream_context_get_options($context);
         } else {
-            $options = $context;
+            $options = (array) $context;
         }
 
         //Create the stream
