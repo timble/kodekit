@@ -113,13 +113,23 @@ abstract class PlgKoowaAbstract extends JPlugin implements PlgKoowaInterface
     }
 
     /**
-     * Get the plugin configuration
+     * Get the object configuration
      *
+     * If no identifier is passed the object config of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @return KObjectConfig
      */
-    public function getConfig()
+    public function getConfig($identifier = null)
     {
-        return $this->__object_config;
+        if (isset($identifier)) {
+            $result = $this->__object_manager->getIdentifier($identifier)->getConfig();
+        } else {
+            $result = $this->__object_config;
+        }
+
+        return $result;
     }
 
     /**

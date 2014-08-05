@@ -39,6 +39,13 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     private $__object_manager;
 
     /**
+     * The object config
+     *
+     * @var KObjectConfig
+     */
+    private $__object_config;
+
+    /**
      * Mixed in methods
      *
      * @var array
@@ -76,6 +83,9 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
                 $this->mixin($key, $value);
             }
         }
+
+        //Set the object config
+        $this->__object_config = $config;
     }
 
     /**
@@ -302,6 +312,26 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
 
 	    return $result;
 	}
+
+    /**
+     * Get the object configuration
+     *
+     * If no identifier is passed the object config of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectConfig
+     */
+    public function getConfig($identifier = null)
+    {
+        if (isset($identifier)) {
+            $result = $this->__object_manager->getIdentifier($identifier)->getConfig();
+        } else {
+            $result = $this->__object_config;
+        }
+
+        return $result;
+    }
 
 	/**
      * Preform a deep clone of the object.

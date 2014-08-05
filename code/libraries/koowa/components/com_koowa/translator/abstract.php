@@ -214,7 +214,7 @@ abstract class ComKoowaTranslatorAbstract extends KTranslatorAbstract
      */
     public function getKey($string)
     {
-        $key = $this->_catalogue->{$string};
+        $key = $this->_catalogue->get($string);
 
         if ($this->_prefix) {
             $key = $this->_prefix.$key;

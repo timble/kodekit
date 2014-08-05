@@ -16,26 +16,6 @@
 class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
-     * The limit information
-     *
-     * @var	array
-     */
-    protected $_limit;
-
-    /**
-	 * Constructor.
-	 *
-	 * @param KObjectConfig $config	An optional KObjectConfig object with configuration options.
-	 */
-	public function __construct(KObjectConfig $config)
-	{
-		parent::__construct($config);
-
-        //Set the limit
-        $this->_limit = $config->limit;
-	}
-
-    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -142,18 +122,18 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
 
         if($controller instanceof KControllerModellable)
         {
-            $controller->getModel()->getState()->setProperty('limit', 'default', $this->_limit->default);
+            $controller->getModel()->getState()->setProperty('limit', 'default', $this->getConfig()->limit->default);
 
             $limit = $this->getRequest()->query->get('limit', 'int');
 
             // Set to default if there is no limit. This is done for both unique and non-unique states
             // so that limit can be transparently used on unique state requests rendering lists.
             if(empty($limit)) {
-                $limit = $this->_limit->default;
+                $limit = $this->getConfig()->limit->default;
             }
 
-            if ($this->_limit->max && $limit > $this->_limit->max) {
-                $limit = $this->_limit->max;
+            if($this->getConfig()->limit->max && $limit > $this->getConfig()->limit->max) {
+                $limit = $this->getConfig()->limit->max;
             }
 
             $this->getRequest()->query->limit = $limit;
