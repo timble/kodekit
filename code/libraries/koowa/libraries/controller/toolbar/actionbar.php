@@ -66,12 +66,12 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     {
         $controller = $this->getController();
 
-        if($controller->isEditable() && $controller->canSave()) {
-            $this->addCommand('save');
-        }
-
         if($controller->isEditable() && $controller->canApply()) {
             $this->addCommand('apply');
+        }
+
+        if($controller->isEditable() && $controller->canSave()) {
+            $this->addCommand('save');
         }
 
         if($controller->isEditable() && $controller->canCancel()) {
