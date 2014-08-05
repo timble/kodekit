@@ -43,4 +43,15 @@ interface KObjectInterface
      * @throws	RuntimeException if the object manager has not been defined.
 	 */
     public function getIdentifier($identifier = null);
+
+    /**
+     * Get the object configuration
+     *
+     * If no identifier is passed the object config of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     *  @param   string|object    $identifier A valid identifier string or object implementing ObjectInterface
+     * @return ObjectConfig
+     */
+    public function getConfig($identifier = null);
 }

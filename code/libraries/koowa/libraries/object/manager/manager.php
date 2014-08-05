@@ -315,13 +315,13 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	}
 
     /**
-     * Get the configuration options for an identifier
+     * Get the object configuration
      *
-     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return array An associative array of configuration options
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectConfig
+     * @throws KObjectExceptionInvalidIdentifier  If the identifier is not valid
      */
-    public function getConfig($identifier)
+    public function getConfig($identifier = null)
     {
         $config = $this->getIdentifier($identifier)->getConfig();
         return $config;

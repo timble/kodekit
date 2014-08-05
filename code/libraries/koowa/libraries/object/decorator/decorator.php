@@ -112,4 +112,15 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
     {
         return $this->getDelegate()->getIdentifier($identifier);
     }
+
+    /**
+     * Get the object configuration
+     *
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectConfig
+     */
+    public function getConfig($identifier = null)
+    {
+        return $this->getDelegate()->getConfig($identifier);
+    }
 }

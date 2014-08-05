@@ -23,33 +23,6 @@
 class KTemplateFilterTitle extends KTemplateFilterTag
 {
     /**
-     * The title separator
-     *
-     * @var	string
-     */
-    protected $_separator;
-
-    /**
-     * Escape the title
-     *
-     * @var	boolean
-     */
-    protected $_escape;
-
-    /**
-     * Constructor
-     *
-     * @param   KObjectConfig $config Configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_separator = $config->separator;
-        $this->_escape    = $config->escape;
-    }
-
-    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -86,7 +59,7 @@ class KTemplateFilterTitle extends KTemplateFilterTag
                 //Set required attributes
                 $attribs = array(
                     'content'   => 'default',
-                    'separator' => $this->_separator
+                    'separator' => $this->getConfig()->separator
                 );
 
                 $attribs   = array_merge($attribs, $this->parseAttributes( $matches[1][$key]));
@@ -125,7 +98,7 @@ class KTemplateFilterTitle extends KTemplateFilterTag
 
         $attribs = $this->buildAttributes($attribs);
 
-        if($this->_escape) {
+        if($this->getConfig()->escape) {
             $content = $this->getTemplate()->escape($content);
         }
 

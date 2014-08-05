@@ -33,6 +33,13 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
     private $__object_manager;
 
     /**
+     * The object config
+     *
+     * @var KObjectConfig
+     */
+    private $__object_config;
+
+    /**
      * The behavior priority
      *
      * @var integer
@@ -66,6 +73,9 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         else $this->__object_identifier = $config->object_identifier;
 
         parent::__construct($config);
+
+        //Set the object config
+        $this->__object_config = $config;
 
         //Set the command priority
         $this->_priority = $config->priority;
@@ -194,7 +204,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         if($this->isSupported())
         {
             $exclude = array_merge($exclude, array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority',
-                'getHandle', 'getName', 'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback',
+                'getHandle', 'getName', 'getObject', 'getConfig', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback',
                 'removeCommandCallback', 'getCommandCallbacks', 'invokeCommandCallback', 'isSupported'));
 
             $methods = parent::getMixableMethods($exclude);
@@ -235,6 +245,26 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
             $result = $this->__object_manager->getIdentifier($identifier);
         } else {
             $result = $this->__object_identifier;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the object configuration
+     *
+     * If no identifier is passed the object config of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     *  @param   string|object    $identifier A valid identifier string or object implementing ObjectInterface
+     *  @return KObjectConfig
+     */
+    public function getConfig($identifier = null)
+    {
+        if (isset($identifier)) {
+            $result = $this->__object_manager->getIdentifier($identifier)->getConfig();
+        } else {
+            $result = $this->__object_config;
         }
 
         return $result;
