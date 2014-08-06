@@ -16,6 +16,13 @@
 class KObjectConfigFactory extends KObject implements KObjectSingleton
 {
     /**
+     * Config object prototypes
+     *
+     * @var array
+     */
+    private $__prototypes;
+
+    /**
      * Registered config file formats.
      *
      * @var array
@@ -61,37 +68,37 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      * Get a registered config object.
      *
      * @param  string $format The format name
-     * @param   array|KObjectConfig $options An associative array of configuration options or a KObjectConfig instance.
-     * @throws RuntimeException            If the format isn't registered
-     * @throws UnexpectedValueException	If the format object doesn't implement the KObjectConfigSerializable
-     * @return KObjectConfigFormat
+     * @param  array|KObjectConfig $options An associative array of configuration options or a KObjectConfig instance.
+     * @throws InvalidArgumentException    If the format isn't registered
+     * @throws \UnexpectedValueException   If the format object doesn't implement the KObjectConfigSerializable
+     * @return KObjectConfigSerializable
      */
     public function createFormat($format, $options = array())
     {
-        $format = strtolower($format);
+        $name = strtolower($format);
 
-        if (!isset($this->_formats[$format])) {
-            throw new RuntimeException(sprintf('Unsupported config format: %s ', $format));
+        if (!isset($this->_formats[$name])) {
+            throw new \RuntimeException(sprintf('Unsupported config format: %s ', $name));
         }
 
-        $format = $this->_formats[$format];
-
-        if(!($format instanceof KObjectConfigSerializable))
+        if(!isset($this->__prototypes[$name]))
         {
-            $format = new $format($options);
+            $class    = $this->_formats[$name];
+            $instance = new $class($options);
 
-            if(!$format instanceof KObjectConfigSerializable)
+            if(!$instance instanceof KObjectConfigSerializable)
             {
-                throw new UnexpectedValueException(
-                    'Format: '.get_class($format).' does not implement ObjectConfigSerializable Interface'
+                throw new \UnexpectedValueException(
+                    'Format: '.get_class($instance).' does not implement ObjectConfigSerializable Interface'
                 );
             }
 
-            $this->_formats[$format->name] = $format;
+            $this->__prototypes[$name] = $instance;
         }
-        else $format = clone $format;
 
-        return $format;
+        //Clone the object
+        $result = clone $this->__prototypes[$name];
+        return $result;
     }
 
     /**
@@ -109,6 +116,12 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
         }
 
         $this->_formats[$format] = $class;
+
+        //In case the format is being re-registered clear the prototype
+        if(isset($this->__prototypes[$format])) {
+            unset($this->__prototypes[$format]);
+        }
+
         return $this;
     }
 
@@ -158,7 +171,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      * @param string $filename
      * @param KObjectConfigInterface $config
      * @throws RuntimeException
-     * @return boolean TRUE on success. FALSE on failure
+     * @return KObjectConfigFactory
      */
     public function toFile($filename, KObjectConfigInterface $config)
     {
@@ -171,7 +184,8 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
             ));
         }
 
-        return $this->createFormat($pathinfo['extension'])->toFile($filename, $config);
+        $this->createFormat($pathinfo['extension'])->toFile($filename, $config);
+        return $this;
     }
 
     /**

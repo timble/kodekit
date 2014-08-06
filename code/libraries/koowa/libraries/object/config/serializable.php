@@ -46,7 +46,7 @@ interface KObjectConfigSerializable
      * Write a config object to a file.
      *
      * @param  string  $filename
-     * @return void
+     * @return KObjectConfigSerializable
      */
     public function toFile($filename);
 }

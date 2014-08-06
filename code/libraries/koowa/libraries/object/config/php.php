@@ -56,7 +56,7 @@ class KObjectConfigPhp extends KObjectConfigFormat
      *
      * @param  string $filename
      * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
-     * @throws RuntimeException
+     * @throws RuntimeException If file doesn't exist is not readable or cannot be included.
      * @return KObjectConfigPhp|array
      */
     public function fromFile($filename, $object = true)
@@ -65,7 +65,11 @@ class KObjectConfigPhp extends KObjectConfigFormat
             throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
-        $data = include $filename;
+        if (version_compare(phpversion(), '5.3.0', '>=')) {
+            $data = call_user_func(function(){return require func_get_arg(0);}, $filename);
+        } else {
+            $data = require $filename;
+        }
 
         return $object ? $this->merge($data) : $data;
     }
