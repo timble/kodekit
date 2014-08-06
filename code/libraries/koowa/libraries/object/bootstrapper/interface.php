@@ -46,9 +46,9 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
     public function getClassLoader();
 
     /**
-     * Get the priority of the bootstrapper
+     * Check if the bootstrapper has been run
      *
-     * @return  integer The priority level
+     * @return bool TRUE if the bootstrapping has run FALSE otherwise
      */
-    public function getPriority();
+    public function isBootstrapped();
 }

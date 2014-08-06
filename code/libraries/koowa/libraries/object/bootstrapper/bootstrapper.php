@@ -16,71 +16,220 @@
 class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObjectSingleton
 {
     /**
+     * List of bootstrapped directories
+     *
+     * @var array
+     */
+    protected $_directories;
+
+    /**
      * List of bootstrapped components
      *
      * @var array
      */
-    private $__bootstrapped;
+    protected $_components;
 
     /**
-     * List of bootstrappers
+     * List of identifier aliases
      *
      * @var array
      */
-    protected $_bootstrappers = array();
+    protected $_aliases;
+
+    /**
+     * Bootstrapped status.
+     *
+     * @var bool
+     */
+    protected $_bootstrapped;
+
+    /**
+     * Constructor.
+     *
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_bootstrapped = false;
+
+        //Force a reload if cache is enabled and we have already bootstrapped
+        if($config->force_reload && $config->bootstrapped)
+        {
+            $config->bootstrapped = false;
+            $config->directories = array();
+            $config->components  = array();
+            $config->aliases     = array();
+            $config->identifiers = array();
+        }
+
+        $this->_directories  = KObjectConfig::unbox($config->directories);
+        $this->_components   = KObjectConfig::unbox($config->components);
+        $this->_aliases      = KObjectConfig::unbox($config->aliases);
+        $this->_identifiers  = KObjectConfig::unbox($config->identifiers);
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'force_reload' => false,
+            'bootstrapped' => false,
+            'directories'  => array(),
+            'components'   => array(),
+            'aliases'      => array(),
+            'identifiers'  => array(),
+        ));
+
+        parent::_initialize($config);
+    }
 
     /**
      * Bootstrap
      *
-     * The bootstrap cycle can only be run once. Subsequent bootstrap calls will not re-run the cycle.
+     * The bootstrap cycle can be run only once
      *
      * @return void
      */
-    final public function bootstrap()
+    public function bootstrap()
     {
-        $chain = $this->getObject('lib:object.bootstrapper.chain');
+        $identifiers = $this->_identifiers;
+        $aliases     = $this->_aliases;
 
-        foreach($this->_bootstrappers as $bootstrapper => $config)
+        if(!$this->isBootstrapped())
         {
-            if(!isset($this->__bootstrapped[$bootstrapper]))
+            foreach($this->_components as $identifier => $component)
             {
-                $instance = $this->getObject($bootstrapper, $config);
-                $chain->addBootstrapper($instance);
+                $name   = $component['name'];
+                $path   = $component['path'];
+                $vendor = $component['vendor'];
 
-                $this->__bootstrapped[$bootstrapper] = true;
+                /*
+                 * Setup the component class and object locators
+                 *
+                 * Locators are always setup as the data cannot be cached in the registry objects.
+                 */
+                if($vendor)
+                {
+                    //Register class namespace
+                    $namespace = ucfirst($name);
+                    $this->getClassLoader()->getLocator('component')->registerNamespace($namespace, dirname(dirname($path)));
+
+                    //Register object manager package
+                    $this->getObjectManager()->getLocator('com')->registerPackage($name, $vendor);
+                }
+
+                /*
+                 * Load resources
+                 *
+                 * If cache is enabled and the bootstrapper has been run we do not reload the config resources
+                 */
+                if(!$this->getConfig()->bootstrapped)
+                {
+                    //Register the component bootstrapper
+                    $config = $path .'/resources/config/bootstrapper.php';
+
+                    if(file_exists($config))
+                    {
+                        $array = $this->getObject('object.config.factory')->fromFile($config, false);
+
+                        if(isset($array['priority'])) {
+                            $priority = $array['priority'];
+                        } else {
+                            $priority = self::PRIORITY_NORMAL;
+                        }
+
+                        if(isset($array['aliases']))
+                        {
+                            if(!isset($aliases[$priority])) {
+                                $aliases[$priority] = array();
+                            }
+
+                            $aliases[$priority] = array_merge($aliases[$priority], $array['aliases']);;
+                        }
+
+                        if(isset($array['identifiers']))
+                        {
+                            if(!isset($identifiers[$priority])) {
+                                $identifiers[$priority] = array();
+                            }
+
+                            $identifiers[$priority] = array_merge_recursive($identifiers[$priority], $array['identifiers']);;
+                        }
+                    }
+                }
+
+                /*
+                * Set the identifiers
+                *
+                * Collect identifiers by priority and then flatten the array.
+                */
+                $result = array();
+
+                foreach ($identifiers as $priority => $merges) {
+                    $result = array_merge_recursive($merges, $result);
+                }
+
+                foreach ($result as $identifier => $config) {
+                    $this->getObjectManager()->setIdentifier(new KObjectIdentifier($identifier, $config));
+                }
+
+                /*
+                 * Set the aliases
+                 *
+                 * Collect aliases by priority and then flatten the array.
+                 */
+                $result = array();
+
+                foreach ($aliases as $priority => $merges) {
+                    $result = array_merge($merges, $result);
+                }
+
+                foreach($result as $alias => $identifier) {
+                    $this->getObjectManager()->registerAlias($identifier, $alias);
+                }
             }
+
+            /*
+             * Set the bootstrapper config.
+             *
+             * If cache is enabled this will prevent the bootstrapper from reloading the config resources
+             */
+            if(!$this->getConfig()->bootstrapped)
+            {
+                $this->getObjectManager()->setIdentifier(new KObjectIdentifier('lib:object.bootstrapper', array(
+                    'bootstrapped' => true,
+                    'directories'  => $this->_directories,
+                    'components'   => $this->_components,
+                    'aliases'      => $aliases,
+                )));
+            }
+
+            $this->_bootstrapped = true;
         }
-
-        $chain->bootstrap();
-
-        //Clear bootstrappers list
-        $this->_bootstrappers = array();
     }
 
     /**
      * Register a component
      *
-     * This method will setup the class and object locators for the component and register the bootstrapper if one can
-     * be found.
+     * This method will setup the class and object locators for vendor component and register the bootstrapper for both
+     * vendor and application components if one can be found.
      *
      * @param string $name      The component name
-     * @param string $vendor    The vendor name
      * @param string $path      The component path
+     * @param string $vendor    The vendor name. Vendor is optional and can be NULL
      * @return KObjectBootstrapper
      */
-    public function registerComponent($name, $vendor = null, $path = null)
+    public function registerComponent($name, $path, $vendor = null)
     {
-        //Setup the component class and object locators
-        if($vendor)
-        {
-            //Register class namespace
-            $namespace = ucfirst($name);
-            $this->getClassLoader()->getLocator('component')->registerNamespace($namespace, $path);
-
-            //Register object manager package
-            $this->getObjectManager()->getLocator('com')->registerPackage($name, $vendor);
-        }
-
         //Get the bootstrapper identifier
         if($vendor) {
             $identifier = 'com://'.$vendor.'/'.$name.'.object.bootstrapper.component';
@@ -88,14 +237,13 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
             $identifier = 'com:'.$name.'.object.bootstrapper.component';
         }
 
-        //Register the component bootstrapper
-        if(!isset($this->_bootstrappers[$identifier]) && $path)
+        if(!isset($this->_components[$identifier]))
         {
-            $config = $path .'/components/com_'.$name.'/resources/config/bootstrapper.php';
-
-            if(file_exists($config)) {
-                $this->_bootstrappers[$identifier] = include $config;
-            }
+            $this->_components[$identifier] = array(
+                'name'   => $name,
+                'path'   => $path,
+                'vendor' => $vendor
+            );
         }
 
         return $this;
@@ -105,34 +253,48 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
      * Register components from a directory
      *
      * @param string  $directory
-     * @param string  $domain
+     * @param string  $vendor
      * @return KObjectBootstrapper
      */
-    public function registerDirectory($directory, $domain = null)
+    public function registerDirectory($directory, $vendor = null)
     {
-        foreach (new DirectoryIterator($directory) as $dir)
+        if(!isset($this->_directories[$directory]))
         {
-            //Only get the component directory names
-            if ($dir->isDot() || !$dir->isDir() || !preg_match('/^[a-zA-Z]+/', $dir->getBasename())) {
-                continue;
+            foreach (new \DirectoryIterator($directory) as $dir)
+            {
+                //Only get the component directory names
+                if ($dir->isDot() || !$dir->isDir() || !preg_match('/^[a-zA-Z]+/', $dir->getBasename())) {
+                    continue;
+                }
+
+                //Get the component path
+                $path = $dir->getPathname();
+
+                //Get the component name (strip prefix if it exists)
+                $parts = explode('_', (string) $dir);
+
+                if(count($parts) > 1) {
+                    $name = $parts[1];
+                } else {
+                    $name = $parts[0];
+                }
+
+                $this->registerComponent($name, $path, $vendor);
             }
 
-            $path = dirname(dirname($dir->getPathname()));
-            $name = substr($dir, 4);
-
-            $this->registerComponent((string) $name, $domain, $path);
+            $this->_directories[$directory] = true;
         }
 
         return $this;
     }
 
     /**
-     * Prevent recursive bootstrapping
+     * Check if the bootstrapper has been run
      *
-     * @return null|string
+     * @return bool TRUE if the bootstrapping has run FALSE otherwise
      */
-    final public function getHandle()
+    public function isBootstrapped()
     {
-        return null;
+        return $this->_bootstrapped;
     }
 }
