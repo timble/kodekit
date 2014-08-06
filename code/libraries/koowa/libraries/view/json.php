@@ -149,7 +149,7 @@ class KViewJson extends KViewAbstract
             'version' => $this->_version,
             'links' => array(
                 'self' => array(
-                    'href' => $this->_getPageUrl(),
+                    'href' => (string) $this->_getPageUrl(),
                     'type' => $this->mimetype
                 )
             ),
@@ -234,7 +234,7 @@ class KViewJson extends KViewAbstract
         if (!isset($data['links']['self']))
         {
             $data['links']['self'] = array(
-                'href' => $this->_getEntityRoute($entity),
+                'href' => (string) $this->_getEntityRoute($entity),
                 'type' => $this->mimetype
             );
         }
