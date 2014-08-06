@@ -24,18 +24,18 @@ require_once dirname(__FILE__).'/registry/cache.php';
 class KClassLoader implements KClassLoaderInterface
 {
     /**
+     * The class container
+     *
+     * @var array
+     */
+    private $__registry = null;
+
+    /**
      * The class locators
      *
      * @var array
      */
     protected $_locators = array();
-
-    /**
-     * The class container
-     *
-     * @var array
-     */
-    protected $_registry = null;
 
     /**
      * Global namespaces
@@ -68,17 +68,17 @@ class KClassLoader implements KClassLoaderInterface
         //Create the class registry
         if(isset($config['cache_enabled']) && $config['cache_enabled'])
         {
-            $this->_registry = new KClassRegistryCache();
+            $this->__registry = new KClassRegistryCache();
 
             if(isset($config['cache_namespace'])) {
-                $this->_registry->setNamespace($config['cache_namespace']);
+                $this->__registry->setNamespace($config['cache_namespace']);
             }
         }
-        else $this->_registry = new KClassRegistry();
+        else $this->__registry = new KClassRegistry();
 
         //Set the debug mode
         if(isset($config['debug'])) {
-            $this->_debug = $config['debug'];
+            $this->setDebug($config['debug']);
         }
 
         //Register the library locator
@@ -189,23 +189,6 @@ class KClassLoader implements KClassLoaderInterface
     }
 
     /**
-     * Enable or disable class loading
-     *
-     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
-     *
-     * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
-     * @return bool Returns the current debug setting.
-     */
-    public function debug($debug)
-    {
-        if($debug !== null) {
-            $this->_debug = (bool) $debug;
-        }
-
-        return $this->_debug;
-    }
-
-    /**
      * Get the path based on a class name
      *
      * @param string $class     The class name
@@ -219,7 +202,7 @@ class KClassLoader implements KClassLoaderInterface
         //Switch the namespace
         $prefix = $namespace ? $namespace : $this->_namespace;
 
-        if(!$this->_registry->has($prefix.'-'.$class))
+        if(!$this->__registry->has($prefix.'-'.$class))
         {
             //Locate the class
             foreach($this->_locators as $locator)
@@ -231,9 +214,9 @@ class KClassLoader implements KClassLoaderInterface
             }
 
             //Also store if the class could not be found to prevent repeated lookups.
-            $this->_registry->set($prefix.'-'.$class, $result);
+            $this->__registry->set($prefix.'-'.$class, $result);
 
-        } else $result = $this->_registry->get($prefix.'-'.$class);
+        } else $result = $this->__registry->get($prefix.'-'.$class);
 
         return $result;
     }
@@ -249,17 +232,7 @@ class KClassLoader implements KClassLoaderInterface
     public function setPath($class, $path, $namespace = null)
     {
         $prefix = $namespace ? $namespace : $this->_namespace;
-        $this->_registry->set($prefix.'-'.$class, $path);
-    }
-
-    /**
-     * Get the class registry object
-     *
-     * @return KClassRegistryInterface
-     */
-    public function getRegistry()
-    {
-        return $this->_registry;
+        $this->__registry->set($prefix.'-'.$class, $path);
     }
 
     /**
@@ -318,7 +291,7 @@ class KClassLoader implements KClassLoaderInterface
         $alias = trim($alias);
         $class = trim($class);
 
-        $this->_registry->alias($class, $alias);
+        $this->__registry->alias($class, $alias);
     }
 
     /**
@@ -329,7 +302,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function getAliases($class)
     {
-        return array_search($class, $this->_registry->getAliases());
+        return array_search($class, $this->__registry->getAliases());
     }
 
     /**
@@ -394,6 +367,30 @@ class KClassLoader implements KClassLoaderInterface
     public function getNamespaces()
     {
         return $this->_namespaces;
+    }
+
+    /**
+     * Enable or disable class loading
+     *
+     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
+     *
+     * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
+     * @return KClassLoader
+     */
+    public function setDebug($debug)
+    {
+        $this->_debug = (bool) $debug;
+        return $this;
+    }
+
+    /**
+     * Check if the loader is runnign in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->_debug;
     }
 
     /**
