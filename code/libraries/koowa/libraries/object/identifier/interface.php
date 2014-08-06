@@ -19,6 +19,15 @@
 interface KObjectIdentifierInterface extends Serializable
 {
     /**
+     * Constructor
+     *
+     * @param  string|array $identifier Identifier string or array in type://domain/package.[.path].name format
+     * @param	array       $config     An optional associative array of configuration settings.
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
+     */
+    public function __construct($identifier, array $config = array());
+
+    /**
      * Get the identifier type
      *
      * @return string
@@ -54,21 +63,6 @@ interface KObjectIdentifierInterface extends Serializable
     public function getName();
 
     /**
-     * Get the identifier class name
-     *
-     * @return string
-     */
-    public function getClass();
-
-    /**
-     * Set the identifier class name
-     *
-     * @param  string $class
-     * @return KObjectIdentifierInterface
-     */
-    public function setClass($class);
-
-    /**
      * Get the config
      *
      * @return KObjectConfig
@@ -76,40 +70,11 @@ interface KObjectIdentifierInterface extends Serializable
     public function getConfig();
 
     /**
-     * Set the config
-     *
-     * @param  KObjectConfig|array $data   A ObjectConfig object or a an array of configuration options
-     * @param   boolean           $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
-     * @return  KObjectIdentifierInterface
-     */
-    public function setConfig($data, $merge = true);
-
-    /**
-     * Add a mixin
-     *
-     *  @param mixed $mixin     An object implementing ObjectMixinInterface, an ObjectIdentifier or an identifier string
-     * @param array $config     An array of configuration options
-     * @return KObjectIdentifierInterface
-     * @see Object::mixin()
-     */
-    public function addMixin($mixin, $config = array());
-
-    /**
      * Get the mixins
      *
      *  @return  KObjectConfig
      */
     public function getMixins();
-
-    /**
-     * Add a decorator
-     *
-     * @param mixed $decorator An object implementing ObjectDecoratorInterface, an ObjectIdentifier or an identifier string
-     * @param array $config    An array of configuration options
-     * @return KObjectIdentifierInterface
-     * @see Object::decorate()
-     */
-    public function addDecorator($decorator, $config = array());
 
     /**
      * Get the decorators
