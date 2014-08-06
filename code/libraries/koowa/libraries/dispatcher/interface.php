@@ -22,15 +22,15 @@ interface KDispatcherInterface extends KControllerInterface
 	 */
 	public function getController();
 
-	/**
-	 * Method to set a controller object attached to the dispatcher
-	 *
-	 * @param	mixed	$controller An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a controller identifier
-	 * @return	KDispatcherAbstract
-	 */
-	public function setController($controller);
+    /**
+     * Method to set a controller object attached to the dispatcher
+     *
+     * @param	mixed	$controller An object that implements ControllerInterface, ObjectIdentifier object
+     * 					            or valid identifier string
+     * @param  array  $config  An optional associative array of configuration options
+     * @return	KDispatcherInterface
+     */
+    public function setController($controller, $config = array());
 
     /**
      * Attach an authenticator

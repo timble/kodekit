@@ -167,9 +167,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      *
      * @param	mixed	$controller An object that implements KControllerInterface, KObjectIdentifier object
      * 					            or valid identifier string
+     * @param  array  $config  An optional associative array of configuration options
      * @return	KDispatcherAbstract
      */
-	public function setController($controller)
+	public function setController($controller, $config = array())
 	{
 		if(!($controller instanceof KControllerInterface))
 		{
@@ -188,7 +189,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 			}
 		    else $identifier = $this->getIdentifier($controller);
 
-			$controller = $identifier;
+            //Set the configuration
+            $identifier->getConfig()->append($config);
+
+            $controller = $identifier;
 		}
 
 		$this->_controller = $controller;
