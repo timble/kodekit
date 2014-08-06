@@ -16,50 +16,6 @@
 interface KObjectManagerInterface
 {
     /**
-     * Returns an identifier object.
-     *
-     * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
-     * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
-     * string. Function recursively resolves identifier aliases and returns the aliased identifier.
-     *
-     * If no identifier is passed the object identifier of this object will be returned.
-     *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return KObjectIdentifier
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     */
-    //public function getIdentifier($identifier = null);
-
-    /**
-     * Set an identifier configuration
-     *
-     * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @param array $config      An associative array of configuration options
-     * @param  boolean  $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
-     * @return KObjectManager
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     */
-    public function setIdentifier($identifier, $config = array(), $merge = true);
-
-    /**
-     * Get the identifier class
-     *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
-     * @return string|false  Returns the class name or false if the class could not be found.
-     */
-    public function getClass($identifier, $fallback = true);
-
-    /**
-     * Get the identifier class
-     *
-     * @param mixed  $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param string $class      The class name
-     * @return string
-     */
-    public function setClass($identifier, $class);
-
-    /**
      * Get an object instance based on an object identifier
      *
      * If the object implements the ObjectInstantiable interface the manager will delegate object instantiation
@@ -75,15 +31,67 @@ interface KObjectManagerInterface
      */
     //public function getObject($identifier, array $config = array());
 
-	/**
-	 * Insert the object instance using the identifier
-	 *
-	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @param object $object     The object instance to store
+    /**
+     * Insert the object instance using the identifier
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param object $object     The object instance to store
      * @return KObjectManagerInterface
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-	 */
-	public function setObject($identifier, $object);
+     */
+    public function setObject($identifier, $object);
+
+    /**
+     * Returns an identifier object.
+     *
+     * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
+     * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
+     * string. Function recursively resolves identifier aliases and returns the aliased identifier.
+     *
+     * If no identifier is passed the object identifier of this object will be returned.
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @return KObjectIdentifier
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    //public function getIdentifier($identifier = null);
+
+    /**
+     * Set an identifier
+     *
+     * This function will reset the identifier if it has already been set. Use this very carefully as it can have
+     * unwanted side-effects.
+     *
+     * @param KObjectIdentifier  $identifier An ObjectIdentifier
+     * @return KObjectManager
+     */
+    public function setIdentifier(KObjectIdentifier $identifier);
+
+    /**
+     * Check if an identifier exists
+     *
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return bool TRUE if the identifier exists, false otherwise.
+     */
+    public function hasIdentifier($identifier);
+
+    /**
+     * Get the identifier class
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
+     * @return string|false  Returns the class name or false if the class could not be found.
+     */
+    public function getClass($identifier, $fallback = true);
+
+    /**
+     * Get the object configuration
+     *
+     * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectConfig
+     * @throws KObjectExceptionInvalidIdentifier  If the identifier is not valid
+     */
+    public function getConfig($identifier = null);
 
     /**
      * Register a mixin for an identifier

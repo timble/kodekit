@@ -27,7 +27,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      *
      * @var KObjectRegistry
      */
-    protected $_registry;
+    private $__registry;
 
     /**
      * The identifier locators
@@ -67,10 +67,10 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         //Create the object registry
         if($config->cache_enabled)
         {
-            $this->_registry = new KObjectRegistryCache();
-            $this->_registry->setNamespace($config->cache_namespace);
+            $this->__registry = new KObjectRegistryCache();
+            $this->__registry->setNamespace($config->cache_namespace);
         }
-        else $this->_registry = new KObjectRegistry();
+        else $this->__registry = new KObjectRegistry();
 
         //Create the object identifier
         $this->__object_identifier = $this->getIdentifier('object.manager');
@@ -139,114 +139,6 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
 	}
 
     /**
-     * Returns an identifier object.
-     *
-     * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
-     * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
-     * string. Function recursively resolves identifier aliases and returns the aliased identifier.
-     *
-     * If the identifier does not have a type set default type to 'lib'. Eg, event.publisher is the same as
-     * lib:event.publisher.
-     *
-     * If no identifier is passed the object identifier of this object will be returned.
-     *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return KObjectIdentifier
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     */
-    public function getIdentifier($identifier = null)
-    {
-        //Get the identifier
-        if(isset($identifier))
-        {
-            if(!$identifier instanceof KObjectIdentifierInterface)
-            {
-                if ($identifier instanceof KObjectInterface) {
-                    $identifier = $identifier->getIdentifier();
-                } else {
-                    $identifier = new KObjectIdentifier($identifier);
-                }
-            }
-
-            //Get the identifier object
-            if (!$result = $this->_registry->find($identifier))
-            {
-                $this->_registry->set($identifier);
-                $result = $identifier;
-            }
-        }
-        else $result = $this->__object_identifier;
-
-        return $result;
-    }
-
-    /**
-     * Set an identifier configuration
-     *
-     * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @param array $config      An associative array of configuration options
-     * @param  boolean  $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
-     * @return KObjectManager
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     */
-    public function setIdentifier($identifier, $config = array(), $merge = true)
-    {
-        $identifier = $this->getIdentifier($identifier);
-        $identifier->setConfig($config, $merge);
-
-        return $this;
-    }
-
-    /**
-     * Get the identifier class
-     *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
-     * @return string|false  Returns the class name or false if the class could not be found.
-     */
-    public function getClass($identifier, $fallback = true)
-    {
-        $identifier = $this->getIdentifier($identifier);
-        $class      = $identifier->getClass();
-
-        //If the class is FALSE we have tried to locate it already, do not locate it again.
-        if(empty($class) && $class !== false)
-        {
-            $class = $this->_locate($identifier, $fallback);
-
-             //If we are falling back set the class in the identifier.
-            if($fallback) {
-                $this->setClass($identifier, $class);
-            }
-        }
-
-        return $class;
-    }
-
-    /**
-     * Set the identifier class
-     *
-     * @param mixed  $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param string $class      The class name
-     * @return string
-     */
-    public function setClass($identifier, $class)
-    {
-        $identifier = $this->getIdentifier($identifier);
-
-        //We cannot reset the class name of a registered object at runtime
-        if(!$this->_registry->get($identifier) instanceof KObjectInterface)
-        {
-            $identifier->setClass($class);
-
-            //Re-set the registry
-            $this->_registry->set($identifier);
-        }
-
-        return $this;
-    }
-
-    /**
      * Get an object instance based on an object identifier
      *
      * If the object implements the ObjectInstantiable interface the manager will delegate object instantiation
@@ -311,8 +203,103 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
             $this->registerAlias($identifier, $singleton);
         }
 
-        $this->_registry->set($identifier, $object);
-	}
+        $this->__registry->set($identifier, $object);
+    }
+
+    /**
+     * Returns an identifier object.
+     *
+     * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
+     * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
+     * string. Function recursively resolves identifier aliases and returns the aliased identifier.
+     *
+     * If the identifier does not have a type set default type to 'lib'. Eg, event.publisher is the same as
+     * lib:event.publisher.
+     *
+     * If no identifier is passed the object identifier of this object will be returned.
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @return KObjectIdentifier
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    public function getIdentifier($identifier = null)
+    {
+        //Get the identifier
+        if(isset($identifier))
+        {
+            if(!$identifier instanceof KObjectIdentifierInterface)
+            {
+                if ($identifier instanceof KObjectInterface) {
+                    $identifier = $identifier->getIdentifier();
+                } else {
+                    $identifier = new KObjectIdentifier($identifier);
+                }
+            }
+
+            //Get the identifier object
+            if (!$result = $this->__registry->find($identifier)) {
+                $result = $this->__registry->set($identifier);
+            }
+        }
+        else $result = $this->__object_identifier;
+
+        return $result;
+    }
+
+    /**
+     * Set an identifier
+     *
+     * This function will reset the identifier if it has already been set. Use this very carefully as it can have
+     * unwanted side-effects.
+     *
+     * @param KObjectIdentifier  $identifier An ObjectIdentifier
+     * @return KObjectManager
+     */
+    public function setIdentifier(KObjectIdentifier $identifier)
+    {
+        $this->__registry->set($identifier);
+        return $this;
+    }
+
+    /**
+     * Check if an identifier exists
+     *
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return bool TRUE if the identifier exists, false otherwise.
+     */
+    public function hasIdentifier($identifier)
+    {
+        return $this->__registry->has($identifier);
+    }
+
+    /**
+     * Get the identifier class
+     *
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
+     * @return string|false  Returns the class name or false if the class could not be found.
+     */
+    public function getClass($identifier, $fallback = true)
+    {
+        $identifier = $this->getIdentifier($identifier);
+        $class      = $this->__registry->getClass($identifier);
+
+        //If the class is FALSE we have tried to locate it already, do not locate it again.
+        if(empty($class) && $class !== false)
+        {
+            $class = $this->_locate($identifier, $fallback);
+
+            //If we are falling back set the class in the registry
+            if($fallback)
+            {
+                if(!$this->__registry->get($identifier) instanceof KObjectInterface) {
+                    $this->__registry->setClass($identifier, $class);
+                }
+            }
+        }
+
+        return $class;
+    }
 
     /**
      * Get the object configuration
@@ -325,16 +312,6 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     {
         $config = $this->getIdentifier($identifier)->getConfig();
         return $config;
-    }
-
-    /**
-     * Get the class registry object
-     *
-     * @return KObjectRegistryInterface
-     */
-    public function getRegistry()
-    {
-        return $this->_registry;
     }
 
     /**
@@ -354,12 +331,17 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     public function registerMixin($identifier, $mixin, $config = array())
     {
         $identifier = $this->getIdentifier($identifier);
-        $identifier->addMixin($mixin, $config);
+
+        if ($mixin instanceof KObjectMixinInterface || $mixin instanceof KObjectIdentifier) {
+            $identifier->getMixins()->append(array($mixin));
+        } else {
+            $identifier->getMixins()->append(array($mixin => $config));
+        }
 
         //If the identifier already exists mixin the mixin
         if ($this->isRegistered($identifier))
         {
-            $mixer = $this->_registry->get($identifier);
+            $mixer = $this->__registry->get($identifier);
             $this->_mixin($identifier, $mixer);
         }
 
@@ -383,12 +365,17 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
     public function registerDecorator($identifier, $decorator, $config = array())
     {
         $identifier = $this->getIdentifier($identifier);
-        $identifier->addDecorator($decorator);
+
+        if ($decorator instanceof KObjectDecoratorInterface || $decorator instanceof KObjectIdentifier) {
+            $identifier->getDecorators()->append(array($decorator));
+        } else {
+            $identifier->getDecorators()->append(array($decorator => $config));
+        }
 
         //If the identifier already exists decorate it
         if ($this->isRegistered($identifier))
         {
-            $delegate = $this->_registry->get($identifier);
+            $delegate = $this->__registry->get($identifier);
             $this->_decorate($identifier, $delegate);
         }
 
@@ -466,14 +453,14 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
         $alias      = $this->getIdentifier($alias);
 
         //Register the alias for the identifier
-        $this->_registry->alias($identifier, (string) $alias);
+        $this->__registry->alias($identifier, (string) $alias);
 
         //Merge alias configuration into the identifier
         $identifier->getConfig()->append($alias->getConfig());
 
         // Register alias mixins.
         foreach ($alias->getMixins() as $mixin) {
-            $identifier->addMixin($mixin);
+            $this->registerMixin($identifier, $mixin);
         }
 
         return $this;
@@ -488,7 +475,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
      */
     public function getAliases($identifier)
     {
-        return array_search((string) $identifier, $this->_registry->getAliases());
+        return array_search((string) $identifier, $this->__registry->getAliases());
     }
 
     /**
@@ -541,7 +528,7 @@ class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObje
                 $registered = $this->getIdentifier($parts);
             }
 
-            $object = $this->_registry->get($registered);
+            $object = $this->__registry->get($registered);
 
             //If the object implements ObjectInterface we have registered an object
             if($object instanceof KObjectInterface) {
