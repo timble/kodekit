@@ -57,6 +57,30 @@ class KObjectRegistryCache extends KObjectRegistry
     }
 
     /**
+     * Register a class for an identifier
+     *
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param string                   $class      The class
+     * @return KObjectRegistry
+     */
+    public function setClass($identifier, $class)
+    {
+        $identifier = (string) $identifier;
+
+        if(parent::offsetExists($identifier))
+        {
+            $data = array(
+                'identifier' =>  parent::offsetGet($identifier),
+                'class'      =>  $class
+            );
+
+            apc_store($this->_namespace.'-object-'.$identifier, $data);
+        }
+
+        return  parent::setClass($identifier, $class);
+    }
+
+    /**
      * Get an item from the array by offset
      *
      * @param   int     $offset The offset
@@ -66,15 +90,21 @@ class KObjectRegistryCache extends KObjectRegistry
     {
         if(!parent::offsetExists($offset))
         {
-            if($result = apc_fetch($this->_namespace.'-object-'.$offset))
+            if($data = apc_fetch($this->_namespace.'-object-'.$offset))
             {
-                $result =  unserialize($result);
-                parent::offsetSet($offset, $result);
+                $class      = $data['class'];
+                $identifier = $data['identifier'];
+
+                //Set the identifier
+                parent::offsetSet($offset, $identifier);
+
+                //Set the class
+                $this->setClass($offset, $class);
             }
         }
-        else $result = parent::offsetGet($offset);
+        else $identifier = parent::offsetGet($offset);
 
-        return $result;
+        return $identifier;
     }
 
     /**
@@ -84,13 +114,19 @@ class KObjectRegistryCache extends KObjectRegistry
      * @param   mixed   $value  The item's value
      * @return  object  ObjectRegistryCache
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $identifier)
     {
-        if($value instanceof KObjectIdentifierInterface) {
-            apc_store($this->_namespace.'-object-'.$offset, serialize($value));
+        if($identifier instanceof KObjectIdentifierInterface)
+        {
+            $data = array(
+                'identifier' =>  $identifier,
+                'class'      =>  $this->getClass($identifier)
+            );
+
+            apc_store($this->_namespace.'-object-'.$offset, $data);
         }
 
-        parent::offsetSet($offset, $value);
+        parent::offsetSet($offset, $identifier);
     }
 
     /**

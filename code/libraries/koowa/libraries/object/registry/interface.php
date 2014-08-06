@@ -18,51 +18,83 @@ interface KObjectRegistryInterface
     /**
      * Get a an object from the registry
      *
-     * @param  KObjectIdentifier $identifier
-     * @return  KObjectInterface   The object
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return KObjectInterface   The object
      */
-    public function get(KObjectIdentifier $identifier);
+    public function get($identifier);
 
     /**
      * Set an object in the registry
      *
-     * @param  KObjectIdentifier $identifier
-     * @param  mixed             $data
-     * @return KObjectRegistryInterface
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  mixed $data
+     * @return KObjectIdentifier The object identifier that was set in the registry.
      */
-    public function set(KObjectIdentifier $identifier, $data = null);
+    public function set($identifier, $data = null);
 
     /**
      * Check if an object exists in the registry
      *
-     * @param  KObjectIdentifier $identifier
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return  boolean
      */
-    public function has(KObjectIdentifier $identifier);
+    public function has($identifier);
 
     /**
      * Remove an object from the registry
      *
-     * @param  KObjectIdentifier $identifier
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return KObjectRegistryInterface
      */
-    public function remove(KObjectIdentifier $identifier);
+    public function remove($identifier);
 
     /**
      * Clears out all objects from the registry
      *
-     * @return KObjectRegistryInterface
+     * @return  KObjectRegistryInterface
      */
     public function clear();
 
     /**
-     * Register an alias for an identifier
+     * Try to find an object based on an identifier string
      *
-     * @param KObjectIdentifier  $identifier
-     * @param mixed             $alias      The alias
+     * @param   mixed  $identifier
+     * @return  KObjectIdentifier  An ObjectIdentifier or NULL if the identifier does not exist.
+     */
+    public function find($identifier);
+
+    /**
+     * Add an alias for an identifier
+     *
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  KObjectIdentifier|string $alias      The alias
      * @return KObjectRegistry
      */
-    public function alias(KObjectIdentifier $identifier, $alias);
+    public function alias($identifier, $alias);
+
+    /**
+     * Register a class for an identifier
+     *
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param mixed $alias The alias
+     * @return KObjectRegistryInterface
+     */
+    public function setClass($identifier, $class);
+
+    /**
+     * Get the identifier class
+     *
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return string|false|null  Returns the class name or FALSE if the class could not be found.
+     */
+    public function getClass($identifier);
+
+    /**
+     * Get a list of all the identifier aliases
+     *
+     * @return array
+     */
+    public function getClasses();
 
     /**
      * Get a list of all the identifier aliases

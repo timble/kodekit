@@ -16,6 +16,13 @@
 class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
 {
     /**
+     * The identifier classes
+     *
+     * @var  array
+     */
+    protected $_classes = array();
+
+    /**
      * The identifier aliases
      *
      * @var  array
@@ -25,10 +32,10 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Get a an object from the registry
      *
-     * @param  KObjectIdentifier $identifier
-     * @return  KObjectInterface   The object or NULL if the identifier could not be found
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return KObjectInterface   The object or NULL if the identifier could not be found
      */
-    public function get(KObjectIdentifier $identifier)
+    public function get($identifier)
     {
         $identifier = (string) $identifier;
 
@@ -44,27 +51,27 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Set an object in the registry
      *
-     * @param  KObjectIdentifier $identifier
-     * @param  mixed            $data
-     * @return KObjectRegistry
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  mixed $data
+     * @return KObjectIdentifier The object identifier that was set in the registry.
      */
-    public function set(KObjectIdentifier $identifier, $data = null)
+    public function set($identifier, $data = null)
     {
         if($data == null) {
-            $data = $identifier;
+            $data = is_string($identifier) ? new KObjectIdentifier($identifier) : $identifier;
         }
 
         $this->offsetSet((string) $identifier, $data);
-        return $this;
+        return $data;
     }
 
     /**
      * Check if an object exists in the registry
      *
-     * @param  KObjectIdentifier $identifier
-     * @return  boolean
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return boolean
      */
-    public function has(KObjectIdentifier $identifier)
+    public function has($identifier)
     {
         return $this->offsetExists((string) $identifier);
     }
@@ -72,10 +79,10 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Remove an object from the registry
      *
-     * @param  KObjectIdentifier $identifier
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return KObjectRegistry
      */
-    public function remove(KObjectIdentifier $identifier)
+    public function remove($identifier)
     {
         $this->offsetUnset((string) $identifier);
         return $this;
@@ -124,11 +131,11 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Register an alias for an identifier
      *
-     * @param KObjectIdentifier  $identifier
-     * @param mixed             $alias      The alias
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param mixed  $alias  The alias
      * @return KObjectRegistry
      */
-    public function alias(KObjectIdentifier $identifier, $alias)
+    public function alias($identifier, $alias)
     {
         $alias      = trim((string) $alias);
         $identifier = (string) $identifier;
@@ -139,6 +146,51 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Register a class for an identifier
+     *
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param string $class The class
+     * @return KObjectRegistry
+     */
+    public function setClass($identifier, $class)
+    {
+        $class      = trim($class);
+        $identifier = (string) $identifier;
+
+        $this->_classes[$identifier] = $class;
+
+        return $this;
+    }
+
+    /**
+     * Get the identifier class
+     *
+     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return string|false|null  Returns the class name or FALSE if the class could not be found.
+     */
+    public function getClass($identifier)
+    {
+        $result     = null;
+        $identifier = (string) $identifier;
+
+        if(isset($this->_classes[$identifier])) {
+            $result = $this->_classes[$identifier];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get a list of all the identifier aliases
+     *
+     * @return array
+     */
+    public function getClasses()
+    {
+        return $this->_classes;
     }
 
     /**
