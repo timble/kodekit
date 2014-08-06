@@ -19,25 +19,24 @@ class KObjectConfigIni extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
      * @throws DomainException
-     * @return KObjectConfigIni
+     * @return KObjectConfigIni|array
      */
-    public function fromString($string)
+    public function fromString($string, $object = true)
     {
         $data = array();
 
         if(!empty($string))
         {
-            $data = @parse_ini_string($string, true);
+            $data = parse_ini_string($string, true);
 
             if($data === false) {
-                throw new DomainException('Cannot parse INI string');
+                throw new \DomainException('Cannot parse INI string');
             }
         }
 
-        $this->merge($data);
-
-        return $this;
+        return $object ? $this->merge($data) : $data;
     }
 
     /**

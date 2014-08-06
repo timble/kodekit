@@ -19,10 +19,11 @@ interface KObjectConfigSerializable
      * Read from a string and create a ObjectConfig object
      *
      * @param  string $string
-     * @throws \DomainException
-     * @return KObjectConfigSerializable
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @throws DomainException
+     * @return KObjectConfigSerializable|array
      */
-    public function fromString($string);
+    public function fromString($string, $object = false);
 
     /**
      * Write a config object to a string.
@@ -35,16 +36,16 @@ interface KObjectConfigSerializable
      * Read from a file and create an array
      *
      * @param  string $filename
-     * @throws \RuntimeException
-     * @return KObjectConfigSerializable
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @throws RuntimeException
+     * @return KObjectConfigSerializable|array
      */
-    public function fromFile($filename);
+    public function fromFile($filename, $object = false);
 
     /**
      * Write a config object to a file.
      *
      * @param  string  $filename
-     * @throws \RuntimeException
      * @return void
      */
     public function toFile($filename);

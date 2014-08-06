@@ -103,12 +103,15 @@ class KObjectConfigYaml extends KObjectConfigFormat
      * Read from a YAML string and create a config object
      *
      * @param  string $string
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
      * @throws DomainException
      * @throws RuntimeException
-     * @return KObjectConfigYaml
+     * @return KObjectConfigYaml|array
      */
-    public function fromString($string)
+    public function fromString($string, $object = true)
     {
+        $data = array();
+
         if ($decoder = $this->getDecoder())
         {
             $data = array();
@@ -121,12 +124,10 @@ class KObjectConfigYaml extends KObjectConfigFormat
                     throw new DomainException('Cannot parse YAML string');
                 }
             }
-
-            $this->merge($data);
         }
         else throw new RuntimeException("No Yaml decoder specified");
 
-        return $this;
+        return $object ? $this->merge($data) : $data;
     }
 
     /**

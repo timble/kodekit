@@ -19,19 +19,18 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
      * Read from a file and create a config object
      *
      * @param  string $filename
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
      * @throws RuntimeException
-     * @return KObjectConfigFormat
+     * @return KObjectConfigFormat|array
      */
-    public function fromFile($filename)
+    public function fromFile($filename, $object = true)
     {
         if (!is_file($filename) || !is_readable($filename)) {
             throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
         $string = file_get_contents($filename);
-        $this->fromString($string);
-
-        return $this;
+        return $this->fromString($string, $object);
     }
 
     /**
