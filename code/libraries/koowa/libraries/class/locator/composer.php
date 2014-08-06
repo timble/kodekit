@@ -57,7 +57,7 @@ class KClassLocatorComposer extends KClassLocatorAbstract
      * @param  string $basepath  The base path
      * @return string|false   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function locate($class, $basepath = null)
+    public function locate($class, $basepath)
     {
         $path = false;
 

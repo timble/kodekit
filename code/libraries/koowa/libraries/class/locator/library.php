@@ -52,7 +52,7 @@ class KClassLocatorLibrary extends KClassLocatorAbstract
      * @param  string $basepath  The base path
 	 * @return string|boolean	 Returns the path on success FALSE on failure
 	 */
-	public function locate($class, $basepath = null)
+	public function locate($class, $basepath)
 	{
         foreach($this->getNamespaces() as $namespace => $basepath)
         {
