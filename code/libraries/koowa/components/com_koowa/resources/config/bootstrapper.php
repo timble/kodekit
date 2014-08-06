@@ -8,7 +8,7 @@
  */
 
 return array(
-    'priority' => KObjectBootstrapper::PRIORITY_LOW,
+    'priority' => KObjectBootstrapper::PRIORITY_HIGH,
 
     'aliases'  => array(
         'request'           => 'com:koowa.dispatcher.request',
