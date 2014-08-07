@@ -272,7 +272,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
     {
         if(!isset($this->_directories[$directory]))
         {
-            foreach (new \DirectoryIterator($directory) as $dir)
+            foreach (new DirectoryIterator($directory) as $dir)
             {
                 //Only get the component directory names
                 if ($dir->isDot() || !$dir->isDir() || !preg_match('/^[a-zA-Z]+/', $dir->getBasename())) {

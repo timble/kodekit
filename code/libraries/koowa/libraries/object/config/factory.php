@@ -78,7 +78,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
         $name = strtolower($format);
 
         if (!isset($this->_formats[$name])) {
-            throw new \RuntimeException(sprintf('Unsupported config format: %s ', $name));
+            throw new RuntimeException(sprintf('Unsupported config format: %s ', $name));
         }
 
         if(!isset($this->__prototypes[$name]))
@@ -88,7 +88,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
 
             if(!$instance instanceof KObjectConfigSerializable)
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Format: '.get_class($instance).' does not implement ObjectConfigSerializable Interface'
                 );
             }

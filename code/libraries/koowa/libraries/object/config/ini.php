@@ -32,7 +32,7 @@ class KObjectConfigIni extends KObjectConfigFormat
             $data = parse_ini_string($string, true);
 
             if($data === false) {
-                throw new \DomainException('Cannot parse INI string');
+                throw new DomainException('Cannot parse INI string');
             }
         }
 

@@ -65,12 +65,19 @@ class KObjectConfigPhp extends KObjectConfigFormat
             throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            $data = call_user_func(function(){return require func_get_arg(0);}, $filename);
-        } else {
-            $data = require $filename;
-        }
+        $data = $this->_includeFile($filename);
 
         return $object ? $this->merge($data) : $data;
+    }
+
+    /**
+     * Includes a file without exposing caller method's scope
+     *
+     * @param  string $filename
+     * @return mixed
+     */
+    protected function _includeFile($filename)
+    {
+        return require $filename;
     }
 }
