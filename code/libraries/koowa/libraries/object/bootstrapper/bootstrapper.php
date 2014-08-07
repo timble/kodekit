@@ -181,28 +181,28 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                 *
                 * Collect identifiers by priority and then flatten the array.
                 */
-                $result = array();
+                $identfiiers_flat = array();
 
                 foreach ($identifiers as $priority => $merges) {
-                    $result = array_merge_recursive($merges, $result);
+                    $result = array_merge_recursive($merges, $identfiiers_flat);
                 }
 
-                foreach ($result as $identifier => $config) {
+                foreach ($identfiiers_flat as $identifier => $config) {
                     $this->getObjectManager()->setIdentifier(new KObjectIdentifier($identifier, $config));
                 }
 
                 /*
-                 * Set the aliases
-                 *
-                 * Collect aliases by priority and then flatten the array.
-                 */
-                $result = array();
+                * Set the aliases
+                *
+                * Collect aliases by priority and then flatten the array.
+                */
+                $aliases_flat = array();
 
                 foreach ($aliases as $priority => $merges) {
-                    $result = array_merge($merges, $result);
+                    $aliases_flat = array_merge($merges, $aliases_flat);
                 }
 
-                foreach($result as $alias => $identifier) {
+                foreach($aliases_flat as $alias => $identifier) {
                     $this->getObjectManager()->registerAlias($identifier, $alias);
                 }
 
@@ -216,8 +216,14 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                     'directories'  => $this->_directories,
                     'components'   => $this->_components,
                     'files'        => $this->_files,
-                    'aliases'      => $aliases,
+                    'aliases'      => $aliases_flat,
                 )));
+            }
+            else
+            {
+                foreach($aliases as $alias => $identifier) {
+                    $this->getObjectManager()->registerAlias($identifier, $alias);
+                }
             }
 
             $this->_bootstrapped = true;
