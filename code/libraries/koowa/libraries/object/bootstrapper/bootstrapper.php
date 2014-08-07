@@ -131,7 +131,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                 {
                     //Register class namespace
                     $namespace = ucfirst($name);
-                    $this->getClassLoader()->getLocator('component')->registerNamespace($namespace, dirname(dirname($path)));
+                    $this->getClassLoader()->getLocator('component')->registerNamespace($namespace, $path);
 
                     //Register object manager package
                     $this->getObjectManager()->getLocator('com')->registerPackage($name, $vendor);

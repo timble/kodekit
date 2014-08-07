@@ -126,8 +126,8 @@ class PlgSystemKoowa extends JPlugin
             $loader      = $manager->getClassLoader();
 
             //Application basepaths
-            $loader->registerNamespace('site' , JPATH_SITE, JFactory::getApplication()->isSite());
-            $loader->registerNamespace('admin', JPATH_ADMINISTRATOR, JFactory::getApplication()->isAdmin());
+            $loader->registerNamespace('site' , JPATH_SITE.'/components', JFactory::getApplication()->isSite());
+            $loader->registerNamespace('admin', JPATH_ADMINISTRATOR.'/components', JFactory::getApplication()->isAdmin());
 
             /**
              * Component Bootstrapping
@@ -140,8 +140,8 @@ class PlgSystemKoowa extends JPlugin
             //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(
                 'namespaces' => array(
-                    '\\'     => JPATH_BASE,
-                    'Koowa'  => JPATH_LIBRARIES.'/koowa',
+                    '\\'     => JPATH_BASE.'/modules',
+                    'Koowa'  => JPATH_LIBRARIES.'/koowa/modules',
                 )
             )));
 
@@ -155,8 +155,8 @@ class PlgSystemKoowa extends JPlugin
              */
             $loader->registerLocator(new ComKoowaClassLocatorPlugin(array(
                 'namespaces' => array(
-                    '\\'     => JPATH_ROOT,
-                    'Koowa'  => JPATH_LIBRARIES.'/koowa',
+                    '\\'     => JPATH_ROOT.'/plugins',
+                    'Koowa'  => JPATH_LIBRARIES.'/koowa/plugins',
                 )
             )));
 

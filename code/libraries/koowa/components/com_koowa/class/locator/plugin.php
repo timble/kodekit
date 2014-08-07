@@ -82,7 +82,7 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
                 $basepath = $this->getNamespace($namespace);
             }
 
-            return $basepath.'/plugins/'.$package.'/'.$path.'.php';
+            return $basepath.'/'.$package.'/'.$path.'.php';
 	    }
 
 		return false;
