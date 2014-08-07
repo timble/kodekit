@@ -18,11 +18,10 @@ class ComKoowaDatabaseBehaviorCreatable extends KDatabaseBehaviorCreatable
     /**
      * Get the user that created the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return KUserInterface Returns a User object
      */
     public function getAuthor()
     {
-        $user     = null;
         $provider = $this->getObject('user.provider');
 
         if($this->hasProperty('created_by') && !empty($this->created_by))
@@ -44,6 +43,7 @@ class ComKoowaDatabaseBehaviorCreatable extends KDatabaseBehaviorCreatable
             }
             else $user = $provider->load($this->created_by);
         }
+        else $user = $provider->load(0);
 
         return $user;
     }

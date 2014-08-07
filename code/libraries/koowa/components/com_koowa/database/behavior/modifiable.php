@@ -18,11 +18,10 @@ class ComKoowaDatabaseBehaviorModifiable extends KDatabaseBehaviorModifiable
     /**
      * Get the user that last edited the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return KUserInterface Returns a User object
      */
     public function getEditor()
     {
-        $user     = null;
         $provider = $this->getObject('user.provider');
 
         if($this->hasProperty('modified_by') && !empty($this->modified_by))
@@ -44,6 +43,7 @@ class ComKoowaDatabaseBehaviorModifiable extends KDatabaseBehaviorModifiable
             }
             else $user = $provider->load($this->modified_by);
         }
+        else $user = $provider->load(0);
 
         return $user;
     }

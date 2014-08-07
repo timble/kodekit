@@ -36,11 +36,10 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
     /**
      * Get the user that owns the lock on the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return KUserInterface Returns a User object
      */
     public function getOwner()
     {
-        $user     = null;
         $provider = $this->getObject('user.provider');
 
         if($this->hasProperty('locked_by') && !empty($this->locked_by))
@@ -58,10 +57,11 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
                     'attributes' => json_decode($this->_owner_params)
                 );
 
-                $user = $this->getObject('user.provider')->store($this->_owner_id, $data);
+                $user = $provider->store($this->_owner_id, $data);
             }
-            else $user = $this->getObject('user.provider')->load($this->locked_by);
+            else $user = $provider->load($this->locked_by);
         }
+        else $user = $provider->load(0);
 
         return $user;
     }
