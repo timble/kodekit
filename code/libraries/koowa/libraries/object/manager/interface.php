@@ -29,7 +29,7 @@ interface KObjectManagerInterface
      * @throws  KObjectExceptionNotFound          If object cannot be loaded
      * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
      */
-    //public function getObject($identifier, array $config = array());
+    public function getObject($identifier, array $config = array());
 
     /**
      * Insert the object instance using the identifier
