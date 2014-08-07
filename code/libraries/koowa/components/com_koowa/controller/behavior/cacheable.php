@@ -67,7 +67,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	protected function _beforeRender(KControllerContextInterface $context)
 	{
 	    $view   = $this->getView();
-	    $cache  = JFactory::getCache($this->_getGroup(), 'output');
+	    $cache  = $this->_getCache($this->_getGroup(), 'output');
         $key    = $this->_getKey();
 
         if($data = $cache->get($key))
@@ -108,7 +108,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	    if(empty($this->_output))
 	    {
 	        $view   = $this->getView();
-	        $cache  = JFactory::getCache($this->_getGroup(), 'output');
+	        $cache  = $this->_getCache($this->_getGroup(), 'output');
 	        $key    = $this->_getKey();
 
 	        $data  = array();
@@ -176,7 +176,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	    $status = $context->result->getStatus();
 
 	    if($status == KDatabase::STATUS_CREATED) {
-	         JFactory::getCache()->clean($this->_getGroup());
+            $this->_getCache()->clean($this->_getGroup());
 	    }
 
 	    return true;
@@ -193,7 +193,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	    $status = $context->result->getStatus();
 
 	    if($status == KDatabase::STATUS_DELETED) {
-	        JFactory::getCache()->clean($this->_getGroup());
+            $this->_getCache()->clean($this->_getGroup());
 	    }
 
 	    return true;
@@ -210,11 +210,24 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 	    $status = $context->result->getStatus();
 
 	    if($status == KDatabase::STATUS_UPDATED) {
-	        JFactory::getCache()->clean($this->_getGroup());
+	        $this->_getCache()->clean($this->_getGroup());
 	    }
 
 	    return true;
 	}
+
+    /**
+     * Create a JCache instance
+     *
+     * @param string $group
+     * @param string $handler
+     * @param null   $storage
+     * @return JCache
+     */
+    protected function _getCache($group = '', $handler = 'callback', $storage = null)
+    {
+        return JFactory::getCache($group, $handler, $storage);
+    }
 
 	/**
 	 * Generate a cache key
