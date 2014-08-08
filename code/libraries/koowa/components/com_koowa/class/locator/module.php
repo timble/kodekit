@@ -40,13 +40,6 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 	 */
 	protected $_type = 'module';
 
-    /**
-     * The active basepath
-     *
-     * @var string
-     */
-    protected $_basepath;
-
 	/**
 	 * Get a fully qualified path based on a class name
 	 *
@@ -91,20 +84,13 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
             else $path = $file;
 
             //Switch basepath
-            if ($this->getNamespace($namespace)) {
+            if(!$this->getNamespace($namespace)) {
+                $basepath = $this->getNamespace('\\');
+            } else {
                 $basepath = $this->getNamespace($namespace);
             }
-            elseif (!empty($basepath)) {
-                $this->_basepath = $basepath;
-            }
-            elseif ($this->_basepath) {
-                $basepath = $this->_basepath;
-            }
-            else {
-                $basepath = $this->getNamespace('\\');
-            }
 
-            return $basepath.'/modules/'.$module.'/'.$path.'.php';
+            return $basepath.'/'.$module.'/'.$path.'.php';
 		}
 
 		return false;

@@ -23,8 +23,22 @@ class ModKoowaTemplateLocatorModule extends KTemplateLocatorAbstract
      */
     public function find(array $info)
     {
-        $basepath  = $this->getObject('manager')->getClassLoader()->getNamespace($info['domain']);
-        $basepath  = $basepath.'/modules/mod_'.strtolower($info['package']);
+        $locator = $this->getObject('manager')->getClassLoader()->getLocator('module');
+
+        //Get the package
+        $package = $info['package'];
+
+        //Get the domain
+        $domain = $info['domain'];
+
+        //Switch basepath
+        if(!$locator->getNamespace(ucfirst($package))) {
+            $basepath = $locator->getNamespace('\\');
+        } else {
+            $basepath = $locator->getNamespace(ucfirst($package));
+        }
+
+        $basepath .= '/mod_'.strtolower($package);
 
         $filepath   = (count($info['path']) ? implode('/', $info['path']).'/' : '').'tmpl/';
         $filepath  .= $info['file'].'.'.$info['format'].'.php';

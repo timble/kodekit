@@ -39,13 +39,12 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
         $domain = $info['domain'];
 
         //Base path
-        if(!empty($domain)) {
-            $basepath = $loader->getNamespace($domain);
-        } else {
-            $basepath = $loader->getLocator('component')->getNamespace(ucfirst($package));
+        if(!empty($domain))
+        {
+            $basepath  = $loader->getNamespace($domain);
+            $basepath .= '/com_'.strtolower($package);
         }
-
-        $basepath .= '/components/com_'.strtolower($package);
+        else $basepath = $loader->getLocator('component')->getNamespace(ucfirst($package));
 
         //File path
         $filepath  = 'view/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
@@ -57,7 +56,6 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
         if ($result === false)
         {
             $filepath = 'views/'.substr($filepath, 5);
-
             $result = $this->realPath($basepath.'/'.$filepath);
         }
 
