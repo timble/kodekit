@@ -51,7 +51,7 @@ class ComKoowaTemplateHelperListbox extends KTemplateHelperListbox
             'attribs'   => array(),
             'deselect_value' => '',
             'deselect'  => true,
-            'prompt'    => '- '.$this->translate('Select').' -'
+            'prompt'    => '- '.$this->getObject('translator')->translate('Select').' -'
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));

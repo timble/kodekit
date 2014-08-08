@@ -62,18 +62,6 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     }
 
     /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTemplate()->translate($string, $parameters);
-    }
-
-    /**
      * Get the priority of a behavior
      *
      * @return  integer The command priority

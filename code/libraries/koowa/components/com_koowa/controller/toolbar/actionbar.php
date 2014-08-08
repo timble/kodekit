@@ -60,12 +60,13 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     protected function _afterRead(KControllerContextInterface $context)
     {
         $controller = $this->getController();
-        $name       = $this->getObject('translator')->translate(strtolower($context->subject->getIdentifier()->name));
+        $translator = $this->getObject('translator');
+        $name       = $translator->translate(strtolower($context->subject->getIdentifier()->name));
 
         if($controller->getModel()->getState()->isUnique()) {
-            $title = $this->getObject('translator')->translate('Edit {item_type}', array('item_type' => $name));
+            $title = $translator->translate('Edit {item_type}', array('item_type' => $name));
         } else {
-            $title = $this->getObject('translator')->translate('Create new {item_type}', array('item_type' => $name));
+            $title = $translator->translate('Create new {item_type}', array('item_type' => $name));
         }
 
         $this->getCommand('title')->title = $title;

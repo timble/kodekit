@@ -58,15 +58,16 @@ class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 	 */
 	public function startPanel($config = array())
 	{
-		$config = new KObjectConfigJson($config);
+        $translator = $this->getObject('translator');
 
+        $config = new KObjectConfigJson($config);
 		$config->append(array(
-			'title'		=> $this->translate('Slide'),
+			'title'		=> $translator->translate('Slide'),
 			'id'     	=> '',
 			'translate'	=> true
 		));
 
-		$title = $config->translate ? $this->translate($config->title) : $config->title;
+		$title = $config->translate ? $translator->translate($config->title) : $config->title;
 
         return JHtml::_('sliders.panel', $title, KObjectConfig::unbox($config->attribs));
 	}

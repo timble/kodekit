@@ -71,19 +71,6 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     }
 
     /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     *
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTemplate()->translate($string, $parameters);
-    }
-
-    /**
      * Method to build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes

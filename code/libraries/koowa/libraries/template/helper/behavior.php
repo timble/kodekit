@@ -144,6 +144,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             'attribs'	=> array(),
         ));
 
+        $translator = $this->getObject('translator');
+
         $html = '';
         // Load the necessary files if they haven't yet been loaded
         if (!isset(self::$_loaded['overlay']))
@@ -189,7 +191,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         $options = json_encode($config->options->toArray());
         $html .= sprintf("<script>kQuery(function(){ new Koowa.Overlay('#%s', %s);});</script>", $id, $options);
 
-        $html .= '<div class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$this->translate('Loading...').'</div></div>';
+        $html .= '<div class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$translator->translate('Loading...').'</div></div>';
         return $html;
     }
 
@@ -459,11 +461,13 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         $html   = '';
         $months = array();
 
+        $translator = $this->getObject('translator');
+
         for ($i = 1; $i < 13; $i++)
         {
             $month  = strtoupper(date('F', mktime(0, 0, 0, $i, 1, 2000)));
-            $long  = $this->translate($month);
-            $short = $this->translate($month.'_SHORT');
+            $long  = $translator->translate($month);
+            $short = $translator->translate($month.'_SHORT');
 
             if (strpos($short, '_SHORT') !== false) {
                 $short = $long;

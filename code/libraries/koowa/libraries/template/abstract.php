@@ -25,13 +25,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_status = null;
 
     /**
-     * Translator object
-     *
-     * @var	KTranslatorInterface
-     */
-    protected $_translator;
-
-    /**
      * The template path
      *
      * @var string
@@ -125,8 +118,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             }
         }
 
-        $this->_translator = $config->translator;
-
         //Reset the stack
         $this->_stack = array();
 	}
@@ -142,7 +133,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected function _initialize(KObjectConfig $config)
     {
     	$config->append(array(
-            'translator' => 'translator',
             'data'       => array(),
             'view'       => null,
             'filters'    => array(),
@@ -313,33 +303,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     }
 
     /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTranslator()->translate($string, $parameters);
-    }
-
-    /**
-     * Translates a string based on the number parameter passed
-     *
-     * @param array   $strings    Strings to choose from
-     * @param integer $number     The number of items
-     * @param array   $parameters An array of parameters
-     *
-     * @throws InvalidArgumentException
-     * @return string Translated string
-     */
-    public function choose(array $strings, $number, array $parameters = array())
-    {
-        $this->getTranslator()->choose($strings, $number, $parameters);
-    }
-
-    /**
      * Get the template path
      *
      * @return	string
@@ -466,32 +429,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
         $this->_view = $view;
 
-        return $this;
-    }
-
-    /**
-     * Gets the translator object
-     *
-     * @return  KTranslatorInterface
-     */
-    public function getTranslator()
-    {
-        if(!$this->_translator instanceof KTranslatorInterface) {
-            $this->setTranslator($this->getObject($this->_translator));
-        }
-
-        return $this->_translator;
-    }
-
-    /**
-     * Sets the translator object
-     *
-     * @param KTranslatorInterface $translator A translator object or identifier
-     * @return KTemplateInterface
-     */
-    public function setTranslator(KTranslatorInterface $translator)
-    {
-        $this->_translator = $translator;
         return $this;
     }
 

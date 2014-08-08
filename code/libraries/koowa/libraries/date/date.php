@@ -16,13 +16,6 @@
 class KDate extends KObject implements KDateInterface
 {
     /**
-     * Translator object
-     *
-     * @var KTranslatorInterface
-     */
-    private $__translator;
-
-    /**
      * The date object
      *
      * @var DateTime
@@ -43,9 +36,6 @@ class KDate extends KObject implements KDateInterface
             $config->timezone = new DateTimeZone($config->timezone);
         }
 
-        //Set the translator
-        $this->__translator = $config->translator;
-
         //Set the date
         $this->_date = new DateTime($config->date, $config->timezone);
     }
@@ -63,7 +53,6 @@ class KDate extends KObject implements KDateInterface
         $config->append(array(
             'date'       => 'now',
             'timezone'   => date_default_timezone_get(),
-            'translator' => 'lib:translator'
         ));
     }
 
@@ -87,7 +76,7 @@ class KDate extends KObject implements KDateInterface
      */
     public function humanize($period = 'second')
     {
-        $translator = $this->getTranslator();
+        $translator = $this->getObject('translator');
 
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
         $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
@@ -254,41 +243,6 @@ class KDate extends KObject implements KDateInterface
     }
 
     /**
-     * Gets the translator object
-     *
-     * @throws UnexpectedValueException
-     * @return KTranslatorInterface
-     */
-    public function getTranslator()
-    {
-        if(!$this->__translator instanceof KTranslatorInterface)
-        {
-            $this->__translator = $this->getObject($this->__translator);
-
-            if(!$this->__translator instanceof KTranslatorInterface)
-            {
-                throw new UnexpectedValueException(
-                    'Translator: '.get_class($this->__translator).' does not implement KTranslatorInterface'
-                );
-            }
-        }
-
-        return $this->__translator;
-    }
-
-    /**
-     * Sets the translator object
-     *
-     * @param  KTranslatorInterface $translator A translator object
-     * @return KDate
-     */
-    public function setTranslator(KTranslatorInterface $translator)
-    {
-        $this->__translator = $translator;
-        return $this;
-    }
-
-    /**
      * Translates day and month names.
      *
      * @param array $matches Matched elements of preg_replace_callback.
@@ -297,7 +251,7 @@ class KDate extends KObject implements KDateInterface
     protected function _translate($matches)
     {
         $replacement = '';
-        $translator = $this->getTranslator();
+        $translator = $this->getObject('translator');
 
         switch ($matches[0])
         {

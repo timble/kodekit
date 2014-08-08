@@ -193,6 +193,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
              )
         ));
 
+        $translator = $this->getObject('translator');
+
         // Handle the special case for "now".
         if (strtoupper($config->value) == 'NOW') {
             $config->value = strftime($config->format);
@@ -255,11 +257,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
                 'months' => array('January','February','March','April','May','June','July','August','September','October','November','December'),
                 'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
             );
+
             foreach($locale as $key => $item){
-                $locale[$key] = array_map(array($this, 'translate'), $item);
+                $locale[$key] = array_map(array($translator, 'translate'), $item);
             }
-            $locale['today']     = $this->translate('Today');
-            $locale['clear']     = $this->translate('Clear');
+            $locale['today']     = $translator->translate('Today');
+            $locale['clear']     = $translator->translate('Clear');
             $locale['weekStart'] = JFactory::getLanguage()->getFirstDay();
 
             $html .= '<script>

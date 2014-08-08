@@ -15,13 +15,6 @@
  */
 abstract class KViewAbstract extends KObject implements KViewInterface, KCommandCallbackDelegate
 {
-    /**
-     * Translator object
-     *
-     * @var	KTranslatorInterface
-     */
-    protected $_translator;
-
 	/**
 	 * Model identifier (com://APP/COMPONENT.model.NAME)
 	 *
@@ -73,7 +66,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         $this->setContent($config->content);
         $this->mimetype = $config->mimetype;
 
-        $this->setTranslator($config->translator);
         $this->setModel($config->model);
 
         // Mixin the behavior (and command) interface
@@ -98,7 +90,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
             'command_chain'     => 'lib:command.chain',
             'command_handlers'  => array('lib:command.handler.event'),
             'model'      => 'lib:model.empty',
-            'translator' => null,
 	    	'content'	 => '',
     		'mimetype'	 => '',
             'url'        =>  $this->getObject('lib:http.url')
@@ -154,19 +145,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     {
         $contents = $this->getContent();
         return trim($contents);
-    }
-
-    /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     *
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTranslator()->translate($string, $parameters);
     }
 
     /**
@@ -341,42 +319,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         }
 
         $this->_model = $model;
-
-        return $this;
-    }
-
-    /**
-     * Gets the translator object
-     *
-     * @return  KTranslatorInterface
-     */
-    public function getTranslator()
-    {
-        return $this->_translator;
-    }
-
-    /**
-     * Sets the translator object
-     *
-     * @param string|KTranslatorInterface $translator A translator object or identifier
-     * @return $this
-     */
-    public function setTranslator($translator)
-    {
-        if (!$translator instanceof KTranslatorInterface)
-        {
-            if (empty($translator) || (is_string($translator) && strpos($translator, '.') === false && $translator !== 'translator'))
-            {
-                $identifier = $this->getIdentifier()->toArray();
-                $identifier['path'] = array();
-                $identifier['name'] = 'translator';
-            }
-            else $identifier = $this->getIdentifier($translator);
-
-            $translator = $this->getObject($identifier);
-        }
-
-        $this->_translator = $translator;
 
         return $this;
     }

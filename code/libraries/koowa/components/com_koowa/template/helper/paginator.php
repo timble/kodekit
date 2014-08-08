@@ -40,6 +40,8 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
 
         $this->_initialize($config);
 
+        $translator = $this->getObject('translator');
+
         $html = '<div class="pagination pagination-toolbar">';
 
         if($config->show_limit) {
@@ -54,7 +56,7 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
         }
 
         if($config->show_count) {
-            $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
+            $html .= sprintf($translator->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
         }
 
         $html .= '</div>';

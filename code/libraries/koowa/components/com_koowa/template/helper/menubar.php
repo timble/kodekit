@@ -35,7 +35,7 @@ class ComKoowaTemplateHelperMenubar extends KTemplateHelperAbstract
                 $command->href = $this->getTemplate()->getView()->getRoute($command->href);
             }
 
-            JSubmenuHelper::addEntry($this->translate($command->label), $command->href, $command->active);
+            JSubmenuHelper::addEntry($this->getObject('translator')->translate($command->label), $command->href, $command->active);
         }
 
 		return '';

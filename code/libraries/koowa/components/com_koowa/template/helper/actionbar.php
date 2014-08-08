@@ -42,7 +42,7 @@ class ComKoowaTemplateHelperActionbar extends KTemplateHelperActionbar
             'command' => NULL,
         ));
 
-        $title = $this->translate($config->command->title);
+        $title = $this->getObject('translator')->translate($config->command->title);
         $icon  = $config->command->icon;
         $html  = '';
 

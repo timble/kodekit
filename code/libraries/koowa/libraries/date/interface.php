@@ -87,19 +87,4 @@ interface KDateInterface extends KObjectHandlable
      * @return integer
      */
     public function getOffset();
-
-    /**
-     * Gets the translator object
-     *
-     * @return  KTranslatorInterface
-     */
-    public function getTranslator();
-
-    /**
-     * Sets the translator object
-     *
-     * @param  KTranslatorInterface $translator A translator object
-     * @return ComKoowaDate
-     */
-    public function setTranslator(KTranslatorInterface $translator);
 }

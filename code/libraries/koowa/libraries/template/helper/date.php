@@ -24,11 +24,13 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
      */
     public function format($config = array())
     {
+        $translator = $this->getObject('translator');
+
         $config = new KObjectConfig($config);
         $config->append(array(
             'date'     => 'now',
             'timezone' => date_default_timezone_get(),
-            'format'   => $this->getTemplate()->getFormat() == 'rss' ? DateTime::RSS : $this->translate('DATE_FORMAT_LC1'),
+            'format'   => $this->getTemplate()->getFormat() == 'rss' ? DateTime::RSS : $translator->translate('DATE_FORMAT_LC1'),
             'default'  => ''
         ));
 
@@ -61,7 +63,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
         $config->append(array(
             'date'      => 'now',
             'timezone'  => date_default_timezone_get(),
-            'default'   => $this->translate('Never'),
+            'default'   => $this->getObject('translator')->translate('Never'),
             'period'    => 'second',
 
         ));

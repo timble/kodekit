@@ -50,15 +50,6 @@ interface KViewInterface
     public function has($property);
 
     /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array());
-
-    /**
      * Sets the view data
      *
      * @param   array $data The view data
@@ -125,21 +116,6 @@ interface KViewInterface
 	 * @return	KViewInterface
 	 */
     public function setModel($model);
-
-    /**
-     * Gets the translator object
-     *
-     * @return  KTranslatorInterface
-     */
-    public function getTranslator();
-
-    /**
-     * Sets the translator object
-     *
-     * @param string|KTranslatorInterface $translator A translator object or identifier
-     * @return KViewInterface
-     */
-    public function setTranslator($translator);
 
     /**
      * Get the view url

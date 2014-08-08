@@ -24,9 +24,11 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      */
     public function optionlist($config = array())
     {
+        $translator = $this->getObject('translator');
+
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'prompt'    => '- '.$this->translate('Select').' -',
+            'prompt'    => '- '.$translator->translate('Select').' -',
             'options' 	=> array(),
             'select2'   => false,
             'attribs'	=> array(),
@@ -51,7 +53,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
                 // special configuration for select2 placeholder
                 $config->select2_options->append(array(
                     'options' => array(
-                        'placeholder' => $this->translate($config->prompt),
+                        'placeholder' => $translator->translate($config->prompt),
                         'allowClear'  => true
                     )
                 ));
@@ -82,14 +84,15 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'selected'  => $config->{$config->name}
         ));
 
-        $options = array();
+        $translator = $this->getObject('translator');
+        $options    = array();
 
         if($config->deselect) {
             $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
         }
 
-        $options[] = $this->option(array('label' => $this->translate( 'Enabled' ) , 'value' => 1 ));
-        $options[] = $this->option(array('label' => $this->translate( 'Disabled' ), 'value' => 0 ));
+        $options[] = $this->option(array('label' => $translator->translate( 'Enabled' ) , 'value' => 1 ));
+        $options[] = $this->option(array('label' => $translator->translate( 'Disabled' ), 'value' => 0 ));
 
         //Add the options to the config object
         $config->options = $options;
@@ -113,15 +116,16 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         ))->append(array(
             'selected'  => $config->{$config->name}
         ));
-    
-        $options = array();
+
+        $translator = $this->getObject('translator');
+        $options    = array();
     
         if ($config->deselect) {
             $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
         }
     
-        $options[] = $this->option(array('label' => $this->translate('Published'), 'value' => 1 ));
-        $options[] = $this->option(array('label' => $this->translate('Unpublished') , 'value' => 0 ));
+        $options[] = $this->option(array('label' => $translator->translate('Published'), 'value' => 1 ));
+        $options[] = $this->option(array('label' => $translator->translate('Unpublished') , 'value' => 0 ));
     
         //Add the options to the config object
         $config->options = $options;
@@ -195,7 +199,8 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'filter' 	      => array('sort' => $config->label),
         ));
 
-        $list = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
+        $translator = $this->getObject('translator');
+        $list       = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
 
         //Get the list of items
         $items = array();
@@ -210,7 +215,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         //Compose the options array
         $options = array();
         if($config->deselect) {
-            $options[] = $this->option(array('label' => $this->translate($config->prompt)));
+            $options[] = $this->option(array('label' => $translator->translate($config->prompt)));
         }
 
         foreach ($items as $key => $value)
@@ -257,7 +262,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'element'    => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
             'options'    => array('multiple' => (bool) $config->attribs->multiple),
             'deselect'   => true,
-            'prompt'     => '- '.$this->translate('Select').' -',
+            'prompt'     => '- '.$this->getObject('translator')->translate('Select').' -',
             'unique'     => true,
             'select2'    => false,
             'value'	     => $config->name,

@@ -32,6 +32,8 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
             'data'		=> array('order' => 0)
         ));
 
+        $translator = $this->getObject('translator');
+
         $html = '';
 
         $config->data->order = -1;
@@ -64,23 +66,25 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
                 </span>';
         }
 
-        if ($config->entity->{$config->field} > 1) {
-            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $this->translate('Move up');
-            $html .= sprintf($tmpl, $this->translate('Move up'), $updata, 'uparrow', $icon);
+        if ($config->entity->{$config->field} > 1)
+        {
+            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $translator->translate('Move up');
+            $html .= sprintf($tmpl, $translator->translate('Move up'), $updata, 'uparrow', $icon);
         }
 
         $html .= $config->entity->{$config->field};
 
-        if ($config->entity->{$config->field} != $config->total) {
-            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $this->translate('Move down');
-            $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow', $icon);
+        if ($config->entity->{$config->field} != $config->total)
+        {
+            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $translator->translate('Move down');
+            $html .= sprintf($tmpl, $translator->translate('Move down'), $downdata, 'downarrow', $icon);
         }
 
         if ($config->sort !== $config->field)
         {
             $html = '<div class="koowa-tooltip"
                           data-koowa-tooltip="'.htmlentities(json_encode(array('placement' => 'left'))).'"
-                          title="'.$this->translate('Please order by this column first by clicking the column title').'">'
+                          title="'.$translator->translate('Please order by this column first by clicking the column title').'">'
                     .$html.
                     '</div>';
         }

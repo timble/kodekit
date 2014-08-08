@@ -101,7 +101,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
         }
 
         if ($config->limit == $config->total) {
-            $options[] = $this->option(array('label' => $this->translate('All'), 'value' => 0));
+            $options[] = $this->option(array('label' => $this->getObject('translator')->translate('All'), 'value' => 0));
         }
 
         $html .= $this->optionlist(array('options' => $options, 'name' => 'limit', 'attribs' => $config->attribs, 'selected' => $selected));
@@ -147,7 +147,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
         }
 
         if($config->show_count) {
-            $html .= sprintf($this->translate('Page %s of %s'), $config->current, $config->count);
+            $html .= sprintf($this->getObject('translator')->translate('Page %s of %s'), $config->current, $config->count);
         }
 
         $html .= '</div>';
@@ -211,9 +211,9 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
         $url->setQuery($query);
 
         if ($page->active && !$page->current) {
-            $html = '<a href="'.$url.'">'.$this->translate($title).'</a>';
+            $html = '<a href="'.$url.'">'.$this->getObject('translator')->translate($title).'</a>';
         } else {
-            $html = '<a>'.$this->translate($title).'</a>';
+            $html = '<a>'.$this->getObject('translator')->translate($title).'</a>';
         }
 
         return $html;

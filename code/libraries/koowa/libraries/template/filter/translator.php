@@ -28,7 +28,7 @@ class KTemplateFilterTranslator extends KTemplateFilterAbstract implements KTemp
 
     public function render(&$text)
     {
-        $translations = $this->getTemplate()->getTranslator()->getScriptCatalogue()->toArray();
+        $translations = $this->getObject('translator')->getScriptCatalogue()->toArray();
 
         if (count($translations))
         {

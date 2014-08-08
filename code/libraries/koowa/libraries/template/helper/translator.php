@@ -25,7 +25,7 @@ class KTemplateHelperTranslator extends KTemplateHelperAbstract
         ));
 
         $translations = KObjectConfig::unbox($config->translations);
-        $translator   = $this->getTemplate()->getTranslator();
+        $translator   = $this->getObject('translator');
 
         foreach ($translations as $string) {
             $translator->addScriptTranslation($string);

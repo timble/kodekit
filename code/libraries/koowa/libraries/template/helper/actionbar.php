@@ -99,11 +99,12 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
         	'command' => NULL
         ));
 
-        $command = $config->command;
+        $translator = $this->getObject('translator');
+        $command    = $config->command;
 
         if ($command->allowed === false)
         {
-            $command->attribs->title = $this->translate('You are not allowed to perform this action');
+            $command->attribs->title = $translator->translate('You are not allowed to perform this action');
             $command->attribs->class->append(array('disabled', 'unauthorized'));
         }
 
@@ -139,7 +140,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
                 $html .= '<i class="'.$icon.'"></i> ';
             }
 
-        	$html .= $this->translate($command->label);
+        	$html .= $translator->translate($command->label);
         	$html .= '</a>';
         	$html .= '</div>';
         }
@@ -151,8 +152,8 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
             $html = '<li class="button" id="'.$id.'">';
 
             $html .= '<a '.$this->buildAttributes($attribs).'>';
-            $html .= '<span class="'.$command->icon.'" title="'.$this->translate($command->title).'"></span>';
-            $html .= $this->translate($command->label);
+            $html .= '<span class="'.$command->icon.'" title="'.$translator->translate($command->title).'"></span>';
+            $html .= $translator->translate($command->label);
             $html .= '</a>';
 
             $html .= '</li>';
@@ -174,7 +175,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
             'command' => NULL,
         ));
 
-        $title = $this->translate($config->command->title);
+        $title = $this->getObject('translator')->translate($config->command->title);
         $icon  = $config->command->icon;
         $html  = '';
 

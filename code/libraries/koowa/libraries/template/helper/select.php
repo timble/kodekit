@@ -88,7 +88,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
             foreach ($options as $option)
             {
                 $value = $option->value;
-                $label = $config->translate ? $this->translate( $option->label ) : $option->label;
+                $label = $config->translate ? $this->getObject('translator')->translate( $option->label ) : $option->label;
 
                 $extra = '';
                 if(isset($option->disable) && $option->disable) {
@@ -147,19 +147,20 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
             'attribs'	=> array(),
         ));
 
-        $attribs = $this->buildAttributes($config->attribs);
+        $translator = $this->getObject('translator');
+        $attribs    = $this->buildAttributes($config->attribs);
 
         $html   = array();
         $html[] = '<fieldset  name="'. $config->name .'" '. $attribs .'>';
 
         if(isset($config->legend)) {
-            $html[] = '<legend>'.$config->translate ? $this->translate( $config->legend ) : $config->legend.'</legend>';
+            $html[] = '<legend>'.$config->translate ? $translator->translate( $config->legend ) : $config->legend.'</legend>';
         }
 
         foreach($config->options as $option)
         {
             $value = $option->value;
-            $label = $config->translate ? $this->translate( $option->label ) : $option->label;
+            $label = $config->translate ? $translator->translate( $option->label ) : $option->label;
 
             $extra = ($value == $config->selected ? 'checked="checked"' : '');
 
@@ -200,20 +201,21 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
             'attribs'	=> array(),
         ));
 
-        $attribs = $this->buildAttributes($config->attribs);
+        $translator = $this->getObject('translator');
+        $attribs    = $this->buildAttributes($config->attribs);
 
         $html = array();
 
         $html[] = '<fieldset  name="'. $config->name .'" '. $attribs .'>';
 
         if(isset($config->legend)) {
-            $html[] = '<legend>'.$config->translate ? $this->translate( $config->legend ) : $config->legend.'</legend>';
+            $html[] = '<legend>'.$config->translate ? $translator->translate( $config->legend ) : $config->legend.'</legend>';
         }
 
         foreach($config->options as $option)
         {
             $value = $option->value;
-            $label = $config->translate ? $this->translate( $option->label ) : $option->label;
+            $label = $config->translate ? $translator->translate( $option->label ) : $option->label;
 
             $extra = '';
 
@@ -258,12 +260,14 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 	 */
     public function booleanlist($config = array())
     {
+        $translator = $this->getObject('translator');
+
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'   	=> '',
             'attribs'	=> array(),
-            'true'		=> $this->translate('Yes'),
-            'false'		=> $this->translate('No'),
+            'true'		=> $translator->translate('Yes'),
+            'false'		=> $translator->translate('No'),
             'selected'	=> null,
             'translate'	=> true
         ));
@@ -274,14 +278,14 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
         $html  = array();
 
         $extra = $config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? $this->translate( $config->true ) : $config->true;
+        $text  = $config->translate ? $translator->translate( $config->true ) : $config->true;
 
         $html[] = '<label for="'.$name.'1" class="btn">';
         $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
         $html[] = $text.'</label>';
 
         $extra = !$config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? $this->translate( $config->false ) : $config->false;
+        $text  = $config->translate ? $translator->translate( $config->false ) : $config->false;
 
         $html[] = '<label for="'.$name.'0" class="btn">';
         $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';

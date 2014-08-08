@@ -58,7 +58,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
             'translate' => true
         ));
 
-        $title = $config->translate ? $this->translate($config->title) : $config->title;
+        $title = $config->translate ? $this->getObject('translator')->translate($config->title) : $config->title;
 
         $class = KObjectConfig::unbox($config->class);
 
