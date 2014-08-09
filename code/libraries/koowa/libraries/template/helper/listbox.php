@@ -12,7 +12,7 @@
  * Listbox Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Library\Template
  */
 class KTemplateHelperListbox extends KTemplateHelperSelect
 {
