@@ -26,6 +26,14 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
     protected $_prefix;
 
     /**
+     * A list of generated keys
+     *
+     * @var array
+     */
+    protected $_keys;
+
+
+    /**
      * @param KObjectConfig $config
      */
     public function __construct(KObjectConfig $config)
@@ -112,13 +120,16 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
                     $key = $this->getPrefix().$this->generateKey($string);
                 }
 
-                $result =  JFactory::getLanguage()->_($key);
+                $translation =  JFactory::getLanguage()->_($key);
             }
-            else $result = JFactory::getLanguage()->_($string);
+            else $translation = JFactory::getLanguage()->_($string);
         }
-        else  $result = JFactory::getLanguage()->_(parent::get(strtolower($string)));
+        else  $translation = JFactory::getLanguage()->_(parent::get(strtolower($string)));
 
-        return $result;
+        //Set the translation to prevent it from being re-translated
+        $this->set($string, $translation);
+
+        return $translation;
     }
 
     /**
@@ -159,28 +170,29 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
     public function generateKey($string, $limit = 40)
     {
         $key = strtolower($string);
-        
-        if ($limit == -1 || strlen($key) <= $limit)
-        {
-            $key = strip_tags($key);
-            $key = preg_replace('#\s+#m', ' ', $key);
-            $key = preg_replace('#\{([A-Za-z0-9_\-\.]+)\}#', '$1', $key);
-            $key = preg_replace('#(%[^%|^\s|^\b]+)#', 'X', $key);
-            $key = preg_replace('#&.*?;#', '', $key);
-            $key = preg_replace('#[\s-]+#', '_', $key);
-            $key = preg_replace('#[^A-Za-z0-9_]#', '', $key);
-            $key = preg_replace('#_+#', '_', $key);
-            $key = trim($key, '_');
-            $key = trim(strtoupper($key));
-        }
-        else
-        {
-            $key = $this->generateKey(substr($key, 0, $limit));
-            $key .= '_'.strtoupper(substr(md5($key), 0, 5));
-        }
 
-        //Set the generated key to prevent re-generation
-        $this->set($string, $key);
+        if(!isset($this->_keys[$string]))
+        {
+            if ($limit == -1 || strlen($key) <= $limit)
+            {
+                $key = strip_tags($key);
+                $key = preg_replace('#\s+#m', ' ', $key);
+                $key = preg_replace('#\{([A-Za-z0-9_\-\.]+)\}#', '$1', $key);
+                $key = preg_replace('#(%[^%|^\s|^\b]+)#', 'X', $key);
+                $key = preg_replace('#&.*?;#', '', $key);
+                $key = preg_replace('#[\s-]+#', '_', $key);
+                $key = preg_replace('#[^A-Za-z0-9_]#', '', $key);
+                $key = preg_replace('#_+#', '_', $key);
+                $key = trim($key, '_');
+                $key = trim(strtoupper($key));
+            }
+            else
+            {
+                $key = $this->generateKey(substr($key, 0, $limit));
+                $key .= '_'.strtoupper(substr(md5($key), 0, 5));
+            }
+        }
+        else $key = $this->_keys[$string];
 
         return $key;
     }
