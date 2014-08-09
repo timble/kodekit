@@ -16,7 +16,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Translator
  */
-class KTranslatorInflector extends KStringInflector
+class KTranslatorInflector extends KStringInflector implements KTranslatorInflectorInterface
 {
     private static $position_rules = array();
 
@@ -30,8 +30,8 @@ class KTranslatorInflector extends KStringInflector
      */
     public static function getPluralPosition($number, $locale)
     {
+        // temporary set a locale for brazilian
         if ("pt-BR" == $locale) {
-            // temporary set a locale for brazilian
             $locale = "xbr";
         }
 
@@ -39,7 +39,8 @@ class KTranslatorInflector extends KStringInflector
             $locale = substr($locale, 0, -strlen(strrchr($locale, '-')));
         }
 
-        if (isset(self::$position_rules[$locale])) {
+        if (isset(self::$position_rules[$locale]))
+        {
             $return = call_user_func(self::$position_rules[$locale], $number);
 
             if (!is_int($return) || $return < 0) {
@@ -197,8 +198,8 @@ class KTranslatorInflector extends KStringInflector
      */
     public static function setPluralRule($rule, $locale)
     {
+        // temporary set a locale for brazilian
         if ("pt_BR" == $locale) {
-            // temporary set a locale for brazilian
             $locale = "xbr";
         }
         
