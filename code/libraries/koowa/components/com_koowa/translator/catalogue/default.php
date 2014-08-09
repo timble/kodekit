@@ -8,9 +8,9 @@
  */
 
 /**
- * Translator Catalogue
+ * Translator Default Catalogue
  *
- * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator
+ * @author  Arunas Mazeika <https://github.com/arunasmazeika>
+ * @package Koowa\Component\Koowa
  */
-class KTranslatorCatalogue extends KObjectArray implements KTranslatorCatalogueInterface {}
+final class ComKoowaTranslatorCatalogueDefault extends ComKoowaTranslatorCatalogueAbstract {}
