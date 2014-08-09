@@ -27,7 +27,6 @@ class ComKoowaDate extends KDate
     {
         $config->append(array(
             'timezone'    => 'UTC',
-            'translator' => 'com:koowa.translator'
         ));
 
         parent::_initialize($config);
