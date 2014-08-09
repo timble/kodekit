@@ -8,9 +8,9 @@
  */
 
 /**
- * Translator
+ * Translator Default Catalogue
  *
- * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
+ * @author  Arunas Mazeika <https://github.com/arunasmazeika>
  * @package Koowa\Library\Translator
  */
-final class KTranslatorDefault extends KTranslatorAbstract {}
+final class KTranslatorCatalogueDefault extends KTranslatorCatalogueAbstract {}
