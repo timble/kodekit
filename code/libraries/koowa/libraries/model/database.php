@@ -220,6 +220,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds SELECT columns list for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryColumns(KDatabaseQueryInterface $query)
     {
@@ -228,6 +230,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds JOINS clauses for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryJoins(KDatabaseQueryInterface $query)
     {
@@ -236,6 +240,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds WHERE clause for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryWhere(KDatabaseQueryInterface $query)
     {
@@ -244,6 +250,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds GROUP BY clause for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryGroup(KDatabaseQueryInterface $query)
     {
