@@ -74,12 +74,12 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     public function merge($options);
 
     /**
-     * Append values
+     * Append options
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
      * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
-     * @throws \RuntimeException If the config is read only
+     * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
     public function append($options);
