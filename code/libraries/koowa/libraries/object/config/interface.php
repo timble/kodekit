@@ -67,7 +67,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be added
+     * @param  array|Traversable|KObjectConfig  $options A KObjectConfig object an or array of options to be added
      * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
@@ -78,7 +78,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @param  array|Traversable|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */

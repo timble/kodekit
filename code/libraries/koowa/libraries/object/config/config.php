@@ -127,7 +127,7 @@ class KObjectConfig implements KObjectConfigInterface
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @param  array|Traversable|KObjectConfig $options A KObjectConfig object an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfig
      */
@@ -137,7 +137,7 @@ class KObjectConfig implements KObjectConfigInterface
         {
             $options = self::unbox($options);
 
-            if (is_array($options))
+            if (is_array($options) || $options instanceof Traversable)
             {
                 foreach ($options as $key => $value) {
                     $this->set($key, $value);
@@ -154,7 +154,7 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * This method only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfig    $config A ObjectConfig object an or array of options to be appended
+     * @param  array|KObjectConfig|Traversable    $config A ObjectConfig object an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfig
      */
@@ -164,7 +164,7 @@ class KObjectConfig implements KObjectConfigInterface
         {
             $options = self::unbox($options);
 
-            if(is_array($options))
+            if(is_array($options) || $options instanceof Traversable)
             {
                 if(!is_numeric(key($options)))
                 {
