@@ -16,24 +16,6 @@
 abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTranslatorCatalogueInterface
 {
     /**
-     * Load translations into the catalogue.
-     *
-     * @param array  $translations Associative array containing translations.
-     * @param bool   $override     Whether or not existing translations can be overridden during import.
-     * @return bool True on success, false otherwise.
-     */
-    public function load(array $translations, $override = false)
-    {
-        if ($override) {
-            $this->_data = array_merge($this->_data, $translations);
-        } else {
-            $this->_data = array_merge($translations, $this->_data);
-        }
-
-        return true;
-    }
-
-    /**
      * Get a string from the catalogue
      *
      * @param  string $string
@@ -90,4 +72,24 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
         $this->_data = array();
         return $this;
     }
+
+    /**
+     * Add translations to the catalogue.
+     *
+     * @param array  $translations Associative array containing translations.
+     * @param bool   $override     If TRUE override existing translations. Default is FALSE.
+     * @return bool True on success, false otherwise.
+     */
+    public function add(array $translations, $override = false)
+    {
+        if ($override) {
+            $this->_data = array_merge($this->_data, $translations);
+        } else {
+            $this->_data = array_merge($translations, $this->_data);
+        }
+
+        return true;
+    }
+
+
 }

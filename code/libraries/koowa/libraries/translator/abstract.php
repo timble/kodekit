@@ -163,7 +163,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
 
                 if(is_array($translations))
                 {
-                    if($result = $this->getCatalogue()->load($translations, $override))
+                    if($result = $this->getCatalogue()->add($translations, $override))
                     {
                         //Mark the file as loaded to prevent re-loading
                         $this->_loaded[$file] = true;
