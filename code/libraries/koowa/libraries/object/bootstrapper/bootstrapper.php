@@ -243,11 +243,11 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
      */
     public function registerComponent($name, $path, $vendor = null)
     {
-        //Get the bootstrapper identifier
+        //Get the component identifier
         if($vendor) {
-            $identifier = 'com://'.$vendor.'/'.$name.'.object.bootstrapper.component';
+            $identifier = 'com://'.$vendor.'/'.$name;
         } else {
-            $identifier = 'com:'.$name.'.object.bootstrapper.component';
+            $identifier = 'com:'.$name;
         }
 
         if(!isset($this->_components[$identifier]))
@@ -324,10 +324,27 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
     /**
      * Check if the bootstrapper has been run
      *
+     * If you specify a specific component name the function will check if this component was bootstrapped.
+     *
+     * @param string $name      The component name
+     * @param string $vendor    The vendor name. Vendor is optional and can be NULL
      * @return bool TRUE if the bootstrapping has run FALSE otherwise
      */
-    public function isBootstrapped()
+    public function isBootstrapped($component = null, $vendor = null)
     {
-        return $this->_bootstrapped;
+        if($component)
+        {
+            //Get the bootstrapper identifier
+            if($vendor) {
+                $identifier = 'com://'.$vendor.'/'.$component;
+            } else {
+                $identifier = 'com:'.$component;
+            }
+
+            $result = $this->_bootstrapped && isset($this->_components[$identifier]);
+        }
+        else $result = $this->_bootstrapped;
+
+        return $result;
     }
 }
