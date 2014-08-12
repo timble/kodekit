@@ -229,7 +229,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
         setlocale(LC_TIME, $locale);
 
         //Sets the default runtime locale
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
+        if (function_exists('locale_set_default') ) {
             locale_set_default($locale);
         }
 
