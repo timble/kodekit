@@ -322,7 +322,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @return KObjectConfig
      */
-    public function getConfig($identifier = null)
+    final public function getConfig($identifier = null)
     {
         if (isset($identifier)) {
             $result = $this->__object_manager->getIdentifier($identifier)->getConfig();
