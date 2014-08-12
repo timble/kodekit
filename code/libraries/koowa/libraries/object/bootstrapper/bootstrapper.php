@@ -207,17 +207,21 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                 }
 
                 /*
-                * Set the bootstrapper config.
-                *
-                * If cache is enabled this will prevent the bootstrapper from reloading the config resources
-                */
-                $this->getObjectManager()->setIdentifier(new KObjectIdentifier('lib:object.bootstrapper', array(
+                 * Reset the bootstrapper in the object manager
+                 *
+                 * If cache is enabled this will prevent the bootstrapper from reloading the config resources
+                 */
+                $identifier = new KObjectIdentifier('lib:object.bootstrapper', array(
                     'bootstrapped' => true,
                     'directories'  => $this->_directories,
                     'components'   => $this->_components,
                     'files'        => $this->_files,
                     'aliases'      => $aliases_flat,
-                )));
+                ));
+
+                $this->getObjectManager()
+                    ->setIdentifier($identifier)
+                    ->setObject('lib:object.bootstrapper', $this);
             }
             else
             {
