@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Bootstrapper
  */
-class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObjectSingleton
+class KObjectBootstrapper extends KObject implements KObjectBootstrapperInterface, KObjectSingleton
 {
     /**
      * List of bootstrapped directories
@@ -116,25 +116,27 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
 
         if(!$this->isBootstrapped())
         {
+            $manager = $this->getObject('manager');
+
             foreach($this->_components as $identifier => $component)
             {
                 $name   = $component['name'];
                 $path   = $component['path'];
-                $vendor = $component['vendor'];
+                $domain = $component['domain'];
 
                 /*
                  * Setup the component class and object locators
                  *
                  * Locators are always setup as the  cannot be cached in the registry objects.
                  */
-                if($vendor)
+                if($domain)
                 {
                     //Register class namespace
                     $namespace = ucfirst($name);
-                    $this->getClassLoader()->getLocator('component')->registerNamespace($namespace, $path);
+                    $manager->getClassLoader()->getLocator('component')->registerNamespace($namespace, $path);
 
                     //Register object manager package
-                    $this->getObjectManager()->getLocator('com')->registerPackage($name, $vendor);
+                    $manager->getLocator('com')->registerPackage($name, $domain);
                 }
             }
 
@@ -188,7 +190,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                 }
 
                 foreach ($identfiers_flat as $identifier => $config) {
-                    $this->getObjectManager()->setIdentifier(new KObjectIdentifier($identifier, $config));
+                    $manager->setIdentifier(new KObjectIdentifier($identifier, $config));
                 }
 
                 /*
@@ -203,7 +205,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                 }
 
                 foreach($aliases_flat as $alias => $identifier) {
-                    $this->getObjectManager()->registerAlias($identifier, $alias);
+                    $manager->registerAlias($identifier, $alias);
                 }
 
                 /*
@@ -219,14 +221,13 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                     'aliases'      => $aliases_flat,
                 ));
 
-                $this->getObjectManager()
-                    ->setIdentifier($identifier)
-                    ->setObject('lib:object.bootstrapper', $this);
+                $manager->setIdentifier($identifier)
+                        ->setObject('lib:object.bootstrapper', $this);
             }
             else
             {
                 foreach($aliases as $alias => $identifier) {
-                    $this->getObjectManager()->registerAlias($identifier, $alias);
+                    $manager->registerAlias($identifier, $alias);
                 }
             }
 
@@ -238,18 +239,18 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
      * Register a component to be bootstrapped.
      *
      * If the component contains a /resources/config/bootstrapper.php file it will be registered. Class and object
-     * locators will be setup for vendor only components.
+     * locators will be setup for domain only components.
      *
      * @param string $name      The component name
      * @param string $path      The component path
-     * @param string $vendor    The vendor name. Vendor is optional and can be NULL
+     * @param string $domain    The component domain. Domain is optional and can be NULL
      * @return KObjectBootstrapper
      */
-    public function registerComponent($name, $path, $vendor = null)
+    public function registerComponent($name, $path, $domain = null)
     {
         //Get the component identifier
-        if($vendor) {
-            $identifier = 'com://'.$vendor.'/'.$name;
+        if($domain) {
+            $identifier = 'com://'.$domain.'/'.$name;
         } else {
             $identifier = 'com:'.$name;
         }
@@ -259,7 +260,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
             $this->_components[$identifier] = array(
                 'name'   => $name,
                 'path'   => $path,
-                'vendor' => $vendor
+                'domain' => $domain
             );
 
             //Register the config file
@@ -275,10 +276,10 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
      * All the first level directories are assumed to be component folders and will be registered.
      *
      * @param string  $directory
-     * @param string  $vendor
+     * @param string  $domain
      * @return KObjectBootstrapper
      */
-    public function registerDirectory($directory, $vendor = null)
+    public function registerDirectory($directory, $domain = null)
     {
         if(!isset($this->_directories[$directory]))
         {
@@ -301,7 +302,7 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
                     $name = $parts[0];
                 }
 
-                $this->registerComponent($name, $path, $vendor);
+                $this->registerComponent($name, $path, $domain);
             }
 
             $this->_directories[$directory] = true;
@@ -326,21 +327,46 @@ class KObjectBootstrapper extends KObjectBootstrapperAbstract implements KObject
     }
 
     /**
+     * Get a registered component path
+     *
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return bool TRUE if the bootstrapping has run FALSE otherwise
+     */
+    public function getComponentPath($component, $domain = null)
+    {
+        $result = false;
+
+        //Get the bootstrapper identifier
+        if($domain) {
+            $identifier = 'com://'.$domain.'/'.$component;
+        } else {
+            $identifier = 'com:'.$component;
+        }
+
+        if(isset($this->_components[$identifier])) {
+            $result = $this->_components[$identifier]['path'];
+        }
+
+        return $result;
+    }
+
+    /**
      * Check if the bootstrapper has been run
      *
      * If you specify a specific component name the function will check if this component was bootstrapped.
      *
      * @param string $name      The component name
-     * @param string $vendor    The vendor name. Vendor is optional and can be NULL
+     * @param string $domain    The component domain. Domain is optional and can be NULL
      * @return bool TRUE if the bootstrapping has run FALSE otherwise
      */
-    public function isBootstrapped($component = null, $vendor = null)
+    public function isBootstrapped($component = null, $domain = null)
     {
         if($component)
         {
             //Get the bootstrapper identifier
-            if($vendor) {
-                $identifier = 'com://'.$vendor.'/'.$component;
+            if($domain) {
+                $identifier = 'com://'.$domain.'/'.$component;
             } else {
                 $identifier = 'com:'.$component;
             }
