@@ -32,6 +32,15 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
     public function bootstrap();
 
     /**
+     * Register an application
+     *
+     * @param string  $name  The application name
+     * @param string  $path  The application path
+     * @return KObjectBootstrapperInterface
+     */
+    public function registerApplication($name, $path);
+
+    /**
      * Register a component to be bootstrapped.
      *
      * If the component contains a /resources/config/bootstrapper.php file it will be registered. Class and object
@@ -40,7 +49,7 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      * @param string $name      The component name
      * @param string $path      The component path
      * @param string $domain    The component domain. Domain is optional and can be NULL
-     * @return KObjectBootstrapper
+     * @return KObjectBootstrapperInterface
      */
     public function registerComponent($name, $path, $domain = null);
 
@@ -51,26 +60,58 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      *
      * @param string  $directory
      * @param string  $domain
-     * @return KObjectBootstrapper
+     * @return KObjectBootstrapperInterface
      */
-    public function registerDirectory($directory, $domain = null);
+    public function registerComponents($directory, $domain = null);
 
     /**
      * Register a configuration file to be bootstrapped
      *
      * @param string $filename The absolute path to the file
-     * @return KObjectBootstrapper
+     * @return KObjectBootstrapperInterface
      */
     public function registerFile($filename);
 
     /**
+     * Get an application path
+     *
+     * @param string  $name   The application name
+     * @return string|null Returns the application path if the application was registered. NULL otherwise
+     */
+    public function getApplicationPath($name);
+
+    /**
+     * Get the registered components
+     *
+     * @return array
+     */
+    public function getComponents();
+
+    /**
+     * Get a registered component domain
+     *
+     * @param string $name    The component name
+     * @return string Returns the component domain if the component is registered. FALSE otherwise
+     */
+    public function getComponentDomain($name);
+
+    /**
      * Get a registered component path
      *
-     * @param string $name   The component name
-     * @param string $domain The component domain. Domain is optional and can be NULL
-     * @return bool TRUE if the bootstrapping has run FALSE otherwise
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return string Returns the component path if the component is registered. FALSE otherwise
      */
-    public function getComponentPath($component, $domain = null);
+    public function getComponentPath($name);
+
+    /**
+     * Get a registered component domain
+     *
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return string|null Returns the component class namespace if the component is registered. NULL otherwise
+     */
+    public function getComponentNamespace($name);
 
     /**
      * Check if the bootstrapper has been run
@@ -78,8 +119,7 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      * If you specify a specific component name the function will check if this component was bootstrapped.
      *
      * @param string $name      The component name
-     * @param string $domain    The component domain. Domain is optional and can be NULL
      * @return bool TRUE if the bootstrapping has run FALSE otherwise
      */
-    public function isBootstrapped($component = null, $domain = null);
+    public function isBootstrapped($name = null);
 }

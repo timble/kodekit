@@ -97,7 +97,7 @@ class Koowa
         $manager->getClassLoader()->registerLocator(new KClassLocatorComponent(
             array(
                 'namespaces' => array(
-                    '\\'    => $this->_base_path,
+                    '\\'    => $this->_base_path.'/components',
                     'Koowa' => dirname(dirname(__FILE__))
                 )
             )

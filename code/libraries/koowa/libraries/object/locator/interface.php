@@ -34,32 +34,6 @@ interface KObjectLocatorInterface
     public function find(array $info, $fallback = true);
 
     /**
-     * Register a package
-     *
-     * @param  string $name    The package name
-     * @param  string $domain  The domain for the package
-     * @return KObjectLocatorInterface
-     */
-    public function registerPackage($name, $domain);
-
-    /**
-     * Get the registered package domain
-     *
-     *  * If no domain has been registered for this package, the default 'Koowa' domain will be returned.
-     *
-     * @param string $package
-     * @return string The registered domain
-     */
-    public function getPackage($package);
-
-    /**
-     * Get the registered packages
-     *
-     * @return array An array with package names as keys and domain names as values
-     */
-    public function getPackages();
-
-    /**
      * Get the locator type
      *
      * @return string

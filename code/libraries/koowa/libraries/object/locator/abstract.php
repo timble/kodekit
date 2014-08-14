@@ -30,13 +30,6 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     protected $_sequence = array();
 
     /**
-     * Package/domain pairs to search
-     *
-     * @var array
-     */
-    protected $_packages = array();
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
@@ -74,12 +67,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      */
     public function locate(KObjectIdentifier $identifier, $fallback = true)
     {
-        if(empty($identifier->domain)) {
-            $domain  = ucfirst($this->getPackage($identifier->package));
-        } else {
-            $domain = ucfirst($identifier->domain);
-        }
-
+        $domain  = empty($identifier->domain) ? 'koowa' : ucfirst($identifier->domain);
         $package = ucfirst($identifier->package);
         $path    = KStringInflector::camelize(implode('_', $identifier->path));
         $file    = ucfirst($identifier->name);
@@ -129,43 +117,6 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
         }
 
         return $result;
-    }
-
-    /**
-     * Register a package
-     *
-     * @param  string $name    The package name
-     * @param  string $domain  The domain for the package
-     * @return KObjectLocatorInterface
-     */
-    public function registerPackage($name, $domain)
-    {
-        $this->_packages[$name] = $domain;
-        return $this;
-    }
-
-    /**
-     * Get the registered package domain
-     *
-     * If no domain has been registered for this package, the default 'Koowa' domain will be returned.
-     *
-     * @param string $package
-     * @return string The registered domain
-     */
-    public function getPackage($package)
-    {
-        $domain = isset($this->_packages[$package]) ?  $this->_packages[$package] : 'Koowa';
-        return $domain;
-    }
-
-    /**
-     * Get the registered packages
-     *s
-     * @return array An array with package names as keys and domain as values
-     */
-    public function getPackages()
-    {
-        return $this->_packages;
     }
 
     /**

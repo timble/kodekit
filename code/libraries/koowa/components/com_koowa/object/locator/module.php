@@ -59,12 +59,7 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
     {
         $class   = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
 
-        if(empty($identifier->domain)) {
-            $domain  = ucfirst($this->getPackage($identifier->package));
-        } else {
-            $domain = ucfirst($identifier->domain);
-        }
-
+        $domain  = ucfirst($identifier->domain);
         $package = ucfirst($identifier->package);
         $file    = ucfirst($identifier->name);
 
