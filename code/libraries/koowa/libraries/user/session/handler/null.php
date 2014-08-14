@@ -16,7 +16,7 @@
  * @package Koowa\Library\User
  * @link    http://www.php.net/manual/en/function.session-set-save-handler.php
  */
-class UserSessionHandlerNull extends KUserSessionHandlerAbstract
+class KUserSessionHandlerNull extends KUserSessionHandlerAbstract
 {
 
 }
