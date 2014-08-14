@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class TemplateFilterWhitespace extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterWhitespace extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
     /**
      * Initializes the options for the object
