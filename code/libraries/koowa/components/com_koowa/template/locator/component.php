@@ -61,6 +61,18 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
      */
     public function find(array $info)
     {
+        $paths  = array();
+        $loader = $this->getObject('manager')->getClassLoader();
+
+        //Get the package
+        $package = $info['package'];
+
+        //Get the domain
+        $domain = $info['domain'];
+
+        /*
+         * Theme path
+         */
         if(!empty($this->_theme_path))
         {
             //Remove the 'view' element from the path.
@@ -70,13 +82,33 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
             }
 
             //Find the template file
-            $filepath = $info['package'].'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.php';
+            $paths[] = $this->_theme_path.'/tmpl/'.$package.'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.php';
+        }
 
-            if ($override = $this->realPath($this->_theme_path.'/tmpl/'.$filepath)) {
-                return $override;
+        /*
+         * Component path
+         */
+
+        //Check if we are trying to find a template inside an application component
+        if($path = $this->getObject('object.bootstrapper')->getApplicationPath($domain)) {
+            $basepath = $path.'/com_'.strtolower($package);
+        } else {
+            $basepath = $this->getObject('object.bootstrapper')->getComponentPath($package);
+        }
+
+        //View folder
+        $paths[] = $basepath.'/view/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
+
+        //Views folder
+        $paths[] = $basepath.'/views/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
+
+        foreach($paths as $path)
+        {
+            if($result = $this->realPath($path)) {
+                return $result;
             }
         }
 
-        return parent::find($info);
+        return false;
     }
 }

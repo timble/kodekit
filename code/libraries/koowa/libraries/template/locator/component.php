@@ -30,35 +30,32 @@ class KTemplateLocatorComponent extends KTemplateLocatorAbstract
      */
     public function find(array $info)
     {
+        $paths  = array();
         $loader = $this->getObject('manager')->getClassLoader();
 
         //Get the package
         $package = $info['package'];
 
-        //Get the domain
-        $domain = $info['domain'];
-
-        //Base path
-        if(!empty($domain))
-        {
-            $basepath  = $loader->getNamespace($domain);
-            $basepath .= '/com_'.strtolower($package);
+        //Base paths
+        if($path = $loader->getLocator('component')->getNamespace('\\')) {
+            $paths[] = $path.'/'.$package;
         }
-        else $basepath = $loader->getLocator('component')->getNamespace(ucfirst($package));
+
+        $namespace = $this->getObject('object.bootstrapper')->getComponentNamespace($package);
+        if($path = $loader->getLocator('component')->getNamespace($namespace)) {
+            $paths[] = $path;
+        }
 
         //File path
-        $filepath  = 'view/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
+        $filepath = implode('/', $info['path']).'/templates/'.$info['file'].'.'.$info['format'].'.php';
 
-        // Find the template
-        $result = $this->realPath($basepath.'/'.$filepath);
-
-        // Check for a views/ folder as well
-        if ($result === false)
+        foreach($paths as $basepath)
         {
-            $filepath = 'views/'.substr($filepath, 5);
-            $result = $this->realPath($basepath.'/'.$filepath);
+            if($result = $this->realPath($basepath.'/'.$filepath)) {
+                return $result;
+            }
         }
 
-        return $result;
+        return false;
     }
 }
