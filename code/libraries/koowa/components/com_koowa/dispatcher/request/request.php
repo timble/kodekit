@@ -8,12 +8,12 @@
  */
 
 /**
- * Dispatcher
+ * Dispatcher Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaDispatcherRequest extends KDispatcherRequest
+final class ComKoowaDispatcherRequest extends KDispatcherRequest
 {
     /**
      * Returns the site URL from which this request is executed.

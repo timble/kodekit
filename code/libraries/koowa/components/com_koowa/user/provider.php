@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaUserProvider extends KUserProvider
+final class ComKoowaUserProvider extends KUserProvider
 {
     /**
      * Loads the user for the given username or user id

@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\User
  */
-class KUserSession extends KUserSessionAbstract implements KObjectSingleton
+final class KUserSession extends KUserSessionAbstract implements KObjectSingleton
 {
 
 }

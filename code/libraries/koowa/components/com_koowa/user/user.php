@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaUser extends KUser implements ComKoowaUserInterface
+final class ComKoowaUser extends KUser implements ComKoowaUserInterface
 {
     protected function _initialize(KObjectConfig $config)
     {

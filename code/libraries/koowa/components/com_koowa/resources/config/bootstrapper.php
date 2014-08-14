@@ -12,6 +12,7 @@ return array(
 
     'aliases'  => array(
         'request'           => 'com:koowa.dispatcher.request',
+        'response'          => 'com:koowa.dispatcher.response',
         'translator'        => 'com:koowa.translator',
         'user'              => 'com:koowa.user',
         'filter.factory'    => 'com:koowa.filter.factory',

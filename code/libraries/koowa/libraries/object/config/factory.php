@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Config
  */
-class KObjectConfigFactory extends KObject implements KObjectSingleton
+final class KObjectConfigFactory extends KObject implements KObjectSingleton
 {
     /**
      * Config object prototypes

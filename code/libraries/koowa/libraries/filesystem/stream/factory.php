@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filesystem
  */
-class KFilesystemStreamFactory extends KObject implements KObjectSingleton
+final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 {
     /**
      * Registered stream

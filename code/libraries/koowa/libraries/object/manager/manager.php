@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object
  */
-class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObjectSingleton
+final class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObjectSingleton
 {
     /**
      * The object identifier

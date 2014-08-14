@@ -13,7 +13,7 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaTranslator extends KTranslator
+final class ComKoowaTranslator extends KTranslator
 {
     /**
      * Maps identifier types to words

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-class ComKoowaEventPublisher extends KEventPublisher
+final class ComKoowaEventPublisher extends KEventPublisher
 {
     /**
      * Publish an event by calling all listeners that have registered to receive it.

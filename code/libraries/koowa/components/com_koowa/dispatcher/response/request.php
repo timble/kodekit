@@ -8,12 +8,12 @@
  */
 
 /**
- * Filter Factory
+ * Dispatcher Response
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa
  */
-final class ComKoowaFilterFactory extends KFilterFactory
+final class ComKoowaDispatcherResponse extends KDispatcherResponse
 {
 
 }

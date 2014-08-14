@@ -19,7 +19,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Command
  */
-class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObjectSingleton
+final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObjectSingleton
 {
     /**
      * The command priority

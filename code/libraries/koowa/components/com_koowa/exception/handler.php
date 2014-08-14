@@ -33,7 +33,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Exception
  */
-class ComKoowaExceptionHandler extends KExceptionHandler
+final class ComKoowaExceptionHandler extends KExceptionHandler
 {
     /**
      * Initializes the default configuration for the object
