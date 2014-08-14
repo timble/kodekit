@@ -82,7 +82,7 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
             }
 
             //Find the template file
-            $paths[] = $this->_theme_path.'/tmpl/'.$package.'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.php';
+            $paths[] = $this->_theme_path.'/com_'.$package.'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.php';
         }
 
         /*
