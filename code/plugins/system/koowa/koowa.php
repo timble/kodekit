@@ -129,10 +129,9 @@ class PlgSystemKoowa extends JPlugin
              * Component Bootstrapping
              */
             $manager->getObject('object.bootstrapper')
-                ->registerApplication('site' , JPATH_SITE.'/components')
-                ->registerApplication('admin', JPATH_ADMINISTRATOR.'/components')
+                ->registerApplication('site' , JPATH_SITE.'/components', JFactory::getApplication()->isSite())
+                ->registerApplication('admin', JPATH_ADMINISTRATOR.'/components', JFactory::getApplication()->isAdmin())
                 ->registerComponents(JPATH_LIBRARIES.'/koowa/components', 'koowa')
-                ->registerComponents(JPATH_BASE.'/components')
                 ->bootstrap();
 
             //Module Locator
