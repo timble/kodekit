@@ -58,7 +58,7 @@ final class ComKoowaExceptionHandler extends KExceptionHandler
 
         $config->append(array(
             'exception_type'  => $type,
-            'error_level'     => $level
+            'error_reporting' => $level
         ));
 
         parent::_initialize($config);
