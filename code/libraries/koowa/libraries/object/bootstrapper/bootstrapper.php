@@ -340,7 +340,8 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                 $parts = explode('_', (string) $dir);
 
                 if(count($parts) > 1) {
-                    $name = $parts[1];
+                    array_shift($parts);
+                    $name = implode('_', $parts);
                 } else {
                     $name = $parts[0];
                 }
