@@ -132,7 +132,7 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
             'user'       => null,
             'name'       => '',
             'id'         => 'KSESSIONID',
-            'lifetime'   => 1440,
+            'lifetime'   => ini_get('session.gc_maxlifetime'),
             'namespace'  => '__koowa',
             'options' => array(
                 'auto_start'        => 0,
