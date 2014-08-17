@@ -81,11 +81,12 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
         }
 
         $info = array(
-            'class'   => $class,
-            'package' => $package,
-            'domain'  => $domain,
-            'path'    => $path,
-            'file'    => $file
+            'identifier' => $identifier,
+            'class'      => $class,
+            'package'    => $package,
+            'domain'     => $domain,
+            'path'       => $path,
+            'file'       => $file
         );
 
         return $this->find($info, $fallback);

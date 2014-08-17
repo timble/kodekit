@@ -89,10 +89,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             $component = 'com_'.$package;
             $file 	   = array_pop($parts);
 
-            if(count($parts)) {
-                $path = implode('/', $parts).'/'.$file;
-            }
-            else
+            if(!count($parts))
             {
                 //Exception for framework components. Follow library structure. Don't load classes from root.
                 if(isset($this->_namespaces[$namespace])) {
@@ -101,6 +98,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
                     $path = $file;
                 }
             }
+            else $path = implode('/', $parts).'/'.$file;
 
             //Switch basepath
             if ($this->getNamespace($namespace)) {

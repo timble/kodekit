@@ -74,11 +74,12 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
         $class   = $path.$file;
 
         $info = array(
-            'class'   => $class,
-            'package' => $package,
-            'domain'  => $domain,
-            'path'    => $path,
-            'file'    => $file
+            'identifier' => $identifier,
+            'class'      => $class,
+            'package'    => $package,
+            'domain'     => $domain,
+            'path'       => $path,
+            'file'       => $file
         );
 
         return $this->find($info, null, $fallback);
