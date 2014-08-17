@@ -103,10 +103,10 @@ class KTemplateFilterScript extends KTemplateFilterTag
             if($condition)
             {
                 $html  = '<!--[if '.$condition.']>';
-                $html .= '<script src="'.$link.'" '.$attribs.' /></script>'."\n";
+                $html .= '<script src="'.$link.'" '.$attribs.'></script>'."\n";
                 $html .= '<![endif]-->';
             }
-            else $html  = '<script src="'.$link.'" '.$attribs.' /></script>'."\n";
+            else $html  = '<script src="'.$link.'" '.$attribs.'></script>'."\n";
         }
 
         return $html;
