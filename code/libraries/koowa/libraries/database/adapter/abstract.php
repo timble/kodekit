@@ -2,81 +2,81 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Abstract Database Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Adapter\Abstract
  */
 abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdapterInterface, KObjectMultiton
 {
-	/**
-	 * Active state of the connection
-	 *
-	 * @var boolean
-	 */
-	protected $_connected = null;
+    /**
+     * Active state of the connection
+     *
+     * @var boolean
+     */
+    protected $_connected = null;
 
-	/**
-	 * The database connection resource
-	 *
-	 * @var mixed
-	 */
-	protected $_connection = null;
+    /**
+     * The database connection resource
+     *
+     * @var mixed
+     */
+    protected $_connection = null;
 
-	/**
-	 * Last auto-generated insert_id
-	 *
-	 * @var integer
-	 */
-	protected $_insert_id;
+    /**
+     * Last auto-generated insert_id
+     *
+     * @var integer
+     */
+    protected $_insert_id;
 
-	/**
-	 * The affected row count
-	 *
-	 * @var int
-	 */
-	protected $_affected_rows;
+    /**
+     * The affected row count
+     *
+     * @var int
+     */
+    protected $_affected_rows;
 
-	/**
-	 * Schema cache
-	 *
-	 * @var array
-	 */
-	protected $_table_schema = null;
+    /**
+     * Schema cache
+     *
+     * @var array
+     */
+    protected $_table_schema = null;
 
-	/**
-	 * The table prefix
-	 *
-	 * @var string
-	 */
-	protected $_table_prefix = '';
+    /**
+     * The table prefix
+     *
+     * @var string
+     */
+    protected $_table_prefix = '';
 
-	/**
-	 * The table needle
-	 *
-	 * @var string
-	 */
-	protected $_table_needle = '';
+    /**
+     * The table needle
+     *
+     * @var string
+     */
+    protected $_table_needle = '';
 
-	/**
-	 * Quote for named objects
-	 *
-	 * @var string
-	 */
-	protected $_identifier_quote = '`';
+    /**
+     * Quote for named objects
+     *
+     * @var string
+     */
+    protected $_identifier_quote = '`';
 
-	/**
-	 * The connection options
-	 *
-	 * @var KObjectConfig
-	 */
-	protected $_options = null;
+    /**
+     * The connection options
+     *
+     * @var KObjectConfig
+     */
+    protected $_options = null;
     
     /**
      * Character set used for connection
@@ -85,15 +85,15 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected $_charset;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 * Recognized key values include 'command_chain', 'charset', 'table_prefix',
-	 * (this list is not meant to be comprehensive).
-	 */
-	public function __construct(KObjectConfig $config = null)
-	{
+    /**
+     * Constructor.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * Recognized key values include 'command_chain', 'charset', 'table_prefix',
+     * (this list is not meant to be comprehensive).
+     */
+    public function __construct(KObjectConfig $config = null)
+    {
         parent::__construct($config);
 
         // Set the connection
@@ -101,35 +101,37 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             $this->setConnection($config->connection);
         }
 
-		// Set the default charset. http://dev.mysql.com/doc/refman/5.1/en/charset-connection.html
-		if (!empty($config->charset)) {
-			$this->setCharset($config->charset);
-		}
+        // Set the default charset. http://dev.mysql.com/doc/refman/5.1/en/charset-connection.html
+        if (!empty($config->charset)) {
+            $this->setCharset($config->charset);
+        }
 
-		// Set the table prefix
-		$this->_table_prefix = $config->table_prefix;
+        // Set the table prefix
+        $this->_table_prefix = $config->table_prefix;
 
-		// Set the table prefix
-		$this->_table_needle = $config->table_needle;
-
-		// Set the connection options
-		$this->_options = $config->options;
+        // Set the table prefix
+        $this->_table_needle = $config->table_needle;
 
         // Mixin the command interface
         $this->mixin('lib:command.mixin', $config);
-	}
 
-	/**
-	 * Destructor
-	 *
-	 * Free any resources that are open.
-	 */
-	public function __destruct()
-	{
-		$this->disconnect();
-	}
+        //Auto connect to the database
+        if($config->auto_connect) {
+            $this->connect();
+        }
+    }
 
-  	/**
+    /**
+     * Destructor
+     *
+     * Free any resources that are open.
+     */
+    public function __destruct()
+    {
+        $this->disconnect();
+    }
+
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -139,83 +141,83 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-    		'options'			=> array(),
-    		'charset'			=> 'UTF-8',
-       	 	'table_prefix'  	=> 'jos_',
-    	    'table_needle'		=> '#__',
-    		'command_chain' 	=> 'lib:command.chain',
-    		'connection'		=> null,
+        $config->append(array(
+            'charset'       => 'UTF-8',
+            'table_prefix'  => 'jos_',
+            'table_needle'  => '#__',
+            'command_chain' => 'lib:command.chain',
+            'connection'    => null,
+            'auto_connect'  => false,
         ));
 
         parent::_initialize($config);
     }
 
-	/**
-	 * Reconnect to the db
-	 *
-	 * @return  KDatabaseAdapterAbstract
-	 */
-	public function reconnect()
-	{
-		$this->disconnect();
-		$this->connect();
+    /**
+     * Reconnect to the db
+     *
+     * @return  KDatabaseAdapterAbstract
+     */
+    public function reconnect()
+    {
+        $this->disconnect();
+        $this->connect();
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Disconnect from db
-	 *
-	 * @return  KDatabaseAdapterAbstract
-	 */
-	public function disconnect()
-	{
-		$this->_connection = null;
-		$this->_connected  = false;
+    /**
+     * Disconnect from db
+     *
+     * @return  KDatabaseAdapterAbstract
+     */
+    public function disconnect()
+    {
+        $this->_connection = null;
+        $this->_connected  = false;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get the database name
-	 *
-	 * @return string	The database name
-	 */
-	abstract function getDatabase();
+    /**
+     * Get the database name
+     *
+     * @return string	The database name
+     */
+    abstract function getDatabase();
 
-	/**
-	 * Set the database name
-	 *
-	 * @param 	string 	$database The database name
-	 * @return  KDatabaseAdapterAbstract
-	 */
-	abstract function setDatabase($database);
+    /**
+     * Set the database name
+     *
+     * @param 	string 	$database The database name
+     * @return  KDatabaseAdapterAbstract
+     */
+    abstract function setDatabase($database);
 
-	/**
-	 * Get the connection
-	 *
-	 * Provides access to the underlying database connection. Useful for when
-	 * you need to call a proprietary method such as postgresql's lo_* methods
-	 *
-	 * @return resource
-	 */
-	public function getConnection()
-	{
-		return $this->_connection;
-	}
+    /**
+     * Get the connection
+     *
+     * Provides access to the underlying database connection. Useful for when
+     * you need to call a proprietary method such as postgresql's lo_* methods
+     *
+     * @return resource
+     */
+    public function getConnection()
+    {
+        return $this->_connection;
+    }
 
-	/**
-	 * Set the connection
-	 *
-	 * @param 	resource 	$resource The connection resource
-	 * @return  KDatabaseAdapterAbstract
-	 */
-	public function setConnection($resource)
-	{
-	    $this->_connection = $resource;
-		return $this;
-	}
+    /**
+     * Set the connection
+     *
+     * @param 	resource    $resource The connection resource
+     * @return  KDatabaseAdapterAbstract
+     */
+    public function setConnection($resource)
+    {
+        $this->_connection = $resource;
+        return $this;
+    }
     
     /**
      * Get character set
@@ -240,14 +242,14 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         return $this;
     }
 
-	/**
-	 * Get the insert id of the last insert operation
-	 *
-	 * @return mixed The id of the last inserted row(s)
-	 */
- 	public function getInsertId()
+    /**
+     * Get the insert id of the last insert operation
+     *
+     * @return mixed The id of the last inserted row(s)
+     */
+    public function getInsertId()
     {
-    	return $this->_insert_id;
+        return $this->_insert_id;
     }
 
     /**
@@ -432,40 +434,40 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         return $result;
     }
 
-	/**
-	 * Set the table prefix
-	 *
-	 * @param string $prefix The table prefix
-	 * @return KDatabaseAdapterAbstract
-	 * @see KDatabaseAdapterAbstract::replaceTableNeedle
-	 */
-	public function setTablePrefix($prefix)
-	{
-		$this->_table_prefix = $prefix;
-		return $this;
-	}
+    /**
+     * Set the table prefix
+     *
+     * @param string $prefix The table prefix
+     * @return KDatabaseAdapterAbstract
+     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     */
+    public function setTablePrefix($prefix)
+    {
+        $this->_table_prefix = $prefix;
+        return $this;
+    }
 
- 	/**
-	 * Get the table prefix
-	 *
-	 * @return string The table prefix
-	 * @see KDatabaseAdapterAbstract::replaceTableNeedle
-	 */
-	public function getTablePrefix()
-	{
-		return $this->_table_prefix;
-	}
+    /**
+     * Get the table prefix
+     *
+     * @return string The table prefix
+     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     */
+    public function getTablePrefix()
+    {
+        return $this->_table_prefix;
+    }
 
-	/**
-	 * Get the table needle
-	 *
-	 * @return string The table needle
-	 * @see KDatabaseAdapterAbstract::replaceTableNeedle
-	 */
-	public function getTableNeedle()
-	{
-		return $this->_table_needle;
-	}
+    /**
+     * Get the table needle
+     *
+     * @return string The table needle
+     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     */
+    public function getTableNeedle()
+    {
+        return $this->_table_needle;
+    }
 
     /**
      * Get a database context object
@@ -487,17 +489,17 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * @param  string|null $replace Table prefix, null for default
      * @return string       The SQL query string
      */
-	public function replaceTableNeedle($sql, $replace = null)
-	{
-		$needle  = $this->getTableNeedle();
-	    $replace = isset($replace) ? $replace : $this->getTablePrefix();
-		$sql     = trim( $sql );
+    public function replaceTableNeedle($sql, $replace = null)
+    {
+        $needle  = $this->getTableNeedle();
+        $replace = isset($replace) ? $replace : $this->getTablePrefix();
+        $sql     = trim( $sql );
 
-		$pattern = "($needle(?=[a-z0-9]))";
-    	$sql = preg_replace($pattern, $replace, $sql);
+        $pattern = "($needle(?=[a-z0-9]))";
+        $sql = preg_replace($pattern, $replace, $sql);
 
-		return $sql;
-	}
+        return $sql;
+    }
 
     /**
      * Safely quotes a value for an SQL statement.
@@ -510,30 +512,30 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     public function quoteValue($value)
     {
-    	if (is_array($value))
-    	{
-    		//Quote array values, not keys, then combine with commas.
-    		foreach ($value as &$v)
-    		{
-    			if (is_null($v)) {
-    				$v = 'NULL';
-    			} elseif (is_string($v)) {
-    				$v = $this->_quoteValue($v);
-    			}
-    		}
+        if (is_array($value))
+        {
+            //Quote array values, not keys, then combine with commas.
+            foreach ($value as &$v)
+            {
+                if (is_null($v)) {
+                    $v = 'NULL';
+                } elseif (is_string($v)) {
+                    $v = $this->_quoteValue($v);
+                }
+            }
     
-    		$value = implode(', ', $value);
-    	}
-    	else
-    	{
-    		if (is_null($value)) {
-    			$value = 'NULL';
-    		} elseif (is_string($value)) {
-    			$value = $this->_quoteValue($value);
-    		}
-    	}
+            $value = implode(', ', $value);
+        }
+        else
+        {
+            if (is_null($value)) {
+                $value = 'NULL';
+            } elseif (is_string($value)) {
+                $value = $this->_quoteValue($value);
+            }
+        }
     
-    	return $value;
+        return $value;
     } 
     
     /**
@@ -549,22 +551,22 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     public function quoteIdentifier($spec)
     {
-    	if (is_array($spec))
-    	{
-    		foreach ($spec as $key => $val) {
-    			$spec[$key] = $this->quoteIdentifier($val);
-    		}
+        if (is_array($spec))
+        {
+            foreach ($spec as $key => $val) {
+                $spec[$key] = $this->quoteIdentifier($val);
+            }
     
-    		return $spec;
-    	}
+            return $spec;
+        }
     
-    	// String spaces around the identifier
-    	$spec = trim($spec);
+        // String spaces around the identifier
+        $spec = trim($spec);
     
-    	// Quote all the lower case parts
-    	$spec = preg_replace_callback('/(?:\b|#)+(?<![`:@])([-a-zA-Z0-9.#_]*[a-z][-a-zA-Z0-9.#_]*)(?!`)\b/', array($this, '_quoteIdentifier'), $spec);
+        // Quote all the lower case parts
+        $spec = preg_replace_callback('/(?:\b|#)+(?<![`:@])([-a-zA-Z0-9.#_]*[a-z][-a-zA-Z0-9.#_]*)(?!`)\b/', array($this, '_quoteIdentifier'), $spec);
     
-    	return $spec;
+        return $spec;
     }
 
    /**
@@ -668,26 +670,26 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      */
     protected function _quoteIdentifier($name)
     {
-    	if (is_array($name)) {
-    		$name = $name[0];
-    	}
+        if (is_array($name)) {
+            $name = $name[0];
+        }
     
-    	$name = trim($name);
+        $name = trim($name);
     
-    	//Special cases
-    	if ($name == '*' || is_numeric($name)) {
-    		return $name;
-    	}
+        //Special cases
+        if ($name == '*' || is_numeric($name)) {
+            return $name;
+        }
     
-    	if ($pos = strrpos($name, '.'))
-    	{
-    		$table = $this->_quoteIdentifier(substr($name, 0, $pos));
-    		$column = $this->_quoteIdentifier(substr($name, $pos + 1));
+        if ($pos = strrpos($name, '.'))
+        {
+            $table = $this->_quoteIdentifier(substr($name, 0, $pos));
+            $column = $this->_quoteIdentifier(substr($name, $pos + 1));
     
-    		$result = "$table.$column";
-    	}
-    	else $result = $this->_identifier_quote . $name . $this->_identifier_quote;
+            $result = "$table.$column";
+        }
+        else $result = $this->_identifier_quote . $name . $this->_identifier_quote;
     
-    	return $result;
+        return $result;
     }
 }
