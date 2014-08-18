@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Manager Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Manager\Interface
  */
 interface KObjectManagerInterface
 {
@@ -25,7 +25,7 @@ interface KObjectManagerInterface
      * @param	array $config     An optional associative array of configuration settings.
      * @return	KObjectInterface  Return object on success, throws exception on failure
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws	KObjectExceptionInvalidObject	  If the object doesn't implement the KObjectInterface
+     * @throws	KObjectExceptionInvalidObject     If the object doesn't implement the KObjectInterface
      * @throws  KObjectExceptionNotFound          If object cannot be loaded
      * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
      */

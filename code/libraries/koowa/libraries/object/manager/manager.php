@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object manager
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Manager
  */
 final class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObjectSingleton
 {
@@ -29,6 +29,13 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
      */
     private $__registry;
 
+    /*
+    * The class loader
+    *
+    * @var KClassLoader
+    */
+    private $__loader;
+
     /**
      * The identifier locators
      *
@@ -36,20 +43,13 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
      */
     protected $_locators = array();
 
-    /*
-     * The class loader
+    /**
+     * Constructor
      *
-     * @var KClassLoader
+     * Prevent creating instances of this class by making the constructor private
      */
-    protected $_loader;
-
-	/**
-	 * Constructor
-	 *
-	 * Prevent creating instances of this class by making the constructor private
-	 */
-	final private function __construct(KObjectConfig $config)
-	{
+    final private function __construct(KObjectConfig $config)
+    {
         //Initialise the object
         $this->_initialize($config);
 
@@ -65,7 +65,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         $this->setClassLoader($config->class_loader);
 
         //Create the object registry
-        if($config->cache_enabled)
+        if($config->cache)
         {
             $this->__registry = new KObjectRegistryCache();
             $this->__registry->setNamespace($config->cache_namespace);
@@ -77,7 +77,6 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
 
         //Manually register the koowa loader
         $config = new KObjectConfig(array(
-            'class_loader'      => $config->class_loader,
             'object_manager'    => $this,
             'object_identifier' => new KObjectIdentifier('lib:object.locator.koowa')
         ));
@@ -87,7 +86,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         //Register self and set a 'manager' alias
         $this->setObject('object.manager', $this);
         $this->registerAlias('object.manager', 'manager');
-	}
+    }
 
     /**
      * Initializes the options for the object
@@ -101,42 +100,42 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
     {
         $config->append(array(
             'class_loader'    => null,
-            'cache_enabled'   => false,
+            'cache'           => false,
             'cache_namespace' => 'koowa'
         ));
     }
 
-	/**
-	 * Prevent creating clones of this class
+    /**
+     * Prevent creating clones of this class
      *
      * @throws Exception
-	 */
-	final private function __clone()
+     */
+    final private function __clone()
     {
         trigger_error("The object manager cannot be cloned.", E_USER_WARNING);
     }
 
-	/**
+    /**
      * Force creation of a singleton
      *
      * @param  array  $config An optional array with configuration options.
      * @return KObjectManager
      */
-	final public static function getInstance($config = array())
-	{
-		static $instance;
+    final public static function getInstance($config = array())
+    {
+        static $instance;
 
-		if ($instance === NULL)
-		{
-			if(!$config instanceof KObjectConfig) {
-				$config = new KObjectConfig($config);
-			}
+        if ($instance === NULL)
+        {
+            if(!$config instanceof KObjectConfig) {
+                $config = new KObjectConfig($config);
+            }
 
-			$instance = new self($config);
-		}
+            $instance = new self($config);
+        }
 
-		return $instance;
-	}
+        return $instance;
+    }
 
     /**
      * Get an object instance based on an object identifier
@@ -145,24 +144,24 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
      * to the object itself.
      *
      * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param	array $config     An optional associative array of configuration settings
-     * @return	KObjectInterface  Return object on success, throws exception on failure
+     * @param   array $config     An optional associative array of configuration settings
+     * @return  KObjectInterface  Return object on success, throws exception on failure
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws	KObjectExceptionInvalidObject	  If the object doesn't implement the KObjectInterface
+     * @throws  KObjectExceptionInvalidObject     If the object doesn't implement the KObjectInterface
      * @throws  KObjectExceptionNotFound          If object cannot be loaded
      * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
      */
     public function getObject($identifier, array $config = array())
-	{
-		$identifier = $this->getIdentifier($identifier);
+    {
+        $identifier = $this->getIdentifier($identifier);
 
         if (!$instance = $this->isRegistered($identifier))
-		{
-		    //Instantiate the identifier
-			$instance = $this->_instantiate($identifier, $config);
+        {
+            //Instantiate the identifier
+            $instance = $this->_instantiate($identifier, $config);
 
-			//Mixins's are early mixed in KObject::_construct()
-			//$instance = $this->_mixin($identifier, $instance);
+            //Mixins's are early mixed in KObject::_construct()
+            //$instance = $this->_mixin($identifier, $instance);
 
             //Decorate the object
             $instance = $this->_decorate($identifier, $instance);
@@ -171,21 +170,21 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
             if($this->isMultiton($identifier)) {
                 $this->setObject($identifier, $instance);
             }
-		}
+        }
 
-		return $instance;
-	}
+        return $instance;
+    }
 
-	/**
-	 * Insert the object instance using the identifier
-	 *
-	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @param object $object    The object instance to store
+    /**
+     * Insert the object instance using the identifier
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param object $object    The object instance to store
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @return void
-	 */
-	public function setObject($identifier, $object)
-	{
+     */
+    public function setObject($identifier, $object)
+    {
         $identifier = $this->getIdentifier($identifier);
 
         //Add alias for singletons
@@ -394,7 +393,6 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
     {
         if(!$identifier instanceof KObjectLocatorInterface)
         {
-            $config['class_loader'] = $this->getClassLoader();
             $locator = $this->getObject($identifier, $config);
 
             if(!$locator instanceof KObjectLocatorInterface)
@@ -407,7 +405,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         else $locator = $identifier;
 
         //Add the locator
-        $this->_locators[$locator->getType()] = $locator;
+        $this->_locators[$locator->getName()] = $locator;
 
         return $this;
     }
@@ -439,16 +437,16 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         return $this->_locators;
     }
 
-	/**
-	 * Set an alias for an identifier
-	 *
-	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+    /**
+     * Set an alias for an identifier
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
      * @param string $alias     The identifier alias
      * @return KObjectManager
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-	 */
-	public function registerAlias($identifier, $alias)
-	{
+     */
+    public function registerAlias($identifier, $alias)
+    {
         $identifier = $this->getIdentifier($identifier);
         $alias      = $this->getIdentifier($alias);
 
@@ -464,7 +462,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         }
 
         return $this;
-	}
+    }
 
     /**
      * Get the aliases for an identifier
@@ -485,7 +483,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
      */
     public function getClassLoader()
     {
-        return $this->_loader;
+        return $this->__loader;
     }
 
     /**
@@ -496,7 +494,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
      */
     public function setClassLoader(KClassLoaderInterface $loader)
     {
-        $this->_loader = $loader;
+        $this->__loader = $loader;
         return $this;
     }
 
@@ -677,7 +675,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
      * @param   KObjectIdentifier $identifier
      * @param   array              $config      An optional associative array of configuration settings.
      * @return  object  Return object on success, throws exception on failure
-     * @throws	KObjectExceptionInvalidObject	  If the object doesn't implement the KObjectInterface
+     * @throws	KObjectExceptionInvalidObject     If the object doesn't implement the KObjectInterface
      * @throws  KObjectExceptionNotFound          If object cannot be loaded
      * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
      */
