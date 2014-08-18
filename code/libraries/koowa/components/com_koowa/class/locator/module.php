@@ -29,26 +29,26 @@
  * Location  : .../modules/mod_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Class|Locator\Module
  */
 class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 {
-	/**
-	 * The adapter type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'module';
+    /**
+     * The locator name
+     *
+     * @var string
+     */
+    protected static $_name = 'module';
 
-	/**
-	 * Get a fully qualified path based on a class name
-	 *
-	 * @param  string $class    The class name
+    /**
+     * Get a fully qualified path based on a class name
+     *
+     * @param  string $class    The class name
      * @param  string $basepath The base path
-	 * @return string|boolean	Returns the path on success FALSE on failure
-	 */
-	public function locate($class, $basepath = null)
-	{
+     * @return string|boolean   Returns the path on success FALSE on failure
+     */
+    public function locate($class, $basepath = null)
+    {
         if (substr($class, 0, 3) === 'Mod')
         {
             /*
@@ -91,9 +91,18 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
             }
 
             return $basepath.'/'.$module.'/'.$path.'.php';
-		}
+        }
 
-		return false;
+        return false;
+    }
 
-	}
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
+    }
 }
