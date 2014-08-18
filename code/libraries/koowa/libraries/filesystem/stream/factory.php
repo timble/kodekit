@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Filesystem Stream Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem
+ * @package Koowa\Library\Filesystem\Stream\Factory
  */
 final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 {
@@ -20,7 +20,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
      *
      * @var array
      */
-    protected $_streams;
+    private $__streams;
 
     /**
      * Constructor.
@@ -95,7 +95,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if(!in_array($name, $this->getStreams()))
         {
             throw new RuntimeException(sprintf(
-                'Unable to find the stream "%s" - did you forget to register it ?', $name
+                'Unable to find the filesystem stream "%s" - did you forget to register it ?', $name
             ));
         }
 
@@ -147,7 +147,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+        if($class && !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
         {
             throw new UnexpectedValueException(
                 'Stream: '.$class.' does not implement KFilesystemStreamInterface'
@@ -159,7 +159,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if (!empty($name) && !$this->isRegistered($name))
         {
             if($result = stream_wrapper_register($name, 'KFilesystemStreamAdapter')) {
-                $this->_streams[$name] = $identifier;
+                $this->__streams[$name] = $identifier;
             }
         }
 
@@ -182,7 +182,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if($class && !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
                     'Stream: '.$class.' does not implement KFilesystemStreamInterface'
@@ -197,7 +197,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if (!empty($name) && $this->isRegistered($name))
         {
             if($result = stream_wrapper_unregister($name)) {
-                unset($this->_streams[$name]);
+                unset($this->__streams[$name]);
             }
         }
 
@@ -216,8 +216,8 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 
         if($this->isRegistered($name))
         {
-            if(isset($this->_streams[$name])) {
-                $stream = $this->_streams[$name];
+            if(isset($this->__streams[$name])) {
+                $stream = $this->__streams[$name];
             } else {
                 $stream = 'lib:filesystem.stream.'.$name;
             }
@@ -249,7 +249,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if($class && !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
                     'Stream: '.$class.' does not implement KFilesystemStreamInterface'

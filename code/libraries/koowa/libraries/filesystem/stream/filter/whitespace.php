@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -13,7 +13,7 @@
  * Filter which removes all spaces from the stream.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem
+ * @package Koowa\Library\FileSystem\Stream\Filter\Whitespace
  */
 class KFilesystemStreamFilterWhitespace extends KFilesystemStreamFilterAbstract
 {
@@ -48,5 +48,15 @@ class KFilesystemStreamFilterWhitespace extends KFilesystemStreamFilterAbstract
         }
 
         return PSFS_PASS_ON;
+    }
+
+    /**
+     * Get the stream name used to register the stream with
+     *
+     * @return string The stream name
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }
