@@ -17,4 +17,12 @@
       float: left !important;
     }
   }
+
+  .limit {
+    line-height: 30px;
+
+    * {
+      vertical-align: baseline;
+    }
+  }
 }
