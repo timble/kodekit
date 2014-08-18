@@ -47,6 +47,15 @@
       background: $btnPrimaryBackground;
     }
 
+    tr, td {
+      vertical-align: middle;
+
+      .btn-mini {
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+    }
+
     tr {
       td {
         border-top: 1px solid #ddd;
