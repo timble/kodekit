@@ -31,7 +31,7 @@ class PlgSystemKoowa extends JPlugin
 			if (JFactory::getApplication()->getName() === 'administrator') 
 			{
 				$link   = JRoute::_('index.php?option=com_config');
-				$error  = 'In order to use Nooku framework, your database type in Global Configuration should be
+				$error  = 'In order to use Nooku Framework, your database type in Global Configuration should be
 				           set to <strong>MySQLi</strong>. Please go to <a href="%2$s">Global Configuration</a> and in
 				           the \'Server\' tab change your Database Type to <strong>MySQLi</strong>.';
 
@@ -116,8 +116,8 @@ class PlgSystemKoowa extends JPlugin
              */
             $koowa = Koowa::getInstance(array(
                 'debug'           => JDEBUG,
+                'cache'           => false, //JFactory::getApplication()->getCfg('caching')
                 'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
-                'cache_enabled'   => false, //JFactory::getApplication()->getCfg('caching')
                 'root_path'       => JPATH_ROOT,
                 'base_path'       => JPATH_BASE
             ));
