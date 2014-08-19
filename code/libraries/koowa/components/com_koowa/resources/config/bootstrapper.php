@@ -8,7 +8,6 @@
  */
 
 return array(
-    'priority' => KObjectBootstrapper::PRIORITY_HIGH,
 
     'aliases'  => array(
         'request'           => 'com:koowa.dispatcher.request',
@@ -21,8 +20,16 @@ return array(
         'event.publisher'   => 'com:koowa.event.publisher',
         'user.provider'     => 'com:koowa.user.provider',
 
-        'lib:database.adapter.mysqli'  => 'com:koowa.database.adapter.mysqli',
-        'lib:dispatcher.router.route'  => 'com:koowa.dispatcher.router.route',
-        'lib:filesystem.stream.buffer' => 'com:koowa.filesystem.stream.buffer'
+        'lib:database.adapter.mysqli'    => 'com:koowa.database.adapter.mysqli',
+        'lib:dispatcher.router.route'    => 'com:koowa.dispatcher.router.route',
+        'lib:filesystem.stream.buffer'   => 'com:koowa.filesystem.stream.buffer',
+        'lib:template.locator.component' => 'com:koowa.template.locator.component',
     ),
+
+    'identifiers' => array(
+
+        'template.locator.factory' => array(
+            'locators' => array('mod:koowa.template.locator.module')
+        )
+    )
 );

@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
  /**
   * Template Interface
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
-  * @package Koowa\Library\Template
+  * @package Koowa\Library\Template\Interface
   */
 interface KTemplateInterface
 {
@@ -23,12 +23,13 @@ interface KTemplateInterface
     /**
      * Load a template by path
      *
-     * @param   string  $path     The template path
+     * @param   string  $url      The template url
      * @param   array   $data     An associative array of data to be extracted in local template scope
      * @param   integer $status   The template state
-     * @return $this
+     * @throws  InvalidArgumentException If the template could not be found
+     * @return KTemplateAbstract
      */
-    public function load($path, $data = array(), $status = self::STATUS_LOADED);
+    public function load($url, $data = array(), $status = self::STATUS_LOADED);
 
     /**
      * Parse and compile the template to PHP code
