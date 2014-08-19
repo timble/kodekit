@@ -34,7 +34,7 @@ class KTemplateLocatorFile extends KTemplateLocatorAbstract
         if(is_file($info['url']) === false)
         {
             if(empty($base)) {
-                throw new \RuntimeException('Cannot qualify partial template path');
+                throw new RuntimeException('Cannot qualify partial template path');
             }
 
             $path = dirname($info['base']);

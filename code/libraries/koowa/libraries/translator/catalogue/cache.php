@@ -33,7 +33,7 @@ class KTranslatorCatalogueCache extends KTranslatorCatalogueAbstract
         parent::__construct($config);
 
         if (!extension_loaded('apc')) {
-            throw new \RuntimeException('APC is not loaded');
+            throw new RuntimeException('APC is not loaded');
         }
     }
 
