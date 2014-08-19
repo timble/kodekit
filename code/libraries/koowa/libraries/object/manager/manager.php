@@ -65,7 +65,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         $this->setClassLoader($config->class_loader);
 
         //Create the object registry
-        if($config->cache)
+        if($config->cache && KObjectRegistryCache::isSupported())
         {
             $this->__registry = new KObjectRegistryCache();
             $this->__registry->setNamespace($config->cache_namespace);
