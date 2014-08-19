@@ -229,7 +229,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
 
             if($class && !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Locator: '.$class.' does not implement KTemplateLocatorInterface'
                 );
             }
