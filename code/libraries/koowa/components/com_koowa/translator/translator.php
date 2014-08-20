@@ -33,6 +33,22 @@ class ComKoowaTranslator extends KTranslator
     }
 
     /**
+     * Prevent caching
+     *
+     * Do not decorate the translator with the cache.
+     *
+     * @param   KObjectConfigInterface  $config   A ObjectConfig object with configuration options
+     * @param   KObjectManagerInterface	$manager  A ObjectInterface object
+     * @return  $this
+     * @see KFilterTraversable
+     */
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    {
+        $class = $manager->getClass($config->object_identifier);
+        return new $class($config);
+    }
+
+    /**
      * Loads translations from a url
      *
      * @param string $url      The translation url
