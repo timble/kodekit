@@ -45,7 +45,7 @@ class ComKoowaTranslatorLocatorModule extends KTranslatorLocatorIdentifier
             $basepath = $locator->getNamespace(ucfirst($package));
         }
 
-        $basepath .= '/mod_'.strtolower($package).'/language';
+        $basepath .= '/mod_'.strtolower($package);
 
         return array('mod_'.$package => $basepath);
     }

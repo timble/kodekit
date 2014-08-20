@@ -35,9 +35,6 @@ class ComKoowaTranslatorLocatorPlugin extends KTranslatorLocatorIdentifier
         //Get the package
         $package = $info['package'];
 
-        //Get the domain
-        $domain = $info['domain'];
-
         //Get the name
         $name   = $info['url']->getName();
 
@@ -48,7 +45,7 @@ class ComKoowaTranslatorLocatorPlugin extends KTranslatorLocatorIdentifier
             $basepath = $locator->getNamespace(ucfirst($package));
         }
 
-        $basepath .= '/'.$package.'/'.$name.'/language';
+        $basepath .= '/'.$package.'/'.$name;
 
         return array('plg_'.$package.'_'.$name => $basepath);
     }
