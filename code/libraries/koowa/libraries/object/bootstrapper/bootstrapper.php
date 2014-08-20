@@ -238,7 +238,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                     'domains'      => $this->_domains,
                     'namespaces'   => $this->_namespaces,
                     'files'        => $this->_files,
-                    'applications' => $this->_domains,
+                    'applications' => $this->_applications,
                     'aliases'      => $aliases_flat,
                 ));
 
@@ -305,6 +305,11 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
 
                 //Set the component namespace
                 $namespace = $this->getComponentNamespace($name);
+                $this->getObject('manager')
+                    ->getClassLoader()
+                    ->getLocator('component')
+                    ->registerNamespace($namespace, $path);
+
                 $this->_namespaces[$namespace] = $path;
             }
 
