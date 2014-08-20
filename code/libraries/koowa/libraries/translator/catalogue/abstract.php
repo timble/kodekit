@@ -2,21 +2,21 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Translator Catalogue
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator
+ * @package Koowa\Library\Translator\Catalogue\Abstract
  */
 abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTranslatorCatalogueInterface
 {
     /**
-     * Get a string from the catalogue
+     * Get a string from the registry
      *
      * @param  string $string
      * @return  string  The translation of the string
@@ -27,7 +27,7 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
     }
 
     /**
-     * Set a string in the catalogue
+     * Set a string in the registry
      *
      * @param  string $string
      * @param  string $translation
@@ -40,7 +40,7 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
     }
 
     /**
-     * Check if a string exists in the catalogue
+     * Check if a string exists in the registry
      *
      * @param  string $string
      * @return boolean
@@ -63,17 +63,6 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
     }
 
     /**
-     * Clears out all strings from the catalogue
-     *
-     * @return  KTranslatorCatalogueAbstract
-     */
-    public function clear()
-    {
-        $this->_data = array();
-        return $this;
-    }
-
-    /**
      * Add translations to the catalogue.
      *
      * @param array  $translations Associative array containing translations.
@@ -91,5 +80,14 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
         return true;
     }
 
-
+    /**
+     * Clears out all strings from the registry
+     *
+     * @return  KTranslatorCatalogueAbstract
+     */
+    public function clear()
+    {
+        $this->_data = array();
+        return $this;
+    }
 }

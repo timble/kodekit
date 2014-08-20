@@ -65,9 +65,6 @@ abstract class KViewTemplate extends KViewAbstract
                 $this->getTemplate()->attachFilter($key, $value);
             }
         }
-
-        //Fetch the view data before rendering
-        $this->addCommandCallback('before.render', '_fetchData');
     }
 
     /**

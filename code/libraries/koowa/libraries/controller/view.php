@@ -15,12 +15,12 @@
  */
 abstract class KControllerView extends KControllerAbstract implements KControllerViewable
 {
-	/**
-	 * View object or identifier (com://APP/COMPONENT.view.NAME.FORMAT)
-	 *
-	 * @var	string|object
-	 */
-	protected $_view;
+    /**
+     * View object or identifier (com://APP/COMPONENT.view.NAME.FORMAT)
+     *
+     * @var	string|object
+     */
+    protected $_view;
 
     /**
      * List of formats supported by the controller
@@ -29,17 +29,17 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
      */
     protected $_formats;
 
-	/**
-	 * Constructor
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 */
-	public function __construct(KObjectConfig $config)
-	{
-		parent::__construct($config);
+    /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
 
-		// Set the view identifier
-		$this->_view = $config->view;
+        // Set the view identifier
+        $this->_view = $config->view;
 
         //Set the supported formats
         $this->_formats = KObjectConfig::unbox($config->formats);
@@ -50,9 +50,11 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
         //Attach the toolbars
         $this->addCommandCallback('before.render', '_addToolbars', array('toolbars' => $config->toolbars));
 
+        //Load the controller translations
+        $this->addCommandCallback('before.render', '_loadTranslations');
     }
 
-	/**
+    /**
      * Initializes the default configuration for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -93,6 +95,26 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     }
 
     /**
+     * Load the controller translations
+     *
+     * @param KControllerContextInterface $context
+     * @return void
+     */
+    protected function _loadTranslations(KControllerContextInterface $context)
+    {
+        $package = $this->getIdentifier()->package;
+        $domain  = $this->getIdentifier()->domain;
+
+        if($domain) {
+            $identifier = 'com://'.$domain.'/'.$package;
+        } else {
+            $identifier = 'com:'.$package;
+        }
+
+        $this->getObject('translator')->load($identifier);
+    }
+
+    /**
      * Get the view object attached to the controller
      *
      * @throws	UnexpectedValueException	If the views doesn't implement the KViewInterface
@@ -123,39 +145,39 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
                     'View: '.get_class($this->_view).' does not implement KViewInterface'
                 );
             }
-		}
+        }
 
-		return $this->_view;
-	}
+        return $this->_view;
+    }
 
-	/**
-	 * Method to set a view object attached to the controller
-	 *
-	 * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					or valid identifier string
-	 * @return	object	A KViewInterface object or a KObjectIdentifier object
-	 */
-	public function setView($view)
-	{
-		if(!($view instanceof KViewInterface))
-		{
-			if(is_string($view) && strpos($view, '.') === false )
-		    {
-			    $identifier			= $this->getIdentifier()->toArray();
-			    $identifier['path']	= array('view', $view);
-			    $identifier['name']	= $this->getRequest()->getFormat();
+    /**
+     * Method to set a view object attached to the controller
+     *
+     * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
+     * 					or valid identifier string
+     * @return	object	A KViewInterface object or a KObjectIdentifier object
+     */
+    public function setView($view)
+    {
+        if(!($view instanceof KViewInterface))
+        {
+            if(is_string($view) && strpos($view, '.') === false )
+            {
+                $identifier			= $this->getIdentifier()->toArray();
+                $identifier['path']	= array('view', $view);
+                $identifier['name']	= $this->getRequest()->getFormat();
 
                 $identifier = $this->getIdentifier($identifier);
-			}
-			else $identifier = $this->getIdentifier($view);
+            }
+            else $identifier = $this->getIdentifier($view);
 
-			$view = $identifier;
-		}
+            $view = $identifier;
+        }
 
-		$this->_view = $view;
+        $this->_view = $view;
 
-		return $this->_view;
-	}
+        return $this->_view;
+    }
 
     /**
      * Get the supported formats
@@ -184,8 +206,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
      * @throws KControllerExceptionFormatNotSupported If the requested format is not supported for the resource
      * @return string|bool The rendered output of the view or false if something went wrong
      */
-	protected function _actionRender(KControllerContextInterface $context)
-	{
+    protected function _actionRender(KControllerContextInterface $context)
+    {
         $format = $this->getRequest()->getFormat();
 
         //Check if the format is supported
@@ -213,7 +235,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
         else throw new KControllerExceptionFormatNotSupported('Format: '.$format.' not supported');
 
         return $content;
-	}
+    }
 
     /**
      * Supports a simple form Fluent Interfaces. Allows you to set the request properties by using the request property

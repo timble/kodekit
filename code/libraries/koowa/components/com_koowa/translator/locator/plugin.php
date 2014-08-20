@@ -8,45 +8,38 @@
  */
 
 /**
- * Module Template Locator
+ * Component Translator Locator
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Module\Koowa\Template\Locator\Module
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Component\Koowa\Translator\Locator\Plugin
  */
-class ModKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
+class ComKoowaTranslatorLocatorPlugin extends KTranslatorLocatorIdentifier
 {
     /**
-     * The stream name
+     * The locator name
      *
      * @var string
      */
-    protected static $_name = 'mod';
-
-    /**
-     * Get the locator name
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return static::$_name;
-    }
+    protected static $_name = 'plg';
 
     /**
      * Find a template path
      *
      * @param array  $info      The path information
-     * @return bool|mixed
+     * @return array
      */
     public function find(array $info)
     {
-        $locator = $this->getObject('manager')->getClassLoader()->getLocator('module');
+        $locator = $this->getObject('manager')->getClassLoader()->getLocator('plugin');
 
         //Get the package
         $package = $info['package'];
 
         //Get the domain
         $domain = $info['domain'];
+
+        //Get the name
+        $name   = $info['url']->getName();
 
         //Switch basepath
         if(!$locator->getNamespace(ucfirst($package))) {
@@ -55,12 +48,18 @@ class ModKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
             $basepath = $locator->getNamespace(ucfirst($package));
         }
 
-        $basepath .= '/mod_'.strtolower($package);
+        $basepath .= '/'.$package.'/'.$name.'/language';
 
-        $filepath   = (count($info['path']) ? implode('/', $info['path']).'/' : '').'tmpl/';
-        $filepath  .= $info['file'].'.'.$info['format'].'.php';
+        return array('plg_'.$package.'_'.$name => $basepath);
+    }
 
-        // Find the template
-        return $this->realPath($basepath.'/'.$filepath);
+    /**
+     * Get the locator name
+     *
+     * @return string The stream name
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

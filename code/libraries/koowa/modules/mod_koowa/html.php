@@ -46,6 +46,29 @@ class ModKoowaHtml extends KViewHtml
 	}
 
     /**
+     * Load the controller translations
+     *
+     * @param KViewContext $context
+     * @return void
+     */
+    protected function _loadTranslations(KViewContext $context)
+    {
+        if(isset($this->module->module))
+        {
+            $package = $this->getIdentifier()->package;
+            $domain  = $this->getIdentifier()->domain;
+
+            if($domain) {
+                $identifier = 'mod://'.$domain.'/'.$package;
+            } else {
+                $identifier = 'mod:'.$package;
+            }
+
+            $this->getObject('translator')->load($identifier);
+        }
+    }
+
+    /**
      * Return the views output
      *
      * @param KViewContext	$context A view context object
@@ -53,11 +76,6 @@ class ModKoowaHtml extends KViewHtml
      */
     protected function _actionRender(KViewContext $context)
     {
-		//Load the language files.
-		if(isset($this->module->module)) {
-            $this->getObject('translator')->loadTranslations($this->getIdentifier());
-		}
-
         if(empty($this->module->content))
         {
             $layout = $this->getLayout();
