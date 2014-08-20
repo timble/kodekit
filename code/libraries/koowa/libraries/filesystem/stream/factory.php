@@ -147,10 +147,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if($class && !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+        if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
         {
             throw new UnexpectedValueException(
-                'Stream: '.$class.' does not implement KFilesystemStreamInterface'
+                'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
             );
         }
 
@@ -182,10 +182,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if($class && !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
-                    'Stream: '.$class.' does not implement KFilesystemStreamInterface'
+                    'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
                 );
             }
 
@@ -249,10 +249,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if($class && !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
-                    'Stream: '.$class.' does not implement KFilesystemStreamInterface'
+                    'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
                 );
             }
 

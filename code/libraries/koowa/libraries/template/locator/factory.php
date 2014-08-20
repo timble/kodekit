@@ -126,10 +126,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if($class && !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
+        if(!$class || !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
         {
             throw new UnexpectedValueException(
-                'Locator: '.$class.' does not implement KTemplateLocatorInterface'
+                'Locator: '.$identifier.' does not implement KTemplateLocatorInterface'
             );
         }
 
@@ -158,10 +158,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if($class && !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
+            if(!$class || !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
-                    'Locator: '.$class.' does not implement KTemplateLocatorInterface'
+                    'Locator: '.$identifier.' does not implement KTemplateLocatorInterface'
                 );
             }
 
@@ -227,10 +227,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if($class && !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
+            if(!$class || !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
-                    'Locator: '.$class.' does not implement KTemplateLocatorInterface'
+                    'Locator: '.$identifier.' does not implement KTemplateLocatorInterface'
                 );
             }
 
