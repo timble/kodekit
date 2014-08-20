@@ -47,15 +47,6 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     }
 
     /**
-     * Checks if the APC PHP extension is enabled
-     * @return bool
-     */
-    public static function isSupported()
-    {
-        return extension_loaded('apc');
-    }
-
-    /**
      * Get the registry cache namespace
      *
      * @param string $namespace
@@ -243,6 +234,16 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     public function isTranslatable($string)
     {
         return $this->getDelegate()->isTranslatable($string);
+    }
+
+    /**
+     * Checks if the APC PHP extension is enabled
+     *
+     * @return bool
+     */
+    public static function isSupported()
+    {
+        return extension_loaded('apc');
     }
 
     /**
