@@ -78,18 +78,6 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     }
 
     /**
-     * Register editor using xdebug's file_link_format option.
-     *
-     * @param $file
-     * @param $line
-     * @return mixed
-     */
-    protected function _getXdebugPath($file, $line)
-    {
-        return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
-    }
-
-    /**
      * Returns an HTML string of information about a single variable.
      *
      * @param 	array 	$config An optional array with configuration options
@@ -687,5 +675,17 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         }
 
         return $vars;
+    }
+
+    /**
+     * Register editor using xdebug's file_link_format option.
+     *
+     * @param $file
+     * @param $line
+     * @return mixed
+     */
+    protected function _getXdebugPath($file, $line)
+    {
+        return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
     }
 }
