@@ -59,7 +59,7 @@ class KClassLoader implements KClassLoaderInterface
     final private function __construct($config = array())
     {
         //Create the class registry
-        if(isset($config['cache']) && $config['cache'])
+        if(isset($config['cache']) && $config['cache'] && KClassRegistryCache::isSupported())
         {
             $this->__registry = new KClassRegistryCache();
 
