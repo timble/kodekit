@@ -45,7 +45,7 @@ The framework follows the [semantic versioning standard](http://semver.org/). Re
 and compatibility. We promise that all minor versions will be 100% backwards compatible. Only in major versions backwards
 compatibility is not guaranteed.
 
-Note : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform][nooku-platform],
+*Note* : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform][nooku-platform],
 a fork from Joomla that is being completely rebuild using Nooku Framework.
 
 Requirements
