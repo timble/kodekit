@@ -4,28 +4,29 @@ Nooku Framework
 What is Nooku Framework?
 -------------------------
 
-Nooku Framework is an open-source extension framework for [Joomla](http://www.joomla.orh). Developed and maintained by
+Nooku Framework is a open-source **extension framework** for **[Joomla](http://www.joomla.org)**. Developed and maintained by
 [Timble](http://timble.net) with the help of passionate developers from all over the world.
 
 Nooku Framework can be installed in Joomla as a plugin and lets you focus on the "business" logic of your extension. By
 doing most of the repetitive work for you [boilerplate code][boilerplate] is eliminated which greatly reduces the time
 to develop Joomla extensions.
 
-Nooku Framework provides you with excellent out-of-the-box security features. The design pattern based architecture makes
-your extension more flexible: your code becomes more re-usable, extensible and more easily replaceable.
+The design pattern based architecture makes your extension more flexible: your extension becomes more **re-usable**,
+**flexible** and more easily **extensible**. Additionally Nooku Framework provides you with excellent **out-of-the-box
+ security** features.
 
 Nooku Framework uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering)
 and includes everything needed to create Joomla extensions according to the [Hierarchical Model-View-Contoller][HMVC]
-(HMVC) pattern.
+**(HMVC)** pattern.
 
 Why Nooku Framework?
 --------------------
 
-Nooku Framework is built to help developers create complex custom Joomla extensions and tries to solve following problems:
+Nooku Framework is built to help developers create **custom** Joomla extensions and tries to solve following problems:
 
 * Abstract differences between Joomla versions 2.x and 3.x.
 * Provide a solid modern and lean architecture for building extensions.
-* Allow extensions to be extended easily.
+* Allow extensions to be more flexible and extended easily.
 
 Who is Nooku Framework for ?
 ----------------------------
@@ -37,7 +38,7 @@ of an installable package please [contact us](http://www.timble.net/contact/) fi
 Production Ready
 ----------------
 
-The framework uses a conservative development approach focussed on the lowest common denominator, at time of writing this
+The framework uses a conservative development approach focused on the lowest common denominator, at time of writing this
 is Joomla 2.5 and PHP 5.2. The framework is fully forwards compatible with Joomla 3.x and PHP 5.x.
 
 The framework follows the [semantic versioning standard](http://semver.org/). Rest assured : it's designed for stability
@@ -45,7 +46,7 @@ and compatibility. We promise that all minor versions will be 100% backwards com
 compatibility is not guaranteed.
 
 Note : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform][nooku-platform],
-a fork from Joomla 1.5 that is being completely rebuild using Nooku Framework.
+a fork from Joomla that is being completely rebuild using Nooku Framework.
 
 Requirements
 ------------
