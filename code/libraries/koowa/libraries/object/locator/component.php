@@ -2,25 +2,25 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Component Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Library\Object\Locator\Component
  */
 class KObjectLocatorComponent extends KObjectLocatorAbstract
 {
     /**
-     * The type
+     * The locator name
      *
      * @var string
      */
-    protected $_type = 'com';
+    protected static $_name = 'com';
 
     /**
      * Initializes the options for the object
@@ -84,13 +84,24 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
         }
 
         $info = array(
-            'class'   => $class,
-            'package' => $package,
-            'domain'  => $domain,
-            'path'    => $path,
-            'file'    => $file
+            'identifier' => $identifier,
+            'class'      => $class,
+            'package'    => $package,
+            'domain'     => $domain,
+            'path'       => $path,
+            'file'       => $file
         );
 
         return $this->find($info, $fallback);
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

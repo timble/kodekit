@@ -11,16 +11,16 @@
  * Module Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Object\Locator\Module
  */
 class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
 {
-	/**
-	 * The type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'mod';
+    /**
+     * The locator name
+     *
+     * @var string
+     */
+    protected static $_name = 'mod';
 
     /**
      * Initializes the options for the object
@@ -81,13 +81,24 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
         }
 
         $info = array(
-            'class'   => $class,
-            'package' => $package,
-            'domain'  => $domain,
-            'path'    => $path,
-            'file'    => $file
+            'identifier' => $identifier,
+            'class'      => $class,
+            'package'    => $package,
+            'domain'     => $domain,
+            'path'       => $path,
+            'file'       => $file
         );
 
         return $this->find($info, $fallback);
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

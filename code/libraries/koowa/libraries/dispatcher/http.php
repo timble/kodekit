@@ -16,6 +16,19 @@
 class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
+     * Constructor.
+     *
+     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        //Load the dispatcher translations
+        $this->addCommandCallback('before.dispatch', '_loadTranslations');
+    }
+
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -54,6 +67,26 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         $manager->registerAlias($config->object_identifier, 'dispatcher');
 
         return $instance;
+    }
+
+    /**
+     * Load the controller translations
+     *
+     * @param KControllerContextInterface $context
+     * @return void
+     */
+    protected function _loadTranslations(KControllerContextInterface $context)
+    {
+        $package = $this->getIdentifier()->package;
+        $domain  = $this->getIdentifier()->domain;
+
+        if($domain) {
+            $identifier = 'com://'.$domain.'/'.$package;
+        } else {
+            $identifier = 'com:'.$package;
+        }
+
+        $this->getObject('translator')->load($identifier);
     }
 
     /**
@@ -356,7 +389,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             }
             else
             {
-                //Add an Allow header to the reponse
+                //Add an Allow header to the response
                 if($response->getStatusCode() === KHttpResponse::METHOD_NOT_ALLOWED) {
                     $this->_actionOptions($context);
                 }

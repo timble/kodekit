@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 require_once dirname(__FILE__).'/interface.php';
@@ -19,7 +19,7 @@ require_once dirname(__FILE__).'/registry/cache.php';
  * Loader
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class\Loader
  */
 class KClassLoader implements KClassLoaderInterface
 {
@@ -59,7 +59,7 @@ class KClassLoader implements KClassLoaderInterface
     final private function __construct($config = array())
     {
         //Create the class registry
-        if(isset($config['cache_enabled']) && $config['cache_enabled'])
+        if(isset($config['cache']) && $config['cache'] && KClassRegistryCache::isSupported())
         {
             $this->__registry = new KClassRegistryCache();
 
@@ -233,7 +233,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function registerLocator(KClassLocatorInterface $locator, $prepend = false )
     {
-        $array = array($locator->getType() => $locator);
+        $array = array($locator->getName() => $locator);
 
         if($prepend) {
             $this->_locators = $array + $this->_locators;

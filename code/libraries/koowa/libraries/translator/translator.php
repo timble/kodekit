@@ -13,7 +13,4 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Translator
  */
-class KTranslator extends KTranslatorAbstract implements KObjectSingleton
-{
-
-}
+class KTranslator extends KTranslatorAbstract implements KObjectSingleton {}

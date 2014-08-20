@@ -8,12 +8,12 @@
  */
 
 /**
- * Component Template Locator
+ * Abstract Translator Locator
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator\Abstract
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Translator\Locator\Abstract
  */
-abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLocatorInterface
+abstract class KTranslatorLocatorAbstract extends KObject implements KTranslatorLocatorInterface
 {
     /**
      * The stream name
@@ -33,22 +33,49 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
     }
 
     /**
-     * Locate the template based on a virtual path
+     * Locate the translation based on a physical path
      *
-     * @param  string $url   The Template url
-     * @param  string $base  The base url or resource (used to resolved partials).
-     * @throws \RuntimeException If the no base path was passed while trying to locate a partial.
-     * @return string   The physical path of the template
+     * @param  string $url       The translation url
+     * @param  string $locale    The locale to search for
+     * @return string  The real file path for the translation
      */
-    public function locate($url, $base = null)
+    public function locate($url, $locale)
     {
-        $info = array(
-            'url'   => $url,
-            'base'  => $base,
-            'path'  => '',
+        $result = array();
+        $info   = array(
+            'url'     => $url,
+            'locale'  => $locale,
+            'path'    => '',
         );
 
         return $this->find($info);
+    }
+
+    /**
+     * Find a translation path
+     *
+     * @param array  $info  The path information
+     * @return array
+     */
+    public function find(array $info)
+    {
+        $result = array();
+
+        if($info['path'] && $info['locale'])
+        {
+            $pattern = $info['path'].'/'.$info['locale'].'.*';
+
+            foreach(glob($pattern) as $file)
+            {
+                if($path = $this->realPath($file))
+                {
+                    $result[] = $path;
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**

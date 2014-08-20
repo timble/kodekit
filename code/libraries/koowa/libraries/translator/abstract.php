@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -12,9 +12,9 @@
  *
  * @author  Arunas Mazeika <https://github.com/arunasmazeika>
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator
+ * @package Koowa\Library\Translator\Abstract
  */
-abstract class KTranslatorAbstract extends KObject implements KTranslatorInterface
+abstract class KTranslatorAbstract extends KObject implements KTranslatorInterface, KObjectInstantiable
 {
     /**
      * Locale
@@ -53,11 +53,11 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     {
         parent::__construct($config);
 
-        $this->setLocale($config->locale);
+        $this->_catalogue = $config->catalogue;
+        $this->_loaded   = array();
 
-        $this->_loaded          = array();
-        $this->_catalogue       = $config->catalogue;
-        $this->_locale_fallback = $config->locale_fallback;
+        $this->setLocale($config->locale);
+        $this->setLocaleFallback($this->_locale_fallback);
     }
 
     /**
@@ -73,12 +73,35 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
         $config->append(array(
             'locale'          => 'en-GB',
             'locale_fallback' => 'en-GB',
-            'cache_enabled'   => false,
-        ))->append(array(
-            'catalogue' =>  $config->cache_enabled ? 'cache' : 'default'
+            'cache'           => false,
+            'cache_namespace' => 'nooku',
+            'catalogue'       => 'default',
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Instantiate the translator and decorate with the cache decorator if cache is enabled.
+     *
+     * @param   KObjectConfigInterface  $config   A ObjectConfig object with configuration options
+     * @param   KObjectManagerInterface	$manager  A ObjectInterface object
+     * @return  $this
+     * @see KFilterTraversable
+     */
+    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    {
+        $class    = $manager->getClass($config->object_identifier);
+        $instance = new $class($config);
+        $config   = $instance->getConfig();
+
+        if($config->cache)
+        {
+            $instance = $instance->decorate('lib:translator.cache');
+            $instance->setNamespace($config->cache_namespace);
+        }
+
+        return $instance;
     }
 
     /**
@@ -145,74 +168,59 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     }
 
     /**
-     * Loads translations from a file.
+     * Loads translations from a url
      *
-     * @param string $file     The path to the file containing translations.
-     * @param bool   $override Tells if previous loaded translations should be overridden
-     * @return bool True if translations were loaded, false otherwise
+     * @param string $url      The translation url
+     * @param bool   $override If TRUE override previously loaded translations. Default FALSE.
+     * @return bool TRUE if translations are loaded, FALSE otherwise
      */
-    public function load($file, $override = false)
+    public function load($url, $override = false)
     {
-        $result = false;
-
-        if (!$this->isLoaded($file))
+        if (!$this->isLoaded($url))
         {
-            try
+            $translations = array();
+
+            foreach($this->find($url) as $file)
             {
-                $translations = $this->getObject('object.config.factory')->fromFile($file)->toArray();
-
-                if(is_array($translations))
-                {
-                    if($result = $this->getCatalogue()->add($translations, $override))
-                    {
-                        //Mark the file as loaded to prevent re-loading
-                        $this->_loaded[$file] = true;
-                        return true;
-                    }
+                try {
+                    $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
+                } catch (Exception $e) {
+                    return false;
+                    break;
                 }
-            }
-            catch (Exception $e) {}
-        }
-        //Translation file has already been loaded
-        else $result = true;
 
-        return $result;
+                $translations = array_merge($translations, $loaded);
+            }
+
+            $this->getCatalogue()->add($translations, $override);
+
+            $this->_loaded[] = $url;
+        }
+
+        return true;
     }
 
     /**
-     * Translations finder.
+     * Find translations from a url
      *
-     * Looks for translation files on the provided path.
-     *
-     * @param string $path      The path to look for translations.
-     * @param string $extension The file extension to look for.
-     * @return string|false The translation filename. False in no translations file is found.
+     * @param string $url      The translation url
+     * @return array An array with physical file paths
      */
-    public function find($path, $extension = 'ini')
+    public function find($url)
     {
-        $locale          = $this->getLocale();
-        $locale_fallback = $this->getLocaleFallback();
+        $locale   = $this->getLocale();
+        $fallback = $this->getLocaleFallback();
+        $locator  = $this->getObject('translator.locator.factory')->createLocator($url);
 
-        $locales = array($locale);
+        //Find translation based on the locale
+        $result = $locator->locate($url, $locale);
 
-        if ($locale_fallback && ($locale !== $locale_fallback)) {
-            $locales[] = $locale_fallback;
+        //If no translations found, try using the fallback locale
+        if(empty($result) && $fallback && $fallback != $locale) {
+            $result = $locator->locate($url, $fallback);
         }
 
-        $file = null;
-
-        foreach ($locales as $locale)
-        {
-            $candidate = $path . $locale . '.'.$extension;
-
-            if (file_exists($candidate))
-            {
-                $file = $candidate;
-                break;
-            }
-        }
-
-        return $file;
+        return $result;
     }
 
     /**
@@ -223,14 +231,23 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      */
     public function setLocale($locale)
     {
-        $this->_locale = $locale;
+        if($this->_locale != $locale)
+        {
+            $this->_locale = $locale;
 
-        //Set locale information for date and time formatting
-        setlocale(LC_TIME, $locale);
+            //Set locale information for date and time formatting
+            setlocale(LC_TIME, $locale);
 
-        //Sets the default runtime locale
-        if (function_exists('locale_set_default') ) {
-            locale_set_default($locale);
+            //Sets the default runtime locale
+            if (function_exists('locale_set_default') ) {
+                locale_set_default($locale);
+            }
+
+            //Clear the catalogue
+            $this->getCatalogue()->clear();
+
+            //Load the library translations
+            $this->load(dirname(dirname(__FILE__)).'/resources/language');
         }
 
         return $this;
@@ -298,8 +315,8 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * Set a catalogue
      *
-     * @param	mixed	$catalogue An object that implements KObjectInterface, KObjectIdentifier object
-     * 					           or valid identifier string
+     * @param   mixed   $catalogue An object that implements KObjectInterface, KObjectIdentifier object
+     *                             or valid identifier string
      * @return KTranslatorAbstract
      */
     public function setCatalogue($catalogue)
@@ -325,6 +342,17 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     }
 
     /**
+     * Checks if translations from a given url are already loaded.
+     *
+     * @param mixed $url The url to check
+     * @return bool TRUE if loaded, FALSE otherwise.
+     */
+    public function isLoaded($url)
+    {
+        return in_array($url, $this->_loaded);
+    }
+
+    /**
      * Checks if the translator can translate a string
      *
      * @param $string String to check
@@ -333,17 +361,6 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     public function isTranslatable($string)
     {
         return $this->getCatalogue()->has($string);
-    }
-
-    /**
-     * Tells if translations from a given file are already loaded.
-     *
-     * @param mixed $file The file to check
-     * @return bool True if loaded, false otherwise.
-     */
-    public function isLoaded($file)
-    {
-        return isset($this->_loaded[$file]);
     }
 
     /**

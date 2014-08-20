@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Cache Object Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Registry\Cache
  */
 class KObjectRegistryCache extends KObjectRegistry
 {
@@ -30,9 +30,18 @@ class KObjectRegistryCache extends KObjectRegistry
      */
     public function __construct()
     {
-        if (!extension_loaded('apc')) {
+        if (!self::isSupported()) {
             throw new RuntimeException('Unable to use KObjectRegistryCache as APC is not enabled.');
         }
+    }
+
+    /**
+     * Checks if the APC PHP extension is enabled
+     * @return bool
+     */
+    public static function isSupported()
+    {
+        return extension_loaded('apc');
     }
 
     /**
@@ -74,7 +83,7 @@ class KObjectRegistryCache extends KObjectRegistry
                 'class'      =>  $class
             );
 
-            apc_store($this->_namespace.'-object-'.$identifier, $data);
+            apc_store($this->getNamespace().'-object_'.$identifier, $data);
         }
 
         return  parent::setClass($identifier, $class);
@@ -90,7 +99,7 @@ class KObjectRegistryCache extends KObjectRegistry
     {
         if(!parent::offsetExists($offset))
         {
-            if($data = apc_fetch($this->_namespace.'-object-'.$offset))
+            if($data = apc_fetch($this->getNamespace().'-object_'.$offset))
             {
                 $class      = $data['class'];
                 $identifier = $data['identifier'];
@@ -123,7 +132,7 @@ class KObjectRegistryCache extends KObjectRegistry
                 'class'      =>  $this->getClass($identifier)
             );
 
-            apc_store($this->_namespace.'-object-'.$offset, $data);
+            apc_store($this->getNamespace().'-object_'.$offset, $data);
         }
 
         parent::offsetSet($offset, $identifier);
@@ -138,7 +147,7 @@ class KObjectRegistryCache extends KObjectRegistry
     public function offsetExists($offset)
     {
         if(false === $result = parent::offsetExists($offset)) {
-            $result = apc_exists($this->_namespace.'-object-'.$offset);
+            $result = apc_exists($this->getNamespace().'-object_'.$offset);
         }
 
         return $result;
@@ -152,7 +161,7 @@ class KObjectRegistryCache extends KObjectRegistry
      */
     public function offsetUnset($offset)
     {
-        apc_delete($this->_namespace.'-object-'.$offset);
+        apc_delete($this->getNamespace().'-object_'.$offset);
         parent::offsetUnset($offset);
     }
 

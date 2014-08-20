@@ -2,25 +2,25 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Koowa Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Locator\Library
  */
 class KObjectLocatorLibrary extends KObjectLocatorAbstract
 {
     /**
-     * The type
+     * The locator name
      *
      * @var string
      */
-    protected $_type = 'lib';
+    protected static $_name = 'lib';
 
     /**
      * Initializes the options for the object
@@ -40,5 +40,15 @@ class KObjectLocatorLibrary extends KObjectLocatorAbstract
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

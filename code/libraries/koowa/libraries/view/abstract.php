@@ -73,6 +73,12 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
 
         // Mixin the event interface
         $this->mixin('lib:event.mixin', $config);
+
+        //Fetch the view data before rendering
+        $this->addCommandCallback('before.render', '_fetchData');
+
+        //Fetch the view data before rendering
+        $this->addCommandCallback('before.render', '_loadTranslations');
 	}
 
     /**
@@ -145,6 +151,37 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     {
         $contents = $this->getContent();
         return trim($contents);
+    }
+
+    /**
+     * Fetch the view data
+     *
+     * @param KViewContext	$context A view context object
+     * @return void
+     */
+    protected function _fetchData(KViewContext $context)
+    {
+
+    }
+
+    /**
+     * Load the view translations
+     *
+     * @param KViewContext	$context A view context object
+     * @return void
+     */
+    protected function _loadTranslations(KViewContext $context)
+    {
+        $package = $this->getIdentifier()->package;
+        $domain  = $this->getIdentifier()->domain;
+
+        if($domain) {
+            $identifier = 'com://'.$domain.'/'.$package;
+        } else {
+            $identifier = 'com:'.$package;
+        }
+
+        $this->getObject('translator')->load($identifier);
     }
 
     /**

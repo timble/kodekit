@@ -13,33 +13,8 @@
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa
  */
-final class ComKoowaTranslator extends KTranslator
+class ComKoowaTranslator extends KTranslator
 {
-    /**
-     * Maps identifier types to words
-     *
-     * @var array
-     */
-    protected static $_type_map = array(
-        'com' => 'component',
-        'mod' => 'module',
-        'plg' => 'plugin'
-    );
-
-    /**
-     * @param KObjectConfig $config
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        if (!$this->isLoaded('koowa'))
-        {
-            $this->loadTranslations('com_koowa');
-            $this->_loaded['koowa'] = true;
-        }
-    }
-
     /**
      * Initializes the options for the object
      *
@@ -58,110 +33,52 @@ final class ComKoowaTranslator extends KTranslator
     }
 
     /**
-     * Load the extension language files.
+     * Loads translations from a url
      *
-     * @param string|KObjectIdentifier $extension Extension identifier or name (e.g. com_files)
-     * @param string $app Application. Leave blank for current one.
-     *
-     * @return boolean
+     * @param string $url      The translation url
+     * @param bool   $override If TRUE override previously loaded translations. Default FALSE.
+     * @return bool TRUE if translations are loaded, FALSE otherwise
      */
-    public function loadTranslations($extension, $app = null)
+    public function load($url, $override = false)
     {
-        if ($extension instanceof KObjectIdentifier) {
-            $extension = $extension->type.'_'.$extension->package;
-        }
+        $loaded = array();
 
-        $folder = $this->_getExtensionFolder($extension, $app);
-
-        $results = array();
-        $results[] = $this->_loadTranslation($extension, $this->getLocaleFallback(), $folder);
-
-        if ($this->getLocale() !== $this->getLocaleFallback()) {
-            $results[] = $this->_loadTranslation($extension, $this->getLocale(), $folder);
-        }
-
-        return in_array(true, $results);
-    }
-
-    /**
-     * Gets the folder for an extension
-     *
-     * @throws BadMethodCallException
-     *
-     * @param string $extension Extension
-     * @param string $app       Application. Leave blank for current one.
-     * @return string
-     */
-    protected function _getExtensionFolder($extension, $app = null)
-    {
-        $type    = substr($extension, 0, 3);
-        $package = substr($extension, 4);
-
-        if ($override = $this->getObject('manager')->getClassLoader()->getLocator('component')->getNamespace(ucfirst($package))) {
-            $base = $override;
-        }
-        else
+        if (!$this->isLoaded($url))
         {
-            switch ($app)
+            $locale       = $this->getLocale();
+            $fallback     = $this->getLocaleFallback();
+
+            foreach($this->find($url) as $extension => $base)
             {
-                case 'admin':
-                    $base = JPATH_ADMINISTRATOR;
-                    break;
-                case 'site':
-                    $base = JPATH_SITE;
-                    break;
-                default:
-                    $base = JPATH_BASE;
-            }
-        }
+                $loaded[] =  JFactory::getLanguage()->load($extension, $base, $fallback, true, false);
 
-        if (isset(self::$_type_map[$type])) {
-            $type_folder = self::$_type_map[$type];
-        } else {
-            throw new BadMethodCallException(sprintf('Invalid extension type: %s', $type));
-        }
-
-        if ($type == 'plg')
-        {
-            $parts = explode('_', $package);
-            if (count($parts) != 2) {
-                throw new BadMethodCallException(sprintf('Invalid plugin: %s', $extension));
+                if ($this->getLocale() !== $this->getLocaleFallback()) {
+                    $loaded[] =  JFactory::getLanguage()->load($extension, $base, $locale, true, false);
+                }
             }
 
-            $folder = sprintf('%s/%ss/%s/%s', JPATH_ROOT, $type_folder, $parts[0], $parts[1]);
-        }
-        else $folder = sprintf('%s/%ss/%s', $base, $type_folder, $extension);
-
-        // Special case for Koowa components
-        if (is_dir($folder.'/resources/language')) {
-            $folder .= '/resources';
+            $this->_loaded[] = $url;
         }
 
-        return $folder;
+        return in_array(true, $loaded);
     }
 
     /**
-     * Loads a Joomla language file
+     * Sets the locale
      *
-     * @param string $extension
-     * @param string $locale Locale name
-     * @param string $base   Base path
-     * @return bool
+     * @param string $locale
+     * @return KTranslatorAbstract
      */
-    protected function _loadTranslation($extension, $locale, $base)
+    public function setLocale($locale)
     {
-        $result    = true;
-        $signature = md5($extension.$base.$locale);
-
-        if (!isset($this->_loaded[$signature]))
+        if($this->_locale != $locale)
         {
-            $result = JFactory::getLanguage()->load($extension, $base, $locale, true, false);
+            parent::setLocale($locale);
 
-            if ($result) {
-                $this->_loaded[$signature] = true;
-            }
+            //Load the koowa translations
+            $this->load('com:koowa');
         }
 
-        return $result;
+        return $this;
     }
 }

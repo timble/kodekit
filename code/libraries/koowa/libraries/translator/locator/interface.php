@@ -8,12 +8,12 @@
  */
 
 /**
- * Template Locator Interface
+ * Translator Locator Interface
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator\Interface
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Translator\Locator\Interface
  */
-interface KTemplateLocatorInterface
+interface KTranslatorLocatorInterface
 {
     /**
      * Get the locator name
@@ -23,20 +23,19 @@ interface KTemplateLocatorInterface
     public static function getName();
 
     /**
-     * Locate the template based on a virtual path
+     * Locate the translation based on a physical path
      *
-     * @param  string $path  Stream path or resource
-     * @param  string $base  The base path or resource (used to resolved partials).
-     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
-     * @return string   The physical stream path for the template
+     * @param  string $url       The translation url
+     * @param  string $locale    The locale to search for
+     * @return string  The real file path for the translation
      */
-    public function locate($path, $base = null);
+    public function locate($url, $locale);
 
     /**
-     * Find a template path
+     * Find a translation path
      *
-     * @param array  $info The path information
-     * @return bool|mixed
+     * @param array  $info  The path information
+     * @return array
      */
     public function find(array $info);
 

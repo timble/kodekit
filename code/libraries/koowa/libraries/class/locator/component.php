@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -38,33 +38,26 @@
  * Location  : .../components/com_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class|Locator\Component
  */
 class KClassLocatorComponent extends KClassLocatorAbstract
 {
-	/**
-	 * The adapter type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'component';
-
-	/**
-     * The active basepath
+    /**
+     * The locator name
      *
      * @var string
      */
-    protected $_basepath;
+    protected static $_name = 'component';
 
-	/**
-	 * Get a fully qualified path based on a class name
-	 *
-	 * @param  string $class     The class name
+    /**
+     * Get a fully qualified path based on a class name
+     *
+     * @param  string $class     The class name
      * @param  string $basepath  The base path
-	 * @return string|bool  	 Returns the path on success FALSE on failure
-	 */
-	public function locate($class, $basepath)
-	{
+     * @return string|bool  	 Returns the path on success FALSE on failure
+     */
+    public function locate($class, $basepath)
+    {
         //Find the class
         if (substr($class, 0, 3) === 'Com')
         {
@@ -89,10 +82,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             $component = 'com_'.$package;
             $file 	   = array_pop($parts);
 
-            if(count($parts)) {
-                $path = implode('/', $parts).'/'.$file;
-            }
-            else
+            if(!count($parts))
             {
                 //Exception for framework components. Follow library structure. Don't load classes from root.
                 if(isset($this->_namespaces[$namespace])) {
@@ -101,6 +91,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
                     $path = $file;
                 }
             }
+            else $path = implode('/', $parts).'/'.$file;
 
             //Switch basepath
             if ($this->getNamespace($namespace)) {
@@ -129,6 +120,16 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             return $result;
         }
 
-		return false;
-	}
+        return false;
+    }
+
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
+    }
 }
