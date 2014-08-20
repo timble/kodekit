@@ -84,14 +84,15 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * Instantiate the translator and decorate with the cache decorator if cache is enabled.
      *
-     * @param   KObjectConfig            $config   A ObjectConfig object with configuration options
+     * @param   KObjectConfigInterface  $config   A ObjectConfig object with configuration options
      * @param   KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return  KFilterInterface
+     * @return  $this
      * @see KFilterTraversable
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        $instance = new static($config);
+        $class    = $manager->getClass($config->object_identifier);
+        $instance = new $class($config);
         $config   = $instance->getConfig();
 
         if($config->cache)
@@ -183,7 +184,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
             {
                 try {
                     $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     return false;
                     break;
                 }

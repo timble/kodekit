@@ -39,11 +39,20 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     {
         parent::__construct($config);
 
-        if (!extension_loaded('apc')) {
-            throw new \RuntimeException('APC is not loaded');
+        if (!self::isSupported()) {
+            throw new RuntimeException('Unable to use KTranslatorCache as APC is not enabled.');
         }
 
         $this->_loaded = array();
+    }
+
+    /**
+     * Checks if the APC PHP extension is enabled
+     * @return bool
+     */
+    public static function isSupported()
+    {
+        return extension_loaded('apc');
     }
 
     /**
@@ -116,7 +125,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
                 {
                     try {
                         $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         return false;
                     }
 

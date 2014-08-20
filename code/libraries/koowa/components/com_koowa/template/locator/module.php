@@ -29,7 +29,7 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
      */
     public static function getName()
     {
-        return static::$_name;
+        return self::$_name;
     }
 
     /**
