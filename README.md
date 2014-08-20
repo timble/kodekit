@@ -12,7 +12,7 @@ doing most of the repetitive work for you [boilerplate code][boilerplate] is eli
 to develop Joomla extensions.
 
 The design pattern based architecture makes your extension more flexible: your extension becomes more **re-usable**,
-**flexible** and more easily **extensible**. Additionally Nooku Framework provides you with excellent **out-of-the-box
+**replaceable** and more easily **extensible**. Additionally Nooku Framework provides you with excellent **out-of-the-box
  security** features.
 
 Nooku Framework uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering)
