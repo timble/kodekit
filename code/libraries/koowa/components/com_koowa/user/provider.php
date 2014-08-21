@@ -11,7 +11,7 @@
  * User Provider
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\User
  */
 final class ComKoowaUserProvider extends KUserProvider
 {

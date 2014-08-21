@@ -11,7 +11,7 @@
  * Immutable Model Entity
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Entity
  */
 final class KModelEntityImmutable extends KModelEntityAbstract
 {

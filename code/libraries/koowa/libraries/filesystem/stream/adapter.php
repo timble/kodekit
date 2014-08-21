@@ -14,7 +14,7 @@
  * are created by PHP itself and therefore are unknown to Koowa object manager.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Adapter
+ * @package Koowa\Library\Filesystem\Stream
  */
 final class KFilesystemStreamAdapter
 {

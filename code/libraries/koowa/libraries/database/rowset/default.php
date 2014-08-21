@@ -11,6 +11,6 @@
  * Default Database Rowset
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Rowset
  */
 final class KDatabaseRowsetDefault extends KDatabaseRowsetAbstract {}

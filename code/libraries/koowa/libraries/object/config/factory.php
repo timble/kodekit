@@ -11,7 +11,7 @@
  * Object Config Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Config
+ * @package Koowa\Library\Object\Config
  */
 final class KObjectConfigFactory extends KObject implements KObjectSingleton
 {

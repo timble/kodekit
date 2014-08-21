@@ -11,7 +11,7 @@
  * Filesystem Stream Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Factory
+ * @package Koowa\Library\Filesystem\Stream
  */
 final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 {

@@ -11,6 +11,6 @@
  * Default Database Row
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Row
  */
 final class KDatabaseRowDefault extends KDatabaseRowAbstract { }

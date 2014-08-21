@@ -11,6 +11,6 @@
   * Default Template
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
-  * @package Koowa\Library\Template\Default
+  * @package Koowa\Library\Template
   */
 final class KTemplateDefault extends KTemplateAbstract {}

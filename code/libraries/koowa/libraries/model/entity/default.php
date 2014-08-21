@@ -11,7 +11,7 @@
  * Default Model Entity
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Entity
  */
 final class KModelEntityDefault extends KModelEntityAbstract implements KObjectInstantiable
 {

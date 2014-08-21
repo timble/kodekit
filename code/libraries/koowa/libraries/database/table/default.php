@@ -11,6 +11,6 @@
  * Default Database Table
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Table
  */
 final class KDatabaseTableDefault extends KDatabaseTableAbstract { }

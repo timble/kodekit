@@ -17,7 +17,7 @@
  * or passed by reference instead. By default the context is passed by reference.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Handler
  */
 final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObjectSingleton
 {

@@ -30,7 +30,7 @@
  * should call {@link handleException()}
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception
+ * @package Koowa\Component\Koowa\Exception
  */
 final class ComKoowaExceptionHandler extends KExceptionHandler
 {

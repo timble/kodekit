@@ -11,6 +11,6 @@
  * Default FileSystem String Stream
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Default
+ * @package Koowa\Library\Filesystem\Stream
  */
 final class KFilesystemStreamDefault extends KFilesystemStreamAbstract {}

@@ -11,6 +11,6 @@
  * Translator Default Catalogue
  *
  * @author  Arunas Mazeika <https://github.com/arunasmazeika>
- * @package Koowa\Library\Translator\Catalogue\Default
+ * @package Koowa\Library\Translator\Catalogue
  */
 final class KTranslatorCatalogueDefault extends KTranslatorCatalogueAbstract {}

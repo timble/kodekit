@@ -11,7 +11,7 @@
  * Object manager
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Manager
+ * @package Koowa\Library\Object
  */
 final class KObjectManager implements KObjectInterface, KObjectManagerInterface, KObjectSingleton
 {
