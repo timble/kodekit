@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 defined('KOOWA') or die;
@@ -23,7 +23,7 @@ jimport('joomla.application.module.helper');
  * content into the module position.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
@@ -45,17 +45,17 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
     }
 
     /**
-	 * Find tags
-	 *
-	 * @param string $text Block of text to parse
-	 * @return ComKoowaTemplateFilterModule
-	 */
+     * Find tags
+     *
+     * @param string $text Block of text to parse
+     * @return ComKoowaTemplateFilterModule
+     */
     public function render(&$text)
     {
         $this->_parseModuleTags($text);
         $this->_parseModulesTags($text);
 
-		return $this;
+        return $this;
     }
 
     /**
@@ -73,10 +73,10 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
             {
                 //Create attributes array
                 $attributes = array(
-                    'style' 	=> 'component',
-                    'params'	=> '',
-                    'title'		=> '',
-                    'class'		=> '',
+                    'style'     => 'component',
+                    'params'    => '',
+                    'title'     => '',
+                    'class'     => '',
                     'prepend'   => true
                 );
 
@@ -89,7 +89,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
                 }
 
                 //Create module object
-                $module   	       = new stdClass();
+                $module            = new stdClass();
                 $module->id        = uniqid();
                 $module->content   = $content;
                 $module->position  = $attributes['position'];
@@ -219,7 +219,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  * This is a specialised modules helper which gives access to the Joomla modules by reference
 .*
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaModuleHelper extends JModuleHelper
 {

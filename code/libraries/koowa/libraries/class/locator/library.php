@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -34,26 +34,26 @@
  * Location  : namespace/.../path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class\Locator
  */
 class KClassLocatorLibrary extends KClassLocatorAbstract
 {
-	/**
-	 * The adapter type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'library';
+    /**
+     * The locator name
+     *
+     * @var string
+     */
+    protected static $_name = 'library';
 
-	/**
-	 * Get a fully qualified path based on a class name
-	 *
+    /**
+     * Get a fully qualified path based on a class name
+     *
      * @param  string $class     The class name
      * @param  string $basepath  The base path
-	 * @return string|boolean	 Returns the path on success FALSE on failure
-	 */
-	public function locate($class, $basepath = null)
-	{
+     * @return string|boolean   Returns the path on success FALSE on failure
+     */
+    public function locate($class, $basepath)
+    {
         foreach($this->getNamespaces() as $namespace => $basepath)
         {
             if(empty($namespace) && strpos($class, '\\')) {
@@ -81,11 +81,11 @@ class KClassLocatorLibrary extends KClassLocatorAbstract
             $word  = preg_replace('/(?<=\\w)([A-Z])/', ' \\1',  $class);
             $parts = explode(' ', $word);
 
-		    $path = strtolower(implode('/', $parts));
+            $path = strtolower(implode('/', $parts));
 
-			if(count($parts) == 1) {
-				$path = $path.'/'.$path;
-			}
+            if(count($parts) == 1) {
+                $path = $path.'/'.$path;
+            }
 
             $file = $basepath.'/'.$path.'.php';
             if(!is_file($file)) {
@@ -93,8 +93,18 @@ class KClassLocatorLibrary extends KClassLocatorAbstract
             }
 
             return $file;
-		}
+        }
 
-		return false;
-	}
+        return false;
+    }
+
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
+    }
 }

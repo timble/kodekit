@@ -2,25 +2,25 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Filesystem Stream Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem
+ * @package Koowa\Library\Filesystem\Stream
  */
-class KFilesystemStreamFactory extends KObject implements KObjectSingleton
+final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 {
     /**
      * Registered stream
      *
      * @var array
      */
-    protected $_streams;
+    private $__streams;
 
     /**
      * Constructor.
@@ -71,10 +71,20 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
     public function createStream($path, $mode = 'rb', $context = array())
     {
         $scheme = parse_url($path, PHP_URL_SCHEME);
+
+        //If no scheme is specified fall back to file:// stream
         $name   = !empty($scheme) ? $scheme : 'file';
 
+        //If a windows drive letter is passed use file:// stream
+        if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+        {
+            if(preg_match('#^[a-z]{1}$#i', $name)) {
+                $name = 'file';
+            }
+        }
+
         //Invalid context
-        if (!is_array($context) && !is_resource($context) && !get_resource_type($context) == 'stream-context')
+        if (!is_null($context) && !is_array($context) && !is_resource($context) && !get_resource_type($context) == 'stream-context')
         {
             throw new InvalidArgumentException(sprintf(
                 'Context must be an array or a resource of type stream-context; received "%s"', gettype($context)
@@ -85,7 +95,7 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if(!in_array($name, $this->getStreams()))
         {
             throw new RuntimeException(sprintf(
-                'Unable to find the stream "%d" - did you forget to register it ?', $name
+                'Unable to find the filesystem stream "%s" - did you forget to register it ?', $name
             ));
         }
 
@@ -93,7 +103,7 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if (is_resource($context)) {
             $options = stream_context_get_options($context);
         } else {
-            $options = $context;
+            $options = (array) $context;
         }
 
         //Create the stream
@@ -137,10 +147,10 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+        if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
         {
             throw new UnexpectedValueException(
-                'Stream: '.$class.' does not implement KFilesystemStreamInterface'
+                'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
             );
         }
 
@@ -149,7 +159,7 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if (!empty($name) && !$this->isRegistered($name))
         {
             if($result = stream_wrapper_register($name, 'KFilesystemStreamAdapter')) {
-                $this->_streams[$name] = $identifier;
+                $this->__streams[$name] = $identifier;
             }
         }
 
@@ -172,10 +182,10 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
-                    'Stream: '.$class.' does not implement KFilesystemStreamInterface'
+                    'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
                 );
             }
 
@@ -187,7 +197,7 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         if (!empty($name) && $this->isRegistered($name))
         {
             if($result = stream_wrapper_unregister($name)) {
-                unset($this->_streams[$name]);
+                unset($this->__streams[$name]);
             }
         }
 
@@ -206,8 +216,8 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 
         if($this->isRegistered($name))
         {
-            if(isset($this->_streams[$name])) {
-                $stream = $this->_streams[$name];
+            if(isset($this->__streams[$name])) {
+                $stream = $this->__streams[$name];
             } else {
                 $stream = 'lib:filesystem.stream.'.$name;
             }
@@ -239,10 +249,10 @@ class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
             {
                 throw new UnexpectedValueException(
-                    'Stream: '.$class.' does not implement KFilesystemStreamInterface'
+                    'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
                 );
             }
 

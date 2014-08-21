@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -38,11 +38,11 @@ if(extension_loaded('apc') && !function_exists('apc_exists'))
      */
     function apc_exists($keys)
     {
-		$result = null;
+        $result = null;
 
-		apc_fetch($keys,$result);
+        apc_fetch($keys,$result);
 
-		return $result;
+        return $result;
     }
 }
 

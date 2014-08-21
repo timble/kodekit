@@ -8,11 +8,9 @@
  */
 
 /**
- * Script Translator Catalogue
+ * Translator Singleton
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Translator
  */
-class KTranslatorCatalogueScript extends KTranslatorCatalogue
-{
-} 
+class KTranslator extends KTranslatorAbstract implements KObjectSingleton {}

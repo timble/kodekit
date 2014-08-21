@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -50,7 +50,7 @@ class Koowa
      */
     protected $_vendor_path;
 
- 	/**
+    /**
      * Constructor
      *
      * Prevent creating instances of this class by making the constructor private
@@ -77,7 +77,7 @@ class Koowa
         if(isset($config['vendor_path'])) {
             $this->_vendor_path = $config['vendor_path'];
         } else {
-            $this->_vendor_path = $this->_root_path.'/vendor';
+            $this->_vendor_path = $this->_root_path.'/libraries/vendor';
         }
 
         //Load the legacy functions
@@ -97,7 +97,7 @@ class Koowa
         $manager->getClassLoader()->registerLocator(new KClassLocatorComponent(
             array(
                 'namespaces' => array(
-                    '\\'    => $this->_base_path,
+                    '\\'    => $this->_base_path.'/components',
                     'Koowa' => dirname(dirname(__FILE__))
                 )
             )
@@ -120,14 +120,14 @@ class Koowa
         $manager->getObject('lib:filesystem.stream.factory');
     }
 
-	/**
+    /**
      * Clone
      *
      * Prevent creating clones of this class
      */
     final private function __clone() { }
 
-	/**
+    /**
      * Singleton instance
      *
      * @param  array  $config An optional array with configuration options.

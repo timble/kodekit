@@ -2,19 +2,45 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Manager Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Manager
  */
 interface KObjectManagerInterface
 {
+    /**
+     * Get an object instance based on an object identifier
+     *
+     * If the object implements the ObjectInstantiable interface the manager will delegate object instantiation
+     * to the object itself.
+     *
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param   array $config     An optional associative array of configuration settings.
+     * @return  KObjectInterface  Return object on success, throws exception on failure
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws	KObjectExceptionInvalidObject     If the object doesn't implement the KObjectInterface
+     * @throws  KObjectExceptionNotFound          If object cannot be loaded
+     * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
+     */
+    public function getObject($identifier, array $config = array());
+
+    /**
+     * Insert the object instance using the identifier
+     *
+     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param object $object     The object instance to store
+     * @return KObjectManagerInterface
+     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     */
+    public function setObject($identifier, $object);
+
     /**
      * Returns an identifier object.
      *
@@ -31,15 +57,23 @@ interface KObjectManagerInterface
     //public function getIdentifier($identifier = null);
 
     /**
-     * Set an identifier configuration
+     * Set an identifier
      *
-     * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @param array $config      An associative array of configuration options
-     * @param  boolean  $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
+     * This function will reset the identifier if it has already been set. Use this very carefully as it can have
+     * unwanted side-effects.
+     *
+     * @param KObjectIdentifier  $identifier An ObjectIdentifier
      * @return KObjectManager
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    public function setIdentifier($identifier, $config = array(), $merge = true);
+    public function setIdentifier(KObjectIdentifier $identifier);
+
+    /**
+     * Check if an identifier exists
+     *
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return bool TRUE if the identifier exists, false otherwise.
+     */
+    public function hasIdentifier($identifier);
 
     /**
      * Get the identifier class
@@ -51,39 +85,13 @@ interface KObjectManagerInterface
     public function getClass($identifier, $fallback = true);
 
     /**
-     * Get the identifier class
+     * Get the object configuration
      *
-     * @param mixed  $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param string $class      The class name
-     * @return string
+     * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectConfig
+     * @throws KObjectExceptionInvalidIdentifier  If the identifier is not valid
      */
-    public function setClass($identifier, $class);
-
-    /**
-     * Get an object instance based on an object identifier
-     *
-     * If the object implements the ObjectInstantiable interface the manager will delegate object instantiation
-     * to the object itself.
-     *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param	array $config     An optional associative array of configuration settings.
-     * @return	KObjectInterface  Return object on success, throws exception on failure
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws	KObjectExceptionInvalidObject	  If the object doesn't implement the KObjectInterface
-     * @throws  KObjectExceptionNotFound          If object cannot be loaded
-     * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
-     */
-    //public function getObject($identifier, array $config = array());
-
-	/**
-	 * Insert the object instance using the identifier
-	 *
-	 * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @param object $object     The object instance to store
-     * @return KObjectManagerInterface
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-	 */
-	public function setObject($identifier, $object);
+    public function getConfig($identifier = null);
 
     /**
      * Register a mixin for an identifier

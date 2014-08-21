@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -20,6 +20,20 @@
  */
 class KObjectIdentifier implements KObjectIdentifierInterface
 {
+    /**
+     * The identifier config
+     *
+     * @var array
+     */
+    private $__config = null;
+
+    /**
+     * The runtime config
+     *
+     * @var KObjectConfig
+     */
+    protected $_config = null;
+
     /**
      * The identifier
      *
@@ -62,28 +76,14 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     protected $_name = '';
 
-     /**
-     * The identifier class
-     *
-     * @var string
-     */
-    protected $_class = '';
-
-    /**
-     * The object config
-     *
-     * @var KObjectConfig
-     */
-    protected $_config = null;
-
     /**
      * Constructor
      *
-     *
-     * @param   string $identifier Identifier string or object in type://domain/package[.path].name format
+     * @param  string|array $identifier Identifier string or array in type://domain/package.[.path].name format
+     * @param	array       $config     An optional associative array of configuration settings.
      * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
      */
-    public function __construct($identifier)
+    public function __construct($identifier, array $config = array())
     {
         //Get the parts
         if(!is_array($identifier))
@@ -122,35 +122,42 @@ class KObjectIdentifier implements KObjectIdentifierInterface
 
         //Cache the identifier to increase performance
         $this->_identifier = $this->toString();
+
+        //The identifier config
+        $this->__config = $config;
     }
 
-	/**
-	 * Serialize the identifier
-	 *
-	 * @return string 	The serialised identifier
-	 */
-	public function serialize()
-	{
-        $data = $this->toArray();
-        $data['identifier'] = $this->_identifier;
-        $data['class']      = $this->_class;
+    /**
+     * Serialize the identifier
+     *
+     * @return string 	The serialised identifier
+     */
+    public function serialize()
+    {
+        $data['_type']       = $this->_type;
+        $data['_domain']     = $this->_domain;
+        $data['_package']    = $this->_package;
+        $data['_path']       = $this->_path;
+        $data['_name']       = $this->_name;
+        $data['_identifier'] = $this->_identifier;
+        $data['__config']    = $this->__config;
 
         return serialize($data);
-	}
+    }
 
-	/**
-	 * Unserialize the identifier
-	 *
-	 * @param string 	$data The serialised identifier
-	 */
-	public function unserialize($data)
-	{
-	    $data = unserialize($data);
+    /**
+     * Unserialize the identifier
+     *
+     * @return string $data	The serialised identifier
+     */
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
 
-	    foreach($data as $property => $value) {
-	        $this->{'_'.$property} = $value;
-	    }
-	}
+        foreach($data as $property => $value) {
+            $this->{$property} = $value;
+        }
+    }
 
     /**
      * Get the identifier type
@@ -201,29 +208,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     {
         return $this->_name;
     }
-
-    /**
-     * Get the identifier class name
-     *
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->_class;
-    }
-
-    /**
-     * Set the identifier class name
-     *
-     * @param  string $class
-     * @return KObjectIdentifier
-     */
-    public function setClass($class)
-    {
-        $this->_class = $class;
-        return $this;
-    }
-
     /**
      * Get the config
      *
@@ -233,50 +217,11 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      */
     public function getConfig()
     {
-        if(!isset($this->_config)) {
-            $this->_config = new KObjectConfig();
+        if(!$this->_config instanceof KObjectConfig) {
+            $this->_config = new KObjectConfig($this->__config);
         }
 
         return $this->_config;
-    }
-
-    /**
-     * Set the config
-     *
-     * @param   array    $data   A ObjectConfig object or a an array of configuration options
-     * @param   boolean  $merge  If TRUE the data in $config will be merged instead of replaced. Default TRUE.
-     * @return  KObjectIdentifierInterface
-     */
-    public function setConfig($data, $merge = true)
-    {
-        $config = $this->getConfig();
-
-        if($merge) {
-            $config->append($data);
-        } else {
-            $this->_config = new KObjectConfig($data);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add a mixin
-     *
-     * @param mixed $mixin      An object implementing ObjectMixinInterface, an ObjectIdentifier or an identifier string
-     * @param array $config     An array of configuration options
-     * @return KObjectIdentifierInterface
-     * @see KObject::mixin()
-     */
-    public function addMixin($mixin, $config = array())
-    {
-        if ($mixin instanceof KObjectMixinInterface || $mixin instanceof KObjectIdentifier) {
-            $this->getMixins()->append(array($mixin));
-        } else {
-            $this->getMixins()->append(array($mixin => $config));
-        }
-
-        return $this;
     }
 
     /**
@@ -291,25 +236,6 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         }
 
         return $this->getConfig()->mixins;
-    }
-
-    /**
-     * Add a decorator
-     *
-     * @param mixed $decorator An object implementing ObjectDecoratorInterface, an ObjectIdentifier or an identifier string
-     * @param array $config    An array of configuration options
-     * @return KObjectIdentifierInterface
-     * @see KObject::decorate()
-     */
-    public function addDecorator($decorator, $config = array())
-    {
-        if ($decorator instanceof KObjectDecoratorInterface || $decorator instanceof KObjectIdentifier) {
-            $this->getDecorators()->append(array($decorator));
-        } else {
-            $this->getDecorators()->append(array($decorator => $config));
-        }
-
-        return $this;
     }
 
     /**

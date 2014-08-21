@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Config Serializable Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 interface KObjectConfigSerializable
 {
@@ -19,10 +19,11 @@ interface KObjectConfigSerializable
      * Read from a string and create a ObjectConfig object
      *
      * @param  string $string
-     * @throws \DomainException
-     * @return KObjectConfigSerializable
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @throws DomainException
+     * @return KObjectConfigSerializable|array
      */
-    public function fromString($string);
+    public function fromString($string, $object = false);
 
     /**
      * Write a config object to a string.
@@ -35,17 +36,17 @@ interface KObjectConfigSerializable
      * Read from a file and create an array
      *
      * @param  string $filename
-     * @throws \RuntimeException
-     * @return KObjectConfigSerializable
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @throws RuntimeException
+     * @return KObjectConfigSerializable|array
      */
-    public function fromFile($filename);
+    public function fromFile($filename, $object = false);
 
     /**
      * Write a config object to a file.
      *
      * @param  string  $filename
-     * @throws \RuntimeException
-     * @return void
+     * @return KObjectConfigSerializable
      */
     public function toFile($filename);
 }

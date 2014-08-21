@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Config Yaml
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 class KObjectConfigYaml extends KObjectConfigFormat
 {
@@ -20,14 +20,14 @@ class KObjectConfigYaml extends KObjectConfigFormat
      *
      * @var callable
      */
-    protected $_encoder;
+    protected static $_encoder;
 
     /**
      * YAML decoder callback
      *
      * @var callable
      */
-    protected $_decoder;
+    protected static $_decoder;
 
     /**
      * Constructor.
@@ -38,11 +38,11 @@ class KObjectConfigYaml extends KObjectConfigFormat
     {
         parent::__construct($options);
 
-        if (function_exists('yaml_emit')) {
+        if (function_exists('yaml_emit') && !self::$_encoder) {
             $this->setEncoder('yaml_emit');
         }
 
-        if (function_exists('yaml_parse')) {
+        if (function_exists('yaml_parse') && !self::$_decoder) {
             $this->setDecoder('yaml_parse');
         }
     }
@@ -52,9 +52,9 @@ class KObjectConfigYaml extends KObjectConfigFormat
      *
      * @return callable
      */
-    public function getEncoder()
+    public static function getEncoder()
     {
-        return $this->_ecncoder;
+        return self::$_encoder;
     }
 
     /**
@@ -62,15 +62,15 @@ class KObjectConfigYaml extends KObjectConfigFormat
      *
      * @param  callable $encoder the encoder to set
      * @throws InvalidArgumentException
-     * @return KObjectConfigYaml
+     * @return void
      */
-    public function setEncoder($encoder)
+    public static function setEncoder($encoder)
     {
         if (!is_callable($encoder)) {
             throw new InvalidArgumentException('Invalid parameter to setEncoder(). Must be callable');
         }
-        $this->_encoder = $encoder;
-        return $this;
+
+        self::$_encoder = $encoder;
     }
 
     /**
@@ -78,9 +78,9 @@ class KObjectConfigYaml extends KObjectConfigFormat
      *
      * @return callable
      */
-    public function getDecoder()
+    public static function getDecoder()
     {
-        return $this->_decoder;
+        return self::$_decoder;
     }
 
     /**
@@ -88,27 +88,30 @@ class KObjectConfigYaml extends KObjectConfigFormat
      *
      * @param  callable $decoder the decoder to set
      * @throws InvalidArgumentException
-     * @return KObjectConfigYaml
+     * @return void
      */
-    public function setDecoder($decoder)
+    public static function setDecoder($decoder)
     {
         if (!is_callable($decoder)) {
             throw new InvalidArgumentException('Invalid parameter to setDecoder(). Must be callable');
         }
-        $this->_decoder = $decoder;
-        return $this;
+
+        self::$_decoder = $decoder;
     }
 
     /**
      * Read from a YAML string and create a config object
      *
      * @param  string $string
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
      * @throws DomainException
      * @throws RuntimeException
-     * @return KObjectConfigYaml
+     * @return KObjectConfigYaml|array
      */
-    public function fromString($string)
+    public function fromString($string, $object = true)
     {
+        $data = array();
+
         if ($decoder = $this->getDecoder())
         {
             $data = array();
@@ -121,12 +124,10 @@ class KObjectConfigYaml extends KObjectConfigFormat
                     throw new DomainException('Cannot parse YAML string');
                 }
             }
-
-            $this->merge($data);
         }
         else throw new RuntimeException("No Yaml decoder specified");
 
-        return $this;
+        return $object ? $this->merge($data) : $data;
     }
 
     /**

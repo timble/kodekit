@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -93,7 +93,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      * Removes an object from the queue
      *
      * @param   KObjectHandlable $object A KObject instance
-     * @return  boolean	TRUE on success FALSE on failure
+     * @return  boolean TRUE on success FALSE on failure
      */
     public function dequeue( KObjectHandlable $object)
     {
@@ -201,7 +201,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
         return $result;
     }
 
- 	/**
+    /**
      * Returns the number of elements in the queue
      *
      * Required by the Countable interface
@@ -213,87 +213,87 @@ class KObjectQueue extends KObject implements Iterator, Countable
         return count($this->__object_list);
     }
 
-	/**
+    /**
      * Rewind the Iterator to the top
      *
      * Required by the Iterator interface
      *
-     * @return	object KObjectQueue
+     * @return  object KObjectQueue
      */
-	public function rewind()
-	{
-		reset($this->__object_list);
-		reset($this->__priority_list);
+    public function rewind()
+    {
+        reset($this->__object_list);
+        reset($this->__priority_list);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
+    /**
      * Check whether the queue contains more object
      *
      * Required by the Iterator interface
      *
-     * @return	boolean
+     * @return  boolean
      */
-	public function valid()
-	{
-		return !is_null(key($this->__priority_list));
-	}
+    public function valid()
+    {
+        return !is_null(key($this->__priority_list));
+    }
 
-	/**
+    /**
      * Return current object index
      *
      * Required by the Iterator interface
      *
      * @return	mixed
      */
-	public function key()
-	{
-		return key($this->__priority_list);
-	}
+    public function key()
+    {
+        return key($this->__priority_list);
+    }
 
-	/**
+    /**
      * Return current object pointed by the iterator
      *
      * Required by the Iterator interface
      *
-     * @return	mixed
+     * @return  mixed
      */
-	public function current()
-	{
-		return $this->__object_list[$this->key()];
-	}
+    public function current()
+    {
+        return $this->__object_list[$this->key()];
+    }
 
-	/**
+    /**
      * Move to the next object
      *
      * Required by the Iterator interface
      *
      * @return	mixed
      */
-	public function next()
-	{
-		return next($this->__priority_list);
-	}
+    public function next()
+    {
+        return next($this->__priority_list);
+    }
 
-	/**
+    /**
      * Return the object from the top of the queue
      *
-     * @return	KObject or NULL is queue is empty
+     * @return  KObject or NULL is queue is empty
      */
-	public function top()
-	{
-	    $handles = array_keys((array)$this->__priority_list);
+    public function top()
+    {
+        $handles = array_keys((array)$this->__priority_list);
 
-	    $object = null;
-	    if(isset($handles[0])) {
-	        $object  = $this->__object_list[$handles[0]];
-	    }
+        $object = null;
+        if(isset($handles[0])) {
+            $object  = $this->__object_list[$handles[0]];
+        }
 
-	    return $object;
-	}
+        return $object;
+    }
 
-	/**
+    /**
      * Checks whether the queue is empty
      *
      * @return boolean
@@ -318,7 +318,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
         return $array;
     }
 
-	/**
+    /**
      * Preform a deep clone of the object
      *
      * @return void

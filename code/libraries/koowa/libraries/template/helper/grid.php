@@ -2,25 +2,24 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Grid Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Library\Template\Helper
  */
 class KTemplateHelperGrid extends KTemplateHelperAbstract
 {
     /**
      * Render a radio field
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return	string  Html
      */
     public function radio($config = array())
     {
@@ -35,7 +34,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
             $html = $this->getTemplate()->invokeHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
                            title="'.$this->getTemplate()->invokeHelper('grid.lock_message', array('entity' => $config->entity)).'">
-					</span>';
+                    </span>';
         }
         else
         {
@@ -71,7 +70,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
             $html = $this->getTemplate()->invokeHelper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
                            title="'.$this->getTemplate()->invokeHelper('grid.lock_message', array('entity' => $config->entity)).'">
-					</span>';
+                    </span>';
         }
         else
         {
@@ -90,8 +89,8 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
     /**
      * Render a search box
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function search($config = array())
     {
@@ -99,7 +98,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
         $config->append(array(
             'search'          => null,
             'submit_on_clear' => true,
-            'placeholder'     => $this->translate('Find by title or description&hellip;')
+            'placeholder'     => $this->getObject('translator')->translate('Find by title or description&hellip;')
         ));
 
         $html = '';
@@ -152,8 +151,8 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
     /**
      * Render a checkall header
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function checkall($config = array())
     {
@@ -164,19 +163,20 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
     /**
      * Render a sorting header
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function sort($config = array())
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'title'   	=> '',
-            'column'  	=> '',
+            'title'     => '',
+            'column'    => '',
             'direction' => 'asc',
-            'sort'		=> ''
+            'sort'      => ''
         ));
 
+        $translator = $this->getObject('translator');
 
         //Set the title
         if(empty($config->title)) {
@@ -197,13 +197,13 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         $url = clone $this->getTemplate()->getView()->getUrl();
 
-        $query 				= $url->getQuery(1);
-        $query['sort'] 		= $config->column;
+        $query              = $url->getQuery(1);
+        $query['sort']      = $config->column;
         $query['direction'] = $direction;
         $url->setQuery($query);
 
-        $html  = '<a href="'.$url.'" title="'.$this->translate('Click to sort by this column').'"  '.$class.'>';
-        $html .= $this->translate($config->title);
+        $html  = '<a href="'.$url.'" title="'.$translator->translate('Click to sort by this column').'"  '.$class.'>';
+        $html .= $translator->translate($config->title);
 
         // Mark the current column
         if ($config->column == $config->sort)
@@ -229,17 +229,19 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function enable($config = array())
     {
+        $translator = $this->getObject('translator');
+
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'entity'  		=> null,
-            'field'		=> 'enabled',
+            'entity'    => null,
+            'field'     => 'enabled',
             'clickable' => true
         ))->append(array(
             'enabled'   => (bool) $config->entity->{$config->field},
-            'data'		=> array($config->field => $config->entity->{$config->field} ? 0 : 1),
+            'data'      => array($config->field => $config->entity->{$config->field} ? 0 : 1),
         ))->append(array(
-            'alt'       => $config->enabled ? $this->translate('Enabled') : $this->translate('Disabled'),
-            'tooltip'   => $config->enabled ? $this->translate('Disable Item') : $this->translate('Enable Item'),
+            'alt'       => $config->enabled ? $translator->translate('Enabled') : $translator->translate('Disabled'),
+            'tooltip'   => $config->enabled ? $translator->translate('Disable Item') : $translator->translate('Enable Item'),
             'color'     => $config->enabled ? '#468847' : '#b94a48',
             'icon'      => $config->enabled ? 'enabled' : 'disabled',
         ));
@@ -267,16 +269,18 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
      */
     public function publish($config = array())
     {
+        $translator = $this->getObject('translator');
+
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'entity'  		=> null,
-            'field'		=> 'enabled',
+            'entity'    => null,
+            'field'     => 'enabled',
             'clickable' => true
         ))->append(array(
             'enabled'   => (bool) $config->entity->{$config->field},
         ))->append(array(
-            'alt'       => $config->enabled ? $this->translate('Published') : $this->translate('Unpublished'),
-            'tooltip'   => $config->enabled ? $this->translate('Unpublish Item') : $this->translate('Publish Item'),
+            'alt'       => $config->enabled ? $translator->translate('Published') : $translator->translate('Unpublished'),
+            'tooltip'   => $config->enabled ? $translator->translate('Unpublish Item') : $translator->translate('Publish Item'),
             'color'     => $config->enabled ? '#468847' : '#b94a48',
             'icon'      => $config->enabled ? 'enabled' : 'disabled',
         ));

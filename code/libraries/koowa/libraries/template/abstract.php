@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
  /**
@@ -23,13 +23,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @var string
      */
     protected $_status = null;
-
-    /**
-     * Translator object
-     *
-     * @var	KTranslatorInterface
-     */
-    protected $_translator;
 
     /**
      * The template path
@@ -51,13 +44,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @var string
      */
     protected $_content;
-
-    /**
-     * The template locators
-     *
-     * @var array
-     */
-    protected $_locators;
 
     /**
      * View object or identifier
@@ -101,8 +87,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     {
         parent::__construct($config);
 
-		// Set the view identifier
-    	$this->_view = $config->view;
+        // Set the view identifier
+        $this->_view = $config->view;
 
         // Set the template data
         $this->_data = $config->data;
@@ -125,13 +111,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
             }
         }
 
-        $this->_translator = $config->translator;
-
         //Reset the stack
         $this->_stack = array();
-	}
+    }
 
- 	/**
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -141,12 +125,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-            'translator' => 'translator',
+        $config->append(array(
             'data'       => array(),
             'view'       => null,
             'filters'    => array(),
-            'locators'   => array('com' => 'lib:template.locator.component')
         ));
 
         parent::_initialize($config);
@@ -155,41 +137,30 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Load a template by path
      *
-     * @param   string  $path     The template path
+     * @param   string  $url      The template url
      * @param   array   $data     An associative array of data to be extracted in local template scope
      * @param   integer $status   The template state
-     * @throws \InvalidArgumentException If the template could not be found
+     * @throws  InvalidArgumentException If the template could not be found
      * @return KTemplateAbstract
      */
-    public function load($path, $data = array(), $status = self::STATUS_LOADED)
+    public function load($url, $data = array(), $status = self::STATUS_LOADED)
     {
-        $parts = parse_url($path);
-
-        //Set the default type is not scheme can be found
-        if(!isset($parts['scheme'])) {
-            $type = $this->getIdentifier()->type;
-        } else {
-            $type = $parts['scheme'];
-        }
-
-        //Fall back on the component locator if none was found.
-        if (!$locator = $this->getLocator($type)) {
-            $locator = $this->getLocator('com');
-        }
+        //Get the template locator
+        $locator = $this->getObject('template.locator.factory')->createLocator($url, $this->getPath());
 
         //Check of the file exists
-        if (!$template = $locator->locate($path, $this->getPath())) {
-            throw new InvalidArgumentException('Template "' . $path . '" not found');
+        if (!$file = $locator->locate($url, $this->getPath())) {
+            throw new InvalidArgumentException('Template "' . $url . '" not found');
         }
 
         //Push the path on the stack
-        array_push($this->_stack, $path);
+        array_push($this->_stack, $url);
 
         //Set the status
         $this->_status = $status;
 
         //Load the file content
-        $this->_content = file_get_contents($template);
+        $this->_content = file_get_contents($file);
 
         //Compile and evaluate partial templates
         if(count($this->_stack) > 1)
@@ -238,7 +209,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param  array   $data  An associative array of data to be extracted in local template scope
      * @return KTemplateAbstract
-     * @see tempnam()
      */
     public function evaluate($data = array())
     {
@@ -313,33 +283,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     }
 
     /**
-     * Translates a string and handles parameter replacements
-     *
-     * @param string $string String to translate
-     * @param array  $parameters An array of parameters
-     * @return string Translated string
-     */
-    public function translate($string, array $parameters = array())
-    {
-        return $this->getTranslator()->translate($string, $parameters);
-    }
-
-    /**
-     * Translates a string based on the number parameter passed
-     *
-     * @param array   $strings    Strings to choose from
-     * @param integer $number     The number of items
-     * @param array   $parameters An array of parameters
-     *
-     * @throws InvalidArgumentException
-     * @return string Translated string
-     */
-    public function choose(array $strings, $number, array $parameters = array())
-    {
-        $this->getTranslator()->choose($strings, $number, $parameters);
-    }
-
-    /**
      * Get the template path
      *
      * @return	string
@@ -359,15 +302,15 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         return $this->getView()->getFormat();
     }
 
-	/**
-	 * Get the template data
-	 *
-	 * @return	mixed
-	 */
-	public function getData()
-	{
-		return $this->_data;
-	}
+    /**
+     * Get the template data
+     *
+     * @return	mixed
+     */
+    public function getData()
+    {
+        return $this->_data;
+    }
 
     /**
      * Set the template data
@@ -470,41 +413,15 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     }
 
     /**
-     * Gets the translator object
-     *
-     * @return  KTranslatorInterface
-     */
-    public function getTranslator()
-    {
-        if(!$this->_translator instanceof KTranslatorInterface) {
-            $this->setTranslator($this->getObject($this->_translator));
-        }
-
-        return $this->_translator;
-    }
-
-    /**
-     * Sets the translator object
-     *
-     * @param KTranslatorInterface $translator A translator object or identifier
-     * @return KTemplateInterface
-     */
-    public function setTranslator(KTranslatorInterface $translator)
-    {
-        $this->_translator = $translator;
-        return $this;
-    }
-
-	/**
      * Check if a filter exists
      *
      * @param 	string	$filter The name of the filter
      * @return  boolean	TRUE if the filter exists, FALSE otherwise
      */
-	public function hasFilter($filter)
-	{
-	    return isset($this->_filters[$filter]);
-	}
+    public function hasFilter($filter)
+    {
+        return isset($this->_filters[$filter]);
+    }
 
     /**
      * Get a filter by identifier
@@ -516,8 +433,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @throws UnexpectedValueException
      * @return KTemplateFilterInterface
      */
- 	 public function getFilter($filter, $config = array())
- 	 {
+     public function getFilter($filter, $config = array())
+     {
          //Create the complete identifier if a partial identifier was passed
         if (is_string($filter) && strpos($filter, '.') === false)
         {
@@ -535,17 +452,17 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
             if (!($filter instanceof KTemplateFilterInterface))
             {
-			    throw new UnexpectedValueException(
+                throw new UnexpectedValueException(
                     "Template filter $identifier does not implement KTemplateFilterInterface"
                 );
-		    }
+            }
 
             $this->_filters[$filter->getIdentifier()->name] = $filter;
         }
         else $filter = $this->_filters[$identifier->name];
 
         return $filter;
- 	 }
+     }
 
     /**
      * Attach a filter for template transformation
@@ -577,26 +494,26 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @return  KTemplateHelperInterface
      */
     public function getHelper($helper, $config = array())
-	{
-		//Create the complete identifier if a partial identifier was passed
-		if (is_string($helper) && strpos($helper, '.') === false)
-		{
+    {
+        //Create the complete identifier if a partial identifier was passed
+        if (is_string($helper) && strpos($helper, '.') === false)
+        {
             $identifier = $this->getIdentifier()->toArray();
             $identifier['path'] = array('template','helper');
             $identifier['name'] = $helper;
-		}
-		else $identifier = $this->getIdentifier($helper);
+        }
+        else $identifier = $this->getIdentifier($helper);
 
-		//Create the template helper
+        //Create the template helper
         $helper = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
-	    //Check the helper interface
+        //Check the helper interface
         if (!($helper instanceof KTemplateHelperInterface)) {
             throw new UnexpectedValueException("Template helper $identifier does not implement KTemplateHelperInterface");
         }
 
-		return $helper;
-	}
+        return $helper;
+    }
 
     /**
      * Invoke a template helper method
@@ -611,8 +528,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @return   string   Helper output
      * @throws   BadMethodCallException If the helper function cannot be called.
      */
-	public function invokeHelper($identifier, $params = array())
-	{
+    public function invokeHelper($identifier, $params = array())
+    {
         //Get the function and helper based on the identifier
         $parts      = explode('.', $identifier);
         $function   = array_pop($parts);
@@ -647,60 +564,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         }
 
         return $helper->$function($params);
-	}
-
-    /**
-     * Register a template locator
-     *
-     * @param KTemplateLocatorInterface $locator
-     * @return KTemplateInterface
-     */
-    public function registerLocator(KTemplateLocatorInterface $locator)
-    {
-        $this->_locators[$locator->getType()] = $locator;
-        return $this;
-    }
-
-    /**
-     * Get a registered template locator based on his type
-     *
-     * @param string $type
-     * @param array  $config
-     * @throws UnexpectedValueException
-     * @return KTemplateLocatorInterface|null  Returns the template loader or NULL if the loader can not be found.
-     */
-    public function getLocator($type, $config = array())
-    {
-        $locator = null;
-        if(isset($this->_locators[$type]))
-        {
-            $locator = $this->_locators[$type];
-
-            if(!$locator instanceof KTemplateLocatorInterface)
-            {
-                //Create the complete identifier if a partial identifier was passed
-                if (is_string($locator) && strpos($locator, '.') === false)
-                {
-                    $identifier = $this->getIdentifier()->toArray();
-                    $identifier['path'] = array('template', 'locator');
-                    $identifier['name'] = $locator;
-                }
-                else $identifier = $this->getIdentifier($locator);
-
-                $locator = $this->getObject($identifier, array_merge($config, array('template' => $this)));
-
-                if (!($locator instanceof KTemplateLocatorInterface))
-                {
-                    throw new UnexpectedValueException(
-                        "Template loader $identifier does not implement KTemplateLocatorInterface"
-                    );
-                }
-
-                $this->_locators[$type] = $locator;
-            }
-        }
-
-        return $locator;
     }
 
     /**

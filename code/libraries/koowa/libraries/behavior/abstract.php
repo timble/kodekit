@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -14,7 +14,7 @@
  * and add execute the method. Command handlers should be declared protected.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Behavior
  */
 abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBehaviorInterface
 {
@@ -31,6 +31,13 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * @var KObjectManager
      */
     private $__object_manager;
+
+    /**
+     * The object config
+     *
+     * @var KObjectConfig
+     */
+    private $__object_config;
 
     /**
      * The behavior priority
@@ -66,6 +73,9 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         else $this->__object_identifier = $config->object_identifier;
 
         parent::__construct($config);
+
+        //Set the object config
+        $this->__object_config = $config;
 
         //Set the command priority
         $this->_priority = $config->priority;
@@ -185,7 +195,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * supported on the mixer no mixable methods will be returned, only an 'is[Behavior]' method will be added which
      * return FALSE when called.
      *
-     * @param  array           $exclude     An array of public methods to be exclude
+     * @param  array $exclude An array of public methods to be exclude
      * @return array An array of methods
      */
     public function getMixableMethods($exclude = array())
@@ -194,7 +204,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
         if($this->isSupported())
         {
             $exclude = array_merge($exclude, array('execute', 'invokeCallbacks', 'getIdentifier', 'getPriority',
-                'getHandle', 'getName', 'getObject', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback',
+                'getHandle', 'getName', 'getObject', 'getConfig', 'setBreakCondition', 'getBreakCondition', 'addCommandCallback',
                 'removeCommandCallback', 'getCommandCallbacks', 'invokeCommandCallback', 'isSupported'));
 
             $methods = parent::getMixableMethods($exclude);
@@ -211,7 +221,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * Get an instance of an object identifier
      *
      * @param KObjectIdentifier|string $identifier An ObjectIdentifier or valid identifier string
-     * @param array  			      $config     An optional associative array of configuration settings.
+     * @param array  $config An optional associative array of configuration settings.
      * @return KObjectInterface  Return object on success, throws exception on failure.
      */
     final public function getObject($identifier, array $config = array())
@@ -226,7 +236,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * If no identifier is passed the object identifier of this object will be returned. Function recursively
      * resolves identifier aliases and returns the aliased identifier.
      *
-     * @param   string|object    $identifier The class identifier or identifier object
+     * @param   string|object $identifier The class identifier or identifier object
      * @return  KObjectIdentifier
      */
     final public function getIdentifier($identifier = null)
@@ -235,6 +245,26 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
             $result = $this->__object_manager->getIdentifier($identifier);
         } else {
             $result = $this->__object_identifier;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the object configuration
+     *
+     * If no identifier is passed the object config of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     *  @param  string|object $identifier A valid identifier string or object implementing ObjectInterface
+     *  @return KObjectConfig
+     */
+    public function getConfig($identifier = null)
+    {
+        if (isset($identifier)) {
+            $result = $this->__object_manager->getIdentifier($identifier)->getConfig();
+        } else {
+            $result = $this->__object_config;
         }
 
         return $result;

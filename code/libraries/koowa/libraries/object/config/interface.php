@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -14,7 +14,7 @@
  * as readonly.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Config
+ * @package Koowa\Library\Object\Config
  */
 interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countable
 {
@@ -67,19 +67,19 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be added
+     * @param  array|Traversable|KObjectConfig  $options A KObjectConfig object an or array of options to be added
      * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
     public function merge($options);
 
     /**
-     * Append values
+     * Append options
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
-     * @throws \RuntimeException If the config is read only
+     * @param  array|Traversable|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
     public function append($options);

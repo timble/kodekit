@@ -2,17 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Paginator Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Helper
  */
 class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
 {
@@ -34,11 +33,13 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
             'offset'     => 0,
             'limit'      => 0,
             'show_limit' => true,
-    	    'show_count' => false,
+            'show_count' => false,
             'show_pages' => true
         ));
 
         $this->_initialize($config);
+
+        $translator = $this->getObject('translator');
 
         $html = '<div class="pagination pagination-toolbar">';
 
@@ -54,7 +55,7 @@ class ComKoowaTemplateHelperPaginator extends KTemplateHelperPaginator
         }
 
         if($config->show_count) {
-            $html .= sprintf($this->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
+            $html .= sprintf($translator->translate('JLIB_HTML_PAGE_CURRENT_OF_TOTAL'), $config->current, $config->count);
         }
 
         $html .= '</div>';

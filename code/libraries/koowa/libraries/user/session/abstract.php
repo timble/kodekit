@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -13,7 +13,7 @@
  * Provides access to session-state values as well as session-level settings and lifetime management methods.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session
  */
 class KUserSessionAbstract extends KObject implements KUserSessionInterface
 {
@@ -132,7 +132,7 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
             'user'       => null,
             'name'       => '',
             'id'         => 'KSESSIONID',
-            'lifetime'   => 1440,
+            'lifetime'   => ini_get('session.gc_maxlifetime'),
             'namespace'  => '__koowa',
             'options' => array(
                 'auto_start'        => 0,
@@ -324,7 +324,7 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
             else $identifier = $this->getIdentifier($handler);
 
             //Set the configuration
-            $this->getObject('manager')->getConfig($identifier, $config);
+            $identifier->getConfig()->append($config);
 
             $handler = $identifier;
         }
@@ -662,9 +662,9 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      * @param   string $name  The attribute name.
      * @return  string $value The attribute value.
      */
-    public function __get($name)
+    final public function __get($name)
     {
-        return $this->getContainer('attribute')->get($name);
+        return $this->get($name);
     }
 
     /**
@@ -674,9 +674,9 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      * @param   mixed  $value The attribute value.
      * @return  void
      */
-    public function __set($name, $value)
+    final public function __set($name, $value)
     {
-        $this->getContainer('attribute')->set($name, $value);
+        $this->set($name, $value);
     }
 
     /**
@@ -685,9 +685,9 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      * @param  string $name The attribute name.
      * @return boolean
      */
-    public function __isset($name)
+    final public function __isset($name)
     {
-        return $this->getContainer('attribute')->has($name);
+        return $this->has($name);
     }
 
     /**
@@ -696,8 +696,8 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
      * @param   string $name  The attribute name.
      * @return  void
      */
-    public function __unset($name)
+    final public function __unset($name)
     {
-        $this->getContainer('attribute')->remove($name);
+        $this->remove($name);
     }
 }

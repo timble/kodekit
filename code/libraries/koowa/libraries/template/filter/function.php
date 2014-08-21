@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -13,7 +13,7 @@
  * Compile filter for template functions such as template(), text(), helper(), route() etc
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterFunction extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {
@@ -27,7 +27,7 @@ class KTemplateFilterFunction extends KTemplateFilterAbstract implements KTempla
         '@object('    => '$this->getObject(',
         '@date('      => '$this->invokeHelper(\'date.format\',',
         '@overlay('   => '$this->invokeHelper(\'behavior.overlay\', ',
-        '@translate(' => '$this->translate(',
+        '@translate(' => '$this->getObject(\'translator\')->translate(',
         '@import('    => '$this->load(',
         '@route('     => '$this->getView()->getRoute(',
         '@escape('    => '$this->escape(',

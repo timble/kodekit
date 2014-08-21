@@ -2,17 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Sluggable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Database\Behavior
  */
 class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
 {
@@ -52,10 +51,10 @@ class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
      */
     protected function _canonicalizeSlug()
     {
-        parent::_canonicalizeSlug();
-
         if (trim(str_replace($this->_separator, '', $this->slug)) == '') {
-        	$this->slug = JFactory::getDate()->format('Y-m-d-H-i-s');
+            $this->slug = JFactory::getDate()->format('Y-m-d-H-i-s');
         }
+
+        parent::_canonicalizeSlug();
     }
 }

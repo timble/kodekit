@@ -2,27 +2,26 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Lockable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Database\Behavior
  */
 class ComKoowaDatabaseBehaviorCreatable extends KDatabaseBehaviorCreatable
 {
     /**
      * Get the user that created the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return KUserInterface Returns a User object
      */
     public function getAuthor()
     {
-        $user     = null;
         $provider = $this->getObject('user.provider');
 
         if($this->hasProperty('created_by') && !empty($this->created_by))
@@ -44,6 +43,7 @@ class ComKoowaDatabaseBehaviorCreatable extends KDatabaseBehaviorCreatable
             }
             else $user = $provider->load($this->created_by);
         }
+        else $user = $provider->load(0);
 
         return $user;
     }
@@ -53,7 +53,7 @@ class ComKoowaDatabaseBehaviorCreatable extends KDatabaseBehaviorCreatable
      *
      * Requires a 'created_by' column
      *
-     * @param KDatabaseContext	$context A database context object
+     * @param KDatabaseContext  $context A database context object
      * @return void
      */
     protected function _beforeSelect(KDatabaseContext $context)

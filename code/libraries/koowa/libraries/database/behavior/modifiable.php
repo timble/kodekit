@@ -2,20 +2,20 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Modifiable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Behavior
  */
 class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 {
-	/**
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -23,14 +23,14 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      * @param   KObjectConfig $config Configuration options
      * @return void
      */
-	protected function _initialize(KObjectConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-			'priority'  => self::PRIORITY_LOW,
-	  	));
+        $config->append(array(
+            'priority'  => self::PRIORITY_LOW,
+        ));
 
-    	parent::_initialize($config);
-   	}
+        parent::_initialize($config);
+    }
 
     /**
      * Get the user that last edited the resource
@@ -70,16 +70,16 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
         return true;
     }
 
-	/**
-	 * Set modified information
-	 *
-	 * Requires a 'modified_on' and 'modified_by' column
-	 *
+    /**
+     * Set modified information
+     *
+     * Requires a 'modified_on' and 'modified_by' column
+     *
      * @param KDatabaseContextInterface $context
-	 * @return void
-	 */
-	protected function _beforeUpdate(KDatabaseContextInterface $context)
-	{
+     * @return void
+     */
+    protected function _beforeUpdate(KDatabaseContextInterface $context)
+    {
         //Get the modified columns
         $modified   = $this->getTable()->filter($this->getProperties(true));
 
@@ -93,5 +93,5 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
                 $this->modified_on = gmdate('Y-m-d H:i:s');
             }
         }
-	}
+    }
 }

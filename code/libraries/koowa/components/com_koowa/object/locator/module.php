@@ -2,25 +2,25 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Module Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Object\Locator
  */
 class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
 {
-	/**
-	 * The type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'mod';
+    /**
+     * The locator name
+     *
+     * @var string
+     */
+    protected static $_name = 'mod';
 
     /**
      * Initializes the options for the object
@@ -59,12 +59,7 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
     {
         $class   = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
 
-        if(empty($identifier->domain)) {
-            $domain  = ucfirst($this->getPackage($identifier->package));
-        } else {
-            $domain = ucfirst($identifier->domain);
-        }
-
+        $domain  = ucfirst($identifier->domain);
         $package = ucfirst($identifier->package);
         $file    = ucfirst($identifier->name);
 
@@ -86,13 +81,24 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
         }
 
         $info = array(
-            'class'   => $class,
-            'package' => $package,
-            'domain'  => $domain,
-            'path'    => $path,
-            'file'    => $file
+            'identifier' => $identifier,
+            'class'      => $class,
+            'package'    => $package,
+            'domain'     => $domain,
+            'path'       => $path,
+            'file'       => $file
         );
 
         return $this->find($info, $fallback);
+    }
+
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

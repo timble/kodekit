@@ -2,19 +2,26 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Config Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Config
+ * @package Koowa\Library\Object\Config
  */
-class KObjectConfigFactory extends KObject implements KObjectSingleton
+final class KObjectConfigFactory extends KObject implements KObjectSingleton
 {
+    /**
+     * Config object prototypes
+     *
+     * @var array
+     */
+    private $__prototypes;
+
     /**
      * Registered config file formats.
      *
@@ -61,37 +68,37 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      * Get a registered config object.
      *
      * @param  string $format The format name
-     * @param   array|KObjectConfig $options An associative array of configuration options or a KObjectConfig instance.
-     * @throws RuntimeException            If the format isn't registered
-     * @throws UnexpectedValueException	If the format object doesn't implement the KObjectConfigSerializable
-     * @return KObjectConfigFormat
+     * @param  array|KObjectConfig $options An associative array of configuration options or a KObjectConfig instance.
+     * @throws InvalidArgumentException    If the format isn't registered
+     * @throws \UnexpectedValueException   If the format object doesn't implement the KObjectConfigSerializable
+     * @return KObjectConfigSerializable
      */
     public function createFormat($format, $options = array())
     {
-        $format = strtolower($format);
+        $name = strtolower($format);
 
-        if (!isset($this->_formats[$format])) {
-            throw new RuntimeException(sprintf('Unsupported config format: %s ', $format));
+        if (!isset($this->_formats[$name])) {
+            throw new RuntimeException(sprintf('Unsupported config format: %s ', $name));
         }
 
-        $format = $this->_formats[$format];
-
-        if(!($format instanceof KObjectConfigSerializable))
+        if(!isset($this->__prototypes[$name]))
         {
-            $format = new $format($options);
+            $class    = $this->_formats[$name];
+            $instance = new $class($options);
 
-            if(!$format instanceof KObjectConfigSerializable)
+            if(!$instance instanceof KObjectConfigSerializable)
             {
                 throw new UnexpectedValueException(
-                    'Format: '.get_class($format).' does not implement ObjectConfigSerializable Interface'
+                    'Format: '.get_class($instance).' does not implement ObjectConfigSerializable Interface'
                 );
             }
 
-            $this->_formats[$format->name] = $format;
+            $this->__prototypes[$name] = $instance;
         }
-        else $format = clone $format;
 
-        return $format;
+        //Clone the object
+        $result = clone $this->__prototypes[$name];
+        return $result;
     }
 
     /**
@@ -109,6 +116,12 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
         }
 
         $this->_formats[$format] = $class;
+
+        //In case the format is being re-registered clear the prototype
+        if(isset($this->__prototypes[$format])) {
+            unset($this->__prototypes[$format]);
+        }
+
         return $this;
     }
 
@@ -117,13 +130,14 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      *
      * @param  string  $format
      * @param  string  $config
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
      * @throws InvalidArgumentException
      * @throws RuntimeException
-     * @return KObjectConfigInterface
+     * @return KObjectConfigInterface|array
      */
-    public function fromString($format, $config)
+    public function fromString($format, $config, $object = true)
     {
-        $config = $this->createFormat($format)->fromString($config);
+        $config = $this->createFormat($format)->fromString($config, $object);
         return $config;
     }
 
@@ -131,11 +145,12 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      * Read a config from a file.
      *
      * @param  string  $filename
-     * @throws InvalidArgumentException
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @throws \InvalidArgumentException
      * @throws RuntimeException
-     * @return KObjectConfigInterface
+     * @return KObjectConfigInterface|array
      */
-    public function fromFile($filename)
+    public function fromFile($filename, $object = true)
     {
         $pathinfo = pathinfo($filename);
 
@@ -146,7 +161,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
             ));
         }
 
-        $config = $this->createFormat($pathinfo['extension'])->fromFile($filename);
+        $config = $this->createFormat($pathinfo['extension'])->fromFile($filename, $object);
         return $config;
     }
 
@@ -156,7 +171,7 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
      * @param string $filename
      * @param KObjectConfigInterface $config
      * @throws RuntimeException
-     * @return boolean TRUE on success. FALSE on failure
+     * @return KObjectConfigFactory
      */
     public function toFile($filename, KObjectConfigInterface $config)
     {
@@ -169,6 +184,18 @@ class KObjectConfigFactory extends KObject implements KObjectSingleton
             ));
         }
 
-        return $this->createFormat($pathinfo['extension'])->toFile($filename, $config);
+        $this->createFormat($pathinfo['extension'])->toFile($filename, $config);
+        return $this;
+    }
+
+    /**
+     * Check if the format is registered
+     *
+     * @param string $format A config format
+     * @return bool TRUE if the format is a registered, FALSE otherwise.
+     */
+    public function isRegistered($format)
+    {
+        return isset($this->_formats[$format]);
     }
 }

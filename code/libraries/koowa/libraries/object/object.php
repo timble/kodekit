@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -37,6 +37,13 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * @var KObjectManager
      */
     private $__object_manager;
+
+    /**
+     * The object config
+     *
+     * @var KObjectConfig
+     */
+    private $__object_config;
 
     /**
      * Mixed in methods
@@ -76,6 +83,9 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
                 $this->mixin($key, $value);
             }
         }
+
+        //Set the object config
+        $this->__object_config = $config;
     }
 
     /**
@@ -262,48 +272,68 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         return $this->__methods;
     }
 
-	/**
-	 * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
-	 *
-	 * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @param	array $config     An optional associative array of configuration settings.
-	 * @return	KObjectInterface Return object on success, throws exception on failure
-     * @throws	RuntimeException if the object manager has not been defined.
-	 * @see 	KObjectInterface
-	 */
-	final public function getObject($identifier, array $config = array())
-	{
-	    if(!isset($this->__object_manager)) {
-	        throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No object_manager object defined.");
-	    }
-
-	    return $this->__object_manager->getObject($identifier, $config);
-	}
-
-	/**
-	 * Gets the object identifier.
-	 *
-     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-	 * @return KObjectIdentifier
+    /**
+     * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
+     *
+     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param	array $config     An optional associative array of configuration settings.
+     * @return	KObjectInterface Return object on success, throws exception on failure
      * @throws	RuntimeException if the object manager has not been defined.
      * @see 	KObjectInterface
-	 */
-	final public function getIdentifier($identifier = null)
-	{
-		if(isset($identifier))
-		{
-		    if(!isset($this->__object_manager)) {
-	            throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No object_manager object defined.");
-	        }
+     */
+    final public function getObject($identifier, array $config = array())
+    {
+        if(!isset($this->__object_manager)) {
+            throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No object_manager object defined.");
+        }
 
-		    $result = $this->__object_manager->getIdentifier($identifier);
-		}
-		else  $result = $this->__object_identifier;
+        return $this->__object_manager->getObject($identifier, $config);
+    }
 
-	    return $result;
-	}
+    /**
+     * Gets the object identifier.
+     *
+     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @return KObjectIdentifier
+     * @throws	RuntimeException if the object manager has not been defined.
+     * @see 	KObjectInterface
+     */
+    final public function getIdentifier($identifier = null)
+    {
+        if(isset($identifier))
+        {
+            if(!isset($this->__object_manager)) {
+                throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No object_manager object defined.");
+            }
 
-	/**
+            $result = $this->__object_manager->getIdentifier($identifier);
+        }
+        else  $result = $this->__object_identifier;
+
+        return $result;
+    }
+
+    /**
+     * Get the object configuration
+     *
+     * If no identifier is passed the object config of this object will be returned. Function recursively
+     * resolves identifier aliases and returns the aliased identifier.
+     *
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return KObjectConfig
+     */
+    final public function getConfig($identifier = null)
+    {
+        if (isset($identifier)) {
+            $result = $this->__object_manager->getIdentifier($identifier)->getConfig();
+        } else {
+            $result = $this->__object_config;
+        }
+
+        return $result;
+    }
+
+    /**
      * Preform a deep clone of the object.
      *
      * @return void

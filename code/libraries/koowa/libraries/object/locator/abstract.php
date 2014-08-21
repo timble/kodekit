@@ -2,25 +2,25 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Abstract Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Locator
  */
 abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
 {
     /**
-     * The locator type
+     * The locator name
      *
      * @var string
      */
-    protected $_type = '';
+    protected static $_name = '';
 
     /**
      * The class prefix sequence in FIFO order
@@ -28,13 +28,6 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      * @var array
      */
     protected $_sequence = array();
-
-    /**
-     * Package/domain pairs to search
-     *
-     * @var array
-     */
-    protected $_packages = array();
 
     /**
      * Constructor.
@@ -74,23 +67,19 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      */
     public function locate(KObjectIdentifier $identifier, $fallback = true)
     {
-        if(empty($identifier->domain)) {
-            $domain  = ucfirst($this->getPackage($identifier->package));
-        } else {
-            $domain = ucfirst($identifier->domain);
-        }
-
+        $domain  = empty($identifier->domain) ? 'koowa' : ucfirst($identifier->domain);
         $package = ucfirst($identifier->package);
         $path    = KStringInflector::camelize(implode('_', $identifier->path));
         $file    = ucfirst($identifier->name);
         $class   = $path.$file;
 
         $info = array(
-            'class'   => $class,
-            'package' => $package,
-            'domain'  => $domain,
-            'path'    => $path,
-            'file'    => $file
+            'identifier' => $identifier,
+            'class'      => $class,
+            'package'    => $package,
+            'domain'     => $domain,
+            'path'       => $path,
+            'file'       => $file
         );
 
         return $this->find($info, null, $fallback);
@@ -132,50 +121,13 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     }
 
     /**
-     * Register a package
-     *
-     * @param  string $name    The package name
-     * @param  string $domain  The domain for the package
-     * @return KObjectLocatorInterface
-     */
-    public function registerPackage($name, $domain)
-    {
-        $this->_packages[$name] = $domain;
-        return $this;
-    }
-
-    /**
-     * Get the registered package domain
-     *
-     * If no domain has been registered for this package, the default 'Koowa' domain will be returned.
-     *
-     * @param string $package
-     * @return string The registered domain
-     */
-    public function getPackage($package)
-    {
-        $domain = isset($this->_packages[$package]) ?  $this->_packages[$package] : 'Koowa';
-        return $domain;
-    }
-
-    /**
-     * Get the registered packages
-     *s
-     * @return array An array with package names as keys and domain as values
-     */
-    public function getPackages()
-    {
-        return $this->_packages;
-    }
-
-    /**
-     * Get the type
+     * Get the name
      *
      * @return string
      */
-    public function getType()
+    public static function getName()
     {
-        return $this->_type;
+        return self::$_name;
     }
 
     /**

@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Exception Handler
@@ -31,9 +30,9 @@
  * should call {@link handleException()}
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception
+ * @package Koowa\Component\Koowa\Exception
  */
-class ComKoowaExceptionHandler extends KExceptionHandler
+final class ComKoowaExceptionHandler extends KExceptionHandler
 {
     /**
      * Initializes the default configuration for the object
@@ -58,7 +57,7 @@ class ComKoowaExceptionHandler extends KExceptionHandler
 
         $config->append(array(
             'exception_type'  => $type,
-            'error_level'     => $level
+            'error_reporting' => $level
         ));
 
         parent::_initialize($config);

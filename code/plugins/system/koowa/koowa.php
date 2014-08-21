@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
@@ -24,31 +24,31 @@ class PlgSystemKoowa extends JPlugin
      * @param array  $config
      */
     public function __construct($subject, $config = array())
-	{
-		// Check if database type is MySQLi
-		if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
-		{
-			if (JFactory::getApplication()->getName() === 'administrator') 
-			{
-				$link   = JRoute::_('index.php?option=com_config');
-				$error  = 'In order to use Nooku framework, your database type in Global Configuration should be
-				           set to <strong>MySQLi</strong>. Please go to <a href="%2$s">Global Configuration</a> and in
-				           the \'Server\' tab change your Database Type to <strong>MySQLi</strong>.';
+    {
+        // Check if database type is MySQLi
+        if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
+        {
+            if (JFactory::getApplication()->getName() === 'administrator')
+            {
+                $link   = JRoute::_('index.php?option=com_config');
+                $error  = 'In order to use Nooku Framework, your database type in Global Configuration should be
+                           set to <strong>MySQLi</strong>. Please go to <a href="%2$s">Global Configuration</a> and in
+                           the \'Server\' tab change your Database Type to <strong>MySQLi</strong>.';
 
                 JFactory::getApplication()->enqueueMessage(sprintf(JText::_($error), $link), 'warning');
-			}
-			
-			return;
-		}
+            }
+
+            return;
+        }
 
         // Try to raise Xdebug nesting level
         @ini_set('xdebug.max_nesting_level', 200);
- 		
- 		// Set pcre.backtrack_limit to a larger value
- 		// See: https://bugs.php.net/bug.php?id=40846
- 		if (version_compare(PHP_VERSION, '5.3.6', '<=') && @ini_get('pcre.backtrack_limit') < 1000000) {
- 		    @ini_set('pcre.backtrack_limit', 1000000);
- 		}
+
+        // Set pcre.backtrack_limit to a larger value
+        // See: https://bugs.php.net/bug.php?id=40846
+        if (version_compare(PHP_VERSION, '5.3.6', '<=') && @ini_get('pcre.backtrack_limit') < 1000000) {
+            @ini_set('pcre.backtrack_limit', 1000000);
+        }
 
         // 2.5.7+ bug - you always need to supply a toolbar title to avoid notices
         // This happens when the component does not supply an output at all
@@ -64,11 +64,11 @@ class PlgSystemKoowa extends JPlugin
             }
         }
 
-		//Bootstrap the Koowa Framework
+        //Bootstrap the Koowa Framework
         $this->bootstrap();
 
-		parent::__construct($subject, $config);
-	}
+        parent::__construct($subject, $config);
+    }
 
     /**
      * Adds application response time and memory usage to Chrome Inspector with ChromeLogger extension
@@ -116,32 +116,29 @@ class PlgSystemKoowa extends JPlugin
              */
             $koowa = Koowa::getInstance(array(
                 'debug'           => JDEBUG,
+                'cache'           => false, //JFactory::getApplication()->getCfg('caching')
                 'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
-                'cache_enabled'   => false, //JFactory::getApplication()->getCfg('caching')
                 'root_path'       => JPATH_ROOT,
                 'base_path'       => JPATH_BASE
             ));
 
-            $manager     = KObjectManager::getInstance();
-            $loader      = $manager->getClassLoader();
-
-            //Application basepaths
-            $loader->registerNamespace('site' , JPATH_SITE, JFactory::getApplication()->isSite());
-            $loader->registerNamespace('admin', JPATH_ADMINISTRATOR, JFactory::getApplication()->isAdmin());
+            $manager = KObjectManager::getInstance();
+            $loader  = $manager->getClassLoader();
 
             /**
              * Component Bootstrapping
              */
             $manager->getObject('object.bootstrapper')
-                ->registerDirectory(JPATH_LIBRARIES.'/koowa/components', 'koowa')
-                ->registerDirectory(JPATH_BASE.'/components')
+                ->registerApplication('site' , JPATH_SITE.'/components', JFactory::getApplication()->isSite())
+                ->registerApplication('admin', JPATH_ADMINISTRATOR.'/components', JFactory::getApplication()->isAdmin())
+                ->registerComponents(JPATH_LIBRARIES.'/koowa/components', 'koowa')
                 ->bootstrap();
 
             //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(
                 'namespaces' => array(
-                    '\\'     => JPATH_BASE,
-                    'Koowa'  => JPATH_LIBRARIES.'/koowa',
+                    '\\'     => JPATH_BASE.'/modules',
+                    'Koowa'  => JPATH_LIBRARIES.'/koowa/modules',
                 )
             )));
 
@@ -155,8 +152,8 @@ class PlgSystemKoowa extends JPlugin
              */
             $loader->registerLocator(new ComKoowaClassLocatorPlugin(array(
                 'namespaces' => array(
-                    '\\'     => JPATH_ROOT,
-                    'Koowa'  => JPATH_LIBRARIES.'/koowa',
+                    '\\'     => JPATH_ROOT.'/plugins',
+                    'Koowa'  => JPATH_LIBRARIES.'/koowa/plugins',
                 )
             )));
 

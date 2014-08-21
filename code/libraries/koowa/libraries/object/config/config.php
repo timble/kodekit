@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -14,7 +14,7 @@
  * as readonly.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Config
+ * @package Koowa\Library\Object
  */
 class KObjectConfig implements KObjectConfigInterface
 {
@@ -127,7 +127,7 @@ class KObjectConfig implements KObjectConfigInterface
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @param  array|Traversable|KObjectConfig $options A KObjectConfig object an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfig
      */
@@ -137,7 +137,7 @@ class KObjectConfig implements KObjectConfigInterface
         {
             $options = self::unbox($options);
 
-            if (is_array($options))
+            if (is_array($options) || $options instanceof Traversable)
             {
                 foreach ($options as $key => $value) {
                     $this->set($key, $value);
@@ -154,7 +154,7 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * This method only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfig    $config A ObjectConfig object an or array of options to be appended
+     * @param  array|KObjectConfig|Traversable    $config A ObjectConfig object an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfig
      */
@@ -164,7 +164,7 @@ class KObjectConfig implements KObjectConfigInterface
         {
             $options = self::unbox($options);
 
-            if(is_array($options))
+            if(is_array($options) || $options instanceof Traversable)
             {
                 if(!is_numeric(key($options)))
                 {

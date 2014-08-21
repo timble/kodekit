@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Abstract FileSystem Stream
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem
+ * @package Koowa\Library\Filesystem\Stream
  */
 abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemStreamInterface
 {
@@ -179,10 +179,10 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
             try
             {
                 $options = $this->getOptions();
-                $scheme  = parse_url($path, PHP_URL_SCHEME);
 
-                if($scheme && !empty($options))
+                if(!empty($options))
                 {
+                    $scheme          = $this->getIdentifier()->getName();
                     $context         = stream_context_create(array($scheme => $options));
                     $this->_resource = @fopen($path, $this->getMode(), false, $context);
                 }

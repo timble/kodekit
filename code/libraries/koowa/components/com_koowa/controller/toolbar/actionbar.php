@@ -2,17 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Action Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Controller\Toolbar
  */
 class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
 {
@@ -60,15 +59,18 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
     protected function _afterRead(KControllerContextInterface $context)
     {
         $controller = $this->getController();
-        $name       = ucfirst($context->subject->getIdentifier()->name);
+        $translator = $this->getObject('translator');
+        $name       = $translator->translate(strtolower($context->subject->getIdentifier()->name));
 
         if($controller->getModel()->getState()->isUnique()) {
-            $title    = 'Edit '.$name;
+            $title = $translator->translate('Edit {item_type}', array('item_type' => $name));
         } else {
-            $title    = 'New '.$name;
+            $title = $translator->translate('Create new {item_type}', array('item_type' => $name));
         }
 
         $this->getCommand('title')->title = $title;
+
+        parent::_afterRead($context);
     }
 
     /**

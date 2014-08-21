@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -18,37 +18,10 @@
  * defined as an extra attribute.  Eg, <title content="prepend" separator="|">[title]</title>
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterTitle extends KTemplateFilterTag
 {
-    /**
-     * The title separator
-     *
-     * @var	string
-     */
-    protected $_separator;
-
-    /**
-     * Escape the title
-     *
-     * @var	boolean
-     */
-    protected $_escape;
-
-    /**
-     * Constructor
-     *
-     * @param   KObjectConfig $config Configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_separator = $config->separator;
-        $this->_escape    = $config->escape;
-    }
-
     /**
      * Initializes the options for the object
      *
@@ -68,25 +41,25 @@ class KTemplateFilterTitle extends KTemplateFilterTag
     }
 
     /**
-	 * Parse the text for script tags
-	 *
-	 * @param string $text  The text to parse
-	 * @return string
-	 */
-	protected function _parseTags(&$text)
-	{
-		$tags  = '';
+     * Parse the text for script tags
+     *
+     * @param string $text  The text to parse
+     * @return string
+     */
+    protected function _parseTags(&$text)
+    {
+        $tags  = '';
         $title =  '';
 
-		$matches = array();
+        $matches = array();
         if(preg_match_all('#<title(.*)>(.*)<\/title>#siU', $text, $matches))
-		{
+        {
             foreach(array_unique($matches[2]) as $key => $match)
             {
                 //Set required attributes
                 $attribs = array(
                     'content'   => 'default',
-                    'separator' => $this->_separator
+                    'separator' => $this->getConfig()->separator
                 );
 
                 $attribs   = array_merge($attribs, $this->parseAttributes( $matches[1][$key]));
@@ -108,28 +81,28 @@ class KTemplateFilterTitle extends KTemplateFilterTag
             $tags .= $this->_renderTag($attribs, $title);
         }
 
-		return $tags;
-	}
+        return $tags;
+    }
 
     /**
      * Render the tag
      *
-     * @param 	array	$attribs Associative array of attributes
-     * @param 	string	$content The tag content
+     * @param   array   $attribs Associative array of attributes
+     * @param   string  $content The tag content
      * @return string
      */
     protected function _renderTag($attribs = array(), $content = null)
-	{
+    {
         unset($attribs['content']);
         unset($attribs['separator']);
 
         $attribs = $this->buildAttributes($attribs);
 
-        if($this->_escape) {
+        if($this->getConfig()->escape) {
             $content = $this->getTemplate()->escape($content);
         }
 
-		$html = '<title '.$attribs.'>'.$content.'</title>'."\n";
-		return $html;
-	}
+        $html = '<title '.$attribs.'>'.$content.'</title>'."\n";
+        return $html;
+    }
 }

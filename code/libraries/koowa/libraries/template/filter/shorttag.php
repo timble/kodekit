@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -13,7 +13,7 @@
  * Filter for short_open_tags support
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {
@@ -35,37 +35,37 @@ class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTempla
     }
 
     /**
-	 * Convert <?= ?> to long-form <?php echo ?> when needed
-	 *
-	 * @param string
-	 * @return KTemplateFilterShorttag
-	 */
-	public function compile(&$text)
-	{
+     * Convert <?= ?> to long-form <?php echo ?> when needed
+     *
+     * @param string
+     * @return KTemplateFilterShorttag
+     */
+    public function compile(&$text)
+    {
         if (!ini_get('short_open_tag'))
         {
            /**
-         	* We could also convert <%= like the real T_OPEN_TAG_WITH_ECHO
-         	* but that's not necessary.
-         	*
-         	* It might be nice to also convert PHP code blocks <? ?> but
-         	* let's quit while we're ahead.  It's probably better to keep
-         	* the <?php for larger code blocks but that's your choice.  If
-          	* you do go for it, explicitly check for <?xml as this will
-         	* probably be the biggest headache.
-         	*/
+            * We could also convert <%= like the real T_OPEN_TAG_WITH_ECHO
+            * but that's not necessary.
+            *
+            * It might be nice to also convert PHP code blocks <? ?> but
+            * let's quit while we're ahead.  It's probably better to keep
+            * the <?php for larger code blocks but that's your choice.  If
+            * you do go for it, explicitly check for <?xml as this will
+            * probably be the biggest headache.
+            */
 
-        	// convert "<?=" to "<?php echo"
-       	 	$find = '/\<\?\s*=\s*(.*?)/';
-        	$replace = "<?php echo \$1";
-        	$text = preg_replace($find, $replace, $text);
+            // convert "<?=" to "<?php echo"
+            $find = '/\<\?\s*=\s*(.*?)/';
+            $replace = "<?php echo \$1";
+            $text = preg_replace($find, $replace, $text);
 
-        	// convert "<?" to "<?php"
-        	$find = '/\<\?(?:php)?\s*(.*?)/';
-        	$replace = "<?php \$1";
-        	$text = preg_replace($find, $replace, $text);
+            // convert "<?" to "<?php"
+            $find = '/\<\?(?:php)?\s*(.*?)/';
+            $replace = "<?php \$1";
+            $text = preg_replace($find, $replace, $text);
         }
 
         return $this;
-	}
+    }
 }

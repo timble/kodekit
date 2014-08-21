@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -109,8 +109,8 @@ class KFilterChain extends KObject implements KFilterInterface
     /**
      * Add a filter to the queue based on priority
      *
-     * @param KFilterInterface 	$filter A Filter
-     * @param integer	        $priority The command priority, usually between 1 (high priority) and 5 (lowest),
+     * @param KFilterInterface  $filter A Filter
+     * @param integer           $priority The command priority, usually between 1 (high priority) and 5 (lowest),
      *                                    default is 3. If no priority is set, the command priority will be used
      *                                    instead.
      *

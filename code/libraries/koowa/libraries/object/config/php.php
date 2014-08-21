@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Config Php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 class KObjectConfigPhp extends KObjectConfigFormat
 {
@@ -19,10 +19,11 @@ class KObjectConfigPhp extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
      * @throws DomainException
-     * @return KObjectConfigPhp
+     * @return KObjectConfigPhp|array
      */
-    public function fromString($string)
+    public function fromString($string, $object = true)
     {
         $data = array();
 
@@ -35,9 +36,7 @@ class KObjectConfigPhp extends KObjectConfigFormat
             }
         }
 
-        $this->merge($data);
-
-        return $this;
+        return $object ? $this->merge($data) : $data;
     }
 
     /**
@@ -56,17 +55,29 @@ class KObjectConfigPhp extends KObjectConfigFormat
      * Read from a file and create a config object
      *
      * @param  string $filename
-     * @throws RuntimeException
-     * @return KObjectConfigPhp
+     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @throws RuntimeException If file doesn't exist is not readable or cannot be included.
+     * @return KObjectConfigPhp|array
      */
-    public function fromFile($filename)
+    public function fromFile($filename, $object = true)
     {
         if (!is_file($filename) || !is_readable($filename)) {
             throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
-        $this->merge(include $filename);
+        $data = $this->_includeFile($filename);
 
-        return $this;
+        return $object ? $this->merge($data) : $data;
+    }
+
+    /**
+     * Includes a file without exposing caller method's scope
+     *
+     * @param  string $filename
+     * @return mixed
+     */
+    protected function _includeFile($filename)
+    {
+        return require $filename;
     }
 }

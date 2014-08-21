@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -103,7 +103,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         parent::_initialize($config);
     }
 
-	/**
+    /**
      * Has the controller been dispatched
      *
      * @return  boolean	Returns true if the controller has been dispatched
@@ -360,8 +360,8 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
 
     /**
      * Execute a controller action by it's name.
-	 *
-	 * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
+     *
+     * Function is also capable of checking is a behavior has been mixed successfully using is[Behavior] function. If
      * the behavior exists the function will return TRUE, otherwise FALSE.
      *
      * @param  string  $method Method name

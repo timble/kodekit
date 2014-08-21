@@ -2,17 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Lockable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Database\Behavior
  */
 class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
 {
@@ -36,11 +35,10 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
     /**
      * Get the user that owns the lock on the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return KUserInterface Returns a User object
      */
     public function getOwner()
     {
-        $user     = null;
         $provider = $this->getObject('user.provider');
 
         if($this->hasProperty('locked_by') && !empty($this->locked_by))
@@ -58,10 +56,11 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
                     'attributes' => json_decode($this->_owner_params)
                 );
 
-                $user = $this->getObject('user.provider')->store($this->_owner_id, $data);
+                $user = $provider->store($this->_owner_id, $data);
             }
-            else $user = $this->getObject('user.provider')->load($this->locked_by);
+            else $user = $provider->load($this->locked_by);
         }
+        else $user = $provider->load(0);
 
         return $user;
     }
@@ -71,7 +70,7 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
      *
      * Requires a 'locked_by' column
      *
-     * @param KDatabaseContext	$context A database context object
+     * @param KDatabaseContext  $context A database context object
      * @return void
      */
     protected function _beforeSelect(KDatabaseContext $context)

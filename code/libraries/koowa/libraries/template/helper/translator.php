@@ -2,18 +2,18 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
- * Translator Helper Class
+ * Translator Helper
  *
  * Adds translation keys used in JavaScript to the translator object
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Library\Template\Helper
  */
 class KTemplateHelperTranslator extends KTemplateHelperAbstract
 {
@@ -21,16 +21,28 @@ class KTemplateHelperTranslator extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'translations' => array()
+            'strings' => array()
         ));
 
-        $translations = KObjectConfig::unbox($config->translations);
-        $translator   = $this->getTemplate()->getTranslator();
+        $strings    = KObjectConfig::unbox($config->strings);
+        $translator = $this->getObject('translator');
 
-        foreach ($translations as $string) {
-            $translator->addScriptTranslation($string);
+        $translations = array();
+        foreach ($strings as $string) {
+            $translations[$string] = $translator->translate($string);
         }
 
-        return '';
+        $html  = '';
+        $html .= $this->getTemplate()->invokeHelper('behavior.koowa') .
+            "<script>
+            if (typeof Koowa === 'object' && Koowa !== null) {
+                if (typeof Koowa.translator === 'object' && Koowa.translator !== null) {
+                    Koowa.translator.loadTranslations(".json_encode($translations).");
+                }
+            }
+            </script>
+            ";
+
+        return $html;
     }
 }

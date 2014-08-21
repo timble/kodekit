@@ -2,17 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Grid Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Helper
  */
 class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
 {
@@ -26,11 +25,13 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'entity'  		=> null,
-            'total'		=> null,
-            'field'		=> 'ordering',
-            'data'		=> array('order' => 0)
+            'entity'    => null,
+            'total'     => null,
+            'field'     => 'ordering',
+            'data'      => array('order' => 0)
         ));
+
+        $translator = $this->getObject('translator');
 
         $html = '';
 
@@ -64,23 +65,25 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
                 </span>';
         }
 
-        if ($config->entity->{$config->field} > 1) {
-            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $this->translate('Move up');
-            $html .= sprintf($tmpl, $this->translate('Move up'), $updata, 'uparrow', $icon);
+        if ($config->entity->{$config->field} > 1)
+        {
+            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-up"></i>' : $translator->translate('Move up');
+            $html .= sprintf($tmpl, $translator->translate('Move up'), $updata, 'uparrow', $icon);
         }
 
         $html .= $config->entity->{$config->field};
 
-        if ($config->entity->{$config->field} != $config->total) {
-            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $this->translate('Move down');
-            $html .= sprintf($tmpl, $this->translate('Move down'), $downdata, 'downarrow', $icon);
+        if ($config->entity->{$config->field} != $config->total)
+        {
+            $icon = version_compare(JVERSION, '3.0', '>=') ? '<i class="icon-arrow-down"></i>' : $translator->translate('Move down');
+            $html .= sprintf($tmpl, $translator->translate('Move down'), $downdata, 'downarrow', $icon);
         }
 
         if ($config->sort !== $config->field)
         {
             $html = '<div class="koowa-tooltip"
                           data-koowa-tooltip="'.htmlentities(json_encode(array('placement' => 'left'))).'"
-                          title="'.$this->translate('Please order by this column first by clicking the column title').'">'
+                          title="'.$translator->translate('Please order by this column first by clicking the column title').'">'
                     .$html.
                     '</div>';
         }
@@ -92,8 +95,8 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
     /**
      * Render an access field
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function access($config = array())
     {

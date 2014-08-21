@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Class Loader Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class
+ * @package Koowa\Library\Class\Loader
  */
 interface KClassLoaderInterface
 {
@@ -40,33 +40,23 @@ interface KClassLoaderInterface
     public function load($class);
 
     /**
-     * Enable or disable class loading
-     *
-     * If debug is enabled the class loader should throw an exception if a file is found but does not declare the class.
-     *
-     * @param bool|null $debug True or false. If NULL the method will return the current debug value.
-     * @return bool Returns the current debug value.
-     */
-    public function debug($debug);
-
-    /**
      * Get the path based on a class name
      *
      * @param string $class     The class name
-     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
+     * @param string $basepath  The basepath. If NULL the global basepath will be used.
      * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function getPath($class, $namespace = null);
+    public function getPath($class, $basepath = null);
 
     /**
      * Get the path based on a class name
      *
      * @param string $class     The class name
      * @param string $path      The class path
-     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
+     * @param string $basepath  The basepath. If NULL the global basepath will be used.
      * @return void
      */
-    public function setPath($class, $path, $namespace = null);
+    public function setPath($class, $path, $basepath = null);
 
     /**
      * Register a class locator
@@ -109,39 +99,36 @@ interface KClassLoaderInterface
     public function getAliases($class);
 
     /**
-     * Register a global namespace
+     * Get the basepath
      *
-     * @param  string $namespace
-     * @param  string $path The location of the namespace
-     * @param  boolean $active Make the namespace active. Default is FALSE.
-     * @return  KClassLoaderInterface
+     * @return string The base path
      */
-    public function registerNamespace($namespace, $path, $active = false);
+    public function getBasepath();
 
     /**
-     * Set the active global namespace
+     * Set the basepath
      *
-     * @param string $namespace The namespace
+     * @param string $basepath The basepath
      * @return KClassLoaderInterface
      */
-    public function setNamespace($namespace);
+    public function setBasepath($basepath);
 
     /**
-     * Get a global namespace path by name
+     * Enable or disable class loading
      *
-     * If no namespace is passed in this method will return the active global namespace path
+     * If debug is enabled the class loader should throw an exception if a file is found but does not declare the class.
      *
-     * @param string|null $namespace The namespace.
-     * @return string|false The namespace path or FALSE if the namespace does not exist.
+     * @param bool $debug True or false
+     * @return KClassLoaderInterface
      */
-    public function getNamespace($namespace = null);
+    public function setDebug($debug);
 
     /**
-     * Get the global namespaces
+     * Check if the loader is running in debug mode
      *
-     * @return array An array with namespaces as keys and path as value
+     * @return bool
      */
-    public function getNamespaces();
+    public function isDebug();
 
     /**
      * Tells if a class, interface or trait exists.

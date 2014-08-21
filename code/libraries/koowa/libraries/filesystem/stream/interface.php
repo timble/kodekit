@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -20,7 +20,7 @@
  *    supported (like rename) must throw a \BadMethodCallException instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem
+ * @package Koowa\Library\Filesystem\Stream
  */
 interface KFilesystemStreamInterface extends KObjectInterface
 {
@@ -140,7 +140,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
     /**
      * Read data from the stream to another stream
      *
-     * @param resource|FilesystemStreamInterface $stream The stream resource to copy the data too
+     * @param resource|KFilesystemStreamInterface $stream The stream resource to copy the data too
      * @return bool Returns TRUE on success, FALSE on failure
      */
     public function copy($stream);
@@ -176,7 +176,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * If no target stream is being passed and you have cached data that is not yet stored into the underlying storage,
      * you should do so now
      *
-     * @param resource|FilesystemStreamInterface|null $stream The stream resource to flush the data too
+     * @param resource|KFilesystemStreamInterface|null $stream The stream resource to flush the data too
      * @param int   $length  The total bytes to flush, if -1 the stream will be flushed until eof. The limit should
      *                       lie within the total size of the stream.
      * @return boolean Should return TRUE if the cached data was successfully stored (or if there was no data to store),
@@ -242,6 +242,13 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * @return array See http://php.net/stat
      */
     public function getInfo($link = false);
+
+    /**
+     * Get the size of the stream
+     *
+     * @return int|bool
+     */
+    public function getSize();
 
     /**
      * Get the stream options

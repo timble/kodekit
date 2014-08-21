@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -16,12 +16,12 @@
  * filter adds the action url query params as hidden fields to comply with the html form standard.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  * @see         http://www.w3.org/TR/html401/interact/forms.html#h-17.13.3.4
  */
 class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
- 	/**
+    /**
      * The form token value
      *
      * @var string
@@ -35,7 +35,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
      */
     protected $_token_name;
 
- 	/**
+    /**
      * Constructor.
      *
      * @param   KObjectConfig $config Configuration options
@@ -48,7 +48,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
         $this->_token_name  = $config->token_name;
     }
 
-	/**
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -60,7 +60,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
     {
         $config->append(array(
             'token_value'   => '',
-        	'token_name'    => 'csrf_token',
+            'token_name'    => 'csrf_token',
         ));
 
         parent::_initialize($config);

@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Tabs Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Helper
  */
 class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
 {
@@ -58,7 +58,7 @@ class ComKoowaTemplateHelperTabs extends KTemplateHelperAbstract
             'translate' => true
         ));
 
-        $title = $config->translate ? $this->translate($config->title) : $config->title;
+        $title = $config->translate ? $this->getObject('translator')->translate($config->title) : $config->title;
 
         $class = KObjectConfig::unbox($config->class);
 

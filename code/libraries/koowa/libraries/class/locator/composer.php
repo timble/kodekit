@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -13,16 +13,16 @@
  * Proxy calls to the Composer Autoloader through Composer\Autoload\ClassLoader::findFile().
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class\Locator
  */
 class KClassLocatorComposer extends KClassLocatorAbstract
 {
     /**
-     * The type
+     * The locator name
      *
      * @var string
      */
-    protected $_type = 'composer';
+    protected static $_name = 'composer';
 
     /**
      * The composer loader
@@ -55,9 +55,9 @@ class KClassLocatorComposer extends KClassLocatorAbstract
      *
      * @param  string $class     The class name
      * @param  string $basepath  The base path
-     * @return string|false   Returns canonicalized absolute pathname or FALSE of the class could not be found.
+     * @return string|false Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function locate($class, $basepath = null)
+    public function locate($class, $basepath)
     {
         $path = false;
 
@@ -66,5 +66,15 @@ class KClassLocatorComposer extends KClassLocatorAbstract
         }
 
         return $path;
+    }
+
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

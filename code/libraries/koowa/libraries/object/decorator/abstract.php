@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -14,7 +14,7 @@
  * KObject use KObjectDecorator instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Decorator
  */
 abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
 {
@@ -185,7 +185,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      * @param  string $key The variable name
      * @return boolean
      */
-    public function __isset($key)
+    final public function __isset($key)
     {
         return isset($this->getDelegate()->$key);
     }
@@ -198,7 +198,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      * @param string $key The variable name.
      * @return void
      */
-    public function __unset($key)
+    final public function __unset($key)
     {
         if (isset($this->getDelegate()->$key)) {
             unset($this->getDelegate()->$key);

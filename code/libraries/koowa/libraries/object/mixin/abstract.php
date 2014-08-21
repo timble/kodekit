@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -187,7 +187,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      * @param  mixed    $value  The variable value.
      * @return mixed
      */
-    public function __set($key, $value)
+    final public function __set($key, $value)
     {
         $this->getMixer()->$key = $value;
     }
@@ -198,7 +198,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      * @param  string $key The variable name.
      * @return mixed
      */
-    public function __get($key)
+    final public function __get($key)
     {
         return $this->getMixer()->$key;
     }
@@ -211,7 +211,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      * @param  string $key The variable name
      * @return boolean
      */
-    public function __isset($key)
+    final public function __isset($key)
     {
         return isset($this->getMixer()->$key);
     }
@@ -224,7 +224,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      * @param string $key The variable name.
      * @return void
      */
-    public function __unset($key)
+    final public function __unset($key)
     {
         if (isset($this->getMixer()->$key)) {
             unset($this->getMixer()->$key);

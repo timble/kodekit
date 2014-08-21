@@ -2,19 +2,26 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Loader Adapter Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class\Locator
  */
 interface KClassLocatorInterface
 {
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName();
+
     /**
      * Get a fully qualified path based on a class name
      *
@@ -22,14 +29,7 @@ interface KClassLocatorInterface
      * @param  string  $basepath The basepath to use to find the class
      * @return string|boolean    Returns the path on success FALSE on failure
      */
-    public function locate($class, $basepath = null);
-
-    /**
-	 * Get the type
-	 *
-	 * @return string	Returns the type
-	 */
-	public function getType();
+    public function locate($class, $basepath);
 
     /**
      * Register a namespace

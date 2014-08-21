@@ -2,19 +2,26 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Template Locator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Locator
  */
 interface KTemplateLocatorInterface
 {
+    /**
+     * Get the locator name
+     *
+     * @return string The stream name
+     */
+    public static function getName();
+
     /**
      * Locate the template based on a virtual path
      *
@@ -32,13 +39,6 @@ interface KTemplateLocatorInterface
      * @return bool|mixed
      */
     public function find(array $info);
-
-    /**
-     * Get the loader type
-     *
-     * @return string
-     */
-    public function getType();
 
     /**
      * Get a path from an file

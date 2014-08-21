@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -159,7 +159,7 @@ class KModelDatabase extends KModelAbstract
     public function getTable()
     {
         if(!($this->_table instanceof KDatabaseTableInterface))
-		{
+        {
             //Make sure we have a table identifier
             if(!($this->_table instanceof KObjectIdentifier)) {
                 $this->setTable($this->_table);
@@ -174,36 +174,36 @@ class KModelDatabase extends KModelAbstract
     /**
      * Method to set a table object attached to the model
      *
-     * @param	mixed	$table An object that implements ObjectInterface, ObjectIdentifier object
-	 * 					       or valid identifier string
+     * @param   mixed   $table An object that implements ObjectInterface, ObjectIdentifier object
+     *                         or valid identifier string
      * @throws  UnexpectedValueException   If the identifier is not a table identifier
      * @return  KModelDatabase
      */
     public function setTable($table)
-	{
-		if(!($table instanceof KDatabaseTableInterface))
-		{
-			if(is_string($table) && strpos($table, '.') === false ) 
-		    {
-		        $identifier         = $this->getIdentifier()->toArray();
-		        $identifier['path'] = array('database', 'table');
-		        $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
+    {
+        if(!($table instanceof KDatabaseTableInterface))
+        {
+            if(is_string($table) && strpos($table, '.') === false )
+            {
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('database', 'table');
+                $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
 
                 $identifier = $this->getIdentifier($identifier);
-		    }
-		    else  $identifier = $this->getIdentifier($table);
-		    
-			if($identifier->path[1] != 'table') {
-				throw new UnexpectedValueException('Identifier: '.$identifier.' is not a table identifier');
-			}
+            }
+            else  $identifier = $this->getIdentifier($table);
 
-			$table = $identifier;
-		}
+            if($identifier->path[1] != 'table') {
+                throw new UnexpectedValueException('Identifier: '.$identifier.' is not a table identifier');
+            }
 
-		$this->_table = $table;
+            $table = $identifier;
+        }
 
-		return $this;
-	}
+        $this->_table = $table;
+
+        return $this;
+    }
 
     /**
      * Get the model context
@@ -220,6 +220,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds SELECT columns list for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryColumns(KDatabaseQueryInterface $query)
     {
@@ -228,6 +230,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds JOINS clauses for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryJoins(KDatabaseQueryInterface $query)
     {
@@ -236,6 +240,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds WHERE clause for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryWhere(KDatabaseQueryInterface $query)
     {
@@ -244,6 +250,8 @@ class KModelDatabase extends KModelAbstract
 
     /**
      * Builds GROUP BY clause for the query
+     *
+     * @param KDatabaseQueryInterface $query
      */
     protected function _buildQueryGroup(KDatabaseQueryInterface $query)
     {

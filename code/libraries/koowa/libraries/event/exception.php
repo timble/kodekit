@@ -2,23 +2,23 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Exception Event
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception
+ * @package Koowa\Library\Event
  */
 class KEventException extends KEvent implements KException
 {
     /**
      * Set the exception
      *
-     * @param \Exception $exception
+     * @param Exception $exception
      */
     public function setException(Exception $exception)
     {
@@ -28,7 +28,7 @@ class KEventException extends KEvent implements KException
     /**
      * Get the exception
      *
-     * @return \Exception
+     * @return Exception
      */
     public function getException()
     {

@@ -2,24 +2,24 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Controller Toolbar Command
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Toolbar\Command
  */
 interface KControllerToolbarCommandInterface extends KControllerToolbarInterface
 {
     /**
      * Constructor.
      *
-     * @param	string 			$name The command name
-     * @param   array|KObjectConfig 	$config An associative array of configuration settings or a KObjectConfig instance.
+     * @param   string              $name   The command name
+     * @param   array|KObjectConfig $config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $name, $config = array());
 

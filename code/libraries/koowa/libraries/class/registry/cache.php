@@ -2,16 +2,16 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Cache Class Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class
+ * @package Koowa\Library\Class\Registry
  */
 class KClassRegistryCache extends KClassRegistry
 {
@@ -30,9 +30,18 @@ class KClassRegistryCache extends KClassRegistry
      */
     public function __construct()
     {
-        if (!extension_loaded('apc')) {
+        if (!self::isSupported()) {
             throw new RuntimeException('Unable to use KClassRegistryCache as APC is not enabled.');
         }
+    }
+
+    /**
+     * Checks if the APC PHP extension is enabled
+     * @return bool
+     */
+    public static function isSupported()
+    {
+        return extension_loaded('apc');
     }
 
     /**
@@ -66,7 +75,7 @@ class KClassRegistryCache extends KClassRegistry
     {
         if(!parent::offsetExists($offset))
         {
-            if($result = apc_fetch($this->_namespace.'-class-'.$offset)) {
+            if($result = apc_fetch($this->getNamespace().'-class_'.$offset)) {
                 parent::offsetSet($offset, $result);
             }
         }
@@ -84,7 +93,7 @@ class KClassRegistryCache extends KClassRegistry
      */
     public function offsetSet($offset, $value)
     {
-        apc_store($this->_namespace.'-class-'.$offset, $value);
+        apc_store($this->getNamespace().'-class_'.$offset, $value);
 
         parent::offsetSet($offset, $value);
     }
@@ -98,7 +107,7 @@ class KClassRegistryCache extends KClassRegistry
     public function offsetExists($offset)
     {
         if(false === $result = parent::offsetExists($offset)) {
-            $result = apc_exists($this->_namespace.'-class-'.$offset);
+            $result = apc_exists($this->getNamespace().'-class_'.$offset);
         }
 
         return $result;
@@ -112,7 +121,7 @@ class KClassRegistryCache extends KClassRegistry
      */
     public function offsetUnset($offset)
     {
-        apc_delete($this->_namespace.'-class-'.$offset);
+        apc_delete($this->getNamespace().'-class_'.$offset);
         parent::offsetUnset($offset);
     }
 

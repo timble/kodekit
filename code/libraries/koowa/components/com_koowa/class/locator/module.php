@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -29,33 +29,26 @@
  * Location  : .../modules/mod_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Class\Locator
  */
 class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 {
-	/**
-	 * The adapter type
-	 *
-	 * @var string
-	 */
-	protected $_type = 'module';
-
     /**
-     * The active basepath
+     * The locator name
      *
      * @var string
      */
-    protected $_basepath;
+    protected static $_name = 'module';
 
-	/**
-	 * Get a fully qualified path based on a class name
-	 *
-	 * @param  string $class    The class name
+    /**
+     * Get a fully qualified path based on a class name
+     *
+     * @param  string $class    The class name
      * @param  string $basepath The base path
-	 * @return string|boolean	Returns the path on success FALSE on failure
-	 */
-	public function locate($class, $basepath = null)
-	{
+     * @return string|boolean   Returns the path on success FALSE on failure
+     */
+    public function locate($class, $basepath = null)
+    {
         if (substr($class, 0, 3) === 'Mod')
         {
             /*
@@ -91,23 +84,25 @@ class ComKoowaClassLocatorModule extends KClassLocatorAbstract
             else $path = $file;
 
             //Switch basepath
-            if ($this->getNamespace($namespace)) {
+            if(!$this->getNamespace($namespace)) {
+                $basepath = $this->getNamespace('\\');
+            } else {
                 $basepath = $this->getNamespace($namespace);
             }
-            elseif (!empty($basepath)) {
-                $this->_basepath = $basepath;
-            }
-            elseif ($this->_basepath) {
-                $basepath = $this->_basepath;
-            }
-            else {
-                $basepath = $this->getNamespace('\\');
-            }
 
-            return $basepath.'/modules/'.$module.'/'.$path.'.php';
-		}
+            return $basepath.'/'.$module.'/'.$path.'.php';
+        }
 
-		return false;
+        return false;
+    }
 
-	}
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
+    }
 }

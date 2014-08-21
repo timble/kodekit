@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -193,7 +193,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * @param   string  $key The key name.
      * @return  string  The corresponding value.
      */
-    public function __get($key)
+    final public function __get($key)
     {
         return $this->offsetGet($key);
     }
@@ -205,7 +205,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * @param   mixed   $value The value for the key
      * @return  void
      */
-    public function __set($key, $value)
+    final public function __set($key, $value)
     {
         $this->offsetSet($key, $value);
     }
@@ -216,7 +216,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * @param  string  $key The key name
      * @return boolean
      */
-    public function __isset($key)
+    final public function __isset($key)
     {
         return $this->offsetExists($key);
     }
@@ -227,7 +227,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      * @param   string  $key The key name
      * @return  void
      */
-    public function __unset($key)
+    final public function __unset($key)
     {
         $this->offsetUnset($key);
     }

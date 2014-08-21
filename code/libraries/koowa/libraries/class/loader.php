@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 require_once dirname(__FILE__).'/interface.php';
@@ -19,10 +19,17 @@ require_once dirname(__FILE__).'/registry/cache.php';
  * Loader
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class
  */
 class KClassLoader implements KClassLoaderInterface
 {
+    /**
+     * The class container
+     *
+     * @var array
+     */
+    private $__registry = null;
+
     /**
      * The class locators
      *
@@ -31,25 +38,11 @@ class KClassLoader implements KClassLoaderInterface
     protected $_locators = array();
 
     /**
-     * The class container
-     *
-     * @var array
-     */
-    protected $_registry = null;
-
-    /**
-     * Global namespaces
-     *
-     * @var array
-     */
-    protected $_namespaces = array();
-
-    /**
-     * The active global namespace
+     * The loader basepath
      *
      * @var  string
      */
-    protected $_namespace = 'koowa';
+    protected $_basepath;
 
     /**
      * Debug
@@ -66,19 +59,19 @@ class KClassLoader implements KClassLoaderInterface
     final private function __construct($config = array())
     {
         //Create the class registry
-        if(isset($config['cache_enabled']) && $config['cache_enabled'])
+        if(isset($config['cache']) && $config['cache'] && KClassRegistryCache::isSupported())
         {
-            $this->_registry = new KClassRegistryCache();
+            $this->__registry = new KClassRegistryCache();
 
             if(isset($config['cache_namespace'])) {
-                $this->_registry->setNamespace($config['cache_namespace']);
+                $this->__registry->setNamespace($config['cache_namespace']);
             }
         }
-        else $this->_registry = new KClassRegistry();
+        else $this->__registry = new KClassRegistry();
 
         //Set the debug mode
         if(isset($config['debug'])) {
-            $this->_debug = $config['debug'];
+            $this->setDebug($config['debug']);
         }
 
         //Register the library locator
@@ -162,7 +155,7 @@ class KClassLoader implements KClassLoaderInterface
         $result = false;
 
         //Get the path
-        $path = $this->getPath( $class, $this->_namespace);
+        $path = $this->getPath( $class, $this->_basepath);
 
         if ($path !== false)
         {
@@ -189,51 +182,33 @@ class KClassLoader implements KClassLoaderInterface
     }
 
     /**
-     * Enable or disable class loading
-     *
-     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
-     *
-     * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
-     * @return bool Returns the current debug setting.
-     */
-    public function debug($debug)
-    {
-        if($debug !== null) {
-            $this->_debug = (bool) $debug;
-        }
-
-        return $this->_debug;
-    }
-
-    /**
      * Get the path based on a class name
      *
      * @param string $class     The class name
-     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
+     * @param string $basepath  The basepath. If NULL the global basepath will be used.
      * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function getPath($class, $namespace = null)
+    public function getPath($class, $basepath = null)
     {
-        $result = false;
+        $result   = false;
 
-        //Switch the namespace
-        $prefix = $namespace ? $namespace : $this->_namespace;
+        $basepath = $basepath ? $basepath : $this->_basepath;
+        $key      = $basepath ? $class.'-'.$basepath : $class;
 
-        if(!$this->_registry->has($prefix.'-'.$class))
+        if(!$this->__registry->has($key))
         {
             //Locate the class
             foreach($this->_locators as $locator)
             {
-                $basepath = $this->getNamespace($namespace);
                 if(false !== $result = $locator->locate($class, $basepath)) {
                     break;
                 };
             }
 
             //Also store if the class could not be found to prevent repeated lookups.
-            $this->_registry->set($prefix.'-'.$class, $result);
+            $this->__registry->set($key, $result);
 
-        } else $result = $this->_registry->get($prefix.'-'.$class);
+        } else $result = $this->__registry->get($key);
 
         return $result;
     }
@@ -243,23 +218,15 @@ class KClassLoader implements KClassLoaderInterface
      *
      * @param string $class     The class name
      * @param string $path      The class path
-     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
+     * @param string $basepath  The basepath. If NULL the global basepath will be used.
      * @return void
      */
-    public function setPath($class, $path, $namespace = null)
+    public function setPath($class, $path, $basepath = null)
     {
-        $prefix = $namespace ? $namespace : $this->_namespace;
-        $this->_registry->set($prefix.'-'.$class, $path);
-    }
+        $basepath = $basepath ? $basepath : $this->_basepath;
+        $key      = $basepath ? $class.'-'.$basepath : $class;
 
-    /**
-     * Get the class registry object
-     *
-     * @return KClassRegistryInterface
-     */
-    public function getRegistry()
-    {
-        return $this->_registry;
+        $this->__registry->set($key, $path);
     }
 
     /**
@@ -271,7 +238,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function registerLocator(KClassLocatorInterface $locator, $prepend = false )
     {
-        $array = array($locator->getType() => $locator);
+        $array = array($locator->getName() => $locator);
 
         if($prepend) {
             $this->_locators = $array + $this->_locators;
@@ -318,7 +285,7 @@ class KClassLoader implements KClassLoaderInterface
         $alias = trim($alias);
         $class = trim($class);
 
-        $this->_registry->alias($class, $alias);
+        $this->__registry->alias($class, $alias);
     }
 
     /**
@@ -329,71 +296,53 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function getAliases($class)
     {
-        return array_search($class, $this->_registry->getAliases());
+        return array_search($class, $this->__registry->getAliases());
     }
 
     /**
-     * Register a global namespace
+     * Get the basepath
      *
-     * @param  string $namespace
-     * @param  string $path The location of the namespace
-     * @param  boolean $active Make the namespace active. Default is FALSE.
-     * @return  KClassLoaderInterface
+     * @return string The base path
      */
-    public function registerNamespace($namespace, $path, $active = false)
+    public function getBasepath()
     {
-        $this->_namespaces[$namespace] = $path;
+        return $this->_basepath;
+    }
 
-        //Set the active namespace
-        if($active) {
-            $this->_namespace = $namespace;
-        }
-
+    /**
+     * Set the basepath
+     *
+     * @param string $basepath The basepath
+     * @return KClassLoaderInterface
+     */
+    public function setBasepath($basepath)
+    {
+        $this->_basepath = $basepath;
         return $this;
     }
 
     /**
-     * Get a global namespace path
+     * Enable or disable class loading
      *
-     * If no namespace is passed in this method will return the active global namespace.
+     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
      *
-     * @param string|null $namespace The namespace.
-     * @return string|false The namespace path or FALSE if the namespace does not exist.
-     */
-    public function getNamespace($namespace = null)
-    {
-        if(!isset($namespace)) {
-            $namespace = $this->_namespace;
-        }
-
-        return isset($this->_namespaces[$namespace]) ? $this->_namespaces[$namespace] : false;
-    }
-
-    /**
-     * Set the active global namespace
-     *
-     * Method can only set a namespace that previously has been registered.
-     *
-     * @param string $namespace The namespace
+     * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
      * @return KClassLoader
      */
-    public function setNamespace($namespace)
+    public function setDebug($debug)
     {
-        if(isset($this->_namespaces[$namespace])) {
-            $this->_namespace = $namespace;
-        }
-
+        $this->_debug = (bool) $debug;
         return $this;
     }
 
     /**
-     * Get the global namespaces
+     * Check if the loader is runnign in debug mode
      *
-     * @return array An array with namespaces as keys and path as value
+     * @return bool
      */
-    public function getNamespaces()
+    public function isDebug()
     {
-        return $this->_namespaces;
+        return $this->_debug;
     }
 
     /**

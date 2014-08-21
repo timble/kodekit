@@ -2,25 +2,25 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Abstract Loader Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Loader
+ * @package Koowa\Library\Class\Locator
  */
 abstract class KClassLocatorAbstract implements KClassLocatorInterface
 {
-	/**
-	 * The adapter type
-	 *
-	 * @var string
-	 */
-	protected $_type = '';
+    /**
+     * The locator name
+     *
+     * @var string
+     */
+    protected static $_name = '';
 
     /**
      * Locator namespaces
@@ -29,7 +29,7 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
      */
     protected $_namespaces = array();
 
-	/**
+    /**
      * Constructor.
      *
      * @param  array  $config An optional array with configuration options.
@@ -43,16 +43,6 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
                 $this->registerNamespace($namespace, $path);
             }
         }
-    }
-
-    /**
-     * Get the type
-     *
-     * @return string	Returns the type
-     */
-    public function getType()
-    {
-        return $this->_type;
     }
 
     /**
@@ -92,5 +82,15 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
     public function getNamespaces()
     {
         return $this->_namespaces;
+    }
+
+    /**
+     * Get locator name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return self::$_name;
     }
 }

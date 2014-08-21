@@ -2,19 +2,26 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
  * Object Locator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Locator
  */
 interface KObjectLocatorInterface
 {
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public static function getName();
+
     /**
      * Returns a fully qualified class name for a given identifier.
      *
@@ -32,39 +39,6 @@ interface KObjectLocatorInterface
      * @return bool|mixed
      */
     public function find(array $info, $fallback = true);
-
-    /**
-     * Register a package
-     *
-     * @param  string $name    The package name
-     * @param  string $domain  The domain for the package
-     * @return KObjectLocatorInterface
-     */
-    public function registerPackage($name, $domain);
-
-    /**
-     * Get the registered package domain
-     *
-     *  * If no domain has been registered for this package, the default 'Koowa' domain will be returned.
-     *
-     * @param string $package
-     * @return string The registered domain
-     */
-    public function getPackage($package);
-
-    /**
-     * Get the registered packages
-     *
-     * @return array An array with package names as keys and domain names as values
-     */
-    public function getPackages();
-
-    /**
-     * Get the locator type
-     *
-     * @return string
-     */
-    public function getType();
 
     /**
      * Get the locator fallback sequence

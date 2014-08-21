@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -15,7 +15,7 @@
  */
 class KViewHtml extends KViewTemplate
 {
-	/**
+    /**
      * Initializes the config for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -25,12 +25,12 @@ class KViewHtml extends KViewTemplate
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
-			'mimetype'	  		=> 'text/html',
-    		'template_filters'	=> array('form'),
-       	));
+        $config->append(array(
+            'mimetype'          => 'text/html',
+            'template_filters'  => array('form'),
+        ));
 
-    	parent::_initialize($config);
+        parent::_initialize($config);
     }
 
     /**
