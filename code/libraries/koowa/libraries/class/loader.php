@@ -190,23 +190,25 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function getPath($class, $basepath = null)
     {
-        $result = false;
+        $result   = false;
 
-        if(!$this->__registry->has($class))
+        $basepath = $basepath ? $basepath : $this->_basepath;
+        $key      = $basepath ? $class.'-'.$basepath : $class;
+
+        if(!$this->__registry->has($key))
         {
             //Locate the class
             foreach($this->_locators as $locator)
             {
-                $basepath = $basepath ? $basepath : $this->_basepath;
                 if(false !== $result = $locator->locate($class, $basepath)) {
                     break;
                 };
             }
 
             //Also store if the class could not be found to prevent repeated lookups.
-            $this->__registry->set($class, $result);
+            $this->__registry->set($key, $result);
 
-        } else $result = $this->__registry->get($class);
+        } else $result = $this->__registry->get($key);
 
         return $result;
     }
@@ -216,12 +218,15 @@ class KClassLoader implements KClassLoaderInterface
      *
      * @param string $class     The class name
      * @param string $path      The class path
-     * @param string $namespace The global namespace. If NULL the active global namespace will be used.
+     * @param string $basepath  The basepath. If NULL the global basepath will be used.
      * @return void
      */
-    public function setPath($class, $path)
+    public function setPath($class, $path, $basepath = null)
     {
-        $this->__registry->set($class, $path);
+        $basepath = $basepath ? $basepath : $this->_basepath;
+        $key      = $basepath ? $class.'-'.$basepath : $class;
+
+        $this->__registry->set($key, $path);
     }
 
     /**
