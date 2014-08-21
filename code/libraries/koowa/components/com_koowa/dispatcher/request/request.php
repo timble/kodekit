@@ -11,7 +11,7 @@
  * Dispatcher Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Dispatcher
+ * @package Koowa\Component\Koowa\Dispatcher\Request
  */
 final class ComKoowaDispatcherRequest extends KDispatcherRequest
 {

@@ -11,7 +11,7 @@
  * Translator
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Translator
  */
 class ComKoowaTranslator extends KTranslator
 {

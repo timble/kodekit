@@ -13,7 +13,7 @@
  * You can call the method stopPropagation() to abort the execution of further listeners in your event listener.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library
+ * @package Koowa\Library\Event
  */
 class KEvent extends KObjectConfig implements KEventInterface
 {

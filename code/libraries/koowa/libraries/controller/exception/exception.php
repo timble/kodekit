@@ -11,6 +11,6 @@
  * Controller Exception Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Exception
  */
 interface KControllerException extends KException {}

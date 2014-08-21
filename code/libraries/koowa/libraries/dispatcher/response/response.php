@@ -13,7 +13,7 @@
  * Force the user object to a singleton with identifier alias 'response'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response
  */
 class KDispatcherResponse extends KDispatcherResponseAbstract implements KObjectSingleton
 {

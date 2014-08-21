@@ -11,7 +11,7 @@
  * Date Class
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Date
  */
 class ComKoowaDate extends KDate
 {

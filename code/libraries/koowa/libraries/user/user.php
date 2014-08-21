@@ -15,7 +15,7 @@
  * conflicts.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library
+ * @package Koowa\Library\User
  */
 class KUser extends KUserAbstract implements KObjectSingleton
 {

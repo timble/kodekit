@@ -11,6 +11,6 @@
  * Dispatcher Response
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Dispatcher
+ * @package Koowa\Component\Koowa\Dispatcher\Response
  */
 final class ComKoowaDispatcherResponse extends KDispatcherResponse {}

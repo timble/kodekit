@@ -13,7 +13,7 @@
  * Force the user object to a singleton with identifier with alias 'request'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Request
  */
 class KDispatcherRequest extends KDispatcherRequestAbstract implements KObjectSingleton
 {

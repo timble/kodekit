@@ -11,7 +11,7 @@
  * Date
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library
+ * @package Koowa\Library\Date
  */
 class KDate extends KObject implements KDateInterface
 {

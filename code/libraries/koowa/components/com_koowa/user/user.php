@@ -11,7 +11,7 @@
  * User
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\User
  */
 final class ComKoowaUser extends KUser implements ComKoowaUserInterface
 {

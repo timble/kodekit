@@ -13,7 +13,7 @@
  * Provides getters and setters, mixin, object handles
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library
+ * @package Koowa\Library\Object
  */
 class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KObjectDecoratable
 {

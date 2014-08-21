@@ -11,7 +11,7 @@
  * Command Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library
+ * @package Koowa\Library\Command
  */
 class KCommand extends KObjectConfig implements KCommandInterface
 {
