@@ -11,7 +11,7 @@
  * Identifier Translator Locator
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator\Identifier
+ * @package Koowa\Library\Translator\Locator
  */
 abstract class KTranslatorLocatorIdentifier extends KTranslatorLocatorAbstract
 {

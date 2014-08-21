@@ -11,7 +11,7 @@
  * Abstract Session Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Handler
  * @link    http://www.php.net/manual/en/function.session-set-save-handler.php
  */
 abstract class KUserSessionHandlerAbstract extends KObject implements KUserSessionHandlerInterface

@@ -11,7 +11,7 @@
  * Model Entity
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Entity
  */
 abstract class KModelEntityAbstract extends KObjectArray implements KModelEntityInterface
 {

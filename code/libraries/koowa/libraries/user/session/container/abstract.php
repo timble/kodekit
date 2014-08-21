@@ -14,7 +14,7 @@
  * the namespace character is a dot ('.')
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Container
  */
 abstract class KUserSessionContainerAbstract extends KObjectArray implements KUserSessionContainerInterface
 {

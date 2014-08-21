@@ -14,7 +14,7 @@
  * KObject use KObjectDecorator instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Decorator
  */
 abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
 {

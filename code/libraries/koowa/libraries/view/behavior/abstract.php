@@ -11,6 +11,6 @@
  * Abstract View Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Koowa\Library\View\Behavior
  */
 abstract class KViewBehaviorAbstract extends KBehaviorAbstract {}

@@ -11,7 +11,7 @@
  * Abstract Dispatcher Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Request
  */
 abstract class KDispatcherRequestAbstract extends KControllerRequest implements KDispatcherRequestInterface
 {

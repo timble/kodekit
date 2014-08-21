@@ -11,7 +11,7 @@
  * Abstract Database Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Adapter\Abstract
+ * @package Koowa\Library\Database\Adapter
  */
 abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdapterInterface, KObjectMultiton
 {

@@ -11,7 +11,7 @@
  * Abstract Command Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Callback
  */
 abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
 {

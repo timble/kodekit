@@ -11,7 +11,7 @@
  * Abstract Dispatcher Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Permission
  */
 abstract class KDispatcherPermissionAbstract extends KObjectMixinAbstract implements KDispatcherPermissionInterface
 {

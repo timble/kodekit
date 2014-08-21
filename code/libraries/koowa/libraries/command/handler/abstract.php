@@ -14,7 +14,7 @@
  * _after[Command]) and invoke the method. Command handler methods should be declared protected.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Handler
  */
 abstract class KCommandHandlerAbstract extends KObject implements KCommandHandlerInterface
 {

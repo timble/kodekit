@@ -11,7 +11,7 @@
  * Action Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Library\Controller\Toolbar
  */
 abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
 {

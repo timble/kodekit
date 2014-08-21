@@ -11,7 +11,7 @@
  * Abstract Translator Locator
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator\Abstract
+ * @package Koowa\Library\Translator\Locator
  */
 abstract class KTranslatorLocatorAbstract extends KObject implements KTranslatorLocatorInterface
 {

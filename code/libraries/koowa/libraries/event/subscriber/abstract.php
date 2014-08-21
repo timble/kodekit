@@ -17,7 +17,7 @@
  * listener priority is usually between 1 (high priority) and 5 (lowest), default is 3 (normal)
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Subscriber
  */
 abstract class KEventSubscriberAbstract extends KObject implements KEventSubscriberInterface
 {

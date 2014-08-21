@@ -11,7 +11,7 @@
   * Abstract Template
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
-  * @package Koowa\Library\Template\Abstract
+  * @package Koowa\Library\Template
   */
 abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 {

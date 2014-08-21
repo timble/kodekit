@@ -11,7 +11,7 @@
  * Translator Catalogue
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Catalogue\Abstract
+ * @package Koowa\Library\Translator\Catalogue
  */
 abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTranslatorCatalogueInterface
 {

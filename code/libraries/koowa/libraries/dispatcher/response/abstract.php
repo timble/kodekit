@@ -11,7 +11,7 @@
  * Abstract Dispatcher Response
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response
  */
 abstract class KDispatcherResponseAbstract extends KControllerResponse implements KDispatcherResponseInterface
 {

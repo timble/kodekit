@@ -12,7 +12,7 @@
  *
  * @author  Arunas Mazeika <https://github.com/arunasmazeika>
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Abstract
+ * @package Koowa\Library\Translator
  */
 abstract class KTranslatorAbstract extends KObject implements KTranslatorInterface, KObjectInstantiable
 {

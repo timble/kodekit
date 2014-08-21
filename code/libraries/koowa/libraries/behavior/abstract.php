@@ -14,7 +14,7 @@
  * and add execute the method. Command handlers should be declared protected.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Behavior
  */
 abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBehaviorInterface
 {

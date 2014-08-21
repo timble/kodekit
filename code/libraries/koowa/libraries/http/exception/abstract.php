@@ -11,7 +11,7 @@
  * Abstract Http Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 abstract class KHttpExceptionAbstract extends RuntimeException implements KHttpException
 {

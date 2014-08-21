@@ -11,7 +11,7 @@
  * Abstract Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Toolbar
  */
 abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implements KControllerToolbarInterface
 {

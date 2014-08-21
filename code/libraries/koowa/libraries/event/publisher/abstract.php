@@ -13,7 +13,7 @@
  * Implementation provides a topic based event publishing mechanism. Higher priority event listeners are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Publisher
  */
 abstract class KEventPublisherAbstract extends KObject implements KEventPublisherInterface
 {

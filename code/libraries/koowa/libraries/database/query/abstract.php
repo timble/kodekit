@@ -11,7 +11,7 @@
  * Abstract Database Query
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Query
  */
 abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
 {

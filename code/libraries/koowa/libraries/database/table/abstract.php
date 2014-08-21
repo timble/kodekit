@@ -13,7 +13,7 @@
  * Parent class to all tables.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Table
  */
 abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableInterface, KObjectMultiton
 {

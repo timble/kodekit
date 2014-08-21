@@ -11,7 +11,7 @@
  * Abstract Dispatcher Transport Abstract
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response\Transport
  */
 abstract class KDispatcherResponseTransportAbstract extends KObject implements KDispatcherResponseTransportInterface
 {

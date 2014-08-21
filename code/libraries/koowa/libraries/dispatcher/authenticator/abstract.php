@@ -11,7 +11,7 @@
  * Abstract Dispatcher Authenticator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Authenticator
  */
 abstract class KDispatcherAuthenticatorAbstract extends KBehaviorAbstract implements KDispatcherAuthenticatorInterface
 {

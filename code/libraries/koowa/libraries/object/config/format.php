@@ -11,7 +11,7 @@
  * Abstract Object Config Format
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfigSerializable
 {

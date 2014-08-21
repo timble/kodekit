@@ -13,7 +13,7 @@
  * Filter to parse tags
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 abstract class KTemplateFilterTag extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

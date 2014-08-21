@@ -11,7 +11,7 @@
  * FileSystem Stream Filter Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\FileSystem\Stream\Filter\Abstract
+ * @package Koowa\Library\Filesystem\Stream\Filter
  */
 abstract class KFilesystemStreamFilterAbstract extends php_user_filter implements KFilesystemStreamFilterInterface
 {

@@ -11,7 +11,7 @@
  * Abstract Template Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilterInterface
 {

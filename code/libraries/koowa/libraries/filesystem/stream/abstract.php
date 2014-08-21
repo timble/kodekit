@@ -11,7 +11,7 @@
  * Abstract FileSystem Stream
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Abstract
+ * @package Koowa\Library\Filesystem\Stream
  */
 abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemStreamInterface
 {

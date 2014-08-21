@@ -11,7 +11,7 @@
  * Abstract Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Locator\Abstract
+ * @package Koowa\Library\Object\Locator
  */
 abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
 {

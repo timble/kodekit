@@ -11,7 +11,7 @@
  * Identifier Template Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator\Identifier
+ * @package Koowa\Library\Template\Locator
  */
 abstract class KTemplateLocatorIdentifier extends KTemplateLocatorAbstract
 {

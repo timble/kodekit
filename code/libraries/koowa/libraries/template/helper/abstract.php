@@ -11,7 +11,7 @@
  * Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Helper
  */
 abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelperInterface
 {

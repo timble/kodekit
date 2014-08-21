@@ -11,7 +11,7 @@
  * Abstract Controller Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Permission
  */
 abstract class KControllerPermissionAbstract extends KObjectMixinAbstract implements KControllerPermissionInterface
 {

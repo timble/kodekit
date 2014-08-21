@@ -11,7 +11,7 @@
  * Abstract Controller Toolbar Decorator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Toolbar
  */
 abstract class KControllerToolbarDecorator extends KObjectDecorator implements KControllerToolbarInterface, KCommandHandlerInterface
 {
