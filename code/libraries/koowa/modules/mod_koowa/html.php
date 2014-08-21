@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -26,8 +26,8 @@ class ModKoowaHtml extends KViewHtml
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-        	'template_filters' => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
-            'data'			   => array(
+            'template_filters' => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
+            'data'             => array(
                 'styles' => array()
             )
         ));
@@ -35,15 +35,15 @@ class ModKoowaHtml extends KViewHtml
         parent::_initialize($config);
     }
 
-	/**
-	 * Get the name
-	 *
-	 * @return 	string 	The name of the object
-	 */
-	public function getName()
-	{
-		return $this->getIdentifier()->package;
-	}
+    /**
+     * Get the name
+     *
+     * @return 	string 	The name of the object
+     */
+    public function getName()
+    {
+        return $this->getIdentifier()->package;
+    }
 
     /**
      * Load the controller translations
@@ -71,7 +71,7 @@ class ModKoowaHtml extends KViewHtml
     /**
      * Return the views output
      *
-     * @param KViewContext	$context A view context object
+     * @param KViewContext  $context A view context object
      * @return string  The output of the view
      */
     protected function _actionRender(KViewContext $context)
@@ -90,8 +90,8 @@ class ModKoowaHtml extends KViewHtml
             }
 
             $this->getTemplate()->load($layout.'.'.$format);
-		}
-		else $this->getTemplate()->setContent($this->module->content);
+        }
+        else $this->getTemplate()->setContent($this->module->content);
 
         $this->_content = (string) $this->getTemplate()
             ->compile()

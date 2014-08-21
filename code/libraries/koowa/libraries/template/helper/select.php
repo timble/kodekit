@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Select Template Helper
@@ -19,20 +18,20 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML select option
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function option($config = array())
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'id'        => null,
-            'name'   	=> 'id',
-            'value' 	=> null,
-            'label'   	=> '',
-            'disabled'	=> false,
+            'name'      => 'id',
+            'value'     => null,
+            'label'     => '',
+            'disabled'  => false,
             'level'     => 1,
-            'attribs'	=> array(),
+            'attribs'   => array(),
         ));
 
         $option = new stdClass;
@@ -58,19 +57,19 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML select list
      *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @return  string  Html
      */
     public function optionlist($config = array())
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'options' 	=> array(),
-            'name'   	=> 'id',
-            'selected'	=> null,
+            'options'   => array(),
+            'name'      => 'id',
+            'selected'  => null,
             'disabled'  => null,
-            'translate'	=> false,
-            'attribs'	=> array('size' => 1),
+            'translate' => false,
+            'attribs'   => array('size' => 1),
         ));
 
         $html = array();
@@ -132,8 +131,8 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML radio list
      *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @return  string  Html
      */
     public function radiolist($config = array())
     {
@@ -186,8 +185,8 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
     /**
      * Generates an HTML check list
      *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @return  string	Html
      */
     public function checklist( $config = array())
     {
@@ -255,8 +254,8 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract
 	/**
 	 * Generates an HTML boolean radio list
 	 *
-	 * @param 	array|KObjectConfig 	$config An optional array with configuration options
-	 * @return	string	Html
+	 * @param   array|KObjectConfig     $config An optional array with configuration options
+	 * @return  string  Html
 	 */
     public function booleanlist($config = array())
     {

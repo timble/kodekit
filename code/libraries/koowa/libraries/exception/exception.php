@@ -15,45 +15,45 @@
  */
 interface KException
 {
-	/**
-	 * Return the exception message
-	 *
-	 * @return string
-	 */
+    /**
+     * Return the exception message
+     *
+     * @return string
+     */
     public function getMessage();
 
     /**
-	 * Return the user defined exception code
-	 *
-	 * @return integer
-	 */
+     * Return the user defined exception code
+     *
+     * @return integer
+     */
     public function getCode();
 
     /**
-	 * Return the source filename
-	 *
-	 * @return string
-	 */
+     * Return the source filename
+     *
+     * @return string
+     */
     public function getFile();
 
     /**
-	 * Return the source line number
-	 *
-	 * @return integer
-	 */
+     * Return the source line number
+     *
+     * @return integer
+     */
     public function getLine();
 
     /**
-	 * Return the backtrace information
-	 *
-	 * @return array
-	 */
+     * Return the backtrace information
+     *
+     * @return array
+     */
     public function getTrace();
 
     /**
-	 * Return the backtrace as a string
-	 *
-	 * @return string
-	 */
+     * Return the backtrace as a string
+     *
+     * @return string
+     */
     public function getTraceAsString();
 }

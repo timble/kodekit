@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -36,91 +36,91 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
         return true;
     }
-	
-	/**
-	 * Override to add a custom WHERE clause
-	 *
-	 * <code>
-	 * 	   $query->where('category_id = :category_id')->bind(array('category_id' => $this->id));
-	 * </code>
-	 *
-	 * @param 	KDatabaseQuerySelect $query
-	 * @return  void
+
+    /**
+     * Override to add a custom WHERE clause
+     *
+     * <code>
+     * 	   $query->where('category_id = :category_id')->bind(array('category_id' => $this->id));
+     * </code>
+     *
+     * @param   KDatabaseQuerySelect $query
+     * @return  void
      *
      * @throws InvalidArgumentException
-	 */
-	public function _buildQueryWhere($query)
-	{
-		if(!$query instanceof KDatabaseQuerySelect && !$query instanceof KDatabaseQueryUpdate)
-		{
-			throw new InvalidArgumentException(
-				'Query must be an instance of KDatabaseQuerySelect or KDatabaseQueryUpdate'
-			);
-		}
-	}	
+     */
+    public function _buildQueryWhere($query)
+    {
+        if(!$query instanceof KDatabaseQuerySelect && !$query instanceof KDatabaseQueryUpdate)
+        {
+            throw new InvalidArgumentException(
+                'Query must be an instance of KDatabaseQuerySelect or KDatabaseQueryUpdate'
+            );
+        }
+    }
 
-	/**
-	 * Move the row up or down in the ordering
-	 *
-	 * Requires an 'ordering' column
-	 *
-	 * @param	integer	$change Amount to move up or down
-	 * @return 	KDatabaseRowAbstract
-	 */
-	public function order($change)
-	{
-		//force to integer
-		settype($change, 'int');
+    /**
+     * Move the row up or down in the ordering
+     *
+     * Requires an 'ordering' column
+     *
+     * @param   integer $change Amount to move up or down
+     * @return  KDatabaseRowAbstract
+     */
+    public function order($change)
+    {
+        //force to integer
+        settype($change, 'int');
 
-		if($change !== 0)
-		{
-			$old = (int) $this->ordering;
-			$new = $this->ordering + $change;
-			$new = $new <= 0 ? 1 : $new;
+        if($change !== 0)
+        {
+            $old = (int) $this->ordering;
+            $new = $this->ordering + $change;
+            $new = $new <= 0 ? 1 : $new;
 
-			$table = $this->getTable();
-			$query = $this->getObject('lib:database.query.update')
-			    ->table($table->getBase());
+            $table = $this->getTable();
+            $query = $this->getObject('lib:database.query.update')
+                ->table($table->getBase());
 
-			//Build the where query
-			$this->_buildQueryWhere($query);
+            //Build the where query
+            $this->_buildQueryWhere($query);
 
-			if($change < 0)
-			{
-				$query->values('ordering = ordering + 1')
-					->where('ordering >= :new')
-					->where('ordering <  :old')
-					->bind(array('new' => $new, 'old' => $old));
-			}
-			else
-			{
-				$query->values('ordering = ordering - 1')
-				->where('ordering >  :new')
-				->where('ordering <= :old')
-				->bind(array('new' => $new, 'old' => $old));
-			}
+            if($change < 0)
+            {
+                $query->values('ordering = ordering + 1')
+                    ->where('ordering >= :new')
+                    ->where('ordering <  :old')
+                    ->bind(array('new' => $new, 'old' => $old));
+            }
+            else
+            {
+                $query->values('ordering = ordering - 1')
+                ->where('ordering >  :new')
+                ->where('ordering <= :old')
+                ->bind(array('new' => $new, 'old' => $old));
+            }
 
-			$table->getAdapter()->update($query);
+            $table->getAdapter()->update($query);
 
-			$this->ordering = $new;
-			$this->save();
-			$this->reorder();
-		}
+            $this->ordering = $new;
+            $this->save();
+            $this->reorder();
+        }
 
-		return $this->getMixer();
-	}
+        return $this->getMixer();
+    }
 
-	 /**
+     /**
      * Resets the order of all rows
      *
      * Resetting starts at $base to allow creating space in sequence for later record insertion.
      *
-     * @param	integer 	$base Order at which to start resetting.
-     * @return	KDatabaseBehaviorOrderable
+     * @param   integer $base Order at which to start resetting.
+     * @return  KDatabaseBehaviorOrderable
      */
     public function reorder($base = 0)
     {
-		//force to integer
+        //force to integer
         settype($base, 'int');
 
         $table  = $this->getTable();
@@ -163,7 +163,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         return (int) $db->select($query, KDatabase::FETCH_FIELD);
     }
 
- 	/**
+    /**
      * Saves the row to the database.
      *
      * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.

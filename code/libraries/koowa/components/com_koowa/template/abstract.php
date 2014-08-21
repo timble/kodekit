@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -16,27 +16,27 @@
 abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
 {
     /**
-	 * The cache object
-	 *
-	 * @var	JCache
-	 */
+     * The cache object
+     *
+     * @var	JCache
+     */
     protected $_cache;
 
-	/**
-	 * Constructor
-	 *
-	 * Prevent creating instances of this class by making the constructor private
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 */
-	public function __construct(KObjectConfig $config)
-	{
-		parent::__construct($config);
+    /**
+     * Constructor
+     *
+     * Prevent creating instances of this class by making the constructor private
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
 
-	    if (JFactory::getConfig()->get('caching')) {
-	        $this->_cache = JFactory::getCache('com_koowa.templates', 'output');
-		}
-	}
+        if (JFactory::getConfig()->get('caching')) {
+            $this->_cache = JFactory::getCache('com_koowa.templates', 'output');
+        }
+    }
 
     /**
      * Initializes the options for the object
@@ -55,20 +55,20 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
         parent::_initialize($config);
     }
 
-	/**
-	 * This function tries to get the template from the cache. If it cannot be found
-	 * the template file will be loaded from the file system.
-	 *
-	 * {@inheritdoc}
-	 */
+    /**
+     * This function tries to get the template from the cache. If it cannot be found
+     * the template file will be loaded from the file system.
+     *
+     * {@inheritdoc}
+     */
     public function load($path, $data = array(), $status = self::STATUS_LOADED)
     {
-	    if(isset($this->_cache))
-	    {
-	        $identifier = md5($path);
+        if(isset($this->_cache))
+        {
+            $identifier = md5($path);
 
-	        if ($template = $this->_cache->get($identifier))
-	        {
+            if ($template = $this->_cache->get($identifier))
+            {
                 //Push the path on the stack
                 array_push($this->_stack, $path);
 
@@ -86,12 +86,12 @@ abstract class ComKoowaTemplateAbstract extends KTemplateAbstract
                     }
                 }
 
-	            return $this;
-	        }
-	    }
+                return $this;
+            }
+        }
 
-		return parent::load($path, $data, $status);
-	}
+        return parent::load($path, $data, $status);
+    }
 
     /**
      * This function implements a caching mechanism when reading the template. If the template cannot be found in the

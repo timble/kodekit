@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Grid Template Helper
@@ -26,10 +25,10 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'entity'  		=> null,
-            'total'		=> null,
-            'field'		=> 'ordering',
-            'data'		=> array('order' => 0)
+            'entity'    => null,
+            'total'     => null,
+            'field'     => 'ordering',
+            'data'      => array('order' => 0)
         ));
 
         $translator = $this->getObject('translator');
@@ -96,8 +95,8 @@ class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
     /**
      * Render an access field
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function access($config = array())
     {

@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -46,8 +46,8 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     /**
      * Constructor.
      *
-     * @param	string 			$name The command name
-     * @param   array|KObjectConfig 	$config An associative array of configuration settings or a KObjectConfig instance.
+     * @param   string              $name   The command name
+     * @param   array|KObjectConfig $config An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
@@ -58,7 +58,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
             'id'         => $name,
             'label'      => ucfirst($name),
             'disabled'   => false,
-            'title'		 => '',
+            'title'      => '',
             'href'       => null,
             'attribs'    => array(
                 'class'        => array(),
@@ -85,8 +85,8 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     /**
      * Add a command
      *
-     * @param   string	$command The command name
-     * @param	mixed	$config  Parameters to be passed to the command
+     * @param   string  $command The command name
+     * @param   mixed   $config  Parameters to be passed to the command
      * @return  KControllerToolbarCommand  The command that was added
      */
     public function addCommand($command, $config = array())

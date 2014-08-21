@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -18,7 +18,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * View object or identifier (com://APP/COMPONENT.view.NAME.FORMAT)
      *
-     * @var	string|object
+     * @var string|object
      */
     protected $_view;
 
@@ -131,7 +131,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
             //Create the view
             $config = array(
-                'url'	     => $this->getObject('request')->getUrl(),
+                'url'        => $this->getObject('request')->getUrl(),
                 'layout'     => $this->getRequest()->getQuery()->get('layout', 'identifier'),
                 'auto_fetch' => $this instanceof KControllerModellable
             );
@@ -153,9 +153,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Method to set a view object attached to the controller
      *
-     * @param	mixed	$view An object that implements KObjectInterface, KObjectIdentifier object
-     * 					or valid identifier string
-     * @return	object	A KViewInterface object or a KObjectIdentifier object
+     * @param   mixed   $view An object that implements KObjectInterface, KObjectIdentifier object
+     *                  or valid identifier string
+     * @return  object  A KViewInterface object or a KObjectIdentifier object
      */
     public function setView($view)
     {
@@ -243,8 +243,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
      *
      * For example : $controller->view('name')->layout('name')->format('html')->render();
      *
-     * @param	string	$method Method name
-     * @param	array	$args   Array containing all the arguments for the original call
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
      * @return	KControllerView
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html

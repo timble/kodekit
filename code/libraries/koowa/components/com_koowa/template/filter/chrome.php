@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Chrome Template Filter
@@ -18,7 +17,7 @@
  */
 class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
-	/**
+    /**
      * The module title
      *
      * If set this will be passed to the module chrome rendered. If the renderer support rendering of a title it
@@ -49,7 +48,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
      */
     protected $_attribs;
 
- 	/**
+    /**
      * Constructor.
      *
      * @param   KObjectConfig $config Configuration options
@@ -64,7 +63,7 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
         $this->_attribs = KObjectConfig::unbox($config->attribs);
     }
 
-	/**
+    /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -76,12 +75,12 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
     {
         $config->append(array(
             'priority' => self::PRIORITY_LOW,
-        	'title'    => '',
+            'title'    => '',
             'class'    => '',
             'styles'   => array(),
             'attribs'  => array(
                 'name'  => $this->getIdentifier()->package . '_' . $this->getIdentifier()->name,
-            	'first' => null,
+                'first' => null,
                 'last'  => null,
             )
         ));
@@ -90,27 +89,27 @@ class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
     }
 
     /**
-	 * Apply module chrome to the template output
-	 *
-	 * @param string $text Block of text to parse
-	 * @return ComKoowaTemplateFilterChrome
-	 */
+     * Apply module chrome to the template output
+     *
+     * @param string $text Block of text to parse
+     * @return ComKoowaTemplateFilterChrome
+     */
     public function render(&$text)
     {
-		$name = $this->getIdentifier()->package . '_' . $this->getIdentifier()->name;
+        $name = $this->getIdentifier()->package . '_' . $this->getIdentifier()->name;
 
-		//Create a module object
-		$module   	       = new KObject(new KObjectConfig());
-		$module->id        = uniqid();
-		$module->module    = 'mod_'.$name;
-		$module->content   = $text;
-		$module->position  = $name;
-		$module->params    = 'moduleclass_sfx='.$this->_class;
-		$module->showtitle = (bool) $this->_title;
-		$module->title     = $this->_title;
-		$module->user      = 0;
+        //Create a module object
+        $module   	       = new KObject(new KObjectConfig());
+        $module->id        = uniqid();
+        $module->module    = 'mod_'.$name;
+        $module->content   = $text;
+        $module->position  = $name;
+        $module->params    = 'moduleclass_sfx='.$this->_class;
+        $module->showtitle = (bool) $this->_title;
+        $module->title     = $this->_title;
+        $module->user      = 0;
 
-		$text = $this->getObject('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->render();
+        $text = $this->getObject('mod://admin/koowa.html')->module($module)->attribs($this->_attribs)->styles($this->_styles)->render();
 
         return $this;
     }

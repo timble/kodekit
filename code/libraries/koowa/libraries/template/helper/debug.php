@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -80,7 +80,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     /**
      * Returns an HTML string of information about a single variable.
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      *
      * @internal param mixed $value variable to dump
      * @internal param int $string_length Maximum length of strings
@@ -127,8 +127,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      *
      * Useful for debugging when you want to display a shorter path.
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function path($config = array())
     {
@@ -165,8 +165,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     /**
      * Returns an HTML string, highlighting a specific line of a file, with some number of lines padded above and below.
      *
-     *  @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     *  @param  array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function source($config = array())
     {
@@ -235,8 +235,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     /**
      * Returns an array of HTML strings that represent each step in the backtrace.
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function trace($config = array())
     {

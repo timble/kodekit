@@ -37,7 +37,7 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
      *
      * @param  string $url   The Template url
      * @param  string $base  The base url or resource (used to resolved partials).
-     * @throws \RuntimeException If the no base path was passed while trying to locate a partial.
+     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
      * @return string   The physical path of the template
      */
     public function locate($url, $base = null)

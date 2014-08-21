@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -38,7 +38,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
+        $config->append(array(
             'behaviors'      => array('resettable'),
             'authenticators' => array('csrf'),
             'limit'          => array('default' => 100)
@@ -51,7 +51,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * Force creation of a singleton
      *
      * @param  KObjectConfigInterface  $config  Configuration options
-     * @param  KObjectManagerInterface $manager	A KObjectManagerInterface object
+     * @param  KObjectManagerInterface $manager A KObjectManagerInterface object
      * @return KDispatcherDefault
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
@@ -95,7 +95,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
      * the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context  A dispatcher context object
      * @throws  KDispatcherExceptionMethodNotAllowed  If the method is not allowed on the resource.
      * @return	mixed
      */
@@ -146,7 +146,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * This function translates a GET request into a render action.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context  A dispatcher context object
      * @return KModelEntityInterface
      */
     protected function _actionGet(KDispatcherContextInterface $context)
@@ -179,7 +179,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     /**
      * Head method
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context  A dispatcher context object
      * @return KModelEntityInterface
      */
     protected function _actionHead(KDispatcherContextInterface $context)
@@ -201,7 +201,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *          entity identified by the Request-URI. The response MUST include an Allow header containing a list of
      *          valid actions for the requested entity.
      * @throws  KControllerExceptionRequestInvalid    The action could not be found based on the info in the request.
-     * @return 	KModelEntityInterface
+     * @return  KModelEntityInterface
      */
     protected function _actionPost(KDispatcherContextInterface $context)
     {
@@ -249,9 +249,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * If the entity already exists it will be completely replaced based on the data available in the request.
      *
-     * @param   KDispatcherContextInterface $context	A dispatcher context object
-     * @throws  KControllerExceptionRequestInvalid 	If the model state is not unique
-     * @return 	KModelEntityInterface
+     * @param   KDispatcherContextInterface $context    A dispatcher context object
+     * @throws  KControllerExceptionRequestInvalid  If the model state is not unique
+     * @return  KModelEntityInterface
      */
     protected function _actionPut(KDispatcherContextInterface $context)
     {
@@ -296,8 +296,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * This function translates a DELETE request into a delete action.
      *
      * @param   KDispatcherContextInterface $context A dispatcher context object
-     * @throws KDispatcherExceptionMethodNotAllowed
-     * @return    KModelEntityInterface
+     * @throws  KDispatcherExceptionMethodNotAllowed
+     * @return  KModelEntityInterface
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {
@@ -316,7 +316,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     /**
      * Options method
      *
-     * @param   KDispatcherContextInterface $context	A dispatcher context object
+     * @param   KDispatcherContextInterface $context    A dispatcher context object
      * @return  string  The allowed actions; e.g., `GET, POST [add, edit, cancel, save], PUT, DELETE`
      */
     protected function _actionOptions(KDispatcherContextInterface $context)

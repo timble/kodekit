@@ -54,7 +54,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
      *
      * @param  string $class     The class name
      * @param  string $basepath  The base path
-     * @return string|bool  	 Returns the path on success FALSE on failure
+     * @return string|bool       Returns the path on success FALSE on failure
      */
     public function locate($class, $basepath)
     {

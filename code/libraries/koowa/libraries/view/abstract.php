@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -15,12 +15,12 @@
  */
 abstract class KViewAbstract extends KObject implements KViewInterface, KCommandCallbackDelegate
 {
-	/**
-	 * Model identifier (com://APP/COMPONENT.model.NAME)
-	 *
-	 * @var	string|object
-	 */
-	protected $_model;
+    /**
+     * Model identifier (com://APP/COMPONENT.model.NAME)
+     *
+     * @var	string|object
+     */
+    protected $_model;
 
     /**
      * The uniform resource locator
@@ -44,20 +44,20 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     protected $_data;
 
     /**
-	 * The mimetype
-	 *
-	 * @var string
-	 */
-	public $mimetype = '';
+     * The mimetype
+     *
+     * @var string
+     */
+    public $mimetype = '';
 
-	/**
-	 * Constructor
-	 *
-	 * @param   KObjectConfig $config Configuration options
-	 */
-	public function __construct(KObjectConfig $config)
-	{
-		parent::__construct($config);
+    /**
+     * Constructor
+     *
+     * @param   KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
 
         //Set the data
         $this->_data = KObjectConfig::unbox($config->data);
@@ -79,7 +79,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
 
         //Fetch the view data before rendering
         $this->addCommandCallback('before.render', '_loadTranslations');
-	}
+    }
 
     /**
      * Initializes the config for the object
@@ -96,10 +96,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
             'command_chain'     => 'lib:command.chain',
             'command_handlers'  => array('lib:command.handler.event'),
             'model'      => 'lib:model.empty',
-	    	'content'	 => '',
-    		'mimetype'	 => '',
+            'content'	 => '',
+            'mimetype'	 => '',
             'url'        =>  $this->getObject('lib:http.url')
-	  	));
+        ));
 
         parent::_initialize($config);
     }
@@ -167,7 +167,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Load the view translations
      *
-     * @param KViewContext	$context A view context object
+     * @param KViewContext  $context A view context object
      * @return void
      */
     protected function _loadTranslations(KViewContext $context)
@@ -247,35 +247,35 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
-	 * Get the name
-	 *
-	 * @return 	string 	The name of the object
-	 */
-	public function getName()
-	{
-		$total = count($this->getIdentifier()->path);
-		return $this->getIdentifier()->path[$total - 1];
-	}
+     * Get the name
+     *
+     * @return 	string 	The name of the object
+     */
+    public function getName()
+    {
+        $total = count($this->getIdentifier()->path);
+        return $this->getIdentifier()->path[$total - 1];
+    }
 
     /**
      * Get the title
      *
-     * @return 	string 	The title of the view
+     * @return  string  The title of the view
      */
     public function getTitle()
     {
         return ucfirst($this->getName());
     }
 
-	/**
-	 * Get the format
-	 *
-	 * @return 	string 	The format of the view
-	 */
-	public function getFormat()
-	{
-		return $this->getIdentifier()->name;
-	}
+    /**
+     * Get the format
+     *
+     * @return  string  The format of the view
+     */
+    public function getFormat()
+    {
+        return $this->getIdentifier()->name;
+    }
 
     /**
      * Get the content
@@ -302,8 +302,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Get the model object attached to the view
      *
-     * @throws	UnexpectedValueException	If the model doesn't implement the ModelInterface
-     * @return	KModelInterface
+     * @throws  UnexpectedValueException    If the model doesn't implement the ModelInterface
+     * @return  KModelInterface
      */
     public function getModel()
     {
@@ -329,8 +329,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Method to set a model object attached to the controller
      *
-     * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
-     * 					       or valid identifier string
+     * @param   mixed   $model An object that implements KObjectInterface, KObjectIdentifier object
+     *                         or valid identifier string
      * @return	KViewAbstract
      */
     public function setModel($model)
@@ -386,23 +386,23 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         return $this;
     }
 
-	/**
+    /**
      * Get a route based on a full or partial query string
-	 *
+     *
      * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
      *
      * - foo=bar
      * - component=[package]&view=[name]&foo=bar
-	 *
-	 * In templates, use @route()
-	 *
+     *
+     * In templates, use @route()
+     *
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
      * @return  KDispatcherRouterRoute The route
-	 */
-	public function getRoute($route = '', $fqr = true, $escape = true)
-	{
+     */
+    public function getRoute($route = '', $fqr = true, $escape = true)
+    {
         //Parse route
         $parts = array();
 
@@ -453,7 +453,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         }
 
         return $route;
-	}
+    }
 
     /**
      * Get the view context

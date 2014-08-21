@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Paginator Template Helper
@@ -69,8 +68,8 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
     /**
      * Render a select box with limit values
      *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
-     * @return 	string	Html select box
+     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @return  string  Html select box
      */
     public function limit($config = array())
     {
@@ -114,7 +113,6 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
      * @see     http://developer.yahoo.com/ypatterns/navigation/pagination/
      *
      * @param   array   $config An optional array with configuration options
-     *
      * @return  string  Html
      */
     public function pagination($config = array())
@@ -126,7 +124,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
             'offset'     => 0,
             'limit'      => 0,
             'show_limit' => true,
-		    'show_count' => false
+            'show_count' => false
         ))->append(array(
             'show_pages' => $config->count !== 1
         ));
@@ -223,7 +221,6 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
      * Get a list of pages
      *
      * @param   KObjectConfig $config
-     *
      * @return  array   Returns and array of pages information
      */
     protected function _items(KObjectConfig $config)
@@ -271,7 +268,6 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
      * Get the offset for each page, optionally with a range
      *
      * @param   KObjectConfig $config
-     *
      * @return  array   Page number => offset
      */
     protected function _offsets(KObjectConfig $config)
@@ -291,10 +287,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
                 array_push($pages, $config->count-1, $config->count);
             }
         }
-        else // show all pages
-        {
-            $pages = range(1, $config->count);
-        }
+        else $pages = range(1, $config->count);
 
         $result = array();
         foreach($pages as $pagenumber) {

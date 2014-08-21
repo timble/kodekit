@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Behavior Template Helper
@@ -89,27 +88,27 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         return '';
     }
 
-   	/**
-	 * Render a modal box
+    /**
+     * Render a modal box
      *
      * @param array|KObjectConfig $config
-	 * @return string	The html output
-	 */
-	public function dialog($config = array())
-	{
-		$config = new KObjectConfigJson($config);
+     * @return string   The html output
+     */
+    public function dialog($config = array())
+    {
+        $config = new KObjectConfigJson($config);
         $config->append(array(
             'debug'    => JFactory::getApplication()->getCfg('debug')
         ));
 
         return parent::dialog($config);
-	}
+    }
 
     /**
      * Render a tooltip
      *
      * @param array|KObjectConfig $config
-     * @return string	The html output
+     * @return string   *The html output
      */
     public function tooltip($config = array())
     {
@@ -163,7 +162,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
      * Loads the calendar behavior and attaches it to a specified element
      *
      * @param array|KObjectConfig $config
-     * @return string	The html output
+     * @return string   The html output
      */
     public function calendar($config = array())
     {
@@ -318,7 +317,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
      * Loads the Forms.Validator class and connects it to Koowa.Controller.Form
      *
      * @param array|KObjectConfig $config
-     * @return string	The html output
+     * @return string   The html output
      */
     public function validator($config = array())
     {
@@ -336,7 +335,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
      * @see    http://ivaynberg.github.io/select2/select-2.1.html
      *
      * @param  array|KObjectConfig $config
-     * @return string	The html output
+     * @return string   The html output
      */
     public function select2($config = array())
     {

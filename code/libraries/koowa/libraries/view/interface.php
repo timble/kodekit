@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -65,11 +65,11 @@ interface KViewInterface
     public function getData();
 
     /**
-	 * Get the name
-	 *
-	 * @return 	string 	The name of the object
-	 */
-	public function getName();
+     * Get the name
+     *
+     * @return 	string 	The name of the object
+     */
+    public function getName();
 
     /**
      * Get the title
@@ -78,12 +78,12 @@ interface KViewInterface
      */
     public function getTitle();
 
-	/**
-	 * Get the format
-	 *
-	 * @return 	string 	The format of the view
-	 */
-	public function getFormat();
+    /**
+     * Get the format
+     *
+     * @return 	string 	The format of the view
+     */
+    public function getFormat();
 
     /**
      * Get the content
@@ -100,21 +100,21 @@ interface KViewInterface
      */
     public function setContent($content);
 
-	/**
-	 * Get the model object attached to the controller
-	 *
-	 * @return	KModelInterface
-	 */
-	public function getModel();
+    /**
+     * Get the model object attached to the controller
+     *
+     * @return	KModelInterface
+     */
+    public function getModel();
 
-	/**
-	 * Method to set a model object attached to the view
-	 *
-	 * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
-	 * 					       or valid identifier string
-	 * @throws	UnexpectedValueException	If the identifier is not a table identifier
-	 * @return	KViewInterface
-	 */
+    /**
+     * Method to set a model object attached to the view
+     *
+     * @param   mixed   $model An object that implements KObjectInterface, KObjectIdentifier object
+     *                         or valid identifier string
+     * @throws	UnexpectedValueException	If the identifier is not a table identifier
+     * @return	KViewInterface
+     */
     public function setModel($model);
 
     /**

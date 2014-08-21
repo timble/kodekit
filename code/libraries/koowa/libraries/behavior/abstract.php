@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -195,7 +195,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * supported on the mixer no mixable methods will be returned, only an 'is[Behavior]' method will be added which
      * return FALSE when called.
      *
-     * @param  array           $exclude     An array of public methods to be exclude
+     * @param  array $exclude An array of public methods to be exclude
      * @return array An array of methods
      */
     public function getMixableMethods($exclude = array())
@@ -221,7 +221,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * Get an instance of an object identifier
      *
      * @param KObjectIdentifier|string $identifier An ObjectIdentifier or valid identifier string
-     * @param array  			      $config     An optional associative array of configuration settings.
+     * @param array  $config An optional associative array of configuration settings.
      * @return KObjectInterface  Return object on success, throws exception on failure.
      */
     final public function getObject($identifier, array $config = array())
@@ -236,7 +236,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * If no identifier is passed the object identifier of this object will be returned. Function recursively
      * resolves identifier aliases and returns the aliased identifier.
      *
-     * @param   string|object    $identifier The class identifier or identifier object
+     * @param   string|object $identifier The class identifier or identifier object
      * @return  KObjectIdentifier
      */
     final public function getIdentifier($identifier = null)
@@ -256,7 +256,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * If no identifier is passed the object config of this object will be returned. Function recursively
      * resolves identifier aliases and returns the aliased identifier.
      *
-     *  @param   string|object    $identifier A valid identifier string or object implementing ObjectInterface
+     *  @param  string|object $identifier A valid identifier string or object implementing ObjectInterface
      *  @return KObjectConfig
      */
     public function getConfig($identifier = null)

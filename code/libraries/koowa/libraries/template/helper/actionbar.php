@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -25,7 +25,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-        	'toolbar' => null,
+            'toolbar' => null,
             'title'   => null,
         ))->append(array(
             'icon' => $config->toolbar->getName()
@@ -55,18 +55,18 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
         //Render the buttons
         if ($this->_useBootstrap())
         {
-        	$html = '<div class="btn-toolbar koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
-        	$html .= '%s';
-		    $html .= '</div>';
+            $html = '<div class="btn-toolbar koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+            $html .= '%s';
+            $html .= '</div>';
         }
         else
         {
-		    $html  = '<div class="toolbar-list koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
-		    $html .= '<ul>';
-		    $html .= '%s';
-		    $html .= '</ul>';
-		    $html .= '<div class="clr"></div>';
-		    $html .= '</div>';
+            $html  = '<div class="toolbar-list koowa-toolbar" id="toolbar-'.$config->toolbar->getName().'">';
+            $html .= '<ul>';
+            $html .= '%s';
+            $html .= '</ul>';
+            $html .= '<div class="clr"></div>';
+            $html .= '</div>';
         }
 
         $buttons = '';
@@ -81,9 +81,9 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
             }
         }
 
-       	$html = sprintf($html, $buttons);
+        $html = sprintf($html, $buttons);
 
-		return $html;
+        return $html;
     }
 
     /**
@@ -96,7 +96,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-        	'command' => NULL
+            'command' => NULL
         ));
 
         $translator = $this->getObject('translator');
@@ -122,27 +122,27 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
 
         if ($this->_useBootstrap())
         {
-        	$command->attribs->class->append(array('btn', 'btn-small'));
-			
-        	$icon = $this->_getIconClass($command->icon);
-        	if ($command->id === 'new' || $command->id === 'apply') {
-        		$command->attribs->class->append(array('btn-success'));
-        		$icon .= ' icon-white';
-        	}
+            $command->attribs->class->append(array('btn', 'btn-small'));
+
+            $icon = $this->_getIconClass($command->icon);
+            if ($command->id === 'new' || $command->id === 'apply') {
+                $command->attribs->class->append(array('btn-success'));
+                $icon .= ' icon-white';
+            }
 
             $attribs = clone $command->attribs;
             $attribs->class = implode(" ", KObjectConfig::unbox($attribs->class));
 
-        	$html = '<div class="btn-group" id="'.$id.'">';
-        	$html .= '<a '.$this->buildAttributes($attribs).'>';
+            $html = '<div class="btn-group" id="'.$id.'">';
+            $html .= '<a '.$this->buildAttributes($attribs).'>';
 
             if ($this->_useIcons()) {
                 $html .= '<i class="'.$icon.'"></i> ';
             }
 
-        	$html .= $translator->translate($command->label);
-        	$html .= '</a>';
-        	$html .= '</div>';
+            $html .= $translator->translate($command->label);
+            $html .= '</a>';
+            $html .= '</div>';
         }
         else
         {
@@ -159,7 +159,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
             $html .= '</li>';
         }
 
-    	return $html;
+        return $html;
     }
 
     /**
@@ -193,7 +193,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
         return $html;
     }
 
-	/**
+    /**
      * Render a separator
      *
      * @param   array   $config An optional array with configuration options
@@ -203,19 +203,19 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-        	'command' => NULL
+            'command' => NULL
         ));
         
-    	if ($this->_useBootstrap()) {
+        if ($this->_useBootstrap()) {
             $html = '<div class="btn-group"></div>';
         } else {
             $html = '<li class="divider"></li>';
         }
 
-    	return $html;
+        return $html;
     }
 
-	/**
+    /**
      * Render a modal button
      *
      * @param   array   $config An optional array with configuration options
@@ -225,12 +225,12 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-        	'command' => NULL
+            'command' => NULL
         ));
 
         $html = $this->command($config);
 
-    	return $html;
+        return $html;
     }
 
     /**

@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -90,7 +90,7 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Return the views output
      *
-     * @param KViewContext	$context A view context object
+     * @param KViewContext  $context A view context object
      * @return string  The output of the view
      */
     protected function _actionRender(KViewContext $context)
@@ -124,7 +124,7 @@ abstract class KViewTemplate extends KViewAbstract
      * This function will always fetch the model state. Model data will only be fetched if the auto_fetch property is
      * set to TRUE.
      *
-     * @param KViewContext	$context A view context object
+     * @param KViewContext  $context A view context object
      * @return void
      */
     protected function _fetchData(KViewContext $context)
@@ -152,7 +152,7 @@ abstract class KViewTemplate extends KViewAbstract
     /**
      * Get the template object attached to the view
      *
-     *  @throws	UnexpectedValueException	If the template doesn't implement the TemplateInterface
+     * @throws UnexpectedValueException    If the template doesn't implement the TemplateInterface
      * @return  KTemplateInterface
      */
     public function getTemplate()

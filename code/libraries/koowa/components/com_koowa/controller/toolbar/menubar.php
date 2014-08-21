@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Menu Controller Toolbar
@@ -38,8 +37,8 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
      *
      * Disable the menubar only for singular views that are editable.
      *
-     * @param   string	$name   The command name
-     * @param	mixed	$config Parameters to be passed to the command
+     * @param   string  $name   The command name
+     * @param   mixed   $config Parameters to be passed to the command
      * @return  KControllerToolbarInterface
      */
     public function addCommand($name, $config = array())
@@ -56,36 +55,36 @@ class ComKoowaControllerToolbarMenubar extends KControllerToolbarAbstract
     }
 
     /**
-	 * Get the list of commands
-	 *
-	 * Will attempt to use information from the xml manifest if possible
-	 *
-	 * @return  array
-	 */
-	public function getCommands()
-	{
-	    $name     = $this->getController()->getIdentifier()->name;
-	    $package  = $this->getIdentifier()->package;
-	    $manifest = JPATH_ADMINISTRATOR.'/components/com_'.$package.'/'.$package.'.xml';
+     * Get the list of commands
+     *
+     * Will attempt to use information from the xml manifest if possible
+     *
+     * @return  array
+     */
+    public function getCommands()
+    {
+        $name     = $this->getController()->getIdentifier()->name;
+        $package  = $this->getIdentifier()->package;
+        $manifest = JPATH_ADMINISTRATOR.'/components/com_'.$package.'/'.$package.'.xml';
 
-	    if(file_exists($manifest))
-	    {
-	        $xml = simplexml_load_file($manifest);
+        if(file_exists($manifest))
+        {
+            $xml = simplexml_load_file($manifest);
 
-	        if(isset($xml->administration->submenu))
-	        {
-	            foreach($xml->administration->submenu->children() as $menu)
-	            {
-	                $view = (string)$menu['view'];
+            if(isset($xml->administration->submenu))
+            {
+                foreach($xml->administration->submenu->children() as $menu)
+                {
+                    $view = (string)$menu['view'];
 
-	                $this->addCommand((string)$menu, array(
-	            		'href'   => 'option=com_'.$package.'&view='.$view,
-	            		'active' => ($name == KStringInflector::singularize($view))
-	                ));
-	            }
-	        }
-	    }
+                    $this->addCommand((string)$menu, array(
+                        'href'   => 'option=com_'.$package.'&view='.$view,
+                        'active' => ($name == KStringInflector::singularize($view))
+                    ));
+                }
+            }
+        }
 
-	    return parent::getCommands();
-	}
+        return parent::getCommands();
+    }
 }

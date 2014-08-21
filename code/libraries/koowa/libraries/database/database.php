@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -15,30 +15,30 @@
  */
 class KDatabase
 {
-	/**
-	 * Database result mode
-	 */
-	const RESULT_STORE = 0;
-	const RESULT_USE   = 1;
+    /**
+     * Database result mode
+     */
+    const RESULT_STORE = 0;
+    const RESULT_USE   = 1;
 
-	/**
-	 * Database fetch mode
-	 */
-	const FETCH_ROW         = 0;
-	const FETCH_ROWSET      = 1;
+    /**
+     * Database fetch mode
+     */
+    const FETCH_ROW         = 0;
+    const FETCH_ROWSET      = 1;
 
-	const FETCH_ARRAY       = 0;
-	const FETCH_ARRAY_LIST  = 1;
-	const FETCH_FIELD       = 2;
-	const FETCH_FIELD_LIST  = 3;
-	const FETCH_OBJECT      = 4;
-	const FETCH_OBJECT_LIST = 5;
+    const FETCH_ARRAY       = 0;
+    const FETCH_ARRAY_LIST  = 1;
+    const FETCH_FIELD       = 2;
+    const FETCH_FIELD_LIST  = 3;
+    const FETCH_OBJECT      = 4;
+    const FETCH_OBJECT_LIST = 5;
 
-	/**
-	 * Row states
-	 */
-	const STATUS_FETCHED  = 'fetched';
-	const STATUS_DELETED  = 'deleted';
+    /**
+     * Row states
+     */
+    const STATUS_FETCHED  = 'fetched';
+    const STATUS_DELETED  = 'deleted';
     const STATUS_CREATED  = 'created';
     const STATUS_UPDATED  = 'updated';
     const STATUS_FAILED   = 'failed';

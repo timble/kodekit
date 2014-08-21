@@ -2,11 +2,10 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
-
 
 /**
  * Listbox Template Helper
@@ -29,9 +28,9 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'prompt'    => '- '.$translator->translate('Select').' -',
-            'options' 	=> array(),
+            'options'   => array(),
             'select2'   => false,
-            'attribs'	=> array(),
+            'attribs'   => array(),
         ))->append(array(
             'select2_options' => array(
                 'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
@@ -184,19 +183,19 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'name'		  => '',
-            'attribs'	  => array(),
-            'model'		  => KStringInflector::pluralize($this->getIdentifier()->package),
-            'deselect'    => true,
-            'unique'	  => true
+            'name'       => '',
+            'attribs'    => array(),
+            'model'      => KStringInflector::pluralize($this->getIdentifier()->package),
+            'deselect'   => true,
+            'unique'     => true
         ))->append(array(
-            'value'		      => $config->name,
-            'selected'        => $config->{$config->name},
-            'identifier'      => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
+            'value'      => $config->name,
+            'selected'   => $config->{$config->name},
+            'identifier' => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
-            'label'		      => $config->value,
+            'label'      => $config->value,
         ))->append(array(
-            'filter' 	      => array('sort' => $config->label),
+            'filter'     => array('sort' => $config->label),
         ));
 
         $translator = $this->getObject('translator');
@@ -253,9 +252,9 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'name'	   => '',
+            'name'     => '',
             'attribs'  => array(),
-            'model'	   => KStringInflector::pluralize($this->getIdentifier()->package),
+            'model'    => KStringInflector::pluralize($this->getIdentifier()->package),
             'validate' => true,
             'filter'   => array(),
         ))->append(array(
@@ -265,14 +264,14 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'prompt'     => '- '.$this->getObject('translator')->translate('Select').' -',
             'unique'     => true,
             'select2'    => false,
-            'value'	     => $config->name,
+            'value'      => $config->name,
             'selected'   => $config->{$config->name},
             'identifier' => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
-            'label'	     => $config->value,
+            'label'      => $config->value,
         ))->append(array(
             'text'       => $config->label,
-            'filter' 	 => array('sort' => $config->label),
+            'filter'     => array('sort' => $config->label),
         ));
 
         if (!$config->url)

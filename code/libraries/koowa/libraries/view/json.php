@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -89,7 +89,7 @@ class KViewJson extends KViewAbstract
      * If the view 'content'  is empty the output will be generated based on the model data, if it set it will
      * be returned instead.
      *
-     * @param KViewContext	$context A view context object
+     * @param KViewContext  $context A view context object
      * @return string A RFC4627-compliant JSON string, which may also be embedded into HTML.
      */
     protected function _actionRender(KViewContext $context)

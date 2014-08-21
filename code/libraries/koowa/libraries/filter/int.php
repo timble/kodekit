@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -48,29 +48,29 @@ class KFilterInt extends KFilterAbstract implements KFilterTraversable
     }
 
     /**
-	 * Validate a value
-	 *
-	 * @param	mixed	$value Value to be validated
-	 * @return	bool	True when the variable is valid
-	 */
-	public function validate($value)
-	{
+     * Validate a value
+     *
+     * @param   mixed   $value Value to be validated
+     * @return  bool    True when the variable is valid
+     */
+    public function validate($value)
+    {
         $options = array('options' => array(
             'max_range' => $this->max,
             'min_range' => $this->min
         ));
 
         return empty($value) || (false !== filter_var($value, FILTER_VALIDATE_INT, $options));
-	}
+    }
 
-	/**
-	 * Sanitize a value
-	 *
-	 * @param	mixed	$value Value to be sanitized
-	 * @return	int
-	 */
-	public function sanitize($value)
-	{
+    /**
+     * Sanitize a value
+     *
+     * @param   mixed   $value Value to be sanitized
+     * @return  int
+     */
+    public function sanitize($value)
+    {
         $value = (int) filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 
         if(isset($this->max) && $value > (int) $this->max) {
@@ -82,12 +82,12 @@ class KFilterInt extends KFilterAbstract implements KFilterTraversable
         }
 
         return $value;
-	}
+    }
 
     /**
      * Set the minimum value
      *
-     * @param integer	$min
+     * @param integer   $min
      * @return KFilterInt
      */
     public function min($min)
@@ -99,7 +99,7 @@ class KFilterInt extends KFilterAbstract implements KFilterTraversable
     /**
      * Set the maximum value
      *
-     * @param integer	$max
+     * @param integer   $max
      * @return KFilterInt
      */
     public function max($max)

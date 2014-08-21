@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -98,17 +98,17 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
         }
     }
 
-	/**
-	 * Set uuid information
-	 *
-	 * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
+    /**
+     * Set uuid information
+     *
+     * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
      * hex value will be returned.
-	 *
+     *
      * @param KDatabaseContextInterface $context
-	 * @return void
-	 */
-	protected function _beforeInsert(KDatabaseContextInterface $context)
-	{
+     * @return void
+     */
+    protected function _beforeInsert(KDatabaseContextInterface $context)
+    {
         if($this->getMixer() instanceof KDatabaseRowInterface)
         {
             if($this->hasProperty('uuid') && empty($this->uuid))
@@ -117,14 +117,14 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
                 $this->uuid = $this->_uuid($hex);
             }
         }
-	}
+    }
 
-	/**
+    /**
      * Generates a Universally Unique Identifier, version 4.
      *
      * This function generates a truly random UUID.
      *
-     * @param boolean	$hex If TRUE return the uuid in hex format, otherwise as a string
+     * @param boolean   $hex If TRUE return the uuid in hex format, otherwise as a string
      * @see http://tools.ietf.org/html/rfc4122#section-4.4
      * @see http://en.wikipedia.org/wiki/UUID
      * @return string A UUID, made up of 36 characters or 16 hex digits.

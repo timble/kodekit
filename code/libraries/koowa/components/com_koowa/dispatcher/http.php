@@ -2,9 +2,9 @@
 /**
  * Nooku Framework - http://nooku.org/framework
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
 /**
@@ -56,7 +56,7 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
      * Render an exception
      *
      * @throws InvalidArgumentException If the action parameter is not an instance of Exception
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context  A dispatcher context object
      * @return boolean|null
      */
     protected function _renderError(KDispatcherContextInterface $context)
@@ -128,9 +128,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
      * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
      * the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param KDispatcherContextInterface $context  A dispatcher context object
      * @throws  KDispatcherExceptionMethodNotAllowed  If the method is not allowed on the resource.
-     * @return	mixed
+     * @return  mixed
      */
     protected function _actionDispatch(KDispatcherContextInterface $context)
     {

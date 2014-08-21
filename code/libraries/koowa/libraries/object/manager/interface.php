@@ -22,8 +22,8 @@ interface KObjectManagerInterface
      * to the object itself.
      *
      * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param	array $config     An optional associative array of configuration settings.
-     * @return	KObjectInterface  Return object on success, throws exception on failure
+     * @param   array $config     An optional associative array of configuration settings.
+     * @return  KObjectInterface  Return object on success, throws exception on failure
      * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws	KObjectExceptionInvalidObject     If the object doesn't implement the KObjectInterface
      * @throws  KObjectExceptionNotFound          If object cannot be loaded

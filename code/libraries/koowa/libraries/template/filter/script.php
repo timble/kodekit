@@ -77,8 +77,8 @@ class KTemplateFilterScript extends KTemplateFilterTag
     /**
      * Render the tag
      *
-     * @param 	array	$attribs Associative array of attributes
-     * @param 	string	$content The tag content
+     * @param   array   $attribs Associative array of attributes
+     * @param   string  $content The tag content
      * @return string
      */
     protected function _renderTag($attribs = array(), $content = null)

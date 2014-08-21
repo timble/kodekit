@@ -209,7 +209,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param  array   $data  An associative array of data to be extracted in local template scope
      * @return KTemplateAbstract
-     * @see tempnam()
      */
     public function evaluate($data = array())
     {
