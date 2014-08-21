@@ -30,6 +30,14 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     protected $_editors;
 
     /**
+     * An associative array containing file path mappings.
+     * The keys represent the local paths while their values are the replacement paths.
+     *
+     * @var array
+     */
+    protected $_path_mapping;
+
+    /**
      * Constructor
      *
      * @param   KObjectConfig $config Configuration options
@@ -37,6 +45,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
+
+        $this->_path_mapping = KObjectConfig ::unbox($config->path_mapping);
 
         //Set the editors
         $this->_editor  = $config->editor;
@@ -47,8 +57,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             // Register editor using xdebug's file_link_format option.
             $this->_editors['xdebug'] = array($this, '_getXdebugPath');
 
-            //If no editor is set use xdebug
-            if(!empty($this->_editor)) {
+            // If no editor is set use xdebug
+            if(empty($this->_editor)) {
                 $this->_editor = 'xdebug';
             }
         }
@@ -64,6 +74,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      */
     protected function _initialize(KObjectConfig $config)
     {
+        $path_mapping = $this->_getDefaultPathMapping();
+
         $config->append(array(
             'editor'   => '',
             'editors'  => array(
@@ -72,8 +84,9 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
                 'textmate' => 'txmt://open?url=file://%file&line=%line',
                 'emacs'    => 'emacs://open?url=file://%file&line=%line',
                 'macvim'   => 'mvim://open/?url=file://%file&line=%line',
-                'phpstorm' => 'phpstorm://open?file=$file&line=$line',      //Only available in PHPStorm 8+
+                'phpstorm' => 'phpstorm://open?file=%file&line=%line',      //Only available in PHPStorm 8+
             ),
+            'path_mapping' => $path_mapping
         ));
     }
 
@@ -161,12 +174,22 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         {
             $editor = $this->_editors[$config->editor];
 
+            if (is_array($this->_path_mapping))
+            {
+                foreach ($this->_path_mapping as $guest => $host)
+                {
+                    if (substr($config->file, 0, strlen($guest)) == $guest) {
+                        $config->file = str_replace($guest, $host, $config->file);
+                    }
+                }
+            }
+
             if(is_callable($editor)) {
                 $editor = call_user_func($editor, $config->file, $config->line);
             }
 
-            $editor = str_replace("%line", rawurlencode($config->line), $editor);
-            $editor = str_replace("%file", rawurlencode($config->file), $editor);
+            $editor = str_replace("%line", $config->line, $editor);
+            $editor = str_replace("%file", $config->file, $editor);
 
             $html = '<a href="'.$editor.'" title="'.$html.'">'.$html.'</a>';
         }
@@ -687,5 +710,38 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         }
 
         return $vars;
+    }
+
+
+    protected function _getDefaultPathMapping()
+    {
+        $mapping = array();
+
+        if ($shared_paths = getenv('BOX_SHARED_PATHS'))
+        {
+            $decoded = json_decode($shared_paths, true);
+
+            if (is_array($decoded))
+            {
+                $mapping = $decoded;
+
+                $comparison = function ($a, $b)
+                {
+                    if (strlen($a) == strlen($b)) {
+                        return 0;
+                    }
+
+                    if (strlen($a) > strlen($b)) {
+                        return -1;
+                    }
+
+                    return 1;
+                };
+
+                uksort($mapping, $comparison);
+            }
+        }
+
+        return $mapping;
     }
 }
