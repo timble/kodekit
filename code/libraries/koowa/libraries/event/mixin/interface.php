@@ -14,7 +14,7 @@
  * event listeners and subscribers.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Mixin
  */
 interface KEventMixinInterface
 {

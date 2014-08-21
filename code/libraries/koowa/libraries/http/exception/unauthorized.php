@@ -13,7 +13,7 @@
  * The request requires user authentication
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionUnauthorized extends KHttpExceptionAbstract
 {

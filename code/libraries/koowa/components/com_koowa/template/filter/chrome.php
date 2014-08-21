@@ -13,7 +13,7 @@
  * This filter allows to apply module chrome to a template
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

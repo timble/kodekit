@@ -11,7 +11,7 @@
  * Dispatcher
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Dispatcher
  */
 class ComKoowaDispatcherHttp extends KDispatcherHttp
 {

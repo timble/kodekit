@@ -11,6 +11,6 @@
  * Action Not Implemented Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Exception
  */
 class KControllerExceptionActionNotImplemented extends KHttpExceptionNotImplemented implements KControllerException {}

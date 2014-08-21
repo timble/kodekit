@@ -14,7 +14,7 @@
  * the toolbar helper for the specific toolbar type.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

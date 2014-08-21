@@ -11,7 +11,7 @@
  * Class Loader Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Loader\Interface
+ * @package Koowa\Library\Class\Loader
  */
 interface KClassLoaderInterface
 {

@@ -11,7 +11,7 @@
  * File Translator Locator
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator\File
+ * @package Koowa\Library\Translator\Locator
  */
 class KTranslatorLocatorFile extends KTranslatorLocatorAbstract
 {

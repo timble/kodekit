@@ -13,7 +13,7 @@
  * The server refused to fulfill the request, for reasons other than invalid user credentials.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionForbidden extends KHttpExceptionAbstract
 {

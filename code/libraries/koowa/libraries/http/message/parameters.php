@@ -13,7 +13,7 @@
  * Container class that handles the aggregations of HTTP parameters as a collection
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Message
  */
 class KHttpMessageParameters extends KObjectArray
 {

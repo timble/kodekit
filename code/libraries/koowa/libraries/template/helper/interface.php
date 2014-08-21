@@ -11,7 +11,7 @@
  * Template Helper Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Helper
  */
 interface KTemplateHelperInterface
 {

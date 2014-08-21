@@ -13,7 +13,7 @@
  * Filter which removes all spaces from the template output
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterWhitespace extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

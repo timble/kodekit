@@ -11,7 +11,7 @@
  * Loader Adapter Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class|Locator\Interface
+ * @package Koowa\Library\Class\Locator
  */
 interface KClassLocatorInterface
 {

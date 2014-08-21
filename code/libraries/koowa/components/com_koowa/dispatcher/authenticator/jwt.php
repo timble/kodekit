@@ -19,7 +19,7 @@
  * - email
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Dispatcher\Authenticator
  */
 class ComKoowaDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorJwt
 {

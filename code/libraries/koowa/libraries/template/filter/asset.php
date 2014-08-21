@@ -14,7 +14,7 @@
  * added that is rewritten to '/media/'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterAsset extends KTemplateFilterAbstract implements KTemplateFilterCompiler, KTemplateFilterRenderer
 {

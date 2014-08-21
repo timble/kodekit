@@ -11,7 +11,7 @@
  * Object Locator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Locator\Interface
+ * @package Koowa\Library\Object\Locator
  */
 interface KObjectLocatorInterface
 {

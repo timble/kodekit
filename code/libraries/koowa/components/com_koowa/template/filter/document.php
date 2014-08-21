@@ -11,7 +11,7 @@
  * Feeds information from JDocument into the template to be used in page rendering
  *
  * @author  Ercan Özkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterDocument extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

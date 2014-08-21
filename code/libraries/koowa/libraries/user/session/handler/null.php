@@ -13,7 +13,7 @@
  * Can be used in unit testing or in a situation where persisted sessions are not desired.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Handler
  * @link    http://www.php.net/manual/en/function.session-set-save-handler.php
  */
 class KUserSessionHandlerNull extends KUserSessionHandlerAbstract {}

@@ -13,7 +13,7 @@
  * Session container that stores session metadata and provides utility functions.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Container
  */
 class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
 {

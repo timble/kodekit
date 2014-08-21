@@ -14,7 +14,7 @@
  * listeners to an EventDispatcher through the {@link subscribe()} method.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Subscriber
  */
 interface KEventSubscriberInterface
 {

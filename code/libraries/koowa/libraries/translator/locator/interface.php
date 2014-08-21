@@ -11,7 +11,7 @@
  * Translator Locator Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator\Interface
+ * @package Koowa\Library\Translator\Locator
  */
 interface KTranslatorLocatorInterface
 {

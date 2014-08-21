@@ -11,7 +11,7 @@
  * Plugin Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Object\Locator\Plugin
+ * @package Koowa\Component\Koowa\Object\Locator
  */
 class ComKoowaObjectLocatorPlugin extends KObjectLocatorAbstract
 {

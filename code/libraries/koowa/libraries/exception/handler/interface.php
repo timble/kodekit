@@ -11,7 +11,7 @@
  * Exception Handler Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Handler\Interface
+ * @package Koowa\Library\Exception\Handler
  */
 interface KExceptionHandlerInterface
 {

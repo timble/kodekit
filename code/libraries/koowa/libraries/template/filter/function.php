@@ -13,7 +13,7 @@
  * Compile filter for template functions such as template(), text(), helper(), route() etc
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterFunction extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {

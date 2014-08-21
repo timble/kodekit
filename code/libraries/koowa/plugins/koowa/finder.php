@@ -20,7 +20,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  * Finder plugin adapter for Koowa extensions.
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Plugin\Finder
+ * @package Koowa\Plugin\Koowa
  */
 abstract class PlgKoowaFinder extends FinderIndexerAdapter
 {

@@ -15,7 +15,7 @@
  * across redirects.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Container
  */
 class KUserSessionContainerMessage extends KUserSessionContainerAbstract
 {

@@ -11,6 +11,6 @@
  * Dispatcher Route
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Router
  */
 class KDispatcherRouterRoute extends KHttpUrl {}

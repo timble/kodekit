@@ -11,7 +11,7 @@
  * Database Row Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Row
  */
 interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializable, Countable
 {

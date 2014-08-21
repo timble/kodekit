@@ -13,7 +13,7 @@
  * Filter for short_open_tags support
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterShorttag extends KTemplateFilterAbstract implements KTemplateFilterCompiler
 {

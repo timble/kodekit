@@ -11,7 +11,7 @@
  * Template Locator Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator\Factory
+ * @package Koowa\Library\Template\Locator
  */
 class KTemplateLocatorFactory extends KObject implements KObjectSingleton
 {

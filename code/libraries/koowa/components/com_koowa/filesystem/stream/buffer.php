@@ -11,7 +11,7 @@
  * Buffer FileSystem Stream
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Filesystem\Stream\Buffer
+ * @package Koowa\Component\Koowa\Filesystem\Stream
  */
 class ComKoowaFilesystemStreamBuffer extends KFilesystemStreamBuffer
 {

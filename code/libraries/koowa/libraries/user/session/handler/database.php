@@ -11,7 +11,7 @@
  * Database User Session Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Handler
  */
 class KUserSessionHandlerDatabase extends KUserSessionHandlerAbstract
 {

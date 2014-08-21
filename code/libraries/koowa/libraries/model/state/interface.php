@@ -11,7 +11,7 @@
  * Model State Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\State
  */
 interface KModelStateInterface
 {

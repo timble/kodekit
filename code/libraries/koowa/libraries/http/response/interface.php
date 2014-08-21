@@ -11,7 +11,7 @@
  * Http Response Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Response
  */
 interface KHttpResponseInterface extends KHttpMessageInterface
 {

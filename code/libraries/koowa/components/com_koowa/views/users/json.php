@@ -11,7 +11,7 @@
  * Users JSON view
  *
  * @author  Arunas Mazeika <https://github.com/amazeika>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\View\Users
  */
 class ComKoowaViewUsersJson extends KViewJson
 {

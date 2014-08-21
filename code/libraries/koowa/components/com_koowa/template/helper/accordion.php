@@ -11,7 +11,7 @@
  * Accordion Template Helper
  *
  * @author  Stian Didriksen <https://github.com/stipsan>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Helper
  */
 class ComKoowaTemplateHelperAccordion extends KTemplateHelperAbstract
 {

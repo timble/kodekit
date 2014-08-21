@@ -11,7 +11,7 @@
  * Style Template Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
 {

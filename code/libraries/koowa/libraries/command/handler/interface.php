@@ -11,7 +11,7 @@
  * Command Handler Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Handler
  */
 interface KCommandHandlerInterface extends KObjectHandlable
 {

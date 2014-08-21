@@ -20,7 +20,7 @@
  *    supported (like rename) must throw a \BadMethodCallException instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Interface
+ * @package Koowa\Library\Filesystem\Stream
  */
 interface KFilesystemStreamInterface extends KObjectInterface
 {

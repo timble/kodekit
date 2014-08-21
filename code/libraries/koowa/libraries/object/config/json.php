@@ -11,7 +11,7 @@
  * Object Config Json
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 class KObjectConfigJson extends KObjectConfigFormat
 {

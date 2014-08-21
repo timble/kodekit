@@ -11,7 +11,7 @@
  * Model Entity Collection
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Entity
  */
 class KModelEntityComposite extends KObjectSet implements KModelEntityInterface, KModelEntityComposable
 {

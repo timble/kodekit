@@ -11,7 +11,7 @@
  * Behavior Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Behavior
  */
 interface KBehaviorInterface extends KCommandHandlerInterface, KObjectInterface
 {

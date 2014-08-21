@@ -11,7 +11,7 @@
  * Exception Json View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\View\Error
  */
 class ComKoowaViewErrorJson extends KViewJson
 {

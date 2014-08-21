@@ -11,6 +11,6 @@
  * Format Not Supported Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Exception
  */
 class KControllerExceptionFormatNotSupported extends KHttpExceptionNotAcceptable implements KControllerException {}

@@ -11,7 +11,7 @@
  * Abstract User Provider
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Provider
  */
 class KUserProviderAbstract extends KObject implements KUserProviderInterface
 {

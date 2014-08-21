@@ -11,7 +11,7 @@
  * Dispatcher Route
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Component\Koowa\Dispatcher\Router
  */
 class ComKoowaDispatcherRouterRoute extends KDispatcherRouterRoute
 {

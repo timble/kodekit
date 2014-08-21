@@ -11,7 +11,7 @@
  * Controller Toolbar Mixin Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Toolbar\Mixin
  */
 interface KControllerToolbarMixinInterface
 {

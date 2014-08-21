@@ -11,7 +11,7 @@
  * Object Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Registry
+ * @package Koowa\Library\Object
  */
 class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
 {

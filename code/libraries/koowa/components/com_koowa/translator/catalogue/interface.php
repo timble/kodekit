@@ -11,7 +11,7 @@
  * Translator Catalogue
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Translator\Catalogue
  */
 interface ComKoowaTranslatorCatalogueInterface extends KTranslatorCatalogueInterface
 {

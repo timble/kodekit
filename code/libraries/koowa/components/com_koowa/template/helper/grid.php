@@ -11,7 +11,7 @@
  * Grid Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Helper
  */
 class ComKoowaTemplateHelperGrid extends KTemplateHelperGrid
 {

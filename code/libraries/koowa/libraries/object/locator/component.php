@@ -11,7 +11,7 @@
  * Component Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Locator\Component
+ * @package Koowa\Library\Object\Locator
  */
 class KObjectLocatorComponent extends KObjectLocatorAbstract
 {

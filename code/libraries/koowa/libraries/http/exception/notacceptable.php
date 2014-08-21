@@ -21,7 +21,7 @@
  * automatically. However, this specification does not define any standard for such automatic selection.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionNotAcceptable extends KHttpExceptionAbstract
 {

@@ -11,6 +11,6 @@
  * Method Not Allowed Dispatcher Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Exception
  */
 class KDispatcherExceptionMethodNotAllowed extends KHttpExceptionMethodNotAllowed implements KDispatcherException, KControllerExceptionRequestNotAllowed {}

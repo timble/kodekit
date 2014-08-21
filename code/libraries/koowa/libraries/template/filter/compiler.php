@@ -13,7 +13,7 @@
  * Filter will compile to the template to executable PHP code.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 interface KTemplateFilterCompiler
 {

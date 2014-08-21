@@ -25,7 +25,7 @@
  * stream is closed.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Buffer
+ * @package Koowa\Library\Filesystem\Stream
  */
 class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
 {

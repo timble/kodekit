@@ -11,7 +11,7 @@
  * Translator Locator Factory
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator\Factory
+ * @package Koowa\Library\Translator\Locator
  */
 class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
 {

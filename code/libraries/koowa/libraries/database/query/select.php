@@ -11,7 +11,7 @@
  * Select Database Query
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Query
  */
 class KDatabaseQuerySelect extends KDatabaseQueryAbstract
 {

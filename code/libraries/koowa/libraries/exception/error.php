@@ -11,7 +11,7 @@
  * Error Exception
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Error
+ * @package Koowa\Library\Exception
  */
 class KExceptionError extends ErrorException implements KException
 {

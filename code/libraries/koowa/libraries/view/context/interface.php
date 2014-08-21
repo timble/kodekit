@@ -11,7 +11,7 @@
  * View Context Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Koowa\Library\View\Context
  */
 interface KViewContextInterface extends KCommandInterface
 {

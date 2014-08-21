@@ -11,6 +11,6 @@
  * Failure Exception
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Failure
+ * @package Koowa\Library\Exception
  */
 class KExceptionFailure extends KExceptionError {}

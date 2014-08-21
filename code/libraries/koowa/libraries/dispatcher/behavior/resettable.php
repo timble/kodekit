@@ -16,7 +16,7 @@
  * Instead, when receiving a none AJAX POST request reset the browser by redirecting it through a GET request.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Behavior
  */
 class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 {

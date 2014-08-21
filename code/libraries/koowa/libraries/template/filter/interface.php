@@ -11,7 +11,7 @@
  * Template Filter Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 interface KTemplateFilterInterface extends KObjectHandlable
 {

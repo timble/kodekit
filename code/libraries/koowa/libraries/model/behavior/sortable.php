@@ -11,7 +11,7 @@
  * Sortable Model Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Behavior
  */
 class KModelBehaviorSortable extends KModelBehaviorAbstract
 {

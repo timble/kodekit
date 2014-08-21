@@ -11,7 +11,7 @@
  * Used to decorate parameter objects coming from Joomla for easy getter/setter access
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Decorator
  */
 class ComKoowaDecoratorParameter extends KObjectDecoratorAbstract
 {

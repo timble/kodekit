@@ -13,7 +13,7 @@
  * Response represents an HTTP response in JSON format.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatchers
+ * @package Koowa\Library\Dispatcher\Response\Transport
  */
 class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
 {

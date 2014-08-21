@@ -11,7 +11,7 @@
  * Permissible Controller Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Behavior
  */
 class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
 {

@@ -13,7 +13,7 @@
  * The request itself or the data supplied along with the request is invalid and could not be processed by the server.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionBadRequest extends KHttpExceptionAbstract
 {

@@ -13,7 +13,7 @@
  * Proxy calls to the Composer Autoloader through Composer\Autoload\ClassLoader::findFile().
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class|Locator\Component
+ * @package Koowa\Library\Class\Locator
  */
 class KClassLocatorComposer extends KClassLocatorAbstract
 {

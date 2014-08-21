@@ -13,7 +13,7 @@
  * Filter allows to create url schemes that are replaced on compile and render.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterAsset extends KTemplateFilterAsset
 {

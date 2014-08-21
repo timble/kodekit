@@ -13,7 +13,7 @@
  * Filter to parse style tags
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterStyle extends KTemplateFilterTag
 {

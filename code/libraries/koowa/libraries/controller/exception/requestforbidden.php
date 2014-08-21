@@ -11,6 +11,6 @@
  * Request Forbidden Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Exception
  */
 class KControllerExceptionRequestForbidden extends KHttpExceptionForbidden implements KControllerExceptionRequestNotAllowed {}

@@ -11,7 +11,7 @@
  * Html View
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\View
  */
 class ComKoowaViewHtml extends KViewHtml
 {

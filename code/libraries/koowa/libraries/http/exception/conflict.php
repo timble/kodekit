@@ -18,7 +18,7 @@
  * complete. Clients should wait until at least this time before retrying the request.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionConflict extends KHttpExceptionAbstract
 {

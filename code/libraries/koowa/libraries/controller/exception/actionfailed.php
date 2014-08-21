@@ -11,6 +11,6 @@
  * Not Allowed Controller Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Exception
  */
 class KControllerExceptionActionFailed extends Exception implements KControllerException {}

@@ -11,6 +11,6 @@
  * Invalid Identifier Object Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Exception
  */
 class KObjectExceptionInvalidIdentifier extends DomainException implements KObjectException {}

@@ -11,7 +11,7 @@
  * Translator Inflector Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Inflector\Interface
+ * @package Koowa\Library\Translator\Inflector
  */
 interface KTranslatorInflectorInterface
 {

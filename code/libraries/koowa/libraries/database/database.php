@@ -11,7 +11,7 @@
  * Database Namespace
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library
  */
 class KDatabase
 {

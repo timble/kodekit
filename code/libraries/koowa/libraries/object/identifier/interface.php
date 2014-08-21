@@ -14,7 +14,7 @@
  * methods for derived formats.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Identifier
  */
 interface KObjectIdentifierInterface extends Serializable
 {

@@ -13,7 +13,7 @@
  * The server does not support the functionality required to fulfill the request.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionNotImplemented extends KHttpExceptionAbstract
 {

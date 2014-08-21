@@ -11,7 +11,7 @@
  * Cacheable Controller Behavior
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Controller\Behavior
  */
 class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
 {

@@ -14,7 +14,7 @@
  * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Inflector
+ * @package Koowa\Library\Translator
  */
 class KTranslatorInflector extends KStringInflector implements KTranslatorInflectorInterface
 {

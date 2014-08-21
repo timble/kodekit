@@ -11,7 +11,7 @@
  * IP Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Koowa\Library\Filter\I
  */
 class KFilterIP extends KFilterAbstract implements KFilterTraversable
 {

@@ -13,7 +13,7 @@
  * Pulls out chunks from an inner stream iterator and yields the chunks as arrays.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\FileSystem\Stream\Iterator\Chunked
+ * @package Koowa\Library\Filesystem\Stream\Iterator
  */
 class KFilesystemStreamIteratorChunked implements OuterIterator, Countable
 {

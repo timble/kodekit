@@ -14,7 +14,7 @@
  * the listeners.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception
+ * @package Koowa\Library\Event\Publisher
  */
 class KEventPublisherException extends KEventPublisherAbstract
 {

@@ -11,7 +11,7 @@
  * Smart Search Controller Behavior
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Controller\Behavior
  */
 class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
 {

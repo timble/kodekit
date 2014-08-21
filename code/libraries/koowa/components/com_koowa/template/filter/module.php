@@ -23,7 +23,7 @@ jimport('joomla.application.module.helper');
  * content into the module position.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {
@@ -219,7 +219,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
  * This is a specialised modules helper which gives access to the Joomla modules by reference
 .*
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaModuleHelper extends JModuleHelper
 {

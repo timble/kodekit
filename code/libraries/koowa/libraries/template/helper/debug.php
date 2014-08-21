@@ -11,7 +11,7 @@
  * Debug Template Helper
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Helper
  */
 class KTemplateHelperDebug extends KTemplateHelperBehavior
 {

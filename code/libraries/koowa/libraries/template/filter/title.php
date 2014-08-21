@@ -18,7 +18,7 @@
  * defined as an extra attribute.  Eg, <title content="prepend" separator="|">[title]</title>
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterTitle extends KTemplateFilterTag
 {

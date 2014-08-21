@@ -13,7 +13,7 @@
  * Provides route building and parsing functionality
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Router
  */
 interface KDispatcherRouterInterface
 {

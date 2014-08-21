@@ -13,7 +13,7 @@
  * Filter for wrapping a template output
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

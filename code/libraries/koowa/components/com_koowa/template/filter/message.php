@@ -13,7 +13,7 @@
  * Filter will render the response flash messages.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Template\Filter
  */
 class ComKoowaTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

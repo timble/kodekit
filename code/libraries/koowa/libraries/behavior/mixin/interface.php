@@ -14,7 +14,7 @@
  * cannot be overridden by attaching a behaviors with the same.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Behavior\Mixin
  */
 interface KBehaviorMixinInterface
 {

@@ -11,7 +11,7 @@
  * Object Bootstrapper Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Bootstrapper
+ * @package Koowa\Library\Object\Bootstrapper
  */
 interface KObjectBootstrapperInterface extends KObjectHandlable
 {

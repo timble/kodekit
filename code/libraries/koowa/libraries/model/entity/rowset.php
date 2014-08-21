@@ -11,7 +11,7 @@
  * Model Rowset Entity
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Entity
  */
 class KModelEntityRowset extends KDatabaseRowsetAbstract implements KModelEntityInterface
 {

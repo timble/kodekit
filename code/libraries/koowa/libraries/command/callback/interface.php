@@ -11,7 +11,7 @@
  * Command Mixin Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Callback
  */
 interface KCommandCallbackInterface extends KCommandCallbackDelegate
 {

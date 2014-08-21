@@ -11,6 +11,6 @@
  * Translator Singleton
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator
+ * @package Koowa\Library
  */
 class KTranslator extends KTranslatorAbstract implements KObjectSingleton {}

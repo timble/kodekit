@@ -11,7 +11,7 @@
  * Exception Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Controller
  */
 class ComKoowaControllerError extends KControllerView
 {

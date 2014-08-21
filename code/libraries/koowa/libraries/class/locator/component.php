@@ -38,7 +38,7 @@
  * Location  : .../components/com_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class|Locator\Component
+ * @package Koowa\Library\Class\Locator
  */
 class KClassLocatorComponent extends KClassLocatorAbstract
 {

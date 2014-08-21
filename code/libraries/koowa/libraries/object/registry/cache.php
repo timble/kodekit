@@ -11,7 +11,7 @@
  * Cache Object Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Registry\Cache
+ * @package Koowa\Library\Object\Registry
  */
 class KObjectRegistryCache extends KObjectRegistry
 {

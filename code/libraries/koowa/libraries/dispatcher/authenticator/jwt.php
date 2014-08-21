@@ -26,7 +26,7 @@
  * the user.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Authenticator
  */
 class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
 {

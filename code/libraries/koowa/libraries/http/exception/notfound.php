@@ -13,7 +13,7 @@
  * The requested resource could not be found.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionNotFound extends KHttpExceptionAbstract
 {

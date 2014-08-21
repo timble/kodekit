@@ -11,7 +11,7 @@
  * Mysqli Database Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Adapter\Mysqli
+ * @package Koowa\Library\Database\Adapter
  */
 class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 {

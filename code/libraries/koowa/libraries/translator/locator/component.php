@@ -11,7 +11,7 @@
  * Component Translator Locator
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator\Component
+ * @package Koowa\Library\Translator\Locator
  */
 class KTranslatorLocatorComponent extends KTranslatorLocatorIdentifier
 {

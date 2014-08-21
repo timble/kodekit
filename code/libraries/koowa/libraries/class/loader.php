@@ -19,7 +19,7 @@ require_once dirname(__FILE__).'/registry/cache.php';
  * Loader
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Loader
+ * @package Koowa\Library\Class
  */
 class KClassLoader implements KClassLoaderInterface
 {

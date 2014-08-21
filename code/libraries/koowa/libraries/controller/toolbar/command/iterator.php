@@ -11,7 +11,7 @@
  * Controller Toolbar Command Iterator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Toolbar\Command
  */
 class KControllerToolbarCommandIterator extends RecursiveIteratorIterator
 {

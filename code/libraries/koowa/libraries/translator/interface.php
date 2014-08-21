@@ -11,7 +11,7 @@
  * Translator Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Interface
+ * @package Koowa\Library\Translator
  */
 interface KTranslatorInterface
 {

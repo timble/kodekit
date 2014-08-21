@@ -11,7 +11,7 @@
  * Page Html View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\View\Page
  */
 class ComKoowaViewPageHtml extends ComKoowaViewHtml
 {

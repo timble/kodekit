@@ -11,7 +11,7 @@
  * Sluggable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Database\Behavior
  */
 class ComKoowaDatabaseBehaviorSluggable extends KDatabaseBehaviorSluggable
 {

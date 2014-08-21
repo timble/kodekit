@@ -15,7 +15,7 @@
  * @link http://tools.ietf.org/html/rfc2616#section-4.2
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Response
  */
 class KHttpResponseHeaders extends KHttpMessageHeaders
 {

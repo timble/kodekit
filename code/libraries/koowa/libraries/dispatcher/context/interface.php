@@ -11,6 +11,6 @@
  * Dispatcher Context Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Dispatcher\Context
  */
 interface KDispatcherContextInterface extends KControllerContextInterface {}

@@ -11,7 +11,7 @@
  * Controller Toolbar Mixin
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Toolbar
  */
 class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMixinInterface
 {

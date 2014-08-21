@@ -11,7 +11,7 @@
  * Database table for Joomla users
  *
  * @author  Arunas Mazeika <https://github.com/amazeika>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Database\Table
  */
 class ComKoowaDatabaseTableUsers extends KDatabaseTableAbstract
 {

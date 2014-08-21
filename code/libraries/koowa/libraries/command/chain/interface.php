@@ -14,7 +14,7 @@
  * priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Chain
  */
 interface KCommandChainInterface
 {

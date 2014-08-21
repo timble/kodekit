@@ -11,7 +11,7 @@
  * Table Database Schema
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Schema
  */
 class KDatabaseSchemaTable
 {

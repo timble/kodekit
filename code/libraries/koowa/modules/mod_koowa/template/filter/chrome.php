@@ -11,7 +11,7 @@
  * Chrome Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Module\Koowa
+ * @package Koowa\Module\Koowa\Template\Filter
  */
 class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

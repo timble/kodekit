@@ -13,7 +13,7 @@
  * Filter will parse and render to the template to an HTML string
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 interface KTemplateFilterRenderer
 {

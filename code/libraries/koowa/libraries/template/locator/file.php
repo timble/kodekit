@@ -11,7 +11,7 @@
  * File Template Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator\File
+ * @package Koowa\Library\Template\Locator
  */
 class KTemplateLocatorFile extends KTemplateLocatorAbstract
 {

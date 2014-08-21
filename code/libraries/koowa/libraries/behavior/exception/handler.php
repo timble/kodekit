@@ -11,6 +11,6 @@
  * Behavior Handler Exception
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Behavior
+ * @package Koowa\Library\Behavior\Exception
  */
 class KBehaviorExceptionHandler extends KCommandExceptionHandler {}

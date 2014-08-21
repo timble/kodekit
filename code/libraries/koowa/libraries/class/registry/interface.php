@@ -11,7 +11,7 @@
  * Class Registry Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Registry\Interface
+ * @package Koowa\Library\Class\Registry
  */
 interface KClassRegistryInterface
 {

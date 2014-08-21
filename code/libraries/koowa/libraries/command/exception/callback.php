@@ -11,6 +11,6 @@
  * Command Callback Exception
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Exception
  */
 class KCommandExceptionCallback extends RuntimeException implements KCommandException {}

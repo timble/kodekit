@@ -11,7 +11,7 @@
  * Date Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Helper
  */
 class KTemplateHelperDate extends KTemplateHelperAbstract
 {

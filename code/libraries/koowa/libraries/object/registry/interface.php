@@ -11,7 +11,7 @@
  * Object Registry Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Registry\Interface
+ * @package Koowa\Library\Object\Registry
  */
 interface KObjectRegistryInterface
 {

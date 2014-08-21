@@ -11,7 +11,7 @@
  * Delete Database Query
  *
  * @author  Gergo Erdosi <https://github.com/gergoerdosi>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Query
  */
 class KDatabaseQueryDelete extends KDatabaseQueryAbstract
 {

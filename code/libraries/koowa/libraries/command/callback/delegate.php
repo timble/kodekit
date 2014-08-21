@@ -11,7 +11,7 @@
  * Command Handler Delegate
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Callback
  */
 interface KCommandCallbackDelegate
 {

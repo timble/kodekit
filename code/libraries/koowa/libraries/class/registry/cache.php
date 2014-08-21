@@ -11,7 +11,7 @@
  * Cache Class Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Registry\Cache
+ * @package Koowa\Library\Class\Registry
  */
 class KClassRegistryCache extends KClassRegistry
 {

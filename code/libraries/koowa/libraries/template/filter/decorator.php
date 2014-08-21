@@ -13,7 +13,7 @@
  * Replace <ktml:content> with the view contents allowing to the template to act as a view decorator.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterDecorator extends KTemplateFilterAbstract implements KTemplateFilterRenderer
 {

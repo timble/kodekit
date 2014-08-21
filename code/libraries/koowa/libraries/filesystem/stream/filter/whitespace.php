@@ -13,7 +13,7 @@
  * Filter which removes all spaces from the stream.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\FileSystem\Stream\Filter\Whitespace
+ * @package Koowa\Library\Filesystem\Stream\Filter
  */
 class KFilesystemStreamFilterWhitespace extends KFilesystemStreamFilterAbstract
 {

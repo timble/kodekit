@@ -11,7 +11,7 @@
  * Http Cookie Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Cookie
  */
 interface KHttpCookieInterface
 {

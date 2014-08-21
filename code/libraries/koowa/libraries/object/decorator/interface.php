@@ -11,7 +11,7 @@
  * Object Decorator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Decorator
  */
 interface KObjectDecoratorInterface
 {

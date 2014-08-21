@@ -11,7 +11,7 @@
  * Default Dispatcher Response Transport
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response\Transport
  */
 class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstract
 {

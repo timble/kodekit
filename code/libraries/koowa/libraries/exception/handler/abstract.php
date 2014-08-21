@@ -11,7 +11,7 @@
  * Exception Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Handler\Abstract
+ * @package Koowa\Library\Exception\Handler
  */
 class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInterface
 {

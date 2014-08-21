@@ -11,7 +11,7 @@
  * Database Context Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Database\Context
  */
 interface KDatabaseContextInterface extends KCommandInterface
 {

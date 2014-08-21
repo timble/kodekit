@@ -11,6 +11,6 @@
  * Invalid Object Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Exception
  */
 class KObjectExceptionInvalidObject extends UnexpectedValueException implements KObjectException {}

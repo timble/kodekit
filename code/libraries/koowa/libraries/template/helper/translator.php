@@ -13,7 +13,7 @@
  * Adds translation keys used in JavaScript to the translator object
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Template
+ * @package Koowa\Library\Template\Helper
  */
 class KTemplateHelperTranslator extends KTemplateHelperAbstract
 {

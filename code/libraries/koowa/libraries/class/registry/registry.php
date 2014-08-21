@@ -11,7 +11,7 @@
  * Class Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Registry
+ * @package Koowa\Library\Class
  */
 class KClassRegistry extends ArrayObject implements KClassRegistryInterface
 {

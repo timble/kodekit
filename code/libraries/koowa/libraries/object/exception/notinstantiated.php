@@ -11,6 +11,6 @@
  * Not Instantiated Object Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Exception
  */
 class KObjectExceptionNotInstantiated extends RuntimeException implements KObjectException {}

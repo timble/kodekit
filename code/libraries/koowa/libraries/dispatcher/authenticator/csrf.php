@@ -11,7 +11,7 @@
  * Csrf Dispatcher Authenticator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Authenticator
  */
 class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
 {

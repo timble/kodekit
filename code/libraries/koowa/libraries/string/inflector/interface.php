@@ -13,7 +13,7 @@
  * Inflector to pluralize and singularize English nouns.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\String
+ * @package Koowa\Library\String\Inflector
  */
 interface KStringInflectorInterface
 {

@@ -11,7 +11,7 @@
  * Users model that wraps Joomla user data
  *
  * @author  Arunas Mazeika <https://github.com/amazeika>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Model
  */
 class ComKoowaModelUsers extends KModelDatabase
 {

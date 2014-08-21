@@ -13,7 +13,7 @@
  * The request URL does not support the specific request method.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  */
 class KHttpExceptionMethodNotAllowed extends KHttpExceptionAbstract
 {

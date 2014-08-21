@@ -11,7 +11,7 @@
  * Exception Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Exception
+ * @package Koowa\Library
  */
 interface KException
 {

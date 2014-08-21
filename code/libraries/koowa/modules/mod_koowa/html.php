@@ -11,7 +11,7 @@
  * Html View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Module\Koowa
+ * @package Koowa\Module\Koowa\View
  */
 class ModKoowaHtml extends KViewHtml
 {

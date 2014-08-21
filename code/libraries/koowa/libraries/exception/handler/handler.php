@@ -11,6 +11,6 @@
  * Exception Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Handler
+ * @package Koowa\Library\Exception
  */
 class KExceptionHandler extends KExceptionHandlerAbstract implements KObjectSingleton {}

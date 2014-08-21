@@ -11,7 +11,7 @@
  * Dispatcher Response Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response
  */
 interface KDispatcherResponseInterface extends KControllerResponseInterface
 {

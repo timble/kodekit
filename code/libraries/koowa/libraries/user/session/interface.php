@@ -13,7 +13,7 @@
  * Provides access to session-state values as well as session-level settings and lifetime management methods.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session
  */
 interface KUserSessionInterface
 {

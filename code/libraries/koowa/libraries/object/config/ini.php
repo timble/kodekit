@@ -11,7 +11,7 @@
  * Object Config Ini
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 class KObjectConfigIni extends KObjectConfigFormat
 {

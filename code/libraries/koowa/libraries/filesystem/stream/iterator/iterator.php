@@ -11,7 +11,7 @@
  * FileSystem Stream Iterator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Iterator
+ * @package Koowa\Library\Filesystem\Stream
  */
 class KFilesystemStreamIterator implements SeekableIterator
 {

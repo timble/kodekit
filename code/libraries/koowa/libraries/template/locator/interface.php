@@ -11,7 +11,7 @@
  * Template Locator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator\Interface
+ * @package Koowa\Library\Template\Locator
  */
 interface KTemplateLocatorInterface
 {

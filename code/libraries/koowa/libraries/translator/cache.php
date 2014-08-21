@@ -11,7 +11,7 @@
  * Translator Cache
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Cache
+ * @package Koowa\Library\Translator
  */
 class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
 {

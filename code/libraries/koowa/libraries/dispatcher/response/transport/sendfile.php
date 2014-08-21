@@ -15,7 +15,7 @@
  * contents from redirected location to the client, thus freeing up the backend to handle other requests.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response\Transport
  * @see Apache   : https://tn123.org/mod_xsendfile/
  * @see Nginx    : http://wiki.nginx.org/XSendfile
  * @see Lighttpd : http://redmine.lighttpd.net/projects/1/wiki/X-LIGHTTPD-send-file

@@ -11,7 +11,7 @@
  * Component Template Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Temmplate\Locator\Component
+ * @package Koowa\Component\Koowa\Template\Locator
  */
 class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
 {

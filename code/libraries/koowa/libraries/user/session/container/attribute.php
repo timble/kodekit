@@ -11,6 +11,6 @@
  * Attribute User Session Container
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Container
  */
 class KUserSessionContainerAttribute extends KUserSessionContainerAbstract {}

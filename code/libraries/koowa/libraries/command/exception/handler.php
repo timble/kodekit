@@ -11,6 +11,6 @@
  * Command Handler Exception
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Exception
  */
 class KCommandExceptionHandler extends RuntimeException implements KCommandException {}

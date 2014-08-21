@@ -11,7 +11,7 @@
  * Dispatcher Permissible Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Behavior
  */
 class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
 {

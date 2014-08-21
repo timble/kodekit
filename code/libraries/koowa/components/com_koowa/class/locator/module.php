@@ -29,7 +29,7 @@
  * Location  : .../modules/mod_foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Class|Locator\Module
+ * @package Koowa\Component\Koowa\Class\Locator
  */
 class ComKoowaClassLocatorModule extends KClassLocatorAbstract
 {

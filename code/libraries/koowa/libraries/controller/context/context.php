@@ -11,7 +11,7 @@
  * Controller Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database
+ * @package Koowa\Library\Controller
  */
 class KControllerContext extends KCommand implements KControllerContextInterface
 {

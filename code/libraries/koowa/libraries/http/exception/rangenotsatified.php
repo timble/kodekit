@@ -13,7 +13,7 @@
  * The request is out of bounds—that, none of the range values overlap the extent of the resource.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Exception
  * @see http://tools.ietf.org/html/rfc2616#section-10.4.17
  */
 class KHttpExceptionRangeNotSatisfied extends KHttpExceptionAbstract

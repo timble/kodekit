@@ -11,7 +11,7 @@
  * Event Publisher Profiler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Publisher
  */
 class KEventPublisherProfiler extends KObjectDecorator implements KEventPublisherInterface
 {

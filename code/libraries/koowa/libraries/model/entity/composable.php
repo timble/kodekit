@@ -11,7 +11,7 @@
  * Traversable Model Entity Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Entity
  */
 interface KModelEntityComposable
 {

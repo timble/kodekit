@@ -11,7 +11,7 @@
  * Alias Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Filter
  */
 class ComKoowaFilterAlias extends KFilterAbstract implements KFilterTraversable
 {

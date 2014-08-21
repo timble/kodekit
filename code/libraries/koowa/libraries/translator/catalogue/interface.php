@@ -11,7 +11,7 @@
  * Translation Catalogue Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\ranslator\Catalogue\Interface
+ * @package Koowa\Library\Translator\Catalogue
  */
 interface KTranslatorCatalogueInterface extends IteratorAggregate, ArrayAccess, Serializable
 {

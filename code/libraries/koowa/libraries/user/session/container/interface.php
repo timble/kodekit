@@ -11,7 +11,7 @@
  * Session Container Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session\Container
  */
 interface KUserSessionContainerInterface
 {

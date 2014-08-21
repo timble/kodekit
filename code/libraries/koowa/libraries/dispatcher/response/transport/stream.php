@@ -33,7 +33,7 @@
  * finished receiving data for that chunk. The data transfer is terminated by a final chunk of length zero.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Response\Transport
  * @see http://en.wikipedia.org/wiki/Byte_serving
  * @see http://en.wikipedia.org/wiki/Chunked_transfer_encoding
  * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16

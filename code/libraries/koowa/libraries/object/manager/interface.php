@@ -11,7 +11,7 @@
  * Object Manager Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Manager\Interface
+ * @package Koowa\Library\Object\Manager
  */
 interface KObjectManagerInterface
 {

@@ -11,6 +11,6 @@
  * Not Found Object Exception
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Exception
  */
 class KObjectExceptionNotFound extends RuntimeException implements KObjectException {}
