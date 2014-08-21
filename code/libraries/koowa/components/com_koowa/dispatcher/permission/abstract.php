@@ -11,7 +11,7 @@
  * Http Dispatcher Permission
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Component\Koowa\Dispatcher\Permission
  */
 abstract class ComKoowaDispatcherPermissionAbstract extends KDispatcherPermissionAbstract
 {

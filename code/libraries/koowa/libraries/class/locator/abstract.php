@@ -11,7 +11,7 @@
  * Abstract Loader Adapter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class|Locator\Abstract
+ * @package Koowa\Library\Class\Locator\Abstract
  */
 abstract class KClassLocatorAbstract implements KClassLocatorInterface
 {

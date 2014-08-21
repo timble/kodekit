@@ -14,7 +14,7 @@
  * prevent them for needing to be re-translated for different components.
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Component\Koowa
+ * @package Koowa\Component\Koowa\Translator\Catalogue
  */
 abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueAbstract implements ComKoowaTranslatorCatalogueInterface
 {
