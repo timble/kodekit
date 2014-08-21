@@ -133,7 +133,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
             );
         }
 
-        $name = $class::getName();
+        $name = call_user_func(array($class, 'getName'));//$class::getName();
 
         if (!empty($name) && !$this->isRegistered($name)) {
             $this->__locators[$name] = $identifier;
@@ -165,7 +165,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $name = $class::getName();
+            $name = call_user_func(array($class, 'getName'));//$class::getName();
 
         }
         else $name = $identifier;
@@ -234,7 +234,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $name  = $class::getName();
+            $name = call_user_func(array($class, 'getName'));//$class::getName();
         }
         else $name = $identifier;
 
