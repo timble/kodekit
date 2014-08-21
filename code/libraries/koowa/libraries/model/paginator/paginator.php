@@ -8,7 +8,7 @@
  */
 
 /**
- * Paginator Model Class
+ * Paginator Model
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model

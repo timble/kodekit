@@ -8,7 +8,7 @@
  */
 
 /**
- * Model State Class
+ * Model State
  *
  * A state requires a model object. It will call back to the model upon a state change by calling reset method.
  *

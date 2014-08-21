@@ -8,7 +8,7 @@
  */
 
 /**
- * Translator Helper Class
+ * Translator Helper
  *
  * Adds translation keys used in JavaScript to the translator object
  *
