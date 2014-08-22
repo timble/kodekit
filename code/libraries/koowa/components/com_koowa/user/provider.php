@@ -59,11 +59,18 @@ final class ComKoowaUserProvider extends KUserProvider
      */
     public function fetch($identifier)
     {
-        //Load the user
-        $user = JFactory::getUser($identifier);
+        $table = JUser::getTable();
 
-        if($user->id)
+        if ($table->load($identifier))
         {
+            $user = JUser::getInstance(0);
+            $user->setProperties($table->getProperties());
+
+            $params = new JRegistry;
+            $params->loadString($table->params);
+
+            $user->setParameters($params);
+
             $data = array(
                 'id'         => $user->id,
                 'email'      => $user->email,
@@ -77,7 +84,7 @@ final class ComKoowaUserProvider extends KUserProvider
                 'attributes' => $user->getParameters()->toArray()
             );
 
-           $user = $this->create($data);
+            $user = $this->create($data);
         }
         else $user = null;
 
@@ -93,8 +100,6 @@ final class ComKoowaUserProvider extends KUserProvider
      */
     public function store($identifier, $data)
     {
-        $user = $this->getObject('user');
-
         // Find the user id
         if (!is_numeric($identifier))
         {
