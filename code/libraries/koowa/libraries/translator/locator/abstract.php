@@ -64,15 +64,20 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
         if($info['path'] && $info['locale'])
         {
             $pattern = $info['path'].'/'.$info['locale'].'.*';
+            $files   = glob($pattern);
 
-            foreach(glob($pattern) as $file)
+            if ($files)
             {
-                if($path = $this->realPath($file))
+                foreach($files as $file)
                 {
-                    $result[] = $path;
-                    break;
+                    if($path = $this->realPath($file))
+                    {
+                        $result[] = $path;
+                        break;
+                    }
                 }
             }
+
         }
 
         return $result;
