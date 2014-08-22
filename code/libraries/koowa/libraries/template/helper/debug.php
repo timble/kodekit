@@ -30,6 +30,16 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     protected $_editors;
 
     /**
+     * The shared paths
+     *
+     * An associative array containing file path mappings when running the in a vagrant box environment. The keys
+     * represent the local paths while their values are the related host paths
+     *
+     * @var array
+     */
+    protected $_shared_paths;
+
+    /**
      * Constructor
      *
      * @param   KObjectConfig $config Configuration options
@@ -39,16 +49,16 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         parent::__construct($config);
 
         //Set the editors
-        $this->_editor  = $config->editor;
-        $this->_editors = $config->editors;
+        $this->_editor   = $config->editor;
+        $this->_editors  = $config->editors;
 
         if (ini_get('xdebug.file_link_format') || extension_loaded('xdebug'))
         {
             // Register editor using xdebug's file_link_format option.
             $this->_editors['xdebug'] = array($this, '_getXdebugPath');
 
-            //If no editor is set use xdebug
-            if(!empty($this->_editor)) {
+            // If no editor is set use xdebug
+            if(empty($this->_editor)) {
                 $this->_editor = 'xdebug';
             }
         }
@@ -72,7 +82,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
                 'textmate' => 'txmt://open?url=file://%file&line=%line',
                 'emacs'    => 'emacs://open?url=file://%file&line=%line',
                 'macvim'   => 'mvim://open/?url=file://%file&line=%line',
-                'phpstorm' => 'phpstorm://open?file=$file&line=$line',      //Only available in PHPStorm 8+
+                'phpstorm' => 'phpstorm://open?file=%file&line=%line',      //Only available in PHPStorm 8+
             ),
         ));
     }
@@ -149,12 +159,19 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         {
             $editor = $this->_editors[$config->editor];
 
+            foreach ($this->_getSharedPaths() as $guest => $host)
+            {
+                if (substr($config->file, 0, strlen($guest)) == $guest) {
+                    $config->file = str_replace($guest, $host, $config->file);
+                }
+            }
+
             if(is_callable($editor)) {
                 $editor = call_user_func($editor, $config->file, $config->line);
             }
 
-            $editor = str_replace("%line", rawurlencode($config->line), $editor);
-            $editor = str_replace("%file", rawurlencode($config->file), $editor);
+            $editor = str_replace("%line", $config->line, $editor);
+            $editor = str_replace("%file", $config->file, $editor);
 
             $html = '<a href="'.$editor.'" title="'.$html.'">'.$html.'</a>';
         }
@@ -678,7 +695,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     }
 
     /**
-     * Register editor using xdebug's file_link_format option.
+     * Get the xddebug editor path from xdebug's file_link_format option.
      *
      * @param $file
      * @param $line
@@ -687,5 +704,47 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     protected function _getXdebugPath($file, $line)
     {
         return str_replace(array('%f', '%l'), array($file, $line), ini_get('xdebug.file_link_format'));
+    }
+
+    /**
+     * Get the shared paths if we are running in a box environment
+     *
+     * @return array
+     */
+    protected function _getSharedPaths()
+    {
+        $mapping = array();
+
+        if(!$this->_shared_paths)
+        {
+            if ($shared_paths = getenv('BOX_SHARED_PATHS'))
+            {
+                $decoded = json_decode($shared_paths, true);
+
+                if (is_array($decoded))
+                {
+                    $mapping = $decoded;
+
+                    $comparison = function ($a, $b)
+                    {
+                        if (strlen($a) == strlen($b)) {
+                            return 0;
+                        }
+
+                        if (strlen($a) > strlen($b)) {
+                            return -1;
+                        }
+
+                        return 1;
+                    };
+
+                    uksort($mapping, $comparison);
+                }
+            }
+
+            $this->_shared_paths = $mapping;
+        }
+
+        return $this->_shared_paths;
     }
 }
