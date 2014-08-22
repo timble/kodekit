@@ -11,7 +11,7 @@
  * Paginator Model
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Paginator
  */
 class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
 {

@@ -11,7 +11,7 @@
  * User Provider Singleton
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Provider
  */
 class KUserProvider extends KUserProviderAbstract implements KObjectSingleton
 {

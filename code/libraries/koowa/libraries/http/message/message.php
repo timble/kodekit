@@ -13,7 +13,7 @@
  * @see http://tools.ietf.org/html/rfc2616#section-4
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Message
  */
 abstract class KHttpMessage extends KObject implements KHttpMessageInterface
 {

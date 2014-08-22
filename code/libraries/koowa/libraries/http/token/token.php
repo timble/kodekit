@@ -22,7 +22,7 @@
  * @see http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Token
  */
 class KHttpToken extends KObject implements KHttpTokenInterface
 {

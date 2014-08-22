@@ -13,7 +13,7 @@
  * Class can be used as a mixin in classes that want to implement a chain of responsibility or chain of command pattern.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Koowa\Library\Command\Mixin
  */
 class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInterface, KCommandHandlerInterface
 {

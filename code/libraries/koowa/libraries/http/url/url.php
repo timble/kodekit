@@ -80,7 +80,7 @@
  * </code>
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Url
  */
 class KHttpUrl extends KObject implements KHttpUrlInterface
 {

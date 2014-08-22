@@ -11,7 +11,7 @@
  * Http Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Request
  * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5
  */
 class KHttpRequest extends KHttpMessage implements KHttpRequestInterface

@@ -11,7 +11,7 @@
  * Model Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\Context
  */
 class KModelContext extends KCommand implements KModelContextInterface
 {

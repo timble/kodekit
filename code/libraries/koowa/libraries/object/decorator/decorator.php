@@ -14,7 +14,7 @@
  * KObject. To decorate an object that does not extend from KObject use KObjectDecoratorAbstract instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Decorator
  */
 abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObjectInterface, KObjectMixable, KObjectDecoratable
 {

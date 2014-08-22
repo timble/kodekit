@@ -11,7 +11,7 @@
  * Object Bootstrapper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Bootstrapper
  */
 final class KObjectBootstrapper extends KObject implements KObjectBootstrapperInterface, KObjectSingleton
 {

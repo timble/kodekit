@@ -14,7 +14,7 @@
  * listeners.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Mixin
  */
 class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
 {

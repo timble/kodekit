@@ -14,7 +14,7 @@
  * @link http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Response
  */
 class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
 {

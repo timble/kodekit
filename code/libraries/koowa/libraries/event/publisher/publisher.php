@@ -11,6 +11,6 @@
  * Event Publisher Singleton
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Koowa\Library\Event\Publisher
  */
 class KEventPublisher extends KEventPublisherException implements KObjectSingleton {}

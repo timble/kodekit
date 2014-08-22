@@ -17,7 +17,7 @@
  * the insert() function.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Koowa\Library\Model\State
  */
 class KModelState extends KObjectArray implements KModelStateInterface
 {

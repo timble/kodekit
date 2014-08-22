@@ -13,6 +13,6 @@
  * Force the user object to a singleton
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Koowa\Library\User\Session
  */
 final class KUserSession extends KUserSessionAbstract implements KObjectSingleton {}

@@ -11,7 +11,7 @@
  * Controller Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Request
  */
 class KControllerRequest extends KHttpRequest implements KControllerRequestInterface
 {

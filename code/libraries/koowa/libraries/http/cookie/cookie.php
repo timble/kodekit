@@ -11,7 +11,7 @@
  * Http Cookie
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http
+ * @package Koowa\Library\Http\Cookie
  */
 class KHttpCookie extends KObject implements KHttpCookieInterface
 {

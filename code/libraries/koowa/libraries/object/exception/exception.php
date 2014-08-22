@@ -11,6 +11,6 @@
  * Object Exception Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Exception
  */
 interface KObjectException extends KException {}

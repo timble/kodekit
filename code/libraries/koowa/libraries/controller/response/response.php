@@ -11,7 +11,7 @@
  * Controller Response
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Koowa\Library\Controller\Response
  */
 class KControllerResponse extends KHttpResponse implements KControllerResponseInterface
 {

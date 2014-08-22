@@ -14,7 +14,7 @@
  * as readonly.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Koowa\Library\Object\Config
  */
 class KObjectConfig implements KObjectConfigInterface
 {

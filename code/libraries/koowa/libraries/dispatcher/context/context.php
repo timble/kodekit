@@ -11,6 +11,6 @@
  * Dispatcher Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Koowa\Library\Dispatcher\Context
  */
 class KDispatcherContext extends KControllerContext implements KDispatcherContextInterface {}
