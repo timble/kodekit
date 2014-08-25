@@ -311,7 +311,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($entity->isLockable() && $entity->isLocked())
         {
-            $user = $this->getObject('user.provider')->load($entity->locked_by);
+            $user = $entity->getLocker();
             $date = $this->getObject('date', array('date' => $entity->locked_on));
 
             $message = $this->getObject('translator')->translate(

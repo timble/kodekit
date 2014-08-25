@@ -37,7 +37,7 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
      *
      * @return KUserInterface Returns a User object
      */
-    public function getOwner()
+    public function getLocker()
     {
         $provider = $this->getObject('user.provider');
 

@@ -47,7 +47,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      *
      * @return KUserInterface|null Returns a User object or NULL if no user could be found
      */
-    public function getOwner()
+    public function getLocker()
     {
         $user = null;
 

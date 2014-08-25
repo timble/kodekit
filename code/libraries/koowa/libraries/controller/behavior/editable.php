@@ -430,7 +430,7 @@ class KControllerBehaviorEditable extends KControllerBehaviorAbstract
             {
                 if($entity->isLockable() && $entity->isLocked())
                 {
-                    $user    = $this->getObject('user.provider')->load($entity->locked_by);
+                    $user    = $entity->getLocker();
                     $date    = $this->getObject('date', array('date' => $entity->locked_on));
                     $message = $this->getObject('translator')->translate(
                         'Locked by {name} {date}', array('name' => $user->getName(), 'date' => $date->humanize())
