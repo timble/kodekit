@@ -62,7 +62,6 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
     public function find(array $info)
     {
         $paths  = array();
-        $loader = $this->getObject('manager')->getClassLoader();
 
         //Get the package
         $package = $info['package'];
