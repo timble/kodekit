@@ -45,10 +45,10 @@ document.body.className = ''; document.documentElement.className = '';
         </div>
     </div>
     <div class="page_content">
-        <? foreach (@helper('debug.trace', array('trace' => $trace)) as $num => $step): endforeach; // Getting the total amount ?>
-        <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?php echo $num+2; ?>">
+        <? $trace_steps = @helper('debug.trace', array('trace' => $trace)); ?>
+        <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?= count($trace_steps)+2; ?>">
             <div id="trace_wrapper">
-                <? foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
+                <? foreach ($trace_steps as $i => $step): ?>
                 <a id="trace__item--<?= $i; ?>" class="trace__item" href="#source<?= $i ?>">
                     <span class="trace__item__header">
                         <?= $step['function'] ?>(<? if ($step['args']): $args_id = 'args'.$i; ?><? endif ?>)
@@ -58,7 +58,7 @@ document.body.className = ''; document.documentElement.className = '';
                 <? endforeach ?>
             </div>
         </div>
-        <div id="codes_container" class="codes_container" style="counter-reset: source-counter <?php echo $num+2; ?>">
+        <div id="codes_container" class="codes_container" style="counter-reset: source-counter <?= count($trace_steps)+2; ?>">
             <? foreach (@helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
             <? if ($step['file']): $source_id = 'source'.$i; ?>
             <div id="<?= $source_id ?>" class="codes_container__item">
