@@ -17,8 +17,6 @@
  */
 class KFilterPath extends KFilterAbstract implements KFilterTraversable
 {
-    const PATTERN = '#^(?:[a-z]:/|~*/)[a-z0-9_\.-\s/~]*$#i';
-
     /**
      * Validate a value
      *
@@ -27,8 +25,22 @@ class KFilterPath extends KFilterAbstract implements KFilterTraversable
      */
     public function validate($value)
     {
-        $value = trim(str_replace('\\', '/', $value));
-        return (is_string($value) && (preg_match(self::PATTERN, $value)) == 1);
+        $result = false;
+
+        if (is_string($value))
+        {
+            if ($value[0] == '/' || $value[0] == '\\'
+                || (strlen($value) > 3 && ctype_alpha($value[0])
+                    && $value[1] == ':'
+                    && ($value[2] == '\\' || $value[2] == '/')
+                )
+                || null !== parse_url($value, PHP_URL_SCHEME)
+            ) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -39,10 +51,6 @@ class KFilterPath extends KFilterAbstract implements KFilterTraversable
      */
     public function sanitize($value)
     {
-        $value = trim(str_replace('\\', '/', $value));
-        preg_match(self::PATTERN, $value, $matches);
-        $match = isset($matches[0]) ? $matches[0] : '';
-
-        return $match;
+        return $this->validate($value) ? $value : '';
     }
 }
