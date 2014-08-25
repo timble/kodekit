@@ -15,7 +15,11 @@
  */
 class KFilterUrl extends KFilterAbstract implements KFilterTraversable
 {
-    // Special URL characters
+    /**
+     * Special URL characters
+     *
+     * @var array
+     */
     protected static $_special_characters = array(
         // Unescaped
         '%2D'=>'-','%5F'=>'_','%2E'=>'.','%21'=>'!', '%7E'=>'~',
