@@ -12,8 +12,8 @@ defined('KOOWA') or die; ?>
 <!DOCTYPE html>
 <html class="koowa-html" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <base href="<?= @url(); ?>" />
-    <title><?= @title() ?></title>
+    <base href="<?= url(); ?>" />
+    <title><?= title() ?></title>
 
     <meta content="text/html; charset=utf-8" http-equiv="content-type"  />
     <meta content="chrome=1" http-equiv="X-UA-Compatible" />

@@ -147,7 +147,7 @@ interface KViewInterface
      * - foo=bar
      * - component=[package]&view=[name]&foo=bar
      *
-     * In templates, use @route()
+     * In templates, use route()
      *
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
