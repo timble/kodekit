@@ -268,6 +268,16 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
+     * Get the state
+     *
+     * @return KModelStateInterface
+     */
+    public function getState()
+    {
+        return $this->getModel()->getState();
+    }
+
+    /**
      * Get the format
      *
      * @return  string  The format of the view
