@@ -69,7 +69,6 @@ class KTemplateAdapter extends KTemplateAbstract implements KTemplateFilterable,
         $config->append(array(
             'filters'   => array(),
             'functions' => array(
-                'render'  => array($this, 'render'),
                 'escape'  => array($this, 'escape'),
                 'helper'  => array($this, 'invoke'),
             ),
