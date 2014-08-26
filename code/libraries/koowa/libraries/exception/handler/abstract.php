@@ -276,7 +276,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
             //Try to handle the exception
             foreach($this->getHandlers() as $handler)
             {
-                if(call_user_func($handler, $exception) === true)
+                if(call_user_func_array($handler, array(&$exception)) === true)
                 {
                     $this->__exceptions->push($exception);
                     return true;
