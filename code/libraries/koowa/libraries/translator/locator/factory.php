@@ -61,21 +61,16 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
      * Note that only URLs delimited by "://"" are supported. ":" and ":/" while technically valid URLs, are not. If no
      * locator is registered for the specific scheme a exception will be thrown.
      *
-     * @param  string  $path The locator path
-     * @param  string $base  The base path or resource (used to resolve partials).
+     * @param  string $path    The locator path
+     * @param  array  $config  An optional associative array of configuration options
      * @throws InvalidArgumentException If the path is not valid
      * @throws RuntimeException         If the locator isn't registered
      * @throws UnexpectedValueException If the locator object doesn't implement the TranslatorLocatorInterface
      * @return KTranslatorLocatorInterface
      */
-    public function createLocator($path, $base = null)
+    public function createLocator($path, array $config = array())
     {
         $scheme = parse_url($path, PHP_URL_SCHEME);
-
-        //If no scheme is specified find a fallback
-        if(empty($scheme) && $base ) {
-            $scheme = parse_url($base, PHP_URL_SCHEME);
-        }
 
         //If no scheme is specified fall back to file:// locator
         $name = !empty($scheme) ? $scheme : 'file';
@@ -98,7 +93,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
 
         //Create the locator
         $identifier = $this->getLocator($name);
-        $locator    = $this->getObject($identifier);
+        $locator    = $this->getObject($identifier, $config);
 
         if(!$locator instanceof KTranslatorLocatorInterface)
         {
@@ -187,13 +182,8 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
     {
         $locator = false;
 
-        if($this->isRegistered($name))
-        {
-            if(isset($this->__locators[$name])) {
-                $locator = $this->__locators[$name];
-            } else {
-                $locator = 'lib:translator.locator.'.$name;
-            }
+        if($this->isRegistered($name)) {
+            $locator = $this->__locators[$name];
         }
 
         return $locator;

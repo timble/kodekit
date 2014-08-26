@@ -13,7 +13,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Translator\Locator
  */
-abstract class KTranslatorLocatorAbstract extends KObject implements KTranslatorLocatorInterface
+abstract class KTranslatorLocatorAbstract extends KObject implements KTranslatorLocatorInterface, KObjectMultiton
 {
     /**
      * The stream name
@@ -23,32 +23,106 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
     protected static $_name = '';
 
     /**
+     * The locale
+     *
+     * @var string
+     */
+    protected $_locale;
+
+    /**
+     * Found locations map
+     *
+     * @var array
+     */
+    protected $_locations;
+
+    /**
+     * Constructor
+     *
+     * Prevent creating instances of this class by making the constructor private
+     *
+     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        //Set the locale
+        $this->setLocale($config->locale);
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'locale' => 'en-GB'
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Get the locator name
      *
      * @return string The stream name
      */
     public static function getName()
     {
-        return self::$_name;
+        return static::$_name;
+    }
+
+    /**
+     * Gets the locale
+     *
+     * @return string|null
+     */
+    public function getLocale()
+    {
+        return $this->_locale;
+    }
+
+    /**
+     * Sets the locale
+     *
+     * @param string $locale
+     * @return KTranslatorLocatorAbstract
+     */
+    public function setLocale($locale)
+    {
+        $this->_locale = $locale;
+        return $this;
     }
 
     /**
      * Locate the translation based on a physical path
      *
      * @param  string $url       The translation url
-     * @param  string $locale    The locale to search for
      * @return string  The real file path for the translation
      */
-    public function locate($url, $locale)
+    public function locate($url)
     {
-        $result = array();
-        $info   = array(
-            'url'     => $url,
-            'locale'  => $locale,
-            'path'    => '',
-        );
+        $key = $this->getLocale().'-'.$url;
 
-        return $this->find($info);
+        if(!isset($this->_locations[$key]))
+        {
+            $result = array();
+            $info   = array(
+                'url'     => $url,
+                'locale'  => $this->getLocale(),
+                'path'    => '',
+            );
+
+            $this->_locations[$key] = $this->find($info);
+        }
+
+        return $this->_locations[$key];
     }
 
     /**
@@ -64,20 +138,15 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
         if($info['path'] && $info['locale'])
         {
             $pattern = $info['path'].'/'.$info['locale'].'.*';
-            $files   = glob($pattern);
 
-            if ($files)
+            foreach(glob($pattern) as $file)
             {
-                foreach($files as $file)
+                if($path = $this->realPath($file))
                 {
-                    if($path = $this->realPath($file))
-                    {
-                        $result[] = $path;
-                        break;
-                    }
+                    $result[] = $path;
+                    break;
                 }
             }
-
         }
 
         return $result;
@@ -111,5 +180,21 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
         }
 
         return $result;
+    }
+
+    /**
+     * Returns true if the translation is still fresh.
+     *
+     * @param  string $url    The translation url
+     * @param int     $time   The last modification time of the cached translation (timestamp)
+     * @return bool TRUE if the template is still fresh, FALSE otherwise
+     */
+    public function isFresh($url, $time)
+    {
+        if($file = $this->locate($url)) {
+            return filemtime($file) < $time;
+        }
+
+        return false;
     }
 }

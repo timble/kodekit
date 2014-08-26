@@ -86,8 +86,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      *
      * @param   KObjectConfigInterface  $config   A ObjectConfig object with configuration options
      * @param   KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return  $this
-     * @see KFilterTraversable
+     * @return  KTranslatorInterface
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
@@ -222,11 +221,11 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
         $locator  = $this->getObject('translator.locator.factory')->createLocator($url);
 
         //Find translation based on the locale
-        $result = $locator->locate($url, $locale);
+        $result = $locator->setLocale($locale)->locate($url, $locale);
 
         //If no translations found, try using the fallback locale
         if(empty($result) && $fallback && $fallback != $locale) {
-            $result = $locator->locate($url, $fallback);
+            $result = $locator->setLocale($fallback)->locate($url, $fallback);
         }
 
         return $result;

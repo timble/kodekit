@@ -40,14 +40,14 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
         parent::__construct($config);
 
         if (!self::isSupported()) {
-            throw new RuntimeException('Unable to use KTranslatorCache as APC is not enabled.');
+            throw new RuntimeException('Unable to use TranslatorCache. APC is not enabled.');
         }
 
         $this->_loaded = array();
     }
 
     /**
-     * Get the registry cache namespace
+     * Get the translator cache namespace
      *
      * @param string $namespace
      * @return KTranslatorCache
@@ -59,7 +59,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     }
 
     /**
-     * Get the registry cache namespace
+     * Get the translator cache namespace
      *
      * @return string
      */

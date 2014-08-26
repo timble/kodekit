@@ -19,17 +19,16 @@ abstract class KTranslatorLocatorIdentifier extends KTranslatorLocatorAbstract
      * Locate the translation based on a physical path
      *
      * @param  string $url       The translation url
-     * @param  string $locale    The locale to search for
      * @return string  The real file path for the translation
      */
-    public function locate($url, $locale)
+    public function locate($url)
     {
         $result     = array();
         $identifier = $this->getIdentifier($url);
 
         $info   = array(
             'url'     => $identifier,
-            'locale'  => $locale,
+            'locale'  => $this->getLocale(),
             'path'    => '',
             'domain'  => $identifier->getDomain(),
             'package' => $identifier->getPackage(),
