@@ -27,10 +27,6 @@ class ModKoowaHtml extends KViewHtml
     {
         $config->append(array(
             'template_filters'   => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
-            'template_functions' => array(
-                'prepareText' => array($this, 'prepareText'),
-                'isRecent'    => array($this, 'isRecent'),
-            ),
             'data'             => array(
                 'styles' => array()
             )
