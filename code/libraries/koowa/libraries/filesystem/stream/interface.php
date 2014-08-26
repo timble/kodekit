@@ -346,7 +346,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * @param array $config  An optional array of filter config options
      * @return  bool   Returns TRUE if the filter was attached, FALSE otherwise
      */
-    public function attachFilter($filter, $config = array());
+    public function addFilter($filter, $config = array());
 
     /**
      * Detach a filter
@@ -354,7 +354,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * @param string $filter   The name of the filter
      * @return bool
      */
-    public function detachFilter($filter);
+    public function removeFilter($filter);
 
     /**
      * Check if a filter is attached to the stream

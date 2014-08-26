@@ -127,9 +127,9 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         foreach($config->filters as $key => $filter)
         {
             if (is_numeric($key)) {
-                $this->attachFilter($filter);
+                $this->addFilter($filter);
             } else {
-                $this->attachFilter($key, $filter);
+                $this->addFilter($key, $filter);
             }
         }
     }
@@ -793,14 +793,14 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     }
 
     /**
-     * Attach a filter in FIFO order
+     * Add a filter in FIFO order
      *
      * @param mixed $filter An object that implements ObjectInterface, ObjectIdentifier object
      *                      or valid identifier string
      * @param array $config  An optional array of filter config options
-     * @return  bool   Returns TRUE if the filter was attached, FALSE otherwise
+     * @return  bool   Returns TRUE if the filter was added, FALSE otherwise
      */
-    public function attachFilter($filter, $config = array())
+    public function addFilter($filter, $config = array())
     {
         $result = false;
 
@@ -857,12 +857,12 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     }
 
     /**
-     * Detach a filter
+     * Remove a filter
      *
      * @param string $filter   The name of the filter
      * @return  bool   Returns TRUE if the filter was detached, FALSE otherwise
      */
-    public function detachFilter($filter)
+    public function removeFilter($filter)
     {
         $result = false;
         if(!is_resource($filter) && isset($this->_filters[$filter])){
