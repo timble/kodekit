@@ -191,8 +191,9 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
             }
             else
             {
-                $key = $this->generateKey(substr($key, 0, $limit));
-                $key .= '_'.strtoupper(substr(md5($key), 0, 5));
+                $hash = substr(md5($key), 0, 5);
+                $key  = $this->generateKey(substr($string, 0, $limit));
+                $key .= '_'.strtoupper($hash);
             }
         }
         else $key = $this->_keys[$string];
