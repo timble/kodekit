@@ -138,9 +138,9 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'url'  		=> '',
-            'options'  	=> array(),
-            'attribs'	=> array(),
+            'url'       => '',
+            'options'   => array(),
+            'attribs'   => array(),
         ));
 
         $translator = $this->getObject('translator');

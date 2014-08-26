@@ -53,7 +53,7 @@ class ComKoowaControllerBehaviorCacheable extends KControllerBehaviorAbstract
     protected function _initialize(KObjectConfig  $config)
     {
         $config->append(array(
-            'modules'	=> array('toolbar', 'title', 'submenu')
+            'modules'   => array('toolbar', 'title', 'submenu')
         ));
 
         parent::_initialize($config);
