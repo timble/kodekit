@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Filter
  */
-class KTemplateFilterAsset extends KTemplateFilterAbstract implements KTemplateFilterCompiler, KTemplateFilterRenderer
+class KTemplateFilterAsset extends KTemplateFilterAbstract
 {
     /**
      * The schemes
@@ -75,21 +75,7 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract implements KTemplateF
      * @param string $text  The text to parse
      * @return void
      */
-    public function compile(&$text)
-    {
-        $text = str_replace(
-            array_keys($this->_schemes),
-            array_values($this->_schemes),
-            $text);
-    }
-
-    /**
-     * Convert the schemes to their real paths
-     *
-     * @param string $text  The text to parse
-     * @return void
-     */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $text = str_replace(
             array_keys($this->_schemes),

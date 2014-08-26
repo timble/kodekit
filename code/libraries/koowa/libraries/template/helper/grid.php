@@ -31,9 +31,9 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
-            $html = $this->getTemplate()->invokeHelper('behavior.tooltip');
+            $html = $this->getTemplate()->helper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->invokeHelper('grid.lock_message', array('entity' => $config->entity)).'">
+                           title="'.$this->getTemplate()->helper('grid.lock_message', array('entity' => $config->entity)).'">
                     </span>';
         }
         else
@@ -67,9 +67,9 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
-            $html = $this->getTemplate()->invokeHelper('behavior.tooltip');
+            $html = $this->getTemplate()->helper('behavior.tooltip');
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->invokeHelper('grid.lock_message', array('entity' => $config->entity)).'">
+                           title="'.$this->getTemplate()->helper('grid.lock_message', array('entity' => $config->entity)).'">
                     </span>';
         }
         else
@@ -105,7 +105,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         if ($config->submit_on_clear)
         {
-            $html .= $this->getTemplate()->invokeHelper('behavior.jquery');
+            $html .= $this->getTemplate()->helper('behavior.jquery');
             $html .= '
             <script>
             (function() {
@@ -195,7 +195,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
             $class = 'class="-koowa-'.$direction.'"';
         }
 
-        $url = clone $this->getTemplate()->getView()->getUrl();
+        $url = clone $this->getTemplate()->url();
 
         $query              = $url->getQuery(1);
         $query['sort']      = $config->column;
@@ -256,7 +256,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract
 
         $html = '<span class="koowa-tooltip koowa_icon--%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
-        $html .= $this->getTemplate()->invokeHelper('behavior.tooltip');
+        $html .= $this->getTemplate()->helper('behavior.tooltip');
 
         return $html;
     }

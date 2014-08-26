@@ -26,7 +26,11 @@ class ModKoowaHtml extends KViewHtml
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'template_filters' => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
+            'template_filters'   => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
+            'template_functions' => array(
+                'prepareText' => array($this, 'prepareText'),
+                'isRecent'    => array($this, 'isRecent'),
+            ),
             'data'             => array(
                 'styles' => array()
             )
@@ -89,14 +93,16 @@ class ModKoowaHtml extends KViewHtml
                 $layout = (string) $this->getIdentifier($identifier);
             }
 
-            $this->getTemplate()->load($layout.'.'.$format);
+            $this->_content = $this->getTemplate()
+                ->load($layout.'.'.$format)
+                ->render($this->_data);
         }
-        else $this->getTemplate()->setContent($this->module->content);
-
-        $this->_content = (string) $this->getTemplate()
-            ->compile()
-            ->evaluate($this->_data)
-            ->render();
+        else
+        {
+            $this_content = $this->getTemplate()
+                ->setContent($this->module->content)
+                ->filter();
+        }
 
         return $this->_content;
     }

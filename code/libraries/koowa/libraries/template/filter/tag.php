@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Filter
  */
-abstract class KTemplateFilterTag extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+abstract class KTemplateFilterTag extends KTemplateFilterAbstract
 {
     /**
      * Initializes the options for the object
@@ -41,7 +41,7 @@ abstract class KTemplateFilterTag extends KTemplateFilterAbstract implements KTe
      *
      * @param string $text  The text to parse
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         //Parse the tags
         $tags = $this->_parseTags($text);

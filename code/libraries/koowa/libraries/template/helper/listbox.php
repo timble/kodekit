@@ -58,7 +58,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
                 ));
             }
 
-            $html .= $this->getTemplate()->getHelper('behavior')->select2($config->select2_options);
+            $html .= $this->getTemplate()->createHelper('behavior')->select2($config->select2_options);
         }
 
         $html .= parent::optionlist($config);
@@ -287,7 +287,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
                 $parts = array_merge($parts, KObjectConfig::unbox($config->filter));
             }
 
-            $config->url = $this->getTemplate()->getView()->getRoute($parts, false, false);
+            $config->url = $this->getTemplate()->route($parts, false, false);
         }
 
         $html = '';
@@ -335,7 +335,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             });</script>';
         }
 
-        $html .= $this->getTemplate()->getHelper('behavior')->autocomplete($config);
+        $html .= $this->getTemplate()->createHelper('behavior')->autocomplete($config);
 
         $config->attribs->name = $config->name;
 

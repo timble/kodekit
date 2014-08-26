@@ -27,11 +27,11 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
      *
      * @param string $text  The text to parse
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $styles = $this->_parseTags($text);
 
-        if($this->getTemplate()->getView()->getLayout() == 'koowa') {
+        if($this->getTemplate()->layout() == 'koowa') {
             $text = str_replace('<ktml:style>', $styles, $text);
         } else  {
             $text = $styles.$text;
@@ -47,7 +47,7 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->getView()->getLayout() !== 'koowa')
+        if($this->getTemplate()->layout() !== 'koowa')
         {
             $link      = isset($attribs['src']) ? $attribs['src'] : false;
             $condition = isset($attribs['condition']) ? $attribs['condition'] : false;

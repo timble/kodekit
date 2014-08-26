@@ -19,7 +19,7 @@
  * @package Koowa\Library\Template\Filter
  * @see         http://www.w3.org/TR/html401/interact/forms.html#h-17.13.3.4
  */
-class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterForm extends KTemplateFilterAbstract
 {
     /**
      * The form token value
@@ -72,7 +72,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
      * @param string
      * @return $this
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $this->_addAction($text);
         $this->_addToken($text);
@@ -92,13 +92,17 @@ class KTemplateFilterForm extends KTemplateFilterAbstract implements KTemplateFi
         // All: Add the action if left empty
         if (preg_match_all('#<\s*form.*?action=""#im', $text, $matches, PREG_SET_ORDER))
         {
-            $action = $this->getTemplate()->getView()->getRoute('');
-
-            foreach ($matches as $match)
+            if($state  = $this->getTemplate()->state())
             {
-                $str  = str_replace('action=""', 'action="'.$action.'"', $match[0]);
-                $text = str_replace($match[0], $str, $text);
+                $action = $this->getTemplate()->route(http_build_query($state->getValues($state->isUnique())));
+
+                foreach ($matches as $match)
+                {
+                    $str = str_replace('action=""', 'action="' . $action . '"', $match[0]);
+                    $text = str_replace($match[0], $str, $text);
+                }
             }
+
         }
 
         return $this;

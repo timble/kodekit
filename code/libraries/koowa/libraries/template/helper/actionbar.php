@@ -114,7 +114,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
         //Create the href
         $command->attribs->append(array('href' => '#'));
         if(!empty($command->href)) {
-            $command->attribs['href'] = $this->getTemplate()->getView()->getRoute($command->href);
+            $command->attribs['href'] = $this->getTemplate()->route($command->href);
         }
 
         //Create the id

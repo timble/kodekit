@@ -29,7 +29,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
         $config->append(array(
             'date'     => 'now',
             'timezone' => date_default_timezone_get(),
-            'format'   => $this->getTemplate()->getFormat() == 'rss' ? DateTime::RSS : $translator->translate('DATE_FORMAT_LC1'),
+            'format'   => $translator->translate('DATE_FORMAT_LC1'),
             'default'  => ''
         ));
 

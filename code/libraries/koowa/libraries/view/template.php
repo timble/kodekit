@@ -53,18 +53,6 @@ abstract class KViewTemplate extends KViewAbstract
 
         //Set the template object
         $this->setTemplate($config->template);
-
-        //Add the template filters
-        $filters = (array) KObjectConfig::unbox($config->template_filters);
-
-        foreach ($filters as $key => $value)
-        {
-            if (is_numeric($key)) {
-                $this->getTemplate()->attachFilter($value);
-            } else {
-                $this->getTemplate()->attachFilter($key, $value);
-            }
-        }
     }
 
     /**
@@ -78,10 +66,19 @@ abstract class KViewTemplate extends KViewAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'layout'           => '',
-            'template'         => $this->getName(),
-            'template_filters' => array('shorttag', 'function', 'asset', 'decorator'),
-            'auto_fetch'       => true,
+            'auto_fetch'         => true,
+            'layout'             => '',
+            'template'           => $this->getName(),
+            'template_filters'   => array('asset', 'decorator'),
+            'template_functions' => array(
+                'route'   => array($this, 'getRoute'),
+                'url'     => array($this, 'getUrl'),
+                'title'   => array($this, 'getTitle'),
+                'content' => array($this, 'getContent'),
+                'layout'  => array($this, 'getLayout'),
+                'state'   => array($this, 'getState'),
+                'name'    => array($this, 'getName')
+            ),
         ));
 
         parent::_initialize($config);
@@ -97,6 +94,7 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $layout  = $this->getLayout();
         $format  = $this->getFormat();
+        $data    = $this->getData();
 
         //Handle partial layout paths
         if (is_string($layout) && strpos($layout, '.') === false)
@@ -111,9 +109,7 @@ abstract class KViewTemplate extends KViewAbstract
         //Render the template
         $this->_content = (string) $this->getTemplate()
             ->load((string) $layout.'.'.$format)
-            ->compile()
-            ->evaluate($this->getData())
-            ->render();
+            ->render($data);
 
         return parent::_actionRender($context);
     }
@@ -165,7 +161,8 @@ abstract class KViewTemplate extends KViewAbstract
             }
 
             $options = array(
-                'view' => $this
+                'filters'   => $this->getConfig()->template_filters,
+                'functions' => $this->getConfig()->template_functions,
             );
 
             $this->_template = $this->getObject($this->_template, $options);

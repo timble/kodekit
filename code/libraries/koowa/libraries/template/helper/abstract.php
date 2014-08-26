@@ -20,7 +20,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      *
      * @var	object
      */
-    protected $_template;
+    private $__template;
 
     /**
      * Constructor
@@ -41,7 +41,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      */
     public function getTemplate()
     {
-        return $this->_template;
+        return $this->__template;
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
             $template = $this->getObject($identifier);
         }
     
-        $this->_template = $template;
+        $this->__template = $template;
     
         return $this;
     }

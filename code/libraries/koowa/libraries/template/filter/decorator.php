@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Filter
  */
-class KTemplateFilterDecorator extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterDecorator extends KTemplateFilterAbstract
 {
     /**
      * Replace <ktml:content> with the view content
@@ -23,13 +23,13 @@ class KTemplateFilterDecorator extends KTemplateFilterAbstract implements KTempl
      * @param string $text  The text to parse
      * @return void
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $matches = array();
         if(preg_match_all('#<ktml:content(.*)>#iU', $text, $matches))
         {
             foreach($matches[1] as $key => $match) {
-                $text = str_replace($matches[0][$key], $this->getTemplate()->getView()->getContent(), $text);
+                $text = str_replace($matches[0][$key], $this->getTemplate()->content(), $text);
             }
         }
     }

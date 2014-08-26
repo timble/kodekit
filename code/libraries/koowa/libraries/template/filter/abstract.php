@@ -27,7 +27,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      *
      * @var KTemplateInterface
      */
-    protected $_template;
+    private $__template;
 
     /**
      * Constructor.
@@ -78,7 +78,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      */
     public function getTemplate()
     {
-        return $this->_template;
+        return $this->__template;
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
      */
     public function setTemplate(KTemplateInterface $template)
     {
-        $this->_template = $template;
+        $this->__template = $template;
         return $this;
     }
 

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Module\Koowa\Template\Filter
  */
-class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract
 {
     /**
      * Constructor.
@@ -56,7 +56,7 @@ class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract implements KT
      * @param string $text Block of text to parse
      * @return $this
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $data = (object) $this->getTemplate()->getData();
 

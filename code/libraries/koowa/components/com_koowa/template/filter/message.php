@@ -15,9 +15,9 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa\Template\Filter
  */
-class ComKoowaTemplateFilterMessage extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterMessage extends KTemplateFilterAbstract
 {
-    public function render(&$text)
+    public function filter(&$text)
     {
         if (strpos($text, '<ktml:messages>') !== false)
         {

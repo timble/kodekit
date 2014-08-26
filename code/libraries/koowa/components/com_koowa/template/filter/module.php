@@ -25,7 +25,7 @@ jimport('joomla.application.module.helper');
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa\Template\Filter
  */
-class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract
 {
     /**
      * Initializes the options for the object
@@ -50,7 +50,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract implements KT
      * @param string $text Block of text to parse
      * @return ComKoowaTemplateFilterModule
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $this->_parseModuleTags($text);
         $this->_parseModulesTags($text);

@@ -8,9 +8,17 @@
  */
 
 /**
- * Abstract Template
+ * Template Engine Interface
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Component\Koowa\Template
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Template\Engine
  */
-final class ComKoowaTemplateDefault extends ComKoowaTemplateAbstract {}
+interface KTemplateEngineInterface extends KTemplateInterface
+{
+    /**
+     * Get the engine supported file types
+     *
+     * @return array
+     */
+    public static function getFileTypes();
+}

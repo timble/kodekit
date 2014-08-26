@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Filter
  */
-class KTemplateFilterWhitespace extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class KTemplateFilterWhitespace extends KTemplateFilterAbstract
 {
     /**
      * Initializes the options for the object
@@ -40,7 +40,7 @@ class KTemplateFilterWhitespace extends KTemplateFilterAbstract implements KTemp
      * @param string $text  The text to parse
      * @return void
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $text = trim(preg_replace('/>\s+</', '><', $text));
     }

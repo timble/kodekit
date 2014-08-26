@@ -15,16 +15,5 @@
  */
 class ComKoowaViewHtml extends KViewHtml
 {
-    /**
-     * Constructor
-     *
-     * @param   KObjectConfig $config Configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
 
-        //Add alias filter for editor helper
-        $this->getTemplate()->getFilter('function')->addFunction('@editor', '$this->invokeHelper(\'editor.display\', ');
-    }
 }

@@ -13,7 +13,7 @@
  * @author  Ercan Özkaya <https://github.com/ercanozkaya>
  * @package Koowa\Component\Koowa\Template\Filter
  */
-class ComKoowaTemplateFilterDocument extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterDocument extends KTemplateFilterAbstract
 {
     protected function _initialize(KObjectConfig $config)
     {
@@ -24,9 +24,9 @@ class ComKoowaTemplateFilterDocument extends KTemplateFilterAbstract implements 
         parent::_initialize($config);
     }
 
-    public function render(&$text)
+    public function filter(&$text)
     {
-        if($this->getTemplate()->getView()->getLayout() == 'koowa')
+        if($this->getTemplate()->layout() == 'koowa')
         {
             $head = JFactory::getDocument()->getHeadData();
             $mime = JFactory::getDocument()->getMimeEncoding();

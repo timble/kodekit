@@ -16,7 +16,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa\Template\Filter
  */
-class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract
 {
     /**
      * Toolbars to render such as actionbar, menubar, ...
@@ -109,7 +109,7 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
      * @param string $text Block of text to parse
      * @return ComKoowaTemplateFilterToolbar
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $matches = array();
 
@@ -131,7 +131,7 @@ class ComKoowaTemplateFilterToolbar extends KTemplateFilterAbstract implements K
                     $config->toolbar = $toolbar; //set the toolbar in the config
 
                     $html = $this->getTemplate()
-                                 ->getHelper($config->type)
+                                 ->createHelper($config->type)
                                  ->render($config);
                 }
 

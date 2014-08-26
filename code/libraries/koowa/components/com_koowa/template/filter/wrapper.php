@@ -15,7 +15,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa\Template\Filter
  */
-class ComKoowaTemplateFilterWrapper extends KTemplateFilterAbstract implements KTemplateFilterRenderer
+class ComKoowaTemplateFilterWrapper extends KTemplateFilterAbstract
 {
     /**
      * An sprintf parameter with %s in it for the template content
@@ -52,7 +52,7 @@ class ComKoowaTemplateFilterWrapper extends KTemplateFilterAbstract implements K
      *
      * @return $this
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         if ($this->getWrapper()) {
             $text = sprintf($this->getWrapper(), $text);

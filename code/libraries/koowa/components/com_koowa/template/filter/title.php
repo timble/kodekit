@@ -22,11 +22,11 @@ class ComKoowaTemplateFilterTitle extends KTemplateFilterTitle
      *
      * @param string $text  The text to parse
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $links   = $this->_parseTags($text);
 
-        if($this->getTemplate()->getView()->getLayout() == 'koowa') {
+        if($this->getTemplate()->layout() == 'koowa') {
             $text = str_replace('<ktml:title>', $links, $text);
         } else  {
             $text = $links.$text;
@@ -42,7 +42,7 @@ class ComKoowaTemplateFilterTitle extends KTemplateFilterTitle
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->getView()->getLayout() !== 'koowa')
+        if($this->getTemplate()->layout() !== 'koowa')
         {
             if($this->_escape) {
                 $content = $this->getTemplate()->escape($content);
