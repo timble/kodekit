@@ -135,7 +135,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      * @param string  $callable  The callable
      * @return KTemplateEngineInterface
      */
-    public function registerFunction($name, callable $function)
+    public function registerFunction($name, $function)
     {
         $this->getDelegate()->registerFunction($name, $function);
         return $this;
