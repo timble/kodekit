@@ -187,13 +187,8 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
     {
         $locator = false;
 
-        if($this->isRegistered($name))
-        {
-            if(isset($this->__locators[$name])) {
-                $locator = $this->__locators[$name];
-            } else {
-                $locator = 'lib:template.locator.'.$name;
-            }
+        if($this->isRegistered($name)) {
+            $locator = $this->__locators[$name];
         }
 
         return $locator;

@@ -23,14 +23,37 @@ interface KTemplateLocatorInterface
     public static function getName();
 
     /**
-     * Locate the template based on a virtual path
+     * Sets the base path
      *
-     * @param  string $path  Stream path or resource
-     * @param  string $base  The base path or resource (used to resolved partials).
-     * @throws RuntimeException If the no base path was passed while trying to locate a partial.
-     * @return string   The physical stream path for the template
+     * @param string $path  The path (used to resolved partials).
+     * @return KTemplateLocatorInterface
      */
-    public function locate($path, $base = null);
+    public function setBasePath($path);
+
+    /**
+     * Get the path
+     *
+     * @return string|null
+     */
+    public function getBasePath();
+
+    /**
+     * Find the template path
+     *
+     * @param  string $url   The Template url
+     * @throws RuntimeException If the no base path exists while trying to locate a partial.
+     * @return string   The physical path of the template
+     */
+    public function locate($url);
+
+    /**
+     * Load the template content
+     *
+     * @param  string $url   The Template url
+     * @throws RuntimeException If the no base path exists while trying to locate a partial.
+     * @return string   The template content
+     */
+    public function load($url);
 
     /**
      * Find a template path
@@ -49,4 +72,13 @@ interface KTemplateLocatorInterface
      * @return string The real file path
      */
     public function realPath($file);
+
+    /**
+     * Returns true if the template is still fresh.
+     *
+     * @param  string $url   The Template url
+     * @param int     $time  The last modification time of the cached template (timestamp)
+     * @return bool TRUE if the template is still fresh, FALSE otherwise
+     */
+    public function isFresh($url, $time);
 }
