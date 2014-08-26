@@ -103,6 +103,20 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
     }
 
     /**
+     * Sets the default keys again after clearing
+     *
+     * {@inheritdoc}
+     */
+    public function clear()
+    {
+        $result = parent::clear();
+
+        $this->_data = KObjectConfig::unbox($this->getConfig()->data);
+
+        return $result;
+    }
+
+    /**
      * Get a string from the catalogue
      *
      * @param string $string
