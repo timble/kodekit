@@ -185,6 +185,17 @@ class KModelState extends KObjectArray implements KModelStateInterface
     }
 
     /**
+     * Get the total number of entities
+     *
+     * @return  int
+     */
+    public function count()
+    {
+        //Reset the model
+        return $this->_model->count();
+    }
+
+    /**
      * Set the state values from an array
      *
      * @param   array $data An associative array of state values by name
