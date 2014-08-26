@@ -26,8 +26,6 @@ class KViewRss extends KViewTemplate
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'layout'   => 'rss',
-            'template' => 'rss',
             'mimetype' => 'application/rss+xml',
             'data'     => array(
                 'update_period'    => 'hourly',
@@ -60,4 +58,20 @@ class KViewRss extends KViewTemplate
     {
         return parent::getRoute($route, $fqr, $escape);
     }
+
+    /**
+     * Prepend the xml prolog
+     *
+     * @param KViewContext  $context A view context object
+     * @return string  The output of the view
+     */
+    protected function _actionRender(KViewContext $context)
+    {
+        //Prepend the xml prolog
+        $result  = '<?xml version="1.0" encoding="utf-8" ?>';
+        $result .=  parent::_actionRender($context);
+
+        return $result;
+    }
+
 }
