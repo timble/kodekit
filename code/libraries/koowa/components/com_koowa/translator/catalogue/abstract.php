@@ -54,8 +54,9 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'prefix'  => 'KLS_',
-            'data'    =>  array(
+            'prefix'     => 'KLS_',
+            'key_length' => 40,
+            'data'       =>  array(
                 'all'           => 'JALL',
                 'title'         => 'JGLOBAL_TITLE',
                 'alias'         => 'JFIELD_ALIAS_LABEL',
@@ -163,17 +164,19 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
     /**
      * Generates a translation key that is safe for INI format
      *
+     * Uses key_length in object config to limit the keys
+     *
      * @param  string $string
-     * @param  int    $limit    Max key length, should be larger then 0. If -1 no limit will be used.
      * @return string
      */
-    public function generateKey($string, $limit = 40)
+    public function generateKey($string)
     {
-        $key = strtolower($string);
+        $limit = $this->getConfig()->key_length;
+        $key   = strtolower($string);
 
         if(!isset($this->_keys[$string]))
         {
-            if ($limit == -1 || strlen($key) <= $limit)
+            if (!$limit || strlen($key) <= $limit)
             {
                 $key = strip_tags($key);
                 $key = preg_replace('#\s+#m', ' ', $key);

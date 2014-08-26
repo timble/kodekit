@@ -19,10 +19,9 @@ interface ComKoowaTranslatorCatalogueInterface extends KTranslatorCatalogueInter
      * Generates a translation key that is safe for INI format
      *
      * @param  string $string
-     * @param  int    $limit    Max key length, should be larger then 0. If -1 no limit will be used.
      * @return string
      */
-    public function generateKey($string, $limit = 40);
+    public function generateKey($string);
 
     /**
      * Return the language key prefix
