@@ -182,7 +182,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      */
     public function unregisterFunction($name)
     {
-        if( $this->_functions[$name]) {
+        if(isset($this->_functions[$name])) {
             unset($this->_functions[$name]);
         }
 
