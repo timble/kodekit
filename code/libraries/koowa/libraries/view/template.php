@@ -127,20 +127,11 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $model = $this->getModel();
 
-        //Auto-assign the state to the view
-        $context->data->state = $model->getState();
-
         //Auto-assign the data from the model
         if($this->_auto_fetch)
         {
             //Get the view name
             $name = $this->getName();
-
-            //Assign the data of the model to the view
-            if(KStringInflector::isPlural($name)) {
-                $context->data->total = $model->count();
-            }
-
             $context->data->$name = $model->fetch();
         }
     }
