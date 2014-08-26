@@ -271,7 +271,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
         if($bootstrap)
         {
             $this->registerComponents($path);
-            $this->getObject('manager')->getClassLoader()->setBasepath($path);
+            $this->getObject('manager')->getClassLoader()->setBasePath($path);
         }
 
         return $this;

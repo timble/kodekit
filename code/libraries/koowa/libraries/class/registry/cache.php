@@ -31,7 +31,7 @@ class KClassRegistryCache extends KClassRegistry
     public function __construct()
     {
         if (!self::isSupported()) {
-            throw new RuntimeException('Unable to use KClassRegistryCache as APC is not enabled.');
+            throw new RuntimeException('Unable to use KClassRegistryCache. APC is not enabled.');
         }
     }
 

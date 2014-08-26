@@ -43,20 +43,20 @@ interface KClassLoaderInterface
      * Get the path based on a class name
      *
      * @param string $class     The class name
-     * @param string $basepath  The basepath. If NULL the global basepath will be used.
+     * @param string $base      The base path. If NULL the global base path will be used.
      * @return string|boolean   Returns canonicalized absolute pathname or FALSE of the class could not be found.
      */
-    public function getPath($class, $basepath = null);
+    public function getPath($class, $base = null);
 
     /**
      * Get the path based on a class name
      *
-     * @param string $class     The class name
-     * @param string $path      The class path
-     * @param string $basepath  The basepath. If NULL the global basepath will be used.
+     * @param string $class The class name
+     * @param string $path  The class path
+     * @param string $base  The base path. If NULL the global base path will be used.
      * @return void
      */
-    public function setPath($class, $path, $basepath = null);
+    public function setPath($class, $path, $base = null);
 
     /**
      * Register a class locator

@@ -662,7 +662,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         if($this->isRegistered('object.bootstrapper'))
         {
              if($path = $this->getObject('object.bootstrapper')->getApplicationPath($identifier->domain)) {
-                 $this->getClassLoader()->setBasepath($path);
+                 $this->getClassLoader()->setBasePath($path);
              }
         }
 
