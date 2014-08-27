@@ -60,23 +60,26 @@ class ModKoowaTemplateFilterChrome extends KTemplateFilterAbstract
     {
         $data = (object) $this->getTemplate()->getData();
 
-        foreach($data->styles as $style)
+        if (isset($data->styles))
         {
-            $method = 'modChrome_'.$style;
-
-            // Apply chrome and render module
-            if (function_exists($method))
+            foreach($data->styles as $style)
             {
-                $data->module->style   = implode(' ', $data->styles);
-                $data->module->content = $text;
+                $method = 'modChrome_'.$style;
 
-                ob_start();
+                // Apply chrome and render module
+                if (function_exists($method))
+                {
+                    $data->module->style   = implode(' ', $data->styles);
+                    $data->module->content = $text;
+
+                    ob_start();
                     $method($data->module, $data->module->params, $data->attribs);
                     $data->module->content = ob_get_contents();
-                ob_end_clean();
-            }
+                    ob_end_clean();
+                }
 
-            $text = $data->module->content;
+                $text = $data->module->content;
+            }
         }
 
         return $this;
