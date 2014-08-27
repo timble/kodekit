@@ -163,7 +163,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         if(!empty($this->_content))
         {
             //Evaluate the template
-            if (!$content = $this->_evaluate($this->_content, $this->getData())) {
+            if (!$content = $this->_evaluate()) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be evaluated.', $content));
             }
 
@@ -297,16 +297,14 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     /**
      * Evaluate the template using a simple sandbox
      *
-     * @param  string  $file  The path of the file to evaluate
-     * @param  array   $data  An associative array of data to be extracted in local template scope
      * @return string The evaluated template content
      */
-    protected function _evaluate($file, $data = array())
+    protected function _evaluate()
     {
         ob_start();
 
-        extract($data, EXTR_SKIP);
-        include $file;
+        extract($this->getData(), EXTR_SKIP);
+        include $this->_content;
         $content = ob_get_clean();
 
         return $content;
