@@ -46,7 +46,7 @@ document.body.className = ''; document.documentElement.className = '';
     </div>
     <div class="page_content">
         <? $trace_steps = helper('debug.trace', array('trace' => $trace)); ?>
-        <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?= count($trace_steps)+2; ?>">
+        <div id="trace_container" class="trace_container" style="counter-reset: trace-counter <?= count($trace_steps)+1; ?>">
             <div id="trace_wrapper">
                 <? foreach ($trace_steps as $i => $step): ?>
                 <a id="trace__item--<?= $i; ?>" class="trace__item" href="#source<?= $i ?>">
@@ -58,7 +58,7 @@ document.body.className = ''; document.documentElement.className = '';
                 <? endforeach ?>
             </div>
         </div>
-        <div id="codes_container" class="codes_container" style="counter-reset: source-counter <?= count($trace_steps)+2; ?>">
+        <div id="codes_container" class="codes_container" style="counter-reset: source-counter <?= count($trace_steps)+1; ?>">
             <? foreach (helper('debug.trace', array('trace' => $trace)) as $i => $step): ?>
             <? if ($step['file']): $source_id = 'source'.$i; ?>
             <div id="<?= $source_id ?>" class="codes_container__item">

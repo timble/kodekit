@@ -105,10 +105,6 @@ function debug() {
             defineClasses(source_elements[i], i, source_elements[i+1]);
         }
 
-        // Make server data at least as tall as viewportheight - headerheight
-        if ( page_data_height != restheight ) {
-            page_data.style.minHeight = restheight + 'px';
-        }
 
     }
     // If viewport is smaller then 600px
