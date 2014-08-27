@@ -95,7 +95,7 @@ class ModKoowaHtml extends KViewHtml
         }
         else
         {
-            $this_content = $this->getTemplate()
+            $this->_content = $this->getTemplate()
                 ->setContent($this->module->content)
                 ->filter();
         }
