@@ -71,7 +71,6 @@ package:
 ```
 
 * Install by executing `composer install`.
-* Enable the plugin called `System - Nooku Framework` in Joomla.
 
 Contributing
 ------------
