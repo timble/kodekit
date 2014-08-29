@@ -8,12 +8,12 @@
  */
 
 /**
- * Template Adapter
+ * Template
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Template
  */
-class KTemplateAdapter extends KTemplateAbstract implements KTemplateFilterable, KTemplateHelperable, KObjectInstantiable
+class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTemplateHelperable, KObjectInstantiable
 {
     /**
      * List of template filters
@@ -151,7 +151,7 @@ class KTemplateAdapter extends KTemplateAbstract implements KTemplateFilterable,
     /**
      * Filter template content
      *
-     * @return KTemplateAdapter
+     * @return KTemplate
      */
     public function filter()
     {
