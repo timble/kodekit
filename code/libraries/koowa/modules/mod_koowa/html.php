@@ -78,8 +78,8 @@ class ModKoowaHtml extends KViewHtml
     {
         if(empty($this->module->content))
         {
-            $layout = $this->getLayout();
-            $format = $this->getFormat();
+            $format = $this->getFormat(); //format cannot be changed through context
+            $layout = $context->layout;
 
             if (is_string($layout) && strpos($layout, '.') === false)
             {
@@ -89,9 +89,15 @@ class ModKoowaHtml extends KViewHtml
                 $layout = (string) $this->getIdentifier($identifier);
             }
 
+            //Unpack the data (first level only)
+            $data = array();
+            foreach($context->data as $key => $value) {
+                $data[$key] = $value;
+            }
+
             $this->_content = $this->getTemplate()
                 ->load($layout.'.'.$format)
-                ->render($this->_data);
+                ->render($data);
         }
         else
         {

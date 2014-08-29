@@ -92,9 +92,8 @@ abstract class KViewTemplate extends KViewAbstract
      */
     protected function _actionRender(KViewContext $context)
     {
-        $layout  = $this->getLayout();
-        $format  = $this->getFormat();
-        $data    = $this->getData();
+        $format = $this->getFormat(); //format cannot be changed through context
+        $layout = $context->layout;
 
         //Handle partial layout paths
         if (is_string($layout) && strpos($layout, '.') === false)
@@ -104,6 +103,12 @@ abstract class KViewTemplate extends KViewAbstract
             unset($identifier['path'][0]);
 
             $layout = (string) $this->getIdentifier($identifier);
+        }
+
+        //Unpack the data (first level only)
+        $data = array();
+        foreach($context->data as $key => $value) {
+            $data[$key] = $value;
         }
 
         //Render the template
@@ -257,5 +262,18 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         return parent::getRoute($parts, $fqr, $escape);
+    }
+
+    /**
+     * Get the view context
+     *
+     * @return  KViewContext
+     */
+    public function getContext()
+    {
+        $context = parent::getContext();
+        $context->layout = $this->getLayout();
+
+        return $context;
     }
 }

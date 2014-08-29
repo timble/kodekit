@@ -113,14 +113,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     final public function render($data = array())
     {
         $context = $this->getContext();
-        $context->data   = $data;
+        $context->data   = array_merge($this->getData(), $data);
         $context->action = 'render';
 
         if ($this->invokeCommand('before.render', $context) !== false)
         {
-            //Push the data in the view
-            $this->setData($context->data);
-
             //Render the view
             $context->result = $this->_actionRender($context);
             $this->invokeCommand('after.render', $context);
