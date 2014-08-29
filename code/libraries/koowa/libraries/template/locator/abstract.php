@@ -101,11 +101,11 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
     }
 
     /**
-     * Locate the template based on a virtual path
+     * Find the template path
      *
      * @param  string $url   The Template url
-     * @throws RuntimeException If the no base path exists while trying to locate a partial.
-     * @return string   The physical path of the template
+     * @throws  \RuntimeException If the no base path exists while trying to locate a partial.
+     * @return string|false The real template path or FALSE if the template could not be found
      */
     public function locate($url)
     {
@@ -129,19 +129,6 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
         }
 
         return $this->_locations[$key];
-    }
-
-    /**
-     * Load the template based on a virtual path
-     *
-     * @param  string $url   The Template url
-     * @throws \RuntimeException If the no base path was passed while trying to locate a partial.
-     * @return string   The physical path of the template
-     */
-    public function load($url)
-    {
-        $file = $this->locate($url);
-        return file_get_contents($file);
     }
 
     /**

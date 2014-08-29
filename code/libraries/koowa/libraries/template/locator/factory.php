@@ -31,9 +31,16 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
     {
         parent::__construct($config);
 
-        //Auto register locators
-        foreach($config->locators as $locator) {
-            $this->registerLocator($locator);
+        //Register the locators
+        $locators = KObjectConfig::unbox($config->locators);
+
+        foreach ($locators as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->registerLocator($value);
+            } else {
+                $this->registerLocator($key, $value);
+            }
         }
     }
 
@@ -61,21 +68,16 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      * Note that only URLs delimited by "://"" are supported. ":" and ":/" while technically valid URLs, are not. If no
      * locator is registered for the specific scheme a exception will be thrown.
      *
-     * @param  string  $url  The template url
-     * @param  string $base  The base url or resource (used to resolve partials).
+     * @param  string $url  The template url
+     * @param  array $config  An optional associative array of configuration options
      * @throws InvalidArgumentException If the path is not valid
      * @throws RuntimeException         If the locator isn't registered
      * @throws UnexpectedValueException If the locator object doesn't implement the TemplateLocatorInterface
      * @return KTemplateLocatorInterface
      */
-    public function createLocator($url, $base = null)
+    public function createLocator($url, array $config = array())
     {
         $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        //If no scheme is specified find a fallback
-        if(empty($scheme) && $base ) {
-            $scheme = parse_url($base, PHP_URL_SCHEME);
-        }
 
         //If no scheme is specified fall back to file:// locator
         $name = !empty($scheme) ? $scheme : 'file';
@@ -98,7 +100,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
 
         //Create the locator
         $identifier = $this->getLocator($name);
-        $locator    = $this->getObject($identifier);
+        $locator    = $this->getObject($identifier, $config);
 
         if(!$locator instanceof KTemplateLocatorInterface)
         {
@@ -116,10 +118,11 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      * Function prevents from registering the locator twice
      *
      * @param string $identifier A locator identifier string
+     * @param  array $config  An optional associative array of configuration options
      * @throws UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
-    public function registerLocator($identifier)
+    public function registerLocator($identifier, array $config = array())
     {
         $result = false;
 
@@ -135,7 +138,9 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
 
         $name = call_user_func(array($class, 'getName'));//$class::getName();
 
-        if (!empty($name) && !$this->isRegistered($name)) {
+        if (!empty($name) && !$this->isRegistered($name))
+        {
+            $identifier->getConfig()->merge($config);
             $this->__locators[$name] = $identifier;
         }
 
