@@ -15,7 +15,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Nooku\Library\Template
  */
-class TemplateFilterMarkdown extends TemplateFilterAbstract
+class KTemplateFilterMarkdown extends KTemplateFilterAbstract
 {
     /**
      * Replace <ktml:markdown></ktml:markdown> and parse contained markdown to html
