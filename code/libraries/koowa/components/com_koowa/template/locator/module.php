@@ -94,8 +94,15 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
                 array_shift($path);
             }
 
-            $path    = count($path) ? implode('/', $path).'/' : '';
-            $paths[] = $this->_theme_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.php';
+            $path = count($path) ? implode('/', $path).'/' : '';
+
+            //If no type exists create a glob pattern
+            if(!empty($info['type'])) {
+                $paths[] = $this->_theme_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.'.$info['type'];
+            } else {
+                $paths[] = $this->_theme_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.*';
+            }
+
         }
 
         //Switch basepath
@@ -108,14 +115,24 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
         $basepath .= '/mod_'.strtolower($package);
 
         $filepath   = (count($info['path']) ? implode('/', $info['path']).'/' : '').'tmpl/';
-        $filepath  .= $info['file'].'.'.$info['format'].'.php';
+
+        //If no type exists create a glob pattern
+        if(!empty($info['type'])) {
+            $filepath  .= $info['file'].'.'.$info['format'].'.'.$info['type'];
+        } else {
+            $filepath  .= $info['file'].'.'.$info['format'].'.*';
+        }
 
         $paths[] = $basepath.'/'.$filepath;
 
         foreach($paths as $path)
         {
-            if($result = $this->realPath($path)) {
-                return $result;
+            //Find the file in the directory
+            foreach(glob($path) as $file)
+            {
+                if($result = $this->realPath($file)) {
+                    return $result;
+                }
             }
         }
 

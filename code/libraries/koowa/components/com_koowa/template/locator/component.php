@@ -81,7 +81,13 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
             }
 
             //Find the template file
-            $paths[] = $this->_theme_path.'/com_'.$package.'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.php';
+            if(!empty($info['type'])) {
+                $filepath = 'com_'.$package.'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.'.$info['type'];
+            } else {
+                $filepath = 'com_'.$package.'/'.implode('/', $path).'/'.$info['file'].'.'.$info['format'].'.*';
+            }
+
+            $paths[] = $this->_theme_path.'/'.$filepath;
         }
 
         /*
@@ -95,16 +101,23 @@ class ComKoowaTemplateLocatorComponent extends KTemplateLocatorComponent
             $basepath = $this->getObject('object.bootstrapper')->getComponentPath($package);
         }
 
-        //View folder
-        $paths[] = $basepath.'/view/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
+        //If no type exists create a glob pattern
+        if(!empty($info['type'])) {
+            $filepath = implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.'.$info['type'];
+        } else {
+            $filepath = implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.*';
+        }
 
-        //Views folder
-        $paths[] = $basepath.'/views/'.implode('/', $info['path']).'/tmpl/'.$info['file'].'.'.$info['format'].'.php';
+        $paths[] = $basepath.'/view*/'.$filepath;
 
         foreach($paths as $path)
         {
-            if($result = $this->realPath($path)) {
-                return $result;
+            //Find the file in the directory
+            foreach(glob($path) as $file)
+            {
+                if($result = $this->realPath($file)) {
+                    return $result;
+                }
             }
         }
 
