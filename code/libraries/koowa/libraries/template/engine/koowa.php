@@ -6,6 +6,7 @@
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
+
 /**
  * Koowa Template Engine
  *
@@ -38,20 +39,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     protected $_buffer;
 
     /**
-     * Caching enabled
-     *
-     * @var bool
-     */
-    protected $_cache;
-
-    /**
-     * Cache path
-     *
-     * @var string
-     */
-    protected $_cache_path;
-
-    /**
      * Constructor
      *
      * Prevent creating instances of this class by making the constructor private
@@ -64,13 +51,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
 
         //Reset the stack
         $this->_stack = array();
-
-        //Set the functions
-        $this->_functions = KObjectConfig::unbox($config->functions);
-
-        //Set caching
-        $this->_cache      = $config->cache;
-        $this->_cache_path = $config->cache_path;
 
         //Intercept template exception
         $this->getObject('exception.handler')->addHandler(array($this, 'handleException'), true);
@@ -86,8 +66,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'cache'      => false,
-            'cache_path' => '',
             'functions' => array(
                 'import' => array($this, '_import'),
             ),
@@ -100,7 +78,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * Load a template by path
      *
      * @param   string  $url      The template url
-     * @param   integer $status   The template state
      * @throws InvalidArgumentException If the template could not be located
      * @throws RuntimeException         If the template could not be loaded
      * @throws RuntimeException         If the template could not be compiled
@@ -109,29 +86,15 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     public function load($url)
     {
         //Locate the template
-        if($template = end($this->_stack)) {
-            $base = $template['url'];
-        } else {
-            $base = null;
-        }
-
-        $locator = $this->getObject('template.locator.factory')->createLocator($url, $base);
-
-        //Locate the template
-        if (!$this->_content = $locator->setBasePath($base)->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
-        }
+        $file = $this->_locate($url);
 
         //Push the template on the stack
-        array_push($this->_stack, array('url' => $url, 'file' => $this->_content));
+        array_push($this->_stack, array('url' => $url, 'file' => $file));
 
-        $hash = crc32($this->_content);
-        $file = $this->_cache_path.'/template_'.$hash;
-
-        if(!$this->_cache || !is_file($file))
+        if(!$this->_content = $this->isCached($file))
         {
             //Load the template
-            if(!$content = file_get_contents($this->_content)) {
+            if(!$content = file_get_contents($file)) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
 
@@ -140,10 +103,8 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
                 throw new RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
             }
 
-            $file = $this->_buffer($file, $content);
+            $this->_content = $this->_buffer($file, $content);
         }
-
-        $this->_content = $file;
 
         return $this;
     }
@@ -172,6 +133,110 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         }
 
         return $content;
+    }
+
+    /**
+     * Get the template content
+     *
+     * @return  string
+     */
+    public function getContent()
+    {
+        return file_get_contents($this->_content);
+    }
+
+    /**
+     * Set the template content from a string
+     *
+     * @param  string  $content  The template content
+     * @throws RuntimeException If the template could not be compiled
+     * @return KTemplateEngineKoowa
+     */
+    public function setContent($content)
+    {
+        $name = crc32($content);
+
+        if(!$file = $this->isCached($name))
+        {
+            //Compile the template
+            if(!$content = $this->_compile($content)) {
+                throw new RuntimeException(sprintf('The template content cannot be compiled.'));
+            }
+
+            $file = $this->_buffer($name, $content);
+        }
+
+        $this->_content = $file;
+
+        //Push the template on the stack
+        array_push($this->_stack, array('url' => '', 'file' => $file));
+        return $this;
+    }
+
+    /**
+     * Handle template exceptions
+     *
+     * If an ErrorException is thrown create a new exception and set the file location to the real template file.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function handleException(Exception &$exception)
+    {
+        if($template = end($this->_stack))
+        {
+            if($this->_content == $exception->getFile())
+            {
+                //Prevents any partial templates from leaking.
+                ob_get_clean();
+
+                //Re-create the exception and set the real file path
+                if($exception instanceof ErrorException)
+                {
+                    $class = get_class($exception);
+
+                    $exception = new $class(
+                        $exception->getMessage(),
+                        $exception->getCode(),
+                        $exception->getSeverity(),
+                        $template['file'],
+                        $exception->getLine(),
+                        $exception
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Locate the template
+     *
+     * @param   string  $url The template url
+     * @return string   The template real path
+     */
+    protected function _locate($url)
+    {
+        //Create the locator
+        if($template = end($this->_stack)) {
+            $base = $template['url'];
+        } else {
+            $base = null;
+        }
+
+        if(!$location = parse_url($url, PHP_URL_SCHEME)) {
+            $location = $base;
+        } else {
+            $location = $url;
+        }
+
+        $locator = $this->getObject('template.locator.factory')->createLocator($location);
+
+        //Locate the template
+        if (!$file = $locator->setBasePath($base)->locate($url)) {
+            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+        }
+
+        return $file;
     }
 
     /**
@@ -249,52 +314,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     }
 
     /**
-     * Buffer the template
-     *
-     * Write the template content to a file buffer. If cache is enabled the file will be buffer in the cache path.
-     * If caching is not enabled the file will be written to the temp path using a buffer://temp stream
-     *
-     * @param  string $content The template content to cache
-     * @throws RuntimeException If the template cache path is not writable
-     * @throws RuntimeException If the template cache path is not writable
-     * @throws RuntimeException If template cannot be cached
-     * @return string    The buffer template file path
-     */
-    protected function _buffer($file, $content)
-    {
-        if($this->_cache)
-        {
-            $path = dirname($file);
-
-            if(!is_dir($path)) {
-                throw new RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
-            }
-
-            if(!is_writable($path)) {
-                throw new RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
-            }
-
-            if(!file_put_contents($file, $content)) {
-                throw new RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
-            }
-        }
-        else
-        {
-            if(!isset($this->_buffer)) {
-                $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('buffer://temp', 'w+b');
-            }
-
-            $this->_buffer->truncate(0);
-            $this->_buffer->write($content);
-
-            $file = $this->_buffer->getPath();
-        }
-
-        return $file;
-    }
-
-
-    /**
      * Evaluate the template using a simple sandbox
      *
      * @return string The evaluated template content
@@ -311,76 +330,32 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     }
 
     /**
-     * Get the template content
+     * Buffer the template
      *
-     * @return  string
-     */
-    public function getContent()
-    {
-        return file_get_contents($this->_content);
-    }
-
-    /**
-     * Set the template content from a string
+     * Write the template content to a file buffer. If cache is enabled the file will be buffer using cache settings
+     * If caching is not enabled the file will be written to the temp path using a buffer://temp stream.
      *
-     * @param  string  $content  The template content
-     * @throws \RuntimeException If the template could not be compiled
-     * @return KTemplateEngineKoowa
+     * @param  string $file     The file name
+     * @param  string $content  The template content to cache
+     * @throws \RuntimeException If the template cache path is not writable
+     * @throws \RuntimeException If template cannot be cached
+     * @return string    The buffer template file path
      */
-    public function setContent($content)
+    protected function _buffer($file, $content)
     {
-        $hash = crc32($content);
-        $file = $this->_cache_path.'/template_'.$hash;
-
-        if(!$this->_cache || !is_file($file))
+        if(!$this->_cache)
         {
-            //Compile the template
-            if(!$content = $this->_compile($content)) {
-                throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
+            if(!isset($this->_buffer)) {
+                $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('buffer://temp', 'w+b');
             }
 
-            $file = $this->_buffer($file, $content);
+            $this->_buffer->truncate(0);
+            $this->_buffer->write($content);
+
+            $file = $this->_buffer->getPath();
         }
+        else $file = $this->cache($file, $content);
 
-        $this->_content = $file;
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => '', 'file' => $file));
-        return $this;
-    }
-
-    /**
-     * Handle template exceptions
-     *
-     * If an ErrorException is thrown create a new exception and set the file location to the real template file.
-     *
-     * @param  Exception  $exception
-     * @return void
-     */
-    public function handleException(Exception &$exception)
-    {
-        if($template = end($this->_stack))
-        {
-            if($this->_content == $exception->getFile())
-            {
-                //Prevents any partial templates from leaking.
-                ob_get_clean();
-
-                //Re-create the exception and set the real file path
-                if($exception instanceof ErrorException)
-                {
-                    $class = get_class($exception);
-
-                    $exception = new $class(
-                        $exception->getMessage(),
-                        $exception->getCode(),
-                        $exception->getSeverity(),
-                        $template['file'],
-                        $exception->getLine(),
-                        $exception
-                    );
-                }
-            }
-        }
+        return $file;
     }
 }

@@ -117,8 +117,13 @@ class KTemplateAdapter extends KTemplateAbstract implements KTemplateFilterable,
         parent::load($url);
 
         //Create the template engine
+        $config = array(
+            'template'  => $this,
+            'functions' => $this->_functions
+        );
+
         $this->_content = $this->getObject('template.engine.factory')
-            ->createEngine($this->_content, array('functions' => $this->_functions))
+            ->createEngine($this->_content, $config)
             ->load($url);
 
         return $this;
@@ -245,8 +250,13 @@ class KTemplateAdapter extends KTemplateAbstract implements KTemplateFilterable,
         if($type)
         {
             //Create the template engine
+            $config = array(
+                'template'  => $this,
+                'functions' => $this->_functions
+            );
+
             $this->_content = $this->getObject('template.engine.factory')
-                ->createEngine($type, array('functions' => $this->_functions))
+                ->createEngine($type, $config)
                 ->setContent($content);
         }
         else parent::setContent($content);
