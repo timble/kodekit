@@ -74,11 +74,12 @@ class Koowa
         }
 
         //Initialize the vendor path
-        if(isset($config['vendor_path'])) {
-            $this->_vendor_path = $config['vendor_path'];
-        } else {
-            $this->_vendor_path = $this->_root_path.'/libraries/vendor';
+        if(!isset($config['vendor_path']))
+        {
+            $path = version_compare(JVERSION, '3.4', '>=') ? '/libraries/vendor' : '/vendor';
+            $this->_vendor_path = $this->_root_path.$path;
         }
+        else $this->_vendor_path = $config['vendor_path'];
 
         //Load the legacy functions
         require_once dirname(__FILE__).'/legacy.php';
