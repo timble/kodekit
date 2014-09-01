@@ -104,12 +104,16 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         if(!$this->_content = $this->isCached($file))
         {
             //Load the template
-            if(!$content = file_get_contents($file)) {
+            $content = file_get_contents($file);
+
+            if($content === false) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
 
             //Compile the template
-            if(!$content = $this->_compile($content)) {
+            $content = $this->_compile($content);
+
+            if($content === false) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
             }
 
@@ -134,7 +138,9 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         if(!empty($this->_content))
         {
             //Evaluate the template
-            if (!$content = $this->_evaluate()) {
+            $content = $this->_evaluate();
+
+            if ($content === false) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be evaluated.', $content));
             }
 

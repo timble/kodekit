@@ -27,7 +27,7 @@ class KFilterPath extends KFilterAbstract implements KFilterTraversable
     {
         $result = false;
 
-        if (is_string($value))
+        if (is_string($value) && strlen($value))
         {
             if ($value[0] == '/' || $value[0] == '\\'
                 || (strlen($value) > 3 && ctype_alpha($value[0])
