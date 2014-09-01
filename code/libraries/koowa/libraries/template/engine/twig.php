@@ -11,7 +11,7 @@
  * Twig Template Engine
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Nooku\Library\Template\Abstract
+ * @package Koowa\Library\Template\Engine
  */
 class KTemplateEngineTwig extends KTemplateEngineAbstract
 {

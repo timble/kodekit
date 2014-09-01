@@ -11,7 +11,7 @@
  * Template Helperable Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Interface
+ * @package Koowa\Library\Template
  */
 interface KTemplateHelperable
 {

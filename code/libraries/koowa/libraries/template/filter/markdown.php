@@ -13,7 +13,7 @@
  * Filter to parse <ktml:markdown></ktml:markdown> tags. Content should be valid markdown and will be converted to html.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Nooku\Library\Template
+ * @package Koowa\Library\Template\Filter
  */
 class KTemplateFilterMarkdown extends KTemplateFilterAbstract
 {
