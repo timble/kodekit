@@ -119,7 +119,8 @@ class PlgSystemKoowa extends JPlugin
                 'cache'           => false, //JFactory::getApplication()->getCfg('caching')
                 'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
                 'root_path'       => JPATH_ROOT,
-                'base_path'       => JPATH_BASE
+                'base_path'       => JPATH_BASE,
+                'vendor_path'     => JPATH_ROOT.(version_compare(JVERSION, '3.4', '>=') ? '/libraries/vendor' : '/vendor')
             ));
 
             $manager = KObjectManager::getInstance();
