@@ -6,10 +6,8 @@ source: code
 # List of allowed file extensions
 extensions: [php]
 # Mask to exclude file or directory from processing
-exclude: [code/administrator/manifests/*,code/plugins/system/koowa/*,code/libraries/koowa/libraries/legacy.php]
+exclude: [*/administrator/manifests/*,*/plugins/system/koowa/*,*/libraries/koowa/libraries/legacy.php,*/administrator/manifests/files/files_koowa/script.php]
 
-# Generate documentation for methods and properties with given access level
-accessLevels: [public, protected]
 # Generate documentation for elements marked as internal and display internal documentation parts
 internal: No
 # Generate documentation for PHP internal classes
@@ -17,8 +15,12 @@ php: No
 # Generate tree view of classes, interfaces and exceptions
 tree: Yes
 # Generate documentation for deprecated classes, methods, properties and constants
-deprecated: No
+deprecated: Yes
 # Generate highlighted source code files
 sourceCode: Yes
 # Add a link to download documentation as a ZIP archive
 download: Yes
+
+googleAnalytics: UA-214238-5
+
+title: "Nooku Framework"
