@@ -152,8 +152,10 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             $hash = crc32($file);
             $file = $path.'/template_'.$hash.'.php';
 
-            if(!file_put_contents($file, $content)) {
-                throw new RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
+            if(file_put_contents($file, $content) !== false) {
+                @chmod($file, 0666 & ~umask());
+            } else {
+                throw new \RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
             }
 
             return $file;
