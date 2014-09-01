@@ -130,7 +130,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
             );
         }
 
-        $types = $class::getFileTypes();
+        $types = call_user_func(array($class, 'getFileTypes'));/*$class::getFileTypes();*/
 
         if (!empty($types))
         {
@@ -174,7 +174,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $types = $class::getFileTypes();
+            $types = call_user_func(array($class, 'getFileTypes'));/*$class::getFileTypes();*/
 
         }
         else $types = (array) $identifier;
@@ -239,12 +239,12 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
 
             if(!$class || !array_key_exists('KTemplateEngineInterface', class_implements($class)))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     'Engine: '.$identifier.' does not implement KTemplateEngineInterface'
                 );
             }
 
-            $types  = $class::getFileTypes();
+            $types = call_user_func(array($class, 'getFileTypes'));/*$class::getFileTypes();*/
         }
         else $types = (array) $identifier;
 

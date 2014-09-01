@@ -725,20 +725,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
                 {
                     $mapping = $decoded;
 
-                    $comparison = function ($a, $b)
-                    {
-                        if (strlen($a) == strlen($b)) {
-                            return 0;
-                        }
-
-                        if (strlen($a) > strlen($b)) {
-                            return -1;
-                        }
-
-                        return 1;
-                    };
-
-                    uksort($mapping, $comparison);
+                    uksort($mapping, array($this, '_sharedPathComparison'));
                 }
             }
 
@@ -746,5 +733,18 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         }
 
         return $this->_shared_paths;
+    }
+
+    protected function _sharedPathComparison($a, $b)
+    {
+        if (strlen($a) == strlen($b)) {
+            return 0;
+        }
+
+        if (strlen($a) > strlen($b)) {
+            return -1;
+        }
+
+        return 1;
     }
 }

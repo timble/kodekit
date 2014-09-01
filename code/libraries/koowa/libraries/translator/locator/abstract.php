@@ -75,7 +75,7 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
      */
     public static function getName()
     {
-        return static::$_name;
+        return self::$_name;
     }
 
     /**

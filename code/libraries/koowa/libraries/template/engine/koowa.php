@@ -75,6 +75,16 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     }
 
     /**
+     * Get the engine supported file types
+     *
+     * @return array
+     */
+    public static function getFileTypes()
+    {
+        return self::$_file_types;
+    }
+
+    /**
      * Load a template by path
      *
      * @param   string  $url      The template url
@@ -191,7 +201,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
                 ob_get_clean();
 
                 //Re-create the exception and set the real file path
-                if($exception instanceof ErrorException)
+                if($exception instanceof ErrorException && version_compare(PHP_VERSION, '5.3', '>'))
                 {
                     $class = get_class($exception);
 

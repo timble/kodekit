@@ -183,7 +183,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     public function setDelegate($delegate)
     {
         if (!$delegate instanceof KTemplateEngineInterface) {
-            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TemplateEngineInterface');
+            throw new InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TemplateEngineInterface');
         }
 
         return parent::setDelegate($delegate);

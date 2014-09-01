@@ -88,14 +88,15 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
-        $instance = new static($config);
+        $class    = $manager->getClass($config->object_identifier);
+        $instance = new $class($config);
         $config   = $instance->getConfig();
 
         if($config->cache)
         {
             $class = $manager->getClass('lib:template.cache');
 
-            if($class::isSupported())
+            if(call_user_func(array($class, 'isSupported'))/*$class::isSupported()*/)
             {
                 $instance = $instance->decorate('lib:template.cache');
                 $instance->setNamespace($config->cache_namespace);
@@ -212,7 +213,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
 
         //Call the helper function
         if (!is_callable(array($helper, $function))) {
-            throw new \BadMethodCallException(get_class($helper) . '::' . $function . ' not supported.');
+            throw new BadMethodCallException(get_class($helper) . '::' . $function . ' not supported.');
         }
 
         //Merge the state or entity properties with the helper params
@@ -290,7 +291,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         //Check the helper interface
         if (!($helper instanceof KTemplateHelperInterface))
         {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 "Template helper $identifier does not implement KTemplateHelperInterface"
             );
         }
@@ -325,7 +326,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
 
             if (!($filter instanceof KTemplateFilterInterface))
             {
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     "Template filter $identifier does not implement KTemplateFilterInterface"
                 );
             }
