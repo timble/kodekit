@@ -11,7 +11,7 @@
  * Parameterizable Helper Interface
  *
  * If a helper class implements this interface, the template parameters will be merged into the config argument
- * passed into its methods
+ * passed into the helper methods
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Helper
