@@ -122,7 +122,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         if(!$file = $this->isCached($name))
         {
             //Compile the template
-            if(!$content = $this->_compile($source)) {
+            if(!$source = $this->_compile($source)) {
                 throw new RuntimeException(sprintf('The template content cannot be compiled.'));
             }
 
