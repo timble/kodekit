@@ -26,7 +26,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      *
      * @var string|object
      */
-    protected $_model;
+    private $__model;
 
     /**
      * Constructor
@@ -53,7 +53,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
             );
         }
 
-        $this->_model = $config->model;
+        $this->__model = $config->model;
     }
 
     /**
@@ -140,7 +140,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
             $this->offsetSet($name, $value);
 
             //Reset the model
-            $this->_model->reset(array($name));
+            $this->__model->reset(array($name));
         }
 
         return $this;
@@ -192,7 +192,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
     public function count()
     {
         //Reset the model
-        return $this->_model->count();
+        return $this->__model->count();
     }
 
     /**
