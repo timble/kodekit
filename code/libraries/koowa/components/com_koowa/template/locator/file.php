@@ -13,7 +13,7 @@
  * @author  Johan Janssens <http://nooku.assembla.com/profile/johanjanssens>
  * @package Koowa\Component\Koowa\Template\Locator
  */
-class ComKowaTemplateLocatorFile extends KTemplateLocatorFile
+class ComKoowaTemplateLocatorFile extends KTemplateLocatorFile
 {
     /**
      * The override path
