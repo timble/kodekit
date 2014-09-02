@@ -25,6 +25,14 @@ interface KTemplateFilterInterface extends KObjectHandlable
     const PRIORITY_LOWEST  = 5;
 
     /**
+     * Filter the text
+     *
+     * @param string $text  The text to parse
+     * @return void
+     */
+    public function filter(&$text);
+
+    /**
      * Get the template object
      *
      * @return  object	The template object
@@ -32,27 +40,11 @@ interface KTemplateFilterInterface extends KObjectHandlable
     public function getTemplate();
 
     /**
-     * Sets the template object
-     *
-     * @param string|KTemplateInterface $template A template object or identifier
-     * @return $this
-     */
-    public function setTemplate(KTemplateInterface $template);
-
-    /**
      * Get the priority of a behavior
      *
      * @return  integer The command priority
      */
     public function getPriority();
-
-    /**
-     * Filter the text
-     *
-     * @param string $text  The text to parse
-     * @return void
-     */
-    public function filter(&$text);
 
     /**
      * Method to extract key/value pairs out of a string with xml style attributes

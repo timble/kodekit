@@ -38,9 +38,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     {
         parent::__construct($config);
 
-        // Set the template object
-        $this->setTemplate($config->template);
-
+        $this->__template = $config->template;
         $this->_priority = $config->priority;
     }
 
@@ -54,7 +52,7 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'template' => null,
+            'template' => 'default',
             'priority' => self::PRIORITY_NORMAL
         ));
 
@@ -72,25 +70,26 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     }
 
     /**
-     * Get the template object
+     * Gets the template object
      *
-     * @return KTemplateInterface The template object
+     * @return  KTemplateInterface	The template object
      */
     public function getTemplate()
     {
-        return $this->__template;
-    }
+        if(!$this->__template instanceof KTemplateInterface)
+        {
+            if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
+            {
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('template');
+                $identifier['name'] = $this->__template;
+            }
+            else $identifier = $this->getIdentifier($this->__template);
 
-    /**
-     * Set the template object
-     *
-     * @param   KTemplateInterface $template The template object
-     * @return  KTemplateFilterInterface
-     */
-    public function setTemplate(KTemplateInterface $template)
-    {
-        $this->__template = $template;
-        return $this;
+            $this->__template = $this->getObject($identifier);
+        }
+
+        return $this->__template;
     }
 
     /**
