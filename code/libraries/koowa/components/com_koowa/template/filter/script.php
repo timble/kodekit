@@ -31,7 +31,7 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
     {
         $scripts = $this->_parseTags($text);
 
-        if($this->getTemplate()->layout() == 'koowa') {
+        if($this->getTemplate()->getParameters()->layout == 'koowa') {
             $text = str_replace('<ktml:script>', $scripts, $text);
         } else  {
             $text = $scripts.$text;
@@ -47,7 +47,7 @@ class ComKoowaTemplateFilterScript extends KTemplateFilterScript
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->layout() !== 'koowa')
+        if($this->getTemplate()->getParameters()->layout !== 'koowa')
         {
             $link      = isset($attribs['src']) ? $attribs['src'] : false;
             $condition = isset($attribs['condition']) ? $attribs['condition'] : false;

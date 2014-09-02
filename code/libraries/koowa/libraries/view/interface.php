@@ -86,13 +86,6 @@ interface KViewInterface
     public function getFormat();
 
     /**
-     * Get the state
-     *
-     * @return KModelStateInterface
-     */
-    public function getState();
-
-    /**
      * Get the content
      *
      * @return  string The content of the view

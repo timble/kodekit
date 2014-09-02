@@ -75,9 +75,6 @@ abstract class KViewTemplate extends KViewAbstract
                 'url'     => array($this, 'getUrl'),
                 'title'   => array($this, 'getTitle'),
                 'content' => array($this, 'getContent'),
-                'layout'  => array($this, 'getLayout'),
-                'state'   => array($this, 'getState'),
-                'name'    => array($this, 'getName')
             ),
         ));
 
@@ -114,6 +111,7 @@ abstract class KViewTemplate extends KViewAbstract
         //Render the template
         $this->_content = $this->getTemplate()
             ->loadFile((string) $layout.'.'.$format)
+            ->setParameters($context->parameters)
             ->render($data);
 
         return parent::_actionRender($context);
@@ -135,10 +133,23 @@ abstract class KViewTemplate extends KViewAbstract
         //Auto-assign the data from the model
         if($this->_auto_fetch)
         {
-            //Get the view name
-            $name = $this->getName();
-            $context->data->$name = $model->fetch();
+            //Set the data
+            $name   = $this->getName();
+            $entity = $model->fetch();
+            $context->data->$name = $entity;
+
+            //Set the parameters
+            if($this->isCollection())
+            {
+                $context->parameters        = $model->getState()->getValues();
+                $context->parameters->total = $model->count();
+            }
+            else $context->parameters = $entity->getProperties();
         }
+
+        //Set the layout
+        $context->parameters->layout = $context->layout;
+        $context->parameters->view   = $this->getName();
     }
 
     /**

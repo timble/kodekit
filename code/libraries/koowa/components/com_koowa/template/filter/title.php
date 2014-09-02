@@ -26,7 +26,7 @@ class ComKoowaTemplateFilterTitle extends KTemplateFilterTitle
     {
         $links   = $this->_parseTags($text);
 
-        if($this->getTemplate()->layout() == 'koowa') {
+        if($this->getTemplate()->getParameters()->layout == 'koowa') {
             $text = str_replace('<ktml:title>', $links, $text);
         } else  {
             $text = $links.$text;
@@ -42,7 +42,7 @@ class ComKoowaTemplateFilterTitle extends KTemplateFilterTitle
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->layout() !== 'koowa')
+        if($this->getTemplate()->getParameters()->layout !== 'koowa')
         {
             if($this->_escape) {
                 $content = $this->getTemplate()->escape($content);

@@ -27,7 +27,7 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
         $request = $this->getObject('request');
         $links   = $this->_parseTags($text);
 
-        if($this->getTemplate()->layout() == 'koowa') {
+        if($this->getTemplate()->getParameters()->layout == 'koowa') {
             $text = str_replace('<ktml:link>', $links, $text);
         } else  {
             $text = $links.$text;
@@ -43,7 +43,7 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->layout() !== 'koowa')
+        if($this->getTemplate()->getParameters()->layout !== 'koowa')
         {
             $link      = isset($attribs['href']) ? $attribs['href'] : false;
             $relType  = 'rel';

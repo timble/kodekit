@@ -113,8 +113,9 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     final public function render($data = array())
     {
         $context = $this->getContext();
-        $context->data   = array_merge($this->getData(), $data);
-        $context->action = 'render';
+        $context->data       = array_merge($this->getData(), $data);
+        $context->action     = 'render';
+        $context->parameters = array();
 
         if ($this->invokeCommand('before.render', $context) !== false)
         {
@@ -262,16 +263,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     public function getTitle()
     {
         return ucfirst($this->getName());
-    }
-
-    /**
-     * Get the state
-     *
-     * @return KModelStateInterface
-     */
-    public function getState()
-    {
-        return $this->getModel()->getState();
     }
 
     /**

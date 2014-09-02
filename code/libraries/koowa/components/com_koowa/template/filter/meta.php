@@ -26,7 +26,7 @@ class ComKoowaTemplateFilterMeta extends KTemplateFilterMeta
     {
         $meta    = $this->_parseTags($text);
 
-        if($this->getTemplate()->layout() == 'koowa') {
+        if($this->getTemplate()->getParameters()->layout == 'koowa') {
             $text = str_replace('<ktml:meta>', $meta, $text);
         } else  {
             $text = $meta.$text;
@@ -42,7 +42,7 @@ class ComKoowaTemplateFilterMeta extends KTemplateFilterMeta
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->layout() !== 'koowa')
+        if($this->getTemplate()->getParameters()->layout !== 'koowa')
         {
             $meta = parent::_renderTag($attribs, $content);
             JFactory::getDocument()->addCustomTag($meta);

@@ -16,6 +16,13 @@
 class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTemplateHelperable, KObjectInstantiable
 {
     /**
+     * The template parameters
+     *
+     * @var array
+     */
+    private $__parameters;
+
+    /**
      * List of template filters
      *
      * @var array
@@ -54,6 +61,9 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
                 $this->addFilter($key, $value);
             }
         }
+
+        //Set the parameters
+        $this->setParameters($config->parameters);
     }
 
     /**
@@ -67,10 +77,12 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'filters'   => array(),
-            'functions' => array(
-                'escape'  => array($this, 'escape'),
-                'helper'  => array($this, 'invoke'),
+            'parameters' => array(),
+            'filters'    => array(),
+            'functions'  => array(
+                'escape'     => array($this, 'escape'),
+                'helper'     => array($this, 'invoke'),
+                'parameters' => array($this, 'getParameters')
             ),
             'cache'           => false,
             'cache_namespace' => 'koowa',
@@ -251,23 +263,32 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
             throw new BadMethodCallException(get_class($helper) . '::' . $function . ' not supported.');
         }
 
-        //Merge the state or entity properties with the helper params
-        $name = $this->getIdentifier()->getName();
-
-        if(KStringInflector::isPlural($name))
-        {
-            if($this->state() instanceof KModelStateInterface) {
-                $params = array_merge($this->state()->getValues(), $params);
-            }
-        }
-        else
-        {
-            if($this->$name instanceof KModelEntityInterface) {
-                $params = array_merge( $this->$name->getProperties(), $params);
-            }
-        }
+        //Set the parameters
+        $params = array_merge($this->getParameters()->toArray(), $params);
 
         return $helper->$function($params);
+    }
+
+    /**
+     * Set the template parameters
+     *
+     * @param  array $parameters Set the template parameters
+     * @return KTemplate
+     */
+    public function setParameters($parameters)
+    {
+        $this->__parameters = new KObjectConfig($parameters);
+        return $this;
+    }
+
+    /**
+     * Get the model state object
+     *
+     * @return KObjectConfigInterface
+     */
+    public function getParameters()
+    {
+        return $this->__parameters;
     }
 
     /**

@@ -119,7 +119,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'total'      => count($this->getTemplate()->state()),
+            'total'      => 0,
             'display'    => 2,
             'offset'     => 0,
             'limit'      => 0,

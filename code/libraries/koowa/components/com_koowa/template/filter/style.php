@@ -31,7 +31,7 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
     {
         $styles = $this->_parseTags($text);
 
-        if($this->getTemplate()->layout() == 'koowa') {
+        if($this->getTemplate()->getParameters()->layout == 'koowa') {
             $text = str_replace('<ktml:style>', $styles, $text);
         } else  {
             $text = $styles.$text;
@@ -47,7 +47,7 @@ class ComKoowaTemplateFilterStyle extends KTemplateFilterStyle
      */
     protected function _renderTag($attribs = array(), $content = null)
     {
-        if($this->getTemplate()->layout() !== 'koowa')
+        if($this->getTemplate()->getParameters()->layout !== 'koowa')
         {
             $link      = isset($attribs['src']) ? $attribs['src'] : false;
             $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
