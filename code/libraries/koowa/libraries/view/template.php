@@ -68,7 +68,7 @@ abstract class KViewTemplate extends KViewAbstract
         $config->append(array(
             'auto_fetch'         => true,
             'layout'             => '',
-            'template'           => $this->getName(),
+            'template'           => 'default',
             'template_filters'   => array('asset', 'decorator'),
             'template_functions' => array(
                 'route'   => array($this, 'getRoute'),
@@ -139,15 +139,16 @@ abstract class KViewTemplate extends KViewAbstract
             $context->data->$name = $entity;
 
             //Set the parameters
-            if($this->isCollection())
+            if(!$this->isCollection())
             {
-                $context->parameters        = $model->getState()->getValues();
-                $context->parameters->total = $model->count();
+                $context->parameters = $entity->getProperties();
+                $context->parameters->total = 1;
             }
-            else $context->parameters = $entity->getProperties();
+            else  $context->parameters->total = $model->count();
         }
+        else $context->parameters = $model->getState()->getValues();
 
-        //Set the layout
+        //Set the layout and view in the parameters.
         $context->parameters->layout = $context->layout;
         $context->parameters->view   = $this->getName();
     }
