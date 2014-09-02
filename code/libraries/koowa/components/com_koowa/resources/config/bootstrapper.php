@@ -25,6 +25,7 @@ return array(
         'lib:filesystem.stream.buffer'     => 'com:koowa.filesystem.stream.buffer',
         'lib:template.locator.component'   => 'com:koowa.template.locator.component',
         'lib:translator.locator.component' => 'com:koowa.translator.locator.component',
+        'lib:translator.locator.file'      => 'com:koowa.translator.locator.file',
     ),
 
     'identifiers' => array(

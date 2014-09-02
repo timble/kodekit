@@ -96,13 +96,13 @@ class ModKoowaHtml extends KViewHtml
             }
 
             $this->_content = $this->getTemplate()
-                ->load($layout.'.'.$format)
+                ->loadFile($layout.'.'.$format)
                 ->render($data);
         }
         else
         {
             $this->_content = $this->getTemplate()
-                ->setContent($this->module->content)
+                ->loadString($this->module->content)
                 ->filter();
         }
 

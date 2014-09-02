@@ -23,11 +23,11 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
     protected static $_name = 'mod';
 
     /**
-     * The theme path
+     * The override path
      *
      * @var string
      */
-    protected $_theme_path;
+    protected $_override_path;
 
     /**
      * Constructor.
@@ -38,7 +38,7 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
     {
         parent::__construct($config);
 
-        $this->_theme_path = $config->theme_path;
+        $this->_override_path = $config->override_path;
     }
 
     /**
@@ -54,7 +54,7 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
         $template  = JFactory::getApplication()->getTemplate();
 
         $config->append(array(
-            'theme_path' => JPATH_THEMES.'/'.$template.'/html'
+            'override_path' => JPATH_THEMES.'/'.$template.'/html'
         ));
 
         parent::_initialize($config);
@@ -98,9 +98,9 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
 
             //If no type exists create a glob pattern
             if(!empty($info['type'])) {
-                $paths[] = $this->_theme_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.'.$info['type'];
+                $paths[] = $this->_override_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.'.$info['type'];
             } else {
-                $paths[] = $this->_theme_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.*';
+                $paths[] = $this->_override_path.'/mod_'.$package.'/'.$path.$info['file'].'.'.$info['format'].'.*';
             }
 
         }
