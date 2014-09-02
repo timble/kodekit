@@ -61,13 +61,25 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     /**
      * Load a template by url
      *
-     * @param  string  $url    The template url
-     * @throws InvalidArgumentException If the template could not be found
+     * @param   string  $url    The template url
+     * @throws \InvalidArgumentException If the template could not be found
      * @return KTemplateInterface
      */
-    public function load($url)
+    public function loadFile($url)
     {
-        $this->getDelegate()->load($url);
+        $this->getDelegate()->loadFile($url);
+        return $this;
+    }
+
+    /**
+     * Set the template content from a string
+     *
+     * @param  string   $content The template content
+     * @return KTemplateInterface
+     */
+    public function loadString($content)
+    {
+        $this->getDelegate()->loadString($content);
         return $this;
     }
 
@@ -107,28 +119,6 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     }
 
     /**
-     * Get the template content
-     *
-     * @return  string
-     */
-    public function getContent()
-    {
-        return $this->getDelegate()->getContent();
-    }
-
-    /**
-     * Set the template content from a string
-     *
-     * @param  string   $content The template content
-     * @return KTemplateEngineInterface
-     */
-    public function setContent($content)
-    {
-        $this->getDelegate()->setContent($content);
-        return $this;
-    }
-
-    /**
      * Register a function
      *
      * @param string  $name      The function name
@@ -151,16 +141,6 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     {
         $this->getDelegate()->unregisterFunction($name);
         return $this;
-    }
-
-    /**
-     * Returns the template contents
-     *
-     * @return  string
-     */
-    public function toString()
-    {
-        return $this->getDelegate()->toString();
     }
 
     /**
@@ -197,15 +177,5 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     public function getDelegate()
     {
         return parent::getDelegate();
-    }
-
-    /**
-     * Cast the object to a string
-     *
-     * @return  string
-     */
-    final public function __toString()
-    {
-        return $this->toString();
     }
 }

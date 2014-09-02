@@ -8,21 +8,21 @@
  */
 
 /**
- * Twig Template Engine
+ * Mustache Template Engine
  *
- *  @link https://github.com/fabpot/Twig
+ * @link https://github.com/bobthecow/mustache.php
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Engine
+ * @package Nooku\Library\Template\Abstract
  */
-class KTemplateEngineTwig extends KTemplateEngineAbstract
+class KTemplateEngineMustache extends KTemplateEngineAbstract implements \Mustache_Loader
 {
     /**
      * The engine file types
      *
      * @var string
      */
-    protected static $_file_types = array('twig');
+    protected static $_file_types = array('mustache');
 
     /**
      * Template stack
@@ -34,18 +34,18 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     protected $_stack;
 
     /**
-     * The twig environment
+     * The mustache engine
      *
      * @var callable
      */
-    protected $_twig;
+    protected $_mustache;
 
     /**
      * The twig template
      *
      * @var callable
      */
-    protected $_twig_template;
+    protected $_mustache_template;
 
     /**
      * Constructor
@@ -59,21 +59,16 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
         //Reset the stack
         $this->_stack = array();
 
-        $this->_twig = new Twig_Environment($this,  array(
-            'cache'       => $this->_cache ? $this->_cache_path : false,
-            'auto_reload' => $this->_cache_reload,
-            'debug'       => $config->debug,
-            'autoescape'  => $config->autoescape,
-            'strict_variables' => $config->strict_variables,
-            'optimizations'    => $config->optimizations,
+        $this->_mustache = new Mustache_Engine(array(
+            'loader' => $this,
+            'cache'  => $this->_cache ? $this->_cache_path : null,
+            'escape' => function($value) {
+                    return $this->getTemplate()->escape($value);
+                },
+            'strict_callables' => $this->getConfig()->strict_callables,
+            'pragmas'          => $this->getConfig()->pragmas,
+            'helpers'          => $this->_functions
         ));
-
-        //Register functions in twig
-        foreach($this->_functions as $name => $callable)
-        {
-            $function = new Twig_SimpleFunction($name, $callable);
-            $this->_twig->addFunction($function);
-        }
     }
 
     /**
@@ -86,14 +81,8 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'autoescape'       => true,
-            'strict_variables' => false,
-            'optimizations'    => -1,
-            'functions'        => array(
-                'import' => function($url, $data) {
-                        return $this->_import($url, $data);
-                }
-            ),
+            'strict_callables' => false,
+            'pragmas'          => [Mustache_Engine::PRAGMA_FILTERS],
         ));
 
         parent::_initialize($config);
@@ -102,36 +91,38 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     /**
      * Load a template by path
      *
-     * @param  string  $url      The template url
+     * @param   string  $url The template url
      * @throws InvalidArgumentException If the template could not be located
      * @throws RuntimeException         If the template could not be loaded
-     * @return KTemplateEngineTwig|string Returns a string when called by Twig.
+     * @return KTemplateEngineMustache|string Returns a string when called by Mustache
      */
     public function loadFile($url)
     {
         //Push the template on the stack
         array_push($this->_stack, array('url' => $url));
 
-        $this->_twig_template = $this->_twig->loadTemplate($url);
+        $this->_mustache_template = $this->_mustache->loadTemplate($url);
 
+        //Load partial templates
         return $this;
     }
 
     /**
      * Set the template content from a string
      *
-     * @param  string  $content  The template content
-     * @return KTemplateEngineTwig
+     * @param  string  $source  The template source
+     * @return KTemplateEngineMustache
      */
-    public function loadString($content)
+    public function loadString($source)
     {
-        parent::loadString($content);
+        parent::loadString($source);
 
-        //Let twig load the content by proxiing through the getSource() method.
-        $this->_twig_template = $this->_twig->loadTemplate($content);
+        //Let mustache load the source by proxiing through the load() method.
+        $this->_mustache_template = $this->_mustache->loadTemplate($source);
 
         //Push the template on the stack
         array_push($this->_stack, array('url' => ''));
+
         return $this;
     }
 
@@ -139,19 +130,19 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      * Render a template
      *
      * @param   array   $data   The data to pass to the template
-     * @throws  RuntimeException If the template could not be evaluated
+     * @throws \RuntimeException If the template could not be rendered
      * @return string The rendered template source
      */
     public function render(array $data = array())
     {
-        parent::render();
+        parent::render($data);
 
-        if(!$this->_twig_template instanceof Twig_Template) {
+        if(!$this->_mustache_template instanceof Mustache_Template) {
             throw new RuntimeException(sprintf('The template cannot be rendered'));
         }
 
         //Render the template
-        $content = $this->_twig_template->render($data);
+        $content = $this->_mustache_template->render($data);
 
         //Remove the template from the stack
         array_pop($this->_stack);
@@ -160,22 +151,13 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     }
 
     /**
-     * Unregister a function
+     * Get the engine supported file types
      *
-     * @param string    $name   The function name
-     * @return KTemplateEngineTwig
+     * @return array
      */
-    public function unregisterFunction($name)
+    public static function getFileTypes()
     {
-        parent::unregisterFunction($name);
-
-        $functions = $this->_twig->getFunctions();
-
-        if(isset($functions[$name])) {
-            unset($functions[$name]);
-        }
-
-        return $this;
+        return self::$_file_types;
     }
 
     /**
@@ -192,6 +174,9 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
 
         if(in_array($type, $this->getFileTypes()))
         {
+            //Push the template on the stack
+            array_push($this->_stack, array('url' => $url, 'file' => $file));
+
             if(!$this->_source = file_get_contents($file)) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
@@ -204,7 +189,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     /**
      * Locate the template
      *
-     * @param   string  $url The template url
+     * @param  string  $url The template url
      * @throws InvalidArgumentException If the template could not be located
      * @return string   The template real path
      */
@@ -234,81 +219,15 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     }
 
     /**
-     * Import a partial template
-     *
-     * If importing a partial merges the data passed in with the data from the call to render. If importing a different
-     * template type jump out of engine scope back to the template.
-     *
-     * @param   string  $url      The template url
-     * @param   array   $data     The data to pass to the template
-     * @return  string The rendered template content
-     */
-    protected function _import($url, array $data = array())
-    {
-        //Locate the template
-        $file = $this->_locate($url);
-        $type = pathinfo($file, PATHINFO_EXTENSION);
-
-        if(in_array($type, $this->getFileTypes()))
-        {
-            $data   = array_merge((array) $this->getData(), $data);
-            $result = $this->_twig->render($file, $data);
-        }
-        else  $result = $this->getTemplate()->loadFile($file)->render($data);
-
-        return $result;
-    }
-
-    /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
-    }
-
-    /**
      * Gets the source code of a template, given its name.
      *
-     * Required by Twig_LoaderInterface Interface. Do not call directly.
+     * Required by Mustache_Loader Interface. Do not call directly.
      *
      * @param  string $name string The name of the template to load
      * @return string The template source code
      */
-    public function getSource($name)
+    public function load($name)
     {
         return $this->_load($name);
-    }
-
-    /**
-     * Gets the cache key to use for the cache for a given template name.
-     *
-     * Required by Twig_LoaderInterface Interface. Do not call directly.
-     *
-     * @param  string $name string The name of the template to load
-     * @return string The cache key
-     */
-    public function getCacheKey($name)
-    {
-        return crc32($name);
-    }
-
-    /**
-     * Returns true if the template is still fresh.
-     *
-     * Required by Twig_Loader Interface. Do not call directly.
-     *
-     * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
-     */
-    public function isFresh($name, $time)
-    {
-        if(is_file($name)) {
-            return filemtime($name) <= $time;
-        }
-
-        return true;
     }
 }

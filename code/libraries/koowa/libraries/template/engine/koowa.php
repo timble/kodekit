@@ -41,8 +41,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     /**
      * Constructor
      *
-     * Prevent creating instances of this class by making the constructor private
-     *
      * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
      */
     public function __construct(KObjectConfig $config)
@@ -66,22 +64,12 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'functions' => array(
+            'functions'           => array(
                 'import' => array($this, '_import'),
             ),
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
     }
 
     /**
@@ -93,7 +81,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * @throws RuntimeException         If the template could not be compiled
      * @return KTemplateEngineKoowa
      */
-    public function load($url)
+    public function loadFile($url)
     {
         //Locate the template
         $file = $this->_locate($url);
@@ -101,88 +89,47 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         //Push the template on the stack
         array_push($this->_stack, array('url' => $url, 'file' => $file));
 
-        if(!$this->_content = $this->isCached($file))
+        if(!$cache_file = $this->isCached($file))
         {
             //Load the template
-            $content = file_get_contents($file);
-
-            if($content === false) {
+            if(!$content = file_get_contents($file)) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
 
             //Compile the template
-            $content = $this->_compile($content);
-
-            if($content === false) {
+            if(!$content = $this->_compile($content)) {
                 throw new RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
             }
 
-            $this->_content = $this->_buffer($file, $content);
+            $this->_source = $this->cache($file, $content);
         }
+        else $this->_source = $cache_file;
 
         return $this;
     }
 
     /**
-     * Render a template
+     * Set the template source from a string
      *
-     * @param   array   $data   The data to pass to the template
-     * @throws RuntimeException If the template could not be evaluated
-     * @return KTemplateEngineKoowa
-     */
-    public function render(array $data = array())
-    {
-        parent::render($data);
-
-        $content = '';
-        if(!empty($this->_content))
-        {
-            //Evaluate the template
-            $content = $this->_evaluate();
-
-            if ($content === false) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be evaluated.', $content));
-            }
-
-            //Remove the template from the stack
-            array_pop($this->_stack);
-        }
-
-        return $content;
-    }
-
-    /**
-     * Get the template content
-     *
-     * @return  string
-     */
-    public function getContent()
-    {
-        return file_get_contents($this->_content);
-    }
-
-    /**
-     * Set the template content from a string
-     *
-     * @param  string  $content  The template content
+     * @param  string  $source The template source
      * @throws RuntimeException If the template could not be compiled
      * @return KTemplateEngineKoowa
      */
-    public function setContent($content)
+    public function loadString($source)
     {
-        $name = crc32($content);
+        $name = crc32($source);
 
         if(!$file = $this->isCached($name))
         {
             //Compile the template
-            if(!$content = $this->_compile($content)) {
+            if(!$content = $this->_compile($source)) {
                 throw new RuntimeException(sprintf('The template content cannot be compiled.'));
             }
 
-            $file = $this->_buffer($name, $content);
+            $file = $this->cache($name, $source);
         }
 
-        $this->_content = $file;
+        $this->_source = $file;
 
         //Push the template on the stack
         array_push($this->_stack, array('url' => '', 'file' => $file));
@@ -190,24 +137,73 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     }
 
     /**
+     * Render a template
+     *
+     * @param   array   $data   The data to pass to the template
+     * @throws RuntimeException If the template could not be rendered
+     * @return string The rendered template source
+     */
+    public function render(array $data = array())
+    {
+        //Set the data
+        $this->_data = $data;
+
+        //Evaluate the template
+        if (!$content = $this->_evaluate()) {
+            throw new RuntimeException(sprintf('The template "%s" cannot be evaluated.'));
+        }
+
+        //Remove the template from the stack
+        array_pop($this->_stack);
+
+        return $content;
+    }
+
+    /**
+     * Cache the compiled template source
+     *
+     * Write the template content to a file buffer. If cache is enabled the file will be buffer using cache settings
+     * If caching is not enabled the file will be written to the temp path using a buffer://temp stream.
+     *
+     * @param  string $name     The file name
+     * @param  string $content  The template source to cache
+     * @throws RuntimeException If the template cache path is not writable
+     * @throws RuntimeException If template cannot be cached
+     * @return string The cached template file path
+     */
+    public function cache($name, $source)
+    {
+        if(!$file = parent::cache($name, $source))
+        {
+            $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('buffer://temp', 'w+b');
+            $this->_buffer->truncate(0);
+            $this->_buffer->write($source);
+
+            $file = $this->_buffer->getPath();
+        }
+
+        return $file;
+    }
+
+    /**
      * Handle template exceptions
      *
      * If an ErrorException is thrown create a new exception and set the file location to the real template file.
      *
-     * @param  Exception  $exception
+     * @param  \Exception  $exception
      * @return void
      */
     public function handleException(Exception &$exception)
     {
         if($template = end($this->_stack))
         {
-            if($this->_content == $exception->getFile())
+            if($this->_source == $exception->getFile())
             {
                 //Prevents any partial templates from leaking.
                 ob_get_clean();
 
                 //Re-create the exception and set the real file path
-                if($exception instanceof ErrorException && version_compare(PHP_VERSION, '5.3', '>'))
+                if($exception instanceof ErrorException)
                 {
                     $class = get_class($exception);
 
@@ -222,6 +218,16 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
                 }
             }
         }
+    }
+
+    /**
+     * Get the engine supported file types
+     *
+     * @return array
+     */
+    public static function getFileTypes()
+    {
+        return self::$_file_types;
     }
 
     /**
@@ -256,27 +262,16 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     }
 
     /**
-     * Import a partial template
+     * Compile the template source
      *
-     * Function merges the data passed in with the data from the call to render.
+     * If the a compile error occurs and exception will be thrown if the error cannot be recovered from or if debug
+     * is enabled.
      *
-     * @param   string  $url      The template url
-     * @param   array   $data     The data to pass to the template
-     * @return  KTemplateEngineKoowa
-     */
-    protected function _import($url, array $data = array())
-    {
-        $data = array_merge((array) $this->getData(), $data);
-        return $this->load($url)->render($data);
-    }
-
-    /**
-     * Compile the template
-     *
-     * @param   string  $content      The template content to compile
+     * @param  string  $source  The template source to compile
+     * @throws \RuntimeException If the template source cannot be compiled.
      * @return string The compiled template content
      */
-    protected function _compile($content)
+    protected function _compile($source)
     {
         //Convert PHP tags
         if (!ini_get('short_open_tag'))
@@ -284,16 +279,17 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
             // convert "<?=" to "<?php echo"
             $find = '/\<\?\s*=\s*(.*?)/';
             $replace = "<?php echo \$1";
-            $content = preg_replace($find, $replace, $content);
+            $source = preg_replace($find, $replace, $source);
 
             // convert "<?" to "<?php"
             $find = '/\<\?(?:php)?\s*(.*?)/';
             $replace = "<?php \$1";
-            $content = preg_replace($find, $replace, $content);
+            $source = preg_replace($find, $replace, $source);
         }
 
         //Compile to valid PHP
-        $tokens = token_get_all($content);
+        $tokens   = token_get_all($source);
+        $function = get_defined_functions();
 
         $result = '';
         for ($i = 0; $i < sizeof($tokens); $i++)
@@ -318,6 +314,13 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
                             }
                         }
 
+                    //Do not allow to use $this context
+                    case T_VARIABLE:
+
+                        if ('$this' == $content) {
+                            throw new KTemplateExceptionSyntaxError('Using $this when not in object context');
+                        }
+
                     default:
                         $result .= $content;
                         break;
@@ -339,39 +342,38 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         ob_start();
 
         extract($this->getData(), EXTR_SKIP);
-        include $this->_content;
+        include $this->_source;
         $content = ob_get_clean();
 
         return $content;
     }
 
     /**
-     * Buffer the template
+     * Import a partial template
      *
-     * Write the template content to a file buffer. If cache is enabled the file will be buffer using cache settings
-     * If caching is not enabled the file will be written to the temp path using a buffer://temp stream.
+     * If importing a partial merges the data passed in with the data from the call to render. If importing a different
+     * template type jump out of engine scope back to the template.
      *
-     * @param  string $file     The file name
-     * @param  string $content  The template content to cache
-     * @throws \RuntimeException If the template cache path is not writable
-     * @throws \RuntimeException If template cannot be cached
-     * @return string    The buffer template file path
+     * @param   string  $url      The template url
+     * @param   array   $data     The data to pass to the template
+     * @return  string The rendered template content
      */
-    protected function _buffer($file, $content)
+    protected function _import($url, array $data = array())
     {
-        if(!$this->_cache)
+        //Locate the template
+        $file = $this->_locate($url);
+        $type = pathinfo($file, PATHINFO_EXTENSION);
+
+        if(in_array($type, $this->getFileTypes()))
         {
-            if(!isset($this->_buffer)) {
-                $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('buffer://temp', 'w+b');
+            if($this->loadFile($url))
+            {
+                $data = array_merge((array) $this->getData(), $data);
+                $result = $this->render($data);
             }
-
-            $this->_buffer->truncate(0);
-            $this->_buffer->write($content);
-
-            $file = $this->_buffer->getPath();
         }
-        else $file = $this->cache($file, $content);
+        else  $result = $this->getTemplate()->loadFile($file)->render($data);
 
-        return $file;
+        return $result;
     }
 }

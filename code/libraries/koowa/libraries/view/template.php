@@ -112,8 +112,8 @@ abstract class KViewTemplate extends KViewAbstract
         }
 
         //Render the template
-        $this->_content = (string) $this->getTemplate()
-            ->load((string) $layout.'.'.$format)
+        $this->_content = $this->getTemplate()
+            ->loadFile((string) $layout.'.'.$format)
             ->render($data);
 
         return parent::_actionRender($context);

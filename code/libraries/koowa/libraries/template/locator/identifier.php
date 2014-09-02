@@ -49,11 +49,6 @@ abstract class KTemplateLocatorIdentifier extends KTemplateLocatorAbstract
                  * - '[file].[format];
                  */
 
-                $identifier = $this->getIdentifier($base);
-                $path       = $identifier->getPath();
-
-                array_pop($path);
-
                 $parts = explode('.', $url);
 
                 if(in_array(end($parts), $engines)) {
@@ -62,6 +57,8 @@ abstract class KTemplateLocatorIdentifier extends KTemplateLocatorAbstract
 
                 $format = array_pop($parts);
                 $file   = array_pop($parts);
+
+                $layout = $this->getLayout($base);
             }
             else
             {
@@ -72,27 +69,28 @@ abstract class KTemplateLocatorIdentifier extends KTemplateLocatorAbstract
                  * - '[type]:[package].[path].[file].[format];
                  */
 
-                $identifier = $this->getIdentifier($url);
-                $path       = $identifier->getPath();
+                $parts = explode('.', $url);
 
-                if(in_array($identifier->name, $engines))
+                if(in_array(end($parts), $engines))
                 {
-                    $type  = $identifier->getName();
-                    $format = array_pop($path);
-                    $file   = array_pop($path);
+                    $type  =  array_pop($parts);
+                    $format = array_pop($parts);
+                    $file   = array_pop($parts);
                 }
                 else
                 {
-                    $format = $identifier->getName();
-                    $file   = array_pop($path);
+                    $format = array_pop($parts);
+                    $file   = array_pop($parts);
                 }
+
+                $layout = $this->getLayout($url);
             }
 
             $info = array(
                 'url'      => $url,
-                'domain'   => $identifier->getDomain(),
-                'package'  => $identifier->getPackage(),
-                'path'     => $path,
+                'domain'   => $layout->getDomain(),
+                'package'  => $layout->getPackage(),
+                'path'     => $layout->getPath(),
                 'file'     => $file,
                 'format'   => $format,
                 'type'     => $type,
@@ -102,5 +100,28 @@ abstract class KTemplateLocatorIdentifier extends KTemplateLocatorAbstract
         }
 
         return $this->_locations[$url];
+    }
+
+    /**
+     * Get the layout identifier based on the url
+     *
+     * If the identifier has been aliased the alias will be returned.
+     *
+     * @param string $url  The template url
+     * @return KObjectIdentifier
+     */
+    public function getLayout($url)
+    {
+        $engines = $this->getObject('template.engine.factory')->getFileTypes();
+        $parts   = explode('.', $url);
+
+        if(in_array(end($parts), $engines))
+        {
+            $type  =  array_pop($parts);
+            $format = array_pop($parts);
+        }
+        else $format = array_pop($parts);
+
+        return $this->getIdentifier(implode('.', $parts));
     }
 }

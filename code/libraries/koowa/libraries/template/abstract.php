@@ -30,11 +30,11 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_data;
 
     /**
-     * The template content
+     * The template source
      *
      * @var string
      */
-    protected $_content;
+    protected $_source;
 
     /**
      * Constructor
@@ -51,7 +51,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_data = array();
 
         //Reset the content
-        $this->_content = null;
+        $this->_source = null;
 
         //Register the functions
         $functions = (array)KObjectConfig::unbox($config->functions);
@@ -82,18 +82,38 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Load a template by path
      *
      * @param   string  $url      The template url
-     * @throws InvalidArgumentException If the template could not be located
+     * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException         If the template could not be loaded
      * @return KTemplateAbstract
      */
-    public function load($url)
+    public function loadFile($url)
     {
         //Locate the template
         $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
-        if (!$this->_content = $locator->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+        if (!$file = $locator->locate($url)) {
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
+        //Load the template
+        if(!$source = file_get_contents($file)) {
+            throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+        }
+
+        $this->_source = $source;
+
+        return $this;
+    }
+
+    /**
+     * Set the template source from a string
+     *
+     * @param  string   $content The template content
+     * @return KTemplateAbstract
+     */
+    public function loadString($source)
+    {
+        $this->_source = $source;
         return $this;
     }
 
@@ -101,13 +121,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Render the template
      *
      * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @return string The Rendered content
+     * @return string The rendered template
      */
     public function render(array $data = array())
     {
         $this->_data = $data;
 
-        return $this->_content;
+        return $this->_source;
     }
 
     /**
@@ -130,28 +150,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     public function getData()
     {
         return $this->_data;
-    }
-
-    /**
-     * Get the template content
-     *
-     * @return  string
-     */
-    public function getContent()
-    {
-        return $this->_content;
-    }
-
-    /**
-     * Set the template content from a string
-     *
-     * @param  string   $content The template content
-     * @return KTemplateAbstract
-     */
-    public function setContent($content)
-    {
-        $this->_content = $content;
-        return $this;
     }
 
     /**
@@ -190,16 +188,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     }
 
     /**
-     * Returns the template contents
-     *
-     * @return  string
-     */
-    public function toString()
-    {
-        return (string) $this->getContent();
-    }
-
-    /**
      * Get a template data property
      *
      * @param   string  $property The property name.
@@ -208,16 +196,6 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     final public function __get($property)
     {
         return $this->get($property);
-    }
-
-    /**
-     * Cast the object to a string
-     *
-     * @return  string
-     */
-    final public function __toString()
-    {
-        return $this->toString();
     }
 
     /**

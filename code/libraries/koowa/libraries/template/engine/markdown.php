@@ -10,6 +10,8 @@
 /**
  * Markdown Template Engine
  *
+ * @link https://github.com/erusev/parsedown
+ *
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Template\Engine
  */
@@ -61,45 +63,67 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
     }
 
     /**
-     * Get the engine supported file types
+     * Load a template by url
      *
-     * @return array
+     * @param   string  $url The template url
+     * @throws InvalidArgumentException If the template could not be located
+     * @throws RuntimeException         If the template could not be loaded
+     * @throws RuntimeException         If the template could not be compiled
+     * @return KTemplateEngineMarkdown
      */
-    public static function getFileTypes()
+    public function loadFile($url)
     {
-        return self::$_file_types;
+        if(!$this->_source)
+        {
+            $locator = $this->getObject('template.locator.factory')->createLocator($url);
+
+            //Locate the template
+            if (!$file = $locator->locate($url)) {
+                throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            }
+
+            if(!$cache_file = $this->isCached($file))
+            {
+                //Load the template
+                if(!$source = file_get_contents($file)) {
+                    throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+                }
+
+                //Compile the template
+                if(!$source = $this->_compile($source)) {
+                    throw new RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
+                }
+
+                $this->cache($file, $source);
+                $this->_source = $source;
+            }
+            else  $this->_source = include $cache_file;
+        }
+
+        return $this;
     }
 
     /**
-     * Load a template by path
+     * Load the template from a string
      *
-     * @param   string  $url      The template url
-     * @throws InvalidArgumentException If the template could not be located
-     * @throws RuntimeException         If the template could not be loaded
+     * @param  string  $souce  The template source
+     * @throws RuntimeException If the template could not be compiled
      * @return KTemplateEngineMarkdown
      */
-    public function load($url)
+    public function loadString($source)
     {
-        parent::load($url);
+        $file = crc32($source);
 
-        $file = $this->_content;
-
-        if(!$this->_content = $this->isCached($file))
+        if(!$this->_source = $this->isCached($file))
         {
-            //Load the template
-            if(!$content = file_get_contents($file)) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
-            }
-
             //Compile the template
-            if(!$content = $this->_compile($content)) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
+            if(!$source = $this->_compile($source)) {
+                throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
             }
 
-            $this->cache($file, $content);
-            $this->_content = $content;
+            $this->cache($file, $source);
+            $this->_source = $source;
         }
-        else $this->_content = include $this->_content;
 
         return $this;
     }
@@ -127,41 +151,26 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
     }
 
     /**
-     * Set the template content from a string
+     * Get the engine supported file types
      *
-     * @param  string  $content  The template content
-     * @throws RuntimeException If the template could not be compiled
-     * @return KTemplateEngineMarkdown
+     * @return array
      */
-    public function setContent($content)
+    public static function getFileTypes()
     {
-        $file = crc32($content);
-
-        if(!$this->_content = $this->isCached($file))
-        {
-            //Compile the template
-            if(!$content = $this->_compile($content)) {
-                throw new RuntimeException(sprintf('The template content cannot be compiled.'));
-            }
-
-            $this->cache($file, $content);
-            $this->_content = $content;
-        }
-
-        return $this;
+        return self::$_file_types;
     }
 
     /**
      * Compile the template
      *
-     * @param   string  $content The template content to compile
+     * @param   string  $source The template source to compile
      * @return string|false The compiled template content or FALSE on failure.
      */
-    protected function _compile($content)
+    protected function _compile($source)
     {
         $result = false;
         if(is_callable($this->_compiler)) {
-            $result = call_user_func($this->_compiler, $content);
+            $result = call_user_func($this->_compiler, $source);
         }
 
         return $result;

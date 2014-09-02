@@ -15,7 +15,6 @@
  */
 abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTemplateEngineInterface
 {
-
     /**
      * The engine file types
      *
@@ -29,6 +28,13 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
      * @var	KTemplateInterface
      */
     private $__template;
+
+    /**
+     * Debug
+     *
+     * @var boolean
+     */
+    protected $_debug;
 
     /**
      * Caching enabled
@@ -53,11 +59,13 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     {
         parent::__construct($config);
 
-        // Set the template object
-        $this->setTemplate($config->template);
+        $this->__template = $config->template;
 
         //Reset the stack
         $this->_stack = array();
+
+        //Set debug
+        $this->_debug        = $config->debug;
 
         //Set caching
         $this->_cache        = $config->cache;
@@ -75,10 +83,11 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'debug'        => false,
             'cache'        => false,
             'cache_path'   => '',
             'cache_reload' => true,
-            'template'     => null,
+            'template'     => 'default',
             'functions'    => array(
                 'object'    => array($this, 'getObject'),
                 'translate' => array($this->getObject('translator'), 'translate'),
@@ -92,6 +101,64 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     }
 
     /**
+     * Cache the template source in a file
+     *
+     * Write the template source to a file cache. Requires cache to be enabled. This method will throw exceptions if
+     * caching fails and debug is enabled. If debug is disabled FALSE will be returned.
+     *
+     * @param  string $name     The file name
+     * @param  string $content  The template source
+     * @throws \RuntimeException If the file path does not exist
+     * @throws \RuntimeException If the file path is not writable
+     * @throws \RuntimeException If template cannot be written to the cache
+     * @return string|false The cached file path. FALSE if the file cannot be stored in the cache
+     */
+    public function cache($name, $source)
+    {
+        if($this->_cache)
+        {
+            $path = $this->_cache_path;
+
+            if(!is_dir($path)) {
+
+                if($this->isDebug()) {
+                    throw new \RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
+                } else {
+                    return false;
+                }
+            }
+
+            if(!is_writable($path))
+            {
+                if($this->isDebug()) {
+                    throw new \RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
+                } else {
+                    return false;
+                }
+            }
+
+            $hash = crc32($name);
+            $file = $path.'/template_'.$hash;
+
+            if(!file_put_contents($file, $source) !== false)
+            {
+                if($this->isDebug()) {
+                    throw new \RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
+                } else {
+                    return false;
+                }
+            }
+
+            //Override default permissions for cache files
+            @chmod($file, 0666 & ~umask());
+
+            return $file;
+        }
+
+        return false;
+    }
+
+    /**
      * Get the engine supported file types
      *
      * @return array
@@ -102,66 +169,50 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     }
 
     /**
-     * Get the template object
+     * Gets the template object
      *
-     * @return KTemplateInterface The template object
+     * @return  KTemplateInterface	The template object
      */
     public function getTemplate()
     {
+        if(!$this->__template instanceof KTemplateInterface)
+        {
+            if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
+            {
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('template');
+                $identifier['name'] = $this->__template;
+            }
+            else $identifier = $this->getIdentifier($this->__template);
+
+            $this->__template = $this->getObject($identifier);
+        }
+
         return $this->__template;
     }
 
     /**
-     * Set the template object
+     * Enable or disable class loading
      *
-     * @param  KTemplateInterface $template The template object
-     * @return KTemplateFilterInterface $template The template object
+     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
+     *
+     * @param bool $debug True or false.
+     * @return KTemplateEngineAbstract
      */
-    public function setTemplate(KTemplateInterface $template)
+    public function setDebug($debug)
     {
-        $this->__template = $template;
+        $this->_debug = (bool) $debug;
         return $this;
     }
 
     /**
-     * Cache the template to a file
+     * Check if the loader is running in debug mode
      *
-     * Write the template content to a file cache. Requires cache to be enabled.
-     *
-     * @param  string $file    The file name
-     * @param  string $content  The template content to cache
-     * @throws \RuntimeException If the file path does not exist
-     * @throws \RuntimeException If the file path is not writable
-     * @throws \RuntimeException If template cannot be written to the cache
-     * @return string|false The cached file path. FALSE if the file cannot be stored in the cache
+     * @return bool
      */
-    public function cache($file, $content)
+    public function isDebug()
     {
-        if($this->_cache)
-        {
-            $path = $this->_cache_path;
-
-            if(!is_dir($path)) {
-                throw new RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
-            }
-
-            if(!is_writable($path)) {
-                throw new RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
-            }
-
-            $hash = crc32($file);
-            $file = $path.'/template_'.$hash.'.php';
-
-            if(file_put_contents($file, $content) !== false) {
-                @chmod($file, 0666 & ~umask());
-            } else {
-                throw new \RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
-            }
-
-            return $file;
-        }
-
-        return false;
+        return $this->_debug;
     }
 
     /**

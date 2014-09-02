@@ -19,21 +19,29 @@ interface KTemplateInterface
      * Load a template by url
      *
      * @param   string  $url    The template url
-     * @throws InvalidArgumentException If the template could not be found
+     * @throws \InvalidArgumentException If the template could not be located
      * @return KTemplateInterface
      */
-    public function load($url);
+    public function loadFile($url);
+
+    /**
+     * Load a template from a string
+     *
+     * @param  string   $content The template content
+     * @return KTemplateInterface
+     */
+    public function loadString($content);
 
     /**
      * Render the template
      *
      * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @return string The rendered template content
+     * @return string The rendered template source
      */
     public function render(array $data = array());
 
     /**
-     * Get a template property
+     * Get a template data property
      *
      * @param   string  $property The property name.
      * @param   mixed   $default  Default value to return.
@@ -49,22 +57,7 @@ interface KTemplateInterface
     public function getData();
 
     /**
-     * Get the template content
-     *
-     * @return  string
-     */
-    public function getContent();
-
-    /**
-     * Set the template content from a string
-     *
-     * @param  string   $content The template content
-     * @return KTemplateInterface
-     */
-    public function setContent($content);
-
-    /**
-     * Register a function
+     * Register a template function
      *
      * @param string  $name      The function name
      * @param string  $callable  The callable
@@ -73,17 +66,10 @@ interface KTemplateInterface
     public function registerFunction($name, $function);
 
     /**
-     * Unregister a function
+     * Unregister a template function
      *
      * @param string    $name   The function name
      * @return KTemplateInterface
      */
     public function unregisterFunction($name);
-
-    /**
-     * Returns the template contents
-     *
-     * @return  string
-     */
-    public function toString();
 }

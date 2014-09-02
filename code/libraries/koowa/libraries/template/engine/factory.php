@@ -55,6 +55,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'debug'      => false,
             'cache'      => false,
             'cache_path' => '',
             'engines'    => array(
@@ -139,6 +140,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
                 if(!$this->isRegistered($type))
                 {
                     $identifier->getConfig()->merge($config)->append(array(
+                        'debug'      => $this->getConfig()->debug,
                         'cache'      => $this->getConfig()->cache,
                         'cache_path' => $this->getConfig()->cache_path
                     ));

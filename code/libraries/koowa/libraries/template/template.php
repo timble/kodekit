@@ -111,11 +111,16 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      *
      * @param   string  $url      The template url
      * @throws \InvalidArgumentException If the template could not be located
-     * @return KTemplateAbstract
+     * @return KTemplate
      */
-    public function load($url)
+    public function loadFile($url)
     {
-        parent::load($url);
+        //Locate the template
+        $locator = $this->getObject('template.locator.factory')->createLocator($url);
+
+        if (!$file = $locator->locate($url)) {
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+        }
 
         //Create the template engine
         $config = array(
@@ -123,9 +128,39 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
             'functions' => $this->_functions
         );
 
-        $this->_content = $this->getObject('template.engine.factory')
-            ->createEngine($this->_content, $config)
-            ->load($url);
+        $this->_source = $this->getObject('template.engine.factory')
+            ->createEngine($file, $config)
+            ->loadFile($url);
+
+        return $this;
+    }
+
+    /**
+     * Set the template content from a string
+     *
+     * Overrides TemplateInterface:loadString() and allows to define the type of content. If a type is set
+     * an engine for the type will be created. If no type is set we will assumed the content has already been
+     * rendered.
+     *
+     * @param  string   $source  The template content
+     * @param  integer  $type    The template type.
+     * @return KTemplate
+     */
+    public function loadString($source, $type = null)
+    {
+        if($type)
+        {
+            //Create the template engine
+            $config = array(
+                'template'  => $this,
+                'functions' => $this->_functions
+            );
+
+            $this->_source = $this->getObject('template.engine.factory')
+                ->createEngine($type, $config)
+                ->loadString($source);
+        }
+        else parent::loadString($source);
 
         return $this;
     }
@@ -134,37 +169,37 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      * Render the template
      *
      * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @return string The Rendered content
+     * @return string The rendered template source
      */
     public function render(array $data = array())
     {
         parent::render($data);
 
-        if($this->_content instanceof KTemplateEngineInterface)
+        if($this->_source instanceof KTemplateEngineInterface)
         {
-            $this->_content = $this->_content->render($data);
-            $this->filter();
+            $this->_source = $this->_source->render($data);
+            $this->_source = $this->filter();
         }
 
-        return $this;
+        return $this->_source;
     }
 
     /**
      * Filter template content
      *
-     * @return KTemplate
+     * @return string The filtered template source
      */
     public function filter()
     {
-        if(is_string($this->_content))
+        if(is_string($this->_source))
         {
             //Filter the template
             foreach($this->__filter_queue as $filter) {
-                $filter->filter($this->_content);
+                $filter->filter($this->_source);
             }
         }
 
-        return $this;
+        return $this->_source;
     }
 
     /**
@@ -233,36 +268,6 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         }
 
         return $helper->$function($params);
-    }
-
-    /**
-     * Set the template content from a string
-     *
-     * Overrides TemplateInterface::setContent() and allows to define the type of content. If a type is set
-     * an engine for the type will be created. If no type is set we will assumed the content has already been
-     * rendered.
-     *
-     * @param  string   $content The template content
-     * @param  integer  $type    The template type.
-     * @return KTemplateAbstract
-     */
-    public function setContent($content, $type = null)
-    {
-        if($type)
-        {
-            //Create the template engine
-            $config = array(
-                'template'  => $this,
-                'functions' => $this->_functions
-            );
-
-            $this->_content = $this->getObject('template.engine.factory')
-                ->createEngine($type, $config)
-                ->setContent($content);
-        }
-        else parent::setContent($content);
-
-        return $this;
     }
 
     /**
