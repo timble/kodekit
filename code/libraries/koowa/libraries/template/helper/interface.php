@@ -23,14 +23,6 @@ interface KTemplateHelperInterface
     public function getTemplate();
 
     /**
-     * Sets the template object
-     *
-     * @param string|KTemplateInterface $template A template object or identifier
-     * @return $this
-     */
-    public function setTemplate($template);
-
-    /**
      * Method to build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes

@@ -25,13 +25,31 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @throws UnexpectedValueException    If no 'template' config option was passed
+     * @throws InvalidArgumentException    If the model config option does not implement TemplateInterface
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->setTemplate($config->template);
+        $this->__template = $config->template;
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'template' => 'default',
+        ));
+
+        parent::_initialize($config);
     }
 
     /**
@@ -41,33 +59,20 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      */
     public function getTemplate()
     {
-        return $this->__template;
-    }
-
-    /**
-     * Sets the template object
-     *
-     * @param string|KTemplateInterface $template A template object or identifier
-     * @return $this
-     */
-    public function setTemplate($template)
-    {
-        if(!$template instanceof KTemplateInterface)
+        if(!$this->__template instanceof KTemplateInterface)
         {
-            if(empty($template) || (is_string($template) && strpos($template, '.') === false) )
+            if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
             {
                 $identifier         = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('template');
-                $identifier['name'] = $template ? $template : 'default';
+                $identifier['name'] = $this->__template;
             }
-            else $identifier = $this->getIdentifier($template);
+            else $identifier = $this->getIdentifier($this->__template);
 
-            $template = $this->getObject($identifier);
+            $this->__template = $this->getObject($identifier);
         }
-    
-        $this->__template = $template;
-    
-        return $this;
+
+        return $this->__template;
     }
 
     /**
