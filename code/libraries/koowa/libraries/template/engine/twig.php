@@ -90,13 +90,23 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
             'strict_variables' => false,
             'optimizations'    => -1,
             'functions'        => array(
-                'import' => function($url, $data) {
-                        return $this->_import($url, $data);
-                }
+                'import' => array($this, 'importFunction')
             ),
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * PHP 5.2
+     *
+     * @param $url
+     * @param $data
+     * @return string
+     */
+    public function importFunction($url, $data)
+    {
+        return $this->_import($url, $data);
     }
 
     /**

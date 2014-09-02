@@ -24,7 +24,7 @@ interface KTemplateHelperable
      * If the view state have the same string keys, then the parameter value for that key will overwrite the state.
      *
      * @param    string   $identifier Name of the helper, dot separated including the helper function to call
-     * @param    array    $params     An optional associative array of functions parameters to be passed to the helper
+     * @param    array    $config     An optional associative array of functions parameters to be passed to the helper
      * @return   string   Helper output
      * @throws   BadMethodCallException If the helper function cannot be called.
      */

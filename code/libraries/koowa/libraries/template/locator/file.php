@@ -41,8 +41,6 @@ class KTemplateLocatorFile extends KTemplateLocatorAbstract
      */
     public function find(array $info)
     {
-        $result = false;
-
         //Qualify partial templates.
         if(is_file($info['url']) === false)
         {

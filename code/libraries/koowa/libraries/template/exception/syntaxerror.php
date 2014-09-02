@@ -13,4 +13,4 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Template\Exception
  */
-class KTemplateExceptionSyntaxError extends \Exception implements KTemplateException {}
+class KTemplateExceptionSyntaxError extends Exception implements KTemplateException {}

@@ -106,7 +106,7 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
     /**
      * Load the template from a string
      *
-     * @param  string  $souce  The template source
+     * @param  string  $source  The template source
      * @throws RuntimeException If the template could not be compiled
      * @return KTemplateEngineMarkdown
      */
@@ -118,7 +118,7 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
         {
             //Compile the template
             if(!$source = $this->_compile($source)) {
-                throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
+                throw new RuntimeException(sprintf('The template content cannot be compiled.'));
             }
 
             $this->cache($file, $source);

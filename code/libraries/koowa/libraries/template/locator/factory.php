@@ -218,6 +218,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      * Check if the locator is registered
      *
      * @param string $identifier A locator object identifier string or locator name
+     * @throws UnexpectedValueException
      * @return bool TRUE if the locator is a registered, FALSE otherwise.
      */
     public function isRegistered($identifier)

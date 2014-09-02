@@ -382,8 +382,6 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      */
     protected function _dumpVar($var, KObjectConfig $config, $level = 0)
     {
-        $output = array();
-
         if(!$var instanceof KObjectIdentifierInterface)
         {
             if (method_exists($this, $method = '_dump' . strtoupper(gettype($var)))) {
@@ -651,10 +649,15 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
                 $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
                 $result .= '<span class="koowa-dump-key">' . $this->getTemplate()->escape($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
             }
-            return $result .= '</div>';
+
+            $result .= '</div>';
+
+            return $result;
         }
 
-        return $result .= "\n";
+        $result .= "\n";
+
+        return $result;
     }
 
     /**

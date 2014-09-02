@@ -71,7 +71,6 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      *
      * @param  string $url    The template url or engine type
      * @param  array $config  An optional associative array of configuration options
-     * @param  KTemplateInterface $template
      *
      * @throws InvalidArgumentException If the path is not valid
      * @throws RuntimeException         If the engine isn't registered
@@ -230,6 +229,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      * Check if the engine is registered
      *
      * @param string $identifier A engine object identifier string or a file type
+     * @throws UnexpectedValueException
      * @return bool TRUE if the engine is a registered, FALSE otherwise.
      */
     public function isRegistered($identifier)

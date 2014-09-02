@@ -107,7 +107,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
      * caching fails and debug is enabled. If debug is disabled FALSE will be returned.
      *
      * @param  string $name     The file name
-     * @param  string $content  The template source
+     * @param  string $source   The template source
      * @throws \RuntimeException If the file path does not exist
      * @throws \RuntimeException If the file path is not writable
      * @throws \RuntimeException If template cannot be written to the cache
@@ -122,7 +122,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             if(!is_dir($path)) {
 
                 if($this->isDebug()) {
-                    throw new \RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
+                    throw new RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
                 } else {
                     return false;
                 }
@@ -131,19 +131,19 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             if(!is_writable($path))
             {
                 if($this->isDebug()) {
-                    throw new \RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
+                    throw new RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
                 } else {
                     return false;
                 }
             }
 
             $hash = crc32($name);
-            $file = $path.'/template_'.$hash;
+            $file = $path.'/template_'.$hash.'.php';
 
             if(!file_put_contents($file, $source) !== false)
             {
                 if($this->isDebug()) {
-                    throw new \RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
+                    throw new RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
                 } else {
                     return false;
                 }

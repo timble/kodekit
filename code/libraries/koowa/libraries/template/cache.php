@@ -122,7 +122,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      * Register a function
      *
      * @param string  $name      The function name
-     * @param string  $callable  The callable
+     * @param string  $function  The callable
      * @return KTemplateEngineInterface
      */
     public function registerFunction($name, $function)

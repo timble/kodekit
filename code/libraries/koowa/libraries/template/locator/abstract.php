@@ -91,7 +91,7 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
     /**
      * Set the base path
      *
-     * @param string $base_path The base path
+     * @param string $path The base path
      * @return KTemplateLocatorAbstract
      */
     public function setBasePath($path)

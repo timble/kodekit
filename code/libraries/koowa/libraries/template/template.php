@@ -131,7 +131,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
         if (!$file = $locator->locate($url)) {
-            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         //Create the template engine
@@ -328,9 +328,10 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
     /**
      * Attach a filter for template transformation
      *
-     * @param   mixed  $filter An object that implements ObjectInterface, ObjectIdentifier object
+     * @param   mixed $filter An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @param   array $config  An optional associative array of configuration settings
+     * @param   array $config An optional associative array of configuration settings
+     * @throws UnexpectedValueException
      * @return KTemplateAbstract
      */
     public function addFilter($filter, $config = array())

@@ -92,12 +92,12 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
         if (!$file = $locator->locate($url)) {
-            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         //Load the template
         if(!$source = file_get_contents($file)) {
-            throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+            throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
         }
 
         $this->_source = $source;
@@ -108,8 +108,8 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Set the template source from a string
      *
-     * @param  string   $content The template content
-     * @return KTemplateAbstract
+     * @param  string   $source The template content
+     * @return $this
      */
     public function loadString($source)
     {
@@ -155,9 +155,10 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Register a function
      *
-     * @param string  $name      The function name
-     * @param string  $callable  The callable
-     * @return KTemplateAbstract
+     * @param string $name The function name
+     * @param string $function The callable
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function registerFunction($name, $function)
     {

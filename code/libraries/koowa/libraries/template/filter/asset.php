@@ -59,7 +59,7 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract
     /**
      * Add a url scheme
      *
-     * @param string $scheme Scheme to be appended
+     * @param string $alias  Scheme to be appended
      * @param mixed  $path   The path to replace the scheme
      * @return KTemplateFilterAsset
      */

@@ -60,7 +60,7 @@ interface KTemplateInterface
      * Register a template function
      *
      * @param string  $name      The function name
-     * @param string  $callable  The callable
+     * @param string  $function  The callable
      * @return KTemplateInterface
      */
     public function registerFunction($name, $function);

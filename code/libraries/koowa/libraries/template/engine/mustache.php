@@ -15,7 +15,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Nooku\Library\Template\Abstract
  */
-class KTemplateEngineMustache extends KTemplateEngineAbstract implements \Mustache_Loader
+class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustache_Loader
 {
     /**
      * The engine file types
@@ -62,13 +62,22 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements \Mustac
         $this->_mustache = new Mustache_Engine(array(
             'loader' => $this,
             'cache'  => $this->_cache ? $this->_cache_path : null,
-            'escape' => function($value) {
-                    return $this->getTemplate()->escape($value);
-                },
+            'escape' => array($this, 'escapeFunction'),
             'strict_callables' => $this->getConfig()->strict_callables,
             'pragmas'          => $this->getConfig()->pragmas,
             'helpers'          => $this->_functions
         ));
+    }
+
+    /**
+     * PHP 5.2
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function escapeFunction($value)
+    {
+        return $this->getTemplate()->escape($value);
     }
 
     /**
@@ -82,7 +91,7 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements \Mustac
     {
         $config->append(array(
             'strict_callables' => false,
-            'pragmas'          => [Mustache_Engine::PRAGMA_FILTERS],
+            'pragmas'          => array(Mustache_Engine::PRAGMA_FILTERS),
         ));
 
         parent::_initialize($config);
