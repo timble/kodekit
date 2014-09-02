@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Helper
  */
-class KTemplateHelperGrid extends KTemplateHelperAbstract
+class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHelperParameterizable
 {
     /**
      * Render a radio field

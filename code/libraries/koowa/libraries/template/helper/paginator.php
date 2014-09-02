@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Helper
  */
-class KTemplateHelperPaginator extends KTemplateHelperSelect
+class KTemplateHelperPaginator extends KTemplateHelperSelect implements KTemplateHelperParameterizable
 {
     /**
      * Initializes the options for the object

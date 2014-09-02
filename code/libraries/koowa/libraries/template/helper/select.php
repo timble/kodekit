@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Helper
  */
-class KTemplateHelperSelect extends KTemplateHelperAbstract
+class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplateHelperParameterizable
 {
     /**
      * Generates an HTML select option
