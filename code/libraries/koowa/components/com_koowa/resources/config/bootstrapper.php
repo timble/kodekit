@@ -24,6 +24,7 @@ return array(
         'lib:dispatcher.router.route'      => 'com:koowa.dispatcher.router.route',
         'lib:filesystem.stream.buffer'     => 'com:koowa.filesystem.stream.buffer',
         'lib:template.locator.component'   => 'com:koowa.template.locator.component',
+        'lib:template.locator.file'        => 'com:koowa.template.locator.file',
         'lib:translator.locator.component' => 'com:koowa.translator.locator.component',
         'lib:translator.locator.file'      => 'com:koowa.translator.locator.file',
     ),
