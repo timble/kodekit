@@ -31,6 +31,11 @@ return array(
 
     'identifiers' => array(
 
+        'template.engine.factory' => array(
+            'cache'        => true,
+            'cache_path'   => JPATH_ADMINISTRATOR.'/cache/koowa.templates'
+        ),
+
         'template.locator.factory' => array(
             'locators' => array('com:koowa.template.locator.module')
         ),
