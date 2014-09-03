@@ -84,14 +84,16 @@ class KDate extends KObject implements KDateInterface
 
         if($now != $this->_date)
         {
-            if($now->getTimestamp() > $this->getTimestamp())
+            // PHP 5.2 :(
+            if($now->format('U') > $this->getTimestamp())
+            //if($now->getTimestamp() > $this->getTimestamp())
             {
-                $difference = $now->getTimestamp() - $this->getTimestamp();
+                $difference = $now->format('U') - $this->getTimestamp();
                 $tense      = 'ago';
             }
             else
             {
-                $difference = $this->getTimestamp() - $now->getTimestamp();
+                $difference = $now->format('U') - $this->getTimestamp();
                 $tense      = 'from now';
             }
 
@@ -229,7 +231,7 @@ class KDate extends KObject implements KDateInterface
      */
     public function getTimestamp()
     {
-        return $this->_date->getTimestamp();
+        return $this->_date->format('U'); // PHP 5.2 ->getTimestamp();
     }
 
     /**
