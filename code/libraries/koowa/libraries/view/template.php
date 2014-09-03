@@ -92,14 +92,17 @@ abstract class KViewTemplate extends KViewAbstract
         $format = $this->getFormat(); //format cannot be changed through context
         $layout = $context->layout;
 
-        //Handle partial layout paths
-        if (is_string($layout) && strpos($layout, '.') === false)
+        if(!parse_url($layout, PHP_URL_SCHEME))
         {
-            $identifier = $this->getIdentifier()->toArray();
-            $identifier['name'] = $layout;
-            unset($identifier['path'][0]);
+            //Handle partial layout paths
+            if (is_string($layout) && strpos($layout, '.') === false)
+            {
+                $identifier = $this->getIdentifier()->toArray();
+                $identifier['name'] = $layout;
+                unset($identifier['path'][0]);
 
-            $layout = (string) $this->getIdentifier($identifier);
+                $layout = (string) $this->getIdentifier($identifier);
+            }
         }
 
         //Unpack the data (first level only)
