@@ -308,7 +308,13 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         if (is_string($helper) && strpos($helper, '.') === false)
         {
             $identifier = $this->getIdentifier()->toArray();
-            $identifier['path'] = array('template', 'helper');
+
+            if($identifier['type'] != 'lib') {
+                $identifier['path'] = array('template', 'helper');
+            } else {
+                $identifier['path'] = array('helper');
+            }
+
             $identifier['name'] = $helper;
         }
         else $identifier = $this->getIdentifier($helper);
