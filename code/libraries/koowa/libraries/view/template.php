@@ -283,8 +283,10 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function getContext()
     {
-        $context = parent::getContext();
-        $context->layout = $this->getLayout();
+        $context = new KViewContextTemplate();
+        $context->setSubject($this);
+        $context->setData($this->_data);
+        $context->setLayout($this->getLayout());
 
         return $context;
     }
