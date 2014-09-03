@@ -57,7 +57,7 @@ class KViewJson extends KViewAbstract
         $query = $this->getUrl()->getQuery(true);
         if (!empty($query['fields']))
         {
-            $fields = explode(',', $query['fields']);
+            $fields = explode(',', rawurldecode($query['fields']));
             $this->_fields = array_merge($this->_fields, $fields);
         }
     }
