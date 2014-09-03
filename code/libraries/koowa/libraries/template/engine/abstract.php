@@ -119,8 +119,8 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
         {
             $path = $this->_cache_path;
 
-            if(!is_dir($path)) {
-
+            if(!is_dir($path) && (false === @mkdir($path, 0777, true) && !is_dir($path)))
+            {
                 if($this->isDebug()) {
                     throw new RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
                 } else {
@@ -140,7 +140,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             $hash = crc32($name);
             $file = $path.'/template_'.$hash.'.php';
 
-            if(!file_put_contents($file, $source) !== false)
+            if(@file_put_contents($file, $source) === false)
             {
                 if($this->isDebug()) {
                     throw new RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
