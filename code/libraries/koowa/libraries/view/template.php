@@ -105,11 +105,7 @@ abstract class KViewTemplate extends KViewAbstract
             }
         }
 
-        //Unpack the data (first level only)
-        $data = array();
-        foreach($context->data as $key => $value) {
-            $data[$key] = $value;
-        }
+        $data = KObjectConfig::unbox($context->data);
 
         //Render the template
         $this->_content = $this->getTemplate()
