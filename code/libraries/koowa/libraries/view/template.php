@@ -105,11 +105,17 @@ abstract class KViewTemplate extends KViewAbstract
             }
         }
 
+        //Unpack the data (first level only)
+        $data = array();
+        foreach($context->data as $key => $value) {
+            $data[$key] = $value;
+        }
+
         //Render the template
         $this->_content = $this->getTemplate()
             ->loadFile((string) $layout.'.'.$format)
             ->setParameters($context->parameters)
-            ->render($context->data->toArray());
+            ->render($data);
 
         return parent::_actionRender($context);
     }
@@ -141,8 +147,7 @@ abstract class KViewTemplate extends KViewAbstract
                 $context->parameters = $model->getState()->getValues();
                 $context->parameters->total = $model->count();
             }
-            else
-            {
+            else {
                 $context->parameters = $entity->getProperties();
                 $context->parameters->total = 1;
             }
@@ -152,8 +157,6 @@ abstract class KViewTemplate extends KViewAbstract
         //Set the layout and view in the parameters.
         $context->parameters->layout = $context->layout;
         $context->parameters->view   = $this->getName();
-
-
     }
 
     /**

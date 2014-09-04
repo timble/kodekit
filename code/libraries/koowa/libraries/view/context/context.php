@@ -16,33 +16,23 @@
 class KViewContext extends KCommand implements KViewContextInterface
 {
     /**
-     * The view data
-     *
-     * @var KObjectArray
-     */
-    private $__data;
-
-    /**
      * Set the view data
-     *
-     * Box the view data as an object array to prevent it from being unboxed.
      *
      * @param array $data
      * @return KViewContext
      */
     public function setData($data)
     {
-        $this->__data = new KObjectArray(new KObjectConfig(array('data' => $data)));
-        return $this;
+        return KObjectConfig::set('data', $data);
     }
 
     /**
      * Get the view data
      *
-     * @return KObjectArray
+     * @return array
      */
     public function getData()
     {
-        return $this->__data;
+        return KObjectConfig::get('data');
     }
 }
