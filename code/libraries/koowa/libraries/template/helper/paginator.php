@@ -85,7 +85,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
         $options  = array();
         $values   = KObjectConfig::unbox($config->values);
 
-        if (!in_array($config->limit, $values)) {
+        if ($config->limit && !in_array($config->limit, $values)) {
             $values[] = $config->limit;
             sort($values);
         }
