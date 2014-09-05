@@ -96,7 +96,7 @@ it into `develop`
 License
 -------
 
-Nooku Framework is open-source software licensed under the [GPLv3 license](develop/LICENSE.md).
+Nooku Framework is open-source software licensed under the [GPLv3 license](LICENSE.md).
 
 [HMVC]: http://en.wikipedia.org/wiki/Hierarchical_model%E2%80%93view%E2%80%93controller
 [boilerplate]: http://en.wikipedia.org/wiki/Boilerplate_code
