@@ -192,7 +192,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                             $identifiers[$priority] = array();
                         }
 
-                        $identifiers[$priority] = array_merge_recursive($identifiers[$priority], $array['identifiers']);;
+                        $identifiers[$priority] = array_replace_recursive($identifiers[$priority], $array['identifiers']);;
                     }
                 }
 
@@ -203,8 +203,9 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                 */
                 $identifiers_flat = array();
 
+                krsort($identifiers);
                 foreach ($identifiers as $priority => $merges) {
-                    $identifiers_flat = array_merge_recursive($merges, $identifiers_flat);
+                    $identifiers_flat = array_replace_recursive($identifiers_flat, $merges);
                 }
 
                 foreach ($identifiers_flat as $identifier => $config) {
