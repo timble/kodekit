@@ -22,9 +22,8 @@ class ComKoowaTemplateFilterLink extends KTemplateFilterLink
      *
      * @param string $text  The text to parse
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
-        $request = $this->getObject('request');
         $links   = $this->_parseTags($text);
 
         if($this->getTemplate()->getParameters()->layout == 'koowa') {

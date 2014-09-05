@@ -22,7 +22,7 @@ class ComKoowaTemplateFilterMeta extends KTemplateFilterMeta
      *
      * @param string $text  The text to parse
      */
-    public function render(&$text)
+    public function filter(&$text)
     {
         $meta    = $this->_parseTags($text);
 
