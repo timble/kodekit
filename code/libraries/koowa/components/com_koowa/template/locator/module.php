@@ -127,11 +127,16 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
 
         foreach($paths as $path)
         {
+            $results = glob($path);
+
             //Find the file in the directory
-            foreach(glob($path) as $file)
+            if ($results)
             {
-                if($result = $this->realPath($file)) {
-                    return $result;
+                foreach($results as $file)
+                {
+                    if($result = $this->realPath($file)) {
+                        return $result;
+                    }
                 }
             }
         }
