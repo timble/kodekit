@@ -86,7 +86,7 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
         /*
          * Theme path
          */
-        if(!empty($this->_theme_path))
+        if(!empty($this->_override_path))
         {
             //Remove the 'view' element from the path.
             $path = $info['path'];
