@@ -27,6 +27,7 @@ class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
         $config->append(array(
             'editor'    => null,
             'name'      => 'description',
+            'value'     => '',
             'width'     => '100%',
             'height'    => '500',
             'cols'      => '75',
@@ -38,7 +39,7 @@ class ComKoowaTemplateHelperEditor extends KTemplateHelperAbstract
         $editor  = JFactory::getEditor($config->editor);
         $options = KObjectConfig::unbox($config->options);
 
-        $result = $editor->display($config->name, $config->{$config->name}, $config->width, $config->height, $config->cols, $config->rows, KObjectConfig::unbox($config->buttons), $config->name, null, null, $options);
+        $result = $editor->display($config->name, $config->value, $config->width, $config->height, $config->cols, $config->rows, KObjectConfig::unbox($config->buttons), $config->name, null, null, $options);
         
         // Some editors like CKEditor return inline JS. 
         $result = str_replace('<script', '<script data-inline', $result);

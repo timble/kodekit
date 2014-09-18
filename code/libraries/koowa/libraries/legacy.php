@@ -27,9 +27,9 @@ if(false === function_exists('lcfirst'))
 
 if (!function_exists('array_replace_recursive'))
 {
-    function array_replace_recursive($array, $array1)
+    if (!function_exists('recurse'))
     {
-        function recurse($array, $array1)
+        function recurse_for_array_replace($array, $array1)
         {
             foreach ($array1 as $key => $value)
             {
@@ -40,7 +40,7 @@ if (!function_exists('array_replace_recursive'))
 
                 // overwrite the value in the base array
                 if (is_array($value)) {
-                    $value = recurse($array[$key], $value);
+                    $value = recurse_for_array_replace($array[$key], $value);
                 }
 
                 $array[$key] = $value;
@@ -48,6 +48,10 @@ if (!function_exists('array_replace_recursive'))
 
             return $array;
         }
+    }
+
+    function array_replace_recursive($array, $array1)
+    {
 
         // handle the arguments, merge one by one
         $args = func_get_args();
@@ -59,7 +63,7 @@ if (!function_exists('array_replace_recursive'))
         for ($i = 1; $i < count($args); $i++)
         {
             if (is_array($args[$i])) {
-                $array = recurse($array, $args[$i]);
+                $array = recurse_for_array_replace($array, $args[$i]);
             }
         }
         return $array;

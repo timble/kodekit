@@ -181,11 +181,12 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             }
         }
 
-        if(isset($_SERVER['PHP_AUTH_USER']))
+        /*if(isset($_SERVER['PHP_AUTH_USER']))
         {
+            This breaks Apache htpasswd authentication
             $headers['PHP_AUTH_USER'] = $_SERVER['PHP_AUTH_USER'];
             $headers['PHP_AUTH_PW']   = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
-        }
+        }*/
 
         $this->_headers->add($headers);
 

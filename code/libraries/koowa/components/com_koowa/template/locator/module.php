@@ -86,7 +86,7 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
         /*
          * Theme path
          */
-        if(!empty($this->_theme_path))
+        if(!empty($this->_override_path))
         {
             //Remove the 'view' element from the path.
             $path = $info['path'];
@@ -127,11 +127,16 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
 
         foreach($paths as $path)
         {
+            $results = glob($path);
+
             //Find the file in the directory
-            foreach(glob($path) as $file)
+            if ($results)
             {
-                if($result = $this->realPath($file)) {
-                    return $result;
+                foreach($results as $file)
+                {
+                    if($result = $this->realPath($file)) {
+                        return $result;
+                    }
                 }
             }
         }

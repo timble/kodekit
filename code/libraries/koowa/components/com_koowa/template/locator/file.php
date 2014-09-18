@@ -70,12 +70,16 @@ class ComKoowaTemplateLocatorFile extends KTemplateLocatorFile
             if(!$result = $this->realPath($path.'/'.$file.'.'.$format))
             {
                 $pattern = $path.'/'.$file.'.'.$format.'.*';
+                $results = glob($pattern);
 
                 //Try to find the file
-                foreach(glob($pattern) as $file)
+                if ($results)
                 {
-                    if($result = $this->realPath($file)) {
-                        break;
+                    foreach($results as $file)
+                    {
+                        if($result = $this->realPath($file)) {
+                            return $result;
+                        }
                     }
                 }
             }
