@@ -1,0 +1,26 @@
+# Use like: php -d memory_limit=512M /usr/bin/apigen -d /output/dir --config apigen.neon
+
+# Source file or directory to parse
+source: code
+
+# List of allowed file extensions
+extensions: [php]
+# Mask to exclude file or directory from processing
+exclude: [*/administrator/manifests/*,*/plugins/system/koowa/*,*/libraries/koowa/libraries/legacy.php,*/administrator/manifests/files/files_koowa/script.php]
+
+# Generate documentation for elements marked as internal and display internal documentation parts
+internal: No
+# Generate documentation for PHP internal classes
+php: No
+# Generate tree view of classes, interfaces and exceptions
+tree: Yes
+# Generate documentation for deprecated classes, methods, properties and constants
+deprecated: Yes
+# Generate highlighted source code files
+sourceCode: Yes
+# Add a link to download documentation as a ZIP archive
+download: Yes
+
+googleAnalytics: UA-214238-5
+
+title: "Nooku Framework"

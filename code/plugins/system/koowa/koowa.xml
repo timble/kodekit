@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="system" method="upgrade" overwrite="true">
+    <name>plg_system_koowa</name>
+    <author>Joomlatools</author>
+    <creationDate>July 2014</creationDate>
+    <copyright>Copyright (C) 2007 - 2014 Timble CVBA (http://www.timble.net)</copyright>
+    <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
+    <authorEmail>support@joomlatools.com</authorEmail>
+    <authorUrl>www.joomlatools.com</authorUrl>
+    <version>2.0.0</version>
+    <description />
+
+    <files folder="plugins/system">
+        <folder>language</folder>
+        <filename plugin="koowa">koowa.php</filename>
+    </files>
+</extension>

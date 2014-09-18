@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<project name="Koowa Framework" default="build">
+
+    <!-- Default settings -->
+    <property name="framework.location" value="local" />
+
+    <property name="file.compression" value="gzip" />
+    <property name="file.extension" value=".tar.gz" />
+
+    <property name="file.compress" value="true" />
+
+	<!-- Load the build configuration -->
+	<property file="build.properties" override="true" />
+
+    <target name="clone">
+        <if>
+            <equals arg1="${framework.location}" arg2="self" />
+            <else>
+                <delete dir="tmp" includeemptydirs="true" />
+            </else>
+        </if>
+
+		<!-- Get the framework -->
+        <if>
+            <equals arg1="${framework.location}" arg2="local" />
+            <then>
+				<echo message="Using local checkout of Nooku framework" />
+				<copy todir="tmp/clone">
+					<fileset dir="." defaultexcludes="no" />
+				</copy>
+
+                <if>
+                    <isset property="framework.branch" />
+                    <then>
+                        <gitcheckout
+                                gitPath="git"
+                                repository="tmp/clone"
+                                branchname="${framework.branch}" />
+                    </then>
+                </if>
+			</then>
+            <elseif>
+                <equals arg1="${framework.location}" arg2="self" />
+                <then>
+                    <echo message="Using the current folder" />
+                </then>
+            </elseif>
+			<else>
+				<echo message="Cloning Nooku framework" />
+                <property name="framework.branch" value="develop" />
+                <exec command="git clone --depth 1 --branch ${framework.branch} git@git.assembla.com:joomlatools-framework.git ${project.basedir}/tmp/clone" />
+			</else>
+		</if>
+
+    </target>
+<!-- -->
+    <target name="build" depends="clone">
+        <mkdir dir="tmp/packages" />
+
+        <copy todir="tmp/code">
+            <fileset dir="tmp/clone/code" />
+        </copy>
+
+        <copy file="tmp/code/libraries/koowa/libraries/LICENSE"
+              tofile="tmp/LICENSE" overwrite="true" />
+
+        <copy file="tmp/clone/pkg_koowa.xml"
+              tofile="tmp/pkg_koowa.xml" overwrite="true" />
+
+        <if>
+            <equals arg1="${file.compression}" arg2="gzip" />
+            <then>
+                <delete file="koowa${file.extension}" quiet="true" />
+
+                <tar destfile="koowa${file.extension}" compression="${file.compression}">
+                    <fileset dir="tmp">
+                        <include name="code/**" />
+                        <include name="pkg_koowa.xml" />
+                        <include name="LICENSE" />
+                    </fileset>
+                </tar>
+            </then>
+            <else>
+                <echo message="${file.compress}" />
+                <delete dir="koowa" />
+
+                <copy todir="koowa">
+                    <fileset dir="tmp">
+                        <include name="code/**" />
+                        <include name="pkg_koowa.xml" />
+                        <include name="LICENSE" />
+                    </fileset>
+                </copy>
+            </else>
+        </if>
+
+        <if>
+            <equals arg1="${framework.location}" arg2="self" />
+            <else>
+                <delete dir="tmp" includeemptydirs="true" />
+            </else>
+        </if>
+	</target>
+</project>

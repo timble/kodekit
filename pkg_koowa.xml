@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension version="3.0" type="package" method="upgrade">
+    <identifier>pkg:koowa</identifier>
+    <name>pkg_koowa</name>
+    <packagename>koowa</packagename>
+    <author>Joomlatools</author>
+    <creationDate>July 2014</creationDate>
+    <copyright>Copyright (C) 2007 - 2014 Timble CVBA (http://www.timble.net)</copyright>
+    <license>GNU GPLv3 - http://www.gnu.org/licenses/gpl.html</license>
+    <authorEmail>support@joomlatools.com</authorEmail>
+    <authorUrl>www.joomlatools.com</authorUrl>
+    <version>2.0.0</version>
+    <description></description>
+
+    <files>
+        <file type="file" id="files_koowa">code/administrator/manifests/files</file>
+        <file type="plugin" id="koowa" group="system">code/plugins/system/koowa</file>
+    </files>
+</extension>

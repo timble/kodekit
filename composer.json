@@ -1,0 +1,30 @@
+{
+    "name": "nooku/nooku-framework",
+    "type": "nooku-framework",
+    "license": "GPLv3",
+    "description": "Nooku Framework is an open-source extension framework for Joomla",
+    "keywords": [
+        "joomla",
+        "extension",
+        "framework",
+        "nooku"
+    ],
+    "homepage": "https://github.com/nooku/nooku-framework",
+    "authors": [
+        {
+            "name": "Timble",
+            "email": "info@timble.net",
+            "homepage": "http://www.timble.net"
+        }
+    ],
+    "require": {
+        "nooku/installer": "*"
+    },
+
+    "suggest": {
+        "symfony/yaml" : "Allows parsing and writing Yaml files",
+        "twig/twig": "Allows building templates using the Twig template engine",
+        "mustache/mustache": "Allows building logic less templates using the Mustache syntax",
+        "erusev/parsedown-extra" : "Allows using Markddown in templates"
+    }
+}

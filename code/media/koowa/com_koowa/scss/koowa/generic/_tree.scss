@@ -1,0 +1,141 @@
+.jqtree-tree {
+  font-size: 13px; // Otherwise font-size will be very small on J! 2.5
+
+  ul.jqtree_common {
+    list-style: none outside;
+    margin: 0;
+    padding: 0;
+  }
+
+  li.jqtree-closed > ul.jqtree_common {
+    display: none;
+  }
+
+  li.jqtree_common {
+    clear: both;
+    list-style-type: none;
+  }
+
+  a:hover {
+    .jqtree-title {
+      color: #fff;
+    }
+  }
+
+  /* We use different markup to display the toggler, so we hide the old one */
+  .jqtree-toggler {
+    display: none !important;
+  }
+
+  .jqtree-title {
+    color: $linkColor;
+    vertical-align: middle;
+    text-shadow: none;
+    line-height: 1em; // Make both lists the same height
+  }
+
+  span.jqtree-dragging {
+    color: #fff;
+    background: #000;
+    opacity: 0.6;
+    cursor: pointer;
+    padding: 2px 8px;
+  }
+
+  li.jqtree-ghost {
+    position: relative;
+    z-index: 10;
+    margin-right: 10px;
+  }
+
+  li.jqtree-ghost span {
+    display: block;
+  }
+
+  li.jqtree-ghost span.jqtree-circle {
+    background-repeat: no-repeat;
+    height: 8px;
+    width: 8px;
+    position: absolute;
+    top: -4px;
+    left: 2px;
+  }
+
+  li.jqtree-ghost span.jqtree-line {
+    background-color: #0000ff;
+    height: 2px;
+    padding: 0;
+    position: absolute;
+    top: -1px;
+    left: 10px;
+    width: 100%;
+  }
+
+  li.jqtree-ghost.jqtree-inside {
+    margin-left: 48px;
+  }
+
+  span.jqtree-border {
+    position: absolute;
+    display: block;
+    left: -2px;
+    top: 0;
+    border: solid 2px #0000ff;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin: 0;
+  }
+
+  .jqtree-element {
+    width: 100%; /* todo: why is this in here? */
+    *width: auto; /* ie7 fix; issue 41 */
+    position: relative;
+  }
+  li.jqtree-selected > a .jqtree-title,
+  li.jqtree-selected a:hover .jqtree-title,
+  li.jqtree-selected a:hover .jqtree-title i {
+    color: #fff !important;
+  }
+
+  .koowa_icon--folder, .koowa_icon--folder_open {
+    opacity: 0.9;
+  }
+
+  /* .icon-triangle-hide elements are for indenting folders with no children on the same column as the other folders */
+  .icon-triangle-right, .icon-triangle-down, .icon-triangle-hide {
+    opacity: 0.6;
+    padding-right: 2px;
+    transition: opacity 300ms;
+    font-style: normal;
+  }
+  .icon-toggler {
+    font-size: 10px;
+    &:hover {
+      opacity: 1;
+      transition: opacity 300ms;
+    }
+  }
+
+  .jqtree-moving > .jqtree-element .jqtree-title {
+    outline: dashed 1px #0000ff;
+  }
+
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    clear: both;
+  }
+
+  ul, li {
+    float: left !important;
+    min-width: 100%;
+    overflow: visible;
+
+    a {
+      padding: 6px 10px !important;
+      width: auto;
+    }
+  }
+}
