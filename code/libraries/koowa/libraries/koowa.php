@@ -106,6 +106,16 @@ class Koowa
         //Register the component object locator
         $manager->registerLocator('lib:object.locator.component');
 
+        //Register the composer class locator
+        if(file_exists($this->getVendorPath()))
+        {
+            $manager->getClassLoader()->registerLocator(new KClassLocatorComposer(
+                array(
+                    'vendor_path' => $this->getVendorPath()
+                )
+            ));
+        }
+
         //Warm-up the stream factory
         $manager->getObject('lib:filesystem.stream.factory');
     }
