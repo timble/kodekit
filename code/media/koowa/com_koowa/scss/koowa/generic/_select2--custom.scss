@@ -1,0 +1,20 @@
+.select2-container.select2-container.select2-container { // To win when outside of .koowa namespace
+  min-width: 200px;
+  width: auto !important;
+  max-width: 100% !important;
+
+  .select2-choice,
+  .select2-choice .select2-chosen {
+    white-space: normal;
+  }
+}
+
+.docman_container,
+#documents-sidebar,
+#files-sidebar,
+#logman-sidebar {
+  .select2-container.select2-container.select2-container { // Within our own forms
+    min-width: 100px;
+    width: 100% !important;
+  }
+}
