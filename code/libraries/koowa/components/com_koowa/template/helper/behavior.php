@@ -66,7 +66,7 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             if (version_compare(JVERSION, '3.0', 'ge'))
             {
                 JHtml::_('jquery.framework');
-                JHtml::_('script', 'media/koowa/com_koowa/js/koowa.jquery.js', false, false, false, false, false);
+                JHtml::_('script', 'media/koowa/com_koowa/js/koowa.kquery.js', false, false, false, false, false);
             }
             else $html .= parent::jquery($config);
 

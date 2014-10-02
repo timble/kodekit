@@ -91,13 +91,13 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
             if ($config->load_base)
             {
-                if (!file_exists($template.'/disable-joomlatools-bootstrap')) {
+                if (!file_exists($template.'/disable-koowa-bootstrap.txt')) {
                     $html .= '<ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />';
                 }
             }
             else
             {
-                if (file_exists($template.'/enable-joomlatools-bootstrap')) {
+                if (file_exists($template.'/enable-koowa-bootstrap.txt')) {
                     $html .= '<ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />';
                 }
             }
