@@ -43,15 +43,7 @@ if (!Function.prototype.bind) {
  * https://github.com/ded/klass
  * License MIT (c) Dustin Diaz & Jacob Thornton 2012
  */
-
-    /** @exports klass */
-!function (name, context, definition) {
-    if (typeof define == 'function') define(definition)
-    //else if (typeof module != 'undefined') module.exports = definition() //@NOTE this breaks qunit
-    else context[name] = definition()
-}('klass', this,
-    /** @exports klass */
-    function () {
+var klass = (function () {
     var context = this
         , old = context.klass
         , f = 'function'
@@ -139,7 +131,7 @@ if (!Function.prototype.bind) {
     }
 
     return klass
-});
+})();
 
 $(function() {
     $('.submittable').on('click.koowa', function(event){
