@@ -32,6 +32,12 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     protected $_keys;
 
+    /**
+     * A list of key aliases.
+     *
+     * @var
+     */
+    protected $_aliases;
 
     /**
      * @param KObjectConfig $config
@@ -41,6 +47,7 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
         parent::__construct($config);
 
         $this->setPrefix($config->prefix);
+        $this->_aliases = $config->aliases;
     }
 
     /**
@@ -56,7 +63,7 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
         $config->append(array(
             'prefix'     => 'KLS_',
             'key_length' => 40,
-            'data'       =>  array(
+            'aliases'    =>  array(
                 'all'           => 'JALL',
                 'title'         => 'JGLOBAL_TITLE',
                 'alias'         => 'JFIELD_ALIAS_LABEL',
@@ -124,6 +131,10 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     public function get($string)
     {
+        if (isset($this->_aliases[$string])) {
+            $string = $this->_aliases[$string];
+        }
+
         if (!parent::has(strtolower($string)))
         {
             if(!JFactory::getLanguage()->hasKey($string))
@@ -138,11 +149,11 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
                 $translation =  JFactory::getLanguage()->_($key);
             }
             else $translation = JFactory::getLanguage()->_($string);
-        }
-        else  $translation = JFactory::getLanguage()->_(parent::get(strtolower($string)));
 
-        //Set the translation to prevent it from being re-translated
-        $this->set($string, $translation);
+            //Set the translation to prevent it from being re-translated
+            $this->set($string, $translation);
+        }
+        else $translation = parent::get(strtolower($string));
 
         return $translation;
     }
