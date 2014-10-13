@@ -58,7 +58,7 @@ class ComKoowaDispatcherRouterRoute extends KDispatcherRouterRoute
         $query = array_merge(array('option' => null, 'view'   => null), $query);
 
         //Let Joomla build the route
-        $route = JRoute::_('index.php?'.http_build_query($query), $escape);
+        $route = JRoute::_('index.php?'.http_build_query($query, '', '&'), $escape);
 
         // We had to change the format in the URL above so that .htaccess file can catch it
         if (isset($append_format)) {
