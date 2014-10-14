@@ -56,8 +56,8 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
         $this->_catalogue = $config->catalogue;
         $this->_loaded   = array();
 
-        $this->setLocale($config->locale);
         $this->setLocaleFallback($config->locale_fallback);
+        $this->setLocale($config->locale);
     }
 
     /**
