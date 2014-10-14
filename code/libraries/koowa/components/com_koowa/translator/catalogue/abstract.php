@@ -165,9 +165,12 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
     {
         $lowercase = strtolower($string);
 
-        if (!parent::has($lowercase) && !JFactory::getLanguage()->hasKey($string) && !isset($this->_aliases[$lowercase]))
+        if (!parent::has($lowercase) && !JFactory::getLanguage()->hasKey($string))
         {
-            if (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
+            if (isset($this->_aliases[$lowercase])) {
+                $key = $this->_aliases[$lowercase];
+            }
+            elseif (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
                 $key = $string;
             } else {
                 //Gets a key from the catalogue and prefixes it
