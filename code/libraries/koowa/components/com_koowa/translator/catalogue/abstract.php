@@ -131,13 +131,14 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     public function get($string)
     {
-        if (isset($this->_aliases[$string])) {
-            $string = $this->_aliases[$string];
-        }
+        $lowercase = strtolower($string);
 
-        if (!parent::has(strtolower($string)))
+        if (!parent::has($lowercase))
         {
-            if(!JFactory::getLanguage()->hasKey($string))
+            if (isset($this->_aliases[$lowercase])) {
+                $key = $this->_aliases[$lowercase];
+            }
+            else if(!JFactory::getLanguage()->hasKey($string))
             {
                 if (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
                     $key = $string;
@@ -145,17 +146,13 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
                     //Gets a key from the catalogue and prefixes it
                     $key = $this->getPrefix().$this->generateKey($string);
                 }
-
-                $translation =  JFactory::getLanguage()->_($key);
             }
-            else $translation = JFactory::getLanguage()->_($string);
+            else $key = $string;
 
-            //Set the translation to prevent it from being re-translated
-            $this->set($string, $translation);
+            $this->set($lowercase, JFactory::getLanguage()->_($key));
         }
-        else $translation = parent::get(strtolower($string));
 
-        return $translation;
+        return parent::get($lowercase);
     }
 
     /**
@@ -166,20 +163,18 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     public function has($string)
     {
-        if (!parent::has(strtolower($string)))
-        {
-            if(!JFactory::getLanguage()->hasKey($string))
-            {
-                if (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
-                    $key = $string;
-                } else {
-                    //Gets a key from the catalogue and prefixes it
-                    $key = $this->getPrefix().$this->generateKey($string);
-                }
+        $lowercase = strtolower($string);
 
-                $result = JFactory::getLanguage()->hasKey($key);
+        if (!parent::has($lowercase) && !JFactory::getLanguage()->hasKey($string) && !isset($this->_aliases[$lowercase]))
+        {
+            if (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
+                $key = $string;
+            } else {
+                //Gets a key from the catalogue and prefixes it
+                $key = $this->getPrefix().$this->generateKey($string);
             }
-            else $result = true;
+
+            $result = JFactory::getLanguage()->hasKey($key);
         }
         else $result = true;
 
