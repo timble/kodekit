@@ -6,7 +6,6 @@
   position: relative;
   display: table;
   width: 100%;
-  @include wrap_words();
 }
 
 table .koowa_header {
