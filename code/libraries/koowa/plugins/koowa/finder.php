@@ -331,6 +331,11 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
             $item->publish_end_date = $item->unpublish_on;
         }
 
+        // Finder needs the access field
+        if (!isset($item->access)) {
+            $item->access = 1;
+        }
+
         $item->state = $item->enabled;
 
         // Set the item type.
