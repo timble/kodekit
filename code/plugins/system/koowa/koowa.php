@@ -177,15 +177,48 @@ class PlgSystemKoowa extends JPlugin
                 $manager->getObject('event.publisher')->addListener('onException', array($this, 'onException'), KEvent::PRIORITY_LOW);
             }
 
+            // Handle 404 errors gracefully after log outs
+            $manager->getObject('event.publisher')->addListener('onException', array($this, 'onErrorAfterLogout'), KEvent::PRIORITY_HIGH);
+
             /**
              * Plugin Bootstrapping
              */
             JPluginHelper::importPlugin('koowa', null, true);
 
+
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Handles 404 errors gracefully after log outs
+     *
+     * If a user does not have access to the entity after logging out, they will be redirected to the homepage.
+     *
+     * @param KEventException $event
+     * @return bool
+     */
+    public function onErrorAfterLogout(KEventException $event)
+    {
+        if ($event->getException()->getCode() === KHttpResponse::NOT_FOUND && JFactory::getApplication()->isSite())
+        {
+            if (version_compare(JVERSION, '3.0', '<')) {
+                $hash = JApplication::getHash('plgSystemLogout'); // Watch out. Starts with lowercase p for 2.5
+            } else {
+                $hash = JApplicationHelper::getHash('PlgSystemLogout');
+            }
+
+            $app = JFactory::getApplication();
+            if ($app->input->cookie->getString($hash, null)) // just logged out
+            {
+                $app->enqueueMessage(JText::_('PLG_SYSTEM_LOGOUT_REDIRECT'));
+                $app->redirect('index.php');
+
+                return true;
+            }
+        }
     }
 
     /**
