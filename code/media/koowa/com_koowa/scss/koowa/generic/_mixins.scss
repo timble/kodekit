@@ -1,13 +1,9 @@
 // Wrapping words
 @mixin wrap_words() {
-  // Older stuff
-  white-space: -o-pre-wrap; // Opera 7
-  white-space: -moz-pre-wrap; // Mozilla, since 1999
-  white-space: -pre-wrap; // Opera 4-6
-
-  // Modern browsers & >= IE8 compability-mode
-  white-space: pre-wrap; // css-3
+  // Breaking
+  white-space: normal;
   word-wrap: break-word;
+  overflow-wrap: break-word;
 
   // Hyphenation, the better word-break (newer browsers only)
   -webkit-hyphens: auto;

@@ -19,6 +19,7 @@ table .koowa_header {
 
 .koowa_header__image {
   height: $iconSize;
+  @include wrap-words;
 }
 
 .koowa_header__item {
@@ -26,6 +27,7 @@ table .koowa_header {
   vertical-align: middle;
   min-width: $iconSize;
   width: 99%;
+  @include wrap-words;
 }
 
 .koowa_header__item--image_container {
