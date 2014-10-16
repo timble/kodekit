@@ -99,6 +99,7 @@ class ComKoowaTemplateFilterModule extends KTemplateFilterAbstract
                 $module->attribs   = $attributes;
                 $module->user      = 0;
                 $module->module    = 'mod_koowa_injector';
+                $module->name      = 'mod_koowa_injector';
 
                 $modules = &ComKoowaModuleHelper::getModules(null);
 
