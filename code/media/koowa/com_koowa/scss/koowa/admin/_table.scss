@@ -105,11 +105,4 @@
       margin: 0 auto;
     }
   }
-
-  .docman_table_wrapped {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    @include wrap_words;
-  }
 }
