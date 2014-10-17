@@ -76,25 +76,30 @@ class ComKoowaTemplateFilterVersion extends KTemplateFilterAbstract
      */
     public function filter(&$text)
     {
-        $pattern = '#<ktml:(?:script|style)(?!\s+data\-inline\s*)\s+src="([^"]+)"(.*)/>#siU';
+        $pattern = '~
+            <ktml:(?:script|style) # match ktml:script and ktml:style tags
+            [^(?:src=)]+           # anything before src=
+            src="                  # match the link
+              (media://              # starts with media://
+              (?:koowa/)?            # may or may not be in koowa/ folder
+              com_([^/]+)/           # match the com_foo part
+              [^"]+)"                # match the rest of the link
+             (.*)/>
+        ~siUx';
 
         if(preg_match_all($pattern, $text, $matches, PREG_SET_ORDER))
         {
             foreach ($matches as $match)
             {
-                $url = $match[1];
+                $version = $this->_getVersion($match[2]);
 
-                if (strpos($url, 'media://') === 0 && preg_match('#media://(?:koowa/)?com_(.*?)/#i', $url, $folder))
+                if ($version)
                 {
-                    $version = $this->_getVersion($folder[1]);
+                    $url     = $match[1];
+                    $version = substr(md5($version), 0, 8);
+                    $suffix  = strpos($url, '?') === false ? '?'.$version : '&'.$version;
 
-                    if ($version)
-                    {
-                        $version = substr(md5($version), 0, 8);
-                        $suffix  = strpos($url, '?') === false ? '?'.$version : '&'.$version;
-
-                        $text    = str_replace($url, $url.$suffix, $text);
-                    }
+                    $text    = str_replace($url, $url.$suffix, $text);
                 }
             }
         }
