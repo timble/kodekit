@@ -66,7 +66,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             if (version_compare(JVERSION, '3.0', 'ge'))
             {
                 JHtml::_('jquery.framework');
-                JHtml::_('script', 'media/koowa/com_koowa/js/koowa.kquery.js', false, false, false, false, false);
+                // Can't use JHtml here as it makes a file_exists call on koowa.kquery.js?version
+                $path = JURI::root(true).'/media/koowa/com_koowa/js/koowa.kquery.js?'.substr(md5(Koowa::VERSION), 0, 8);
+                JFactory::getDocument()->addScript($path);
             }
             else $html .= parent::jquery($config);
 
