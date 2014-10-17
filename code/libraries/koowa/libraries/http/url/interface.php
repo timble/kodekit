@@ -145,21 +145,6 @@ interface KHttpUrlInterface
     public function setQuery($query, $merge = false);
 
     /**
-     * Get the URL format
-     *
-     * @return string|null
-     */
-    public function getFormat();
-
-    /**
-     * Set the URL format
-     *
-     * @param  string $format
-     * @return KHttpUrl
-     */
-    public function setFormat($format);
-
-    /**
      * Get the URL fragment
      *
      * @return string|null
