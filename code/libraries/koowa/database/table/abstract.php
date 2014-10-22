@@ -576,7 +576,7 @@ abstract class KDatabaseTableAbstract extends KObject
                 $data = $this->_database->select($context->query, $context->mode, $this->getIdentityColumn());
 
                 //Map the columns
-                if (($context->mode != KDatabase::FETCH_FIELD) || ($context->mode != KDatabase::FETCH_FIELD_LIST))
+                if (($context->mode != KDatabase::FETCH_FIELD) && ($context->mode != KDatabase::FETCH_FIELD_LIST))
                 {
                     if($context->mode % 2)
                     {
