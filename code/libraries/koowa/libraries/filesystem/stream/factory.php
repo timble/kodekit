@@ -23,6 +23,13 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
     private $__streams;
 
     /**
+     * A prefix for registered streams
+     *
+     * @var string
+     */
+    protected $_stream_prefix = '';
+
+    /**
      * Constructor.
      *
      * @param   KObjectConfig $config Configuration options
@@ -30,6 +37,8 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
     public function __construct( KObjectConfig $config)
     {
         parent::__construct($config);
+
+        $this->_stream_prefix = $config->stream_prefix;
 
         //Auto register streams
         foreach($config->streams as $stream) {
@@ -48,8 +57,11 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'streams' => array('lib:filesystem.stream.buffer'),
+            'stream_prefix'  => 'koowa-',
+            'streams'        => array('lib:filesystem.stream.buffer'),
         ));
+
+        parent::_initialize($config);
     }
 
     /**
@@ -92,7 +104,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         }
 
         //Stream not supported
-        if(!in_array($name, $this->getStreams()))
+        if(!$this->isRegistered($name))
         {
             throw new RuntimeException(sprintf(
                 'Unable to find the filesystem stream "%s" - did you forget to register it ?', $name
@@ -158,7 +170,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 
         if (!empty($name) && !$this->isRegistered($name))
         {
-            if($result = stream_wrapper_register($name, 'KFilesystemStreamAdapter')) {
+            if($result = stream_wrapper_register($this->_stream_prefix.$name, 'KFilesystemStreamAdapter')) {
                 $this->__streams[$name] = $identifier;
             }
         }
@@ -196,7 +208,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 
         if (!empty($name) && $this->isRegistered($name))
         {
-            if($result = stream_wrapper_unregister($name)) {
+            if($result = stream_wrapper_unregister($this->_stream_prefix.$name)) {
                 unset($this->__streams[$name]);
             }
         }
@@ -260,7 +272,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         }
         else $name = $identifier;
 
-        $result = in_array($name, $this->getStreams());
+        $result = in_array($this->_stream_prefix.$name, $this->getStreams());
         return $result;
     }
 
