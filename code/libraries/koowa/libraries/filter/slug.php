@@ -100,6 +100,9 @@ class KFilterSlug extends KFilterAbstract implements KFilterTraversable
         //remove repeated occurrences of the separator
         $value = preg_replace('/['.preg_quote($this->_separator, '/').']+/', $this->_separator, $value);
 
+        //trim separators around the slug
+        $value = trim($value, $this->_separator);
+
         //limit length
         if (strlen($value) > $this->_length) {
             $value = substr($value, 0, $this->_length);

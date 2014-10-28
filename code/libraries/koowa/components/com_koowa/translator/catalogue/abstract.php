@@ -32,6 +32,12 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     protected $_keys;
 
+    /**
+     * A list of key aliases.
+     *
+     * @var
+     */
+    protected $_aliases;
 
     /**
      * @param KObjectConfig $config
@@ -41,6 +47,7 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
         parent::__construct($config);
 
         $this->setPrefix($config->prefix);
+        $this->_aliases = $config->aliases;
     }
 
     /**
@@ -56,7 +63,7 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
         $config->append(array(
             'prefix'     => 'KLS_',
             'key_length' => 40,
-            'data'       =>  array(
+            'aliases'    =>  array(
                 'all'           => 'JALL',
                 'title'         => 'JGLOBAL_TITLE',
                 'alias'         => 'JFIELD_ALIAS_LABEL',
@@ -124,9 +131,14 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     public function get($string)
     {
-        if (!parent::has(strtolower($string)))
+        $lowercase = strtolower($string);
+
+        if (!parent::has($lowercase))
         {
-            if(!JFactory::getLanguage()->hasKey($string))
+            if (isset($this->_aliases[$lowercase])) {
+                $key = $this->_aliases[$lowercase];
+            }
+            else if(!JFactory::getLanguage()->hasKey($string))
             {
                 if (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
                     $key = $string;
@@ -134,17 +146,13 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
                     //Gets a key from the catalogue and prefixes it
                     $key = $this->getPrefix().$this->generateKey($string);
                 }
-
-                $translation =  JFactory::getLanguage()->_($key);
             }
-            else $translation = JFactory::getLanguage()->_($string);
+            else $key = $string;
+
+            $this->set($lowercase, JFactory::getLanguage()->_($key));
         }
-        else  $translation = JFactory::getLanguage()->_(parent::get(strtolower($string)));
 
-        //Set the translation to prevent it from being re-translated
-        $this->set($string, $translation);
-
-        return $translation;
+        return parent::get($lowercase);
     }
 
     /**
@@ -155,20 +163,21 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
      */
     public function has($string)
     {
-        if (!parent::has(strtolower($string)))
-        {
-            if(!JFactory::getLanguage()->hasKey($string))
-            {
-                if (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
-                    $key = $string;
-                } else {
-                    //Gets a key from the catalogue and prefixes it
-                    $key = $this->getPrefix().$this->generateKey($string);
-                }
+        $lowercase = strtolower($string);
 
-                $result = JFactory::getLanguage()->hasKey($key);
+        if (!parent::has($lowercase) && !JFactory::getLanguage()->hasKey($string))
+        {
+            if (isset($this->_aliases[$lowercase])) {
+                $key = $this->_aliases[$lowercase];
             }
-            else $result = true;
+            elseif (substr($string, 0, strlen($this->getPrefix())) === $this->getPrefix()) {
+                $key = $string;
+            } else {
+                //Gets a key from the catalogue and prefixes it
+                $key = $this->getPrefix().$this->generateKey($string);
+            }
+
+            $result = JFactory::getLanguage()->hasKey($key);
         }
         else $result = true;
 

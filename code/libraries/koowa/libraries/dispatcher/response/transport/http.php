@@ -98,7 +98,19 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
             }
         }
 
-        //Add file related information if we are serving a file
+        // IIS does not like it when you have a Location header in a non-redirect request
+        // http://stackoverflow.com/questions/12074730/w7-pro-iis-7-5-overwrites-php-location-header-solved
+        if ($response->headers->has('Location') && !$response->isRedirect())
+        {
+            $server = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : getenv('SERVER_SOFTWARE');
+
+            if ($server && strpos(strtolower($server), 'microsoft-iis') !== false) {
+                $response->headers->remove('Location');
+            }
+        }
+
+
+            //Add file related information if we are serving a file
         if($response->isDownloadable())
         {
             //Last-Modified header

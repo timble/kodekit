@@ -19,7 +19,7 @@ COM_FILES=$BASE/../../com_files/code/media/koowa/com_files/scss
 for FILE in `find $INPUT_PATH -maxdepth 1 -name '*.scss'`
 do
   base=`basename "$FILE" .scss`
-  sass --sourcemap --load-path $FRAMEWORK --load-path $COM_FILES --style compressed $INPUT_PATH/$base.scss $OUTPUT_PATH/$base.css
+  sass --load-path $FRAMEWORK --load-path $COM_FILES --style compressed $INPUT_PATH/$base.scss $OUTPUT_PATH/$base.css
   sed -ix 's/koowa\/code\///g' $OUTPUT_PATH/$base.css.map
   sed -ix 's/com_files\/code\///g' $OUTPUT_PATH/$base.css.map
 done

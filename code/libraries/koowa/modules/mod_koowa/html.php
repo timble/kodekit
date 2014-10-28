@@ -26,7 +26,7 @@ class ModKoowaHtml extends KViewHtml
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'template_filters'   => array('chrome', 'style', 'link', 'meta', 'script', 'title'),
+            'template_filters'   => array('version', 'chrome', 'style', 'link', 'meta', 'script', 'title'),
             'data'             => array(
                 'styles' => array()
             )

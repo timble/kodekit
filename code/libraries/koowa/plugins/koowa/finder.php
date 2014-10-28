@@ -331,6 +331,11 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
             $item->publish_end_date = $item->unpublish_on;
         }
 
+        // Finder needs the access field
+        if (!isset($item->access)) {
+            $item->access = 1;
+        }
+
         $item->state = $item->enabled;
 
         // Set the item type.
@@ -347,9 +352,13 @@ abstract class PlgKoowaFinder extends FinderIndexerAdapter
             $item->extension = $entity->extension;
         }
 
-        // Add the author taxonomy data.
-        if ($entity->isCreatable()) {
+        if ($entity->isCreatable())
+        {
+            // Add the author taxonomy data.
             $item->addTaxonomy('Author', $entity->getAuthor()->getName());
+
+            // Add the start date
+            $item->start_date = $entity->created_on;
         }
 
         return $item;

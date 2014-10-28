@@ -23,11 +23,11 @@ defined('KOOWA') or die; ?>
 
     <script>
     // Add a "joomla_modal" class to the HTML element if we are rendering inside a Squeezebox modal
-    if (window.parent && window.parent != window) {
+    if (window.parent && window.parent != window && window.frameElement && window.frameElement.className.match('mfp-iframe')) {
         document.documentElement.className += " inside_modal";
     }
     if (window.parent.SqueezeBox && window.parent.SqueezeBox.isOpen) {
-        document.documentElement.className += " joomla_modal";
+        document.documentElement.className += " inside_modal joomla_modal";
     }
     if (navigator.userAgent.match(/Trident|MSIE/)) {
         document.documentElement.className += " old-ie-html";

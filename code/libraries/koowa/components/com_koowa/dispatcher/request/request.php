@@ -51,4 +51,23 @@ final class ComKoowaDispatcherRequest extends KDispatcherRequest
 
         return $format;
     }
+
+    /**
+     * If PHP is on a secure connection always return 443 instead of 80
+     *
+     * When PHP is behind a reverse proxy port information might not be forwarded correctly.
+     * Also, $_SERVER['SERVER_PORT'] is not configured correctly on some hosts and always returns 80.
+     *
+     * {@inheritdoc}
+     */
+    public function getPort()
+    {
+        $port = parent::getPort();
+
+        if ($this->isSecure() && $port == '80') {
+            $port = '443';
+        }
+
+        return $port;
+    }
 }

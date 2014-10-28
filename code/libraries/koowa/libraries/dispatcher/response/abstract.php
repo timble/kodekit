@@ -142,7 +142,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
 
             if(!$this->getObject('filter.path')->validate($content))
             {
-                $stream = $factory->createStream('buffer://memory', 'w+b');
+                $stream = $factory->createStream('koowa-buffer://memory', 'w+b');
                 $stream->write($content);
             }
             else $stream = $factory->createStream($content, 'rb');
