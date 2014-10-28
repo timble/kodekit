@@ -146,7 +146,9 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
     /**
      * Register a stream
      *
-     * Function prevents from registering the stream twice
+     * Function prevents from registering the stream twice.
+     * If stream_prefix config option is set, the registered stream will be prefixed and createStream should be called
+     * with the prefix.
      *
      * @param string $identifier A stream identifier string
      * @throws UnexpectedValueException
@@ -168,10 +170,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 
         $name = call_user_func(array($class, 'getName'));//$class::getName();
 
-        if (!empty($name) && !$this->isRegistered($name))
+        if (!empty($name) && !$this->isRegistered($this->_stream_prefix.$name))
         {
             if($result = stream_wrapper_register($this->_stream_prefix.$name, 'KFilesystemStreamAdapter')) {
-                $this->__streams[$name] = $identifier;
+                $this->__streams[$this->_stream_prefix.$name] = $identifier;
             }
         }
 
@@ -206,10 +208,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         }
         else $name = $identifier;
 
-        if (!empty($name) && $this->isRegistered($name))
+        if (!empty($name) && $this->isRegistered($this->_stream_prefix.$name))
         {
             if($result = stream_wrapper_unregister($this->_stream_prefix.$name)) {
-                unset($this->__streams[$name]);
+                unset($this->__streams[$this->_stream_prefix.$name]);
             }
         }
 
@@ -272,7 +274,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         }
         else $name = $identifier;
 
-        $result = in_array($this->_stream_prefix.$name, $this->getStreams());
+        $result = in_array($name, $this->getStreams());
         return $result;
     }
 
