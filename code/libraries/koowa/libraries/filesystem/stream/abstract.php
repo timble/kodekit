@@ -471,7 +471,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         if($resource = $this->getResource())
         {
             if($this->isWritable()) {
-                return ftruncate($resource, $size);
+                return @ftruncate($resource, $size);
             }
         }
 
@@ -503,7 +503,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     {
         if($resource = $this->getResource())
         {
-            if(fclose($resource) === true)
+            if(@fclose($resource) === true)
             {
                 $this->_resource = null;
                 return true;
