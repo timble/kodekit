@@ -80,7 +80,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     /**
      * Get the request object
      *
-     * @throws	UnexpectedValueException    If the request doesn't implement the KDispatcherRequestInterface
+     * @throws  UnexpectedValueException    If the request doesn't implement the KDispatcherRequestInterface
      * @return KDispatcherRequest
      */
     public function getRequest()
@@ -142,7 +142,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             }
 
             $config = array(
-                'request' 	 => $this->getRequest(),
+                'request'    => $this->getRequest(),
                 'response'   => $this->getResponse(),
                 'user'       => $this->getUser(),
                 'dispatched' => true
@@ -181,9 +181,9 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
                     $controller = KStringInflector::singularize($controller);
                 }
 
-                $identifier			= $this->getIdentifier()->toArray();
-                $identifier['path']	= array('controller');
-                $identifier['name']	= $controller;
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('controller');
+                $identifier['name'] = $controller;
 
                 $identifier = $this->getIdentifier($identifier);
             }
@@ -277,21 +277,21 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      * dispatcher and passing along the context.
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @throws	UnexpectedValueException    If the dispatcher doesn't implement the KDispatcherInterface
+     * @throws UnexpectedValueException    If the dispatcher doesn't implement the KDispatcherInterface
      */
     protected function _actionForward(KDispatcherContextInterface $context)
     {
         //Get the dispatcher identifier
         if(is_string($context->param) && strpos($context->param, '.') === false )
         {
-            $identifier			   = $this->getIdentifier()->toArray();
+            $identifier            = $this->getIdentifier()->toArray();
             $identifier['package'] = $context->param;
         }
         else $identifier = $this->getIdentifier($context->param);
 
         //Create the dispatcher
         $config = array(
-            'request' 	 => $context->request,
+            'request'    => $context->request,
             'response'   => $context->response,
             'user'       => $context->user,
         );
