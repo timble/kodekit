@@ -111,7 +111,10 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         }
         else
         {
-            $this->setController($this->getRequest()->query->get('view', 'cmd'));
+            $view = $this->getRequest()->query->get('view', 'alpha');
+
+            //Set the controller based on the view and pass the view
+            $this->setController($view, array('view' => $view));
 
             //Execute the component method
             $method = strtolower($context->request->getMethod());
