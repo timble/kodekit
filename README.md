@@ -58,19 +58,11 @@ Requirements
 Installation
 ------------
 
-* Create a `composer.json` file in the root directory of your Joomla installation and require the `nooku/nooku-framework`
-package:
+Go to the root directory of your Joomla installation in command line and execute this command: 
 
-```json
-{
-    "require": {    	
-        "nooku/nooku-framework": "dev-develop"
-    },
-    "minimum-stability": "dev"
-}
 ```
-
-* Install by executing `composer install`.
+composer require nooku/nooku-framework:2.*
+```
 
 Contributing
 ------------
