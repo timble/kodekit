@@ -82,18 +82,17 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
             'file'       => $file
         );
 
-        return $this->find($info, null, $fallback);
+        return $this->find($info, $fallback);
     }
 
     /**
      * Find a class
      *
      * @param array  $info      The class information
-     * @param string $basepath  The basepath name
      * @param bool   $fallback  If TRUE use the fallback sequence
      * @return bool|mixed
      */
-    public function find(array $info, $basepath = null, $fallback = true)
+    public function find(array $info, $fallback = true)
     {
         $result = false;
 
