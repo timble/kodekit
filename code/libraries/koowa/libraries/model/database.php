@@ -35,7 +35,27 @@ class KModelDatabase extends KModelAbstract
 
         $this->_table = $config->table;
 
-        $identifier = $alias = $this->getIdentifier()->toArray();
+        $identifier = $this->getIdentifier()->toArray();
+
+        $alias = $this->_table;
+
+        if ($alias instanceof KDatabaseTableInterface) {
+            $alias = $alias->getIdentifier();
+        }
+
+        if (is_string($alias))
+        {
+            if (strpos($alias, '.') === false)
+            {
+                $alias = $identifier;
+                $alias['name'] = $this->_table;
+            }
+            else $alias = $this->getIdentifier($alias);
+        }
+
+        if ($alias instanceof KObjectIdentifierInterface) {
+            $alias = $alias->toArray();
+        }
 
         //Create database.rowset alias
         $alias['path']      = array('database', 'rowset');
