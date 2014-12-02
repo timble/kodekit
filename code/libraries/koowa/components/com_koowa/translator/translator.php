@@ -64,13 +64,17 @@ class ComKoowaTranslator extends KTranslator
             $locale       = $this->getLocale();
             $fallback     = $this->getLocaleFallback();
 
-            foreach($this->find($url) as $extension => $base)
+            foreach($this->find($url) as $extension => $file)
             {
-                $loaded[] =  JFactory::getLanguage()->load($extension, $base, $fallback, true, false);
+                if (is_dir($file))
+                {
+                    $loaded[] =  JFactory::getLanguage()->load($extension, $file, $fallback, true, false);
 
-                if ($this->getLocale() !== $this->getLocaleFallback()) {
-                    $loaded[] =  JFactory::getLanguage()->load($extension, $base, $locale, true, false);
+                    if ($this->getLocale() !== $this->getLocaleFallback()) {
+                        $loaded[] =  JFactory::getLanguage()->load($extension, $file, $locale, true, false);
+                    }
                 }
+                else ComKoowaJLanguage::add($file, $extension, $this);
             }
 
             $this->_loaded[] = $url;
