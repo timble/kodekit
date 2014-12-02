@@ -38,12 +38,29 @@ class ComKoowaTranslatorLocatorComponent extends KTranslatorLocatorIdentifier
 
         //Check if we are trying to find a template inside an application component
         if($path = $this->getObject('object.bootstrapper')->getApplicationPath($domain)) {
-            $basepath = $path.'/com_'.strtolower($package);
-        } else {
-            $basepath = $this->getObject('object.bootstrapper')->getComponentPath($package).'/resources';
+            $file = $path.'/com_'.strtolower($package);
+        }
+        else
+        {
+            $file = $this->getObject('object.bootstrapper')->getComponentPath($package).'/resources';
+
+            if ($package != 'koowa')
+            {
+                $file = glob(sprintf('%s/language/%s.*', $file, $this->getLocale()));
+
+                if ($file) {
+                    $file = current($file);
+                }
+            }
         }
 
-        return array('com_'.$package => $basepath);
+        $result = array();
+
+        if ($file && file_exists($file)) {
+            $result['com_' . $package] = $file;
+        }
+
+        return $result;
     }
 
     /**
