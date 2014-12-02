@@ -98,3 +98,45 @@ class ComKoowaTranslator extends KTranslator
         return $this;
     }
 }
+
+class ComKoowaJLanguage extends JLanguage
+{
+    static public function add($file, $extension, KTranslatorInterface $translator)
+    {
+        $filename = basename($file);
+        $lang     = JFactory::getLanguage();
+
+        if (!isset($lang->paths[$extension][$filename]))
+        {
+            $lang->counter++;
+
+            $strings = array();
+            $result  = false;
+            $catalogue = $translator->getCatalogue();
+
+            foreach ($translator->getObject('object.config.factory')->fromFile($file) as $key => $value) {
+                $strings[$catalogue->getPrefix().$catalogue->generateKey($key)] = $value;
+            }
+
+            if (count($strings))
+            {
+                ksort($strings, SORT_STRING);
+
+                $lang->strings = array_merge($lang->strings, $strings);
+
+                if (!empty($lang->override)) {
+                    $lang->strings = array_merge($lang->strings, $lang->override);
+                }
+
+                $result = true;
+            }
+
+            // Record the result of loading the extension's file.
+            if (!isset($lang->paths[$extension])) {
+                $lang->paths[$extension] = array();
+            }
+
+            $lang->paths[$extension][$filename] = $result;
+        }
+    }
+}
