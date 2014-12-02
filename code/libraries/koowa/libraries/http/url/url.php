@@ -193,7 +193,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
         $this->setEscape($config->escape);
 
         //Set the url
-        $this->setUrl($config->url);
+        $this->setUrl(KObjectConfig::unbox($config->url));
     }
 
     /**
@@ -227,8 +227,6 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public function setUrl($url)
     {
-        $url = KObjectConfig::unbox($url);
-
         if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')) && !is_array($url))
         {
             throw new UnexpectedValueException(
