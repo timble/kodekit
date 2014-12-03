@@ -77,7 +77,7 @@ class ComKoowaTranslator extends KTranslator
                     $file = glob(sprintf('%s/language/%s.*', $base, $locale));
 
                     if ($file) {
-                        ComKoowaJLanguage::add(current($file), $extension, $this);
+                        ComKoowaJLanguage::loadFile(current($file), $extension, $this);
                     }
                     else $loaded[] = JFactory::getLanguage()->load($extension, $base, $locale, true, false);
                 }
@@ -123,7 +123,7 @@ class ComKoowaJLanguage extends JLanguage
      * @param                      $extension  The name of the extension containing the file.
      * @param KTranslatorInterface $translator The Translator object.
      */
-    static public function add($file, $extension, KTranslatorInterface $translator)
+    static public function loadFile($file, $extension, KTranslatorInterface $translator)
     {
         $filename = basename($file);
         $lang     = JFactory::getLanguage();
@@ -132,13 +132,9 @@ class ComKoowaJLanguage extends JLanguage
         {
             $lang->counter++;
 
-            $strings   = array();
-            $result    = false;
-            $catalogue = $translator->getCatalogue();
+            $result = false;
 
-            foreach ($translator->getObject('object.config.factory')->fromFile($file) as $key => $value) {
-                $strings[$catalogue->getPrefix() . $catalogue->generateKey($key)] = $value;
-            }
+            $strings = self::parseFile($file, $translator);
 
             if (count($strings))
             {
@@ -160,5 +156,24 @@ class ComKoowaJLanguage extends JLanguage
 
             $lang->paths[$extension][$filename] = $result;
         }
+    }
+
+    /**
+     * Parses a translations file and returns an array of key/values entries.
+     *
+     * @param string               $file       The file to parse.
+     * @param KTranslatorInterface $translator The translator object.
+     * @return array The parse result.
+     */
+    static public function parseFile($file, KTranslatorInterface $translator)
+    {
+        $strings   = array();
+        $catalogue = $translator->getCatalogue();
+
+        foreach ($translator->getObject('object.config.factory')->fromFile($file) as $key => $value) {
+            $strings[$catalogue->getPrefix() . $catalogue->generateKey($key)] = $value;
+        }
+
+        return $strings;
     }
 }
