@@ -119,8 +119,8 @@ class ComKoowaJLanguage extends JLanguage
     /**
      * Adds file translations to the JLanguage catalogue.
      *
-     * @param  string              $file       The file containing translations.
-     * @param                      $extension  The name of the extension containing the file.
+     * @param string               $file       The file containing translations.
+     * @param string               $extension  The name of the extension containing the file.
      * @param KTranslatorInterface $translator The Translator object.
      *
      * @return bool True if translations where loaded, false otherwise.
