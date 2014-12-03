@@ -66,33 +66,20 @@ class ComKoowaTranslator extends KTranslator
 
             foreach($this->find($url) as $extension => $base)
             {
-                $identifier = $this->getIdentifier($url);
+                $locales   = array($current);
 
-                if ($identifier->getDomain() || $extension == 'com_koowa')
-                {
-                    $loaded[] =  JFactory::getLanguage()->load($extension, $base, $fallback, true, false);
-
-                    if ($current !== $fallback) {
-                        $loaded[] =  JFactory::getLanguage()->load($extension, $base, $current, true, false);
-                    }
+                if ($current !== $fallback) {
+                    array_unshift($locales, $fallback);
                 }
-                else
+
+                foreach ($locales as $locale)
                 {
-                    $locales   = array($current);
+                    $file = glob(sprintf('%s/language/%s.*', $base, $locale));
 
-                    if ($current !== $fallback) {
-                        array_unshift($locales, $fallback);
+                    if ($file) {
+                        ComKoowaJLanguage::add(current($file), $extension, $this);
                     }
-
-                    foreach ($locales as $locale)
-                    {
-                        $file = glob(sprintf('%s/language/%s.*', $base, $locale));
-
-                        if ($file) {
-                            ComKoowaJLanguage::add(current($file), $extension, $this);
-                        }
-                        else $loaded[] = JFactory::getLanguage()->load($extension, $base, $locale, true, false);
-                    }
+                    else $loaded[] = JFactory::getLanguage()->load($extension, $base, $locale, true, false);
                 }
             }
 
