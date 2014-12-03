@@ -78,7 +78,6 @@ class ComKoowaTranslator extends KTranslator
                 }
                 else
                 {
-                    $locations = array('%s/language/%s.*', '%1$s/language/%2$s/%2$s.' . $extension . '.ini');
                     $locales   = array($current);
 
                     if ($current !== $fallback) {
@@ -87,16 +86,12 @@ class ComKoowaTranslator extends KTranslator
 
                     foreach ($locales as $locale)
                     {
-                        foreach ($locations as $location)
-                        {
-                            $file = glob(sprintf($location, $base, $locale));
+                        $file = glob(sprintf('%s/language/%s.*', $base, $locale));
 
-                            if ($file)
-                            {
-                                ComKoowaJLanguage::add(current($file), $extension, $this);
-                                break;
-                            }
+                        if ($file) {
+                            ComKoowaJLanguage::add(current($file), $extension, $this);
                         }
+                        else $loaded[] = JFactory::getLanguage()->load($extension, $base, $locale, true, false);
                     }
                 }
             }
