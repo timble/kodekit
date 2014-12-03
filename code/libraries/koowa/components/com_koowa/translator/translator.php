@@ -103,8 +103,20 @@ class ComKoowaTranslator extends KTranslator
     }
 }
 
+/**
+ * Koowa JLanguage Class
+ *
+ * Extended for accessing protected JLanguage properties.
+ */
 class ComKoowaJLanguage extends JLanguage
 {
+    /**
+     * Adds file translations to the JLanguage catalogue.
+     *
+     * @param  string              $file       The file containing translations.
+     * @param                      $extension  The name of the extension containing the file.
+     * @param KTranslatorInterface $translator The Translator object.
+     */
     static public function add($file, $extension, KTranslatorInterface $translator)
     {
         $filename = basename($file);
@@ -114,12 +126,12 @@ class ComKoowaJLanguage extends JLanguage
         {
             $lang->counter++;
 
-            $strings = array();
-            $result  = false;
+            $strings   = array();
+            $result    = false;
             $catalogue = $translator->getCatalogue();
 
             foreach ($translator->getObject('object.config.factory')->fromFile($file) as $key => $value) {
-                $strings[$catalogue->getPrefix().$catalogue->generateKey($key)] = $value;
+                $strings[$catalogue->getPrefix() . $catalogue->generateKey($key)] = $value;
             }
 
             if (count($strings))
