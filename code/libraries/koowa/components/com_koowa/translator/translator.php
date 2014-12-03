@@ -61,20 +61,44 @@ class ComKoowaTranslator extends KTranslator
 
         if (!$this->isLoaded($url))
         {
-            $locale       = $this->getLocale();
-            $fallback     = $this->getLocaleFallback();
+            $current  = $this->getLocale();
+            $fallback = $this->getLocaleFallback();
 
-            foreach($this->find($url) as $extension => $file)
+            foreach($this->find($url) as $extension => $base)
             {
-                if (is_dir($file))
-                {
-                    $loaded[] =  JFactory::getLanguage()->load($extension, $file, $fallback, true, false);
+                $identifier = $this->getIdentifier($url);
 
-                    if ($this->getLocale() !== $this->getLocaleFallback()) {
-                        $loaded[] =  JFactory::getLanguage()->load($extension, $file, $locale, true, false);
+                if ($identifier->getDomain() || $extension == 'com_koowa')
+                {
+                    $loaded[] =  JFactory::getLanguage()->load($extension, $base, $fallback, true, false);
+
+                    if ($current !== $fallback) {
+                        $loaded[] =  JFactory::getLanguage()->load($extension, $base, $current, true, false);
                     }
                 }
-                else ComKoowaJLanguage::add($file, $extension, $this);
+                else
+                {
+                    $locations = array('%s/language/%s.*', '%1$s/language/%2$s/%2$s.' . $extension . '.ini');
+                    $locales   = array($current);
+
+                    if ($current !== $fallback) {
+                        array_unshift($locales, $fallback);
+                    }
+
+                    foreach ($locales as $locale)
+                    {
+                        foreach ($locations as $location)
+                        {
+                            $file = glob(sprintf($location, $base, $locale));
+
+                            if ($file)
+                            {
+                                ComKoowaJLanguage::add(current($file), $extension, $this);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             $this->_loaded[] = $url;
