@@ -77,7 +77,7 @@ class ComKoowaTranslator extends KTranslator
                     $file = glob(sprintf('%s/language/%s.*', $base, $locale));
 
                     if ($file) {
-                        ComKoowaJLanguage::loadFile(current($file), $extension, $this);
+                        $loaded[] = ComKoowaJLanguage::loadFile(current($file), $extension, $this);
                     }
                     else $loaded[] = JFactory::getLanguage()->load($extension, $base, $locale, true, false);
                 }
@@ -122,17 +122,18 @@ class ComKoowaJLanguage extends JLanguage
      * @param  string              $file       The file containing translations.
      * @param                      $extension  The name of the extension containing the file.
      * @param KTranslatorInterface $translator The Translator object.
+     *
+     * @return bool True if translations where loaded, false otherwise.
      */
     static public function loadFile($file, $extension, KTranslatorInterface $translator)
     {
         $filename = basename($file);
         $lang     = JFactory::getLanguage();
+        $result   = false;
 
         if (!isset($lang->paths[$extension][$filename]))
         {
             $lang->counter++;
-
-            $result = false;
 
             $strings = self::parseFile($file, $translator);
 
@@ -156,6 +157,8 @@ class ComKoowaJLanguage extends JLanguage
 
             $lang->paths[$extension][$filename] = $result;
         }
+
+        return $result;
     }
 
     /**
