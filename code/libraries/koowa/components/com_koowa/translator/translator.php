@@ -176,7 +176,14 @@ class ComKoowaJLanguage extends JLanguage
         $strings   = array();
         $catalogue = $translator->getCatalogue();
 
-        foreach ($translator->getObject('object.config.factory')->fromFile($file) as $key => $value) {
+        // Catch exceptions if any.
+        try {
+            $translations = $translator->getObject('object.config.factory')->fromFile($file);
+        }  catch (Exception $e) {
+            $translations = array();
+        }
+
+        foreach ($translations as $key => $value) {
             $strings[$catalogue->getPrefix() . $catalogue->generateKey($key)] = $value;
         }
 
