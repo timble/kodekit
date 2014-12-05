@@ -45,7 +45,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      */
     protected function _initialize(KObjectConfig $config)
     {
-    	$config->append(array(
+        $config->append(array(
             'model'	=> $this->getIdentifier()->name,
         ));
 
@@ -59,7 +59,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * not contain view information try to get the view from based on the model state instead. If the model is unique
      * use a singular view name, if not unique use a plural view name.
      *
-     * @return	KViewInterface
+     * @return  KViewInterface
      */
     public function getView()
     {
@@ -100,8 +100,8 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Get the model object attached to the controller
      *
-     * @throws	\UnexpectedValueException	If the model doesn't implement the ModelInterface
-     * @return	KModelInterface
+     * @throws  \UnexpectedValueException   If the model doesn't implement the ModelInterface
+     * @return  KModelInterface
      */
     public function getModel()
     {
@@ -131,8 +131,8 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Method to set a model object attached to the controller
      *
-     * @param	mixed	$model An object that implements KObjectInterface, KObjectIdentifier object
-     * 					       or valid identifier string
+     * @param   mixed   $model An object that implements KObjectInterface, KObjectIdentifier object
+     *                         or valid identifier string
      * @return	KControllerView
      */
     public function setModel($model)
@@ -146,9 +146,9 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                     $model = KStringInflector::pluralize($model);
                 }
 
-                $identifier			= $this->getIdentifier()->toArray();
-                $identifier['path']	= array('model');
-                $identifier['name']	= $model;
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('model');
+                $identifier['name'] = $model;
 
                 $identifier = $this->getIdentifier($identifier);
             }
@@ -168,7 +168,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * This function translates a GET request into a read or browse action. If the view name is singular a read action
      * will be executed, if plural a browse action will be executed.
      *
-     * @param KControllerContextInterface $context A command context object
+     * @param   KControllerContextInterface $context A command context object
      * @return  string|bool The rendered output of the view or FALSE if something went wrong
      */
     protected function _actionRender(KControllerContextInterface $context)
@@ -189,8 +189,8 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic browse action, fetches an entity collection
      *
-     * @param	KControllerContextInterface	$context A controller context object
-     * @return 	KModelEntityInterface An entity object containing the selected entities
+     * @param   KControllerContextInterface	$context A controller context object
+     * @return  KModelEntityInterface An entity object containing the selected entities
      */
     protected function _actionBrowse(KControllerContextInterface $context)
     {
@@ -229,9 +229,9 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic edit action, saves over an existing entity collection
      *
-     * @param	KControllerContextInterface	$context A command context object
+     * @param   KControllerContextInterface	$context A command context object
      * @throws  KControllerExceptionResourceNotFound   If the resource could not be found
-     * @return 	KModelEntityInterface
+     * @return  KModelEntityInterface
      */
     protected function _actionEdit(KControllerContextInterface $context)
     {
@@ -260,9 +260,9 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic add action, saves a new entity
      *
-     * @param	KControllerContextInterface	$context A controller context object
+     * @param   KControllerContextInterface	$context A controller context object
      * @throws  KControllerExceptionActionFailed If the delete action failed on the data entity
-     * @return 	KModelEntityInterface
+     * @return  KModelEntityInterface
      */
     protected function _actionAdd(KControllerContextInterface $context)
     {
@@ -343,14 +343,33 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      *
      * For example : $controller->limit(10)->browse();
      *
-     * @param	string	$method Method name
-     * @param	array	$args   Array containing all the arguments for the original call
-     * @return	KControllerModel
+     * @param   string  $method Method name
+     * @param   array   $args   Array containing all the arguments for the original call
+     * @return  KControllerModel
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */
     public function __call($method, $args)
     {
+        //Handle action alias method
+        if(in_array($method, $this->getActions()))
+        {
+            //Get the data
+            $data = !empty($args) ? $args[0] : array();
+
+            //Set the data in the request
+            if(!($data instanceof KCommandInterface))
+            {
+                //Make sure the data is cleared on HMVC calls
+                $this->getRequest()->getData()->clear();
+
+                //Automatic set the data in the request if an associative array is passed
+                if(is_array($data) && !is_numeric(key($data))) {
+                    $this->getRequest()->getData()->add($data);
+                }
+            }
+        }
+
         //Check first if we are calling a mixed in method to prevent the model being
         //loaded during object instantiation.
         if(!isset($this->_mixed_methods[$method]))
@@ -358,7 +377,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
             //Check for model state properties
             if(isset($this->getModel()->getState()->$method))
             {
-                $this->getRequest()->query->set($method, $args[0]);
+                $this->getRequest()->getQuery()->set($method, $args[0]);
                 $this->getModel()->getState()->set($method, $args[0]);
 
                 return $this;
