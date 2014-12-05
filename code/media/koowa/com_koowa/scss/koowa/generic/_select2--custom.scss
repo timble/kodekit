@@ -1,7 +1,5 @@
 .select2-container.select2-container.select2-container { // To win when outside of .koowa namespace
-  min-width: 400px;
-  width: auto !important;
-  max-width: 100% !important;
+  min-width: 100%;
 
   .select2-choice,
   .select2-choice .select2-chosen {
@@ -9,14 +7,11 @@
   }
 }
 
-.docman_container,
-#documents-sidebar,
-#files-sidebar,
-#logman-sidebar {
-  .select2-container.select2-container.select2-container { // Within our own forms
-    min-width: 100px;
-    width: 100% !important;
-  }
+// Special classes for admin (j3) area
+.admin .select2-container.select2-container.select2-container { // To win when outside of .koowa namespace
+  min-width: 220px;
+  width: auto !important;
+  max-width: 100%;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice.select2-search-choice {
