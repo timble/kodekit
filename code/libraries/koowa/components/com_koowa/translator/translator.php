@@ -120,6 +120,13 @@ class ComKoowaTranslator extends KTranslator
 class ComKoowaJLanguage extends JLanguage
 {
     /**
+     * Associative array containing the list of loaded translations.
+     *
+     * @var array
+     */
+    static protected $_paths;
+
+    /**
      * Adds file translations to the JLanguage catalogue.
      *
      * @param string               $file       The file containing translations.
@@ -130,14 +137,11 @@ class ComKoowaJLanguage extends JLanguage
      */
     static public function loadFile($file, $extension, KTranslatorInterface $translator)
     {
-        $filename = basename($file);
         $lang     = JFactory::getLanguage();
         $result   = false;
 
-        if (!isset($lang->paths[$extension][$filename]))
+        if (!isset(self::$_paths[$extension][$file]))
         {
-            $lang->counter++;
-
             $strings = self::parseFile($file, $translator);
 
             if (count($strings))
@@ -158,7 +162,7 @@ class ComKoowaJLanguage extends JLanguage
                 $lang->paths[$extension] = array();
             }
 
-            $lang->paths[$extension][$filename] = $result;
+            self::$_paths[$extension][$file] = $result;
         }
 
         return $result;
