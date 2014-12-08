@@ -18,11 +18,10 @@
         }
     ],
     "require": {
-        "nooku/installer": "*"
+        "nooku/installer": "*",
+        "symfony/yaml": "~2.6"
     },
-
     "suggest": {
-        "symfony/yaml" : "Allows parsing and writing Yaml files",
         "twig/twig": "Allows building templates using the Twig template engine",
         "mustache/mustache": "Allows building logic less templates using the Mustache syntax",
         "erusev/parsedown-extra" : "Allows using Markddown in templates"
