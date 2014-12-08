@@ -8,7 +8,7 @@
 }
 
 // Special classes for admin (j3) area
-.admin .select2-container.select2-container.select2-container { // To win when outside of .koowa namespace
+body .tab-pane.tab-pane.tab-pane .select2-container { // To win when outside of .koowa namespace
   min-width: 220px;
   width: auto !important;
   max-width: 100%;
