@@ -324,6 +324,13 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
     protected function _actionOptions(KDispatcherContextInterface $context)
     {
+        $agent   = $context->request->getAgent();
+        $pattern = '#(?:Microsoft Office (?:Protocol|Core|Existence)|Microsoft-WebDAV)#i';
+
+        if (preg_match($pattern, $agent)) {
+            throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
+        }
+
         $methods = array();
 
         //Retrieve HTTP methods allowed by the dispatcher
