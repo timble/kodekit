@@ -327,7 +327,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         $methods = array();
 
         //Retrieve HTTP methods allowed by the dispatcher
-        $actions = array_diff($this->getActions(), array('dispatch'));
+        $actions = array_diff($this->getActions(), array('dispatch', 'redirect', 'send', 'forward', 'fail'));
 
         foreach($actions as $action)
         {
