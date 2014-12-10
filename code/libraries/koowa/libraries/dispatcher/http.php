@@ -401,7 +401,10 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             {
                 //Add an Allow header to the response
                 if($response->getStatusCode() === KHttpResponse::METHOD_NOT_ALLOWED) {
-                    $this->_actionOptions($context);
+                    try {
+                        $this->_actionOptions($context);
+                    }
+                    catch (Exception $e) {}
                 }
             }
         }
