@@ -542,28 +542,30 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public function toString($parts = self::FULL, $escape = null)
     {
-        $url    = '';
+        $url = '';
         $escape = isset($escape) ? (bool) $escape : $this->getEscape();
 
         //Add the scheme
         if (($parts & self::SCHEME) && !empty($this->scheme)) {
-            $url .= urlencode($this->scheme) . '://';
-        }
-
-        //Add the username and password
-        if (($parts & self::USER) && !empty($this->user))
-        {
-            $url .= urlencode($this->user);
-            if (($parts & self::PASS) && !empty($this->pass)) {
-                $url .= ':' . urlencode($this->pass);
-            }
-
-            $url .= '@';
+            $url .= urlencode($this->scheme) . ':';
         }
 
         // Add the host and port, if any.
         if (($parts & self::HOST) && !empty($this->host))
         {
+            $url .= '//';
+
+            //Add the username and password
+            if (($parts & self::USER) && !empty($this->user))
+            {
+                $url .= urlencode($this->user);
+                if (($parts & self::PASS) && !empty($this->pass)) {
+                    $url .= ':' . urlencode($this->pass);
+                }
+
+                $url .= '@';
+            }
+
             $url .= urlencode($this->host);
 
             if (($parts & self::PORT) && !empty($this->port)) {
