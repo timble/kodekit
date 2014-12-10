@@ -28,7 +28,9 @@ class KFilterUrl extends KFilterAbstract implements KFilterTraversable
         '%3B'=>';','%2C'=>',','%2F'=>'/','%3F'=>'?','%3A'=>':',
         '%40'=>'@','%26'=>'&','%3D'=>'=','%2B'=>'+','%24'=>'$',
         // Score
-        '%23'=>'#'
+        '%23'=>'#',
+        // Percent
+        '%25'=>'%'
     );
 
     /**
