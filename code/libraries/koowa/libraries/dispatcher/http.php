@@ -16,6 +16,13 @@
 class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
+     * List of methods supported by the dispatcher
+     *
+     * @var array
+     */
+    protected $_methods = array();
+
+    /**
      * Constructor.
      *
      * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
@@ -23,6 +30,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
+
+        //Set the supported methods
+        $this->_methods = KObjectConfig::unbox($config->methods);
 
         //Load the dispatcher translations
         $this->addCommandCallback('before.dispatch', '_loadTranslations');
@@ -39,10 +49,10 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'internal_methods' => array('dispatch', 'redirect', 'send', 'forward', 'fail'),
-            'behaviors'        => array('resettable'),
-            'authenticators'   => array('csrf'),
-            'limit'            => array('default' => 100)
+            'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
+            'behaviors'      => array('resettable'),
+            'authenticators' => array('csrf'),
+            'limit'          => array('default' => 100)
          ));
 
         parent::_initialize($config);
@@ -112,9 +122,9 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         }
         else
         {
-            $internal = KObjectConfig::unbox($this->getConfig()->internal_methods);
-            $method   = strtolower($context->request->getMethod());
-            if (in_array($method, $internal) || !in_array($method, $this->getActions())) {
+            $method = strtolower($context->request->getMethod());
+
+            if (!in_array($method, $this->getHttpMethods())) {
                 throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
             }
 
@@ -340,8 +350,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         $methods = array();
 
         //Retrieve HTTP methods allowed by the dispatcher
-        $internal = KObjectConfig::unbox($this->getConfig()->internal_methods);
-        $actions  = array_diff($this->getActions(), $internal);
+        $actions = array_intersect($this->getActions(), $this->getHttpMethods());
 
         foreach($actions as $action)
         {
@@ -354,7 +363,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         if(in_array('post', $methods))
         {
             $actions = array_diff($this->getController()->getActions(), array('browse', 'read', 'render'));
-
             foreach($actions as $key => $action)
             {
                 if(!$this->getController()->canExecute($action)) {
@@ -417,5 +425,15 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
         }
 
         parent::_actionSend($context);
+    }
+
+    /**
+     * Get the supported methods
+     *
+     * @return array
+     */
+    public function getHttpMethods()
+    {
+        return $this->_methods;
     }
 }
