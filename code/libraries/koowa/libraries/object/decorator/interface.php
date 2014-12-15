@@ -38,7 +38,7 @@ interface KObjectDecoratorInterface
      *
      * @return array An array
      */
-    //public function getMethods();
+    public function getMethods();
 
     /**
      * Decorate Notifier

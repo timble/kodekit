@@ -147,7 +147,7 @@ interface KViewInterface
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
      * @return  KDispatcherRouterRoute The route
      */
-    //public function getRoute($route, $fqr = true, $escape = true);
+    public function getRoute($route, $fqr = true, $escape = true);
 
     /**
      * Get the view context

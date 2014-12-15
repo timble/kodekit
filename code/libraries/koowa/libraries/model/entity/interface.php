@@ -32,21 +32,21 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      *
      * @return KModelEntityInterface
      */
-    //public function save();
+    public function save();
 
     /**
      * Deletes the entity form the data store
      *
      * @return KModelEntityInterface
      */
-    //public function delete();
+    public function delete();
 
     /**
      * Resets to the entity to it's default properties
      *
      * @return KModelEntityInterface
      */
-    //public function reset();
+    public function reset();
 
     /**
      * Get the entity key
@@ -61,7 +61,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   string  $name The property name.
      * @return  mixed   The property value.
      */
-    //public function getProperty($name);
+    public function getProperty($name);
 
     /**
      * Set a property
@@ -75,7 +75,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      *
      * @return  KModelEntityInterface
      */
-    //public function setProperty($name, $value, $modified = true);
+    public function setProperty($name, $value, $modified = true);
 
     /**
      * Test existence of a property
@@ -83,7 +83,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param  string  $name The property name.
      * @return boolean
      */
-    //public function hasProperty($name);
+    public function hasProperty($name);
 
     /**
      * Remove a property
@@ -91,7 +91,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   string  $name The property name.
      * @return  KModelEntityInterface
      */
-    //public function removeProperty($name);
+    public function removeProperty($name);
 
     /**
      * Get the properties
@@ -99,7 +99,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   boolean  $modified If TRUE, only return the modified data.
      * @return  array   An associative array of entity properties
      */
-    //public function getProperties($modified = false);
+    public function getProperties($modified = false);
 
     /**
      * Set the properties
@@ -108,21 +108,21 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   boolean $modified    If TRUE, update the modified information for each column being set.
      * @return  KModelEntityInterface
      */
-    //public function setProperties($properties, $modified = true);
+    public function setProperties($properties, $modified = true);
 
     /**
      * Get a list of the computed properties
      *
      * @return array An array
      */
-    //public function getComputedProperties();
+    public function getComputedProperties();
 
     /**
      * Returns the status.
      *
      * @return string The status value.
      */
-    //public function getStatus();
+    public function getStatus();
     
     /**
      * Set the status
@@ -130,14 +130,14 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   string|null $status The status value or NULL to reset the status
      * @return  KModelEntityInterface
      */
-    //public function setStatus($status);
+    public function setStatus($status);
     
     /**
      * Returns the status message
      *
      * @return string The status message
      */
-    //public function getStatusMessage();
+    public function getStatusMessage();
     
     /**
      * Set the status message
@@ -145,14 +145,14 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   string $message The status message
      * @return  KModelEntityInterface
      */
-    //public function setStatusMessage($message);
+    public function setStatusMessage($message);
 
     /**
      * Checks if the entity is new or not
      *
      * @return bool
      */
-    //public function isNew();
+    public function isNew();
 
     /**
      * Check if the entity or specific entity property has been modified.
@@ -162,12 +162,12 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   string $property The property name
      * @return  boolean
      */
-    //public function isModified($property = null);
+    public function isModified($property = null);
 
 	/**
 	 * Test if the entity is connected to a data store
 	 *
 	 * @return	bool
 	 */
-    //public function isConnected();
+    public function isConnected();
 }

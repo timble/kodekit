@@ -36,5 +36,5 @@ interface PlgKoowaInterface extends KObjectInterface
      *
      * @return KObjectConfig
      */
-    //public function getConfig($identifier = null); PHP 5.2
+    public function getConfig($identifier = null);
 }

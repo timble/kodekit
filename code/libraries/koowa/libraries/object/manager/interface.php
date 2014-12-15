@@ -29,7 +29,7 @@ interface KObjectManagerInterface
      * @throws  KObjectExceptionNotFound          If object cannot be loaded
      * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
      */
-    //public function getObject($identifier, array $config = array()); PHP 5.2 fix
+    public function getObject($identifier, array $config = array());
 
     /**
      * Insert the object instance using the identifier
@@ -54,7 +54,7 @@ interface KObjectManagerInterface
      * @return KObjectIdentifier
      * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
      */
-    //public function getIdentifier($identifier = null);
+    public function getIdentifier($identifier = null);
 
     /**
      * Set an identifier
@@ -91,7 +91,7 @@ interface KObjectManagerInterface
      * @return KObjectConfig
      * @throws KObjectExceptionInvalidIdentifier  If the identifier is not valid
      */
-    //public function getConfig($identifier = null); PHP 5.2 fix
+    public function getConfig($identifier = null);
 
     /**
      * Register a mixin for an identifier
