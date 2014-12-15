@@ -151,16 +151,6 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
     }
 
     /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
-    }
-
-    /**
      * Compile the template
      *
      * @param   string  $source The template source to compile

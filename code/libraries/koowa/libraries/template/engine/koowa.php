@@ -228,16 +228,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     }
 
     /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
-    }
-
-    /**
      * Locate the template
      *
      * @param  string $url The template url

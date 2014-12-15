@@ -61,7 +61,7 @@ abstract class KFilesystemStreamFilterAbstract extends php_user_filter implement
      */
     public static function getName()
     {
-        return self::$_name;
+        return static::$_name;
     }
 
     /**

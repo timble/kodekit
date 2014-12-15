@@ -136,7 +136,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
             );
         }
 
-        $name = call_user_func(array($class, 'getName'));//$class::getName();
+        $name = $class::getName();
 
         if (!empty($name) && !$this->isRegistered($name))
         {
@@ -170,7 +170,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $name = call_user_func(array($class, 'getName'));//$class::getName();
+            $name = $class::getName();
 
         }
         else $name = $identifier;
@@ -235,7 +235,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $name = call_user_func(array($class, 'getName'));//$class::getName();
+            $name = $class::getName();
         }
         else $name = $identifier;
 

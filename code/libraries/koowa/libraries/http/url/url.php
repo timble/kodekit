@@ -506,7 +506,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = new self(new KObjectConfig(array('url' => $parts)));
+        $url = new static(new KObjectConfig(array('url' => $parts)));
         return $url;
     }
 

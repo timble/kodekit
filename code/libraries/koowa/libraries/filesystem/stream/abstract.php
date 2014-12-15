@@ -161,7 +161,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      */
     public static function getName()
     {
-        return self::$_name;
+        return static::$_name;
     }
 
     /**
@@ -825,7 +825,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
 
                 if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($class)))
                 {
-                    $filter = call_user_func(array($class, 'getName'));//$class::getName();
+                    $filter = $class::getName();
 
                     if (!empty($filter) && !in_array($filter, stream_get_filters())) {
                         stream_filter_register($filter, $class);

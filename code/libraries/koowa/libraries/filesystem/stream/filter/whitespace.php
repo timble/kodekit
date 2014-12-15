@@ -49,14 +49,4 @@ class KFilesystemStreamFilterWhitespace extends KFilesystemStreamFilterAbstract
 
         return PSFS_PASS_ON;
     }
-
-    /**
-     * Get the stream name used to register the stream with
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

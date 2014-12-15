@@ -30,7 +30,7 @@ class KObjectRegistryCache extends KObjectRegistry
      */
     public function __construct()
     {
-        if (!self::isSupported()) {
+        if (!static::isSupported()) {
             throw new RuntimeException('Unable to use KObjectRegistryCache. APC is not enabled.');
         }
     }

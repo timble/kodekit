@@ -54,7 +54,7 @@ class KFilterUrl extends KFilterAbstract implements KFilterTraversable
     public function sanitize($value)
     {
         // Escape UTF-8 characters
-        $value = strtr(rawurlencode($value), self::$_special_characters);
+        $value = strtr(rawurlencode($value), static::$_special_characters);
 
         return filter_var($value, FILTER_SANITIZE_URL);
     }

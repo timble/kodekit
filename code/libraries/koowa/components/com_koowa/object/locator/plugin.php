@@ -38,14 +38,4 @@ class ComKoowaObjectLocatorPlugin extends KObjectLocatorAbstract
 
         parent::_initialize($config);
     }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

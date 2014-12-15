@@ -756,7 +756,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
                         //Get the highest quality format
                         $mime_type = key($formats);
 
-                        foreach (self::$_formats as $value => $mime_types)
+                        foreach (static::$_formats as $value => $mime_types)
                         {
                             if (in_array($mime_type, (array) $mime_types))
                             {

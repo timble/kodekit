@@ -100,7 +100,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     {
         $method = strtoupper($method);
 
-        if (!defined('self::'.$method)) {
+        if (!defined('static::'.$method)) {
             throw new InvalidArgumentException('Invalid HTTP method passed');
         }
 

@@ -168,7 +168,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             );
         }
 
-        $name = call_user_func(array($class, 'getName'));//$class::getName();
+        $name = $class::getName();
 
         if (!empty($name) && !$this->isRegistered($this->_stream_prefix.$name))
         {
@@ -203,7 +203,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $name = call_user_func(array($class, 'getName'));//$class::getName();
+            $name = $class::getName();
 
         }
         else $name = $identifier;
@@ -270,7 +270,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
                 );
             }
 
-            $name = call_user_func(array($class, 'getName'));//$class::getName();
+            $name = $class::getName();
         }
         else $name = $identifier;
 
@@ -290,7 +290,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         {
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
-            $name       = call_user_func(array($class, 'getName'));//$class::getName();
+            $name       = $class::getName();
         }
         else $name = $identifier;
 

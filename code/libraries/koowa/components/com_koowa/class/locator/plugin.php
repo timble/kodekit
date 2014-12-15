@@ -88,14 +88,4 @@ class ComKoowaClassLocatorPlugin extends KClassLocatorAbstract
         return false;
 
     }
-
-    /**
-     * Get locator name
-     *
-     * @return string
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

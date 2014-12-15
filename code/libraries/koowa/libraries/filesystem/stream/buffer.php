@@ -58,16 +58,6 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
     protected $_synchronised;
 
     /**
-     * Get the stream name used to register the stream with
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
-
-    /**
      * Opens the stream
      *
      * @throws RuntimeException If the stream cannot be opened.

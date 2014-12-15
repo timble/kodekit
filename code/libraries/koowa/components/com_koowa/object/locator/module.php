@@ -91,14 +91,4 @@ class ComKoowaObjectLocatorModule extends KObjectLocatorAbstract
 
         return $this->find($info, $fallback);
     }
-
-    /**
-     * Get the name
-     *
-     * @return string
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

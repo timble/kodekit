@@ -39,7 +39,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     {
         parent::__construct($config);
 
-        if (!self::isSupported()) {
+        if (!static::isSupported()) {
             throw new RuntimeException('Unable to use TranslatorCache. APC is not enabled.');
         }
 
