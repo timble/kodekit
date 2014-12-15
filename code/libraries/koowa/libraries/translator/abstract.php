@@ -376,20 +376,28 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      */
     protected function _replaceParameters($string, array $parameters = array())
     {
-        $keys       = array_map(array($this, '_replaceParam'), array_keys($parameters));
+        //Adds curly braces around keys to make strtr work in replaceParameters method
+        $replace_keys = function ($key) {
+            return  '{'.$key.'}';
+        };
+
+        $keys       = array_map($replace_keys, array_keys($parameters));
         $parameters = array_combine($keys, $parameters);
 
         return strtr($string, $parameters);
     }
 
     /**
-     * Adds curly braces around a param to make strtr work in replaceParameters method
+     * Translates a string and handles parameter replacements
      *
-     * @param string $name The parameter name
-     * @return string
+     * Parameters are wrapped in curly braces. So {foo} would be replaced with bar given that $parameters['foo'] = 'bar'
+     *
+     * @param string $string String to translate
+     * @param array  $parameters An array of parameters
+     * @return string Translated string
      */
-    protected function _replaceParam($name)
+    public function __invoke($string, array $parameters = array())
     {
-        return '{'.$name.'}';
+        return $this->translate($string, $parameters);
     }
 }
