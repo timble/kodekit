@@ -67,7 +67,7 @@ final class ComKoowaUser extends KUser implements ComKoowaUserInterface
     public function getRoles()
     {
         $data  = $this->getData();
-        $roles = KObjectConfig::unbox($data->rules);
+        $roles = KObjectConfig::unbox($data->roles);
 
         if(empty($roles)) {
             $this->getSession()->set('user.roles', JAccess::getAuthorisedViewLevels($this->getId()));
