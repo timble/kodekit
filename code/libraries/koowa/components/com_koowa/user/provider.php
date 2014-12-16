@@ -78,6 +78,8 @@ final class ComKoowaUserProvider extends KUserProvider
                 'username'   => $user->username,
                 'password'   => $user->password,
                 'salt'       => '',
+                'groups'     => JAccess::getGroupsByUser($user->id),
+                'roles'      => JAccess::getAuthorisedViewLevels($user->id),
                 'authentic'  => !$user->guest,
                 'enabled'    => !$user->block,
                 'expired'    => (bool) $user->activation,
