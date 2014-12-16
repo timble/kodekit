@@ -271,17 +271,20 @@ class KObjectIdentifier implements KObjectIdentifierInterface
                 $this->_identifier .= ':';
             }
 
+            $parts = array();
             if(!empty($this->_package)) {
-                $this->_identifier .= $this->_package;
+                $parts[] = $this->_package;
             }
 
             if(count($this->_path)) {
-                $this->_identifier .= '.'.implode('.',$this->_path);
+                $parts[] = implode('.',$this->_path);
             }
 
             if(!empty($this->_name)) {
-                $this->_identifier .= '.'.$this->_name;
+                $parts[] = $this->_name;
             }
+
+            $this->_identifier .= implode('.', $parts);
         }
 
         return $this->_identifier;
