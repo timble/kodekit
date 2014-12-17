@@ -589,7 +589,14 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
             throw new BadMethodCallException('The stream "'.self::getName().'" does not support stat.');
         }
 
-        return fstat($this->_resource);
+        if($this->isLocal()) {
+            $info = fstat($this->_resource);
+        }
+        else {
+            $info = @stat($this->getPath());
+        }
+
+        return $info;
     }
 
     /**
