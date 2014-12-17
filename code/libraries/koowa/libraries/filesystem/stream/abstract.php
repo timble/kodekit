@@ -253,7 +253,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if($resource = $this->getResource()) {
+        if(($resource = $this->getResource()) && $this->isSeekable()) {
             return fseek($resource, $offset, $whence) === 0;
         }
 
@@ -589,7 +589,14 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
             throw new BadMethodCallException('The stream "'.self::getName().'" does not support stat.');
         }
 
-        return fstat($this->_resource);
+        if($this->isLocal()) {
+            $info = fstat($this->_resource);
+        }
+        else {
+            $info = @stat($this->getPath());
+        }
+
+        return $info;
     }
 
     /**
