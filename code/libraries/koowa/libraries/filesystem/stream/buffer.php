@@ -460,6 +460,21 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
     }
 
     /**
+     * Check if the stream is seekable
+     *
+     * @return bool Returns TRUE on success or FALSE on failure.
+     */
+    public function isSeekable()
+    {
+        //Memory streams are always seekable
+        if($this->getType() == 'memory') {
+            return true;
+        }
+
+        return parent::isSeekable();
+    }
+
+    /**
      * Reads all data from the stream into a string, from the beginning to end.
      *
      * This method MUST attempt to seek to the beginning of the stream before reading data and read the stream until
