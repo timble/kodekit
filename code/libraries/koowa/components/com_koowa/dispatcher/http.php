@@ -80,9 +80,9 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
         }
 
         //Make sure the output buffers are cleared
-        while(ob_get_level()) {
+        for ($i = 0; $i < ob_get_level(); $i++) {
             ob_end_clean();
-        };
+        }
 
         //Render the error
         if(!JDEBUG && $request->getFormat() == 'html')
