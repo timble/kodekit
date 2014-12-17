@@ -253,7 +253,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if($resource = $this->getResource()) {
+        if(($resource = $this->getResource()) && $this->isSeekable()) {
             return fseek($resource, $offset, $whence) === 0;
         }
 
