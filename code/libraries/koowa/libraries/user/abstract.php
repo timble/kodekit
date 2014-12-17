@@ -123,7 +123,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getRoles()
     {
-        return $this->getData()->roles;
+        return KObjectConfig::unbox($this->getData()->roles);
     }
 
     /**
@@ -133,7 +133,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getGroups()
     {
-        return $this->getData()->groups;
+        return KObjectConfig::unbox($this->getData()->groups);
     }
 
     /**
