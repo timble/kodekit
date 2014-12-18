@@ -281,8 +281,7 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
     public function getClass($identifier, $fallback = true)
     {
         $identifier = $this->getIdentifier($identifier);
-        $class = $this->_locate($identifier, $fallback);
-
+        $class      = $this->_locate($identifier, $fallback);
 
         return $class;
     }
