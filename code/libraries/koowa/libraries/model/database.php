@@ -23,7 +23,7 @@ class KModelDatabase extends KModelAbstract
      * @var string|object
      */
     protected $_table;
-    
+
     /**
      * Constructor
      *
@@ -35,7 +35,11 @@ class KModelDatabase extends KModelAbstract
 
         $this->_table = $config->table;
 
-        $identifier = $alias = $this->getIdentifier()->toArray();
+        //Get the model identifier
+        $identifier = $this->getIdentifier()->toArray();
+
+        //Get the table identifier
+        $alias = $this->getTable()->getIdentifier()->toArray();
 
         //Create database.rowset alias
         $alias['path']      = array('database', 'rowset');
