@@ -192,8 +192,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
             }
 
             //Make sure the output buffers are cleared
-            for ($i = 0; $i < ob_get_level(); $i++) {
+            $level = ob_get_level();
+            while($level > 0) {
                 ob_end_clean();
+                $level--;
             }
 
             $stream  = $response->getStream();
