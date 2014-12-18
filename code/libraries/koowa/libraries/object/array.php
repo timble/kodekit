@@ -174,7 +174,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public static function fromArray(array $data)
     {
-        return new self(new KObjectConfig(array('data' => $data)));
+        return new static(new KObjectConfig(array('data' => $data)));
     }
 
     /**

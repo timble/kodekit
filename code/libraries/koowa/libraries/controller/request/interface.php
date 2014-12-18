@@ -58,5 +58,5 @@ interface KControllerRequestInterface
      *
      * @return  string  The request format or NULL if no format could be found
      */
-    //public function getFormat();
+    public function getFormat();
 }

@@ -193,7 +193,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
         $this->setEscape($config->escape);
 
         //Set the url
-        $this->setUrl($config->url);
+        $this->setUrl(KObjectConfig::unbox($config->url));
     }
 
     /**
@@ -227,8 +227,6 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public function setUrl($url)
     {
-        $url = KObjectConfig::unbox($url);
-
         if (!is_string($url) && !is_numeric($url) && !is_callable(array($url, '__toString')) && !is_array($url))
         {
             throw new UnexpectedValueException(
@@ -508,7 +506,7 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public static function fromArray(array $parts)
     {
-        $url = new self(new KObjectConfig(array('url' => $parts)));
+        $url = new static(new KObjectConfig(array('url' => $parts)));
         return $url;
     }
 
@@ -544,28 +542,30 @@ class KHttpUrl extends KObject implements KHttpUrlInterface
      */
     public function toString($parts = self::FULL, $escape = null)
     {
-        $url    = '';
+        $url = '';
         $escape = isset($escape) ? (bool) $escape : $this->getEscape();
 
         //Add the scheme
         if (($parts & self::SCHEME) && !empty($this->scheme)) {
-            $url .= urlencode($this->scheme) . '://';
-        }
-
-        //Add the username and password
-        if (($parts & self::USER) && !empty($this->user))
-        {
-            $url .= urlencode($this->user);
-            if (($parts & self::PASS) && !empty($this->pass)) {
-                $url .= ':' . urlencode($this->pass);
-            }
-
-            $url .= '@';
+            $url .= urlencode($this->scheme) . ':';
         }
 
         // Add the host and port, if any.
         if (($parts & self::HOST) && !empty($this->host))
         {
+            $url .= '//';
+
+            //Add the username and password
+            if (($parts & self::USER) && !empty($this->user))
+            {
+                $url .= urlencode($this->user);
+                if (($parts & self::PASS) && !empty($this->pass)) {
+                    $url .= ':' . urlencode($this->pass);
+                }
+
+                $url .= '@';
+            }
+
             $url .= urlencode($this->host);
 
             if (($parts & self::PORT) && !empty($this->port)) {

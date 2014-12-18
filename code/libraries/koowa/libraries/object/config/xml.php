@@ -50,29 +50,29 @@ class KObjectConfigXml extends KObjectConfigFormat
      */
     public function toString()
     {
+        $addChildren = function($value, $key, $node)
+        {
+            if (is_scalar($value))
+            {
+                $n = $node->addChild('option', $value);
+                $n->addAttribute('name', $key);
+                $n->addAttribute('type', gettype($value));
+            }
+            else
+            {
+                $n = $node->addChild('config');
+                $n->addAttribute('name', $key);
+                $n->addAttribute('type', gettype($value));
+
+                array_walk($value, $addChildren, $n);
+            }
+        };
+
         $xml  = simplexml_load_string('<config />');
         $data = $this->toArray();
-        array_walk($data, array($this, '_addChildren'), $xml);
+        array_walk($data, $addChildren, $xml);
 
         return $xml->asXML();
-    }
-
-    protected function _addChildren($value, $key, $node)
-    {
-        if (is_scalar($value))
-        {
-            $n = $node->addChild('option', $value);
-            $n->addAttribute('name', $key);
-            $n->addAttribute('type', gettype($value));
-        }
-        else
-        {
-            $n = $node->addChild('config');
-            $n->addAttribute('name', $key);
-            $n->addAttribute('type', gettype($value));
-
-            array_walk($value, array($this, '_addChildren'), $n);
-        }
     }
 
     /**

@@ -36,8 +36,8 @@ class KExceptionError extends ErrorException implements KException
         E_NOTICE            => 'Notice',
         E_USER_NOTICE       => 'User Notice',
         E_STRICT            => 'Strict standards',
-        8192                => 'Deprecated', // E_DEPRECATED not defined in PHP 5.2
-        16384               => 'User Deprecated' // E_USER_DEPRECATED not defined in PHP 5.2
+        E_DEPRECATED        => 'Deprecated',
+        E_USER_DEPRECATED   => 'User Deprecated'
     );
 
     /**

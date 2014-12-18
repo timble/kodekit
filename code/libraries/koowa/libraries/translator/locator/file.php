@@ -34,14 +34,4 @@ class KTranslatorLocatorFile extends KTranslatorLocatorAbstract
 
         return parent::find($info);
     }
-
-    /**
-     * Get the locator name
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

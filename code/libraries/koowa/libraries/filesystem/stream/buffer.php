@@ -58,16 +58,6 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
     protected $_synchronised;
 
     /**
-     * Get the stream name used to register the stream with
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
-
-    /**
      * Opens the stream
      *
      * @throws RuntimeException If the stream cannot be opened.
@@ -467,6 +457,21 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
     public function getTemporaryDirectory()
     {
         return sys_get_temp_dir();
+    }
+
+    /**
+     * Check if the stream is seekable
+     *
+     * @return bool Returns TRUE on success or FALSE on failure.
+     */
+    public function isSeekable()
+    {
+        //Memory streams are always seekable
+        if($this->getType() == 'memory') {
+            return true;
+        }
+
+        return parent::isSeekable();
     }
 
     /**

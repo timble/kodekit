@@ -28,7 +28,9 @@ class KFilterUrl extends KFilterAbstract implements KFilterTraversable
         '%3B'=>';','%2C'=>',','%2F'=>'/','%3F'=>'?','%3A'=>':',
         '%40'=>'@','%26'=>'&','%3D'=>'=','%2B'=>'+','%24'=>'$',
         // Score
-        '%23'=>'#'
+        '%23'=>'#',
+        // Percent
+        '%25'=>'%'
     );
 
     /**
@@ -52,7 +54,7 @@ class KFilterUrl extends KFilterAbstract implements KFilterTraversable
     public function sanitize($value)
     {
         // Escape UTF-8 characters
-        $value = strtr(rawurlencode($value), self::$_special_characters);
+        $value = strtr(rawurlencode($value), static::$_special_characters);
 
         return filter_var($value, FILTER_SANITIZE_URL);
     }

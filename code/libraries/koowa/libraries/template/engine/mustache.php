@@ -160,16 +160,6 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
     }
 
     /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
-    }
-
-    /**
      * Load the template source
      *
      * @param   string  $url The template url

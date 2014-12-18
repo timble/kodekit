@@ -64,7 +64,7 @@ class KDate extends KObject implements KDateInterface
      */
     public function format($format)
     {
-        $format = preg_replace_callback('/(?<!\\\)[DlFM]/', array($this, '_translate'), $format);
+        $format = preg_replace_callback('/(?<!\\\\)[DlFM]/', array($this, '_translate'), $format);
         return $this->_date->format($format);
     }
 
@@ -84,9 +84,7 @@ class KDate extends KObject implements KDateInterface
 
         if($now != $this->_date)
         {
-            // PHP 5.2 :(
-            if($now->format('U') > $this->getTimestamp())
-            //if($now->getTimestamp() > $this->getTimestamp())
+            if($now->getTimestamp() > $this->getTimestamp())
             {
                 $difference = $now->format('U') - $this->getTimestamp();
                 $tense      = 'ago';
@@ -231,7 +229,7 @@ class KDate extends KObject implements KDateInterface
      */
     public function getTimestamp()
     {
-        return $this->_date->format('U'); // PHP 5.2 ->getTimestamp();
+        return $this->_date->getTimestamp();
     }
 
     /**
@@ -274,8 +272,7 @@ class KDate extends KObject implements KDateInterface
                 break;
         }
 
-        $replacement = preg_replace('/^([0-9])/', '\\\\\\\\\1', $replacement);
-        $replacement = preg_replace('/([a-z])/i', '\\\\\1', $replacement);
+        $replacement = preg_replace('/([a-z])/i', '\\\\$1', $replacement);
 
         return $replacement;
     }

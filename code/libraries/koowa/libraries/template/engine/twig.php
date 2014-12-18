@@ -270,16 +270,6 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     }
 
     /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
-    }
-
-    /**
      * Gets the source code of a template, given its name.
      *
      * Required by Twig_LoaderInterface Interface. Do not call directly.
