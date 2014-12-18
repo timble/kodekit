@@ -10,6 +10,8 @@
 /**
  * Csrf Dispatcher Authenticator
  *
+ * @link http://www.adambarth.com/papers/2008/barth-jackson-mitchell-b.pdf
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Authenticator
  */
