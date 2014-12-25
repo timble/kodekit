@@ -10,7 +10,7 @@
 [class^="koowa_icon--"],
 [class*=" koowa_icon--"],
 .koowa_icon_font /* Used as mixin */  {
-  font-family: 'koowa' !important;
+  font-family: 'koowa';
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -31,7 +31,7 @@
 
   /* Styling the before element */
   &:before {
-    font-family: 'koowa' !important;
+    font-family: 'koowa';
     display: block;
     overflow: visible;
     width: 16px;

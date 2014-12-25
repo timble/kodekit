@@ -303,9 +303,11 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
             );
 
             //Make sure the output buffers are cleared
-            while(ob_get_level()) {
+            $level = ob_get_level();
+            while($level > 0) {
                 ob_end_clean();
-            };
+                $level--;
+            }
 
             if (ini_get('display_errors')) {
                 echo $message;

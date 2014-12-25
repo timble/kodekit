@@ -23,7 +23,7 @@ class KModelDatabase extends KModelAbstract
      * @var string|object
      */
     protected $_table;
-    
+
     /**
      * Constructor
      *

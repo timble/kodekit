@@ -64,7 +64,7 @@ class KDate extends KObject implements KDateInterface
      */
     public function format($format)
     {
-        $format = preg_replace_callback('/(?<!\\\)[DlFM]/', array($this, '_translate'), $format);
+        $format = preg_replace_callback('/(?<!\\\\)[DlFM]/', array($this, '_translate'), $format);
         return $this->_date->format($format);
     }
 
@@ -274,8 +274,7 @@ class KDate extends KObject implements KDateInterface
                 break;
         }
 
-        $replacement = preg_replace('/^([0-9])/', '\\\\\\\\\1', $replacement);
-        $replacement = preg_replace('/([a-z])/i', '\\\\\1', $replacement);
+        $replacement = preg_replace('/([a-z])/i', '\\\\$1', $replacement);
 
         return $replacement;
     }
