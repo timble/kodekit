@@ -23,7 +23,7 @@
   -webkit-backface-visibility: hidden;
 
   // Importing the well here so the advanced permissions popup looks nice
-  @import "../../../libraries/sass-twitter-bootstrap/lib/wells";
+  @import "../../libraries/sass-twitter-bootstrap/lib/wells";
 }
 
 .mfp-container {
@@ -359,7 +359,6 @@ img.mfp-img {
   line-height: 18px;
   color: #f3f3f3;
   padding-right: 36px;
-  @include wrap_words();
 }
 
 .mfp-figure small {
@@ -580,4 +579,3 @@ img.mfp-img {
     }
   }
 }
-
