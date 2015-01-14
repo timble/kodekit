@@ -607,11 +607,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     public function getSize()
     {
         // If the stream is a file based stream and local, then use fstat
-        if (version_compare(PHP_VERSION, '5.3', '>=')) {
-            clearstatcache(true, $this->getPath());
-        } else {
-            clearstatcache();
-        }
+        clearstatcache(true, $this->getPath());
 
         $info = $this->getInfo();
 

@@ -139,7 +139,7 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
             $this->__command_callbacks[$command] = array();
         }
 
-        if(class_exists('Closure') && $method instanceof Closure) {
+        if($method instanceof Closure) {
             $index = spl_object_hash($method);
         } else {
             $index = $method;
@@ -168,7 +168,7 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
 
         if (isset($this->__command_callbacks[$command]) )
         {
-            if(class_exists('Closure') && $method instanceof Closure) {
+            if($method instanceof Closure) {
                 $index = spl_object_hash($method);
             } else {
                 $index = $method;

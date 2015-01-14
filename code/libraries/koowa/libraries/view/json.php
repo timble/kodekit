@@ -109,12 +109,7 @@ class KViewJson extends KViewAbstract
             }
 
             // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
-            if (version_compare(PHP_VERSION, '5.3', '>=')) {
-                $this->_content = json_encode($this->_content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
-            } else {
-                $this->_content = json_encode($this->_content);
-            }
-
+            $this->_content = json_encode($this->_content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
         }
 
 
