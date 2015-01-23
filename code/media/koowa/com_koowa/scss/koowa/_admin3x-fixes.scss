@@ -16,7 +16,7 @@ body.admin {
   // Get rid of the nasty jump because of the toolbar fixed position
   @media screen and (min-width: 480px) {
     .subhead-collapse {
-      min-height: 43px;
+      min-height: 49px;
 
       &:after,
       &:before {
