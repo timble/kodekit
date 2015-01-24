@@ -71,6 +71,14 @@
     margin-bottom: 0;
   }
 
+  // The default pagination links do have a background-color but no font color
+  // If a template has link color specified as a light color (e.g. white or light grey etc.)
+  // you don't see a thing. So adding a #333 color to links within pagination
+  .pagination ul > li > a,
+  .pagination ul > li > span {
+    color: $textColor;
+  }
+
   // Custom joomla classes
   .koowa .nav-tabs>li {
     margin-bottom: -1px !important;

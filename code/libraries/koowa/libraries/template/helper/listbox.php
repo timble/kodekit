@@ -31,17 +31,23 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'options'   => array(),
             'select2'   => false,
             'attribs'   => array(),
-        ))->append(array(
-            'select2_options' => array(
-                'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name='.$config->name.']',
-                'options' => array()
-            )
         ));
+
+        if ($config->attribs->multiple && substr($config->name, -2) !== '[]') {
+            $config->name .= '[]';
+        }
 
         $html = '';
 
         if ($config->select2)
         {
+            $config->append(array(
+                'select2_options' => array(
+                    'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name=\"'.$config->name.'\"]',
+                    'options' => array()
+                )
+            ));
+
             if ($config->deselect)
             {
                 // select2 needs the first option empty for placeholders to work on single select boxes

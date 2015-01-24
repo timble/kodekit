@@ -797,7 +797,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      */
     public function addFormat($format, $mime_types)
     {
-        self::$_formats[$format] = is_array($mime_types) ? $mime_types : array($mime_types);
+        static::$_formats[$format] = is_array($mime_types) ? $mime_types : array($mime_types);
         return $this;
     }
 

@@ -40,6 +40,9 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
                 //Mimetype
                 JFactory::getDocument()->setMimeEncoding($response->getContentType());
 
+                //Remove Content-Type header to prevent duplicate header conflict (see #172)
+                $response->headers->remove('Content-Type');
+
                 //Headers
                 $headers = explode("\r\n", trim((string) $response->headers));
                 foreach ($headers as $header)
