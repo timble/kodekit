@@ -71,6 +71,11 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
                     }
                 }
 
+                //If the limit is larger than the total, reset offset to 0
+                if ($limit >= $total) {
+                    $state->offset = $offset = 0;
+                }
+
                 $context->query->limit($limit, $offset);
             }
         }
