@@ -300,7 +300,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         $result = null;
 
-        if (is_array($data))
+        if (is_array($data) || is_object($data))
         {
             $result = array();
 
@@ -322,6 +322,10 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                 }
 
                 $result[$column] = $value;
+            }
+
+            if (is_object($data)) {
+                $result = (object) $result;
             }
         }
 
