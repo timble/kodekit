@@ -55,25 +55,24 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
     {
         $model = $context->getSubject();
 
-        if ($model instanceof KModelDatabase && !$context->state->isUnique()) {
+        if ($model instanceof KModelDatabase && !$context->state->isUnique())
+        {
             $state = $context->state;
             $limit = $state->limit;
 
-            if ($limit) {
+            if ($limit)
+            {
                 $offset = $state->offset;
                 $total  = $this->count();
 
-                //If the offset is higher than the total recalculate the offset
-                if ($offset !== 0 && $total !== 0) {
-                    if ($offset >= $total) {
-                        $offset        = floor(($total - 1) / $limit) * $limit;
+                // Recalculate the offset if it is higher than the total or set to the middle of a page.
+                if ($offset !== 0 && $total !== 0)
+                {
+                    if (($offset >= $total) || ($offset % $limit !== 0))
+                    {
+                        $offset = floor(($total - 1) / $limit) * $limit;
                         $state->offset = $offset;
                     }
-                }
-
-                //If the limit is larger than the total, reset offset to 0
-                if ($limit >= $total) {
-                    $state->offset = $offset = 0;
                 }
 
                 $context->query->limit($limit, $offset);
