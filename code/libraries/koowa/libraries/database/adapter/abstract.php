@@ -282,10 +282,12 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             {
                 switch ($context->mode)
                 {
+                    case KDatabase::FETCH_ROW         :
                     case KDatabase::FETCH_ARRAY       :
                         $context->result = $this->_fetchArray($result);
                         break;
 
+                    case KDatabase::FETCH_ROWSET      :
                     case KDatabase::FETCH_ARRAY_LIST  :
                         $context->result = $this->_fetchArrayList($result, $key);
                         break;

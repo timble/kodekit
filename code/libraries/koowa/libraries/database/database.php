@@ -24,8 +24,8 @@ class KDatabase
     /**
      * Database fetch mode
      */
-    const FETCH_ROW         = 0;
-    const FETCH_ROWSET      = 1;
+    const FETCH_ROW         = 6;
+    const FETCH_ROWSET      = 7;
 
     const FETCH_ARRAY       = 0;
     const FETCH_ARRAY_LIST  = 1;
