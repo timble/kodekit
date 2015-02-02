@@ -41,7 +41,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
      * @param 	KControllerContextInterface $context The active controller context
      * @return  string
      */
-    protected function _getKey(KControllerContextInterface $context)
+    protected function _getStateKey(KControllerContextInterface $context)
     {
         $view   = $this->getView()->getIdentifier();
         $layout = $this->getView()->getLayout();
@@ -63,7 +63,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
     {
         $query = $context->getRequest()->query;
 
-        $query->add((array) $context->user->get($this->_getKey($context)));
+        $query->add((array) $context->user->get($this->_getStateKey($context)));
 
         $this->getModel()->getState()->setValues($query->toArray());
     }
@@ -86,6 +86,6 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
             }
         }
 
-        $context->user->set($this->_getKey($context), $vars);
+        $context->user->set($this->_getStateKey($context), $vars);
     }
 }
