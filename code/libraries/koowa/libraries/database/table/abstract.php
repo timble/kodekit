@@ -541,7 +541,9 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         {
             if ($context->query)
             {
-                if($context->mode == KDatabase::FETCH_ARRAY_LIST || $context->mode == KDatabase::FETCH_OBJECT_LIST) {
+                if($context->mode == KDatabase::FETCH_ARRAY_LIST || $context->mode == KDatabase::FETCH_OBJECT_LIST
+                    || $context->mode == KDatabase::FETCH_ROWSET
+                ) {
                     $key = $this->getIdentityColumn();
                 } else {
                     $key = null;
