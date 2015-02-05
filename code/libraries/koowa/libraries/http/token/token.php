@@ -383,7 +383,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     {
         $result = false;
         if (isset($this->_claims['iat']) && is_numeric($this->_claims['iat'])) {
-            $result = max(time() - $this->_claims['iat'], 0);
+            $result = $this->_claims['iat'] < time();
         }
 
         return $result;
