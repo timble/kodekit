@@ -79,10 +79,6 @@ class ComKoowaDispatcherResponseTransportHttp extends KDispatcherResponseTranspo
                 $messages = $response->getMessages();
                 foreach($messages as $type => $group)
                 {
-                    if ($type === 'success') {
-                        $type = 'message';
-                    }
-
                     foreach($group as $message) {
                         JFactory::getApplication()->enqueueMessage($message, $type);
                     }
