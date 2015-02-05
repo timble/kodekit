@@ -26,7 +26,8 @@ class ComKoowaDatabaseBehaviorModifiable extends KDatabaseBehaviorModifiable
 
         if($this->hasProperty('modified_by') && !empty($this->modified_by))
         {
-            if($this->_editor_id && !$provider->isLoaded($this->modified_by))
+            if($this->_editor_id && $this->_editor_id == $this->modified_by
+                && !$provider->isLoaded($this->modified_by))
             {
                 $data = array(
                     'id'         => $this->_editor_id,
