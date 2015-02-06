@@ -140,7 +140,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
     protected function _addQueryParameters(&$text)
     {
         $matches = array();
-        if (preg_match_all('#<form.*action=".*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches))
+        if (preg_match_all('#<form.*action="[^"]*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches))
         {
             foreach ($matches[1] as $key => $query)
             {
