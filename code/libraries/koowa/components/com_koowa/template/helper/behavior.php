@@ -210,13 +210,6 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             $config->value = '';
         }
 
-        // @TODO this is legacy, or bc support, and may not be compatible with strftime and the like
-        $config->format = str_replace(
-            array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
-            array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
-            $config->format
-        );
-
         switch (strtoupper($config->filter))
         {
             case 'SERVER_UTC':
@@ -279,8 +272,17 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             self::$_loaded['calendar-triggers'] = array();
         }
 
+        $config->value = strftime($config->format, JFactory::getDate($config->value)->format('U', false, true));
+
         $attribs = $this->buildAttributes($config->attribs);
         $value   = $this->getTemplate()->escape($config->value);
+
+        // @TODO this is legacy, or bc support, and may not be compatible with strftime and the like
+        $config->format = str_replace(
+            array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
+            array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
+            $config->format
+        );
 
         if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
         {
