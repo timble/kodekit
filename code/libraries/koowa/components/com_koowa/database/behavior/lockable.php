@@ -43,7 +43,8 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
 
         if($this->hasProperty('locked_by') && !empty($this->locked_by))
         {
-            if($this->_owner_id && !$provider->isLoaded($this->locked_by))
+            if($this->_owner_id && $this->_owner_id == $this->locked_by
+                && !$provider->isLoaded($this->locked_by))
             {
                 $data = array(
                     'id'         => $this->_owner_id,
