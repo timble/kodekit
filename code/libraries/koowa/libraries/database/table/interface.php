@@ -157,7 +157,7 @@ interface KDatabaseTableInterface
      * @param string   $value The value for the column
      * @return KDatabaseTableAbstract
      */
-    public function setDefault($name, $value);
+    public function setDefault($column, $value);
 
     /**
      * Get an instance of a row object for this table

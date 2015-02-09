@@ -33,7 +33,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'attribs'   => array(),
         ));
 
-        if ($config->attribs->multiple && substr($config->name, -2) !== '[]') {
+        if ($config->attribs->multiple && $config->name && substr($config->name, -2) !== '[]') {
             $config->name .= '[]';
         }
 
