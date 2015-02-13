@@ -84,6 +84,7 @@ abstract class ComKoowaTranslatorCatalogueAbstract extends KTranslatorCatalogueA
                 'disabled'      => 'JDISABLED',
                 'prev'          => 'JPREV',
                 'next'          => 'JNEXT',
+                'ordering'      => 'JFIELD_ORDERING_LABEL',
 
                 'click to sort by this column'  => 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN',
                 'about the calendar'            => 'JLIB_HTML_BEHAVIOR_ABOUT_THE_CALENDAR',
