@@ -272,7 +272,9 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
             self::$_loaded['calendar-triggers'] = array();
         }
 
-        $config->value = strftime($config->format, JFactory::getDate($config->value)->format('U', false, true));
+        if ($config->value) {
+            $config->value = strftime($config->format, JFactory::getDate($config->value)->format('U', false, true));
+        }
 
         $attribs = $this->buildAttributes($config->attribs);
         $value   = $this->getTemplate()->escape($config->value);
