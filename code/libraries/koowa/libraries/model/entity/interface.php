@@ -18,6 +18,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
     /**
      * Entity States
      */
+    const STATUS_MODIFIED = 'modified';
     const STATUS_FETCHED  = 'fetched';
     const STATUS_DELETED  = 'deleted';
     const STATUS_CREATED  = 'created';
@@ -123,7 +124,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @return string The status value.
      */
     public function getStatus();
-    
+
     /**
      * Set the status
      *
@@ -131,14 +132,14 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @return  KModelEntityInterface
      */
     public function setStatus($status);
-    
+
     /**
      * Returns the status message
      *
      * @return string The status message
      */
     public function getStatusMessage();
-    
+
     /**
      * Set the status message
      *
