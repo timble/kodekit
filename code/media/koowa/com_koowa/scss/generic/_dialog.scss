@@ -1,0 +1,508 @@
+// Variables for this file
+$borderColor: #ccc;
+$borderColor-darken: darken($borderColor, 5%);
+$menuHeight: 40px;
+$titleHeight: 30px;
+$windowHeight: 510px;
+$maxColumnHeight: 16em;
+
+// Not used for the doclink since it uses standard joomla popup
+// Don't make this bigger then 700px because it will break the doclink view
+$dialogScreenWidth: 700px;
+
+// Dialog container
+.koowa_dialog {
+  @include clearfix();
+  width: 100%;
+  min-height: 200px;
+  margin: auto;
+  display: block;
+  background: #fff;
+  position: relative;
+  font-size: 14px; // Bigger font size for clearer lists
+
+  // Box-sizing everywhere
+  &, *, *:before, *:after {
+    @include box-sizing(border-box);
+  }
+}
+
+// Menu
+.koowa_dialog__menu {
+  @include clearfix();
+  border: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-bottom: none;
+  padding-left: 10px;
+  margin-bottom: -1px;
+  height: $menuHeight;
+  position: relative;
+  z-index: 10;
+  top: 0;
+
+  a {
+    @include border-radius(5px 5px 0 0);
+    width: 110px;
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 9px 0 0;
+    cursor: pointer;
+    color: #333;
+    font-size: 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    background: #f5f5f5;
+    margin-right: 10px;
+    height: $menuHeight - 1;
+
+    &:hover {
+      text-decoration: none;
+      color: #222;
+    }
+  }
+
+  a.active {
+    @include box-shadow(inset 0 2px 3px rgba(0, 0, 0, 0.1));
+    height: $menuHeight;
+    background: #eee;
+    border: 1px solid $borderColor-darken;
+    border-bottom: 2px solid #eee;
+  }
+}
+
+// Layout
+.koowa_dialog__layout {
+  @include clearfix();
+}
+
+// Wrapper
+.koowa_dialog__wrapper {
+  @include clearfix();
+  border: 1px solid $borderColor;
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+.koowa_dialog__wrapper__child {
+  display: block;
+  width: 100%;
+
+  #documents-sidebar {
+    width: 100%;
+  }
+}
+
+// Contents
+.koowa_dialog__title {
+  margin: 0;
+  font-size: 12px;
+  height: $titleHeight;
+  line-height: $titleHeight;
+  text-transform: uppercase;
+  background: #eee;
+  border-top: 1px solid $borderColor;
+  border-bottom: 1px solid $borderColor;
+  color: #666;
+  padding: 0 8px;
+  text-shadow: 1px 1px 0 white;
+  position: relative;
+  z-index: 9;
+}
+
+.koowa_dialog__title--child {
+  border-top: 1px solid $borderColor !important;
+}
+
+.koowa_dialog__files_tree {
+  width: 100%;
+  max-height: $maxColumnHeight;
+  position: relative;
+  z-index: 5;
+
+  p {
+    margin: 10px;
+  }
+}
+
+.koowa_dialog__child__content__box {
+  height: 100%;
+  overflow: auto;
+}
+
+.koowa_dialog__block {
+  padding: 5px;
+}
+
+// Specific views
+.koowa_dialog__file_dialog_upload {
+  .koowa_dialog__child__content {
+    max-height: 100%;
+    height: auto;
+    overflow: auto;
+    background: #f5f5f5;
+  }
+}
+
+.koowa_dialog__file_dialog_categories {
+  .koowa_dialog__title {
+    border-top-color: #fff;
+  }
+}
+
+.koowa_dialog__table_title {
+  background: #f3f3f3;
+  font-weight: normal;
+  height: 16px;
+  line-height: 16px;
+}
+
+.koowa_dialog #document_list.table {
+  td {
+    padding: 4px 5px;
+    line-height: 16px;
+  }
+
+  tr.selected td {
+    @include gradient-vertical(lighten($blueDark, 20%), $blueDark);
+    @include box-shadow(hsla(0, 0%, 100%, 0.2) 0 1px 0 inset);
+    border-top-color: lighten($blueDark, 15%);
+    text-shadow: hsla(0, 0%, 0%, 0.2) 0 -1px 0;
+  }
+}
+
+// The message layer when no documents are available in DOClink
+.koowa_dialog__message_layer {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 20px;
+  background: #fff;
+}
+
+// Images in details view
+.koowa_dialog #files-preview {
+
+  .details > div {
+    padding: 16px;
+  }
+  img.icon {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 150px;
+  }
+  table.parameters {
+    border-bottom: 1px solid #dddddd;
+  }
+}
+
+.koowa_dialog #insert-button-container {
+  padding: 16px;
+}
+
+// Media Queries
+@media screen and (min-width: $dialogScreenWidth) {
+  .koowa_dialog {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  .koowa_dialog__menu {
+    position: absolute;
+    width: 75%;
+    left: 25%;
+  }
+
+  .koowa_dialog__layout {
+    height: 100%;
+  }
+
+  .koowa_dialog--file_dialog {
+    .koowa_dialog__layout {
+      padding-top: $menuHeight - 1;
+    }
+  }
+
+  .koowa_dialog__wrapper {
+    height: 100%;
+    width: 100%;
+    float: left;
+  }
+
+  .koowa_dialog__wrapper__child {
+    display: block;
+    border-left: 1px solid $borderColor;
+    height: 100%;
+    max-height: 100%;
+    float: left;
+  }
+
+  .koowa_dialog__child__content {
+    min-height: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin-top: -$titleHeight;
+    padding-top: $titleHeight;
+  }
+
+  .koowa_dialog__files_tree {
+    max-height: none;
+    overflow: visible !important;
+  }
+
+  .koowa_dialog--doclink {
+    .koowa_dialog__child__content {
+      margin-bottom: -$menuHeight;
+      padding-bottom: $menuHeight;
+    }
+  }
+
+  .koowa_dialog__child__content__box {
+    height: 100%;
+    max-height: 100%;
+    min-height: 180px;
+  }
+
+  .koowa_dialog__file_dialog_categories {
+    width: 25%;
+    border-left: none;
+    position: relative;
+  }
+
+  .koowa_dialog__file_dialog_files {
+    width: 42%;
+  }
+  .koowa_dialog__file_dialog_insert {
+    width: 33%;
+  }
+  .koowa_dialog__file_dialog_upload {
+    width: 75%;
+  }
+  .koowa_dialog__title {
+    border-top-color: #fff;
+  }
+
+  // Doclink
+  .koowa_dialog__doclink_menu_items {
+    width: 35%;
+    border-left: none;
+  }
+
+  .koowa_dialog__doclink_table {
+    width: 65%;
+  }
+
+  .koowa_dialog__doclink_insert {
+    background: #ddd;
+    border: none;
+    border-top: 1px solid $borderColor;
+    width: 100%;
+    clear: both;
+    height: $menuHeight;
+    position: absolute;
+    bottom: 0;
+    z-index: 15;
+    padding: 5px;
+  }
+
+  // Files/folders
+  .koowa_dialog__folders_files {
+    padding-bottom: 68px;
+    margin-bottom: -68px;
+    position: relative;
+  }
+
+  .koowa_dialog__new_folder {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    height: 68px;
+    clear: both;
+    float: none;
+    max-width: 100%;
+
+    input[type=text] {
+      max-width: 100%;
+      float: left;
+    }
+  }
+}
+
+// Internet explorer 8 and below
+.old-ie {
+  height: 100%;
+
+  .koowa_dialog {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  .koowa_dialog__menu {
+    position: absolute;
+    width: 75%;
+    left: 25%;
+  }
+
+  .koowa_dialog__layout {
+    height: 100%;
+  }
+
+  .koowa_dialog--file_dialog {
+    .koowa_dialog__layout {
+      padding-top: $menuHeight - 1;
+    }
+  }
+
+  .koowa_dialog__wrapper {
+    height: 100%;
+    width: 100%;
+    float: left;
+  }
+
+  .koowa_dialog__wrapper__child {
+    display: block;
+    border-left: 1px solid $borderColor;
+    height: 100%;
+    max-height: 100%;
+    float: left;
+  }
+
+  .koowa_dialog__child__content {
+    min-height: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin-top: -$titleHeight;
+    padding-top: $titleHeight;
+  }
+
+  .koowa_dialog__files_tree {
+    max-height: none;
+    overflow: visible !important;
+  }
+
+  .koowa_dialog--doclink {
+    .koowa_dialog__child__content {
+      margin-bottom: -$menuHeight;
+      padding-bottom: $menuHeight;
+    }
+  }
+
+  .koowa_dialog__child__content__box {
+    height: 100%;
+    max-height: 100%;
+    min-height: 180px;
+  }
+
+  .koowa_dialog__file_dialog_categories {
+    width: 25%;
+    border-left: none;
+    position: relative;
+  }
+
+  .koowa_dialog__file_dialog_files {
+    width: 42%;
+  }
+  .koowa_dialog__file_dialog_insert {
+    width: 33%;
+  }
+  .koowa_dialog__file_dialog_upload {
+    width: 75%;
+  }
+  .koowa_dialog__title {
+    border-top-color: #fff;
+  }
+
+  // Doclink
+  .koowa_dialog__doclink_menu_items {
+    width: 35%;
+    border-left: none;
+  }
+
+  .koowa_dialog__doclink_table {
+    width: 65%;
+  }
+
+  .koowa_dialog__doclink_insert {
+    background: #ddd;
+    border: none;
+    border-top: 1px solid $borderColor;
+    width: 100%;
+    clear: both;
+    height: $menuHeight;
+    position: absolute;
+    bottom: 0;
+    z-index: 15;
+    padding: 5px;
+  }
+
+  // Files/folders
+  .koowa_dialog__folders_files {
+    padding-bottom: 68px;
+    margin-bottom: -68px;
+    position: relative;
+  }
+
+  .koowa_dialog__new_folder {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    height: 68px;
+    clear: both;
+    float: none;
+    max-width: 100%;
+
+    input[type=text] {
+      max-width: 100%;
+      float: left;
+    }
+  }
+}
+
+// Not showing this element doesnt seem to affect the drag-and-drop uploader
+// But it does solve a weird element width overflow bug...
+.koowa_dialog .uploader-flash-container {
+  display: none;
+}
+
+// Remove border, shadow and radius from uploader within file dialog
+.koowa_dialog__file_dialog_upload #files-upload {
+  @include border-radius(0);
+  @include box-shadow(none);
+  border: none;
+}
+
+// Make the h2 area smaller within file dialog
+.koowa_dialog__file_dialog_upload .dropzone h2 {
+  margin: 50px 0;
+}
+
+// Overwriting the jqtree output
+.koowa_dialog__files_tree {
+  overflow: hidden; // Stops IE9 from creating whitespace on the bottom when folding folders
+}
+
+// Hide certain elements
+.koowa_dialog--file_dialog.koowa_dialog--no_menu {
+  .koowa_dialog__layout {
+    padding-top: 0;
+  }
+}
+
+.koowa_dialog--file_dialog.koowa_dialog--no_new_folder {
+  .koowa_dialog__folders_files {
+    padding-bottom: 0;
+  }
+}
+
+.koowa_dialog--file_dialog.koowa_dialog--no_categories {
+  .koowa_dialog__file_dialog_upload {
+    width: 100%;
+    border: none;
+  }
+}

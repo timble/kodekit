@@ -1,0 +1,22 @@
+// Page titles without icons
+div.pagetitle {
+  float: right;
+}
+
+div.pagetitle h2 {
+  margin: 0;
+  padding: 0;
+  line-height: 32px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #555;
+  display: none;
+
+  @media screen and (min-width: 600px) {
+    display: block;
+  }
+}
+
+.old-ie .koowa-toolbar .pagetitle h2 {
+  display: block !important;
+}
