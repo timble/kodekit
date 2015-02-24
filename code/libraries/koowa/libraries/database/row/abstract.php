@@ -128,6 +128,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Saves the row to the database.
      *
      * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
+     * Save prevent subsequent database updates if the entity was already updated previously and it was not
+     * modified since.
      *
      * @return boolean If successful return TRUE, otherwise FALSE
      */
@@ -137,11 +139,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 
         if ($this->isConnected())
         {
-            if ($this->isNew()) {
-                $result = $this->getTable()->insert($this);
-            } elseif ($this->getStatus() === KDatabase::STATUS_MODIFIED) {
-                $result = $this->getTable()->update($this);
+            if (!$this->isNew())
+            {
+                if($this->getStatus() !== KDatabase::STATUS_UPDATED) {
+                    $result = $this->getTable()->update($this);
+                }
             }
+            else $result = $this->getTable()->insert($this);
         }
 
         return (bool) $result;
@@ -175,6 +179,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     {
         $this->_data                 = array();
         $this->__modified_properties = array();
+        $this->setStatus(NULL);
 
         if ($this->isConnected()) {
             $this->_data = $this->getTable()->getDefaults();
