@@ -247,8 +247,10 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
                 parent::offsetSet($name, $value);
 
                 //Mark the property as modified
-                if($modified || $this->isNew()) {
+                if($modified || $this->isNew())
+                {
                     $this->__modified_properties[$name] = $name;
+                    $this->setStatus(KDatabase::STATUS_MODIFIED);
                 }
             }
         }
