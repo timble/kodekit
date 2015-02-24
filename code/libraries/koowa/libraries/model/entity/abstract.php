@@ -146,6 +146,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     {
         $this->_data                 = array();
         $this->__modified_properties = array();
+        $this->setStatus(NULL);
 
         return $this;
     }
@@ -223,8 +224,10 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
                 parent::offsetSet($name, $value);
 
                 //Mark the property as modified
-                if($modified || $this->isNew()) {
+                if($modified || $this->isNew())
+                {
                     $this->__modified_properties[$name] = $name;
+                    $this->setStatus(KDatabase::STATUS_MODIFIED);
                 }
             }
         }
