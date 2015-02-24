@@ -137,10 +137,10 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 
         if ($this->isConnected())
         {
-            if (!$this->isNew()) {
-                $result = $this->getTable()->update($this);
-            } else {
+            if ($this->isNew()) {
                 $result = $this->getTable()->insert($this);
+            } elseif ($this->getStatus() === KDatabase::STATUS_MODIFIED) {
+                $result = $this->getTable()->update($this);
             }
         }
 
