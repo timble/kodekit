@@ -9,11 +9,17 @@
 // Outside of the koowa scope
 @import "generic/general";
 
+$koowaPath: '..';
+
+// Core variables and mixins
+@import "koowa/koowa";
+
 // Inside koowa scope
 .koowa {
   @import "generic/grid";
   @import "generic/header";
   @import "generic/input-file";
+  @import "generic/dialog";
   @import "generic/inputgroups";
   @import "generic/pagination";
   @import "generic/sidebar-nav";
