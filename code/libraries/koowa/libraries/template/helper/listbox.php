@@ -326,6 +326,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
                     if (element.addEvent) {
                         element.addEvent("submit", explode);
+                        element.addEvent("onsubmit", explode); // See: https://github.com/joomla/joomla-cms/pull/5914
                     } else if (element.addEventListener) {
                         element.addEventListener("submit", explode, false);
                     } else if (element.attachEvent) {
