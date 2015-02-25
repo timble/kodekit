@@ -322,17 +322,17 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
                 if (form.hasClass("-koowa-form") || form.hasClass("-koowa-grid")) {
                     form.submit(explode);
                 } else {
-                    var element = form.get(0);
+                    // See: https://github.com/joomla/joomla-cms/pull/5914 for why we use onsubmit
+                    var element = form.get(0),
+                        previous = element.onsubmit;
 
-                    if (element.addEvent) {
-                        element.addEvent("submit", explode);
-                        element.addEvent("onsubmit", explode); // See: https://github.com/joomla/joomla-cms/pull/5914
-                    } else if (element.addEventListener) {
-                        element.addEventListener("submit", explode, false);
-                        element.addEventListener("onsubmit", explode, false); // See: https://github.com/joomla/joomla-cms/pull/5914
-                    } else if (element.attachEvent) {
-                        element.attachEvent("onsubmit", explode);
-                    }
+                    element.onsubmit = function() {
+                        if (typeof previous === "function") {
+                            previous();
+                        }
+
+                        explode();
+                    };
                 }
             });</script>';
         }
