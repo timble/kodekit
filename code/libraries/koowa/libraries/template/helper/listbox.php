@@ -332,6 +332,9 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
                         }
 
                         explode();
+
+                        // Avoid explode to be executed more than once.
+                        element.onsubmit = previous;
                     };
                 }
             });</script>';
