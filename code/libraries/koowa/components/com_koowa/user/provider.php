@@ -131,7 +131,7 @@ final class ComKoowaUserProvider extends KUserProvider
             }
         }
 
-        if($user->getId() != $identifier) {
+        if($identifier == 0 || $user->getId() != $identifier) {
             $result = isset($this->_users[$identifier]);
         } else {
             $result = true;

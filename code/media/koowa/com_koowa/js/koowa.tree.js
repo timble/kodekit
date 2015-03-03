@@ -246,10 +246,10 @@
             this.element.bind({
                 'tree.select': // The select event happens when a node is clicked
                     function(event) {
-                        $(this).find('.active').removeClass('active').find('.icon-white').removeClass('icon-white');
+                        $(this).find('.active').removeClass('active');
                         if(event.node) { // When event.node is null, it's actually a deselect event
                             //Style the clicked element
-                            $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=koowa_icon--folder]').addClass('icon-white');
+                            $(this).find('.jqtree-selected').addClass('active');
                         }
                     },
                 'tree.open':
@@ -281,7 +281,7 @@
                 'tree.refresh': //Refreshes reset the html, and happen on events like setState
                     function() {
                         $(this).find('ul.jqtree-tree').addClass('sidebar-nav'); // .sidebar-nav needed for bootstrap styling to apply
-                        $(this).find('.jqtree-selected').addClass('active').children('a').find('[class^=koowa_icon--folder]').addClass('icon-white');
+                        $(this).find('.jqtree-selected').addClass('active');
                     }
             });
 

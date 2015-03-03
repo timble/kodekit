@@ -196,8 +196,8 @@ class ComKoowaControllerBehaviorFindable extends KControllerBehaviorAbstract
      */
     protected function _afterAdd(KControllerContextInterface $context)
     {
-        $name = $this->getMixer()->getIdentifier()->name;
         $entity  = $context->result;
+        $name    = $entity->getIdentifier()->name;
 
         if ($name === $this->_entity && $entity->getStatus() !== KDatabase::STATUS_FAILED) {
             $this->_getDispatcher()->trigger('onFinderAfterSave', array($this->_event_context, $entity, true));
