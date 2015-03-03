@@ -742,7 +742,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             {
                 $format = pathinfo($this->getUrl()->getPath(), PATHINFO_EXTENSION);
 
-                if(empty($format))
+                if(empty($format) || !isset(static::$_formats[$format]))
                 {
                     $format = 'html'; //define html default
 
