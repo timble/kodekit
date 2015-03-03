@@ -51,16 +51,17 @@ a fork from Joomla that is being completely rebuild using Nooku Framework.
 Requirements
 ------------
 
-* Joomla 2.5 and 3.x 
+* Joomla 2.5 and 3.x
 * PHP 5.2 or newer
 * MySQL 5.x
 
 Installation
 ------------
 
-Go to the root directory of your Joomla installation in command line and execute this command: 
+Go to the root directory of your Joomla installation in command line and execute these commands:
 
 ```
+[ -f composer.json ] && composer update
 composer require nooku/nooku-framework:2.*
 ```
 
