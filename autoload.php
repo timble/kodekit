@@ -29,7 +29,7 @@ Koowa::getInstance(array(
     'cache_namespace' => 'koowa-' . JPATH_BASE === JPATH_SITE ? 'site' : 'admin' . '-' . md5($config->secret),
     'root_path'       => JPATH_ROOT,
     'base_path'       => JPATH_BASE,
-    'vendor_path'     => JPATH_ROOT.(version_compare($version->getShortVersion(), '3.4', '>=') ? '/libraries/vendor' : '/vendor')
+    'vendor_path'     => false //Composer loader is already registered.
 ));
 
 /**
