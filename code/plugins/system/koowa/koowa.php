@@ -118,6 +118,22 @@ class PlgSystemKoowa extends JPlugin
                 $application = JFactory::getApplication()->getName();
 
                 /**
+                 * Find Composer Vendor Directory
+                 */
+                $vendor_path = false;
+                if(file_exists(JPATH_ROOT.'/composer.json'))
+                {
+                    $content  = file_get_contents(JPATH_ROOT.'/composer.json');
+                    $composer = json_decode($content);
+
+                    if(isset($composer->config->vendor_dir)) {
+                        $vendor_path = JPATH_ROOT.'/'.$composer->config->vendor_dir;
+                    } else {
+                        $vendor_path = JPATH_ROOT.'/vendor';
+                    }
+                }
+
+                /**
                  * Framework Bootstrapping
                  */
                 Koowa::getInstance(array(
@@ -126,7 +142,7 @@ class PlgSystemKoowa extends JPlugin
                     'cache_namespace' => 'koowa-' . $application . '-' . md5(JFactory::getApplication()->getCfg('secret')),
                     'root_path'       => JPATH_ROOT,
                     'base_path'       => JPATH_BASE,
-                    'vendor_path'     => JPATH_ROOT . (version_compare(JVERSION, '3.4', '>=') ? '/libraries/vendor' : '/vendor')
+                    'vendor_path'     => $vendor_path
                 ));
 
                 /**
