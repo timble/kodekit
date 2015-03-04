@@ -58,10 +58,9 @@ Requirements
 Installation
 ------------
 
-Go to the root directory of your Joomla installation in command line and execute these commands:
+Go to the root directory of your Joomla installation in command line and execute this command:
 
 ```
-[ -f composer.json ] && composer update
 composer require nooku/nooku-framework:2.*
 ```
 
