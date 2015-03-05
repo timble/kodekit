@@ -7,6 +7,10 @@
  * @link        https://github.com/nooku/nooku-framework for the canonical source repository
  */
 
+if (defined('KOOWA')) {
+    return;
+}
+
 /**
  * Joomla Configuration
  */
