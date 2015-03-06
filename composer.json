@@ -25,5 +25,8 @@
         "twig/twig": "Allows building templates using the Twig template engine",
         "mustache/mustache": "Allows building logic less templates using the Mustache syntax",
         "erusev/parsedown-extra" : "Allows using Markddown in templates"
+    },
+    "autoload": {
+      "files": ["autoload.php"]
     }
 }
