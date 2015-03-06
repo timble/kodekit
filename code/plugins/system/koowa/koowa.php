@@ -109,7 +109,7 @@ class PlgSystemKoowa extends JPlugin
             /**
              * Koowa Bootstrapping
              *
-             * If KOOWA is defined assume it was already bootstrapped through Compooser autoload.php.
+             * If KOOWA is defined assume it was already loaded and bootstrapped
              */
             if (!defined('KOOWA'))
             {
