@@ -103,37 +103,66 @@ class PlgSystemKoowa extends JPlugin
      */
     public function bootstrap()
     {
-        // Koowa: setup
         $path = JPATH_LIBRARIES.'/koowa/libraries/koowa.php';
         if (file_exists($path))
         {
-            require_once $path;
-
-            $application = JFactory::getApplication()->getName();
-
             /**
-             * Framework Bootstrapping
+             * Koowa Bootstrapping
+             *
+             * If KOOWA is defined assume it was already loaded and bootstrapped
              */
-            $koowa = Koowa::getInstance(array(
-                'debug'           => JDEBUG,
-                'cache'           => false, //JFactory::getApplication()->getCfg('caching')
-                'cache_namespace' => 'koowa-'.$application.'-'.md5(JFactory::getApplication()->getCfg('secret')),
-                'root_path'       => JPATH_ROOT,
-                'base_path'       => JPATH_BASE,
-                'vendor_path'     => JPATH_ROOT.(version_compare(JVERSION, '3.4', '>=') ? '/libraries/vendor' : '/vendor')
-            ));
+            if (!defined('KOOWA'))
+            {
+                require_once $path;
 
-            $manager = KObjectManager::getInstance();
-            $loader  = $manager->getClassLoader();
+                $application = JFactory::getApplication()->getName();
+
+                /**
+                 * Find Composer Vendor Directory
+                 */
+                $vendor_path = false;
+                if(file_exists(JPATH_ROOT.'/composer.json'))
+                {
+                    $content  = file_get_contents(JPATH_ROOT.'/composer.json');
+                    $composer = json_decode($content);
+
+                    if(isset($composer->config->vendor_dir)) {
+                        $vendor_path = JPATH_ROOT.'/'.$composer->config->vendor_dir;
+                    } else {
+                        $vendor_path = JPATH_ROOT.'/vendor';
+                    }
+                }
+
+                /**
+                 * Framework Bootstrapping
+                 */
+                Koowa::getInstance(array(
+                    'debug'           => JDEBUG,
+                    'cache'           => false, //JFactory::getApplication()->getCfg('caching')
+                    'cache_namespace' => 'koowa-' . $application . '-' . md5(JFactory::getApplication()->getCfg('secret')),
+                    'root_path'       => JPATH_ROOT,
+                    'base_path'       => JPATH_BASE,
+                    'vendor_path'     => $vendor_path
+                ));
+
+                /**
+                 * Component Bootstrapping
+                 */
+                KObjectManager::getInstance()->getObject('object.bootstrapper')
+                    ->registerComponents(JPATH_LIBRARIES . '/koowa/components', 'koowa')
+                    ->bootstrap();
+            }
 
             /**
              * Component Bootstrapping
              */
-            $manager->getObject('object.bootstrapper')
-                ->registerApplication('site' , JPATH_SITE.'/components', JFactory::getApplication()->isSite())
-                ->registerApplication('admin', JPATH_ADMINISTRATOR.'/components', JFactory::getApplication()->isAdmin())
-                ->registerComponents(JPATH_LIBRARIES.'/koowa/components', 'koowa')
+            KObjectManager::getInstance()->getObject('object.bootstrapper')
+                ->registerApplication('site', JPATH_SITE . '/components', JFactory::getApplication()->isSite())
+                ->registerApplication('admin', JPATH_ADMINISTRATOR . '/components', JFactory::getApplication()->isAdmin())
                 ->bootstrap();
+
+            $manager = KObjectManager::getInstance();
+            $loader  = $manager->getClassLoader();
 
             //Module Locator
             $loader->registerLocator(new ComKoowaClassLocatorModule(array(
@@ -184,7 +213,6 @@ class PlgSystemKoowa extends JPlugin
              * Plugin Bootstrapping
              */
             JPluginHelper::importPlugin('koowa', null, true);
-
 
             return true;
         }
