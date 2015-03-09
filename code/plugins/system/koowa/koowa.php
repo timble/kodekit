@@ -150,16 +150,10 @@ class PlgSystemKoowa extends JPlugin
                  */
                 KObjectManager::getInstance()->getObject('object.bootstrapper')
                     ->registerComponents(JPATH_LIBRARIES . '/koowa/components', 'koowa')
+                    ->registerApplication('site', JPATH_SITE . '/components', JFactory::getApplication()->isSite())
+                    ->registerApplication('admin', JPATH_ADMINISTRATOR . '/components', JFactory::getApplication()->isAdmin())
                     ->bootstrap();
             }
-
-            /**
-             * Component Bootstrapping
-             */
-            KObjectManager::getInstance()->getObject('object.bootstrapper')
-                ->registerApplication('site', JPATH_SITE . '/components', JFactory::getApplication()->isSite())
-                ->registerApplication('admin', JPATH_ADMINISTRATOR . '/components', JFactory::getApplication()->isAdmin())
-                ->bootstrap();
 
             $manager = KObjectManager::getInstance();
             $loader  = $manager->getClassLoader();
