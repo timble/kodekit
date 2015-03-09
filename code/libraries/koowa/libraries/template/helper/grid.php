@@ -110,12 +110,20 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
             <script>
             (function() {
             var value = '.json_encode($config->search).',
+                submitForm = function(form) {
+                    if (form.length) {
+                        var controller = form.data("controller");
+                        if (typeof controller === "object" && controller !== null
+                                && controller.grid && typeof controller.grid.uncheckAll !== "undefined") {
+                            controller.grid.uncheckAll();
+                        }
+
+                        form[0].submit();
+                    }
+                },
                 send = function(event) {
                     if (event.which === 13 || event.type === "blur") {
-                        var form = kQuery(this).parents("form");
-                        if (form.length) {
-                            form[0].submit();
-                        }
+                        submitForm(kQuery(this).parents("form"));
                     }
                 };
 
@@ -128,10 +136,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
                     input.val("");
 
                     if (value) {
-                        var form = input.parents("form");
-                        if (form.length) {
-                            form[0].submit();
-                        }
+                        submitForm(input.parents("form"));
                     }
                 });
             });
