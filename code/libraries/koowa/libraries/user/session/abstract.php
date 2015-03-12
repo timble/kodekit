@@ -320,8 +320,11 @@ class KUserSessionAbstract extends KObject implements KUserSessionInterface
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('session', 'handler');
                 $identifier['name'] = $handler;
+                // reset the handler
+                $handler = $identifier;
             }
-            else $identifier = $this->getIdentifier($handler);
+            
+            $identifier = $this->getIdentifier($handler);
 
             //Set the configuration
             $identifier->getConfig()->append($config);
