@@ -572,7 +572,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Return an associative array of the data
      *
-     * Skip the properties that start with an underscore
+     * Skip the properties that start with an underscore as they are considered private
      *
      * @return array
      */
