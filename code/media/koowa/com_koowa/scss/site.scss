@@ -9,7 +9,7 @@
 // Outside of the koowa scope
 @import "generic/general";
 
-$koowaPath: '..';
+$koowaPath: '..' !default;
 
 // Core variables and mixins
 @import "koowa/koowa";
