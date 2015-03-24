@@ -209,7 +209,11 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         {
             if(in_array($this->getMethod(), array('POST', 'PUT', 'DELETE', 'PATCH')))
             {
-                $data = json_decode($this->getContent(), true);
+                if ($content = $this->getContent()) {
+                    $data = json_decode($content, true);
+                }
+                else $data = array();
+
                 $this->data->add($data);
             }
         }
