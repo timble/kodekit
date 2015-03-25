@@ -53,6 +53,16 @@ if (!function_exists('mb_strlen'))
 
 if (!function_exists('mb_substr'))
 {
+    /*
+     * Joomla checks if mb_substr exists to determine the availability of mbstring extension
+     * Loading JString before providing the replacement function makes sure everything works
+     */
+    if (class_exists('JLoader') && is_callable(array('JLoader', 'import')))
+    {
+        JLoader::import('joomla.string.string');
+        JLoader::load('JString');
+    }
+
     function mb_substr($str, $offset, $length = NULL)
     {
         // generates E_NOTICE
