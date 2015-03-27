@@ -79,6 +79,39 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
     }
 
     /**
+     * Add Bootstrap JS and CSS a modal box
+     *
+     * @param array|KObjectConfig $config
+     * @return string   The html output
+     */
+    public function bootstrap($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'debug' => JFactory::getApplication()->getCfg('debug'),
+            'javascript' => false
+        ));
+
+        $html = '';
+
+        if ($config->javascript && empty(self::$_loaded['bootstrap-javascript']))
+        {
+            if (version_compare(JVERSION, '3.0', '>='))
+            {
+                $html .= $this->jquery($config);
+
+                JHtml::_('bootstrap.framework');
+
+                KTemplateHelperBehavior::$_loaded['bootstrap-javascript'] = true;
+            }
+        }
+
+        $html .= parent::bootstrap($config);
+
+        return $html;
+    }
+
+    /**
      * Keeps session alive
      *
      * @param array|KObjectConfig $config

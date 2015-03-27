@@ -23,27 +23,7 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
      */
     public function javascript($config = array())
     {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'debug' => JFactory::getApplication()->getCfg('debug')
-        ));
-        $html   = '';
-
-        if (!isset(self::$_loaded['bootstrap-javascript']))
-        {
-            if (!isset(self::$_loaded['jquery'])) {
-                $html .= $this->jquery($config);
-            }
-
-            if (version_compare(JVERSION, '3.0', '>='))
-            {
-                JHtml::_('bootstrap.framework');
-                self::$_loaded['bootstrap-javascript'] = true;
-            }
-            else $html .= '<ktml:script src="media://koowa/com_koowa/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
-        }
-
-        return $html;
+        return $this->bootstrap(array('css' => false, 'javascript' => true));
     }
 
     /**
@@ -79,8 +59,11 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
 
         $html = '';
 
-        if ($config->javascript && !isset(self::$_loaded['bootstrap-javascript'])) {
+        if ($config->javascript)
+        {
+            $config->css = false;
             $html .= $this->javascript($config);
+            $config->css = true;
         }
 
         // Load the generic files
@@ -92,13 +75,13 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             if ($config->load_base)
             {
                 if (!file_exists($template.'/disable-koowa-bootstrap.txt')) {
-                    $html .= '<ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />';
+                    $html .= parent::bootstrap($config);
                 }
             }
             else
             {
                 if (file_exists($template.'/enable-koowa-bootstrap.txt')) {
-                    $html .= '<ktml:style src="media://koowa/com_koowa/css/bootstrap.css" />';
+                    $html .= parent::bootstrap($config);
                 }
             }
 
@@ -128,29 +111,12 @@ class ComKoowaTemplateHelperBootstrap extends ComKoowaTemplateHelperBehavior
             }
         }
 
-        if ($config->wrapper) {
-            $this->wrapper($config);
-        }
-
-        return $html;
-    }
-
-    /**
-     * Wrap the output of the template with a filter
-     *
-     * @param array|KObjectConfig $config
-     */
-    public function wrapper($config = array())
-    {
-        $config = new KObjectConfigJson($config);
-        $config->append(array(
-            'wrapper' => null
-        ));
-
         if ($config->wrapper)
         {
             $this->getTemplate()->addFilter('wrapper');
             $this->getTemplate()->getFilter('wrapper')->setWrapper($config->wrapper);
         }
+
+        return $html;
     }
 }

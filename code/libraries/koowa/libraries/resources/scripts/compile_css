@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ -z "$BASE" ]
+then
+  BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+fi
+
+INPUT_PATH=$BASE/../assets/scss
+OUTPUT_PATH=$BASE/../assets/css
+
+for FILE in `find $INPUT_PATH -maxdepth 1 -name '*.scss'`
+do
+  base=`basename "$FILE" .scss`
+  sass --style compressed $INPUT_PATH/$base.scss $OUTPUT_PATH/$base.css
+  sed -ix 's/koowa\/code\///g' $OUTPUT_PATH/$base.css.map
+  sed -ix 's/com_files\/code\///g' $OUTPUT_PATH/$base.css.map
+  rm $OUTPUT_PATH/$base.css.mapx
+done

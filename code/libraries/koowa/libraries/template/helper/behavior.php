@@ -78,6 +78,41 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
+     * Add Bootstrap JS and CSS a modal box
+     *
+     * @param array|KObjectConfig $config
+     * @return string   The html output
+     */
+    public function bootstrap($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'debug' => false,
+            'css'   => true,
+            'javascript' => false
+        ));
+
+        $html = '';
+
+        if ($config->javascript && !isset(self::$_loaded['bootstrap-javascript']))
+        {
+            $html .= $this->jquery($config);
+            $html .= '<ktml:script src="media://library/js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
+
+            self::$_loaded['bootstrap-javascript'] = true;
+        }
+
+        if ($config->css && !isset(self::$_loaded['bootstrap-css']))
+        {
+            $html .= '<ktml:style src="media://library/css/bootstrap.css" />';
+
+            self::$_loaded['bootstrap-css'] = true;
+        }
+
+        return $html;
+    }
+
+    /**
      * Render a modal box
      *
      * @param array|KObjectConfig $config
