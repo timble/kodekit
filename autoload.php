@@ -26,6 +26,17 @@ if(!defined('KOOWA'))
     require_once JPATH_LIBRARIES . '/cms/version/version.php';
     $version = new JVersion;
 
+    /*
+     * Joomla checks if mb_substr exists to determine the availability of mbstring extension
+     * Loading JString here before bootstrapping Koowa makes sure our replacement function
+     * in legacy.php does not break anything
+     */
+    if (!function_exists('mb_substr') && class_exists('JLoader') && is_callable(array('JLoader', 'import')))
+    {
+        JLoader::import('joomla.string.string');
+        JLoader::load('JString');
+    }
+
     /**
      * Framework Bootstrapping
      */
