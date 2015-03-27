@@ -40,7 +40,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['koowa']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/koowa'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/koowa'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['koowa'] = true;
         }
@@ -69,7 +69,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['jquery']))
         {
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/jquery'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/jquery'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['jquery'] = true;
         }
@@ -98,7 +98,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded['modal']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['modal'] = true;
         }
@@ -150,7 +150,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['overlay']))
         {
             $html .= $this->koowa();
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/koowa.overlay.js" />';
+            $html .= '<ktml:script src="media://library/js/koowa.overlay.js" />';
 
             $html .= '
             <style>
@@ -219,8 +219,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->jquery();
             $html .= $this->koowa();
 
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/patch.validator.js" />';
+            $html .= '<ktml:script src="media://library/js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -272,8 +272,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['select2']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/select2'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/koowa.select2.js" />';
+            $html .= '<ktml:script src="media://library/js/select2'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/koowa.select2.js" />';
 
             self::$_loaded['select2'] = true;
         }
@@ -387,8 +387,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['tree']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://koowa/com_koowa/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['tree'] = true;
         }
