@@ -483,6 +483,206 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
+     * Render a tooltip
+     *
+     * @param array|KObjectConfig $config
+     * @return string   *The html output
+     */
+    public function tooltip($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'selector' => '.koowa-tooltip',
+            'data'     => 'koowa-tooltip',
+            'options'  => array()
+        ));
+
+        $html = '';
+
+        // Load Bootstrap with JS plugins.
+        if(!isset(self::$_loaded['tooltip']))
+        {
+            $html .= $this->bootstrap(array('css' => false, 'javascript' => true));
+
+            self::$_loaded['tooltip'] = true;
+        }
+
+        $options = json_encode($config->options->toArray());
+
+        $signature = md5('tooltip-'.$config->selector.$options);
+
+        if(!isset(self::$_loaded[$signature]))
+        {
+            $html .= "<script>
+                kQuery(function($) {
+                    $('$config->selector').each(function(idx, el) {
+                        var el = $(el);
+                        var data = el.data('$config->data');
+                        var options = $.parseJSON('$options');
+                        if (data) {
+                            $.extend(true, options, data);
+                        }
+                        el.tooltip(options);
+                        });
+                });
+            </script>";
+
+        }
+
+        return $html;
+    }
+
+
+    /**
+     * Loads the calendar behavior and attaches it to a specified element
+     *
+     * @param array|KObjectConfig $config
+     * @return string   The html output
+     */
+    public function calendar($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'offset' => strtoupper($config->filter) // @TODO Backwards compatibility
+        ))->append(array(
+            'debug'   => false,
+            'offset'  => date_default_timezone_get(),
+            'value'	  => gmdate("M d Y H:i:s"),
+            'name'    => '',
+            'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
+            'first_week_day' => 0,
+            'attribs' => array(
+                'size' => 25,
+                'maxlength' => 19,
+                'placeholder' => '', //@TODO placeholder fix for chrome may not be needed anymore
+                'oninput' => 'if(kQuery(this).data(\'datepicker\'))kQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
+            )
+        ))->append(array(
+            'id'      => 'datepicker-'.$config->name,
+            'options' => array(
+                'todayBtn' => 'linked',
+                'todayHighlight' => true,
+                'language' => 'en-GB',
+                'autoclose' => true, //Same as singleClick in previous js plugin,
+                'keyboardNavigation' => false, //To allow editing timestamps,
+                'calendarWeeks' => true, //Old datepicker used to display these
+                //'orientation' => 'auto left', //popover arrow set to point at the datepicker icon,
+                //'parentEl' => false //this feature breaks if a parent el is position: relative;
+            )
+        ));
+
+        if ($config->offset === 'USER_UTC') {
+            $config->offset = $this->getObject('user')->getParameter('timezone', $config->offset);
+        }
+
+        $translator = $this->getObject('translator');
+
+        // Handle the special case for "now".
+        if (strtoupper($config->value) == 'NOW') {
+            $config->value = strftime($config->format);
+        }
+
+        $html = '';
+
+        if($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00') {
+            $config->value = strftime($config->format, strtotime($config->value));
+        } else {
+            $config->value = '';
+        }
+
+        if (intval($config->value))
+        {
+            $date = new DateTime($config->value, new DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone($config->offset));
+
+            // Transform the date string.
+            $config->value = $date->format('Y-m-d H:i:s');
+        }
+
+        if (!isset(self::$_loaded['calendar']))
+        {
+            $html .= '<ktml:script src="media://library/js/datepicker'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://library/js/koowa.datepicker.js" />';
+
+            $locale = array(
+                'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
+                'daysShort' => array('Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
+                'daysMin' => array('Su','Mo','Tu','We','Th','Fr','Sa','Su'),
+                'months' => array('January','February','March','April','May','June','July','August','September','October','November','December'),
+                'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
+            );
+
+            foreach($locale as $key => $item){
+                $locale[$key] = array_map(array($translator, 'translate'), $item);
+            }
+            $locale['today']     = $translator->translate('Today');
+            $locale['clear']     = $translator->translate('Clear');
+            $locale['weekStart'] = $config->first_week_day;
+
+            $html .= '<script>
+            (function($){
+                $.fn.datepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
+            }(kQuery));
+            </script>';
+
+            self::$_loaded['calendar'] = true;
+        }
+
+        if (!isset(self::$_loaded['calendar-triggers'])) {
+            self::$_loaded['calendar-triggers'] = array();
+        }
+
+        if ($config->value)
+        {
+            $date = new DateTime($config->value);
+
+            $config->value = strftime($config->format, $date->format('U'));
+        }
+
+        $attribs = $this->buildAttributes($config->attribs);
+        $value   = $this->getTemplate()->escape($config->value);
+
+        // @TODO this is legacy, or bc support, and may not be compatible with strftime and the like
+        $config->format = str_replace(
+            array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
+            array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
+            $config->format
+        );
+
+        if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
+        {
+            // Only display the triggers once for each control.
+            if (!in_array($config->id, self::$_loaded['calendar-triggers']))
+            {
+                $html .= "<script>
+                    kQuery(function($){
+                        $('#".$config->id."').koowaDatepicker(".$config->options.");
+                    });
+                </script>";
+                self::$_loaded['calendar-triggers'][] = $config->id;
+            }
+
+            $html .= '<div class="input-group date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
+            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
+            $html .= '<span class="input-group-btn">';
+            $html .= '<span class="btn" >';
+            $html .= '<span class="koowa_icon--calendar"><i>calendar</i></span>';
+            $html .= '</span>';
+            $html .= '</span>';
+            $html .= '</div>';
+        }
+        else
+        {
+            $html = '';
+            $html .= '<div>';
+            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$value.'" '.$attribs.' />';
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    /**
      * Returns an array of month names (short and long) translated to the site language
      *
      * JavaScript Date object does not have a public API to do this.
