@@ -31,7 +31,7 @@ class ComKoowaTemplateFilterAsset extends KTemplateFilterAsset
 
         $config->append(array(
             'schemes' => array(
-                'media://library/' => '/libraries/koowa/libraries/resources/assets/',
+                'media://koowa/framework/' => $path.'/media/koowa/framework/',
                 'media://' => $path.'/media/',
                 'root://'  => $path.'/',
                 'base://'  => rtrim($this->getObject('request')->getBaseUrl()->getPath(), '/').'/',
