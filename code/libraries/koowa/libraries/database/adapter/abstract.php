@@ -106,7 +106,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $this->_table_needle = $config->table_needle;
 
         // Set the database name
-        $this->_database = $config->database;
+        $this->setDatabase($config->database);
 
         // Mixin the command interface
         $this->mixin('lib:command.mixin', $config);
