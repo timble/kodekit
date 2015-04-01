@@ -29,8 +29,10 @@ table.parameters {
 
 // Table
 .koowa_table {
+  @include box-sizing(border-box);
   margin-top: $smallMargin;
   margin-bottom: $smallMargin;
+  width: 100%;
 
   .koowa_header {
     margin: 0;

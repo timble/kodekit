@@ -65,14 +65,4 @@ class KClassLocatorComposer extends KClassLocatorAbstract
 
         return $path;
     }
-
-    /**
-     * Get locator name
-     *
-     * @return string
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

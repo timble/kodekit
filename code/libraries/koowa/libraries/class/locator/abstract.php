@@ -91,6 +91,6 @@ abstract class KClassLocatorAbstract implements KClassLocatorInterface
      */
     public static function getName()
     {
-        return self::$_name;
+        return static::$_name;
     }
 }

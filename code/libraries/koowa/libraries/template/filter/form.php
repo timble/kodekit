@@ -140,7 +140,7 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
     protected function _addQueryParameters(&$text)
     {
         $matches = array();
-        if (preg_match_all('#<form.*action=".*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches))
+        if (preg_match_all('#<form.*action="[^"]*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches))
         {
             foreach ($matches[1] as $key => $query)
             {
@@ -149,7 +149,11 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
                 $input = '';
                 foreach ($query as $name => $value)
                 {
-                    if (strpos($matches[2][$key], 'name="'.$name.'"') !== false) {
+                    if (is_array($value)) {
+                        $name = $name . '[]';
+                    }
+
+                    if (strpos($matches[2][$key], 'name="' . $name . '"') !== false) {
                         continue;
                     }
 
@@ -159,13 +163,13 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
                     {
                         foreach ($value as $k => $v)
                         {
-                            if (!is_scalar($v)) {
+                            if (!is_scalar($v) || !is_numeric($k)) {
                                 continue;
                             }
 
                             $v = $this->getTemplate()->escape($v);
 
-                            $input .= PHP_EOL.'<input type="hidden" name="'.$name.'['.$k.']" value="'.$v.'" />';
+                            $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$v.'" />';
                         }
                     }
                     else {

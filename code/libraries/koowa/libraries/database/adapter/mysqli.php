@@ -196,7 +196,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      */
     public function getDatabase()
     {
-        if(!isset($this->_database)) {
+        if(!isset($this->_database))
+        {
             $query = $this->getObject('lib:database.query.select')
                 ->columns('DATABASE()');
 

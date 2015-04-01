@@ -75,7 +75,7 @@ abstract class KTemplateLocatorAbstract extends KObject implements KTemplateLoca
      */
     public static function getName()
     {
-        return self::$_name;
+        return static::$_name;
     }
 
     /**

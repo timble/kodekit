@@ -300,7 +300,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         $result = null;
 
-        if (is_array($data))
+        if (is_array($data) || is_object($data))
         {
             $result = array();
 
@@ -322,6 +322,10 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                 }
 
                 $result[$column] = $value;
+            }
+
+            if (is_object($data)) {
+                $result = (object) $result;
             }
         }
 
@@ -422,6 +426,24 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     {
         $defaults = $this->getDefaults();
         return isset($defaults[$column]) ? $defaults[$column] : null;
+    }
+
+    /**
+     * Set a default value for a column
+     *
+     * @param string   $column The name of the column
+     * @param string   $value The value for the column
+     * @return KDatabaseTableAbstract
+     */
+    public function setDefault($column, $value)
+    {
+        $defaults = $this->getDefaults();
+
+        if(isset($defaults[$column])) {
+            $this->_defaults[$column] = $value;
+        }
+
+        return $this;
     }
 
     /**
@@ -537,7 +559,9 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         {
             if ($context->query)
             {
-                if($context->mode == KDatabase::FETCH_ARRAY_LIST || $context->mode == KDatabase::FETCH_OBJECT_LIST) {
+                if($context->mode == KDatabase::FETCH_ARRAY_LIST || $context->mode == KDatabase::FETCH_OBJECT_LIST
+                    || $context->mode == KDatabase::FETCH_ROWSET
+                ) {
                     $key = $this->getIdentityColumn();
                 } else {
                     $key = null;

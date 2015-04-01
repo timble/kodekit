@@ -26,6 +26,7 @@ class ComKoowaViewPageHtml extends ComKoowaViewHtml
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'layout'            => 'joomla',
             'template_filters'	=> array('document', 'module', 'style', 'link', 'meta', 'script', 'title', 'message'),
         ));
 

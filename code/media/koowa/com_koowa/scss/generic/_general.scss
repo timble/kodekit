@@ -1,7 +1,10 @@
 // Large add buttons to fit Joomla 3.x styling
 .subhead .koowa-toolbar {
   .btn-success {
-    width: 148px;
+    @include box-sizing(border-box);
+    width: auto;
+    padding-left: 2em;
+    padding-right: 2em;
   }
 }
 

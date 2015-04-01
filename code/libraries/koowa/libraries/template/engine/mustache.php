@@ -59,25 +59,18 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
         //Reset the stack
         $this->_stack = array();
 
+        $self = $this;
+
         $this->_mustache = new Mustache_Engine(array(
             'loader' => $this,
             'cache'  => $this->_cache ? $this->_cache_path : null,
-            'escape' => array($this, 'escapeFunction'),
+            'escape' => function($value) use($self) {
+                return $self->getTemplate()->escape($value);
+            },
             'strict_callables' => $this->getConfig()->strict_callables,
             'pragmas'          => $this->getConfig()->pragmas,
             'helpers'          => $this->_functions
         ));
-    }
-
-    /**
-     * PHP 5.2
-     *
-     * @param $value
-     * @return mixed
-     */
-    public function escapeFunction($value)
-    {
-        return $this->getTemplate()->escape($value);
     }
 
     /**
@@ -157,16 +150,6 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
         array_pop($this->_stack);
 
         return $content;
-    }
-
-    /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
     }
 
     /**

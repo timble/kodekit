@@ -70,14 +70,14 @@ interface KHttpMessageInterface
      * @param string $type Content type
      * @return KHttpMessage
      */
-    //public function setContentType($type);
+    public function setContentType($type);
 
     /**
      * Retrieves the message content type
      *
      * @return string Character set
      */
-    //public function getContentType();
+    public function getContentType();
 
     /**
      * Render the message as a string

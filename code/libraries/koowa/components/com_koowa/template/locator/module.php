@@ -61,16 +61,6 @@ class ComKoowaTemplateLocatorModule extends KTemplateLocatorIdentifier
     }
 
     /**
-     * Get the locator name
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
-
-    /**
      * Find a template path
      *
      * @param array  $info      The path information

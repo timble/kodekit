@@ -294,7 +294,6 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 }
                 else $url->query[$entity->getIdentityKey()] = $entity->getProperty($entity->getIdentityKey());
 
-                $context->response->headers->set('Location', (string) $url);
                 $context->response->setStatus(KHttpResponse::CREATED);
             }
         }
