@@ -140,7 +140,6 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 
         $this->_connection = $mysqli;
         $this->_connected  = true;
-        $this->_database   = $this->_options->database;
 
         return $this;
     }
