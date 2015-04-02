@@ -203,9 +203,14 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
     public function calendar($config = array())
     {
         $config = new KObjectConfigJson($config);
+
+        if ($config->filter) {
+            $config->offset = strtoupper($config->filter); // @TODO Backwards compatibility
+        }
+
         $config->append(array(
-            'offset'         => 'UTC',//JFactory::getConfig()->get('offset'),
             'debug'          => JFactory::getApplication()->getCfg('debug'),
+            'server_offset'  => JFactory::getConfig()->get('offset'),
             'first_week_day' => JFactory::getLanguage()->getFirstDay(),
             'options'        => array(
                 'language' => JFactory::getLanguage()->getTag(),
