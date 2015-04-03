@@ -78,8 +78,6 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             array_shift($parts);
             $package   = array_shift($parts);
             $namespace = ucfirst($package);
-
-            $component = 'com_'.$package;
             $file 	   = array_pop($parts);
 
             if(!count($parts))
@@ -97,7 +95,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             if ($this->getNamespace($namespace)) {
                 $basepath = $this->getNamespace($namespace);
             } else {
-                $basepath = $basepath.'/'.$component;
+                $basepath = $basepath.'/com_'.$package;
             }
 
             $result =  $basepath.'/'.$path.'.php';
