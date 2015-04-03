@@ -1,0 +1,98 @@
+// Custom generated bootstrap
+// Removed all scss files that are currently not being used
+// All files that might be used in the future and most likely wont cause styling issues are included
+// Added some custom values to classes at the end since we're not including scaffolding.scss
+
+.koowa {
+  // Core variables and mixins
+  @import "../libraries/sass-twitter-bootstrap/lib/variables"; // Modify this for custom colors, font-sizes, etc
+  @import "../libraries/sass-twitter-bootstrap/lib/mixins";
+
+  $iconSpritePath: "../images/glyphicons-halflings.png";
+  $iconWhiteSpritePath: "../images/glyphicons-halflings-white.png";
+
+  // CSS Reset
+  @import "../libraries/sass-twitter-bootstrap/lib/reset";
+
+  // Grid system and page structure
+  // @import "../libraries/sass-twitter-bootstrap/lib/scaffolding";
+  // @import "../libraries/sass-twitter-bootstrap/lib/grid";
+  // @import "../libraries/sass-twitter-bootstrap/lib/layouts";
+
+  // Base CSS
+  @import "../libraries/sass-twitter-bootstrap/lib/type";
+  @import "../libraries/sass-twitter-bootstrap/lib/code";
+  @import "../libraries/sass-twitter-bootstrap/lib/forms";
+  @import "../libraries/sass-twitter-bootstrap/lib/tables";
+
+  // Components: common
+  @import "../libraries/sass-twitter-bootstrap/lib/sprites";
+  @import "../libraries/sass-twitter-bootstrap/lib/dropdowns";
+  @import "../libraries/sass-twitter-bootstrap/lib/wells";
+  @import "../libraries/sass-twitter-bootstrap/lib/component-animations";
+  @import "../libraries/sass-twitter-bootstrap/lib/close";
+
+  // Components: Buttons & Alerts
+  @import "../libraries/sass-twitter-bootstrap/lib/buttons";
+  @import "../libraries/sass-twitter-bootstrap/lib/button-groups";
+  @import "../libraries/sass-twitter-bootstrap/lib/alerts"; // Note: alerts share common CSS with buttons and thus have styles in buttons
+
+  // Components: Nav
+  @import "../libraries/sass-twitter-bootstrap/lib/navs";
+  // @import "../libraries/sass-twitter-bootstrap/lib/navbar";
+  // @import "../libraries/sass-twitter-bootstrap/lib/breadcrumbs";
+  @import "../libraries/sass-twitter-bootstrap/lib/pagination";
+  @import "../libraries/sass-twitter-bootstrap/lib/pager";
+
+  // Components: Popovers
+  // @import "../libraries/sass-twitter-bootstrap/lib/modals";
+  @import "../libraries/sass-twitter-bootstrap/lib/tooltip";
+  // @import "../libraries/sass-twitter-bootstrap/lib/popovers";
+
+  // Components: Misc
+  @import "../libraries/sass-twitter-bootstrap/lib/thumbnails";
+  @import "../libraries/sass-twitter-bootstrap/lib/media";
+  @import "../libraries/sass-twitter-bootstrap/lib/labels-badges";
+  @import "../libraries/sass-twitter-bootstrap/lib/progress-bars";
+  // @import "../libraries/sass-twitter-bootstrap/lib/accordion";
+  // @import "../libraries/sass-twitter-bootstrap/lib/carousel";
+  // @import "../libraries/sass-twitter-bootstrap/lib/hero-unit";
+
+  // Utility classes
+  @import "../libraries/sass-twitter-bootstrap/lib/utilities"; // Has to be last to override when necessary
+
+  // Overwrites for custom bootstrap file
+  .btn,
+  #editor-xtd-buttons a,
+  .toggle-editor a {
+    text-decoration: none;
+  }
+  .table {
+    margin-bottom: 0;
+  }
+
+  // The default pagination links do have a background-color but no font color
+  // If a template has link color specified as a light color (e.g. white or light grey etc.)
+  // you don't see a thing. So adding a #333 color to links within pagination
+  .pagination ul > li > a,
+  .pagination ul > li > span {
+    color: $textColor;
+  }
+
+  // Custom joomla classes
+  .koowa .nav-tabs>li {
+    margin-bottom: -1px !important;
+  }
+  #rules,
+  .koowa_dialog {
+    a {
+      color: #555;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+  }
+}
