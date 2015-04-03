@@ -15,9 +15,6 @@
  */
 abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissionAbstract
 {
-    /**
-     * {@inheritdoc}
-     */
     public function canAdd()
     {
         $component = $this->getIdentifier()->package;
@@ -25,9 +22,6 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
         return (parent::canAdd() && $this->getObject('user')->authorise('core.create', 'com_'.$component) === true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function canEdit()
     {
         $component = $this->getIdentifier()->package;
@@ -35,9 +29,6 @@ abstract class ComKoowaControllerPermissionAbstract extends KControllerPermissio
         return (parent::canEdit() && $this->getObject('user')->authorise('core.edit', 'com_'.$component) === true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function canDelete()
     {
         $component = $this->getIdentifier()->package;
