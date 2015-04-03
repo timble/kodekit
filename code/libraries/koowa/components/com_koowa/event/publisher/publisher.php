@@ -42,26 +42,4 @@ final class ComKoowaEventPublisher extends KEventPublisher
 
         return parent::publishEvent($event, $attributes, $target);
     }
-
-    /**
-     * Publish an event by calling all listeners that have registered to receive it.
-     *
-     * Function will avoid a recursive loop when an exception is thrown during even publishing and output a generic
-     * exception instead.
-     *
-     * @param  Exception           $exception  The exception to be published.
-     * @param  array|Traversable    $attributes An associative array or a Traversable object
-     * @param  mixed                $target     The event target
-     * @return  KEventException
-     */
-    public function publishException(Exception $exception, $attributes = array(), $target = null)
-    {
-        //Make sure we have an event object
-        $event = new KEventException('onException', $attributes, $target);
-        $event->setException($exception);
-
-        parent::publishEvent($event);
-
-        return $event;
-    }
 }

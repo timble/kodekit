@@ -26,13 +26,8 @@ final class ComKoowaUserProvider extends KUserProvider
     {
         $user = $this->getObject('user');
 
-        // Find the user id
-        if (!is_numeric($identifier))
-        {
-            if(!$identifier = JUserHelper::getUserId($identifier)) {
-                $identifier = 0;
-            }
-        }
+        // Find the user
+        $identifier = $this->_find($identifier);
 
         // Fetch the user
         if ($identifier == 0 || $user->getId() != $identifier)
@@ -102,13 +97,8 @@ final class ComKoowaUserProvider extends KUserProvider
      */
     public function store($identifier, $data)
     {
-        // Find the user id
-        if (!is_numeric($identifier))
-        {
-            if(!$identifier = JUserHelper::getUserId($identifier)) {
-                $identifier = 0;
-            }
-        }
+        // Find the user
+        $identifier = $this->_find($identifier);
 
         return parent::store($identifier, $data);
     }
@@ -116,20 +106,15 @@ final class ComKoowaUserProvider extends KUserProvider
     /**
      * Check if a user has already been loaded for a given user identifier
      *
-     * @param $identifier
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
      * @return boolean TRUE if a user has already been loaded. FALSE otherwise
      */
     public function isLoaded($identifier)
     {
         $user = $this->getObject('user');
 
-        // Find the user id
-        if (!is_numeric($identifier))
-        {
-            if(!$identifier = JUserHelper::getUserId($identifier)) {
-                $identifier = 0;
-            }
-        }
+        // Find the user
+        $identifier = $this->_find($identifier);
 
         if($identifier == 0 || $user->getId() != $identifier) {
             $result = isset($this->_users[$identifier]);
@@ -138,5 +123,24 @@ final class ComKoowaUserProvider extends KUserProvider
         }
 
         return $result;
+    }
+
+    /**
+     * Find a user based on an identifier
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @return integer The user id.
+     */
+    protected function _find($identifier)
+    {
+        // Find the user id
+        if (!is_numeric($identifier))
+        {
+            if(!$identifier = JUserHelper::getUserId($identifier)) {
+                $identifier = 0;
+            }
+        }
+
+        return $identifier;
     }
 }

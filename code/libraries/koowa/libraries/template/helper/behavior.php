@@ -35,7 +35,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             'debug' => false
         ));
 
-        $html = '';
+        $html = $this->jquery();
 
         if (!isset(self::$_loaded['koowa']))
         {
@@ -421,7 +421,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
          */
         if (!isset(self::$_loaded['tree']))
         {
-            $html .= $this->jquery();
+            $html .= $this->koowa();
             $html .= '<ktml:script src="media://koowa/framework/js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="media://koowa/framework/js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 

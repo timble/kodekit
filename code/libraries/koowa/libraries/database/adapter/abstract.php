@@ -70,13 +70,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * @var string
      */
     protected $_identifier_quote = '`';
-
-    /**
-     * The connection options
-     *
-     * @var KObjectConfig
-     */
-    protected $_options = null;
     
     /**
      * Character set used for connection
