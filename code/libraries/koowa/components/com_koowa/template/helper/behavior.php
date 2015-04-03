@@ -31,6 +31,12 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         return parent::koowa($config);
     }
 
+    /**
+     * Loads modal.js
+     *
+     * @param array|KObjectConfig $config
+     * @return string
+     */
     public function modal($config = array())
     {
         $config = new KObjectConfigJson($config);
