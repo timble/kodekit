@@ -15,23 +15,6 @@
  */
 class ComKoowaViewUsersJson extends KViewJson
 {
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        // Only allow fields in the config option for security reasons
-        $this->_fields = array_intersect(KObjectConfig::unbox($config->fields), $this->_fields);
-    }
-
-    protected function _initialize(KObjectConfig $config)
-    {
-        if (empty($config->fields)) {
-            $config->fields = array('id', 'name');
-        }
-
-        parent::_initialize($config);
-    }
-
     /**
      * Overridden to use id instead of slug for links
      *
