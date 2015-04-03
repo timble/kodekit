@@ -100,7 +100,7 @@ class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
             throw new KControllerExceptionRequestNotAuthenticated('Invalid Cookie Token');
         }
 
-        if($user->isAuthentic())
+        if($user->isAuthentic() && $user->getSession()->isActive())
         {
             //Check session token
             if( $this->getCsrfToken() !== $user->getSession()->getToken()) {
