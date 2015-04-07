@@ -558,9 +558,19 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     public function toArray()
     {
         $result = array();
+
         foreach ($this as $key => $row) {
             $result[$key] = $row->toArray();
+
+            foreach ($row->getComputedProperties() as $computed_property) {
+                if ($row->{$computed_property} instanceof KModelEntityInterface) {
+                    $result[$key][$computed_property] = array_values($row->{$computed_property}->toArray());
+                } else {
+                    $result[$key][$computed_property] = $row->{$computed_property};
+                }
+            }
         }
+
         return $result;
     }
 
