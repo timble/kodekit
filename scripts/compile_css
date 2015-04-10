@@ -14,7 +14,7 @@ INPUT_PATH=$BASE/../code/media/$FOLDER/scss
 OUTPUT_PATH=$BASE/../code/media/$FOLDER/css
 
 FRAMEWORK=$BASE/../../koowa/code/media/koowa/com_koowa/scss
-COM_FILES=$BASE/../../com_files/code/media/koowa/com_files/scss
+COM_FILES=$BASE/../../com_files/resources/assets/scss
 
 for FILE in `find $INPUT_PATH -maxdepth 1 -name '*.scss'`
 do

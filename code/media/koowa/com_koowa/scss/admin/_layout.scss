@@ -1,0 +1,44 @@
+// Variables
+$sidebar-width: 260px;
+
+
+// Sidebars
+#documents-sidebar,
+#files-sidebar,
+#logman-sidebar {
+  width: $sidebar-width;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: -1px;
+  float: left;
+
+  /**
+   * Not mobile-first for older browsers (admin only)
+   */
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    float: none;
+  }
+}
+
+
+// Main areas
+.docman_admin_list_grid,
+#files-canvas,
+.logman_admin_list_grid {
+  margin-left: $sidebar-width;
+  float: none;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: -1px;
+
+  /**
+   * Not mobile-first for older browsers (admin only)
+   */
+  @media screen and (max-width: 767px) {
+    margin-left: 0 !important;
+    clear: both !important;
+    border-left: none !important;
+    border-top: 1px solid #ddd !important;
+  }
+}

@@ -35,21 +35,23 @@ class KModelDatabase extends KModelAbstract
 
         $this->_table = $config->table;
 
-        $identifier = $alias = $this->getIdentifier()->toArray();
+        //Calculate the aliases based on the location of the table 
+        $model = $database = $this->getTable()->getIdentifier()->toArray();
 
-        //Create database.rowset alias
-        $alias['path']      = array('database', 'rowset');
-        $identifier['path'] = array('model', 'entity');
+        //Create database.rowset -> model.entity alias
+        $database['path'] = array('database', 'rowset');
+        $model['path']    = array('model'   , 'entity');
 
-        $this->getObject('manager')->registerAlias($identifier , $alias);
+        $this->getObject('manager')->registerAlias($model, $database);
 
-        //Create database.row alias
-        $alias['path'] = array('database', 'row');
-        $alias['name'] = KStringInflector::singularize($alias['name']);
+        //Create database.row -> model.entity alias
+        $database['path'] = array('database', 'row');
+        $database['name'] = KStringInflector::singularize($database['name']);
 
-        $identifier['name'] = KStringInflector::singularize($identifier['name']);
+        $model['path'] = array('model', 'entity');
+        $model['name'] = KStringInflector::singularize($model['name']);
 
-        $this->getObject('manager')->registerAlias($identifier, $alias);
+        $this->getObject('manager')->registerAlias($model, $database);
 
         //Behavior depends on the database. Need to add if after database has been set.
         $this->addBehavior('indexable');

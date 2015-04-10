@@ -85,28 +85,20 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      */
     protected function _initialize(KObjectConfig $config)
     {
+        $self = $this;
+
         $config->append(array(
             'autoescape'       => true,
             'strict_variables' => false,
             'optimizations'    => -1,
             'functions'        => array(
-                'import' => array($this, 'importFunction')
+                'import' => function($url, $data) use($self) {
+                    return $self->_import($url, $data);
+                }
             ),
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * PHP 5.2
-     *
-     * @param $url
-     * @param $data
-     * @return string
-     */
-    public function importFunction($url, $data)
-    {
-        return $this->_import($url, $data);
     }
 
     /**
@@ -267,16 +259,6 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
         else  $result = $this->getTemplate()->loadFile($file)->render($data);
 
         return $result;
-    }
-
-    /**
-     * Get the engine supported file types
-     *
-     * @return array
-     */
-    public static function getFileTypes()
-    {
-        return self::$_file_types;
     }
 
     /**

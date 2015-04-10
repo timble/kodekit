@@ -119,16 +119,7 @@ class KClassLoader implements KClassLoaderInterface
      */
     public function register($prepend = false)
     {
-        // Prepend parameter was added in 5.3.0 and the call does not work in 5.2 with it
-        if (version_compare(PHP_VERSION, '5.3', '>=')) {
-            spl_autoload_register(array($this, 'load'), true, $prepend);
-        } else {
-            spl_autoload_register(array($this, 'load'), true);
-        }
-
-        if (function_exists('__autoload')) {
-            spl_autoload_register('__autoload');
-        }
+        spl_autoload_register(array($this, 'load'), true, $prepend);
     }
 
     /**

@@ -173,7 +173,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     protected function _commandExport(KControllerToolbarCommand $command)
     {
         //Get the states
-        $states = $this->getController()->getModel()->getState()->toArray();
+        $states = $this->getController()->getModel()->getState()->getValues();
 
         unset($states['limit']);
         unset($states['offset']);
@@ -183,7 +183,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         //Get the query options
         $query  = http_build_query($states, '', '&');
         $option = $this->getIdentifier()->package;
-        $view   = $this->getIdentifier()->name;
+        $view   = $this->getController()->getView()->getName();
 
         $command->href = 'option=com_'.$option.'&view='.$view.'&'.$query;
     }

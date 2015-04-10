@@ -45,14 +45,4 @@ class ComKoowaTranslatorLocatorComponent extends KTranslatorLocatorIdentifier
 
         return array('com_' . $package => $path);
     }
-
-    /**
-     * Get the locator name
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
 }

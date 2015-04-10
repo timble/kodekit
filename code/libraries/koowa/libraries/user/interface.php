@@ -44,6 +44,14 @@ interface KUserInterface extends KObjectEquatable
     public function getRoles();
 
     /**
+     * Checks if the user has a role.
+     *
+     * @param  mixed|array $role A role name or an array containing role names.
+     * @return bool True if the user has at least one of the provided roles, false otherwise.
+     */
+    public function hasRole($role);
+
+    /**
      * Returns the groups the user is part of
      *
      * @return array An array of group id's

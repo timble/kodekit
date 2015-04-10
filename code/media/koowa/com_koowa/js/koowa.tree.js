@@ -27,7 +27,7 @@
                 if(this.element.css('position') != 'relative') {
                     this.element.css('position', 'relative');
                     //Warn that a css optimization should be done
-                    if(window.console) console.warn('The element:', this.element, 'should have position:relative applied by css');
+                    //if(window.console) console.warn('The element:', this.element, 'should have position:relative applied by css');
                 }
             }, this));
 
@@ -275,7 +275,9 @@
 
                         // If a node should be preselected on init, select it right away
                         if(options.selected) {
-                            self.selectNode($(this).tree('getNodeById', options.selected), $(this));
+                            var node = $(this).tree('getNodeById', options.selected);
+                            $(this).tree('selectNode', node);
+                            self.selectNode(node, $(this));
                         }
                     },
                 'tree.refresh': //Refreshes reset the html, and happen on events like setState

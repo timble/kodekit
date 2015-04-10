@@ -32,7 +32,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     {
         parent::__construct($config);
 
-        if (!self::isSupported()) {
+        if (!static::isSupported()) {
             throw new RuntimeException('Unable to use TemplateEngineCache. APC is not enabled.');
         }
     }

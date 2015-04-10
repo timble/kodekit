@@ -23,16 +23,6 @@ class KTemplateLocatorFile extends KTemplateLocatorAbstract
     protected static $_name = 'file';
 
     /**
-     * Get the locator name
-     *
-     * @return string The stream name
-     */
-    public static function getName()
-    {
-        return self::$_name;
-    }
-
-    /**
      * Find a template path
      *
      * @param array  $info  The path information

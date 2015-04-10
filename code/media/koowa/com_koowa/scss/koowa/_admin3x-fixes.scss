@@ -1,0 +1,41 @@
+// Only target the joomla 3 admin pages
+// These are some fixes that should be fixed in Joomla
+// We added them here to have a better joomla experience when using Nooku
+body.admin {
+
+  // Get rid of the 100% + 30px styling bug in Joomla
+  height: auto !important;
+
+
+  // Fixing joomla padding bug between below media querie widths
+  @media screen and (min-width: 738px) and (max-width: 767px) {
+    padding-top: 0 !important;
+  }
+
+
+  // Get rid of the nasty jump because of the toolbar fixed position
+  @media screen and (min-width: 480px) {
+    .subhead-collapse {
+      min-height: 49px;
+
+      &:after,
+      &:before {
+        content: " ";
+        display: table;
+      }
+
+      &:after {
+        clear: both;
+      }
+    }
+  }
+
+
+  // Fix hover styling on disabled toolbar buttons
+  .btn.disabled,
+  .btn.disabled:hover,
+  .btn.disabled:active {
+    color: #333;
+    background-color: #e6e6e6;
+  }
+}

@@ -70,13 +70,6 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * @var string
      */
     protected $_identifier_quote = '`';
-
-    /**
-     * The connection options
-     *
-     * @var KObjectConfig
-     */
-    protected $_options = null;
     
     /**
      * Character set used for connection
@@ -282,10 +275,12 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             {
                 switch ($context->mode)
                 {
+                    case KDatabase::FETCH_ROW         :
                     case KDatabase::FETCH_ARRAY       :
                         $context->result = $this->_fetchArray($result);
                         break;
 
+                    case KDatabase::FETCH_ROWSET      :
                     case KDatabase::FETCH_ARRAY_LIST  :
                         $context->result = $this->_fetchArrayList($result, $key);
                         break;
@@ -564,7 +559,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         $spec = trim($spec);
     
         // Quote all the lower case parts
-        $spec = preg_replace_callback('/(?:\b|#)+(?<![`:@])([-a-zA-Z0-9.#_]*[a-z][-a-zA-Z0-9.#_]*)(?!`)\b/', array($this, '_quoteIdentifier'), $spec);
+        $spec = preg_replace_callback('/(?:\b|#)+(?<![`:@%])([-a-zA-Z0-9.#_]*[a-z][-a-zA-Z0-9.#_]*)(?!`)\b/', array($this, '_quoteIdentifier'), $spec);
     
         return $spec;
     }

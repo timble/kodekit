@@ -431,19 +431,21 @@ Koowa.Controller = Koowa.Class.extend({
         });
     },
     execute: function(event, context){
-        var action   = context.action[0].toUpperCase() + context.action.substr(1),
-            method = '_action' + action;
+        if (context.action[0]) {
+            var action   = context.action[0].toUpperCase() + context.action.substr(1),
+                method = '_action' + action;
 
-        if (typeof context.validate === 'undefined') {
-            context.validate = true;
-        }
+            if (typeof context.validate === 'undefined') {
+                context.validate = true;
+            }
 
-        if (this.trigger('before'+action, context)) {
-            method = this[method] ? method : '_actionDefault';
+            if (this.trigger('before'+action, context)) {
+                method = this[method] ? method : '_actionDefault';
 
-            this[method].call(this, context);
+                this[method].call(this, context);
 
-            this.trigger('after'+action, context);
+                this.trigger('after'+action, context);
+            }
         }
 
         return this;

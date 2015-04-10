@@ -165,7 +165,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
      */
     public static function getFileTypes()
     {
-        return self::$_file_types;
+        return static::$_file_types;
     }
 
     /**

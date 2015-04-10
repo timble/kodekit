@@ -140,7 +140,6 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
 
         $this->_connection = $mysqli;
         $this->_connected  = true;
-        $this->_database   = $this->_options->database;
 
         return $this;
     }
@@ -196,7 +195,8 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      */
     public function getDatabase()
     {
-        if(!isset($this->_database)) {
+        if(!isset($this->_database))
+        {
             $query = $this->getObject('lib:database.query.select')
                 ->columns('DATABASE()');
 
