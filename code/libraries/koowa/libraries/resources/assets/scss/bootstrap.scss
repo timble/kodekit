@@ -5,61 +5,61 @@
 
 .koowa {
   // Core variables and mixins
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/variables"; // Modify this for custom colors, font-sizes, etc
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/mixins";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/variables"; // Modify this for custom colors, font-sizes, etc
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/mixins";
 
-  $iconSpritePath: "../images/glyphicons-halflings.png";
-  $iconWhiteSpritePath: "../images/glyphicons-halflings-white.png";
+  $iconSpritePath: "../img/glyphicons-halflings.png";
+  $iconWhiteSpritePath: "../img/glyphicons-halflings-white.png";
 
   // CSS Reset
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/reset";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/reset";
 
   // Grid system and page structure
-  // @import "../libraries/sass-twitter-bootstrap/lib/scaffolding";
-  // @import "../libraries/sass-twitter-bootstrap/lib/grid";
-  // @import "../libraries/sass-twitter-bootstrap/lib/layouts";
+  // @import "../vendor/sass-twitter-bootstrap/lib/scaffolding";
+  // @import "../vendor/sass-twitter-bootstrap/lib/grid";
+  // @import "../vendor/sass-twitter-bootstrap/lib/layouts";
 
   // Base CSS
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/type";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/code";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/forms";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/tables";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/type";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/code";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/forms";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/tables";
 
   // Components: common
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/sprites";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/dropdowns";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/wells";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/component-animations";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/close";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/sprites";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/dropdowns";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/wells";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/component-animations";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/close";
 
   // Components: Buttons & Alerts
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/buttons";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/button-groups";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/alerts"; // Note: alerts share common CSS with buttons and thus have styles in buttons
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/buttons";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/button-groups";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/alerts"; // Note: alerts share common CSS with buttons and thus have styles in buttons
 
   // Components: Nav
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/navs";
-  // @import "../libraries/sass-twitter-bootstrap/lib/navbar";
-  // @import "../libraries/sass-twitter-bootstrap/lib/breadcrumbs";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/pagination";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/pager";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/navs";
+  // @import "../vendor/sass-twitter-bootstrap/lib/navbar";
+  // @import "../vendor/sass-twitter-bootstrap/lib/breadcrumbs";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/pagination";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/pager";
 
   // Components: Popovers
-  // @import "../libraries/sass-twitter-bootstrap/lib/modals";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/tooltip";
-  // @import "../libraries/sass-twitter-bootstrap/lib/popovers";
+  // @import "../vendor/sass-twitter-bootstrap/lib/modals";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/tooltip";
+  // @import "../vendor/sass-twitter-bootstrap/lib/popovers";
 
   // Components: Misc
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/thumbnails";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/media";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/labels-badges";
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/progress-bars";
-  // @import "../libraries/sass-twitter-bootstrap/lib/accordion";
-  // @import "../libraries/sass-twitter-bootstrap/lib/carousel";
-  // @import "../libraries/sass-twitter-bootstrap/lib/hero-unit";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/thumbnails";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/media";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/labels-badges";
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/progress-bars";
+  // @import "../vendor/sass-twitter-bootstrap/lib/accordion";
+  // @import "../vendor/sass-twitter-bootstrap/lib/carousel";
+  // @import "../vendor/sass-twitter-bootstrap/lib/hero-unit";
 
   // Utility classes
-  @import "../../../../../../libraries/koowa/libraries/resources/assets/libraries/sass-twitter-bootstrap/lib/utilities"; // Has to be last to override when necessary
+  @import "../../../../../../libraries/koowa/libraries/resources/assets/vendor/sass-twitter-bootstrap/lib/utilities"; // Has to be last to override when necessary
 
   // Overwrites for custom bootstrap file
   .btn,
