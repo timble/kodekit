@@ -462,6 +462,14 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     {
         $data = parent::toArray();
 
+        foreach ($this->getComputedProperties() as $computed_property) {
+            if ($this->{$computed_property} instanceof KModelEntityInterface) {
+                $data[$computed_property] = array_values($this->{$computed_property}->toArray());
+            } else {
+                $data[$computed_property] = $this->{$computed_property};
+            }
+        }
+
         foreach(array_keys($data) as $key)
         {
             if (substr($key, 0, 1) === '_') {
