@@ -1,7 +1,7 @@
 Nooku Framework
 ===============
 
-[![Codacy Badge](https://www.codacy.com/project/badge/c6cc3c05cc7a4d13806602c7647f4476](https://www.codacy.com/app/timble/nooku-framework)
+[ ![Codacy Badge](https://www.codacy.com/project/badge/c6cc3c05cc7a4d13806602c7647f4476) ](https://www.codacy.com/app/timble/nooku-framework)
 
 What is Nooku Framework?
 -------------------------
