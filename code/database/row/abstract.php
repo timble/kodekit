@@ -23,18 +23,18 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     private $__computed_properties;
 
     /**
+     * List of modified properties
+     *
+     * @var array
+     */
+    private $__modified_properties;
+
+    /**
      * Tracks if row data is new
      *
      * @var bool
      */
     private $__new = true;
-
-    /**
-     * List of modified properties
-     *
-     * @var array
-     */
-    protected $_modified = array();
 
     /**
      * The status
@@ -128,6 +128,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Saves the row to the database.
      *
      * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
+     * Save prevent subsequent database updates if the entity was already updated previously and it was not
+     * modified since.
      *
      * @return boolean If successful return TRUE, otherwise FALSE
      */
@@ -137,19 +139,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 
         if ($this->isConnected())
         {
-            if (!$this->isNew()) {
-                $result = $this->getTable()->update($this);
-            } else {
-                $result = $this->getTable()->insert($this);
-            }
-
-            //Reset the modified array
-            if ($result !== false)
+            if (!$this->isNew())
             {
-                if (((integer) $result) > 0) {
-                    $this->_modified = array();
+                if($this->getStatus() !== KDatabase::STATUS_UPDATED) {
+                    $result = $this->getTable()->update($this);
                 }
             }
+            else $result = $this->getTable()->insert($this);
         }
 
         return (bool) $result;
@@ -181,8 +177,9 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function reset()
     {
-        $this->_data     = array();
-        $this->_modified = array();
+        $this->_data                 = array();
+        $this->__modified_properties = array();
+        $this->setStatus(NULL);
 
         if ($this->isConnected()) {
             $this->_data = $this->getTable()->getDefaults();
@@ -255,8 +252,10 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
                 parent::offsetSet($name, $value);
 
                 //Mark the property as modified
-                if($modified || $this->isNew()) {
-                    $this->_modified[$name] = $name;
+                if($modified || $this->isNew())
+                {
+                    $this->__modified_properties[$name] = $name;
+                    $this->setStatus(KDatabase::STATUS_MODIFIED);
                 }
             }
         }
@@ -295,7 +294,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             else
             {
                 parent::offsetUnset($name);
-                unset($this->_modified[$name]);
+                unset($this->__modified_properties[$name]);
             }
         }
 
@@ -313,7 +312,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         $properties = $this->_data;
 
         if ($modified) {
-            $properties = array_intersect_key($properties, $this->_modified);
+            $properties = array_intersect_key($properties, $this->__modified_properties);
         }
 
         return $properties;
@@ -329,7 +328,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     public function setProperties($properties, $modified = true)
     {
         if ($properties instanceof KDatabaseRowInterface) {
-            $properties = $properties->getProperties(false);
+            $properties = $properties->getProperties();
         } else {
             $properties = (array) $properties;
         }
@@ -550,11 +549,11 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
 
         if($property)
         {
-            if (isset($this->_modified[$property]) && $this->_modified[$property]) {
+            if (isset($this->__modified_properties[$property]) && $this->__modified_properties[$property]) {
                 $result = true;
             }
         }
-        else $result = (bool) count($this->_modified);
+        else $result = (bool) count($this->__modified_properties);
 
         return $result;
     }
