@@ -6,7 +6,7 @@ source: code
 # List of allowed file extensions
 extensions: [php]
 # Mask to exclude file or directory from processing
-exclude: [*/libraries/koowa/libraries/legacy.php]
+exclude: [code/legacy.php]
 
 # Generate documentation for elements marked as internal and display internal documentation parts
 internal: No
