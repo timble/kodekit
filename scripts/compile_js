@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-JS_PATH=$DIR/../code/media/koowa/com_koowa/js
-FILES=('datepicker' 'koowa' 'koowa.tree' 'koowa.overlay')
+JS_PATH=$DIR/../code/resources/assets/js
+FILES=('koowa' 'koowa.tree' 'koowa.overlay')
 
 for FILE in ${FILES[@]}
 do
