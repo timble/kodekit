@@ -705,6 +705,8 @@ Koowa.Controller.Form = Koowa.Controller.extend({
         }
 
         this.form.append($('<input/>', {name: '_action', type: 'hidden', value: context.action}));
+
+        this.trigger('submit', [context]);
         this.form.submit();
     }
 

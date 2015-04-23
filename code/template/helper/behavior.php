@@ -543,19 +543,19 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     {
         $config = new KObjectConfigJson($config);
         $config->append(array(
-            'offset' => strtoupper($config->filter) // @TODO Backwards compatibility
-        ))->append(array(
             'debug'   => false,
-            'offset'  => date_default_timezone_get(),
+            'offset'  => 'UTC',
+            'user_offset'    => $this->getObject('user')->getParameter('timezone'),
+            'server_offset'  => date_default_timezone_get(),
+            'offset_seconds' => 0,
             'value'	  => gmdate("M d Y H:i:s"),
             'name'    => '',
-            'format'  => '%Y-%m-%d %H:%M:%S', //Passed to the js plugin as a data attribute
+            'format'  => '%Y-%m-%d %H:%M:%S',
             'first_week_day' => 0,
-            'attribs' => array(
-                'size' => 25,
-                'maxlength' => 19,
-                'placeholder' => '', //@TODO placeholder fix for chrome may not be needed anymore
-                'oninput' => 'if(kQuery(this).data(\'datepicker\'))kQuery(this).data(\'datepicker\').update();'//@NOTE to allow editing timestamps
+            'attribs'        => array(
+                'size'        => 25,
+                'maxlength'   => 19,
+                'placeholder' => ''
             )
         ))->append(array(
             'id'      => 'datepicker-'.$config->name,
@@ -565,39 +565,109 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 'language' => 'en-GB',
                 'autoclose' => true, //Same as singleClick in previous js plugin,
                 'keyboardNavigation' => false, //To allow editing timestamps,
-                'calendarWeeks' => true, //Old datepicker used to display these
                 //'orientation' => 'auto left', //popover arrow set to point at the datepicker icon,
                 //'parentEl' => false //this feature breaks if a parent el is position: relative;
             )
         ));
 
-        if ($config->offset === 'USER_UTC') {
-            $config->offset = $this->getObject('user')->getParameter('timezone', $config->offset);
+        if ($config->offset)
+        {
+            if (strtoupper($config->offset) === 'SERVER_UTC') {
+                $config->offset = $config->server_offset;
+            }
+            else if (strtoupper($config->offset) === 'USER_UTC') {
+                $config->offset = $config->user_offset ?: $config->server_offset;
+            }
+
+            $timezone               = new DateTimeZone($config->offset);
+            $config->offset_seconds = $timezone->getOffset(new DateTime());
         }
 
-        $translator = $this->getObject('translator');
+        if ($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00')
+        {
+            if (strtoupper($config->value) == 'NOW') {
+                $config->value = strftime($config->format);
+            }
 
-        // Handle the special case for "now".
-        if (strtoupper($config->value) == 'NOW') {
-            $config->value = strftime($config->format);
-        }
+            $date = new DateTime($config->value, new DateTimeZone('UTC'));
 
-        $html = '';
-
-        if($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00') {
-            $config->value = strftime($config->format, strtotime($config->value));
+            $config->value = strftime($config->format, ((int)$date->format('U')) + $config->offset_seconds);
         } else {
             $config->value = '';
         }
 
-        if (intval($config->value))
-        {
-            $date = new DateTime($config->value, new DateTimeZone('UTC'));
-            $date->setTimezone(new DateTimeZone($config->offset));
+        $attribs = $this->buildAttributes($config->attribs);
+        $value   = $this->getTemplate()->escape($config->value);
 
-            // Transform the date string.
-            $config->value = $date->format('Y-m-d H:i:s');
+        if ($config->attribs->readonly === 'readonly' || $config->attribs->disabled === 'disabled')
+        {
+            $html  = '<div>';
+            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$value.'" '.$attribs.' />';
+            $html .= '</div>';
         }
+        else
+        {
+            $html = $this->_loadCalendarScripts($config);
+
+            if (!isset(self::$_loaded['calendar-triggers'])) {
+                self::$_loaded['calendar-triggers'] = array();
+            }
+
+            // Only display the triggers once for each control.
+            if (!in_array($config->id, self::$_loaded['calendar-triggers']))
+            {
+                $html .= "<script>
+                    kQuery(function($){
+                        $('#".$config->id."').koowaDatepicker(".$config->options.");
+                    });
+                </script>";
+
+                if ($config->offset_seconds)
+                {
+                    $html .= "<script>
+                        kQuery(function($){
+                            $('.-koowa-form').on('koowa:submit', function() {
+                                var element = kQuery('#".$config->id."'),
+                                    picker  = element.data('datepicker'),
+                                    offset  = $config->offset_seconds;
+
+                                if (picker && element.children('input').val()) {
+                                    picker.setDate(new Date(picker.getDate().getTime() + (-1*offset*1000)));
+                                }
+                            });
+                        });
+                    </script>";
+                }
+
+                self::$_loaded['calendar-triggers'][] = $config->id;
+            }
+
+            $format = str_replace(
+                array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
+                array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
+                $config->format
+            );
+
+            $html .= '<div class="input-group date datepicker" data-date-format="'.$format.'" id="'.$config->id.'">';
+            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
+            $html .= '<span class="input-group-btn">';
+            $html .= '<span class="btn" >';
+            $html .= '<span class="koowa_icon--calendar"><i>calendar</i></span>';
+            $html .= '</span>';
+            $html .= '</span>';
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param KObjectConfig $config
+     * @return string
+     */
+    protected function _loadCalendarScripts(KObjectConfig $config)
+    {
+        $html = '';
 
         if (!isset(self::$_loaded['calendar']))
         {
@@ -612,8 +682,10 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
             );
 
-            foreach($locale as $key => $item){
-                $locale[$key] = array_map(array($translator, 'translate'), $item);
+            $translator = $this->getObject('translator');
+
+            foreach($locale as $key => $items){
+                $locale[$key] = array_map(array($translator, 'translate'), $items);
             }
             $locale['today']     = $translator->translate('Today');
             $locale['clear']     = $translator->translate('Clear');
@@ -628,58 +700,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             self::$_loaded['calendar'] = true;
         }
 
-        if (!isset(self::$_loaded['calendar-triggers'])) {
-            self::$_loaded['calendar-triggers'] = array();
-        }
-
-        if ($config->value)
-        {
-            $date = new DateTime($config->value);
-
-            $config->value = strftime($config->format, $date->format('U'));
-        }
-
-        $attribs = $this->buildAttributes($config->attribs);
-        $value   = $this->getTemplate()->escape($config->value);
-
-        // @TODO this is legacy, or bc support, and may not be compatible with strftime and the like
-        $config->format = str_replace(
-            array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
-            array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
-            $config->format
-        );
-
-        if ($config->attribs->readonly !== 'readonly' && $config->attribs->disabled !== 'disabled')
-        {
-            // Only display the triggers once for each control.
-            if (!in_array($config->id, self::$_loaded['calendar-triggers']))
-            {
-                $html .= "<script>
-                    kQuery(function($){
-                        $('#".$config->id."').koowaDatepicker(".$config->options.");
-                    });
-                </script>";
-                self::$_loaded['calendar-triggers'][] = $config->id;
-            }
-
-            $html .= '<div class="input-group date datepicker" data-date-format="'.$config->format.'" id="'.$config->id.'">';
-            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
-            $html .= '<span class="input-group-btn">';
-            $html .= '<span class="btn" >';
-            $html .= '<span class="koowa_icon--calendar"><i>calendar</i></span>';
-            $html .= '</span>';
-            $html .= '</span>';
-            $html .= '</div>';
-        }
-        else
-        {
-            $html = '';
-            $html .= '<div>';
-            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$value.'" '.$attribs.' />';
-            $html .= '</div>';
-        }
-
         return $html;
+
     }
 
     /**
