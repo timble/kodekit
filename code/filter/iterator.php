@@ -68,6 +68,17 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     }
 
     /**
+     * Resets any generated errors for the filter
+     *
+     * @return KFilterIterator
+     */
+    public function reset()
+    {
+        $this->getDelegate()->reset();
+        return $this;
+    }
+
+    /**
      * Get the priority of the filter
      *
      * @return  integer The priority level
@@ -85,6 +96,17 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     public function getErrors()
     {
         return $this->getDelegate()->getErrors();
+    }
+
+    /**
+     * Add an error message
+     *
+     * @return KFilterIterator
+     */
+    public function addError($message)
+    {
+        $this->getDelegate()->addError($message);
+        return $this;
     }
 
     /**
