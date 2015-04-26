@@ -48,6 +48,9 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
         //Create a command chain object
         $this->__command_chain = $config->command_chain;
 
+        //Set the command priority
+        $this->_priority = $config->priority;
+
         //Add the event subscribers
         $handlers = (array) KObjectConfig::unbox($config->command_handlers);
 
