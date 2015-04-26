@@ -83,7 +83,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KObject) {
+        if (!$delegate instanceof KObjectInterface) {
             throw new InvalidArgumentException('Delegate needs to extend from KObject');
         }
 
