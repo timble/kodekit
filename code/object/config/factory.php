@@ -84,7 +84,7 @@ final class KObjectConfigFactory extends KObject implements KObjectSingleton
         if(!isset($this->__prototypes[$name]))
         {
             $class    = $this->_formats[$name];
-            $instance = new $class($options);
+            $instance = new $class();
 
             if(!$instance instanceof KObjectConfigSerializable)
             {
@@ -98,6 +98,8 @@ final class KObjectConfigFactory extends KObject implements KObjectSingleton
 
         //Clone the object
         $result = clone $this->__prototypes[$name];
+        $result->merge($options);
+
         return $result;
     }
 
