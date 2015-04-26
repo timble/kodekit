@@ -115,6 +115,17 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     }
 
     /**
+     * Resets any generated errors for the filter
+     *
+     * @return KFilterAbstract
+     */
+    public function reset()
+    {
+        $this->_errors = array();
+        return $this;
+    }
+
+    /**
      * Get a list of error that occurred during sanitize or validate
      *
      * @return array
@@ -122,6 +133,17 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     public function getErrors()
     {
         return (array) $this->_errors;
+    }
+
+    /**
+     * Add an error message
+     *
+     * @return KFilterAbstract
+     */
+    public function addError($message)
+    {
+        $this->_errors[] = $message;
+        return $this;
     }
 
     /**

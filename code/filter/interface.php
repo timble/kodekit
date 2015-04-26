@@ -45,11 +45,25 @@ interface KFilterInterface extends KObjectHandlable
     public function sanitize($value);
 
     /**
+     * Resets any generated errors for the filter
+     *
+     * @return KFilterInterface
+     */
+    public function reset();
+
+    /**
      * Get a list of error that occurred during sanitize or validate
      *
      * @return array
      */
     public function getErrors();
+
+    /**
+     * Add an error message
+     *
+     * @param KFilterInterface
+     */
+    public function addError($message);
 
     /**
      * Get the priority of the filter
