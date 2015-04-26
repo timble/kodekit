@@ -107,6 +107,20 @@ class KFilterChain extends KObject implements KFilterInterface
     }
 
     /**
+     * Resets any generated errors for the filter chain
+     *
+     * @return KFilterChain
+     */
+    public function reset()
+    {
+        foreach($this->_queue as $filter) {
+            $filter->reset();
+        }
+
+        return $this;
+    }
+
+    /**
      * Add a filter to the queue based on priority
      *
      * @param KFilterInterface  $filter A Filter
@@ -142,6 +156,18 @@ class KFilterChain extends KObject implements KFilterInterface
     }
 
     /**
+     * Add an error message to the top filter in the queue
+     *
+     * @param string $message The error message to add
+     * @return KFilterChain
+     */
+    public function addError($message)
+    {
+        $this->_queue->top()->addError($message);
+        return $this;
+    }
+
+    /**
      * Get the priority of the filter
      *
      * @return  integer The priority level
@@ -152,7 +178,7 @@ class KFilterChain extends KObject implements KFilterInterface
     }
 
     /**
-     * Allow for filter chaining 
+     * Allow for filter chaining
      *
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
