@@ -61,6 +61,7 @@ interface KFilterInterface extends KObjectHandlable
     /**
      * Add an error message
      *
+     * @param string $message The error message
      * @param KFilterInterface
      */
     public function addError($message);

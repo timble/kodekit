@@ -101,6 +101,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     /**
      * Add an error message
      *
+     * @param string $message The error message
      * @return KFilterIterator
      */
     public function addError($message)

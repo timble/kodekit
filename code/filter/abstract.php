@@ -138,6 +138,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     /**
      * Add an error message
      *
+     * @param string $message The error message
      * @return KFilterAbstract
      */
     public function addError($message)
