@@ -102,8 +102,11 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         // Set the column filters
         if (!empty($config->filters))
         {
-            foreach ($config->filters as $column => $filter) {
-                $this->getColumn($column, true)->filter = KObjectConfig::unbox($filter);
+            foreach ($config->filters as $column => $filter)
+            {
+                if($column = $this->getColumn($column, true)){
+                    $column->filter = KObjectConfig::unbox($filter);
+                }
             }
         }
 
