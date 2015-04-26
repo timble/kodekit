@@ -58,12 +58,12 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
                 $session->getContainer('message')->add($messages);
             }
 
+            //Set the redirect into the response
             $format = $response->getRequest()->getFormat();
             if($format == 'json')
             {
                 array_unshift($messages, sprintf('Redirecting to %1$s', $response->getHeaders()->get('Location')));
 
-                //Set the redirect into the response
                 $response->setContent(json_encode(array(
                     'messages' => $messages
                 )), 'application/json');
@@ -71,7 +71,6 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
 
             if($format == 'html')
             {
-                //Set the redirect into the response
                 $response->setContent(sprintf(
                     '<!DOCTYPE html>
                         <html>
