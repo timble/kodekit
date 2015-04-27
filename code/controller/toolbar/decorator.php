@@ -52,7 +52,9 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
 
         if ($controller->inherits('KControllerToolbarMixin'))
         {
-            if($controller->hasToolbar($delegate->getType()))
+            $type = $delegate->getType();
+
+            if($controller->hasToolbar($type))
             {
                 $controller->removeToolbar($delegate);
                 $controller->addToolbar($this);
@@ -81,6 +83,10 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
      */
     public function addCommand($command, $config = array())
     {
+        if (!($command instanceof KControllerToolbarCommand)) {
+            $command = $this->getCommand($command, $config);
+        }
+
         return $this->getDelegate()->addCommand($command, $config);
     }
 
