@@ -20,7 +20,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      *
      * @var     array
      */
-    protected $_controller = null;
+    private $__controller = null;
 
     /**
      * The commands
@@ -101,7 +101,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      */
     public function getController()
     {
-        return $this->_controller;
+        return $this->__controller;
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      */
     public function setController(KControllerInterface $controller)
     {
-        $this->_controller = $controller;
+        $this->__controller = $controller;
         return $this;
     }
 
