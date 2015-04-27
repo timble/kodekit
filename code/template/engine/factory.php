@@ -55,8 +55,8 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'debug'      => false,
-            'cache'      => false,
+            'debug'      => Koowa::getInstance()->isDebug(),
+            'cache'      => Koowa::getInstance()->isCache(),
             'cache_path' => '',
             'engines'    => array(
                 'lib:template.engine.koowa'

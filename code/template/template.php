@@ -84,7 +84,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
                 'helper'     => array($this, 'invoke'),
                 'parameters' => array($this, 'getParameters')
             ),
-            'cache'           => false,
+            'cache'           => Koowa::getInstance()->isCache(),
             'cache_namespace' => 'koowa',
         ));
 

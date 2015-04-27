@@ -83,8 +83,8 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'debug'        => false,
-            'cache'        => false,
+            'debug'        => Koowa::getInstance()->isDebug(),
+            'cache'        => Koowa::getInstance()->isCache(),
             'cache_path'   => '',
             'cache_reload' => true,
             'template'     => 'default',
