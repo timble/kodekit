@@ -17,7 +17,6 @@
         }
     ],
     "require": {
-        "nooku/installer": "*",
         "symfony/yaml": "~2.6"
     },
     "suggest": {
