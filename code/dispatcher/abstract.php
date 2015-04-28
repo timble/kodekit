@@ -13,29 +13,32 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-abstract class KDispatcherAbstract extends KControllerAbstract implements KDispatcherInterface
+/**
+ * Abstract Dispatcher
+ *
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Nooku\Library\Dispatcher
+ */
+abstract class DispatcherAbstract extends KControllerAbstract implements KDispatcherInterface
 {
     /**
-     * Controller object or identifier (com://APP/COMPONENT.controller.NAME)
+     * Controller object or identifier
      *
      * @var	string|object
      */
     protected $_controller;
 
     /**
-     * List of authenticators
+     * Controller action
      *
-     * Associative array of authenticators, where key holds the authenticator identifier string
-     * and the value is an identifier object.
-     *
-     * @var array
+     * @var	string
      */
-    private $__authenticators;
+    protected $_controller_action;
 
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
     public function __construct(KObjectConfig $config)
     {
@@ -44,17 +47,17 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         //Set the controller
         $this->_controller = $config->controller;
 
-        //Add the authenticators
-        $authenticators = (array) KObjectConfig::unbox($config->authenticators);
+        //Set the controller action
+        $this->_controller_action = $config->controller_action;
 
-        foreach ($authenticators as $key => $value)
-        {
-            if (is_numeric($key)) {
-                $this->addAuthenticator($value);
-            } else {
-                $this->addAuthenticator($key, $value);
-            }
-        }
+        //Resolve the request
+        $this->addCommandCallback('before.dispatch', '_resolveRequest');
+
+        //Load the dispatcher translations
+        $this->addCommandCallback('before.dispatch', '_loadTranslations');
+
+        //Register the default exception handler
+        $this->addEventListener('onException', array($this, 'fail'));
     }
 
     /**
@@ -62,16 +65,19 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param KObjectConfig $config 	An optional ObjectConfig object with configuration options.
      * @return 	void
      */
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'controller'     => $this->getIdentifier()->package,
-            'request'        => 'lib:dispatcher.request',
-            'response'       => 'lib:dispatcher.response',
+            'controller'        => $this->getIdentifier()->package,
+            'controller_action' => 'render',
+            'request'        => 'dispatcher.request',
+            'response'       => 'dispatcher.response',
             'authenticators' => array()
+        ))->append(array(
+            'behaviors'     => array('authenticatable' => array('authenticators' => $config->authenticators)),
         ));
 
         parent::_initialize($config);
@@ -80,7 +86,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     /**
      * Get the request object
      *
-     * @throws  UnexpectedValueException    If the request doesn't implement the KDispatcherRequestInterface
+     * @throws	UnexpectedValueException	If the request doesn't implement the DispatcherRequestInterface
      * @return KDispatcherRequest
      */
     public function getRequest()
@@ -92,7 +98,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             if(!$this->_request instanceof KDispatcherRequestInterface)
             {
                 throw new UnexpectedValueException(
-                    'Request: '.get_class($this->_request).' does not implement KDispatcherRequestInterface'
+                    'Request: '.get_class($this->_request).' does not implement DispatcherRequestInterface'
                 );
             }
         }
@@ -103,7 +109,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     /**
      * Get the response object
      *
-     * @throws  UnexpectedValueException    If the response doesn't implement the KDispatcherResponseInterface
+     * @throws	UnexpectedValueException	If the response doesn't implement the DispatcherResponseInterface
      * @return KDispatcherResponse
      */
     public function getResponse()
@@ -117,8 +123,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
             if(!$this->_response instanceof KDispatcherResponseInterface)
             {
-                throw new UnexpectedValueException(
-                    'Response: '.get_class($this->_response).' does not implement KDispatcherResponseInterface'
+                throw new \UnexpectedValueException(
+                    'Response: '.get_class($this->_response).' does not implement DispatcherResponseInterface'
                 );
             }
         }
@@ -129,8 +135,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     /**
      * Method to get a controller object
      *
-     * @throws  UnexpectedValueException    If the controller doesn't implement the ControllerInterface
-     * @return  KControllerAbstract
+     * @throws	UnexpectedValueException	If the controller doesn't implement the ControllerInterface
+     * @return	KControllerInterface
      */
     public function getController()
     {
@@ -142,19 +148,19 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             }
 
             $config = array(
-                'request'    => $this->getRequest(),
-                'response'   => $this->getResponse(),
+                'request' 	 => $this->getRequest(),
                 'user'       => $this->getUser(),
+                'response'   => $this->getResponse(),
                 'dispatched' => true
             );
 
             $this->_controller = $this->getObject($this->_controller, $config);
 
-            //Make sure the controller implements KControllerInterface
+            //Make sure the controller implements ControllerInterface
             if(!$this->_controller instanceof KControllerInterface)
             {
-                throw new UnexpectedValueException(
-                    'Controller: '.get_class($this->_controller).' does not implement KControllerInterface'
+                throw new \UnexpectedValueException(
+                    'Controller: '.get_class($this->_controller).' does not implement ControllerInterface'
                 );
             }
         }
@@ -165,10 +171,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     /**
      * Method to set a controller object attached to the dispatcher
      *
-     * @param   mixed   $controller An object that implements KControllerInterface, KObjectIdentifier object
-     *                              or valid identifier string
+     * @param	mixed	$controller An object that implements ControllerInterface, ObjectIdentifier object
+     * 					            or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return	KDispatcherAbstract
+     * @return	DispatcherAbstract
      */
     public function setController($controller, $config = array())
     {
@@ -181,9 +187,9 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
                     $controller = KStringInflector::singularize($controller);
                 }
 
-                $identifier         = $this->getIdentifier()->toArray();
-                $identifier['path'] = array('controller');
-                $identifier['name'] = $controller;
+                $identifier			= $this->getIdentifier()->toArray();
+                $identifier['path']	= array('controller');
+                $identifier['name']	= $controller;
 
                 $identifier = $this->getIdentifier($identifier);
             }
@@ -201,9 +207,30 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     }
 
     /**
+     * Method to get a controller action to be executed
+     *
+     * @return	string
+     */
+    public function getControllerAction()
+    {
+        return $this->_controller_action;
+    }
+
+    /**
+     * Method to set the controller action to be executed
+     *
+     * @return	DispatcherAbstract
+     */
+    public function setControllerAction($action)
+    {
+        $this->_controller_action = $action;
+        return $this;
+    }
+
+    /**
      * Get the controller context
      *
-     * @return KDispatcherContext
+     * @return  KCommand
      */
     public function getContext()
     {
@@ -211,131 +238,103 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
         $context->setSubject($this);
         $context->setRequest($this->getRequest());
-        $context->setResponse($this->getResponse());
         $context->setUser($this->getUser());
+        $context->setResponse($this->getResponse());
 
         return $context;
     }
 
     /**
-     * Attach an authenticator
+     * Load the dispatcher translations
      *
-     * @param  mixed $authenticator An object that implements KDispatcherAuthenticatorInterface, an KObjectIdentifier
-     *                              or valid identifier string
-     * @param  array  $config  An optional associative array of configuration options
-     * @return KDispatcherAbstract
+     * @param KControllerContextInterface $context
+     * @return void
      */
-    public function addAuthenticator($authenticator, $config = array())
+    protected function _loadTranslations(KControllerContextInterface $context)
     {
-        //Create the complete identifier if a partial identifier was passed
-        if (is_string($authenticator) && strpos($authenticator, '.') === false)
-        {
-            $identifier = $this->getIdentifier()->toArray();
-            $identifier['path'] = array('dispatcher', 'authenticator');
-            $identifier['name'] = $authenticator;
+        $package = $this->getIdentifier()->package;
+        $domain  = $this->getIdentifier()->domain;
 
-            $identifier = $this->getIdentifier($identifier);
-        }
-        else $identifier = $this->getIdentifier($authenticator);
-
-        if (!isset($this->__authenticators[(string)$identifier]))
-        {
-            if(!$authenticator instanceof KDispatcherAuthenticatorInterface) {
-                $authenticator = $this->getObject($identifier, $config);
-            }
-
-            if (!($authenticator instanceof KDispatcherAuthenticatorInterface))
-            {
-                throw new UnexpectedValueException(
-                    "Authenticator $identifier does not implement KDispatcherAuthenticatorInterface"
-                );
-            }
-
-            $this->addBehavior($authenticator);
-
-            //Store the authenticator to allow for named lookups
-            $this->__authenticators[(string)$identifier] = $authenticator;
+        if($domain) {
+            $identifier = 'com://'.$domain.'/'.$package;
+        } else {
+            $identifier = 'com:'.$package;
         }
 
-        return $this;
+        $this->getObject('translator')->load($identifier);
     }
 
     /**
-     * Gets the authenticators
+     * Resolve the request
      *
-     * @return array An array of authenticators
+     * @param KDispatcherContextInterface $context A dispatcher context object
      */
-    public function getAuthenticators()
+    protected function _resolveRequest(KDispatcherContextInterface $context)
     {
-        return $this->__authenticators;
-    }
-
-    /**
-     * Forward the request
-     *
-     * Forward to another dispatcher internally. Method makes an internal sub-request, calling the specified
-     * dispatcher and passing along the context.
-     *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @throws UnexpectedValueException    If the dispatcher doesn't implement the KDispatcherInterface
-     */
-    protected function _actionForward(KDispatcherContextInterface $context)
-    {
-        //Get the dispatcher identifier
-        if(is_string($context->param) && strpos($context->param, '.') === false )
-        {
-            $identifier            = $this->getIdentifier()->toArray();
-            $identifier['package'] = $context->param;
-        }
-        else $identifier = $this->getIdentifier($context->param);
-
-        //Create the dispatcher
-        $config = array(
-            'request'    => $context->request,
-            'response'   => $context->response,
-            'user'       => $context->user,
-        );
-
-        $dispatcher = $this->getObject($identifier, $config);
-
-        if(!$dispatcher instanceof KDispatcherInterface)
-        {
-            throw new UnexpectedValueException(
-                'Dispatcher: '.get_class($dispatcher).' does not implement KDispatcherInterface'
-            );
+        //Resolve the controller
+        if($context->request->query->has('view')) {
+            $this->setController($context->request->query->get('view', 'cmd'));
         }
 
-        $dispatcher->dispatch($context);
+        //Resolve the controller action
+        if($context->request->query->has('action')) {
+            $this->setControllerAction($context->request->query->get('action', 'cmd'));
+        }
     }
 
     /**
      * Dispatch the request
      *
-     * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
-     * the request and passing along the context.
+     * Dispatch to a controller internally or forward to another component.  Functions makes an internal sub-request,
+     * based on the information in the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context  A dispatcher context object
-     * @return  mixed
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return	mixed
      */
     protected function _actionDispatch(KDispatcherContextInterface $context)
     {
+        $controller = $this->getController();
+        $action     = $this->getControllerAction();
+
+        //Execute the component and pass along the context
+        $controller->execute($action, $context);
+
         //Send the response
-        $this->send($context);
+        return $this->send($context);
     }
 
     /**
-     * Render an exception
+     * Redirect
      *
-     * @throws InvalidArgumentException If the action parameter is not an instance of Exception
+     * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
+     * redirect the dispatcher to another URL after a GET request.
+     *
+     * @param KDispatcherContextInterface $context	A dispatcher context object
+     */
+    protected function _actionRedirect(KDispatcherContextInterface $context)
+    {
+        $url = $context->param;
+
+        $context->response->setStatus(KDispatcherResponse::MOVED_PERMANENTLY);
+        $context->response->setRedirect($url);
+
+        //Send the response
+        return $this->send($context);
+    }
+
+    /**
+     * Handle errors and exceptions
+     *
+     * @throws \InvalidArgumentException If the action parameter is not an instance of Exception or ExceptionError
      * @param KDispatcherContextInterface $context	A dispatcher context object
      */
     protected function _actionFail(KDispatcherContextInterface $context)
     {
         //Check an exception was passed
-        if(!isset($context->param) && !$context->param instanceof KException)
+        if(!isset($context->param) && !$context->param instanceof Exception)
         {
-            throw new InvalidArgumentException(
-                "Action parameter 'exception' [KException] is required"
+            throw new \InvalidArgumentException(
+                "Action parameter 'exception' [Exception] is required"
             );
         }
 
@@ -348,24 +347,31 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
 
         //If the error code does not correspond to a status message, use 500
         $code = $exception->getCode();
-        if(!isset(KHttpResponse::$status_messages[$code])) {
+        if(!isset(HttpResponse::$status_messages[$code])) {
             $code = '500';
         }
 
         //Get the error message
-        $message = KHttpResponse::$status_messages[$code];
+        $message = $exception->getMessage();
+        if(empty($message)) {
+            $message = HttpResponse::$status_messages[$code];
+        }
+
+        //Store the exception in the context
+        $context->exception = $exception;
 
         //Set the response status
         $context->response->setStatus($code , $message);
 
         //Send the response
-        $this->send($context);
+        return $this->send($context);
     }
 
     /**
      * Send the response
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @return mixed
      */
     protected function _actionSend(KDispatcherContextInterface $context)
     {
