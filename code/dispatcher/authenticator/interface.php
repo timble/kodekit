@@ -13,21 +13,57 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Authenticator
  */
-interface KDispatcherAuthenticatorInterface
+interface DispatcherAuthenticatorInterface
 {
+    /**
+     * Priority levels
+     */
+    const PRIORITY_HIGHEST = 1;
+    const PRIORITY_HIGH    = 2;
+    const PRIORITY_NORMAL  = 3;
+    const PRIORITY_LOW     = 4;
+    const PRIORITY_LOWEST  = 5;
+
+    /**
+     * Get the authentication scheme
+     *
+     * @link http://tools.ietf.org/html/rfc7235#section-4.1
+     *
+     * @return string The authentication scheme
+     */
+    public function getScheme();
+
+    /**
+     * Get the priority of the authenticator
+     *
+     * @return  integer The priority level
+     */
+    public function getPriority();
+
     /**
      * Authenticate the request
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @return bool Returns TRUE if the request could be authenticated, FALSE otherwise.
+     * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
     public function authenticateRequest(KDispatcherContextInterface $context);
 
     /**
-     * Sign the response
+     * Challenge the response
+     *
+     * @link http://tools.ietf.org/html/rfc7235#section-2.1
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @return bool Returns TRUE if the response could be signed, FALSE otherwise.
+     * @return void
      */
-    public function signResponse(KDispatcherContextInterface $context);
+    public function challengeResponse(KDispatcherContextInterface $context);
+
+    /**
+     * Log the user in
+     *
+     * @param mixed  $user A user key or name, an array of user data or a UserInterface object. Default NULL
+     * @param array  $data Optional user data
+     * @return bool
+     */
+    public function loginUser($user = null, $data = array());
 }
