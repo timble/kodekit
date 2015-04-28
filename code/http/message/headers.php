@@ -200,7 +200,7 @@ class KHttpMessageHeaders extends KObjectArray
                     $results[] = $key.'='.$value;
                 }
 
-                $value = implode($results, '; ');
+                $value = implode($results, ', ');
             }
 
             if ($value) {

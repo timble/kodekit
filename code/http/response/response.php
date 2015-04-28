@@ -47,7 +47,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     const RESET_CONTENT             = 205;
     const PARTIAL_CONTENT           = 206;
 
-    // [Redirection 3xx]  
+    // [Redirection 3xx]
     const MOVED_PERMANENTLY         = 301;
     const FOUND                     = 302;
     const SEE_OTHER                 = 303;
@@ -55,7 +55,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     const USE_PROXY                 = 305;
     const TEMPORARY_REDIRECT        = 307;
 
-    // [Client Error 4xx]  
+    // [Client Error 4xx]
     const BAD_REQUEST                   = 400;
     const UNAUTHORIZED                  = 401;
     const FORBIDDEN                     = 403;
@@ -73,7 +73,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     const REQUESTED_RANGE_NOT_SATISFIED = 416;
     const EXPECTATION_FAILED            = 417;
 
-    // [Server Error 5xx]  
+    // [Server Error 5xx]
     const INTERNAL_SERVER_ERROR     = 500;
     const NOT_IMPLEMENTED           = 501;
     const BAD_GATEWAY               = 502;
@@ -102,7 +102,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         205 => 'Reset Content',
         206 => 'Partial Content',
 
-        // [Redirection 3xx]  
+        // [Redirection 3xx]
         300 => 'Multiple Choices',
         301 => 'Moved Permanently',
         302 => 'Found',
@@ -111,7 +111,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         305 => 'Use Proxy',
         307 => 'Temporary Redirect',
 
-        // [Client Error 4xx]  
+        // [Client Error 4xx]
         400 => 'Bad Request',
         401 => 'Unauthorized',
         403 => 'Forbidden',
@@ -129,7 +129,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         416 => 'Requested Range Not Satisfiable',
         417 => 'Expectation Failed',
 
-        // [Server Error 5xx]  
+        // [Server Error 5xx]
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
         502 => 'Bad Gateway',
@@ -253,7 +253,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     public function setContentType($type)
     {
         $this->_content_type = $type;
-        $this->_headers->set('Content-Type', array($type, 'charset' => 'utf-8'));
+        $this->_headers->set('Content-Type', $type.'; charset=utf-8');
 
         return $this;
     }
