@@ -52,7 +52,7 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
      *
      * @param 	KObjectConfig            $config	  A ObjectConfig object with configuration options
      * @param 	KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return  KDispatcherHttp
+     * @return  KDispatcherInterface
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {

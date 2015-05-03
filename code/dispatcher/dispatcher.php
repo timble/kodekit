@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
+class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
      * List of methods supported by the dispatcher
@@ -60,7 +60,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * @param  KObjectConfigInterface  $config  Configuration options
      * @param  KObjectManagerInterface $manager A KObjectManagerInterface object
-     * @return KDispatcherDefault
+     * @return KDispatcherInterface
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
