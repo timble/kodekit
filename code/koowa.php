@@ -144,6 +144,9 @@ class Koowa
             ));
         }
 
+        //Register the PSR locator
+        $manager->getClassLoader()->registerLocator(new KClassLocatorPsr);
+
         //Warm-up the stream factory
         $manager->getObject('lib:filesystem.stream.factory');
     }
