@@ -247,12 +247,22 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 $entity->setProperties($context->request->data->toArray());
             }
 
+            $result = $entities->save();
+
             //Only set the reset content status if the action explicitly succeeded
-            if($entities->save() === true) {
+            if($result === true)
+            {
                 $context->response->setStatus(KHttpResponse::RESET_CONTENT);
             }
+
+            //Only throw an error if the action explicitly failed.
+            if($result === false)
+            {
+                $error = $entities->getStatusMessage();
+                throw new KControllerExceptionActionFailed($error ? $error : 'Edit Action Failed');
+            }
         }
-        else throw new KControllerExceptionResourceNotFound('Resource could not be found');
+        else throw new KControllerExceptionResourceNotFound('Resource Not Found');
 
         return $entities;
     }
