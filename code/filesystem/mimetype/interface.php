@@ -8,12 +8,12 @@
  */
 
 /**
- * FileSystem Mimetype Guesser Interface
+ * FileSystem Mimetype Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Filesystem\Mimetype\Guesser
+ * @package Koowa\Library\Filesystem\Mimetype
  */
-interface KFilesystemMimetypeGuesserInterface
+interface KFilesystemMimetypeInterface
 {
     /**
      * Guesses the mime type of the file with the given path.
@@ -22,10 +22,10 @@ interface KFilesystemMimetypeGuesserInterface
      *
      * @return string The mime type or NULL, if none could be guessed
      */
-    public function guess($path);
+    public function find($path);
 
     /**
-     * Check if the guesser is supported
+     * Check if the finder is supported
      *
      * @return  boolean  True on success, false otherwise
      */

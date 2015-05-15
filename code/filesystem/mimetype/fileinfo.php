@@ -8,14 +8,12 @@
  */
 
 /**
- * Guesses the mime type using the list in the provided JSON file
- *
- * JSON should be structured as a map of extension to mimetype
+ * Guesses the mime type using the PECL extension FileInfo.
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Filesystem\Mimetype\Guesser
+ * @package Koowa\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetypeGuesserExtension extends KObject implements KFilesystemMimetypeGuesserInterface
+class KFilesystemMimetypeFileinfo extends KObject implements KFilesystemMimetypeInterface
 {
     /**
      * {@inheritdoc}
@@ -23,7 +21,7 @@ class KFilesystemMimetypeGuesserExtension extends KObject implements KFilesystem
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'file' => __DIR__.'/../mimetypes.json'
+            'magic_file' => null
         ));
 
         parent::_initialize($config);
@@ -34,13 +32,12 @@ class KFilesystemMimetypeGuesserExtension extends KObject implements KFilesystem
      */
     public static function isSupported()
     {
-        return true;
+        return function_exists('finfo_open');
     }
-
     /**
      * {@inheritdoc}
      */
-    public function guess($path)
+    public function find($path)
     {
         if (!is_file($path)) {
             throw new \RuntimeException('File not found at '.$path);
@@ -54,16 +51,10 @@ class KFilesystemMimetypeGuesserExtension extends KObject implements KFilesystem
 
         if (static::isSupported())
         {
-            $file = $this->getConfig()->file;
+            $finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file);
 
-            if (is_readable($file))
-            {
-                $mimetypes = json_decode(file_get_contents($file), true);
-                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-                if (isset($mimetypes[$extension])) {
-                    $mimetype = $mimetypes[$extension];
-                }
+            if ($finfo) {
+                $mimetype = $finfo->file($path);
             }
         }
 

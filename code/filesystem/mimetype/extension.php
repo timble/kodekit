@@ -8,12 +8,14 @@
  */
 
 /**
- * Guesses the mime type using the PECL extension FileInfo.
+ * Guesses the mime type using the list in the provided JSON file
+ *
+ * JSON should be structured as a map of extension to mimetype
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Filesystem\Mimetype\Guesser
+ * @package Koowa\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetypeGuesserFileinfo extends KObject implements KFilesystemMimetypeGuesserInterface
+class KFilesystemMimetypeExtension extends KObject implements KFilesystemMimetypeInterface
 {
     /**
      * {@inheritdoc}
@@ -21,25 +23,24 @@ class KFilesystemMimetypeGuesserFileinfo extends KObject implements KFilesystemM
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'magic_file' => null
+            'file' => __DIR__.'/mimetypes.json'
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Returns whether this guesser is supported on the current OS/PHP setup.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public static function isSupported()
     {
-        return function_exists('finfo_open');
+        return true;
     }
+
     /**
      * {@inheritdoc}
      */
-    public function guess($path)
+    public function find($path)
     {
         if (!is_file($path)) {
             throw new \RuntimeException('File not found at '.$path);
@@ -53,10 +54,16 @@ class KFilesystemMimetypeGuesserFileinfo extends KObject implements KFilesystemM
 
         if (static::isSupported())
         {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file);
+            $file = $this->getConfig()->file;
 
-            if ($finfo) {
-                $mimetype = $finfo->file($path);
+            if (is_readable($file))
+            {
+                $mimetypes = json_decode(file_get_contents($file), true);
+                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+                if (isset($mimetypes[$extension])) {
+                    $mimetype = $mimetypes[$extension];
+                }
             }
         }
 
