@@ -8,25 +8,20 @@
  */
 
 /**
- * FileSystem Mimetype Resolver Interface
+ * Abstract FileSystem Mimetype Resolver
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Filesystem\Mimetype
  */
-interface KFilesystemMimetypeInterface
+abstract class KFilesystemMimetypeAbstract extends KObject implements KFilesystemMimetypeInterface
 {
     /**
-     * Find the mime type of the file with the given path.
-     *
-     * @param string $path The path to the file
-     * @return string The mime type or NULL, if none could be guessed
-     */
-    public function fromPath($path);
-
-    /**
-     * Check if the finder is supported
+     * Check if the resolver is supported
      *
      * @return  boolean  True on success, false otherwise
      */
-    public static function isSupported();
+    public static function isSupported()
+    {
+        return true;
+    }
 }

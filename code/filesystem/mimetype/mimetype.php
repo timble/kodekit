@@ -11,61 +11,70 @@
 /**
  * Mime type finder chain
  *
- * You can register custom finders by calling the add() method.
- * Custom finders are always called before any default ones.
+ * You can add custom mimetype resolvers by calling the registerResolve() method. Custom resolvers are always called
+ * before any default ones.
  *
  *     $mimetype = $this->getObject('filesystem.mimetype');
- *     $mimetype->add('custom.finder.identifier');
+ *     $mimetype->add('custom.mimetype.identifier');
  *
- * If you want to change the order of the default finders, just re-register your
- * preferred one as a custom one. The last registered finder is preferred over
- * previously registered ones.
+ * If you want to change the order of the default resolvers, just re-register your preferred one as a custom one. The
+ * last registered resolver is preferred over previously registered ones.
  *
- * Re-registering a built-in finder also allows you to configure it:
+ * Re-registering a built-in resolver also allows you to configure it:
  *
  *     $mimetype = $this->getObject('filesystem.mimetype');
  *     $mimetype->add($this->getObject('filesystem.mimetype.fileinfo', array(
  *         'magic_file' => '/path/to/magic/file'
  *     )));
  *
- * This class is based on Symfony 2 class Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser
- * and subject to MIT license
- * Copyright (c) Fabien Potencier <fabien@symfony.com>
- *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetype extends KObject implements KFilesystemMimetypeInterface
+class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObjectSingleton
 {
     /**
-     * All registered finder instances.
+     * List of registered mimetype resolvers
      *
      * @var array
      */
-    protected $_finders = array();
+    private $__resolvers;
 
     /**
-     * Registers all natively provided mime type finders.
+     * Registers all natively provided mime type resolvers.
      *
-     * {@inheritdoc}
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        foreach ($config->finders as $finder) {
-            $this->add($finder);
+        //Register the resolvers
+        $resolvers = KObjectConfig::unbox($config->resolvers);
+
+        foreach ($resolvers as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->registerResolver($value);
+            } else {
+                $this->registerResolver($key, $value);
+            }
         }
     }
+
     /**
-     * {@inheritdoc}
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
      */
     protected function _initialize(KObjectConfig $config)
     {
-        if (empty($config->finders))
+        if (empty($config->resolvers))
         {
             $config->append(array(
-                'finders' => array('extension')
+                'resolvers' => array('extension')
             ));
         }
 
@@ -73,76 +82,63 @@ class KFilesystemMimetype extends KObject implements KFilesystemMimetypeInterfac
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function isSupported()
-    {
-        return true;
-    }
-
-    /**
-     * Removes all registered finders
+     * Registers a new mime type resolver.
      *
+     * The last added mimetype resolver is preferred over previously registered ones.
+     *
+     * @param   mixed $resolver An object that implements KFilesystemMimetypeInterface, KObjectIdentifier object
+     *                          or valid identifier string
+     * @param  array $config  An optional associative array of configuration options
      * @return $this
      */
-    public function reset()
+    public function registerResolver($resolver, array $config = array())
     {
-        $this->_finders = array();
-
-        return $this;
-    }
-
-    /**
-     * Registers a new mime type finder.
-     *
-     * The last added finder is preferred over previously registered ones.
-     *
-     * @param string|KFilesystemMimetypeInterface $finder
-     * @return $this
-     */
-    public function add($finder)
-    {
-        //Create the complete identifier if a partial identifier was passed
-        if (is_string($finder) && strpos($finder, '.') === false)
+        if(!($resolver instanceof KFilesystemMimetypeInterface))
         {
-            if (strpos($finder, '.') === false)
+            if(is_string($resolver) && strpos($resolver, '.') === false )
             {
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'][] = 'mimetype';
-                $identifier['name'] = $finder;
+                $identifier['name'] = $resolver;
 
-                $finder = $this->getObject($identifier);
+                $identifier = $this->getIdentifier($identifier);
             }
-            else {
-                $finder = $this->getObject($finder);
-            }
+            else $identifier = $this->getIdentifier($resolver);
+
+            $resolver = $identifier;
+        }
+        else $identifier = $resolver->getIdentifier();
+
+        //Merge the config for the resolver
+        $identifier->getConfig()->merge($config);
+
+        //Store the resolver
+        $name = $identifier->name;
+
+        if(isset($this->__resolvers[$name])) {
+            unset($this->__resolvers[$name]);
         }
 
-        if (!$finder instanceof KFilesystemMimetypeInterface) {
-            throw new UnexpectedValueException("Mimetype object does not implement KFilesystemMimetypeInterface");
-        }
-
-        array_unshift($this->_finders, $finder);
+        $this->__resolvers[$name] = $resolver;
 
         return $this;
     }
 
+
+
     /**
-     * Tries to guess the mime type of the given file.
+     * Tries to find the mime type of the given file from it's file path.
      *
-     * The file is passed to each registered mime type finder in reverse order
-     * of their registration (last registered is queried first). Once a finder
-     * returns a value that is not NULL, this method terminates and returns the
-     * value.
+     * The file is passed to each registered mime type resolver in FILO order. Once a resolver returns a value that
+     * is not NULL, the result is returned.
      *
      * @param string $path The path to the file
-     *
-     * @return string The mime type or NULL, if none could be guessed
-     *
-     * @throws \LogicException
-     * @throws \RuntimeException
+     * @throws \LogicException   If the file cannot be found
+     * @throws \RuntimeException If the file is not readable
+     * @throws \UnexpectedValueException If the resolver doesn't implement KFilesystemMimetypeInterface
+     * @return string The mime type or NULL, if none could be found
      */
-    public function find($path)
+    public function fromPath($path)
     {
         if (!is_file($path)) {
             throw new \RuntimeException('File not found at '.$path);
@@ -152,14 +148,37 @@ class KFilesystemMimetype extends KObject implements KFilesystemMimetypeInterfac
             throw new \RuntimeException('File not readable at '.$path);
         }
 
-        foreach ($this->_finders as $finder)
+        foreach (array_reverse($this->__resolvers) as $name => $resolver)
         {
-            /* @var $finder KFilesystemMimetypeInterface */
-            if (null !== $mimeType = $finder->find($path)) {
-                return $mimeType;
+            //Lazy create the resolver
+            if($resolver instanceof KFilesystemMimetypeInterface)
+            {
+                $resolver = $this->getObject($resolver);
+
+                if (!$resolver instanceof KFilesystemMimetypeInterface) {
+                    throw new \UnexpectedValueException('Resolver does not implement KFilesystemMimetypeInterface');
+                }
+
+                $this->__resolvers[$name] = $resolver;
+            }
+
+            /* @var $resolver KFilesystemMimetypeInterface */
+            if (null !== $mimetype = $resolver->fromPath($path)) {
+                return $mimetype;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Check if a resolver has already been registered
+     *
+     * @param 	string	$resolver The name of the resolver
+     * @return  boolean	TRUE if the resolver exists, FALSE otherwise
+     */
+    public function isRegistered($resolver)
+    {
+        return isset($this->__resolvers[$resolver]);
     }
 }

@@ -8,15 +8,22 @@
  */
 
 /**
- * Guesses the mime type using the PECL extension FileInfo.
+ * Find the mime type of a file using the PECL FileInfo extension.
+ *
+ * @link http://php.net/manual/en/book.fileinfo.php
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetypeFileinfo extends KObject implements KFilesystemMimetypeInterface
+class KFilesystemMimetypeFileinfo extends KFilesystemMimetypeAbstract
 {
     /**
-     * {@inheritdoc}
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
      */
     protected function _initialize(KObjectConfig $config)
     {
@@ -28,32 +35,36 @@ class KFilesystemMimetypeFileinfo extends KObject implements KFilesystemMimetype
     }
 
     /**
-     * {@inheritdoc}
+     * Check if the resolver is supported
+     *
+     * @return  boolean  True on success, false otherwise
      */
     public static function isSupported()
     {
         return function_exists('finfo_open');
     }
+
     /**
-     * {@inheritdoc}
+     * Find the mime type of the file with the given path.
+     *
+     * @param string $path The path to the file
+     * @return string The mime type or NULL, if none could be guessed
      */
-    public function find($path)
+    public function fromPath($path)
     {
-        if (!is_file($path)) {
-            throw new \RuntimeException('File not found at '.$path);
-        }
-
-        if (!is_readable($path)) {
-            throw new \RuntimeException('File not readable at '.$path);
-        }
-
         $mimetype = null;
 
         if (static::isSupported())
         {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file);
+            if (!is_file($path)) {
+                throw new \RuntimeException('File not found at '.$path);
+            }
 
-            if ($finfo) {
+            if (!is_readable($path)) {
+                throw new \RuntimeException('File not readable at '.$path);
+            }
+
+            if ($finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file)) {
                 $mimetype = $finfo->file($path);
             }
         }

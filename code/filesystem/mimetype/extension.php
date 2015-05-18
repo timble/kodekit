@@ -8,17 +8,29 @@
  */
 
 /**
- * Guesses the mime type using the list in the provided JSON file
+ * Find the mime type of a file using the file extension. Lookups are performed using a provided JSON lookup file.
  *
  * JSON should be structured as a map of extension to mimetype
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetypeExtension extends KObject implements KFilesystemMimetypeInterface
+class KFilesystemMimetypeExtension extends KFilesystemMimetypeAbstract
 {
     /**
-     * {@inheritdoc}
+     * The mimetypes
+     *
+     * @var array
+     */
+    protected $_mimetypes;
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
      */
     protected function _initialize(KObjectConfig $config)
     {
@@ -30,40 +42,40 @@ class KFilesystemMimetypeExtension extends KObject implements KFilesystemMimetyp
     }
 
     /**
-     * {@inheritdoc}
+     * Find the mime type of the file with the given path.
+     *
+     * @param string $path The path to the file
+     * @return string The mime type or NULL, if none could be guessed
      */
-    public static function isSupported()
+    public function fromPath($path)
     {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function find($path)
-    {
-        if (!is_file($path)) {
-            throw new \RuntimeException('File not found at '.$path);
-        }
-
-        if (!is_readable($path)) {
-            throw new \RuntimeException('File not readable at '.$path);
-        }
-
         $mimetype = null;
 
         if (static::isSupported())
         {
-            $file = $this->getConfig()->file;
+            if (!is_file($path)) {
+                throw new \RuntimeException('File not found at '.$path);
+            }
 
-            if (is_readable($file))
+            if (!is_readable($path)) {
+                throw new \RuntimeException('File not readable at '.$path);
+            }
+
+            //Get the mimetypes from the JSON file
+            if(!isset($this->_mimetypes))
             {
-                $mimetypes = json_decode(file_get_contents($file), true);
-                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                $file = $this->getConfig()->file;
 
-                if (isset($mimetypes[$extension])) {
-                    $mimetype = $mimetypes[$extension];
+                if (is_readable($file)) {
+                    $this->_mimetypes = json_decode(file_get_contents($file), true);
                 }
+            }
+
+            //Find the mimetype from the path extension
+            $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+            if (isset($this->_mimetypes[$extension])) {
+                $mimetype = $this->_mimetypes[$extension];
             }
         }
 
