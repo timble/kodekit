@@ -422,7 +422,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['tree']))
         {
             $html .= $this->koowa();
-            $html .= '<ktml:script src="media://js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="media://js/jqtree'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="media://js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['tree'] = true;
