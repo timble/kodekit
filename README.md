@@ -39,7 +39,7 @@ Production Ready
 ----------------
 
 The framework uses a conservative development approach focused on the lowest common denominator, at time of writing this
-is Joomla 2.5 and PHP 5.2. The framework is fully forwards compatible with Joomla 3.x and PHP 5.x.
+is Joomla 2.5 and PHP 5.3. The framework is fully forwards compatible with Joomla 3.x and PHP 5.x.
 
 The framework follows the [semantic versioning standard](http://semver.org/). Rest assured : it's designed for stability
 and compatibility. We promise that all minor versions will be 100% backwards compatible. Only in major versions backwards
@@ -52,7 +52,7 @@ Requirements
 ------------
 
 * Joomla 2.5 and 3.x
-* PHP 5.2 or newer
+* PHP 5.3 or newer
 * MySQL 5.x
 
 Installation
