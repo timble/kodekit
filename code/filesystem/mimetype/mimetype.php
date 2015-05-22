@@ -15,7 +15,7 @@
  * before any default ones.
  *
  *     $mimetype = $this->getObject('filesystem.mimetype');
- *     $mimetype->add('custom.mimetype.identifier');
+ *     $mimetype->registerResolver('custom.mimetype.identifier');
  *
  * If you want to change the order of the default resolvers, just re-register your preferred one as a custom one. The
  * last registered resolver is preferred over previously registered ones.
@@ -23,7 +23,7 @@
  * Re-registering a built-in resolver also allows you to configure it:
  *
  *     $mimetype = $this->getObject('filesystem.mimetype');
- *     $mimetype->add($this->getObject('filesystem.mimetype.fileinfo', array(
+ *     $mimetype->registerResolver($this->getObject('filesystem.mimetype.fileinfo', array(
  *         'magic_file' => '/path/to/magic/file'
  *     )));
  *
@@ -151,7 +151,7 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
         foreach (array_reverse($this->__resolvers) as $name => $resolver)
         {
             //Lazy create the resolver
-            if($resolver instanceof KFilesystemMimetypeInterface)
+            if(!($resolver instanceof KFilesystemMimetypeInterface))
             {
                 $resolver = $this->getObject($resolver);
 
