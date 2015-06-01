@@ -42,6 +42,26 @@ class KFilesystemMimetypeExtension extends KFilesystemMimetypeAbstract
     }
 
     /**
+     * Find the mime type of the given stream
+     *
+     * @param KFilesystemStreamInterface $stream
+     * @return string The mime type or NULL, if none could be guessed
+     */
+    public function fromStream(KFilesystemStreamInterface $stream)
+    {
+        $mimetype = null;
+
+        if (static::isSupported())
+        {
+            if ($path = $stream->getPath()) {
+                $mimetype = $this->_getMimetype(strtolower(pathinfo($path, PATHINFO_EXTENSION)));
+            }
+        }
+
+        return $mimetype;
+    }
+
+    /**
      * Find the mime type of the file with the given path.
      *
      * @param string $path The path to the file
@@ -61,24 +81,41 @@ class KFilesystemMimetypeExtension extends KFilesystemMimetypeAbstract
                 throw new \RuntimeException('File not readable at '.$path);
             }
 
-            //Get the mimetypes from the JSON file
-            if(!isset($this->_mimetypes))
-            {
-                $file = $this->getConfig()->file;
-
-                if (is_readable($file)) {
-                    $this->_mimetypes = json_decode(file_get_contents($file), true);
-                }
-            }
-
-            //Find the mimetype from the path extension
-            $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-            if (isset($this->_mimetypes[$extension])) {
-                $mimetype = $this->_mimetypes[$extension];
-            }
+            $mimetype = $this->_getMimetype(strtolower(pathinfo($path, PATHINFO_EXTENSION)));
         }
 
         return $mimetype;
+    }
+
+    /**
+     * Return a mimetype for the given extension
+     *
+     * @param  string $extension
+     * @return string|null
+     */
+    protected function _getMimetype($extension)
+    {
+        $mimetypes = $this->_getMimetypes();
+
+        return isset($mimetypes[$extension]) ? $mimetypes[$extension] : null;
+    }
+
+    /**
+     * Returns mimetypes list
+     *
+     * @return array
+     */
+    protected function _getMimetypes()
+    {
+        if(!isset($this->_mimetypes))
+        {
+            $file = $this->getConfig()->file;
+
+            if (is_readable($file)) {
+                $this->_mimetypes = json_decode(file_get_contents($file), true);
+            }
+        }
+
+        return $this->_mimetypes;
     }
 }
