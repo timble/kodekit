@@ -290,6 +290,37 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     }
 
     /**
+     * Execute a query
+     *
+     * @param  string      $query The query to run. Data inside the query should be properly escaped.
+     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE, KDatabase::RESULT_STORE
+     *                            or KDatabase::MULTI_QUERY depending on the desired behavior.
+     * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
+     *                     For other successful queries  return TRUE.
+     */
+    protected function _executeQuery($query, $mode = KDatabase::RESULT_STORE)
+    {
+        if ($mode === KDatabase::MULTI_QUERY)
+        {
+            $connection = $this->getConnection();
+            $result     = $connection->multi_query((string)$query);
+
+            if ($result)
+            {
+                // Clear results to make subsequent queries work.
+                // See: http://php.net/manual/en/mysqli.multi-query.php#102837
+                do {
+                    $connection->use_result();
+                }
+                while ($connection->more_results() && $connection->next_result());
+            }
+        }
+        else $result = $this->getConnection()->query((string)$query, $mode);
+
+        return $result;
+    }
+
+    /**
      * Fetch the first field of the first row
      *
      * @param	mysqli_result  	$result The result object. A result set identifier returned by the select() function

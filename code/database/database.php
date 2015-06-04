@@ -21,6 +21,8 @@ class KDatabase
     const RESULT_STORE = 0;
     const RESULT_USE   = 1;
 
+    const MULTI_QUERY = 2;
+
     /**
      * Database fetch mode
      */
