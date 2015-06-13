@@ -64,6 +64,11 @@ class PlgSystemKoowa extends JPlugin
             }
         }
 
+        //Bugfix: Set display_errors accordingly
+        if(JFactory::getApplication()->getCfg('error_reporting') == 'none') {
+            ini_set('display_errors', 0);
+        }
+
         //Bootstrap the Koowa Framework
         $this->bootstrap();
 

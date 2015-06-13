@@ -89,7 +89,19 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
         //Render the error
         if(!JDEBUG && $request->getFormat() == 'html')
         {
-            $message = $this->getObject('translator')->translate($exception->getMessage());
+            //If the error code does not correspond to a status message, use 500
+            $code = $exception->getCode();
+            if(!isset(KHttpResponse::$status_messages[$code])) {
+                $code = '500';
+            }
+
+            if(ini_get('display_errors')) {
+                $message = $exception->getMessage();
+            } else {
+                $message = KHttpResponse::$status_messages[$code];
+            }
+
+            $message = $this->getObject('translator')->translate($message);
 
             if (version_compare(JVERSION, '3.0', '>='))
             {
@@ -98,9 +110,8 @@ class ComKoowaDispatcherHttp extends KDispatcherHttp
                 JErrorPage::render($error);
 
                 JFactory::getApplication()->close(0);
-            } else {
-                JError::raiseError($exception->getCode(), $message);
             }
+            else JError::raiseError($exception->getCode(), $message);
 
             return false;
         }
