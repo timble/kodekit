@@ -399,10 +399,10 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Use and other queries that don't return rows
      *
      * @param  string      $query The query to run. Data inside the query should be properly escaped.
-     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
-     *                     depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
-     *                     use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
-     *                     unless you free the result first.
+     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE, KDatabase::RESULT_STORE
+     *                     or KDatabase::MULTI_QUERY depending on the desired behavior.
+     *                     By default, KDatabase::RESULT_STORE is used. If you use KDatabase::RESULT_USE all subsequent
+     *                     calls will return error Commands out of sync unless you free the result first.
      * @throws \RuntimeException If the query could not be executed
      * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                     For other successful queries  return TRUE.
@@ -414,7 +414,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             $query = $this->replaceTableNeedle($query);
         }
 
-        $result = $this->getConnection()->query((string)$query, $mode);
+        $result = $this->_executeQuery($query, $mode);
 
         if ($result === false)
         {
@@ -563,6 +563,17 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     
         return $spec;
     }
+
+    /**
+     * Execute a query
+     *
+     * @param  string      $query The query to run. Data inside the query should be properly escaped.
+     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE, KDatabase::RESULT_STORE
+     *                            or KDatabase::MULTI_QUERY depending on the desired behavior.
+     * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
+     *                     For other successful queries  return TRUE.
+     */
+    abstract protected function _executeQuery($query, $mode = KDatabase::RESULT_STORE);
 
    /**
      * Fetch the first field of the first row
