@@ -77,7 +77,7 @@ class KViewJson extends KViewAbstract
             'fields'      => array(),
             'text_fields' => array('description'), // Links are converted to absolute ones in these fields
         ))->append(array(
-            'mimetype' => 'application/json; version=' . $config->version,
+            'mimetype' => 'application/vnd.api+json',
         ));
 
         parent::_initialize($config);
