@@ -49,7 +49,6 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
         $config->append(array(
             'priority' => self::PRIORITY_NORMAL,
             'padding'  => '',
-            'formats'  => array('json', 'jsonapi')
         ));
 
         parent::_initialize($config);
