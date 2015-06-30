@@ -189,8 +189,10 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     public function getFormats()
     {
         $result = $this->_formats;
-        if($this->getUser()->isAuthentic()) {
+        if($this->getUser()->isAuthentic())
+        {
             $result[] = 'json';
+            $result[] = 'jsonapi';
         }
 
         return $result;
