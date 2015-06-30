@@ -49,7 +49,6 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
         $config->append(array(
             'priority' => self::PRIORITY_NORMAL,
             'padding'  => '',
-            'formats'  => array('json', 'jsonapi')
         ));
 
         parent::_initialize($config);
@@ -97,7 +96,7 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
         $request = $response->getRequest();
 
         //Force to use the json transport if format is json
-        if(in_array($request->getFormat(), $this->getConfig()->formats->toArray()))
+        if($request->getFormat() == 'json')
         {
             //If not padding is set inspect the request query.
             if(empty($this->_padding))

@@ -27,9 +27,9 @@ final class KModelEntityDefault extends KModelEntityAbstract implements KObjectI
         $name = $config->object_identifier->name;
 
         if(KStringInflector::isSingular($name)) {
-            $class = 'KModelEntityDefault';
+            $class = 'KModelEntityRow';
         } else {
-            $class = 'KModelEntityComposite';
+            $class = 'KModelEntityRowset';
         }
 
         $instance = new $class($config);
