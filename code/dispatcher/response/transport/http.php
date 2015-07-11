@@ -154,9 +154,9 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
             }
 
             //Explicitly disable the IE pause button
-            if(!$response->headers->has('Accept-Ranges')) {
+            /*if(!$response->headers->has('Accept-Ranges')) {
                 $response->headers->set('Accept-Ranges', 'none');
-            }
+            }*/
         }
 
         //Add Last-Modified header if not present
