@@ -253,7 +253,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     public function setContentType($type)
     {
         $this->_content_type = $type;
-        $this->_headers->set('Content-Type', $type.'; charset=utf-8');
+        $this->_headers->set('Content-Type', array($type, 'charset' => 'utf-8'));
 
         return $this;
     }
