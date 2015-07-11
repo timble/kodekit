@@ -74,7 +74,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
         $this->_stack = array();
 
         //Set debug
-        $this->_debug        = $config->debug;
+        $this->_debug = $config->debug;
 
         //Set caching
         $this->_cache        = $config->cache;
