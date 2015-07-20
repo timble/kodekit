@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Authenticator
  */
-interface DispatcherAuthenticatorInterface
+interface KDispatcherAuthenticatorInterface
 {
     /**
      * Priority levels
