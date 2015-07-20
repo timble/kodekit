@@ -261,7 +261,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
         if($this->isDebug())
         {
             $template = end($this->_stack);
-            $path     = trim(str_replace(Koowa::getInstance()->getRootPath(), '', $template['file']), '/');
+            $path     = str_replace(rtrim(Koowa::getInstance()->getRootPath(), '/').'/', '', $template['file']);
             $type     = $this->getIdentifier()->getName();
 
             $format  = PHP_EOL.'<!--BEGIN '.$type.':render '.$path.' -->'.PHP_EOL;
