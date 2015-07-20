@@ -19,7 +19,7 @@
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Nooku\Library\Dispatcher
  */
-abstract class DispatcherAbstract extends KControllerAbstract implements KDispatcherInterface
+abstract class KDispatcherAbstract extends KControllerAbstract implements KDispatcherInterface
 {
     /**
      * Controller object or identifier
@@ -174,7 +174,7 @@ abstract class DispatcherAbstract extends KControllerAbstract implements KDispat
      * @param	mixed	$controller An object that implements ControllerInterface, ObjectIdentifier object
      * 					            or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return	DispatcherAbstract
+     * @return	$this
      */
     public function setController($controller, $config = array())
     {
@@ -219,7 +219,7 @@ abstract class DispatcherAbstract extends KControllerAbstract implements KDispat
     /**
      * Method to set the controller action to be executed
      *
-     * @return	DispatcherAbstract
+     * @return	$this
      */
     public function setControllerAction($action)
     {
@@ -277,6 +277,7 @@ abstract class DispatcherAbstract extends KControllerAbstract implements KDispat
         }
 
         //Resolve the controller action
+        // TODO: shouldn't this be data and not query? and _action not action
         if($context->request->query->has('action')) {
             $this->setControllerAction($context->request->query->get('action', 'cmd'));
         }
@@ -347,7 +348,7 @@ abstract class DispatcherAbstract extends KControllerAbstract implements KDispat
 
         //If the error code does not correspond to a status message, use 500
         $code = $exception->getCode();
-        if(!isset(HttpResponse::$status_messages[$code])) {
+        if(!isset(KHttpResponse::$status_messages[$code])) {
             $code = '500';
         }
 

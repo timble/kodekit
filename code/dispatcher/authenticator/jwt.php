@@ -28,7 +28,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Authenticator
  */
-class DispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
+class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
 {
     /**
      * The JWT token

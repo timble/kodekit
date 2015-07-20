@@ -196,7 +196,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         }
 
         //Modifies the response so that it conforms to the rules defined for a 401 status code.
-        if($response->getStatusCode() == HttpResponse::UNAUTHORIZED)
+        if($response->getStatusCode() == KHttpResponse::UNAUTHORIZED)
         {
             //The response MUST include a WWW-Authenticate header field, use 'unknown' scheme.
             //@link : http://tools.ietf.org/html/rfc7235 (updated spec)

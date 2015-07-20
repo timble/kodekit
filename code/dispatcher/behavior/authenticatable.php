@@ -80,7 +80,7 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      * @param  mixed $authenticator An object that implements DispatcherAuthenticatorInterface, an ObjectIdentifier
      *                              or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return KDispatcherAbstract
+     * @return $this
      */
     public function addAuthenticator($authenticator, $config = array())
     {
@@ -97,11 +97,11 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
 
         if (!isset($this->__authenticators[(string)$identifier]))
         {
-            if(!$authenticator instanceof DispatcherAuthenticatorInterface) {
+            if(!$authenticator instanceof KDispatcherAuthenticatorInterface) {
                 $authenticator = $this->getObject($identifier, $config);
             }
 
-            if (!($authenticator instanceof DispatcherAuthenticatorInterface))
+            if (!($authenticator instanceof KDispatcherAuthenticatorInterface))
             {
                 throw new \UnexpectedValueException(
                     "Authenticator $identifier does not implement DispatcherAuthenticatorInterface"
@@ -135,7 +135,7 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      * @param   mixed $authenticator An object that implements ObjectInterface, ObjectIdentifier object
      *                               or valid identifier string
      * @throws \UnexpectedValueException
-     * @return DispatcherAuthenticatorInterface|null
+     * @return KDispatcherAuthenticatorInterface|null
      */
     public function getAuthenticator($authenticator)
     {
