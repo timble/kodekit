@@ -18,8 +18,8 @@ abstract class KObjectConfigFormat extends KObjectConfig implements KObjectConfi
     /**
      * Read from a file and create a config object
      *
-     * @param  string $filename
-     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @param  string   $filename
+     * @param  bool     $object  If TRUE return a KObjectConfig, if FALSE return an array. Default TRUE.
      * @throws RuntimeException
      * @return KObjectConfigFormat|array
      */

@@ -106,10 +106,12 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      * @param KDispatcherContextInterface $context	A dispatcher context object
      * @return	mixed
      */
-    protected function _actionDispatch(KDispatcherContextInterface $context)
-    {
+	protected function _actionDispatch(KDispatcherContextInterface $context)
+	{
+        $view = $context->request->query->get('view', 'cmd');
+
         //Redirect if no view information can be found in the request
-        if(!$context->request->query->has('view'))
+        if(empty($view))
         {
             $url = clone($context->request->getUrl());
             $url->query['view'] = $this->getConfig()->controller;

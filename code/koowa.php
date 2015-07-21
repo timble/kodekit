@@ -27,7 +27,7 @@ class Koowa
      *
      * @var string
      */
-    const VERSION = '2.2.0-dev';
+    const VERSION = '3.0-beta1';
 
     /**
      * Debug state
@@ -143,6 +143,9 @@ class Koowa
                 )
             ));
         }
+
+        //Register the PSR locator
+        $manager->getClassLoader()->registerLocator(new KClassLocatorPsr);
 
         //Warm-up the stream factory
         $manager->getObject('lib:filesystem.stream.factory');

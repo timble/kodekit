@@ -19,7 +19,7 @@ class KObjectConfigIni extends KObjectConfigFormat
      * Read from a string and create an array
      *
      * @param  string $string
-     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @param  bool    $object  If TRUE return a KConfigObjectIni, if FALSE return an array. Default TRUE.
      * @throws DomainException
      * @return KObjectConfigIni|array
      */

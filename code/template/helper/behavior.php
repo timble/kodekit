@@ -40,7 +40,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['koowa']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://js/koowa'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/koowa'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['koowa'] = true;
         }
@@ -69,7 +69,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['jquery']))
         {
-            $html .= '<ktml:script src="media://js/jquery'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/jquery'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['jquery'] = true;
         }
@@ -97,14 +97,14 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if ($config->javascript && !isset(self::$_loaded['bootstrap-javascript']))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="media://js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['bootstrap-javascript'] = true;
         }
 
         if ($config->css && !isset(self::$_loaded['bootstrap-css']))
         {
-            $html .= '<ktml:style src="media://css/bootstrap.css" />';
+            $html .= '<ktml:style src="assets://css/bootstrap.css" />';
 
             self::$_loaded['bootstrap-css'] = true;
         }
@@ -133,7 +133,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded['modal']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['modal'] = true;
         }
@@ -185,7 +185,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['overlay']))
         {
             $html .= $this->koowa();
-            $html .= '<ktml:script src="media://js/koowa.overlay.js" />';
+            $html .= '<ktml:script src="assets://js/koowa.overlay.js" />';
 
             $html .= '
             <style>
@@ -254,8 +254,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= $this->jquery();
             $html .= $this->koowa();
 
-            $html .= '<ktml:script src="media://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://js/patch.validator.js" />';
+            $html .= '<ktml:script src="assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/patch.validator.js" />';
 
             self::$_loaded['validator'] = true;
         }
@@ -307,8 +307,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['select2']))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="media://js/select2'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://js/koowa.select2.js" />';
+            $html .= '<ktml:script src="assets://js/select2'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/koowa.select2.js" />';
 
             self::$_loaded['select2'] = true;
         }
@@ -422,8 +422,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if (!isset(self::$_loaded['tree']))
         {
             $html .= $this->koowa();
-            $html .= '<ktml:script src="media://js/tree.jquery'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/jqtree'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['tree'] = true;
         }
@@ -671,8 +671,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 
         if (!isset(self::$_loaded['calendar']))
         {
-            $html .= '<ktml:script src="media://js/datepicker'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="media://js/koowa.datepicker.js" />';
+            $html .= '<ktml:script src="assets://js/datepicker'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/koowa.datepicker.js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),

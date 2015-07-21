@@ -16,7 +16,7 @@
 class KUserProviderAbstract extends KObject implements KUserProviderInterface
 {
     /**
-     * The list of users
+     * The list of users by identifier
      *
      * @var array
      */
@@ -28,7 +28,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      * The user array is a hash where the keys are user identifier and the values are an array of attributes:
      * 'password', 'enabled', and 'roles' etc. The user identifiers should be unique.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options
      * @return  KUserProviderAbstract
      */
     public function __construct(KObjectConfig $config)
@@ -46,7 +46,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
      */
     protected function _initialize(KObjectConfig $config)
     {

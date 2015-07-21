@@ -90,7 +90,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
                 $label = $config->translate ? $this->getObject('translator')->translate( $option->label ) : $option->label;
 
                 $extra = '';
-                if(isset($option->disable) && $option->disable) {
+                if(isset($option->disabled) && $option->disabled) {
                     $extra .= 'disabled="disabled"';
                 }
 

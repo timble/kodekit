@@ -32,7 +32,7 @@ class KObjectConfigYaml extends KObjectConfigFormat
     /**
      * Constructor.
      *
-     * @param   array|KObjectConfig An associative array of configuration options or a KObjectConfig instance.
+     * @param   array|KObjectConfigInterface An associative array of configuration options or a KObjectConfigInterface instance.
      */
     public function __construct( $options = array() )
     {
@@ -112,8 +112,8 @@ class KObjectConfigYaml extends KObjectConfigFormat
     /**
      * Read from a YAML string and create a config object
      *
-     * @param  string $string
-     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @param  string   $string
+     * @param  bool     $object  If TRUE return a KObjectConfigYaml, if FALSE return an array. Default TRUE.
      * @throws DomainException
      * @throws RuntimeException
      * @return KObjectConfigYaml|array
