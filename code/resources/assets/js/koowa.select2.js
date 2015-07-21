@@ -54,8 +54,9 @@
                     }
                 },
                 initSelection: function(element, callback) {
-                    var selected= $.parseJSON($(element).val());
-                    if (selected!=='') {
+                    var selected = $.parseJSON($(element).val());
+
+                    if (selected && (!$.isArray(selected) || selected.length)) {
                         var data = {};
                         data[options.value] = selected;
                         $.ajax(options.url, {
