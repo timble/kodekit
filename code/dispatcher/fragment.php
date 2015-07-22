@@ -92,7 +92,10 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
     public function getResponse()
     {
         if(!$this->_response instanceof KDispatcherResponseInterface) {
-            $this->_response = clone $this->getObject('dispatcher.response');
+            $this->_response = clone $this->getObject('dispatcher.response', array(
+                'request' => $this->getRequest(),
+                'user'    => $this->getUser()
+            ));
         }
 
         return $this->_response;
