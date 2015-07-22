@@ -56,7 +56,13 @@
                 initSelection: function(element, callback) {
                     var selected = $.parseJSON($(element).val());
 
-                    if (selected && (!$.isArray(selected) || selected.length)) {
+                    if ($.isArray(selected) && !selected.length)
+                    {
+                        selected = '';
+                        $(element).val(selected);
+                    }
+
+                    if (selected) {
                         var data = {};
                         data[options.value] = selected;
                         $.ajax(options.url, {
