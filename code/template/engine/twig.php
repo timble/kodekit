@@ -25,15 +25,6 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     protected static $_file_types = array('twig');
 
     /**
-     * Template stack
-     *
-     * Used to track recursive load calls during template evaluation
-     *
-     * @var array
-     */
-    protected $_stack;
-
-    /**
      * The twig environment
      *
      * @var callable
@@ -140,8 +131,8 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     /**
      * Render a template
      *
-     * @param   array   $data   The data to pass to the template
-     * @throws  RuntimeException If the template could not be evaluated
+     * @param  array   $data   The data to pass to the template
+     * @throws RuntimeException If the template could not be evaluated
      * @return string The rendered template source
      */
     public function render(array $data = array())
@@ -154,6 +145,9 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
 
         //Render the template
         $content = $this->_twig_template->render($data);
+
+        //Render the debug information
+        $content = $this->_debug($content);
 
         //Remove the template from the stack
         array_pop($this->_stack);

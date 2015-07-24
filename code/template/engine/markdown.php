@@ -82,6 +82,9 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
                 throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
             }
 
+            //Push the template on the stack
+            array_push($this->_stack, array('url' => $url, 'file' => $file));
+
             if(!$cache_file = $this->isCached($file))
             {
                 //Load the template
@@ -114,6 +117,9 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
     {
         $file = crc32($source);
 
+        //Push the template on the stack
+        array_push($this->_stack, array('url' => '', 'file' => $file));
+
         if(!$this->_source = $this->isCached($file))
         {
             //Compile the template
@@ -127,6 +133,27 @@ class KTemplateEngineMarkdown extends KTemplateEngineAbstract
 
         return $this;
     }
+
+    /**
+     * Render a template
+     *
+     * @param   array   $data   The data to pass to the template
+     * @throws RuntimeException If the template could not be rendered
+     * @return string The rendered template source
+     */
+    public function render(array $data = array())
+    {
+        $content = parent::render($data);
+
+        //Render the debug information
+        $content = $this->_debug($content);
+
+        //Remove the template from the stack
+        array_pop($this->_stack);
+
+        return $content;
+    }
+
 
     /**
      * Get callback for compiling markdown

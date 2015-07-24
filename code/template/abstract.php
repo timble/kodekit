@@ -37,6 +37,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected $_source;
 
     /**
+     * Debug
+     *
+     * @var boolean
+     */
+    protected $_debug;
+
+    /**
      * Constructor
      *
      * Prevent creating instances of this class by making the constructor private
@@ -52,6 +59,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
 
         //Reset the content
         $this->_source = null;
+
+        //Set debug
+        $this->_debug  = $config->debug;
 
         //Register the functions
         $functions = (array)KObjectConfig::unbox($config->functions);
@@ -72,6 +82,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'debug'     => Koowa::getInstance()->isDebug(),
             'functions' => array()
         ));
 
@@ -145,7 +156,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Get the template data
      *
-     * @return  array   The view data
+     * @return  array   The template data
      */
     public function getData()
     {
@@ -186,6 +197,28 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Enable or disable debug
+     *
+     * @param bool $debug True or false.
+     * @return KTemplateAbstract
+     */
+    public function setDebug($debug)
+    {
+        $this->_debug = (bool) $debug;
+        return $this;
+    }
+
+    /**
+     * Check if the template is running in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->_debug;
     }
 
     /**
