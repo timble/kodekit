@@ -56,8 +56,12 @@ class KFilesystemMimetypeFileinfo extends KFilesystemMimetypeAbstract
 
         if (static::isSupported())
         {
-            if ($finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file)) {
-                $mimetype = $finfo->buffer($stream->read());
+            if ($finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file))
+            {
+                if ($path = $stream->getPath()) {
+                    $mimetype = $finfo->file($path);
+                }
+                else $mimetype = $finfo->buffer($stream->toString());
             }
         }
 
