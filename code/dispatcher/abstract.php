@@ -277,9 +277,8 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         }
 
         //Resolve the controller action
-        // TODO: shouldn't this be data and not query? and _action not action
-        if($context->request->query->has('action')) {
-            $this->setControllerAction($context->request->query->get('action', 'cmd'));
+        if($context->request->data->has('_action')) {
+            $this->setControllerAction($context->request->data->get('_action', 'cmd'));
         }
     }
 
