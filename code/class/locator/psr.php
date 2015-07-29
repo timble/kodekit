@@ -14,7 +14,7 @@
  *
  * @author  Ercan Ozkaya <http://github.com/ercanozkaya>
  * @package Koowa\Library\Class\Locator
- * @see     http://www.php-fig.org/psr/psr-4/
+ * @link    http://www.php-fig.org/psr/psr-4/
  */
 class KClassLocatorPsr extends KClassLocatorAbstract
 {
