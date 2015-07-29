@@ -18,8 +18,8 @@ class KObjectConfigJson extends KObjectConfigFormat
     /**
      * Read from a string and create an array
      *
-     * @param  string $string
-     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @param  string   $string
+     * @param  bool     $object  If TRUE return a KObjectConfig, if FALSE return an array. Default TRUE.
      * @throws DomainException  If the JSON cannot be decoded or if the encoded data is deeper than the recursion limit.
      * @return KObjectConfigJson|array
      */

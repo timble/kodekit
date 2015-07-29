@@ -25,16 +25,20 @@ class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
     private $__token;
 
     /**
-     * Constructor
+     * Initializes the default configuration for the object
      *
-     * @param KObjectConfig $config Configuration options
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return void
      */
-    public function __construct(KObjectConfig $config)
+    protected function _initialize(KObjectConfig $config)
     {
-        parent::__construct($config);
+        $config->append(array(
+            'priority' => self::PRIORITY_LOW,
+        ));
 
-        $this->addCommandCallback('before.post', 'authenticateRequest');
-        $this->addCommandCallback('after.get'  , 'signResponse');
+        parent::_initialize($config);
     }
 
     /**
@@ -42,7 +46,7 @@ class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
      *
      * @return  string  The CSRF token or NULL if no token could be found
      */
-    public function getCsrfToken()
+    public function getToken()
     {
         if(!isset($this->__token))
         {
@@ -74,41 +78,41 @@ class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
      * additionally a session token check if the user is authentic.
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
-     *
      * @throws KControllerExceptionRequestInvalid      If the request referrer is not valid
      * @throws KControllerExceptionRequestForbidden    If the cookie token is not valid
      * @throws KControllerExceptionRequestNotAuthenticated If the session token is not valid
-     * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
+     * @return boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
     public function authenticateRequest(KDispatcherContextInterface $context)
     {
-        $request = $context->request;
-        $user    = $context->user;
-
-        //Check referrer
-        if(!$request->getReferrer()) {
-            throw new KControllerExceptionRequestInvalid('Request Referrer Not Found');
-        }
-
-        //Check csrf token
-        if(!$this->getCsrfToken()) {
-            throw new KControllerExceptionRequestNotAuthenticated('Csrf Token Not Found');
-        }
-
-        //Check cookie token
-        if($this->getCsrfToken() !== $request->cookies->get('csrf_token', 'sha1')) {
-            throw new KControllerExceptionRequestNotAuthenticated('Invalid Cookie Token');
-        }
-
-        if($user->isAuthentic() && $user->getSession()->isActive())
+        if($context->request->isPost())
         {
-            //Check session token
-            if( $this->getCsrfToken() !== $user->getSession()->getToken()) {
-                throw new KControllerExceptionRequestForbidden('Invalid Session Token');
+            $request = $context->request;
+            $user    = $context->user;
+
+            //Check referrer
+            if(!$request->getReferrer()) {
+                throw new KControllerExceptionRequestInvalid('Request Referrer Not Found');
+            }
+
+            //Check csrf token
+            if(!$this->getToken()) {
+                throw new KControllerExceptionRequestNotAuthenticated('Token Not Found');
+            }
+
+            //Check cookie token
+            if($this->getToken() !== $request->cookies->get('csrf_token', 'sha1')) {
+                throw new KControllerExceptionRequestNotAuthenticated('Invalid Cookie Token');
+            }
+
+            if($user->isAuthentic() && $user->getSession()->isActive())
+            {
+                //Check session token
+                if( $this->getToken() !== $user->getSession()->getToken()) {
+                    throw new KControllerExceptionRequestForbidden('Invalid Session Token');
+                }
             }
         }
-
-        return true;
     }
 
     /**
@@ -116,9 +120,9 @@ class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
      */
-    public function signResponse(KDispatcherContextInterface $context)
+    public function challengeResponse(KDispatcherContextInterface $context)
     {
-        if(!$context->response->isError())
+        if($context->request->isGet())
         {
             $token = $context->user->getSession()->getToken();
 
@@ -130,5 +134,7 @@ class KDispatcherAuthenticatorCsrf extends KDispatcherAuthenticatorAbstract
 
             $context->response->headers->set('X-CSRF-Token', $token);
         }
+
+        parent::challengeResponse($context);
     }
 }

@@ -16,10 +16,10 @@
 interface KObjectConfigSerializable
 {
     /**
-     * Read from a string and create a ObjectConfig object
+     * Read from a string and create a KObjectConfig object
      *
      * @param  string $string
-     * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
+     * @param  bool    $object  If TRUE return a KObjectConfig, if FALSE return an array. Default TRUE.
      * @throws DomainException
      * @return KObjectConfigSerializable|array
      */

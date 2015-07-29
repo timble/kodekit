@@ -148,6 +148,8 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
             throw new \RuntimeException('File not readable at '.$path);
         }
 
+        $mimetype = null;
+
         foreach (array_reverse($this->__resolvers) as $name => $resolver)
         {
             //Lazy create the resolver
@@ -164,11 +166,49 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
 
             /* @var $resolver KFilesystemMimetypeInterface */
             if (null !== $mimetype = $resolver->fromPath($path)) {
-                return $mimetype;
+                break;
             }
         }
 
-        return null;
+        return $mimetype;
+    }
+
+    /**
+     * Find the mime type of the given stream
+     *
+     * @param KFilesystemStreamInterface $stream
+     * @throws \RuntimeException If the stream is not readable
+     * @return string The mime type or NULL, if none could be guessed
+     */
+    public function fromStream(KFilesystemStreamInterface $stream)
+    {
+        if (!$stream->isReadable()) {
+            throw new \RuntimeException('Stream not readable');
+        }
+
+        $mimetype = null;
+
+        foreach (array_reverse($this->__resolvers) as $name => $resolver)
+        {
+            //Lazy create the resolver
+            if(!($resolver instanceof KFilesystemMimetypeInterface))
+            {
+                $resolver = $this->getObject($resolver);
+
+                if (!$resolver instanceof KFilesystemMimetypeInterface) {
+                    throw new \UnexpectedValueException('Resolver does not implement KFilesystemMimetypeInterface');
+                }
+
+                $this->__resolvers[$name] = $resolver;
+            }
+
+            /* @var $resolver KFilesystemMimetypeInterface */
+            if (null !== $mimetype = $resolver->fromStream($stream)) {
+                break;
+            }
+        }
+
+        return $mimetype;
     }
 
     /**

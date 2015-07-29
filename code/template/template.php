@@ -137,7 +137,8 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         //Create the template engine
         $config = array(
             'template'  => $this,
-            'functions' => $this->_functions
+            'functions' => $this->_functions,
+            'debug'     => $this->isDebug()
         );
 
         $this->_source = $this->getObject('template.engine.factory')
@@ -165,7 +166,8 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
             //Create the template engine
             $config = array(
                 'template'  => $this,
-                'functions' => $this->_functions
+                'functions' => $this->_functions,
+                'debug'     => $this->isDebug()
             );
 
             $this->_source = $this->getObject('template.engine.factory')

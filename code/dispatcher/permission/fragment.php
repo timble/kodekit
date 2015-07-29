@@ -8,12 +8,12 @@
  */
 
 /**
- * Abstract Dispatcher Permission
+ * Fragment Dispatcher Permission
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Permission
  */
-abstract class KDispatcherPermissionAbstract extends KObjectMixinAbstract implements KDispatcherPermissionInterface
+class KDispatcherPermissionFragment extends KDispatcherPermissionAbstract
 {
     /**
      * Permission handler for dispatch actions
@@ -26,31 +26,11 @@ abstract class KDispatcherPermissionAbstract extends KObjectMixinAbstract implem
     }
 
     /**
-     * Permission handler for exception actions
+     * Permission handler for include actions
      *
      * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function canFail()
-    {
-        return true;
-    }
-
-    /**
-     * Permission handler for redirect actions
-     *
-     * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
-     */
-    public function canRedirect()
-    {
-        return true;
-    }
-
-    /**
-     * Permission handler for send actions
-     *
-     * @return  boolean  Return TRUE if action is permitted. FALSE otherwise.
-     */
-    public function canSend()
+    public function canInclude()
     {
         return true;
     }

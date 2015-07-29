@@ -45,6 +45,29 @@ class KFilesystemMimetypeFileinfo extends KFilesystemMimetypeAbstract
     }
 
     /**
+     * Find the mime type of the given stream
+     *
+     * @param KFilesystemStreamInterface $stream
+     * @return string The mime type or NULL, if none could be guessed
+     */
+    public function fromStream(KFilesystemStreamInterface $stream)
+    {
+        $mimetype = null;
+
+        if (static::isSupported())
+        {
+            if ($finfo = new \finfo(FILEINFO_MIME_TYPE, $this->getConfig()->magic_file))
+            {
+                if ($path = $stream->getPath()) {
+                    $mimetype = $finfo->file($path);
+                } else $mimetype = $finfo->buffer($stream->toString());
+            }
+        }
+
+        return $mimetype;
+    }
+
+    /**
      * Find the mime type of the file with the given path.
      *
      * @param string $path The path to the file

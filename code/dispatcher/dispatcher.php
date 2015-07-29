@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
+class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
      * List of methods supported by the dispatcher
@@ -33,9 +33,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
 
         //Set the supported methods
         $this->_methods = KObjectConfig::unbox($config->methods);
-
-        //Load the dispatcher translations
-        $this->addCommandCallback('before.dispatch', '_loadTranslations');
     }
 
     /**
@@ -63,7 +60,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * @param  KObjectConfigInterface  $config  Configuration options
      * @param  KObjectManagerInterface $manager A KObjectManagerInterface object
-     * @return KDispatcherDefault
+     * @return KDispatcherInterface
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
@@ -81,23 +78,23 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     }
 
     /**
-     * Load the controller translations
+     * Resolve the request
      *
-     * @param KControllerContextInterface $context
-     * @return void
+     * @param KDispatcherContextInterface $context A dispatcher context object
+     * @throw KDispatcherExceptionMethodNotAllowed If the HTTP request method is not allowed.
      */
-    protected function _loadTranslations(KControllerContextInterface $context)
+    protected function _resolveRequest(KDispatcherContextInterface $context)
     {
-        $package = $this->getIdentifier()->package;
-        $domain  = $this->getIdentifier()->domain;
+        //Resolve the controller action
+        $method = strtolower($context->request->getMethod());
 
-        if($domain) {
-            $identifier = 'com://'.$domain.'/'.$package;
-        } else {
-            $identifier = 'com:'.$package;
+        if (!in_array($method, $this->getHttpMethods())) {
+            throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
         }
 
-        $this->getObject('translator')->load($identifier);
+        $this->setControllerAction($method);
+
+        parent::_resolveRequest($context);
     }
 
     /**
@@ -106,8 +103,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
      * the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context  A dispatcher context object
-     * @throws  KDispatcherExceptionMethodNotAllowed  If the method is not allowed on the resource.
+     * @param KDispatcherContextInterface $context	A dispatcher context object
      * @return	mixed
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
@@ -120,44 +116,17 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             $url = clone($context->request->getUrl());
             $url->query['view'] = $this->getController()->getView()->getName();
 
-            $this->redirect($url);
-        }
-        else
-        {
-            $method = strtolower($context->request->getMethod());
-
-            if (!in_array($method, $this->getHttpMethods())) {
-                throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
-            }
-
-            //Set the controller based on the view and pass the view
-            $this->setController($view, array('view' => $view));
-
-            //Execute the component method
-            $this->execute($method, $context);
+            return $this->redirect($url);
         }
 
-        return parent::_actionDispatch($context);
-	}
+        //Get the action
+        $action = $this->getControllerAction();
 
-    /**
-     * Redirect
-     *
-     * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
-     * redirect the dispatcher to another URL after a GET request.
-     *
-     * @param KDispatcherContextInterface $context A dispatcher context object
-     * @return bool
-     */
-    protected function _actionRedirect(KDispatcherContextInterface $context)
-    {
-        $url = $context->param;
+        //Execute the component method
+        $this->execute(strtolower($context->request->getMethod()), $context);
 
-        $context->response->setStatus(KDispatcherResponse::MOVED_PERMANENTLY);
-        $context->response->setRedirect($url);
-        $this->send();
-
-        return false;
+        //Send the response
+        return $this->send($context);
     }
 
     /**
@@ -426,7 +395,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             }
         }
 
-        parent::_actionSend($context);
+        return parent::_actionSend($context);
     }
 
     /**
