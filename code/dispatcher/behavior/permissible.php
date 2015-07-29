@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Behavior
  */
-class KDispatcherBehaviorPermissible extends KControllerBehaviorAbstract
+class KDispatcherBehaviorPermissible extends KDispatcherBehaviorAbstract
 {
     /**
      * The permission object

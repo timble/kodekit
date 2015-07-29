@@ -18,7 +18,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Behavior
  */
-class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
+class KDispatcherBehaviorResettable extends KDispatcherBehaviorAbstract
 {
     /**
      * Check if the behavior is supported
@@ -52,6 +52,6 @@ class KDispatcherBehaviorResettable extends KControllerBehaviorAbstract
 
         if($response->isSuccess()) {
             $response->setRedirect($request->getReferrer());
-        } 
+        }
 	}
 }

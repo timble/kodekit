@@ -56,8 +56,6 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     protected $_max_age;
 
     /**
-     * The max age
-     *
      * Check if the user exists
      *
      * @var boolean
@@ -65,9 +63,23 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     protected $_check_user;
 
     /**
+     * Check the toke age
+     *
+     * @var boolean
+     */
+    protected $_check_age;
+
+    /**
+     * Check if the token is expired
+     *
+     * @var boolean
+     */
+    protected $_check_expire;
+
+    /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param KObjectConfig $config Configuration options
      */
     public function __construct(KObjectConfig $config)
     {
@@ -75,9 +87,10 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
 
         $this->_secret     = $config->secret;
         $this->_max_age    = $config->max_age;
-        $this->_check_user = $config->check_user;
 
-        $this->addCommandCallback('before.dispatch', 'authenticateRequest');
+        $this->_check_user   = $config->check_user;
+        $this->_check_age    = $config->check_age;
+        $this->_check_expire = $config->check_expire;
     }
 
     /**
@@ -91,9 +104,12 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'priority'   => self::PRIORITY_HIGH,
             'secret'     => '',
             'max_age'    => 900,
-            'check_user' => true
+            'check_user'   => true,
+            'check_age'    => true,
+            'check_expire' => true,
         ));
 
         parent::_initialize($config);
@@ -104,7 +120,17 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      *
      * @return KHttpToken  The authorisation token or NULL if no token could be found
      */
-    public function getAuthToken()
+    public function getSecret()
+    {
+        return $this->_secret;
+    }
+
+    /**
+     * Return the JWT authorisation token
+     *
+     * @return KHttpToken  The authorisation token or NULL if no token could be found
+     */
+    public function getToken()
     {
         if(!isset($this->__token))
         {
@@ -144,65 +170,76 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     }
 
     /**
+     * Create a new signed JWT authorisation token
+     *
+     * If not user passed, the context user object will be used.
+     *
+     * @param KUserInterface $user The user object. Default NULL
+     * @return string  The signed authorisation token
+     */
+    public function createToken(KUserInterface $user = null)
+    {
+        if(!$user) {
+            $user = $this->getObject('user');
+        }
+
+        $token = $this->getObject('lib:http.token')
+            ->setSubject($user->getId())
+            ->sign($this->getSecret());
+
+        return $token;
+    }
+
+    /**
      * Authenticate using a JWT token
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
      * @throws KControllerExceptionRequestNotAuthenticated
-     * @return  boolean Returns FALSE if the check failed. Otherwise TRUE.
+     * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
     public function authenticateRequest(KDispatcherContextInterface $context)
     {
-        if(!$context->user->isAuthentic() && $token = $this->getAuthToken())
+        if($token = $this->getToken())
         {
-            if($token->verify($this->_secret))
+            if($token->verify($this->getSecret()))
             {
-                $username = $token->getSubject();
-                $data     = (array) $token->getClaim('user');
+                $user = $token->getSubject();
+                $data = (array) $token->getClaim('user');
 
                 //Ensure the token is not expired
-                if(!$token->getExpireTime() || $token->isExpired()) {
-                    throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
+                if($this->_check_expire)
+                {
+                    if(!$token->getExpireTime() || $token->isExpired()) {
+                        throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
+                    }
                 }
 
                 //Ensure the token is not too old
-                if(!$token->getIssueTime() || $token->getAge() > $this->_max_age) {
-                    throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
+                if($this->_check_age)
+                {
+                    if (!$token->getIssueTime() || $token->getAge() > $this->_max_age) {
+                        throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
+                    }
+                }
+                //Ensure the user exists
+                if($this->_check_user)
+                {
+                    //Ensure we have a username
+                    if(empty($user)) {
+                        throw new KControllerExceptionRequestNotAuthenticated('Invalid User');
+                    }
+
+                    if($this->getObject('user.provider')->load($user)->getId() == 0) {
+                        throw new KControllerExceptionRequestNotAuthenticated('User Not Found');
+                    }
                 }
 
-                //Ensure we have a username
-                if(empty($username)) {
-                    throw new KControllerExceptionRequestNotAuthenticated('Invalid Username');
-                }
+                //Login the user
+                $this->loginUser($user, $data);
 
-                //Ensure the user has an account already
-                if($this->_check_user && $this->getObject('user.provider')->load($username)->getId() == 0) {
-                    throw new KControllerExceptionRequestNotAuthenticated('User Not Found');
-                }
-
-                return $this->_loginUser($username, $data);
+                return true;
             }
             else throw new KControllerExceptionRequestNotAuthenticated('Invalid Token');
         }
-
-        return true;
-    }
-
-    /**
-     * Log the user in
-     *
-     * @param string $username  A user key or name
-     * @param array  $data      Optional user data
-     *
-     * @return bool
-     */
-    protected function _loginUser($username, $data = array())
-    {
-        //Set user data in context
-        $data = $this->getObject('user.provider')->load($username)->toArray();
-        $data['authentic'] = true;
-
-        $this->getObject('user')->setData($data);
-
-        return true;
     }
 }

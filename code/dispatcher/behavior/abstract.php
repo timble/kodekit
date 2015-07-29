@@ -8,9 +8,12 @@
  */
 
 /**
- * Default Dispatcher
+ * Abstract Dispatcher Behavior
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Dispatcher\Behavior
  */
-final class KDispatcherDefault extends KDispatcher {}
+abstract class KDispatcherBehaviorAbstract extends KControllerBehaviorAbstract
+{
+
+}
