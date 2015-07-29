@@ -114,7 +114,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
         if(empty($view))
         {
             $url = clone($context->request->getUrl());
-            $url->query['view'] = $this->getConfig()->controller;
+            $url->query['view'] = $this->getController()->getView()->getName();
 
             return $this->redirect($url);
         }
@@ -123,7 +123,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
         $action = $this->getControllerAction();
 
         //Execute the component method
-        $this->execute($action, $context);
+        $this->execute(strtolower($context->request->getMethod()), $context);
 
         //Send the response
         return $this->send($context);
