@@ -85,8 +85,6 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
     protected function _resolveRequest(KDispatcherContextInterface $context)
     {
-        parent::_resolveRequest($context);
-
         //Resolve the controller action
         $method = strtolower($context->request->getMethod());
 
@@ -95,6 +93,8 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
         }
 
         $this->setControllerAction($method);
+
+        parent::_resolveRequest($context);
     }
 
     /**
