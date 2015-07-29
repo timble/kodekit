@@ -24,6 +24,14 @@ interface KFilesystemMimetypeInterface
     public function fromPath($path);
 
     /**
+     * Find the mime type of the given stream
+     *
+     * @param KFilesystemStreamInterface $stream
+     * @return string The mime type or NULL, if none could be guessed
+     */
+    public function fromStream(KFilesystemStreamInterface $stream);
+
+    /**
      * Check if the finder is supported
      *
      * @return  boolean  True on success, false otherwise
