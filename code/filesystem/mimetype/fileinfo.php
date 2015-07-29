@@ -60,8 +60,7 @@ class KFilesystemMimetypeFileinfo extends KFilesystemMimetypeAbstract
             {
                 if ($path = $stream->getPath()) {
                     $mimetype = $finfo->file($path);
-                }
-                else $mimetype = $finfo->buffer($stream->toString());
+                } else $mimetype = $finfo->buffer($stream->toString());
             }
         }
 
