@@ -47,7 +47,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     {
         $config->append(array(
             'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
-            'behaviors'      => array('limitable', 'resettable'),
+            'behaviors'      => array('routable', 'limitable', 'resettable'),
             'authenticators' => array('csrf')
          ));
 
@@ -107,21 +107,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
-        $view = $context->request->query->get('view', 'cmd');
-
-        //Redirect if no view information can be found in the request
-        if(empty($view))
-        {
-            $url = clone($context->request->getUrl());
-            $url->query['view'] = $this->getController()->getView()->getName();
-
-            return $this->redirect($url);
-        }
-
-        //Get the action
-        $action = $this->getControllerAction();
-
-        //Execute the component method
+        //Execute the request method
         $this->execute(strtolower($context->request->getMethod()), $context);
 
         //Send the response
