@@ -45,7 +45,7 @@
                         var results = [],
                             more = (page * 10) < data.meta.total; // whether or not there are more results available
 
-                        $.each(data.entities, function(i, item) {
+                        $.each(data.data, function(i, item) {
                             results.push(item);
                         });
 
@@ -68,23 +68,24 @@
                         $.ajax(options.url, {
                             data: data
                         }).done(function(data) {
-                                var entities = data.entities;
-                                if (!options.multiple) {
-                                    entities = entities[0];
-                                    $(element).val(selected);
-                                } else {
-                                    // Cleanup up selected. Values will be appended for multiple boxes.
-                                    $(element).val('');
-                                }
+                            var entities = data.data;
+                            if (!options.multiple) {
+                                entities = entities[0];
+                                $(element).val(selected);
+                            } else {
+                                // Cleanup up selected. Values will be appended for multiple boxes.
+                                $(element).val('');
+                            }
+
                             callback(entities);
                         });
                     }
                 },
                 formatResult: function (item) {
-                    return item[options.text];
+                    return item.attributes[options.text];
                 },
                 formatSelection: function (item) {
-                    return item[options.text];
+                    return item.attributes[options.text];
                 },
                 id: options.value
             }, options);
