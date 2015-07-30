@@ -10,6 +10,8 @@
 /**
  * JSON Dispatcher Request Transport Header
  *
+ * Decodes the request payload for various content types and pushes the results into the data object
+ *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Dispatcher\Request\Transport
  */

@@ -10,6 +10,8 @@
 /**
  * JSON Dispatcher Request Transport Header
  *
+ * Fixes the common problems in $_SERVER array and sets protocol data in the request object
+ *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Dispatcher\Request\Transport
  */

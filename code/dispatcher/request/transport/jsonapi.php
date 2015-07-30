@@ -10,6 +10,8 @@
 /**
  * JSON Dispatcher Request Transport Header
  *
+ * Transforms the JSON API request payloads
+ *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Dispatcher\Request\Transport
  */
@@ -40,8 +42,6 @@ class KDispatcherRequestTransportJsonapi extends KDispatcherRequestTransportAbst
                 if (isset($data['attributes']) && is_array($data['attributes'])) {
                     $request->data->add($data['attributes']);
                 }
-
-                var_dump($request->data->toArray(), $request->query->toArray());die;
             }
         }
     }

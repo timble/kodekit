@@ -10,6 +10,9 @@
 /**
  * JSON Dispatcher Request Transport Header
  *
+ * Pushes the request headers into the headers object
+ *
+ * @see     \KHttpRequestHeaders
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\Dispatcher\Request\Transport
  */
