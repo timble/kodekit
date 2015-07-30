@@ -47,9 +47,8 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     {
         $config->append(array(
             'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
-            'behaviors'      => array('resettable'),
-            'authenticators' => array('csrf'),
-            'limit'          => array('default' => 100)
+            'behaviors'      => array('routable', 'limitable', 'resettable'),
+            'authenticators' => array('csrf')
          ));
 
         parent::_initialize($config);
@@ -108,21 +107,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
-        $view = $context->request->query->get('view', 'cmd');
-
-        //Redirect if no view information can be found in the request
-        if(empty($view))
-        {
-            $url = clone($context->request->getUrl());
-            $url->query['view'] = $this->getController()->getView()->getName();
-
-            return $this->redirect($url);
-        }
-
-        //Get the action
-        $action = $this->getControllerAction();
-
-        //Execute the component method
+        //Execute the request method
         $this->execute(strtolower($context->request->getMethod()), $context);
 
         //Send the response
@@ -139,29 +124,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
     protected function _actionGet(KDispatcherContextInterface $context)
     {
-        $controller = $this->getController();
-
-        if($controller instanceof KControllerModellable)
-        {
-            $controller->getModel()->getState()->setProperty('limit', 'default', $this->getConfig()->limit->default);
-
-            $limit = $this->getRequest()->query->get('limit', 'int');
-
-            // Set to default if there is no limit. This is done for both unique and non-unique states
-            // so that limit can be transparently used on unique state requests rendering lists.
-            if(empty($limit)) {
-                $limit = $this->getConfig()->limit->default;
-            }
-
-            if($this->getConfig()->limit->max && $limit > $this->getConfig()->limit->max) {
-                $limit = $this->getConfig()->limit->max;
-            }
-
-            $this->getRequest()->query->limit = $limit;
-            $controller->getModel()->getState()->limit = $limit;
-        }
-
-        return $controller->execute('render', $context);
+        return $this->getController()->execute('render', $context);
     }
 
     /**
