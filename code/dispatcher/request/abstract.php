@@ -211,8 +211,8 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * @param   mixed $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                                 or valid identifier string
      * @param   array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
-     * @return KDispatcherResponseAbstract
+     * @throws \UnexpectedValueException
+     * @return KDispatcherRequestTransportInterface
      */
     public function getTransport($transport, $config = array())
     {
@@ -238,7 +238,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
 
             if (!($transport instanceof KDispatcherRequestTransportInterface))
             {
-                throw new UnexpectedValueException(
+                throw new \UnexpectedValueException(
                     "Transport handler $identifier does not implement DispatcherRequestTransportInterface"
                 );
             }
@@ -256,7 +256,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                            or valid identifier string
      * @param   array $config  An optional associative array of configuration settings
-     * @return KDispatcherResponseAbstract
+     * @return KDispatcherRequestAbstract
      */
     public function attachTransport($transport, $config = array())
     {
