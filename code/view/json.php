@@ -183,14 +183,14 @@ class KViewJson extends KViewAbstract
             if ($limit && $total-($limit + $offset) > 0)
             {
                 $output['links']['next'] = $url->setQuery(array_merge($url->getQuery(true), array(
-                    array('offset' => $limit+$offset)
+                    'offset' => $limit+$offset
                 )))->toString();
             }
 
             if ($limit && $offset && $offset >= $limit)
             {
                 $output['links']['prev'] = $url->setQuery(array_merge($url->getQuery(true), array(
-                    array('offset' => max($offset-$limit, 0))
+                    'offset' => max($offset-$limit, 0)
                 )))->toString();
             }
         }
