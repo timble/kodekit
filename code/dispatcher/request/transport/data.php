@@ -33,8 +33,7 @@ class KDispatcherRequestTransportData extends KDispatcherRequestTransportAbstrac
                 $request->getData()->add($data);
             }
         }
-
-        if($request->getFormat() === 'json')
+        elseif(in_array($request->getContentType(), array('application/json', 'application/x-json', 'application/vnd.api+json')))
         {
             if(in_array($request->getMethod(), array('POST', 'PUT', 'DELETE', 'PATCH')))
             {
@@ -44,7 +43,9 @@ class KDispatcherRequestTransportData extends KDispatcherRequestTransportAbstrac
                     $data = json_decode($content, true);
                 }
 
-                $request->getData()->add($data);
+                if ($data) {
+                    $request->getData()->add($data);
+                }
             }
         }
     }
