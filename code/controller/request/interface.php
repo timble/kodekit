@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Controller\Request
  */
-interface KControllerRequestInterface
+interface KControllerRequestInterface extends KHttpRequestInterface
 {
     /**
      * Set the request query
