@@ -180,18 +180,12 @@ class KViewJson extends KViewAbstract
                 'total'	   => $total
             );
 
-            if ($limit && $total-($limit + $offset) > 0)
-            {
-                $output['links']['next'] = $url->setQuery(array_merge($url->getQuery(true), array(
-                    'offset' => $limit+$offset
-                )))->toString();
+            if ($limit && $total-($limit + $offset) > 0) {
+                $output['links']['next'] = $url->setQuery(array('offset' => $limit+$offset), true)->toString();
             }
 
-            if ($limit && $offset && $offset >= $limit)
-            {
-                $output['links']['prev'] = $url->setQuery(array_merge($url->getQuery(true), array(
-                    'offset' => max($offset-$limit, 0)
-                )))->toString();
+            if ($limit && $offset && $offset >= $limit) {
+                $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
             }
         }
         else $output['data'] = $this->_createResource($model->fetch());
@@ -208,10 +202,16 @@ class KViewJson extends KViewAbstract
      *
      * @see   http://jsonapi.org/format/#document-resource-objects
      * @param KModelEntityInterface  $entity   Document row
+     * @param array $config Resource configuration.
      * @return array The array with data to be encoded to json
      */
-    protected function _createResource(KModelEntityInterface $entity)
+    protected function _createResource(KModelEntityInterface $entity, array $config = array())
     {
+        $config = array_merge(array(
+            'links'         => true,
+            'relationships' => true
+        ), $config);
+
         $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
         $data   = array(
             'type' => $this->_callCustomMethod($entity, 'type') ?: KStringInflector::pluralize($entity->getIdentifier()->name),
@@ -225,14 +225,20 @@ class KViewJson extends KViewAbstract
             $data['attributes'] = array_intersect_key($data['attributes'], $fields);
         }
 
-        $links = $this->_callCustomMethod($entity, 'links') ?: array('self' => (string)$this->_getEntityRoute($entity));
-        if ($links) {
-            $data['links'] = $links;
+        if ($config['links'])
+        {
+            $links = $this->_callCustomMethod($entity, 'links') ?: array('self' => (string)$this->_getEntityRoute($entity));
+            if ($links) {
+                $data['links'] = $links;
+            }
         }
 
-        $relationships = $this->_callCustomMethod($entity, 'relationships');
-        if ($relationships) {
-            $data['relationships'] = $relationships;
+        if ($config['relationships'])
+        {
+            $relationships = $this->_callCustomMethod($entity, 'relationships');
+            if ($relationships) {
+                $data['relationships'] = $relationships;
+            }
         }
 
         return $data;
@@ -251,7 +257,7 @@ class KViewJson extends KViewAbstract
         $cache  = $entity->getIdentifier()->name.'-'.$entity->getHandle();
 
         if (!isset($this->_included_resources[$cache])) {
-            $this->_included_resources[$cache] = $this->_createResource($entity);
+            $this->_included_resources[$cache] = $this->_createResource($entity, array('relationships' => false));
         }
 
         $resource = $this->_included_resources[$cache];
@@ -262,6 +268,27 @@ class KViewJson extends KViewAbstract
                 'id'   => $resource['id']
             )
         );
+    }
+
+
+    /**
+     * Creates resource objects and returns an array of resource identifier objects specified by JSON API
+     *
+     * @see   http://jsonapi.org/format/#document-resource-identifier-objects
+     * @param KModelEntityInterface $entities
+     * @return array
+     */
+    protected function _includeCollection(KModelEntityInterface $entities)
+    {
+        $result = array('data' => array());
+
+        foreach ($entities as $entity)
+        {
+            $relation = $this->_includeResource($entity);
+            $result['data'][] = $relation['data'];
+        }
+
+        return $result;
     }
 
     /**
