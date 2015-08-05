@@ -297,8 +297,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             'debug'   => false,
             'element' => '.select2-listbox',
             'options' => array(
-                'width' => 'resolve',
-                'dropdownCssClass' => 'koowa'
+                'width' => 'resolve'
             )
         ));
 
@@ -321,7 +320,6 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script>
             kQuery(function($){
                 $("'.$config->element.'").select2('.$options.');
-                $("'.$config->element.'").select2(\'container\').removeClass(\'required\');
             });</script>';
 
             self::$_loaded[$signature] = true;
@@ -342,7 +340,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         $config->append(array(
             'element'  => null,
             'options'  => array(
-                'dropdownCssClass' => 'koowa',
+                'minimumInputLength' => 2,
                 'validate'      => false, //Toggle if the forms validation helper is loaded
                 'queryVarName'  => 'search',
                 'width'         => 'resolve',
@@ -380,7 +378,6 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
             $html .= '<script>
             kQuery(function($){
                 $("'.$config->element.'").koowaSelect2('.$options.');
-                $("'.$config->element.'").koowaSelect2(\'container\').removeClass(\'required\');
             });</script>';
 
             self::$_loaded[$signature] = true;

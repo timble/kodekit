@@ -37,29 +37,32 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             $config->name .= '[]';
         }
 
+        if($config->deselect) {
+            $config->options = array_merge(array($this->option(array('label' => $config->prompt))), $config->options->toArray());
+        }
+
         $html = '';
 
         if ($config->select2)
         {
             $config->append(array(
                 'select2_options' => array(
-                    'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name=\"'.$config->name.'\"]',
-                    'options' => array()
+                    'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name=\"'.$config->name.'\"]'
                 )
             ));
 
+            // special configuration for select2 placeholder
             if ($config->deselect)
             {
-                // select2 needs the first option empty for placeholders to work on single select boxes
-                if (!$config->attribs->multiple) {
-                    $config->options = array_merge(array($this->option(array('label' => ''))), $config->options->toArray());
-                }
-
-                // special configuration for select2 placeholder
-                $config->select2_options->append(array(
-                    'options' => array(
-                        'placeholder' => $translator->translate($config->prompt),
-                        'allowClear'  => true
+                $config->append(array(
+                    'select2_options' => array(
+                        'options' => array(
+                            'placeholder' => array(
+                                'id' => '',
+                                'text' => $config->prompt
+                            ),
+                            'allowClear'  => true
+                        )
                     )
                 ));
             }
@@ -92,10 +95,6 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         $translator = $this->getObject('translator');
         $options    = array();
 
-        if($config->deselect) {
-            $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
-        }
-
         $options[] = $this->option(array('label' => $translator->translate( 'Enabled' ) , 'value' => 1 ));
         $options[] = $this->option(array('label' => $translator->translate( 'Disabled' ), 'value' => 0 ));
 
@@ -124,10 +123,6 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         $translator = $this->getObject('translator');
         $options    = array();
-    
-        if ($config->deselect) {
-            $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
-        }
     
         $options[] = $this->option(array('label' => $translator->translate('Published'), 'value' => 1 ));
         $options[] = $this->option(array('label' => $translator->translate('Unpublished') , 'value' => 0 ));
@@ -204,7 +199,6 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             'filter'     => array('sort' => $config->label),
         ));
 
-        $translator = $this->getObject('translator');
         $list       = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
 
         //Get the list of items
@@ -219,9 +213,6 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         //Compose the options array
         $options = array();
-        if($config->deselect) {
-            $options[] = $this->option(array('label' => $translator->translate($config->prompt)));
-        }
 
         foreach ($items as $key => $value)
         {
@@ -259,17 +250,16 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         $config = new KObjectConfigJson($config);
         $config->append(array(
             'name'     => '',
-            'attribs'  => array(),
+            'attribs'  => array(
+                'id' => 'select2-element-'.mt_rand(1000, 100000)
+            ),
             'model'    => KStringInflector::pluralize($this->getIdentifier()->package),
             'validate' => true,
-            'filter'   => array(),
+            'prompt'   => '- '.$this->getObject('translator')->translate('Select').' -',
+            'deselect' => true,
         ))->append(array(
-            'element'    => $config->attribs->id ? '#'.$config->attribs->id : 'input[name='.$config->name.']',
+            'element'    => '#'.$config->attribs->id,
             'options'    => array('multiple' => (bool) $config->attribs->multiple),
-            'deselect'   => true,
-            'prompt'     => '- '.$this->getObject('translator')->translate('Select').' -',
-            'unique'     => true,
-            'select2'    => false,
             'value'      => $config->name,
             'selected'   => $config->{$config->name},
             'identifier' => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
@@ -298,77 +288,40 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         $html = '';
 
-        // TODO: Remove when select2 properly support AJAX multiple listboxes by sending choices
-        // as an array (presumably for v4).
-        if ($config->attribs->multiple)
-        {
-            $html .= '<script>
-            kQuery(function($) {
-                var el = $("' . $config->element . '");
-                var form = el.closest("form");
-
-                var explode = function(e) {
-                   if (el.val()) {
-                        if (el.attr("name").substr(-2) !== "[]") {
-                            // Make the input an array.
-                            el.attr("name", el.attr("name") + "[]");
-                        }
-
-                        var values = el.val().split(",");
-                        $.each(values, function(idx, value) {
-                            form.append(el.clone().val(value));
-                        });
-                        el.remove();
-                    } else {
-                        // If there is no value, then we remove the element anyways to mimic a real select box.
-                        el.remove();
-                    }
-                };
-
-                if (form.hasClass("-koowa-form") || form.hasClass("-koowa-grid")) {
-                    form.submit(explode);
-                } else {
-                    // See: https://github.com/joomla/joomla-cms/pull/5914 for why we use onsubmit
-                    var element = form.get(0),
-                        previous = element.onsubmit;
-
-                    element.onsubmit = function() {
-                        if (typeof previous === "function") {
-                            previous();
-                        }
-
-                        explode();
-
-                        // Avoid explode to be executed more than once.
-                        element.onsubmit = previous;
-                    };
-                }
-            });</script>';
-        }
-
         $html .= $this->getTemplate()->createHelper('behavior')->autocomplete($config);
 
         $config->attribs->name = $config->name;
 
+        $options = array();
+
         if ($config->selected)
         {
-            //Compose the selected array
-            if($config->selected instanceof KModelEntityInterface)
-            {
-                $selected = array();
-                foreach($config->selected as $entity) {
-                    $selected[] = $entity->{$config->value};
-                }
+            $selected = $config->selected;
 
-                $config->selected = $selected;
+            if(!$selected instanceof KModelEntityInterface)
+            {
+                $model     = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter));
+                $selected  = $model->setState(array($config->value => KObjectConfig::unbox($selected)))->fetch();
             }
 
-            $config->attribs->value = json_encode(KObjectConfig::unbox($config->selected));
+            foreach($selected as $entity)
+            {
+                $options[]  = $this->option(array(
+                    'value' => $entity->{$config->value},
+                    'label' => $entity->{$config->label},
+                    'attribs' => array('selected' => true)
+                ));
+            }
         }
 
-        $attribs = $this->buildAttributes($config->attribs);
-
-        $html .= "<input type=\"hidden\" {$attribs} />";
+         $html .= $this->optionlist(array(
+            'name'     => $config->name,
+            'id'       => $config->id,
+            'options' => $options,
+            'deselect' => false,
+            'select2'  => false,
+            'attribs'  => $config->attribs
+        ));
 
         return $html;
     }
