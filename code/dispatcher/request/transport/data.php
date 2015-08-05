@@ -46,6 +46,19 @@ class KDispatcherRequestTransportData extends KDispatcherRequestTransportAbstrac
                 if ($data) {
                     $request->getData()->add($data);
                 }
+
+                // Transform the JSON API request payloads
+                if($request->getContentType() == 'application/vnd.api+json')
+                {
+                    if (is_array($request->data->data))
+                    {
+                        $data = $request->data->data;
+
+                        if (isset($data['attributes']) && is_array($data['attributes'])) {
+                            $request->data->add($data['attributes']);
+                        }
+                    }
+                }
             }
         }
     }

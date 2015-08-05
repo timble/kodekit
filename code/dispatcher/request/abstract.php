@@ -164,7 +164,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'transports'  => array('server', 'headers', 'data', 'jsonapi'),
+            'transports'  => array('server', 'headers', 'data'),
             'base_url'  => '/',
             'base_path' => null,
             'format'    => null,
