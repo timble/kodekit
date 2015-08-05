@@ -8,7 +8,7 @@
  */
 
 /**
- * JSON Dispatcher Request Transport Header
+ * Dispatcher request transport for JSON API payloads
  *
  * Transforms the JSON API request payloads
  *

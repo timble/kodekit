@@ -23,13 +23,6 @@ abstract class KDispatcherRequestTransportAbstract extends KObject implements KD
     protected $_priority;
 
     /**
-     * Request object
-     *
-     * @var	KDispatcherRequestInterface
-     */
-    protected $_request;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config 	An optional KObjectConfig object with configuration options.

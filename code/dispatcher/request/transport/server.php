@@ -8,7 +8,7 @@
  */
 
 /**
- * JSON Dispatcher Request Transport Header
+ * Dispatcher request transport for $_SERVER
  *
  * Fixes the common problems in $_SERVER array and sets protocol data in the request object
  *

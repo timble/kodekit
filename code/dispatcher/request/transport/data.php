@@ -8,7 +8,7 @@
  */
 
 /**
- * JSON Dispatcher Request Transport Header
+ * Dispatcher request transport for decoding data
  *
  * Decodes the request payload for various content types and pushes the results into the data object
  *
