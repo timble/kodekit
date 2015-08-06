@@ -5,6 +5,7 @@
  * Released under the MIT license
  * https://github.com/select2/select2/blob/master/LICENSE.md
  */
+
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -14,7 +15,7 @@
     factory(require('jquery'));
   } else {
     // Browser globals
-    factory(jQuery);
+    factory(kQuery);
   }
 }(function (jQuery) {
   // This is needed so we can catch the AMD loader configuration and use it
