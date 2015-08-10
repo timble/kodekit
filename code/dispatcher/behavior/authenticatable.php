@@ -159,6 +159,7 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      */
     protected function _beforeDispatch(KDispatcherContextInterface $context)
     {
+        // Check if the user has been explicitly authenticated for this request
         if (!$this->getUser()->isAuthentic(true))
         {
             foreach($this->__authenticator_queue as $authenticator)
