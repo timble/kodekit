@@ -235,9 +235,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
                 }
 
                 //Login the user
-                $this->loginUser($user, $data);
-
-                return true;
+                return $this->loginUser($user, $data);
             }
             else throw new KControllerExceptionRequestNotAuthenticated('Invalid Token');
         }
