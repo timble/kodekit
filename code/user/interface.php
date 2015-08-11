@@ -80,9 +80,10 @@ interface KUserInterface extends KObjectEquatable
     /**
      * The user has been successfully authenticated
      *
-     * @return Boolean
+     * @param  boolean $strict If true, checks if the user has been authenticated for this request explicitly
+     * @return boolean True if the user is not logged in, false otherwise
      */
-    public function isAuthentic();
+    public function isAuthentic($strict = false);
 
     /**
      * Checks whether the user account is enabled.
@@ -97,6 +98,13 @@ interface KUserInterface extends KObjectEquatable
      * @return Boolean
      */
     public function isExpired();
+
+    /**
+     * Sets the user as authenticated for the request
+     *
+     * @return $this
+     */
+    public function setAuthentic();
 
     /**
      * Get an user attribute

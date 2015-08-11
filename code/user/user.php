@@ -20,6 +20,13 @@
 class KUser extends KUserAbstract implements KObjectSingleton
 {
     /**
+     * User authentication status for this request
+     *
+     * @var bool
+     */
+    protected $_authentic = false;
+
+    /**
      * Get the user session
      *
      * This function will create a session object if it hasn't been created yet.
@@ -109,11 +116,18 @@ class KUser extends KUserAbstract implements KObjectSingleton
     /**
      * Checks whether the user is not logged in
      *
-     * @return Boolean true if the user is not logged in, false otherwise
+     * @param  boolean $strict If true, checks if the user has been authenticated for this request explicitly
+     * @return boolean True if the user is not logged in, false otherwise
      */
-    public function isAuthentic()
+    public function isAuthentic($strict = false)
     {
-        return $this->getSession()->get('user.authentic');
+        $result = $this->getSession()->get('user.authentic');
+
+        if ($strict) {
+            $result = $result && $this->_authentic;
+        }
+
+        return $result;
     }
 
     /**
@@ -144,6 +158,20 @@ class KUser extends KUserAbstract implements KObjectSingleton
     public function toArray()
     {
         return $this->getSession()->get('user');
+    }
+
+    /**
+     * Sets the user as authenticated for the request
+     *
+     * @return $this
+     */
+    public function setAuthentic()
+    {
+        $this->_authentic = true;
+
+        $this->getSession()->set('user.authentic', true);
+
+        return $this;
     }
 
     /**
