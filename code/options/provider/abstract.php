@@ -8,7 +8,7 @@
  */
 
 /**
- * Options Provider Abstract
+ * Abstract Options Provider
  *
  * @author  Israel Canasa <https://github.com/raeldc>
  * @package Koowa\Library\Options
@@ -16,7 +16,7 @@
 abstract class KOptionsProviderAbstract extends KObject implements KOptionsProviderInterface
 {
     /**
-     * The list of options
+     * The list of options by identifier
      *
      * @var array
      */
@@ -57,10 +57,10 @@ abstract class KOptionsProviderAbstract extends KObject implements KOptionsProvi
     }
 
     /**
-     * Loads the option for the given option identifier
+     * Loads the options for the given option identifier
      *
-     * @param string $identifier A unique option identifier
-     * @param bool  $refresh     If TRUE and the option has already been loaded it will be re-loaded.
+     * @param string    $identifier     A unique option identifier
+     * @param bool      $refresh        If TRUE and the option has already been loaded it will be re-loaded.
      * @return KOptionsInterface Returns a OptionsInterface object
      */
     public function load($identifier, $refresh = false)
@@ -78,8 +78,8 @@ abstract class KOptionsProviderAbstract extends KObject implements KOptionsProvi
     /**
      * Fetch the option for the given option identifier from the backend
      *
-     * @param string $identifier A unique option identifier
-     * @return KOptionsInterface|null Returns a OptionsInterface object or NULL if the option could not be found.
+     * @param string    $identifier     A unique option identifier
+     * @return KOptionsInterface|null   Returns a OptionsInterface object or NULL if the option could not be found.
      */
     public function fetch($identifier)
     {
@@ -89,25 +89,20 @@ abstract class KOptionsProviderAbstract extends KObject implements KOptionsProvi
     /**
      * Create a option object
      *
-     * @param array $data An associative array of options data
-     * @return KOptionsInterface     Returns a OptionsInterface object
+     * @param array $data   An associative array of options data
+     * @return KOptionsInterface     Returns a KOptionsInterface object
      */
     public function create($identifier, $data = array())
     {
-        $options = new KOptions(array(
-            'identifier' => $identifier,
-            'provider'   => $this,
-            'data'       => $data
-        ));
-
+        $options = $this->getObject('options.default', array('data' => $data));
         return $options;
     }
 
     /**
      * Store the options object in the provider
      *
-     * @param string $identifier A unique option identifier
-     * @param array $data An associative array of option data
+     * @param string    $identifier     A unique option identifier
+     * @param array     $data           An associative array of option data
      * @return KOptionsInterface     Returns a OptionsInterface object
      */
     public function store($identifier, $data)
@@ -122,10 +117,10 @@ abstract class KOptionsProviderAbstract extends KObject implements KOptionsProvi
     }
 
     /**
-     * Check if a option has already been loaded for a given option identifier
+     * Check if options has already been loaded for a given option identifier
      *
-     * @param string $identifier A unique option identifier
-     * @return boolean TRUE if a option has already been loaded. FALSE otherwise
+     * @param string    $identifier A unique option identifier
+     * @return boolean  TRUE if a option has already been loaded. FALSE otherwise
      */
     public function isLoaded($identifier)
     {

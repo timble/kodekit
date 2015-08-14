@@ -13,26 +13,113 @@
  * @author  Israel Canasa <https://github.com/raeldc>
  * @package Koowa\Library\Options
  */
-interface KOptionsInterface extends KObjectConfigInterface
+interface KOptionsInterface
 {
     /**
-     * Gets the options identifier.
+     * Retrieve an option
      *
-     * @return	string
+     * If the option does not exist return the default.
+     *
+     * @param string  $name
+     * @param mixed   $default
+     * @return mixed
      */
-    public function getIdentifier();
+    public function get($name, $default = null);
 
     /**
-     * Gets the Provider that instantiated this Options
+     * Set an option
      *
-     * @return	string
+     * @param  string $name
+     * @param  mixed  $value
+     * @throws RuntimeException If the config is read only
+     * @return KOptionsInterface
      */
-    public function getProvider();
+    public function set($name, $value);
 
     /**
-     * Store the Options using the Provider
+     * Check if an option exists
      *
-     * @return	boolean Whether store was successful
+     * @param   string  $name The configuration option name.
+     * @return  boolean
      */
-    public function store();
+    public function has($name);
+
+    /**
+     * Remove an option
+     *
+     * @param   string $name The configuration option name.
+     * @throws  RuntimeException If the config is read only
+     * @return  KOptionsInterface
+     */
+    public function remove( $name );
+
+    /**
+     * Merge options
+     *
+     * This method will overwrite keys that already exist, keys that don't exist yet will be added.
+     *
+     * For duplicate keys, the following will be performed:
+     *
+     * - Nested configs will be recursively merged.
+     * - Items in $options with INTEGER keys will be appended.
+     * - Items in $options with STRING keys will overwrite current values.
+     *
+     * @param  array|Traversable|KOptionsInterface  $options A KOptions object an or array of options to be added
+     * @throws RuntimeException If the config is read only
+     * @return KOptionsInterface
+     */
+    public function merge($options);
+
+    /**
+     * Append options
+     *
+     * This function only adds keys that don't exist and it filters out any duplicate values
+     *
+     * @param  array|Traversable|KOptionsInterface  $options A KObjectConfig object an or array of options to be appended
+     * @throws RuntimeException If the config is read only
+     * @return KOptionsInterface
+     */
+    public function append($options);
+
+    /**
+     * Return the data
+     *
+     * If the data being passed is an instance of KOptionsInterface the data will be transformed
+     * to an associative array.
+     *
+     * @param mixed|KOptionsInterface $data
+     * @return mixed|array
+     */
+    public static function unbox($data);
+
+    /**
+     * Return an associative array of the config data.
+     *
+     * @return array
+     */
+    public function toArray();
+
+    /**
+     * Prevent any more modifications being made to this instance.
+     *
+     * Useful after merge() has been used to merge multiple objects into one object which should then not be
+     * modified again.
+     *
+     * @return KOptionsInterface
+     */
+    public function setReadOnly();
+
+    /**
+     * Returns whether this object is read only or not.
+     *
+     * @return bool
+     */
+    public function isReadOnly();
+
+    /**
+     * Get a new instance
+     *
+     * @return KOptionsInterface
+     */
+    public function getInstance();
 }

@@ -18,42 +18,42 @@ interface KOptionsProviderInterface
     /**
      * Loads the options for the given identifier
      *
-     * @param string $identifier A unique options identifier
-     * @param bool  $refresh     If TRUE and the option has already been loaded it will be re-loaded.
-     * @return KoptionInterface  Returns a KoptionInterface object
+     * @param string    $identifier     A unique options identifier
+     * @param bool      $refresh        If TRUE and the option has already been loaded it will be re-loaded.
+     * @return KOptionsInterface  Returns a KoptionInterface object
      */
     public function load($identifier, $refresh = false);
 
     /**
-     * Fetch the option for the given option identifier from the backend
+     * Fetch the options for the given option identifier from the backend
      *
-     * @param string $identifier A unique option identifier
-     * @return KOptionInterface|null Returns a OptionInterface object or NULL if the option could not be found.
+     * @param string    $identifier    A unique options identifier
+     * @return KOptionsInterface|null   Returns a OptionInterface object or NULL if the options could not be found.
      */
     public function fetch($identifier);
 
     /**
-     * Create a option object
+     * Create a options object
      *
-     * @param array $data An associative array of option data
-     * @return KoptionInterface     Returns a optionInterface object
+     * @param array     $data   An associative array of option data
+     * @return KOptionsInterface    Returns a KOptionsInterface object
      */
     public function create($identifier, $data = array());
 
     /**
-     * Store a option object in the provider
+     * Store a options object in the provider
      *
-     * @param string $identifier A unique option identifier
-     * @param array $data An associative array of option data
-     * @return boolean Whether store was successful
+     * @param string    $identifier     A unique options identifier
+     * @param array     $data           An associative array of option data
+     * @return boolean  Whether store was successful
      */
     public function store($identifier, $data);
 
     /**
-     * Check if a option has already been loaded for a given option identifier
+     * Check if a options has already been loaded for a given options identifier
      *
-     * @param string $identifier A unique option identifier
-     * @return boolean TRUE if a option has already been loaded. FALSE otherwise
+     * @param string    $identifier     A unique option identifier
+     * @return boolean  TRUE if a option has already been loaded. FALSE otherwise
      */
     public function isLoaded($identifier);
 }
