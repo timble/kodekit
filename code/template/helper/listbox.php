@@ -294,7 +294,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         $options = array();
 
-        if ($config->selected)
+        if ((is_scalar($config->selected) && $config->selected) || count($config->selected))
         {
             $selected = $config->selected;
 
