@@ -112,16 +112,15 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
      */
     protected function _addToken(&$text)
     {
-        // POST : Add token
-        if (!empty($this->_token_value)) {
-            $text    = preg_replace('/(<form.*method="post".*>)/i',
+        if (!empty($this->_token_value))
+        {
+            // POST: Add token
+            $text    = preg_replace('/(<form.*method="post"[^>]*>)/i',
                 '\1'.PHP_EOL.'<input type="hidden" name="'.$this->_token_name.'" value="'.$this->_token_value.'" />',
                 $text
             );
-        }
 
-        // GET : Add token to .-koowa-grid forms
-        if (!empty($this->_token_value)) {
+            // GET: Add token to .-koowa-grid forms
             $text    = preg_replace('#(<\s*?form\s+?.*?class=(?:\'|")[^\'"]*?-koowa-grid.*?(?:\'|").*?)>#im',
                 '\1 data-token-name="'.$this->_token_name.'" data-token-value="'.$this->_token_value.'">',
                 $text
