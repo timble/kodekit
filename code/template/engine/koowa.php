@@ -42,7 +42,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         $this->_stack = array();
 
         //Intercept template exception
-        $this->getObject('exception.handler')->addHandler(array($this, 'handleException'), true);
+        $this->getObject('exception.handler')->addExceptionCallback(array($this, 'handleException'), true);
     }
 
     /**

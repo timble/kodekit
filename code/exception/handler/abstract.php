@@ -20,7 +20,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      *
      * @var array
      */
-    private $__handlers = array();
+    private $__exception_callbacks = array();
 
     /**
      * The exception stack
@@ -79,8 +79,8 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
         $this->setErrorReporting($config->error_reporting);
 
         //Add handlers
-        foreach($config->exception_handlers as $handler) {
-            $this->addHandler($handler);
+        foreach($config->exception_callbacks as $callback) {
+            $this->addExceptionCallback($callback);
         }
 
         if($config->exception_type) {
@@ -104,10 +104,10 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'exception_handlers' => array(),
-            'exception_type'     => self::TYPE_ALL,
-            'error_reporting'    => self::ERROR_REPORTING,
-            'error_operator'     => true
+            'exception_callbacks' => array(),
+            'exception_type'      => self::TYPE_ALL,
+            'error_reporting'     => self::ERROR_REPORTING,
+            'error_operator'      => true
         ));
 
         parent::_initialize($config);
@@ -172,62 +172,62 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     }
 
     /**
-     * Add an exception handler
+     * Add an exception callback
      *
      * @param  callable $callback
-     * @param  bool $prepend If true, the handler will be prepended instead of appended.
-     * @throws InvalidArgumentException If the callback is not a callable
-     * @return KExceptionHandler
+     * @param  bool $prepend If true, the callback will be prepended instead of appended.
+     * @throws \InvalidArgumentException If the callback is not a callable
+     * @return KExceptionHandlerAbstract
      */
-    public function addHandler($callback, $prepend = false )
+    public function addExceptionCallback($callback, $prepend = false )
     {
         if (!is_callable($callback))
         {
-            throw new InvalidArgumentException(
-                'The handler must be a callable, "'.gettype($callback).'" given.'
+            throw new \InvalidArgumentException(
+                'The callback must be a callable, "'.gettype($callback).'" given.'
             );
         }
 
         if($prepend) {
-            array_unshift($this->__handlers, $callback);
+            array_unshift($this->__exception_callbacks, $callback);
         } else {
-            array_push($this->__handlers, $callback);
+            array_push($this->__exception_callbacks, $callback);
         }
 
         return $this;
     }
 
     /**
-     * Remove an exception handler
+     * Remove an exception callback
      *
      * @param  callable $callback
-     * @throws InvalidArgumentException If the callback is not a callable
-     * @return KExceptionHandler
+     * @throws \InvalidArgumentException If the callback is not a callable
+     * @return KExceptionHandlerAbstract
      */
-    public function removeHandler($callback)
+    public function removeExceptionCallback($callback)
     {
         if (!is_callable($callback))
         {
-            throw new InvalidArgumentException(
-                'The handler must be a callable, "'.gettype($callback).'" given.'
+            throw new \InvalidArgumentException(
+                'The callback must be a callable, "'.gettype($callback).'" given.'
             );
         }
 
-        if($key = array_search($callback, $this->__handlers)) {
-            unset($this->__handlers[$key]);
+        if($key = array_search($callback, $this->__exception_callbacks)) {
+            unset($this->__exception_callbacks[$key]);
         }
 
         return $this;
     }
 
     /**
-     * Get the registered handlers
+     * Get the registered exception callbacks
      *
      * @return array An array of callables
      */
-    public function getHandlers()
+    public function getExceptionCallbacks()
     {
-        return $this->__handlers;
+        return $this->__exception_callbacks;
     }
 
     /**
@@ -261,20 +261,20 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     }
 
     /**
-     * Handle an exception by calling all handlers that have registered to receive it.
+     * Handle an exception by calling all callbacks that have registered to receive it.
      *
-     * If an exception handler returns TRUE the exception handling will be aborted, otherwise the next handler will be
-     * called, until all handlers have gotten a change to handle the exception.
+     * If an exception callback returns TRUE the exception handling will be aborted, otherwise the next callback will be
+     * called, until all callbacks have gotten a change to handle the exception.
      *
-     * @param   Exception  $exception  The exception to be handled
-     * @return  bool  If the exception was handled return TRUE, otherwise false
+     * @param  \Exception  $exception  The exception to be handled
+     * @return bool  If the exception was handled return TRUE, otherwise false
      */
-    public function handleException(Exception $exception)
+    public function handleException(\Exception $exception)
     {
         try
         {
             //Try to handle the exception
-            foreach($this->getHandlers() as $handler)
+            foreach($this->getExceptionCallbacks() as $handler)
             {
                 if(call_user_func_array($handler, array(&$exception)) === true)
                 {
