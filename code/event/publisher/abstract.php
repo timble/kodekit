@@ -42,7 +42,7 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
 
         $this->__listeners = array();
 
-        $this->setEnabled($config->enabled);
+        $this->__enabled = $config->enabled;
     }
 
     /**
