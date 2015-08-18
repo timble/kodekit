@@ -88,7 +88,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
         $method = strtolower($context->request->getMethod());
 
         if (!in_array($method, $this->getHttpMethods())) {
-            throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
+            throw new KDispatcherExceptionMethodNotAllowed('Method '.strtoupper($method).' not allowed');
         }
 
         $this->setControllerAction($method);
@@ -107,8 +107,20 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
-        //Execute the request method
-        $this->execute(strtolower($context->request->getMethod()), $context);
+        $controller = $this->getController();
+
+        if(!$controller instanceof KControllerViewable && !$controller instanceof KControllerModellable)
+        {
+            $action = strtolower($context->request->query->get('_action', 'alpha'));
+
+            //Throw exception if no action could be determined from the request
+            if(!$action) {
+                throw new KControllerExceptionRequestInvalid('Action not found');
+            }
+
+            $result = $controller->execute($action, $context);
+        }
+        else $this->execute(strtolower($context->request->getMethod()), $context);
 
         //Send the response
         return $this->send($context);
@@ -124,7 +136,15 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
     protected function _actionGet(KDispatcherContextInterface $context)
     {
-        return $this->getController()->execute('render', $context);
+        $controller = $this->getController();
+
+        if($controller instanceof KControllerViewable) {
+            $result = $this->getController()->execute('render', $context);
+        } else {
+            throw new KDispatcherExceptionMethodNotAllowed('Method GET not allowed');
+        }
+
+        return $result;
     }
 
     /**
@@ -135,7 +155,15 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
     protected function _actionHead(KDispatcherContextInterface $context)
     {
-        return $this->execute('get', $context);
+        $controller = $this->getController();
+
+        if($controller instanceof KControllerViewable) {
+            $result =  $this->execute('get', $context);
+        } else {
+            throw new KDispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
+        }
+
+        return $result;
     }
 
     /**
