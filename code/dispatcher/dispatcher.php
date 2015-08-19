@@ -118,7 +118,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
                 throw new KControllerExceptionRequestInvalid('Action not found');
             }
 
-            $result = $controller->execute($action, $context);
+            $controller->execute($action, $context);
         }
         else $this->execute(strtolower($context->request->getMethod()), $context);
 
@@ -184,7 +184,6 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
     protected function _actionPost(KDispatcherContextInterface $context)
     {
-        $result     = false;
         $action     = null;
         $controller = $this->getController();
 
@@ -280,7 +279,6 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {
-        $result     = false;
         $controller = $this->getController();
 
         if($controller instanceof KControllerModellable) {
