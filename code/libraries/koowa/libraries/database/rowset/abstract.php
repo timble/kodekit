@@ -72,6 +72,9 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
             foreach($config->data->toArray() as $properties) {
                 $this->create($properties, $config->status);
             }
+
+            // Unset data to save memory
+            unset($config->data);
         }
 
         //Set the status message
