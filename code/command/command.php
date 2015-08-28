@@ -158,7 +158,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
      */
     final public function getInstance()
     {
-        $instance = new KObjectConfig(array(), $this->_readonly);
+        $instance = new KObjectConfig(array());
         return $instance;
     }
 
