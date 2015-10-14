@@ -84,8 +84,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             $this->_identity_column = $config->identity_column;
         }
 
-        // Reset the row
-        $this->reset();
+        // Clear the row
+        $this->clear();
 
         //Set the status
         if (isset($config->status)) {
@@ -173,11 +173,11 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     }
 
     /**
-     * Reset the row data using the defaults
+     * Clear the row data using the defaults
      *
      * @return KDatabaseRowInterface
      */
-    public function reset()
+    public function clear()
     {
         $this->_data                 = array();
         $this->__modified_properties = array();
@@ -330,9 +330,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     public function setProperties($properties, $modified = true)
     {
         if ($properties instanceof KDatabaseRowInterface) {
-            $properties = $properties->getProperties();
-        } else {
-            $properties = (array) $properties;
+            $properties = $properties->getProperties(false);
         }
 
         foreach ($properties as $property => $value) {
@@ -444,9 +442,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function getHandle()
     {
-        if (isset($this->_identity_column)) {
-            $handle = $this->getProperty($this->_identity_column);
-        } else {
+        if(!$handle = $this->getProperty($this->getIdentityColumn())) {
             $handle = parent::getHandle();
         }
 

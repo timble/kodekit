@@ -37,7 +37,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      *
      * @return KDatabaseRowInterface
      */
-    public function reset();
+    public function clear();
 
     /**
      * Gets the identity column
@@ -113,7 +113,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @return string The status value.
      */
     public function getStatus();
-    
+
     /**
      * Set the status
      *
@@ -121,14 +121,14 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @return  KDatabaseRowAbstract
      */
     public function setStatus($status);
-    
+
     /**
      * Returns the status message
      *
      * @return string The status message
      */
-    public function getStatusMessage();  
-    
+    public function getStatusMessage();
+
     /**
      * Set the status message
      *
