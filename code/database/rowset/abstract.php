@@ -63,14 +63,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
             $this->_identity_column = $config->identity_column;
         }
 
-        // Reset the rowset
-        $this->reset();
+        // Clear the rowset
+        $this->clear();
 
         // Insert the data, if exists
         if (!empty($config->data))
         {
             foreach($config->data->toArray() as $properties) {
-                $this->create($properties, $config->status);
+                $this->insert($properties, $config->status);
             }
 
             // Unset data to save memory
@@ -104,23 +104,54 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     }
 
     /**
-     * Insert a row into the rowset
+     * Insert a new row
      *
-     * The row will be stored by it's identity_column if set or otherwise by it's object handle.
+     * This function will either clone the row prototype, or create a new instance of the row object for each row
+     * being inserted. By default the prototype will be cloned. The row will be stored by it's identity_column if
+     * set or otherwise by it's object handle.
      *
-     * @param  KObjectHandlable|KDatabaseRowInterface $row
-     * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
-     * @return boolean    TRUE on success FALSE on failure
+     * @param   KDatabaseRowInterface|array $row  A DatabaseRowInterface object or an array of row properties
+     * @param   string  $status     The row status
+     * @return  KDatabaseRowsetAbstract
      */
-    public function insert(KObjectHandlable $row)
+    public function insert($row, $status = null)
     {
-        if (!$row instanceof KDatabaseRowInterface) {
-            throw new InvalidArgumentException('Row needs to implement KDatabaseRowInterface');
+        if(!$row instanceof KDatabaseRowInterface)
+        {
+            if (!is_array($row) && !$row instanceof Traversable)
+            {
+                throw new InvalidArgumentException(
+                    'Row must be an array or an object implementing the Traversable interface; received "%s"', gettype($row)
+                );
+            }
+
+            if($this->_prototypable)
+            {
+                if(!$this->_prototype instanceof KDatabaseRowInterface) {
+                    $this->_prototype = $this->getTable()->createRow();
+                }
+
+                $prototype = clone $this->_prototype;
+                $prototype->setStatus($status);
+                $prototype->setProperties($row, $prototype->isNew());
+
+                $row = $prototype;
+            }
+            else
+            {
+                $config = array(
+                    'data'   => $row,
+                    'status' => $status,
+                );
+
+                $row = $this->getTable()->createRow($config);
+            }
         }
 
-        $this->offsetSet($row, null);
+        //Insert the row into the rowset
+        parent::insert($row);
 
-        return true;
+        return $this;
     }
 
     /**
