@@ -13,47 +13,37 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model\Entity
  */
-interface KModelEntityComposable
+interface KModelEntityComposable extends KModelEntityInterface
 {
+    /**
+     * Insert a new entity
+     *
+     * This function will either clone a entity prototype or create a new instance of the entity object for each
+     * entity being inserted. By default the entity will be cloned. The entity will be stored by it's identity_key
+     * if set or otherwise by it's object handle.
+     *
+     * @param   KModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
+     * @param   string  $status     The entity status
+     * @return  KModelEntityComposable
+     */
+    public function insert($entity, $status = null);
+
     /**
      * Find an entity in the collection based on a needle
      *
      * This functions accepts either a know position or associative array of property/value pairs
      *
-     * @param 	string $needle The position or the key to search for
+     * @param string $needle The position or the key to search for
      * @return KModelEntityInterface
      */
     public function find($needle);
-
-    /**
-     * Create an entity for this collection
-     *
-     * This function will either clone the entity object, or create a new instance of the entity object for each entity
-     * being inserted. By default the entity will be cloned.
-     *
-     * @param   array   $properties The entity properties
-     * @param   string  $status     The entity status
-     * @return  KModelEntityComposite
-     */
-    public function create(array $properties = array(), $status = null);
-
-    /**
-     * Insert an entity into the collection
-     *
-     * The entity will be stored by it's identity_key if set or otherwise by it's object handle.
-     *
-     * @param  KObjectHandlable|KModelEntityInterface $entity
-     * @return boolean    TRUE on success FALSE on failure
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntity
-     */
-    public function insert(KObjectHandlable $entity);
 
     /**
      * Removes an entity from the collection
      *
      * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
      *
-     * @param  KObjectHandlable|KModelEntityInterface $entity
+     * @param  KModelEntityInterface $entity
      * @return KModelEntityComposite
      * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
      */
@@ -62,7 +52,7 @@ interface KModelEntityComposable
     /**
      * Checks if the collection contains a specific entity
      *
-     * @param   KObjectHandlable|KModelEntityInterface $entity
+     * @param   KModelEntityInterface $entity
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
     public function contains(KObjectHandlable $entity);

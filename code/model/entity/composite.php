@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model\Entity
  */
-class KModelEntityComposite extends KObjectSet implements KModelEntityInterface, KModelEntityComposable
+class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
 {
     /**
      * Name of the identity key in the collection
@@ -50,13 +50,13 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
         $this->_identity_key = $config->identity_key;
 
         // Reset the collection
-        $this->reset();
+        $this->clear();
 
         // Insert the data, if exists
         if (!empty($config->data))
         {
             foreach($config->data->toArray() as $properties) {
-                $this->create($properties,$config->status);
+                $this->insert($properties,$config->status);
             }
         }
     }
@@ -81,74 +81,50 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
     }
 
     /**
-     * Insert an entity into the collection
+     * Insert a new entity
      *
-     * The entity will be stored by it's identity_key if set or otherwise by it's object handle.
+     * This function will either clone a entity prototype or create a new instance of the entity object for each
+     * entity being inserted. By default the entity will be cloned. The entity will be stored by it's identity_key
+     * if set or otherwise by it's object handle.
      *
-     * @param  KObjectHandlable|KModelEntityInterface $entity
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntity
-     * @return boolean    TRUE on success FALSE on failure
-     */
-    public function insert(KObjectHandlable $entity)
-    {
-        if (!$entity instanceof KModelEntityInterface) {
-            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
-        }
-
-        $this->offsetSet($entity, null);
-
-        return true;
-    }
-
-    /**
-     * Removes an entity from the collection
-     *
-     * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
-     *
-     * @param  KObjectHandlable|KModelEntityInterface $entity
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
-     * @return KModelEntityComposite
-     */
-    public function remove(KObjectHandlable $entity)
-    {
-        if (!$entity instanceof KModelEntityInterface) {
-            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
-        }
-
-        return parent::remove($entity);
-    }
-
-    /**
-     * Checks if the collection contains a specific entity
-     *
-     * @param   KObjectHandlable|KModelEntityInterface $entity
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
-     * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
-     */
-    public function contains(KObjectHandlable $entity)
-    {
-        if (!$entity instanceof KModelEntityInterface) {
-            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
-        }
-
-        return parent::contains($entity);
-    }
-
-    /**
-     * Create a new entity and insert it
-     *
-     * This function will either clone the entity object, or create a new instance of the entity object for each entity
-     * being inserted. By default the entity will be cloned.
-     *
-     * @param   array   $properties The entity properties
+     * @param   KModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
      * @param   string  $status     The entity status
      * @return  KModelEntityComposite
      */
-    public function create(array $properties = array(), $status = null)
+    public function insert($entity, $status = null)
     {
-        if($this->_prototypable)
+        if(!$entity instanceof KModelEntityInterface)
         {
-            if(!$this->_prototype instanceof KModelEntityInterface)
+            if (!is_array($entity) && !$entity instanceof \Traversable)
+            {
+                throw new \InvalidArgumentException(
+                    'Entity must be an array or an object implementing the Traversable interface; received "%s"', gettype($entity)
+                );
+            }
+
+            if($this->_prototypable)
+            {
+                if(!$this->_prototype instanceof KModelEntityInterface)
+                {
+                    $identifier = $this->getIdentifier()->toArray();
+                    $identifier['path'] = array('model', 'entity');
+                    $identifier['name'] = KStringInflector::singularize($this->getIdentifier()->name);
+
+                    //The entity default options
+                    $options = array(
+                        'identity_key' => $this->getIdentityKey()
+                    );
+
+                    $this->_prototype = $this->getObject($identifier, $options);
+                }
+
+                $prototype = clone $this->_prototype;
+                $prototype->setStatus($status);
+                $prototype->setProperties($entity, $prototype->isNew());
+
+                $entity = $prototype;
+            }
+            else
             {
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('model', 'entity');
@@ -156,37 +132,19 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
 
                 //The entity default options
                 $options = array(
+                    'data'         => $entity,
+                    'status'       => $status,
                     'identity_key' => $this->getIdentityKey()
                 );
 
-                $this->_prototype = $this->getObject($identifier, $options);
+                $entity = $this->getObject($identifier, $options);
             }
-
-            $entity = clone $this->_prototype;
-
-            $entity->setStatus($status);
-            $entity->setProperties($properties, $entity->isNew());
-        }
-        else
-        {
-            $identifier = $this->getIdentifier()->toArray();
-            $identifier['path'] = array('model', 'entity');
-            $identifier['name'] = KStringInflector::singularize($this->getIdentifier()->name);
-
-            //The entity default options
-            $options = array(
-                'data'         => $properties,
-                'status'       => $status,
-                'identity_key' => $this->getIdentityKey()
-            );
-
-            $entity = $this->getObject($identifier, $options);
         }
 
         //Insert the entity into the collection
-        $this->insert($entity);
+        parent::insert($entity);
 
-        return $entity;
+        return $this;
     }
 
     /**
@@ -221,6 +179,40 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
         }
 
         return $result;
+    }
+
+    /**
+     * Removes an entity from the collection
+     *
+     * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
+     *
+     * @param  KModelEntityInterface $entity
+     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
+     * @return KModelEntityComposite
+     */
+    public function remove(KObjectHandlable $entity)
+    {
+        if (!$entity instanceof KModelEntityInterface) {
+            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
+        }
+
+        return parent::remove($entity);
+    }
+
+    /**
+     * Checks if the collection contains a specific entity
+     *
+     * @param   KModelEntityInterface $entity
+     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
+     * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
+     */
+    public function contains(KObjectHandlable $entity)
+    {
+        if (!$entity instanceof KModelEntityInterface) {
+            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
+        }
+
+        return parent::contains($entity);
     }
 
     /**
@@ -278,11 +270,11 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityInterface,
     }
 
     /**
-     * Reset the collection
+     * Clear the collection
      *
      * @return  KModelEntityComposite
      */
-    public function reset()
+    public function clear()
     {
         $this->_data = array();
         return $this;
