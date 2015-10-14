@@ -29,6 +29,13 @@ class KModelState extends KObjectArray implements KModelStateInterface
     private $__model;
 
     /**
+     * Default state values
+     *
+     * @var array
+     */
+    private $__defaults;
+
+    /**
      * Constructor
      *
      * @param KObjectConfig $config An optional KObjectConfig object with configuration options
@@ -53,7 +60,8 @@ class KModelState extends KObjectArray implements KModelStateInterface
             );
         }
 
-        $this->__model = $config->model;
+        $this->__model    = $config->model;
+        $this->__defaults = $config->defaults;
     }
 
     /**
@@ -66,7 +74,8 @@ class KModelState extends KObjectArray implements KModelStateInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'model' => null,
+            'model'    => null,
+            'defaults' => array(),
         ));
 
         parent::_initialize($config);
@@ -88,20 +97,17 @@ class KModelState extends KObjectArray implements KModelStateInterface
     public function insert($name, $filter, $default = null, $unique = false, $required = array(), $internal = false)
     {
         //Create the state
-        $state = new stdClass();
+        $state = new \stdClass();
         $state->name     = $name;
         $state->filter   = $filter;
-        $state->value    = null;
         $state->unique   = $unique;
         $state->required = $required;
-        $state->default  = $default;
+        $state->default  = isset($this->__defaults[$name]) ? $this->__defaults[$name] : $default;
+        $state->value    = $state->default;
         $state->internal = $internal;
-        $this->_data[$name] = $state;
 
-        //Set the value to default
-        if(isset($default)) {
-            $this->offsetSet($name, $default);
-        }
+        //Sanitize the state
+        $this->_data[$name] = $this->_sanitize($state);
 
         return $this;
     }
@@ -116,8 +122,8 @@ class KModelState extends KObjectArray implements KModelStateInterface
     public function get($name, $default = null)
     {
         $result = $default;
-        if($this->offsetExists($name)) {
-            $result = $this->offsetGet($name);
+        if($this->hasProperty($name, 'value')) {
+            $result =  $this->_data[$name]->value;
         }
 
         return $result;
@@ -129,19 +135,27 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * This function only acts on existing states, if a state has changed it will call back to the model triggering a
      * reset action.
      *
-     * @param  	string 	$name  The state name.
-     * @param  	mixed  	$value The state value.
-     * @return  KModelInterface
+     * This function only accepts scalar or array values. Values are only filtered if not NULL. If the value is an empty
+     * string it will be filtered to NULL. Values will only be set if the state exists. Function will not create new
+     * states. Use the insert() function instead.
+     *
+     * @param   string        $name
+     * @param   scalar|array  $value
+     * @throws \UnexpectedValueException If the value is not a scalar or an array
+     * @return  KModelState
      */
     public function set($name, $value = null)
     {
         if ($this->has($name) && $this->get($name) !== $value)
         {
-            $this->offsetSet($name, $value);
+            $this->_data[$name]->value = $value;
+            $this->_sanitize($this->_data[$name]);
 
-            //Reset the model
+            //Reset the mode
             $this->__model->reset(array($name));
+
         }
+        else $this->__defaults[$name] = $value;
 
         return $this;
     }
@@ -154,7 +168,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      */
     public function has($name)
     {
-        return $this->offsetExists($name);
+        return array_key_exists($name, $this->_data);
     }
 
     /**
@@ -165,7 +179,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      */
     public function remove( $name )
     {
-        $this->offsetUnset($name);
+        unset($this->_data[$name]);
         return $this;
     }
 
@@ -274,8 +288,13 @@ class KModelState extends KObjectArray implements KModelStateInterface
     {
         if($this->has($name))
         {
-            if($this->hasProperty($name, $property)) {
-                $this->_data[$name]->$property = $value;
+            if($this->hasProperty($name, $property))
+            {
+                if($property !== 'value') {
+                    $this->_data[$name]->$property = $value;
+                } else {
+                    $this->set($name, $value);
+                }
             }
         }
 
@@ -372,59 +391,49 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * @param   string $name
      * @return  mixed  The state value
      */
-    public function offsetGet($name)
+    final public function offsetGet($name)
     {
-        $result = null;
-
-        if (isset($this->_data[$name])) {
-            $result = $this->_data[$name]->value;
-        }
-
-        return $result;
+        return $this->get($name);
     }
 
     /**
      * Set an state value
      *
-     * This function only accepts scalar or array values. Values are only filtered if not NULL. If the value is an empty
-     * string it will be filtered to NULL. Values will only be set if the state exists. Function will not create new
-     * states. Use the insert() function instead.
-     *
      * @param   string        $name
-     * @param   mixed|array  $value
-     * @throws UnexpectedValueException If the value is not a scalar or an array
+     * @param   scalar|array  $value
      * @return  void
      */
-    public function offsetSet($name, $value)
+    final public function offsetSet($name, $value)
     {
-        if($this->offsetExists($name))
-        {
-            //Only filter if we have a value
-            if($value !== null)
-            {
-                if($value !== '')
-                {
-                    //Only accepts scalar values and array
-                    if(!is_scalar($value) && !is_array($value))
-                    {
-                        throw new UnexpectedValueException(
-                            'Value needs to be an array or a scalar, "'.gettype($value).'" given'
-                        );
-                    }
+        $this->set($name, $value);
+    }
 
-                    $filter = $this->_data[$name]->filter;
+    /**
+     * Check if the offset exists
+     *
+     * Required by interface \ArrayAccess
+     *
+     * @param   int   $offset
+     * @return  bool
+     */
+    final public function offsetExists($offset)
+    {
+        return $this->has($offset);
+    }
 
-                    if(!($filter instanceof KFilterInterface)) {
-                        $filter =  $this->getObject('filter.factory')->createChain($filter);
-                    }
-
-                    $value = $filter->sanitize($value);
-                }
-                else $value = null;
-            }
-
-            $this->_data[$name]->value = $value;
-        }
+    /**
+     * Unset an item in the array
+     *
+     * All numerical array keys will be modified to start counting from zero while literal keys won't be touched.
+     *
+     * Required by interface \ArrayAccess
+     *
+     * @param   int     $offset
+     * @return  void
+     */
+    final public function offsetUnset($offset)
+    {
+        $this->remove($offset);
     }
 
 	/**
@@ -450,5 +459,37 @@ class KModelState extends KObjectArray implements KModelStateInterface
         }
 
         return true;
+    }
+
+    /**
+     * Sanitize a state by filtering the state value
+     *
+     * @param  object  $state The state object.
+     * @throws \UnexpectedValueException If the value is not a scalar or an array
+     * @return object
+     */
+    protected function _sanitize($state)
+    {
+        //Only filter if we have a value
+        if(!empty($state->value))
+        {
+            //Only accepts scalar values and array
+            if(!is_scalar($state->value) && !is_array($state->value))
+            {
+                throw new \UnexpectedValueException(
+                    'Value needs to be an array or a scalar, "'.gettype($state->value).'" given'
+                );
+            }
+
+            $filter = $state->filter;
+
+            if(!($filter instanceof KFilterInterface)) {
+                $filter =  $this->getObject('filter.factory')->createChain($filter);
+            }
+
+            $state->value = $filter->sanitize($state->value);
+        }
+
+        return $state;
     }
 }
