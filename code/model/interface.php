@@ -16,22 +16,22 @@
 interface KModelInterface
 {
     /**
-     * Create a new entity for the data source
+     * Create a new entity for the data store
      *
      * @param  array $properties Array of entity properties
-     * @return  KModelEntityInterface
+     * @return  KModelEntityComposite
      */
     public function create(array $properties = array());
 
     /**
-     * Fetch an entity from the datasource on the model state
+     * Fetch an entity from the data store using the model state
      *
-     * @return KModelEntityInterface
+     * @return KModelEntityComposite
      */
     public function fetch();
 
     /**
-     * Get the total amount of items
+     * Get the total amount of entities from the data store using the model state
      *
      * @return  int
      */
