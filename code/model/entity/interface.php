@@ -43,11 +43,11 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
     public function delete();
 
     /**
-     * Resets to the entity to it's default properties
+     * Clear the entity data
      *
      * @return KModelEntityInterface
      */
-    public function reset();
+    public function clear();
 
     /**
      * Get the entity key

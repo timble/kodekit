@@ -71,8 +71,8 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
 
         $this->_identity_key = $config->identity_key;
 
-        // Reset the entity
-        $this->reset();
+        // Clear the entity
+        $this->clear();
 
         //Set the status
         if (isset($config->status)) {
@@ -138,11 +138,11 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     }
 
     /**
-     * Resets to the default properties
+     * Clear the entity data
      *
      * @return KModelEntityAbstract
      */
-    public function reset()
+    public function clear()
     {
         $this->_data                 = array();
         $this->__modified_properties = array();
@@ -287,9 +287,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     public function setProperties($properties, $modified = true)
     {
         if ($properties instanceof KModelEntityInterface) {
-            $properties = $properties->getProperties();
-        } else {
-            $properties = (array) $properties;
+            $properties = $properties->getProperties(false);
         }
 
         foreach ($properties as $property => $value) {
@@ -391,9 +389,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      */
     public function getHandle()
     {
-        if (isset($this->_identity_key)) {
-            $handle = $this->getProperty($this->_identity_key);
-        } else {
+        if(!$handle = $this->getProperty($this->getIdentityKey())) {
             $handle = parent::getHandle();
         }
 
