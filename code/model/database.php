@@ -35,7 +35,7 @@ class KModelDatabase extends KModelAbstract
 
         $this->_table = $config->table;
 
-        //Calculate the aliases based on the location of the table 
+        //Calculate the aliases based on the location of the table
         $model = $database = $this->getTable()->getIdentifier()->toArray();
 
         //Create database.rowset -> model.entity alias
@@ -76,15 +76,19 @@ class KModelDatabase extends KModelAbstract
     }
 
     /**
-     * Create a new entity for the data source
+     * Create a new entity for the data store
      *
      * @param KModelContext $context A model context object
-     * @return  KModelEntityInterface The entity
+     * @return  KModelEntityComposite The model entity
      */
     protected function _actionCreate(KModelContext $context)
     {
         //Get the data
         $data = KModelContext::unbox($context->entity);
+
+        if(!is_numeric(key($data))) {
+            $data = array($data);
+        }
 
         //Entity options
         $options = array(
@@ -92,20 +96,14 @@ class KModelDatabase extends KModelAbstract
             'identity_column' => $context->getIdentityKey()
         );
 
-        if(!is_numeric(key($data))) {
-            $entity = $this->getTable()->createRow($options);
-        } else {
-            $entity = $this->getTable()->createRowset($options);
-        }
-
-        return $entity;
+        return $this->getTable()->createRowset($options);
     }
 
     /**
-     * Fetch a new entity from the data source
+     * Fetch a new entity from the data store
      *
      * @param KModelContext $context A model context object
-     * @return KModelEntityInterface The entity
+     * @return  KModelEntityComposite The model entity
      */
     protected function _actionFetch(KModelContext $context)
     {
