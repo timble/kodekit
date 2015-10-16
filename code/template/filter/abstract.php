@@ -93,10 +93,10 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
     }
 
     /**
-     * Method to extract key/value pairs out of a string with xml style attributes
+     * Method to extract name/value pairs out of a string with xml style attributes
      *
      * @param   string  $string String containing xml style attributes
-     * @return  array   Key/Value pairs for the attributes
+     * @return  array   name/value pairs for the attributes
      */
     public function parseAttributes($string)
     {
@@ -106,14 +106,11 @@ abstract class KTemplateFilterAbstract extends KObject implements KTemplateFilte
         {
             $attr = array();
 
-            preg_match_all('/([\w:-]+)[\s]?=[\s]?"([^"]*)"/i', $string, $attr);
-
-            if (is_array($attr))
+            //Find name/value attributes
+            if(preg_match_all('/(?<name>[\w:-]+)[\s]?=[\s]?"(?<value>[^"]*)"/i', $string, $attr))
             {
-                $numPairs = count($attr[1]);
-                for ($i = 0; $i < $numPairs; $i++)
-                {
-                    $result[$attr[1][$i]] = $attr[2][$i];
+                for($i = 0; $i < count($attr['name']); $i++) {
+                    $result[$attr['name'][$i]] = trim($attr['value'][$i]);
                 }
             }
         }
