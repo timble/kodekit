@@ -64,7 +64,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_debug  = $config->debug;
 
         //Register the functions
-        $functions = (array)KObjectConfig::unbox($config->functions);
+        $functions = KObjectConfig::unbox($config->functions);
 
         foreach ($functions as $name => $callback) {
             $this->registerFunction($name, $callback);
