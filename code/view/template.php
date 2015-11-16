@@ -76,6 +76,7 @@ abstract class KViewTemplate extends KViewAbstract
                 'title'   => array($this, 'getTitle'),
                 'content' => array($this, 'getContent'),
             ),
+            'template_parameters' => array()
         ));
 
         parent::_initialize($config);
@@ -143,7 +144,8 @@ abstract class KViewTemplate extends KViewAbstract
                 $context->parameters = $model->getState()->getValues();
                 $context->parameters->total = $model->count();
             }
-            else {
+            else
+            {
                 $context->parameters = $entity->getProperties();
                 $context->parameters->total = 1;
             }
@@ -287,8 +289,9 @@ abstract class KViewTemplate extends KViewAbstract
     {
         $context = new KViewContextTemplate();
         $context->setSubject($this);
-        $context->setData($this->_data);
+        $context->setData($this->getData());
         $context->setLayout($this->getLayout());
+        $context->setParameters($this->getConfig()->template_parameters);
 
         return $context;
     }
