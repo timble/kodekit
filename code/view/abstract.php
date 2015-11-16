@@ -37,6 +37,13 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     protected $_content;
 
     /**
+     * The title of the view
+     *
+     * @var string
+     */
+    protected $_title;
+
+    /**
      * The view data
      *
      * @var boolean
@@ -63,6 +70,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         $this->_data = KObjectConfig::unbox($config->data);
 
         $this->setUrl($config->url);
+        $this->setTitle($config->title);
         $this->setContent($config->content);
         $this->mimetype = $config->mimetype;
 
@@ -98,7 +106,8 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
             'model'      => 'lib:model.empty',
             'content'	 => '',
             'mimetype'	 => '',
-            'url'        =>  $this->getObject('lib:http.url')
+            'url'        =>  $this->getObject('lib:http.url'),
+            'title'      => ucfirst($this->getName())
         ));
 
         parent::_initialize($config);
@@ -115,7 +124,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         $context = $this->getContext();
         $context->data       = array_merge($this->getData(), $data);
         $context->action     = 'render';
-        $context->parameters = array();
 
         if ($this->invokeCommand('before.render', $context) !== false)
         {
@@ -220,6 +228,16 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData()
+    {
+        return $this->_data;
+    }
+
+    /**
      * Sets the view data
      *
      * @param   array $data The view data
@@ -235,44 +253,24 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     }
 
     /**
-     * Get the view data
-     *
-     * @return  array   The view data
-     */
-    public function getData()
-    {
-        return $this->_data;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return 	string 	The name of the object
-     */
-    public function getName()
-    {
-        $total = count($this->getIdentifier()->path);
-        return $this->getIdentifier()->path[$total - 1];
-    }
-
-    /**
      * Get the title
      *
-     * @return  string  The title of the view
+     * @return 	string 	The title of the view
      */
     public function getTitle()
     {
-        return ucfirst($this->getName());
+        return $this->_title;
     }
 
     /**
-     * Get the format
+     * Set the title
      *
-     * @return  string  The format of the view
+     * @return 	string 	The title of the view
      */
-    public function getFormat()
+    public function setTitle($title)
     {
-        return $this->getIdentifier()->name;
+        $this->_title = $title;
+        return $this;
     }
 
     /**
@@ -465,6 +463,27 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         $context->setData($this->_data);
 
         return $context;
+    }
+
+    /**
+     * Get the name
+     *
+     * @return 	string 	The name of the object
+     */
+    public function getName()
+    {
+        $total = count($this->getIdentifier()->path);
+        return $this->getIdentifier()->path[$total - 1];
+    }
+
+    /**
+     * Get the format
+     *
+     * @return  string  The format of the view
+     */
+    public function getFormat()
+    {
+        return $this->getIdentifier()->name;
     }
 
     /**
