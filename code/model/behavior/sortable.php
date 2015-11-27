@@ -30,11 +30,23 @@ class KModelBehaviorSortable extends KModelBehaviorAbstract
     }
 
     /**
+     * Split the sort state if format is [column,ASC|DESC]
+     *
+     * @param   KModelContextInterface $context A model context object
+     * @return  void
+     */
+    protected function _afterReset(KModelContextInterface $context)
+    {
+        if($context->modified == 'sort' && strpos($context->state->sort, ',') !== false)  {
+            list($context->state->sort, $context->state->direction) = explode(',', $context->state->sort);
+        }
+    }
+
+    /**
      * Add order query
      *
      * @param   KModelContextInterface $context A model context object
-     *
-     * @return    void
+     * @return  void
      */
     protected function _beforeFetch(KModelContextInterface $context)
     {
@@ -44,17 +56,14 @@ class KModelBehaviorSortable extends KModelBehaviorAbstract
         {
             $state = $context->state;
 
-            $sort      = $state->sort;
-            $direction = strtoupper($state->direction);
+            $sort      = trim($state->sort);
+            $direction = strtoupper(trim($state->direction));
             $columns   = array_keys($this->getTable()->getColumns());
 
             if ($sort)
             {
                 $column = $this->getTable()->mapColumns($sort);
-
-                //if(in_array($column, $columns)) {
                 $context->query->order($column, $direction);
-                //}
             }
 
             if ($sort != 'ordering' && in_array('ordering', $columns)) {
