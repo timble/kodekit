@@ -100,9 +100,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'data'              => array(),
-            'command_chain'     => 'lib:command.chain',
-            'command_handlers'  => array('lib:command.handler.event'),
+            'data'             => array(),
+            'parameters'       => array(),
+            'command_chain'    => 'lib:command.chain',
+            'command_handlers' => array('lib:command.handler.event'),
             'model'      => 'lib:model.empty',
             'content'	 => '',
             'mimetype'	 => '',
@@ -461,6 +462,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         $context = new KViewContext();
         $context->setSubject($this);
         $context->setData($this->_data);
+        $context->setParameters($this->getConfig()->parameters);
 
         return $context;
     }

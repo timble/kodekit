@@ -35,25 +35,4 @@ class KViewContextTemplate extends KViewContext
     {
         return KObjectConfig::get('layout');
     }
-
-    /**
-     * Set the view parameters
-     *
-     * @param array $parameters
-     * @return KViewContextTemplate
-     */
-    public function setParameters($parameters)
-    {
-        return KObjectConfig::set('parameters', $parameters);
-    }
-
-    /**
-     * Get the view parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return KObjectConfig::get('parameters');
-    }
 }
