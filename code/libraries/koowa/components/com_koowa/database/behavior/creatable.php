@@ -59,15 +59,18 @@ class ComKoowaDatabaseBehaviorCreatable extends KDatabaseBehaviorCreatable
      */
     protected function _beforeSelect(KDatabaseContext $context)
     {
-        $context->query
-            ->columns(array('_author_id'         => '_author.id'))
-            ->columns(array('_author_name'       => '_author.name'))
-            ->columns(array('_author_username'   => '_author.username'))
-            ->columns(array('_author_email'      => '_author.email'))
-            ->columns(array('_author_params'     => '_author.params'))
-            ->columns(array('_author_block'      => '_author.block'))
-            ->columns(array('_author_activation' => '_author.activation'))
-            ->columns(array('created_by_name'    => '_author.name'))
-            ->join(array('_author' => 'users'), 'tbl.created_by = _author.id');
+        if (!$context->query->isCountQuery())
+        {
+            $context->query
+                ->columns(array('_author_id'         => '_author.id'))
+                ->columns(array('_author_name'       => '_author.name'))
+                ->columns(array('_author_username'   => '_author.username'))
+                ->columns(array('_author_email'      => '_author.email'))
+                ->columns(array('_author_params'     => '_author.params'))
+                ->columns(array('_author_block'      => '_author.block'))
+                ->columns(array('_author_activation' => '_author.activation'))
+                ->columns(array('created_by_name'    => '_author.name'))
+                ->join(array('_author' => 'users'), 'tbl.created_by = _author.id');
+        }
     }
 }

@@ -76,15 +76,19 @@ class ComKoowaDatabaseBehaviorLockable extends KDatabaseBehaviorLockable
      */
     protected function _beforeSelect(KDatabaseContext $context)
     {
-        $context->query
-            ->columns(array('_owner_id'         => '_owner.id'))
-            ->columns(array('_owner_name'       => '_owner.name'))
-            ->columns(array('_owner_username'   => '_owner.username'))
-            ->columns(array('_owner_email'      => '_owner.email'))
-            ->columns(array('_owner_params'     => '_owner.params'))
-            ->columns(array('_owner_block'      => '_owner.block'))
-            ->columns(array('_owner_activation' => '_owner.activation'))
-            ->columns(array('locked_by_name'    => '_owner.name'))
-            ->join(array('_owner' => 'users'), 'tbl.locked_by = _owner.id');
+        if (!$context->query->isCountQuery())
+        {
+            $context->query
+                ->columns(array('_owner_id'         => '_owner.id'))
+                ->columns(array('_owner_name'       => '_owner.name'))
+                ->columns(array('_owner_username'   => '_owner.username'))
+                ->columns(array('_owner_email'      => '_owner.email'))
+                ->columns(array('_owner_params'     => '_owner.params'))
+                ->columns(array('_owner_block'      => '_owner.block'))
+                ->columns(array('_owner_activation' => '_owner.activation'))
+                ->columns(array('locked_by_name'    => '_owner.name'))
+                ->join(array('_owner' => 'users'), 'tbl.locked_by = _owner.id');
+        }
+
     }
 }
