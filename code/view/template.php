@@ -289,6 +289,7 @@ abstract class KViewTemplate extends KViewAbstract
         $context = new KViewContextTemplate();
         $context->setSubject($this);
         $context->setData($this->getData());
+        $context->setParameters($this->getConfig()->parameters);
         $context->setLayout($this->getLayout());
 
         return $context;
