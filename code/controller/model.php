@@ -33,6 +33,14 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 
         // Set the model identifier
         $this->_model = $config->model;
+
+        // Set the controller state
+        foreach($config->state as $name => $value)
+        {
+            if($this->getModel()->getState()->has($name)) {
+                $this->$name($value);
+            }
+        }
     }
 
     /**
@@ -47,6 +55,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     {
         $config->append(array(
             'model'	=> $this->getIdentifier()->name,
+            'state' => array(),
         ));
 
         parent::_initialize($config);
@@ -375,7 +384,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         if(!isset($this->_mixed_methods[$method]))
         {
             //Check for model state properties
-            if(isset($this->getModel()->getState()->$method))
+            if($this->getModel()->getState()->has($method))
             {
                 $this->getRequest()->getQuery()->set($method, $args[0]);
                 $this->getModel()->getState()->set($method, $args[0]);
