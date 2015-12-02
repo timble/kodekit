@@ -73,9 +73,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $config->append(array(
             'controller'        => $this->getIdentifier()->package,
             'controller_action' => 'render',
-            'request'        => 'dispatcher.request',
-            'response'       => 'dispatcher.response',
-            'authenticators' => array()
+            'authenticators'    => array()
         ))->append(array(
             'behaviors'     => array('authenticatable' => array('authenticators' => $config->authenticators)),
         ));
@@ -93,7 +91,10 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     {
         if(!$this->_request instanceof KDispatcherRequestInterface)
         {
-            $this->_request = $this->getObject($this->_request);
+            //Setup the request
+            $this->_request->user = $this->getUser();
+
+            $this->_request = $this->getObject('dispatcher.request', KObjectConfig::unbox($this->_request));
 
             if(!$this->_request instanceof KDispatcherRequestInterface)
             {
@@ -116,10 +117,11 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
     {
         if(!$this->_response instanceof KDispatcherResponseInterface)
         {
-            $this->_response = $this->getObject($this->_response, array(
-                'request' => $this->getRequest(),
-                'user'    => $this->getUser(),
-            ));
+            //Setup the response
+            $this->_response->request  = $this->getRequest();
+            $this->_response->user     = $this->getUser();
+
+            $this->_response = $this->getObject('dispatcher.response', ObjectConfig::unbox($this->_response));
 
             if(!$this->_response instanceof KDispatcherResponseInterface)
             {
