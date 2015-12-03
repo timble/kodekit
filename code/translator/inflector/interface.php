@@ -16,21 +16,21 @@
 interface KTranslatorInflectorInterface
 {
     /**
-     * Returns the plural position to use for the given locale and number.
+     * Returns the plural position to use for the given language and number.
      *
      * @param integer $number The number
-     * @param string  $locale The locale
+     * @param string  $language The lnaguage
      * @return integer The plural position
      */
-    public static function getPluralPosition($number, $locale);
+    public static function getPluralPosition($number, $language);
 
     /**
-     * Overrides the default plural rule for a given locale.
+     * Overrides the default plural rule for a given language.
      *
      * @param callable $rule   A PHP callable
-     * @param string $locale   The locale
-     * @throws LogicException
+     * @param string $language   The language
+     * @throws \LogicException
      * @return void
      */
-    public static function setPluralRule($rule, $locale);
+    public static function setPluralRule(callable $rule, $language);
 }

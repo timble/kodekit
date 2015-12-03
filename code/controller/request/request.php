@@ -37,6 +37,13 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     protected $_format;
 
     /**
+     * User object
+     *
+     * @var	string|object
+     */
+    protected $_user;
+
+    /**
      * Constructor
      *
      * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
@@ -53,6 +60,9 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
 
         //Set the format
         $this->setFormat($config->format);
+
+        //Set the user
+        $this->setUser($config->user);
     }
 
     /**
@@ -66,9 +76,12 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'query'  => array(),
-            'data'   => array(),
-            'format' => 'html',
+            'query'    => array(),
+            'data'     => array(),
+            'format'   => 'html',
+            'user'     => null,
+            'language' => locale_get_default(),
+            'timezone' => date_default_timezone_get(),
         ));
 
         parent::_initialize($config);
@@ -156,6 +169,60 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     }
 
     /**
+     * Set the user object
+     *
+     * @param KUserInterface $user A request object
+     * @return KControllerRequest
+     */
+    public function setUser(KUserInterface $user)
+    {
+        $this->_user = $user;
+        return $this;
+    }
+
+    /**
+     * Get the user object
+     *
+     * @return KUserInterface
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
+     * Returns the request language tag
+     *
+     * Should return a properly formatted IETF language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        if(!$language = $this->getUser()->getLanguage()) {
+            $language = $this->getConfig()->language;
+        }
+
+        return $language;
+    }
+
+    /**
+     * Returns the request timezone
+     *
+     * @return string
+     */
+    public function getTimezone()
+    {
+        if(!$timezone = $this->getUser()->getLanguage()) {
+            $timezone = $this->getConfig()->timezone;
+        }
+
+        return $timezone;
+    }
+
+    /**
      * Implement a virtual 'headers', 'query' and 'data class property to return their respective objects.
      *
      * @param   string $name  The property name.
@@ -190,5 +257,6 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
 
         $this->_data  = clone $this->_data;
         $this->_query = clone $this->_query;
+        $this->_user  = clone $this->_user;
     }
 }

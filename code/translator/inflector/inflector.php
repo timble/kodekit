@@ -8,8 +8,8 @@
  */
 
 /**
- * Returns the plural rules for a given locale.
- * 
+ * Returns the plural rules for a given language
+ *
  * This class is based on Symfony 2 class Symfony\Component\Translation\PluralizationRules and subject to MIT license
  * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -21,27 +21,27 @@ class KTranslatorInflector extends KStringInflector implements KTranslatorInflec
     private static $position_rules = array();
 
     /**
-     * Returns the plural position to use for the given locale and number.
+     * Returns the plural position to use for the given language and number.
      *
      * @param integer $number The number
-     * @param string  $locale The locale
+     * @param string  $language The language
      *
      * @return integer The plural position
      */
-    public static function getPluralPosition($number, $locale)
+    public static function getPluralPosition($number, $language)
     {
-        // temporary set a locale for brazilian
-        if ("pt-BR" == $locale) {
-            $locale = "xbr";
+        // temporary set a language for brazilian
+        if ("pt-BR" == $language) {
+            $language = "xbr";
         }
 
-        if (strlen($locale) > 3) {
-            $locale = substr($locale, 0, -strlen(strrchr($locale, '-')));
+        if (strlen($language) > 3) {
+            $language = substr($language, 0, -strlen(strrchr($language, '-')));
         }
 
-        if (isset(self::$position_rules[$locale]))
+        if (isset(self::$position_rules[$language]))
         {
-            $return = call_user_func(self::$position_rules[$locale], $number);
+            $return = call_user_func(self::$position_rules[$language], $number);
 
             if (!is_int($return) || $return < 0) {
                 return 0;
@@ -55,7 +55,7 @@ class KTranslatorInflector extends KStringInflector implements KTranslatorInflec
          * which is subject to the new BSD license (http://framework.zend.com/license/new-bsd).
          * Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
          */
-        switch ($locale) {
+        switch ($language) {
             case 'bo':
             case 'dz':
             case 'id':
@@ -188,29 +188,28 @@ class KTranslatorInflector extends KStringInflector implements KTranslatorInflec
     }
 
     /**
-     * Overrides the default plural rule for a given locale.
+     * Overrides the default plural rule for a given language.
      *
-     * @param string $rule   A PHP callable
-     * @param string $locale The locale
-     *
-     * @throws LogicException
-     * @return null
+     * @param callable $rule    A PHP callable
+     * @param string $language  The language
+     * @throws \LogicException
+     * @return void
      */
-    public static function setPluralRule($rule, $locale)
+    public static function setPluralRule(callable $rule, $language)
     {
-        // temporary set a locale for brazilian
-        if ("pt_BR" == $locale) {
-            $locale = "xbr";
+        // temporary set a language for brazilian
+        if ("pt_BR" == $language) {
+            $language = "xbr";
         }
-        
-        if (strlen($locale) > 3) {
-            $locale = substr($locale, 0, -strlen(strrchr($locale, '_')));
+
+        if (strlen($language) > 3) {
+            $language = substr($language, 0, -strlen(strrchr($language, '_')));
         }
 
         if (!is_callable($rule)) {
             throw new LogicException('The given rule can not be called');
         }
 
-        self::$position_rules[$locale] = $rule;
+        self::$position_rules[$language] = $rule;
     }
 }
