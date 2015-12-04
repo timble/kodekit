@@ -199,4 +199,12 @@ interface KObjectManagerInterface
      * @return boolean Returns TRUE if the object is a singleton, FALSE otherwise.
      */
     public function isSingleton($identifier);
+
+    /**
+     * Check if the identifier is an alias
+     *
+     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @return boolean Returns TRUE if the identifiers is an alias FALSE otherwise
+     */
+    public function isAlias($identifier);
 }
