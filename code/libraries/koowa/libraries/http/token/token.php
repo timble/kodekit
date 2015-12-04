@@ -106,7 +106,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      */
     public function getType()
     {
-        return $this->_header['type'];
+        return $this->_header['typ'];
     }
 
     /**
@@ -120,7 +120,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      */
     public function setType($type)
     {
-        $this->_header['type'] = $type;
+        $this->_header['typ'] = $type;
         return $this;
     }
 
@@ -266,7 +266,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     public function setExpireTime(DateTime $date)
     {
         $date->setTimezone(new DateTimeZone('UTC'));
-        $this->_claims['exp'] = $date->format('U');
+        $this->_claims['exp'] = (int)$date->format('U');
 
         return $this;
     }
