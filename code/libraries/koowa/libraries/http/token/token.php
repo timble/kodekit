@@ -308,7 +308,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     public function setIssueTime(DateTime $date)
     {
         $date->setTimezone(new DateTimeZone('UTC'));
-        $this->_claims['iat'] = $date->format('U');
+        $this->_claims['iat'] = (int)$date->format('U');
 
         return $this;
     }
