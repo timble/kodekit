@@ -316,11 +316,11 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     }
 
     /**
-     * Reset the rowset
+     * Clear the rowset
      *
-     * @return  KDatabaseRowInterface
+     * @return KDatabaseRowsetAbstract
      */
-    public function reset()
+    public function clear()
     {
         $this->_data = array();
         return $this;

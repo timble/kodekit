@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model\Entity
  */
-class KModelEntityRowset extends KDatabaseRowsetAbstract implements KModelEntityInterface
+class KModelEntityRowset extends KDatabaseRowsetAbstract implements KModelEntityComposable
 {
     /**
      * Get the entity key
