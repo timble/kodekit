@@ -37,8 +37,18 @@ class KModelBehaviorSortable extends KModelBehaviorAbstract
      */
     protected function _afterReset(KModelContextInterface $context)
     {
-        if($context->modified == 'sort' && strpos($context->state->sort, ',') !== false)  {
-            list($context->state->sort, $context->state->direction) = explode(',', $context->state->sort);
+        if($context->modified == 'sort' && strpos($context->state->sort, ',') !== false)
+        {
+            $context->state->sort = explode(',', $context->state->sort);
+
+            foreach($context->state->sort as $key => $value)
+            {
+                if(strtoupper($value) == 'DESC' || strtoupper($value) == 'ASC')
+                {
+                    unset($context->state->sort[$key]);
+                    $context->state->direction = $value;
+                }
+            }
         }
     }
 
@@ -57,7 +67,7 @@ class KModelBehaviorSortable extends KModelBehaviorAbstract
             $state = $context->state;
 
             $sort      = trim($state->sort);
-            $direction = strtoupper(trim($state->direction));
+            $direction = strtoupper($state->direction);
             $columns   = array_keys($this->getTable()->getColumns());
 
             if ($sort)
