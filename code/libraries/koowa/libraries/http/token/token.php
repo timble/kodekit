@@ -261,7 +261,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * token MUST NOT be accepted for processing
      *
      * @param  DateTime $date A DateTime instance
-     * @return KHttpResponse
+     * @return $this
      */
     public function setExpireTime(DateTime $date)
     {
