@@ -58,7 +58,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
         $html .= '</div>';
 
         $buttons = '';
-        foreach ($config->toolbar->getCommands() as $command)
+        foreach ($config->toolbar as $command)
         {
             $name = $command->getName();
 
@@ -96,7 +96,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
             $command->attribs->class->append(array('disabled', 'unauthorized'));
         }
 
-         //Add a toolbar class	
+         //Add a toolbar class
         $command->attribs->class->append(array('toolbar'));
 
         //Create the href
