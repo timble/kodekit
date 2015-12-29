@@ -140,16 +140,16 @@ abstract class KViewTemplate extends KViewAbstract
             //Set the parameters
             if($this->isCollection())
             {
-                $context->parameters = $model->getState()->getValues();
+                $context->parameters->merge($model->getState()->getValues());
                 $context->parameters->total = $model->count();
             }
             else
             {
-                $context->parameters = $entity->getProperties();
+                $context->parameters->merge($entity->getProperties());
                 $context->parameters->total = 1;
             }
         }
-        else $context->parameters = $model->getState()->getValues();
+        else $context->parameters->merge($model->getState()->getValues());
 
         //Set the layout and view in the parameters.
         $context->parameters->layout = $context->layout;
@@ -286,10 +286,7 @@ abstract class KViewTemplate extends KViewAbstract
      */
     public function getContext()
     {
-        $context = new KViewContextTemplate();
-        $context->setSubject($this);
-        $context->setData($this->getData());
-        $context->setParameters($this->getConfig()->parameters);
+        $context = new KViewContextTemplate(parent::getContext());
         $context->setLayout($this->getLayout());
 
         return $context;

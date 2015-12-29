@@ -65,6 +65,21 @@ interface KViewInterface
     public function setData($data);
 
     /**
+     * Get the view parameters
+     *
+     * @return  array   The view parameters
+     */
+    public function getParameters();
+
+    /**
+     * Sets the view parameters
+     *
+     * @param   array $parameters The view parameters
+     * @return  ViewAbstract
+     */
+    public function setParameters(array $parameters);
+
+    /**
      * Get the title
      *
      * @return 	string 	The title of the view

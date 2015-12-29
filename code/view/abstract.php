@@ -51,6 +51,13 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     protected $_data;
 
     /**
+     * The view parameters
+     *
+     * @var boolean
+     */
+    protected $_parameters;
+
+    /**
      * The mimetype
      *
      * @var string
@@ -68,6 +75,9 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
 
         //Set the data
         $this->_data = KObjectConfig::unbox($config->data);
+
+        //Set the parameters
+        $this->_parameters = KObjectConfig::unbox($config->parameters);
 
         $this->setUrl($config->url);
         $this->setTitle($config->title);
@@ -250,6 +260,28 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
             $this->set($name, $value);
         }
 
+        return $this;
+    }
+
+    /**
+     * Get the view parameters
+     *
+     * @return  array   The view parameters
+     */
+    public function getParameters()
+    {
+        return $this->_parameters;
+    }
+
+    /**
+     * Sets the view parameters
+     *
+     * @param   array $parameters The view parameters
+     * @return  KViewAbstract
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->_parameters = $parameters;
         return $this;
     }
 
@@ -459,10 +491,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      */
     public function getContext()
     {
-        $context = new KViewContext();
+        $context = new ViewContext();
         $context->setSubject($this);
-        $context->setData($this->_data);
-        $context->setParameters($this->getConfig()->parameters);
+        $context->setData($this->getData());
+        $context->setParameters($this->getParameters());
 
         return $context;
     }

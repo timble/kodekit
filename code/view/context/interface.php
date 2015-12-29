@@ -21,4 +21,11 @@ interface KViewContextInterface extends KCommandInterface
      * @return array
      */
     public function getData();
+
+    /**
+     * Get the view parameters
+     *
+     * @return array
+     */
+    public function getParameters();
 }
