@@ -93,7 +93,12 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
         {
             foreach($array as $key => $item)
             {
-                if(is_array($item)) {
+                if(is_array($item))
+                {
+                    if(empty($item)) {
+                        continue;
+                    }
+
                     $item = implode(' ', $item);
                 }
 
