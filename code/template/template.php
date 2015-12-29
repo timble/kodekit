@@ -81,7 +81,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
             'filters'    => array(),
             'functions'  => array(
                 'escape'     => array($this, 'escape'),
-                'helper'     => array($this, 'invoke'),
+                'helper'     => array($this, 'invokeHelper'),
                 'parameters' => array($this, 'getParameters')
             ),
             'cache'           => Koowa::getInstance()->isCache(),
@@ -234,6 +234,28 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
     }
 
     /**
+     * Set the template parameters
+     *
+     * @param  array $parameters Set the template parameters
+     * @return KTemplate
+     */
+    public function setParameters($parameters)
+    {
+        $this->__parameters = new KObjectConfig($parameters);
+        return $this;
+    }
+
+    /**
+     * Get the model state object
+     *
+     * @return KObjectConfigInterface
+     */
+    public function getParameters()
+    {
+        return $this->__parameters;
+    }
+
+    /**
      * Invoke a template helper
      *
      * This function accepts a partial identifier, in the form of helper.method or schema:package.helper.method. If
@@ -246,7 +268,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      * @return   string   Helper output
      * @throws   \BadMethodCallException If the helper function cannot be called.
      */
-    public function invoke($identifier, $params = array())
+    public function invokeHelper($identifier, $params = array())
     {
         //Get the function and helper based on the identifier
         $parts      = explode('.', $identifier);
@@ -271,28 +293,6 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         }
 
         return $helper->$function($params);
-    }
-
-    /**
-     * Set the template parameters
-     *
-     * @param  array $parameters Set the template parameters
-     * @return KTemplate
-     */
-    public function setParameters($parameters)
-    {
-        $this->__parameters = new KObjectConfig($parameters);
-        return $this;
-    }
-
-    /**
-     * Get the model state object
-     *
-     * @return KObjectConfigInterface
-     */
-    public function getParameters()
-    {
-        return $this->__parameters;
     }
 
     /**
