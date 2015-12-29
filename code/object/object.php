@@ -84,6 +84,18 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
             }
         }
 
+        //Register the decorators
+        $decorators = (array) KObjectConfig::unbox($config->decorators);
+
+        foreach ($decorators as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->getIdentifier()->getDecorators()->append(array($value));
+            } else {
+                $this->getIdentifier()->getDecorators()->append(array($key, $value));
+            }
+        }
+
         //Set the object config
         $this->__object_config = $config;
     }
