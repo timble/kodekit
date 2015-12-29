@@ -275,7 +275,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     }
 
     /**
-     * Set the decorated event dispatcher
+     * Set the decorated event publisher
      *
      * @param   KEventPublisherInterface $delegate The decorated event publisher
      * @return  KEventPublisherProfiler
@@ -291,7 +291,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     }
 
     /**
-     * Set the decorated object
+     * Get the decorated event publisher
      *
      * @return KEventPublisherInterface
      */
