@@ -84,8 +84,8 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         $this->registerLocator(new KObjectLocatorLibrary($config));
 
         //Register self and set a 'manager' alias
-        $this->setObject('object.manager', $this);
-        $this->registerAlias('object.manager', 'manager');
+        $this->setObject('lib:object.manager', $this);
+        $this->registerAlias('lib:object.manager', 'manager');
     }
 
     /**
