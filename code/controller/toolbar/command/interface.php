@@ -18,25 +18,10 @@ interface KControllerToolbarCommandInterface extends KControllerToolbarInterface
     /**
      * Constructor.
      *
-     * @param   string              $name   The command name
-     * @param   array|KObjectConfig $config An associative array of configuration settings or a KObjectConfig instance.
+     * @param	string $name The command name
+     * @param   array|KObjectConfig 	An associative array of configuration settings or a KObjectConfig instance.
      */
     public function __construct( $name, $config = array());
-
-    /**
-     * Get the parent node
-     *
-     * @return	KControllerToolbarCommandInterface
-     */
-    public function getParent();
-
-    /**
-     * Set the parent command
-     *
-     * @param KControllerToolbarCommandInterface $command The parent command
-     * @return KControllerToolbarCommand
-     */
-    public function setParent(KControllerToolbarCommandInterface $command );
 
     /**
      * Get the toolbar object

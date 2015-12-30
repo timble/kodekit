@@ -27,46 +27,39 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
      *
      * @var string|object
      */
-    protected $_commands = null;
-
-    /**
-     * Toolbar command object
-     *
-     * @var object
-     */
-    protected $_parent = null;
+    private $__commands = null;
 
     /**
      * Toolbar object
      *
-     * @var KControllerToolbarCommandInterface
+     * @var KControllerToolbarInterface
      */
-    protected $_toolbar = null;
+    private $__toolbar = null;
 
     /**
      * Constructor.
      *
-     * @param   string              $name   The command name
-     * @param   array|KObjectConfig $config An associative array of configuration settings or a KObjectConfig instance.
+     * @param	string $name The command name
+     * @param   array|KObjectConfig 	An associative array of configuration settings or a ObjectConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
         parent::__construct($config);
 
         $this->append(array(
-            'icon'       => 'icon-'.$name,
+            'icon'       => 'icon-32-'.$name,
             'id'         => $name,
             'label'      => ucfirst($name),
             'disabled'   => false,
-            'title'      => '',
+            'title'		 => '',
             'href'       => null,
             'attribs'    => array(
-                'class'        => array(),
-            )
+                'class'  => array(),
+            ),
         ));
 
         //Create the children array
-        $this->_commands = array();
+        $this->__commands = array();
 
         //Set the command name
         $this->_name = $name;
@@ -83,22 +76,29 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     }
 
     /**
+     * Get the toolbar's title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
      * Add a command
      *
-     * @param   string  $command The command name
-     * @param   mixed   $config  Parameters to be passed to the command
+     * @param   string	$command The command name
+     * @param	mixed	$config  Parameters to be passed to the command
      * @return  KControllerToolbarCommand  The command that was added
      */
     public function addCommand($command, $config = array())
     {
-        if (!($command instanceof KControllerToolbarCommandInterface)) {
+        if (!($command instanceof KControllerToolbarCommand)) {
             $command = $this->getCommand($command, $config);
         }
 
-        //Set the command parent
-        $command->setParent($this);
-
-        $this->_commands[$command->getName()] = $command;
+        $this->__commands[$command->getName()] = $command;
         return $command;
     }
 
@@ -107,7 +107,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
      *
      * @param string $name  The command name
      * @param array $config An optional associative array of configuration settings
-     * @return KControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
+     * @return mixed ControllerToolbarCommand if found, false otherwise.
      */
     public function getCommand($name, $config = array())
     {
@@ -122,39 +122,29 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
      */
     public function hasCommand($name)
     {
-        return isset($this->_commands[$name]);
-    }
-
-    /**
-     * Get the list of commands
-     *
-     * @return  array
-     */
-    public function getCommands()
-    {
-        return $this->_commands;
-    }
-
-    /**
-     * Return the command count
-     *
-     * Required by Countable interface
-     *
-     * @return  integer
-     */
-    public function count()
-    {
-        return count($this->_commands);
+        return isset($this->__commands[$name]);
     }
 
     /**
      * Get a new iterator
      *
-     * @return  RecursiveArrayIterator
+     * @return  \RecursiveArrayIterator
      */
     public function getIterator()
     {
-        return new RecursiveArrayIterator($this->getCommands());
+        return new \ArrayIterator($this->__commands);
+    }
+
+    /**
+     * Returns the number of elements in the collection.
+     *
+     * Required by the Countable interface
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->__commands);
     }
 
     /**
@@ -174,46 +164,24 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     }
 
     /**
-     * Get the parent node
-     *
-     * @return	KControllerToolbarCommandInterface
-     */
-    public function getParent()
-    {
-        return $this->_parent;
-    }
-
-    /**
-     * Set the parent command
-     *
-     * @param KControllerToolbarCommandInterface $command The parent command
-     * @return KControllerToolbarCommand
-     */
-    public function setParent(KControllerToolbarCommandInterface $command )
-    {
-        $this->_parent = $command;
-        return $this;
-    }
-
-    /**
-     * Get the toolbar
+     * Get the toolbar object
      *
      * @return KControllerToolbarInterface
      */
     public function getToolbar()
     {
-        return $this->_toolbar;
+        return $this->__toolbar;
     }
 
     /**
-     * Set the toolbar
+     * Set the parent node
      *
-     * @param KControllerToolbarInterface $toolbar  The toolbar this command belongs too
+     * @param KControllerToolbarInterface $toolbar The toolbar this command belongs too
      * @return KControllerToolbarCommand
      */
     public function setToolbar(KControllerToolbarInterface $toolbar )
     {
-        $this->_toolbar = $toolbar;
+        $this->__toolbar = $toolbar;
         return $this;
     }
 
@@ -235,7 +203,5 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
             $command = $this->addCommand(strtolower($parts[1]), $config);
             return $command;
         }
-
-        return null;
     }
 }

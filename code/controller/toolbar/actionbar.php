@@ -46,17 +46,6 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     }
 
     /**
-     * Add a separator command
-     *
-     * @return  KControllerToolbarAbstract
-     */
-    public function addSeparator()
-    {
-        $this->_commands[] = new KControllerToolbarCommand('separator');
-        return $this;
-    }
-
-    /**
      * Add default toolbar commands and set the toolbar title
      * .
      * @param KControllerContextInterface	$context A controller context object

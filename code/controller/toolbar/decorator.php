@@ -75,6 +75,16 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
     }
 
     /**
+     * Get the toolbar's title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->getDelegate()->getTitle();
+    }
+
+    /**
      * Add a command
      *
      * @param   string    $command The command name
@@ -172,5 +182,31 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
     public function count()
     {
         return $this->getDelegate()->count();
+    }
+
+    /**
+     * Set the decorated model
+     *
+     * @param   KControllerToolbarInterface $delegate The decorated toolbar
+     * @return  KControllerToolbarDecorator
+     * @throws \InvalidArgumentException If the delegate is not a toolbar
+     */
+    public function setDelegate($delegate)
+    {
+        if (!$delegate instanceof KControllerToolbarInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement ControllerToolbarInterface');
+        }
+
+        return parent::setDelegate($delegate);
+    }
+
+    /**
+     * Get the decorated toolbar
+     *
+     * @return KControllerToolbarInterface
+     */
+    public function getDelegate()
+    {
+        return parent::getDelegate();
     }
 }

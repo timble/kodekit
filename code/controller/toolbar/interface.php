@@ -23,6 +23,13 @@ interface KControllerToolbarInterface extends IteratorAggregate, Countable
     public function getName();
 
     /**
+     * Get the toolbar's title
+     *
+     * @return string
+     */
+    public function getTitle();
+
+    /**
      * Add a command by name
      *
      * @param   string	$name    The command name
@@ -47,11 +54,4 @@ interface KControllerToolbarInterface extends IteratorAggregate, Countable
      * @return boolean True if the command exists, false otherwise.
      */
     public function hasCommand($name);
-
-    /**
-     * Get the list of commands
-     *
-     * @return  array
-     */
-    public function getCommands();
 }
