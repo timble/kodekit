@@ -267,7 +267,20 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      */
     public function hasProperty($name)
     {
-        return parent::offsetExists($name);
+        $result = false;
+
+        //Handle computed properties
+        if(!parent::offsetExists($name) && !empty($name))
+        {
+            $properties = $this->getComputedProperties();
+
+            if(isset($properties[$name])) {
+                $result = true;
+            }
+        }
+        else $result = true;
+
+        return $result;
     }
 
     /**
