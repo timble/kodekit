@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Model
  */
-class KModelComposite extends KObjectDecorator implements KModelInterface, KModelEntityComposable
+class KModelCompositeDecorator extends KObjectDecorator implements KModelInterface, KModelEntityComposable
 {
     /**
      * Create a new entity for the data store
@@ -369,35 +369,6 @@ class KModelComposite extends KObjectDecorator implements KModelInterface, KMode
     }
 
     /**
-     * Decorate Notifier
-     *
-     * Set the composite model in the object manager if an alias has been defined for the delegate that matches
-     * the naming convention of package.name or package (if name is the same as the package)
-     *
-     * @param object $delegate The object being decorated
-     * @return void
-     * @throws  \InvalidArgumentException If the delegate is not an object
-     */
-    public function onDecorate($delegate)
-    {
-        parent::onDecorate($delegate);
-
-        $name    = $delegate->getIdentifier()->name;
-        $package = $delegate->getIdentifier()->package;
-
-        if($name != $package) {
-            $identifier = $name.'.'.$package;
-        } else {
-            $identifier = $name;
-        }
-
-        $aliases = $this->getObject('manager')->getAliases($this->getIdentifier());
-        if(in_array('lib:'.$identifier, $aliases)) {
-            $this->getObject('manager')->setObject($identifier, $this);
-        }
-    }
-
-    /**
      * Set a property
      *
      * @param   string  $property   The property name.
@@ -443,9 +414,36 @@ class KModelComposite extends KObjectDecorator implements KModelInterface, KMode
     }
 
     /**
+     * Set the decorated model
+     *
+     * @param   KModelInterface $delegate The decorated model
+     * @return  KModelCompositeDecorator
+     * @throws \InvalidArgumentException If the delegate is not a model
+     */
+    public function setDelegate($delegate)
+    {
+        if (!$delegate instanceof KModelInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement KModelInterface');
+        }
+
+        return parent::setDelegate($delegate);
+    }
+
+    /**
+     * Get the decorated model
+     *
+     * @return KModelInterface
+     */
+    public function getDelegate()
+    {
+        return parent::getDelegate();
+    }
+
+    /**
      * Overloaded call function
      *
-     * Auto-matically fetch the entity and forward the call
+     * Auto-matically fetch the entity and forward the call if the method exists in the entity,
+     * if not delegate to the model instead.
      *
      * @param  string     $method    The function name
      * @param  array      $arguments The function arguments
@@ -454,10 +452,11 @@ class KModelComposite extends KObjectDecorator implements KModelInterface, KMode
      */
     public function __call($method, $arguments)
     {
+        $model  = $this->getDelegate();
         $entity = $this->fetch();
 
         //Call the method if it exists
-        if (method_exists($entity, $method))
+        if (!method_exists($model, $method) && is_callable(array($entity, $method)))
         {
             $result = null;
 
@@ -484,6 +483,6 @@ class KModelComposite extends KObjectDecorator implements KModelInterface, KMode
             return $result;
         }
 
-        parent::__call($method, $arguments);
+        return parent::__call($method, $arguments);
     }
 }
