@@ -10,6 +10,8 @@
 /**
  * Parameterizable Database Behavior
  *
+ * By default requires a 'parameters' table column. Column can be configured using the 'column' config option.
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database\Behavior
  */
