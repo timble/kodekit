@@ -109,7 +109,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
     /**
      * Make the query distinct
      *
-     * @return $this
+     * @return KDatabaseQuerySelect
      */
     public function distinct()
     {
@@ -121,7 +121,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build a select query
      *
      * @param  array|string $columns A string or an array of column names
-     * @return $this
+     * @return KDatabaseQuerySelect
      */
     public function columns($columns = array())
     {
@@ -138,10 +138,10 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the from clause 
+     * Build the from clause
      *
      * @param  array|string The table string or array name.
-     * @return $this
+     * @return KDatabaseQuerySelect
      */
     public function table($table)
     {
@@ -155,7 +155,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * @param string $table      The table name to join to.
      * @param string $condition  The join condition statement.
      * @param string|array $type The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
-     * @return $this
+     * @return KDatabaseQuerySelect
      */
     public function join($table, $condition = null, $type = 'LEFT')
     {
@@ -181,7 +181,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      *
      * @param   string $condition   The where condition statement
      * @param   string $combination The where combination, defaults to 'AND'
-     * @return  $this
+     * @return  KDatabaseQuerySelect
      */
     public function where($condition, $combination = 'AND')
     {
@@ -197,7 +197,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build the group clause
      *
      * @param   array|string $columns A string or array of ordering columns
-     * @return  $this
+     * @return  KDatabaseQuerySelect
      */
     public function group($columns)
     {
@@ -209,7 +209,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      * Build the having clause
      *
      * @param   array|string $columns A string or array of ordering columns
-     * @return  $this
+     * @return  KDatabaseQuerySelect
      */
     public function having($columns)
     {
@@ -218,11 +218,11 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the order clause 
+     * Build the order clause
      *
      * @param   array|string $columns   A string or array of ordering columns
      * @param   string       $direction Either DESC or ASC
-     * @return  $this
+     * @return  KDatabaseQuerySelect
      */
     public function order($columns, $direction = 'ASC')
     {
@@ -238,11 +238,11 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the limit element 
+     * Build the limit element
      *
      * @param   integer $limit  Number of items to fetch.
      * @param   integer $offset Offset to start fetching at.
-     * @return  $this
+     * @return  KDatabaseQuerySelect
      */
     public function limit($limit, $offset = 0)
     {
