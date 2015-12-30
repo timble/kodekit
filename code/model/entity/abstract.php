@@ -196,7 +196,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     public function getProperty($name)
     {
         //Handle computed properties
-        if(!$this->hasProperty($name) && !empty($name))
+        if(!parent::offsetExists($name) && $this->hasProperty($name))
         {
             $getter  = 'getProperty'.KStringInflector::camelize($name);
             $methods = $this->getMethods();
