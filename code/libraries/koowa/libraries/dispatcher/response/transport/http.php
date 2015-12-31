@@ -64,6 +64,13 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
      */
     public function sendContent(KDispatcherResponseInterface $response)
     {
+        //Make sure the output buffers are cleared
+        $level = ob_get_level();
+        while($level > 0) {
+            ob_end_clean();
+            $level--;
+        }
+
         echo $response->getStream()->toString();
         return $this;
     }
