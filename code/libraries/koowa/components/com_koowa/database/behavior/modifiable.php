@@ -59,15 +59,18 @@ class ComKoowaDatabaseBehaviorModifiable extends KDatabaseBehaviorModifiable
      */
     protected function _beforeSelect(KDatabaseContext $context)
     {
-        $context->query
-            ->columns(array('_editor_id'         => '_editor.id'))
-            ->columns(array('_editor_name'       => '_editor.name'))
-            ->columns(array('_editor_username'   => '_editor.username'))
-            ->columns(array('_editor_email'      => '_editor.email'))
-            ->columns(array('_editor_params'     => '_editor.params'))
-            ->columns(array('_editor_block'      => '_editor.block'))
-            ->columns(array('_editor_activation' => '_editor.activation'))
-            ->columns(array('modified_by_name'   => '_editor.name'))
-            ->join(array('_editor' => 'users'), 'tbl.modified_by = _editor.id');
+        if (!$context->query->isCountQuery())
+        {
+            $context->query
+                ->columns(array('_editor_id' => '_editor.id'))
+                ->columns(array('_editor_name' => '_editor.name'))
+                ->columns(array('_editor_username' => '_editor.username'))
+                ->columns(array('_editor_email' => '_editor.email'))
+                ->columns(array('_editor_params' => '_editor.params'))
+                ->columns(array('_editor_block' => '_editor.block'))
+                ->columns(array('_editor_activation' => '_editor.activation'))
+                ->columns(array('modified_by_name' => '_editor.name'))
+                ->join(array('_editor' => 'users'), 'tbl.modified_by = _editor.id');
+        }
     }
 }

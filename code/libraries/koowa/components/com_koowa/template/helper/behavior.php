@@ -273,7 +273,8 @@ class ComKoowaTemplateHelperBehavior extends KTemplateHelperBehavior
         }
 
         if ($config->value) {
-            $config->value = strftime($config->format, JFactory::getDate($config->value)->format('U', false, true));
+            $date = new DateTime($config->value);
+            $config->value = strftime($config->format, $date->format('U'));
         }
 
         $attribs = $this->buildAttributes($config->attribs);

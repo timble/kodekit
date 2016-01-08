@@ -106,7 +106,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      */
     public function getType()
     {
-        return $this->_header['type'];
+        return $this->_header['typ'];
     }
 
     /**
@@ -120,7 +120,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      */
     public function setType($type)
     {
-        $this->_header['type'] = $type;
+        $this->_header['typ'] = $type;
         return $this;
     }
 
@@ -261,12 +261,12 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * token MUST NOT be accepted for processing
      *
      * @param  DateTime $date A DateTime instance
-     * @return KHttpResponse
+     * @return $this
      */
     public function setExpireTime(DateTime $date)
     {
         $date->setTimezone(new DateTimeZone('UTC'));
-        $this->_claims['exp'] = $date->format('U');
+        $this->_claims['exp'] = (int)$date->format('U');
 
         return $this;
     }
@@ -308,7 +308,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     public function setIssueTime(DateTime $date)
     {
         $date->setTimezone(new DateTimeZone('UTC'));
-        $this->_claims['iat'] = $date->format('U');
+        $this->_claims['iat'] = (int)$date->format('U');
 
         return $this;
     }
