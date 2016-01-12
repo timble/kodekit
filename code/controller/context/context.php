@@ -23,6 +23,13 @@ class KControllerContext extends KCommand implements KControllerContextInterface
     public function __construct($attributes = array())
     {
         KObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof KControllerContext)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
     }
 
     /**
