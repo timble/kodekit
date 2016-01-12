@@ -47,7 +47,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     {
         $config->append(array(
             'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
-            'behaviors'      => array('routable', 'limitable', 'resettable'),
+            'behaviors'      => array('routable', 'limitable', 'resettable', 'localizable'),
             'authenticators' => array('csrf')
          ));
 

@@ -42,6 +42,7 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
             'dispatched'        => false,
             'controller'        => '',
             'controller_action' => 'render',
+            'behaviors'         => array('localizable'),
         ));
 
         parent::_initialize($config);

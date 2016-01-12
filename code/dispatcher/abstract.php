@@ -53,9 +53,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         //Resolve the request
         $this->addCommandCallback('before.dispatch', '_resolveRequest');
 
-        //Load the dispatcher translations
-        $this->addCommandCallback('before.dispatch', '_loadTranslations');
-
         //Register the default exception handler
         $this->addEventListener('onException', array($this, 'fail'));
     }
@@ -75,9 +72,12 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             'controller_action' => 'render',
             'request'        => 'dispatcher.request',
             'response'       => 'dispatcher.response',
-            'authenticators' => array()
+            'authenticators' => array(),
+            'behaviors'      => array('localizable'),
         ))->append(array(
-            'behaviors'     => array('authenticatable' => array('authenticators' => $config->authenticators)),
+            'behaviors'     => array(
+                'authenticatable' => array('authenticators' => $config->authenticators)
+            ),
         ));
 
         parent::_initialize($config);
@@ -242,26 +242,6 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         $context->setResponse($this->getResponse());
 
         return $context;
-    }
-
-    /**
-     * Load the dispatcher translations
-     *
-     * @param KControllerContextInterface $context
-     * @return void
-     */
-    protected function _loadTranslations(KControllerContextInterface $context)
-    {
-        $package = $this->getIdentifier()->package;
-        $domain  = $this->getIdentifier()->domain;
-
-        if($domain) {
-            $identifier = 'com://'.$domain.'/'.$package;
-        } else {
-            $identifier = 'com:'.$package;
-        }
-
-        $this->getObject('translator')->load($identifier);
     }
 
     /**
