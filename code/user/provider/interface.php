@@ -26,21 +26,30 @@
 interface KUserProviderInterface
 {
     /**
-     * Loads the user for the given username or identifier
+     * Get the user for the given username or identifier, fetching it from data store if it doesn't exist yet.
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
      * @param bool  $refresh     If TRUE and the user has already been loaded it will be re-loaded.
-     * @return KUserInterface  Returns a KUserInterface object
+     * @return KUserInterface Returns a UserInterface object.
      */
-    public function load($identifier, $refresh = false);
+    public function getUser($identifier, $refresh = false);
 
     /**
-     * Fetch the user for the given user identifier from the backend
+     * Set a user in the provider
+     *
+     * @param KUserInterface $user
+     * @return boolean
+     */
+    public function setUser(KUserInterface $user);
+
+    /**
+     * Fetch the user for the given user identifier from the data store
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     * @param bool  $refresh     If TRUE and the user has already been fetched it will be re-fetched.
+     * @return boolean
      */
-    public function fetch($identifier);
+    public function fetch($identifier, $refresh = false);
 
     /**
      * Create a user object
@@ -49,15 +58,6 @@ interface KUserProviderInterface
      * @return KUserInterface     Returns a UserInterface object
      */
     public function create($data);
-
-    /**
-     * Store a user object in the provider
-     *
-     * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @param array $data An associative array of user data
-     * @return KUserInterface     Returns a UserInterface object
-     */
-    public function store($identifier, $data);
 
     /**
      * Check if a user has already been loaded for a given user identifier

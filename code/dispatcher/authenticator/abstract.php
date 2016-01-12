@@ -146,7 +146,7 @@ abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDisp
                 if($user instanceof KUserInterface) {
                     $user = $user->toArray();
                 } else {
-                    $user = $this->getObject('user.provider')->load($user)->toArray();
+                    $user = $this->getObject('user.provider')->getUser($user)->toArray();
                 }
             }
 

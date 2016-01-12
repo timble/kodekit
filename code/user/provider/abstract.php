@@ -37,7 +37,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
 
         //Create the users
         foreach($config->users as $identifier => $data) {
-            $this->_users[$identifier] = $this->create($data);
+            $this->setUser($this->create($data));
         }
     }
 
@@ -58,38 +58,64 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
     }
 
     /**
-     * Loads the user for the given user identifier
+     * Load the user for the given username or identifier, fetching it from data store if it doesn't exist yet.
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
      * @param bool  $refresh     If TRUE and the user has already been loaded it will be re-loaded.
-     * @return KUserInterface Returns a UserInterface object
+     * @return KUserInterface Returns a UserInterface object.
      */
-    public function load($identifier, $refresh = false)
+    public function getUser($identifier, $refresh = false)
     {
+        $result = null;
+
         //Fetch a user from the backend
         if($refresh || !$this->isLoaded($identifier))
         {
-            $user = $this->fetch($identifier);
-            $this->_users[$identifier] = $user;
+            $this->fetch($identifier, $refresh);
+
+            if($this->isLoaded($identifier)) {
+                $result = $this->_users[$identifier];
+            }
         }
 
-        return $this->_users[$identifier];
+        return  $result;
     }
 
     /**
-     * Fetch the user for the given user identifier from the backend
+     * Store user object in the provider
      *
-     * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     * @param KUserInterface $user
+     * @return boolean
      */
-    public function fetch($identifier)
+    public function setUser(KUserInterface $user)
     {
-        $data = array(
-            'id'         => $identifier,
-            'authentic'  => false
-        );
+        $this->_users[$user->getId()] = $user;
+        return true;
+    }
 
-        return $this->create($data);
+    /**
+     * Fetch the user for the given user identifier from the data store
+     *
+     * @param string|array $identifier A unique user identifier, (i.e a username or email address)
+     *                                 or an array of identifiers
+     * @param bool  $refresh     If TRUE and the user has already been fetched it will be re-fetched.
+     * @return boolean
+     */
+    public function fetch($identifier, $refresh = false)
+    {
+        $identifiers = (array) $identifier;
+
+        foreach($identifiers as $identifier)
+        {
+            $data = array(
+                'id'         => $identifier,
+                'authentic'  => false
+            );
+
+            $this->setUser($this->create($data));
+        }
+
+        return true;
     }
 
     /**
@@ -105,27 +131,9 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
     }
 
     /**
-     * Store a user object in the provider
-     *
-     * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @param array $data An associative array of user data
-     * @return KUserInterface     Returns a UserInterface object
-     */
-    public function store($identifier, $data)
-    {
-        if(!$data instanceof KUserInterface) {
-            $data = $this->create($data);
-        }
-
-        $this->_users[$identifier] = $data;
-
-        return $data;
-    }
-
-    /**
      * Check if a user has already been loaded for a given user identifier
      *
-     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @param $identifier
      * @return boolean TRUE if a user has already been loaded. FALSE otherwise
      */
     public function isLoaded($identifier)

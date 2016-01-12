@@ -16,6 +16,13 @@
 class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 {
     /**
+     * List of user identifiers to lazy load
+     *
+     * @var    array
+     */
+    protected static $_users = array();
+
+    /**
      * Get the user that created the resource
      *
      * @return KUserInterface|null Returns a User object or NULL if no user could be found
@@ -25,7 +32,7 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
         $user = null;
 
         if($this->hasProperty('created_by') && !empty($this->created_by)) {
-            $user = $this->getObject('user.provider')->load($this->created_by);
+            $user = $this->_getUser($this->created_by);
         }
 
         return $user;
@@ -54,6 +61,23 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
     }
 
     /**
+     * Get a user
+     *
+     * @return KUserInterface
+     */
+    protected function _getUser($identifier)
+    {
+        //Fetch all the users
+        if(!empty(static::$_users))
+        {
+            $this->getObject('user.provider')->fetch(static::$_users);
+            static::$_users = array(); //unset the users array
+        }
+
+        return $this->getObject('user.provider')->getUser($identifier);
+    }
+
+    /**
      * Set created information
      *
      * Requires an 'created_on' and 'created_by' column
@@ -72,6 +96,29 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 
         if($this->hasProperty('created_on') && (empty($this->created_on) || $this->created_on == $table->getDefault('created_on'))) {
             $this->created_on  = gmdate('Y-m-d H:i:s');
+        }
+    }
+
+    /**
+     * Set created information
+     *
+     * Requires a 'created_by' column
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _afterSelect(KDatabaseContext $context)
+    {
+        $rowset = $context->data;
+
+        if($rowset instanceof KDatabaseRowsetInterface)
+        {
+            foreach($rowset as $row)
+            {
+                if(!empty($row->created_by)) {
+                    static::$_users[$row->created_by] = $row->created_by;
+                }
+            }
         }
     }
 }

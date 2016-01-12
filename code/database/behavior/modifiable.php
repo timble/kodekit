@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Database\Behavior
  */
-class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
+class KDatabaseBehaviorModifiable extends KDatabaseBehaviorCreatable
 {
     /**
      * Initializes the options for the object
@@ -41,8 +41,10 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     {
         $user = null;
 
-        if($this->has('modified_by') && !empty($this->modified_by)) {
-            $user = $this->getObject('user.provider')->load($this->modified_by);
+        if($this->hasProperty('modified_by') && !empty($this->modified_by)) {
+            $user = $this->_getUser($this->modified_by);
+        } else {
+            $user = parent::getAuthor();
         }
 
         return $user;
@@ -63,7 +65,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
         if($table instanceof KDatabaseTableInterface)
         {
             if(!$table->hasColumn('modified_by') && !$table->hasColumn('modified_on')) {
-                return false;
+                return parent::isSupported();
             }
         }
 
@@ -91,6 +93,29 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
 
             if($this->hasProperty('modified_on')) {
                 $this->modified_on = gmdate('Y-m-d H:i:s');
+            }
+        }
+    }
+
+    /**
+     * Set created information
+     *
+     * Requires a 'created_by' column
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _afterSelect(KDatabaseContext $context)
+    {
+        $rowset = $context->data;
+
+        if($rowset instanceof KDatabaseRowsetInterface)
+        {
+            foreach($rowset as $row)
+            {
+                if(!empty($row->modified_by)) {
+                    static::$_users[$row->modified_by] = $row->modified_by;
+                }
             }
         }
     }
