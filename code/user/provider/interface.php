@@ -38,7 +38,7 @@ interface KUserProviderInterface
      * Set a user in the provider
      *
      * @param KUserInterface $user
-     * @return boolean
+     * @return KUserProviderInterface
      */
     public function setUser(KUserInterface $user);
 

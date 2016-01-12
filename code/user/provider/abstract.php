@@ -85,7 +85,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      * Store user object in the provider
      *
      * @param KUserInterface $user
-     * @return boolean
+     * @return KUserProviderAbstract
      */
     public function setUser(KUserInterface $user)
     {
