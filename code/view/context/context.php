@@ -23,6 +23,13 @@ class KViewContext extends KCommand implements KViewContextInterface
     public function __construct($attributes = array())
     {
         KObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof KViewContext)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
     }
 
     /**

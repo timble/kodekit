@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\View
  */
-abstract class KViewTemplate extends KViewAbstract
+abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
 {
     /**
      * Template identifier (com://APP/COMPONENT.template.NAME)
