@@ -44,12 +44,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
         //Set the supported formats
         $this->_formats = KObjectConfig::unbox($config->formats);
 
-        // Mixin the toolbar interface
-        $this->mixin('lib:controller.toolbar.mixin');
-
-        //Attach the toolbars
-        $this->addCommandCallback('before.render', '_addToolbars', array('toolbars' => $config->toolbars));
-
         //Load the controller translations
         $this->addCommandCallback('before.render', '_loadTranslations');
     }
@@ -68,30 +62,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             'formats' => array('html'),
             'view'    => $this->getIdentifier()->name,
             'toolbars'  => array()
-         ));
+        ))->append(array(
+            'behaviors'     => array(
+                'commandable' => array('toolbars' => $config->toolbars),
+            ),
+        ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Add the toolbars to the controller
-     *
-     * @param KControllerContextInterface $context
-     */
-    protected function _addToolbars(KControllerContextInterface $context)
-    {
-        if($this->getView() instanceof KViewHtml)
-        {
-            // Add toolbars on authenticated requests only.
-            if($this->getObject('user')->isAuthentic())
-            {
-                foreach($context->toolbars as $toolbar) {
-                    $this->addToolbar($toolbar);
-                }
-            }
-
-            $this->getView()->getTemplate()->addFilter('toolbar', array('toolbars' => $this->getToolbars()));
-        }
     }
 
     /**

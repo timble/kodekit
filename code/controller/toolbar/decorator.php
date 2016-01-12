@@ -50,7 +50,7 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
     {
         $controller = $delegate->getController();
 
-        if ($controller->inherits('KControllerToolbarMixin'))
+        if ($controller->isCommandable())
         {
             $type = $delegate->getType();
 
