@@ -195,13 +195,6 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             else $identifier = $this->getIdentifier($this->__template);
 
             $this->__template = $this->getObject($identifier);
-
-            if(!$this->__template instanceof KTemplateInterface)
-            {
-                throw new \UnexpectedValueException(
-                    'Template: '.get_class($this->__template).' does not implement TemplateInterface'
-                );
-            }
         }
 
         return $this->__template;
