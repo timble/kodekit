@@ -27,18 +27,6 @@ class KUser extends KUserAbstract implements KObjectSingleton
     protected $_authentic = false;
 
     /**
-     * Get the user session
-     *
-     * This function will create a session object if it hasn't been created yet.
-     *
-     * @return KUserSessionInterface
-     */
-    public function getSession()
-    {
-        return $this->getObject('lib:user.session');
-    }
-
-    /**
      * Returns the id of the user
      *
      * @return int The id
@@ -69,9 +57,33 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
+     * Returns the user language tag
+     *
+     * Should return a properly formatted IETF language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->getSession()->get('user.language');
+    }
+
+    /**
+     * Returns the user timezone
+     *
+     * @return string
+     */
+    public function getTimezone()
+    {
+        return $this->getSession()->get('user.timezone');
+    }
+
+    /**
      * Returns the roles of the user
      *
-     * @return int The role id
+     * @return array An array of role identifiers
      */
     public function getRoles()
     {
@@ -81,7 +93,7 @@ class KUser extends KUserAbstract implements KObjectSingleton
     /**
      * Returns the groups the user is part of
      *
-     * @return array An array of group id's
+     * @return array An array of group identifiers
      */
     public function getGroups()
     {
@@ -89,7 +101,7 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Returns the password used to authenticate the user.
+     * Returns the hashed password used to authenticate the user.
      *
      * This should be the encoded password. On authentication, a plain-text password will be salted, encoded, and
      * then compared to this value.
@@ -102,15 +114,13 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Returns the salt that was originally used to encode the password.
+     * Returns the user parameters
      *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string The salt or NULL if no salt defined
+     * @return array The parameters
      */
-    public function getSalt()
+    public function getParameters()
     {
-        return null; //return NULL by default
+        return $this->getSession()->get('user.parameters');
     }
 
     /**
@@ -151,16 +161,6 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Get the user data as an array
-     *
-     * @return array An associative array of data
-     */
-    public function toArray()
-    {
-        return $this->getSession()->get('user');
-    }
-
-    /**
      * Sets the user as authenticated for the request
      *
      * @return $this
@@ -175,74 +175,96 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Set the user data from an array
+     * Get the user session
      *
-     * @param  array $data An associative array of data
+     * This function will create a session object if it hasn't been created yet.
+     *
+     * @return KUserSessionInterface
+     */
+    public function getSession()
+    {
+        return $this->getObject('user.session');
+    }
+
+    /**
+     * Get the user data as an array
+     *
+     * @return array An associative array of data
+     */
+    public function toArray()
+    {
+        return $this->getSession()->get('user');
+    }
+
+    /**
+     * Set the user properties from an array
+     *
+     * @param  array $properties An associative array
      * @return KUser
      */
-    public function setData($data)
+    public function setProperties($properties)
     {
-        parent::setData($data);
+        parent::setProperties($properties);
 
         //Set the user data
-        $this->getSession()->set('user', KObjectConfig::unbox($data));
+        $this->getSession()->set('user', KObjectConfig::unbox($properties));
 
         return $this;
     }
 
     /**
-     * Get an user attribute
+     * Get an user parameter
      *
-     * @param   string  $identifier Attribute identifier, eg .foo.bar
-     * @param   mixed   $default    Default value when the attribute doesn't exist
+     * @param string $name The parameter name
+     * @param   mixed   $value      Default value when the attribute doesn't exist
      * @return  mixed   The value
      */
-    public function get($identifier, $default = null)
+    public function get($name, $default = null)
     {
-        return $this->getSession()->get('user.attributes'.$identifier, $default);
+        return $this->getSession()->get('user.parameters'.$name, $default);
     }
 
     /**
-     * Set an user attribute
+     * Set an user parameter
      *
-     * @param   mixed   $identifier Attribute identifier, eg foo.bar
-     * @param   mixed   $value Attribute value
+     * @param string $name The parameter name
+     * @param  mixed $value The parameter value
      * @return KUser
      */
-    public function set($identifier, $value)
+    public function set($name, $value)
     {
-        $this->getSession()->set('user.attributes'.$identifier, $value);
+        $this->getSession()->set('user.parameters'.$name, $value);
         return $this;
     }
 
     /**
-     * Check if a user attribute exists
+     * Check if a user parameter exists
      *
-     * @param   string  $identifier Attribute identifier, eg foo.bar
+     * @param string $name The parameter name
      * @return  boolean
      */
-    public function has($identifier)
+    public function has($name)
     {
-        return $this->getSession()->has('user.attributes'.$identifier);
+        return $this->getSession()->has('user.parameters'.$name);
     }
 
     /**
-     * Removes an user attribute
+     * Removes an user parameter
      *
-     * @param string $identifier Attribute identifier, eg foo.bar
+     * @param string $name The parameter name
      * @return KUser
      */
-    public function remove($identifier)
+    public function remove($name)
     {
-        $this->getSession()->remove('user.attributes'.$identifier);
+        $this->getSession()->remove('user.parameters'.$name);
         return $this;
     }
 
     /**
-     * Get a user attribute
+     * Get a user parameter
      *
-     * @param   string $name  The attribute name.
-     * @return  string $value The attribute value.
+     * @param   string $name  The parameter name.
+     * @return  mixed The parameter value
      */
     final public function __get($name)
     {
@@ -250,10 +272,10 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Set a user attribute
+     * Set a user parameter
      *
-     * @param   string $name  The attribute name.
-     * @param   mixed  $value The attribute value.
+     * @param   string $name  The parameter name.
+     * @param   mixed  $value The parameter value.
      * @return  void
      */
     final public function __set($name, $value)
@@ -262,9 +284,9 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Test existence of a use attribute
+     * Test existence of a use parameter
      *
-     * @param  string $name The attribute name.
+     * @param  string $name The parameter name.
      * @return boolean
      */
     final public function __isset($name)
@@ -273,9 +295,9 @@ class KUser extends KUserAbstract implements KObjectSingleton
     }
 
     /**
-     * Unset a user attribute
+     * Unset a user parameter
      *
-     * @param   string $name  The attribute name.
+     * @param   string $name  The parameter name.
      * @return  void
      */
     final public function __unset($name)

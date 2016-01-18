@@ -16,23 +16,24 @@
 abstract class KUserAbstract extends KObject implements KUserInterface
 {
     /**
-     * The user data
+     * The user properties
      *
      * @var KObjectConfig
      */
-    private $__data;
+    private $__properties;
 
     /**
      * Constructor
      *
-     * @param KObjectConfig $config An optional KObjectConfig object with configuration options.
+     * @param KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return KUserAbstract
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
-        //Set the user properties and attributes
-        $this->setData($config->data);
+        //Set the user properties
+        $this->setProperties($config->properties);
     }
 
     /**
@@ -46,10 +47,12 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'data' => array(
+            'properties' => array(
                 'id'         => 0,
                 'email'      => '',
                 'name'       => '',
+                'language'   => '',
+                'timezone'   => '',
                 'roles'      => array(),
                 'groups'     => array(),
                 'password'   => '',
@@ -57,7 +60,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
                 'authentic'  => false,
                 'enabled'    => true,
                 'expired'    => false,
-                'attributes' => array(),
+                'parameters' => array(),
             )
         ));
 
@@ -65,25 +68,25 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     }
 
     /**
-     * Set the user data from an array
+     * Set the user properties from an array
      *
      * @param  array $data An associative array of data
      * @return KUserAbstract
      */
-    public function setData($data)
+    public function setProperties($properties)
     {
-        $this->__data = new KObjectConfigJson($data);
+        $this->__properties = new KObjectConfigJson($properties);
         return $this;
     }
 
     /**
-     * Get the user data
+     * Get the user properties
      *
-     * @return KObjectConfig
+     * @return KObjectConfigJson
      */
-    public function getData()
+    public function getProperties()
     {
-        return $this->__data;
+        return $this->__properties;
     }
 
     /**
@@ -93,7 +96,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getId()
     {
-        return $this->getData()->id;
+        return $this->getProperties()->id;
     }
 
     /**
@@ -103,7 +106,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getEmail()
     {
-        return $this->getData()->email;
+        return $this->getProperties()->email;
     }
 
     /**
@@ -113,17 +116,41 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getName()
     {
-        return $this->getData()->name;
+        return $this->getProperties()->name;
+    }
+
+    /**
+     * Returns the user language tag
+     *
+     * Should return a properly formatted IETF language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->getProperties()->language;
+    }
+
+    /**
+     * Returns the user timezone
+     *
+     * @return string
+     */
+    public function getTimezone()
+    {
+        return $this->getProperties()->timezone;
     }
 
     /**
      * Returns the roles of the user
      *
-     * @return array An array of role id's
+     * @return array An array of role identifiers
      */
     public function getRoles()
     {
-        return KObjectConfig::unbox($this->getData()->roles);
+        return KObjectConfig::unbox($this->getProperties()->roles);
     }
 
     /**
@@ -141,24 +168,35 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     /**
      * Returns the groups the user is part of
      *
-     * @return array An array of group id's
+     * @return array An array of group identifiers
      */
     public function getGroups()
     {
-        return KObjectConfig::unbox($this->getData()->groups);
+        return KObjectConfig::unbox($this->getProperties()->groups);
     }
 
     /**
-     * Returns the password used to authenticate the user.
+     * Returns the hashed password used to authenticate the user.
      *
-     * This should be the encoded password. On authentication, a plain-text password will be salted, encoded, and
+     * This should be the hashed password. On authentication, a plain-text password will be salted, encoded, and
      * then compared to this value.
      *
      * @return string The password
      */
     public function getPassword()
     {
-        return $this->getData()->password;
+        return $this->getProperties()->password;
+    }
+
+    /**
+     * Verifies that a plain text password matches the users hashed password
+     *
+     * @param string $password The plain-text password to verify
+     * @return bool Returns TRUE if the plain-text password and users hashed password, or FALSE otherwise.
+     */
+    public function verifyPassword($password)
+    {
+        return password_verify($password, $this->getPassword());
     }
 
     /**
@@ -170,7 +208,17 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getSalt()
     {
-        return $this->getData()->salt;
+        return $this->getProperties()->salt;
+    }
+
+    /**
+     * Returns the user parameters
+     *
+     * @return array The parameters
+     */
+    public function getParameters()
+    {
+        return KObjectConfig::unbox($this->getProperties()->parameters);
     }
 
     /**
@@ -181,7 +229,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function isAuthentic($strict = false)
     {
-        return $this->getData()->authentic;
+        return $this->getProperties()->authentic;
     }
 
     /**
@@ -191,7 +239,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function isEnabled()
     {
-        return $this->getData()->enabled;
+        return $this->getProperties()->enabled;
     }
 
     /**
@@ -201,7 +249,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function isExpired()
     {
-        return $this->getData()->expired;
+        return $this->getProperties()->expired;
     }
 
     /**
@@ -211,80 +259,64 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function setAuthentic()
     {
-        $this->getData()->authentic = true;
+        $this->getProperties()->authentic = true;
 
         return $this;
     }
 
     /**
-     * Get an user attribute
+     * Get an user parameter
      *
-     * @param   string  $identifier Attribute identifier, eg .foo.bar
-     * @param   mixed   $default Default value when the attribute doesn't exist
+     * @param   string  $name    Parameter name
+     * @param   mixed   $default Default value when the parameter doesn't exist
      * @return  mixed   The value
      */
-    public function get($identifier, $default = null)
+    public function get($name, $default = null)
     {
-        $attributes = $this->getData()->attributes;
-
-        $result = $default;
-        if(isset($attributes[$identifier])) {
-            $result = $attributes[$identifier];
-        }
-
+        $result = $this->getParameters()->get($name, $default);
         return $result;
     }
 
     /**
-     * Set an user attribute
+     * Set an user parameter
      *
-     * @param   mixed   $identifier Attribute identifier, eg foo.bar
-     * @param   mixed   $value      Attribute value
+     * @param   mixed   $name    Parameter name
+     * @param   mixed   $value   Parameter value
      * @return KUserAbstract
      */
-    public function set($identifier, $value)
+    public function set($name, $value)
     {
-        $attributes = $this->getData()->attributes;
-        $attributes[$identifier] = $value;
-
+        $this->getParameters()->set($name, $value);
         return $this;
     }
 
     /**
-     * Check if a user attribute exists
+     * Check if a user parameter exists
      *
-     * @param   string  $identifier Attribute identifier, eg foo.bar
+     * @param   mixed   $name    Parameter name
      * @return  boolean
      */
-    public function has($identifier)
+    public function has($name)
     {
-        $attributes = $this->getData()->attributes;
-        if(isset($attributes[$identifier])) {
-            return true;
-        }
-
-        return false;
+        return $this->getParameters()->has($name);
     }
 
     /**
-     * Removes an user attribute
+     * Removes an user parameter
      *
-     * @param string $identifier Attribute identifier, eg foo.bar
+     * @param   mixed   $name    Parameter name
      * @return KUserAbstract
      */
-    public function remove($identifier)
+    public function remove($name)
     {
-        if(isset($attributes[$identifier])) {
-            unset($attributes[$identifier]);
-        }
-
+        $this->getParameters()->remove($name);
         return $this;
     }
 
     /**
      * Check if the user is equal
      *
-     * @param KObjectInterface|KUserInterface $user
+     * @param  KUserInterface $user
      * @return Boolean
      */
     public function equals(KObjectInterface $user)
@@ -309,6 +341,6 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function toArray()
     {
-        return KObjectConfig::unbox($this->getData());
+        return KObjectConfig::unbox($this->getProperties());
     }
 }
