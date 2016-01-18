@@ -16,13 +16,6 @@
 class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 {
     /**
-     * List of user identifiers to lazy load
-     *
-     * @var    array
-     */
-    protected static $_users = array();
-
-    /**
      * Get the user that created the resource
      *
      * @return KUserInterface|null Returns a User object or NULL if no user could be found
@@ -32,7 +25,7 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
         $user = null;
 
         if($this->hasProperty('created_by') && !empty($this->created_by)) {
-            $user = $this->_getUser($this->created_by);
+            $user = $this->getObject('user.provider')->getUser($this->created_by);
         }
 
         return $user;
@@ -58,23 +51,6 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
         }
 
         return true;
-    }
-
-    /**
-     * Get a user
-     *
-     * @return KUserInterface
-     */
-    protected function _getUser($identifier)
-    {
-        //Fetch all the users
-        if(!empty(static::$_users))
-        {
-            $this->getObject('user.provider')->fetch(static::$_users);
-            static::$_users = array(); //unset the users array
-        }
-
-        return $this->getObject('user.provider')->getUser($identifier);
     }
 
     /**
@@ -113,12 +89,17 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 
         if($rowset instanceof KDatabaseRowsetInterface)
         {
+            $users = array();
+
             foreach($rowset as $row)
             {
                 if(!empty($row->created_by)) {
-                    static::$_users[$row->created_by] = $row->created_by;
+                    $users[] = $row->created_by;
                 }
             }
+
+            //Lazy load the users
+            $this->getObject('user.provider')->fetch($users, true);
         }
     }
 }
