@@ -182,7 +182,7 @@ $dialogScreenWidth: 700px;
 }
 
 // Images in details view
-.koowa_dialog #files-preview {
+.koowa_dialog #files-preview, .koowa_dialog #attachments-preview {
 
   .details > div {
     padding: 16px;
@@ -198,9 +198,12 @@ $dialogScreenWidth: 700px;
   }
 }
 
-.koowa_dialog #insert-button-container {
-  padding: 16px;
+.koowa_dialog {
+  #insert-button-container, #detach-button-container {
+    padding: 16px;
+  }
 }
+
 
 // Media Queries
 @media screen and (min-width: $dialogScreenWidth) {
@@ -272,7 +275,7 @@ $dialogScreenWidth: 700px;
     position: relative;
   }
 
-  .koowa_dialog__file_dialog_files {
+  .koowa_dialog__file_dialog_files, .koowa_dialog__file_dialog_attachments {
     width: 42%;
   }
   .koowa_dialog__file_dialog_insert {
@@ -404,7 +407,7 @@ $dialogScreenWidth: 700px;
     position: relative;
   }
 
-  .koowa_dialog__file_dialog_files {
+  .koowa_dialog__file_dialog_files, .koowa_dialog__file_dialog_attachments {
     width: 42%;
   }
   .koowa_dialog__file_dialog_insert {
