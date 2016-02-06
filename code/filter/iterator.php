@@ -127,7 +127,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     }
 
     /**
-     * Set the decorated object
+     * Get the decorated filter
      *
      * @return KFilterInterface
      */

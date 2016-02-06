@@ -37,7 +37,7 @@ class KEventPublisherException extends KEventPublisherAbstract
         $this->__exception_handler = $config->exception_handler;
 
         if($this->isEnabled()) {
-            $this->enable();
+            $this->setEnabled(true);
         }
     }
 
@@ -56,28 +56,6 @@ class KEventPublisherException extends KEventPublisherAbstract
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Enable the publisher
-     *
-     * @return  KEventPublisherException
-     */
-    public function enable()
-    {
-        $this->getExceptionHandler()->addHandler(array($this, 'publishException'));
-        return parent::enable();
-    }
-
-    /**
-     * Disable the publisher
-     *
-     * @return  KEventPublisherException
-     */
-    public function disable()
-    {
-        $this->getExceptionHandler()->removeHandler(array($this, 'publishException'));
-        return parent::enable();
     }
 
     /**
@@ -133,10 +111,28 @@ class KEventPublisherException extends KEventPublisherAbstract
         //Re-enable the exception handler
         if($this->isEnabled())
         {
-            $this->disable();
-            $this->enable();
+            $this->setEnabled(false);
+            $this->setEnabled(true);
         }
 
         return $this;
+    }
+
+    /**
+     * Enable the profiler
+     *
+     * @return  KEventPublisherException
+     */
+    public function setEnabled($enabled)
+    {
+        $result = parent::setEnabled($enabled);
+
+        if($this->isEnabled()) {
+            $this->getExceptionHandler()->addExceptionCallback(array($this, 'publishException'));
+        } else {
+            $this->getExceptionHandler()->removeExceptionCallback(array($this, 'publishException'));
+        }
+
+        return $result;
     }
 }

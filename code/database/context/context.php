@@ -16,6 +16,16 @@
 class KDatabaseContext extends KCommand implements KDatabaseContextInterface
 {
     /**
+     * Constructor.
+     *
+     * @param  array|\Traversable  $attributes An associative array or a Traversable object instance
+     */
+    public function __construct($attributes = array())
+    {
+        KObjectConfig::__construct($attributes);
+    }
+
+    /**
      * Get the query object
      *
      * @return KDatabaseQueryInterface|string

@@ -10,7 +10,10 @@
 /**
  * Json View
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
+ * Adheres to the JSON API standard v1.0
+ *
+ * @see     http://jsonapi.org/
+ * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Koowa\Library\View
  */
 class KViewJson extends KViewAbstract
@@ -23,9 +26,18 @@ class KViewJson extends KViewAbstract
     protected $_version;
 
     /**
-     * A list of fields to use in the response. Blank for all.
+     * A cache of resource objects to be sent in included property in top level
      *
-     * Comes from the comma separated "fields" value in the request
+     * @var array
+     */
+    protected $_included_resources = array();
+
+    /**
+     * A type=>fields map to return in the response. Blank for all.
+     *
+     * Comes from the fields property in the query string. For example:
+     * fields[documents]=foo,bar&fields[categories]=foo,bar,baz would only show foo and bar properties
+     * for documents type and foo, bar, and baz for categories type
      *
      * @var array
      */
@@ -55,11 +67,19 @@ class KViewJson extends KViewAbstract
         $this->_fields      = KObjectConfig::unbox($config->fields);
 
         $query = $this->getUrl()->getQuery(true);
-        if (!empty($query['fields']))
+        if (!empty($query['fields']) && is_array($query['fields']))
         {
-            $fields = explode(',', rawurldecode($query['fields']));
-            $this->_fields = array_merge($this->_fields, $fields);
+            foreach ($query['fields'] as $type => $list)
+            {
+                if (!isset($this->_fields[$type])) {
+                    $this->_fields[$type] = array();
+                }
+
+                $this->_fields[$type] = explode(',', rawurldecode($list));
+            }
         }
+
+        $this->addCommandCallback('before.render', '_convertRelativeLinks');
     }
 
     /**
@@ -77,7 +97,7 @@ class KViewJson extends KViewAbstract
             'fields'      => array(),
             'text_fields' => array('description'), // Links are converted to absolute ones in these fields
         ))->append(array(
-            'mimetype' => 'application/json; version=' . $config->version,
+            'mimetype' => 'application/vnd.api+json',
         ));
 
         parent::_initialize($config);
@@ -94,12 +114,6 @@ class KViewJson extends KViewAbstract
      */
     protected function _actionRender(KViewContext $context)
     {
-        if (empty($this->_content))
-        {
-            $this->_content = $this->_renderData();
-            $this->_processLinks($this->_content);
-        }
-
         //Serialise
         if (!is_string($this->_content))
         {
@@ -136,25 +150,26 @@ class KViewJson extends KViewAbstract
      *
      * @return array
      */
-    protected function _renderData()
+    protected function _fetchData(KViewContext $context)
     {
-        $model  = $this->getModel();
-        $data   = $this->_getCollection($model->fetch());
-        $output = array(
-            'version' => $this->_version,
-            'links' => array(
-                'self' => array(
-                    'href' => (string) $this->_getPageUrl(),
-                    'type' => $this->mimetype
-                )
+        $output = new ArrayObject(array(
+            'jsonapi' => array(
+                'version' => $this->_version,
             ),
-            'meta'     => array(),
-            'entities' => $data,
-            'linked'   => array()
-        );
+            'links' => array(
+                'self' => $this->getUrl()->toString()
+            ),
+            'data' => array()
+        ));
+        $model  = $this->getModel();
+        $url    = $this->getUrl();
 
         if ($this->isCollection())
         {
+            foreach ($model->fetch() as $entity) {
+                $output['data'][] = $this->_createResource($entity);
+            }
+
             $total  = $model->count();
             $limit  = (int) $model->getState()->limit;
             $offset = (int) $model->getState()->offset;
@@ -165,80 +180,142 @@ class KViewJson extends KViewAbstract
                 'total'	   => $total
             );
 
-            if ($limit && $total-($limit + $offset) > 0)
-            {
-                $output['links']['next'] = array(
-                    'href' => $this->_getPageUrl(array('offset' => $limit+$offset)),
-                    'type' => $this->mimetype
-                );
+            if ($limit && $total-($limit + $offset) > 0) {
+                $output['links']['next'] = $url->setQuery(array('offset' => $limit+$offset), true)->toString();
             }
 
-            if ($limit && $offset && $offset >= $limit)
-            {
-                $output['links']['previous'] = array(
-                    'href' => $this->_getPageUrl(array('offset' => max($offset-$limit, 0))),
-                    'type' => $this->mimetype
-                );
+            if ($limit && $offset && $offset >= $limit) {
+                $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
             }
         }
+        else $output['data'] = $this->_createResource($model->fetch());
 
-        return $output;
+        if ($this->_included_resources) {
+            $output['included'] = array_values($this->_included_resources);
+        }
+
+        $this->setContent($output);
     }
 
     /**
-     * Returns the JSON representation of a collection
+     * Creates a resource object specified by JSON API
      *
-     * @param  KModelEntityInterface $collection
-     * @return array
-     */
-    protected function _getCollection(KModelEntityInterface $collection)
-    {
-        $result = array();
-
-        foreach ($collection as $entity) {
-            $result[] = $this->_getEntity($entity);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the item data
-     *
+     * @see   http://jsonapi.org/format/#document-resource-objects
      * @param KModelEntityInterface  $entity   Document row
+     * @param array $config Resource configuration.
      * @return array The array with data to be encoded to json
      */
-    protected function _getEntity(KModelEntityInterface $entity)
+    protected function _createResource(KModelEntityInterface $entity, array $config = array())
     {
-        $method = '_get'.ucfirst($entity->getIdentifier()->name);
+        $config = array_merge(array(
+            'links'         => true,
+            'relationships' => true
+        ), $config);
 
-        if ($method !== '_getEntity' && method_exists($this, $method)) {
-            $data = $this->$method($entity);
-        } else {
-            $data = $entity->toArray();
-        }
+        $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
+        $data   = array(
+            'type' => $this->_callCustomMethod($entity, 'type') ?: KStringInflector::pluralize($entity->getIdentifier()->name),
+            'id'   => $this->_callCustomMethod($entity, 'id') ?: $entity->{$entity->getIdentityKey()},
+            'attributes' => $this->_callCustomMethod($entity, 'attributes') ?: $entity->toArray()
+        );
 
-        if (!empty($this->_fields)) {
-            $data = array_intersect_key($data, array_merge(array('links' => 'links'), array_flip($this->_fields)));
-        }
-
-        if (!isset($data['links'])) {
-            $data['links'] = array();
-        }
-
-        if (!isset($data['links']['self']))
+        if (isset($this->_fields[$data['type']]))
         {
-            $data['links']['self'] = array(
-                'href' => (string) $this->_getEntityRoute($entity),
-                'type' => $this->mimetype
-            );
+            $fields = array_flip($this->_fields[$data['type']]);
+            $data['attributes'] = array_intersect_key($data['attributes'], $fields);
+        }
+
+        if ($config['links'])
+        {
+            $links = $this->_callCustomMethod($entity, 'links') ?: array('self' => (string)$this->_getEntityRoute($entity));
+            if ($links) {
+                $data['links'] = $links;
+            }
+        }
+
+        if ($config['relationships'])
+        {
+            $relationships = $this->_callCustomMethod($entity, 'relationships');
+            if ($relationships) {
+                $data['relationships'] = $relationships;
+            }
         }
 
         return $data;
     }
 
     /**
-     * Get the item link
+     * Creates a resource object and returns a resource identifier object specified by JSON API
+     *
+     * @see   http://jsonapi.org/format/#document-resource-identifier-objects
+     * @param KModelEntityInterface $entity
+     * @return array
+     */
+    protected function _includeResource(KModelEntityInterface $entity)
+    {
+        $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
+        $cache  = $entity->getIdentifier()->name.'-'.$entity->getHandle();
+
+        if (!isset($this->_included_resources[$cache])) {
+            $this->_included_resources[$cache] = $this->_createResource($entity, array('relationships' => false));
+        }
+
+        $resource = $this->_included_resources[$cache];
+
+        return array(
+            'data' => array(
+                'type' => $resource['type'],
+                'id'   => $resource['id']
+            )
+        );
+    }
+
+
+    /**
+     * Creates resource objects and returns an array of resource identifier objects specified by JSON API
+     *
+     * @see   http://jsonapi.org/format/#document-resource-identifier-objects
+     * @param KModelEntityInterface $entities
+     * @return array
+     */
+    protected function _includeCollection(KModelEntityInterface $entities)
+    {
+        $result = array('data' => array());
+
+        foreach ($entities as $entity)
+        {
+            $relation = $this->_includeResource($entity);
+            $result['data'][] = $relation['data'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Calls a custom method per entity name to modify resource objects
+     *
+     * If the entity is of type foo and the method is links, this method will return the results of
+     * _getFooLinks method if possible
+     *
+     * @param KModelEntityInterface $entity
+     * @param string $method
+     * @return mixed Method results or false if the method not exists
+     */
+    protected function _callCustomMethod(KModelEntityInterface $entity, $method)
+    {
+        $name   = KStringInflector::singularize($entity->getIdentifier()->name);
+        $method = '_get'.ucfirst($name).ucfirst($method);
+
+        if ($method !== '_getEntity'.ucfirst($method) && method_exists($this, $method)) {
+            return $this->$method($entity);
+        }
+        else return false;
+    }
+
+    /**
+     * Provides a default entity link
+     *
+     * It can be overridden by creating a _getFooLinks method where foo is the entity type
      *
      * @param KModelEntityInterface  $entity
      * @return string
@@ -252,41 +329,39 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Get the page link
+     * Converts links in the content from relative to absolute
      *
-     * @param  array  $query Additional query parameters to merge
-     * @return string
+     * @param KViewContextInterface $context
      */
-    protected function _getPageUrl(array $query = array())
+    protected function _convertRelativeLinks(KViewContextInterface $context)
     {
-        $url = $this->getUrl();
-
-        if ($query) {
-            $url->setQuery(array_merge($url->getQuery(true), $query));
+        if (is_array($this->_content) || $this->_content instanceof Traversable) {
+            $this->_processLinks($this->_content);
         }
-
-        return (string) $url;
     }
 
     /**
-     * Converts links in an array from relative to absolute
+     * Converts links in the content array from relative to absolute
      *
-     * @param array $array Source array
+     * @param Traversable|array $array
      */
-    protected function _processLinks(array &$array)
+    protected function _processLinks(&$array)
     {
         $base = $this->getUrl()->toString(KHttpUrl::AUTHORITY);
 
         foreach ($array as $key => &$value)
         {
-            if (is_array($value)) {
-                $this->_processLinks($value);
-            }
-            elseif ($key === 'href')
+            if ($key === 'links')
             {
-                if (substr($value, 0, 4) !== 'http') {
-                    $array[$key] = $base.$value;
+                foreach ($array['links'] as $k => $v)
+                {
+                    if (strpos($v, ':/') === false) {
+                        $array['links'][$k] = $base.$v;
+                    }
                 }
+            }
+            elseif (is_array($value)) {
+                $this->_processLinks($value);
             }
             elseif (in_array($key, $this->_text_fields)) {
                 $array[$key] = $this->_processText($value);
@@ -295,7 +370,7 @@ class KViewJson extends KViewAbstract
     }
 
     /**
-     * Convert links in a text from relative to absolute and runs them through JRoute
+     * Convert links in a text from relative to absolute and runs them through router
      *
      * @param string $text The text processed
      * @return string Text with converted links

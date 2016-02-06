@@ -93,6 +93,20 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     protected static $_formats;
 
     /**
+     * The transport queue
+     *
+     * @var	KObjectQueue
+     */
+    protected $_queue;
+
+    /**
+     * List of request transports
+     *
+     * @var array
+     */
+    protected $_transports;
+
+    /**
      * Constructor
      *
      * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
@@ -100,6 +114,21 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
+
+        //Create the transport queue
+        $this->_queue = $this->getObject('lib:object.queue');
+
+        //Attach the request transport handlers
+        $transports = (array) KObjectConfig::unbox($config->transports);
+
+        foreach ($transports as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->attachTransport($value);
+            } else {
+                $this->attachTransport($key, $value);
+            }
+        }
 
         //Set the trusted proxies
         $this->setProxies(KObjectConfig::unbox($config->proxies));
@@ -121,103 +150,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
             $this->addFormat($format, $mimetypes);
         }
 
-        //Set document root for IIS
-        if(!isset($_SERVER['DOCUMENT_ROOT']))
-        {
-            if(isset($_SERVER['SCRIPT_FILENAME'])) {
-                $_SERVER['DOCUMENT_ROOT'] = str_replace( '\\', '/', substr($_SERVER['SCRIPT_FILENAME'], 0, 0 - strlen($_SERVER['PHP_SELF'])));
-            }
-
-            if(isset($_SERVER['PATH_TRANSLATED'])) {
-                $_SERVER['DOCUMENT_ROOT'] = str_replace( '\\', '/', substr(str_replace('\\\\', '\\', $_SERVER['PATH_TRANSLATED']), 0, 0 - strlen($_SERVER['PHP_SELF'])));
-            }
-         }
-
-        //Set the authorization
-        if (!isset($_SERVER['PHP_AUTH_USER']))
-        {
-            /*
-             * If you are running PHP as CGI. Apache does not pass HTTP Basic user/pass to PHP by default.
-             * To fix this add these lines to your .htaccess file:
-             *
-             * RewriteCond %{HTTP:Authorization} ^(.+)$
-             * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-             */
-
-            //When using PHP-FPM HTTP_AUTHORIZATION is called REDIRECT_HTTP_AUTHORIZATION
-            if(isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-                $_SERVER['HTTP_AUTHORIZATION'] = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
-            }
-
-            // Decode AUTHORIZATION header into PHP_AUTH_USER and PHP_AUTH_PW when authorization header is basic
-            if (isset($_SERVER['HTTP_AUTHORIZATION']) && stripos($_SERVER['HTTP_AUTHORIZATION'], 'basic') === 0)
-            {
-                $exploded = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'] , 6)));
-                if (count($exploded) == 2) {
-                    list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = $exploded;
-                }
-            }
-        }
-
-        //Set the headers
-        $headers = array();
-        foreach ($_SERVER as $key => $value)
-        {
-            if ($value && strpos($key, 'HTTP_') === 0)
-            {
-                // Cookies are handled using the $_COOKIE superglobal
-                if (strpos($key, 'HTTP_COOKIE') === 0) {
-                    continue;
-                }
-
-                $headers[substr($key, 5)] = $value;
-            }
-            elseif ($value && strpos($key, 'CONTENT_') === 0)
-            {
-                $name = substr($key, 8); // Content-
-                $name = 'Content-' . (($name == 'MD5') ? $name : ucfirst(strtolower($name)));
-
-                $headers[$name] = $value;
-            }
-        }
-
-        /*if(isset($_SERVER['PHP_AUTH_USER']))
-        {
-            This breaks Apache htpasswd authentication
-            $headers['PHP_AUTH_USER'] = $_SERVER['PHP_AUTH_USER'];
-            $headers['PHP_AUTH_PW']   = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
-        }*/
-
-        $this->_headers->add($headers);
-
-        //Set the version
-        if (isset($_SERVER['SERVER_PROTOCOL']) && strpos($_SERVER['SERVER_PROTOCOL'], '1.0') !== false) {
-            $this->setVersion('1.0');
-        }
-
-        //Set request data
-        if($this->getContentType() == 'application/x-www-form-urlencoded')
-        {
-            if (in_array($this->getMethod(), array('PUT', 'DELETE', 'PATCH')))
-            {
-                parse_str($this->getContent(), $data);
-                $this->data->add($data);
-            }
-        }
-
-        if($this->getContentType() == 'application/json')
-        {
-            if(in_array($this->getMethod(), array('POST', 'PUT', 'DELETE', 'PATCH')))
-            {
-                $data = array();
-
-                if ($content = $this->getContent()) {
-                    $data = json_decode($content, true);
-                }
-
-                $this->data->add($data);
-            }
-        }
+        $this->receive();
     }
 
     /**
@@ -231,22 +164,23 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'transports'  => array('server', 'headers', 'data'),
             'base_url'  => '/',
             'base_path' => null,
             'format'    => null,
             'url'       => null,
             'method'   => null,
             'formats'  => array(
-                'html'     => array('text/html', 'application/xhtml+xml'),
-                'txt'      => array('text/plain'),
-                'js'       => array('application/javascript', 'application/x-javascript', 'text/javascript'),
-                'css'      => array('text/css'),
-                'json'     => array('application/json', 'application/x-json'),
-                'xml'      => array('text/xml', 'application/xml', 'application/x-xml'),
-                'rdf'      => array('application/rdf+xml'),
-                'atom'     => array('application/atom+xml'),
-                'rss'      => array('application/rss+xml'),
-                'stream'   => array('application/stream+json'),
+                'html'       => array('text/html', 'application/xhtml+xml'),
+                'txt'        => array('text/plain'),
+                'js'         => array('application/javascript', 'application/x-javascript', 'text/javascript'),
+                'css'        => array('text/css'),
+                'json'       => array('application/json', 'application/x-json', 'application/vnd.api+json'),
+                'xml'        => array('text/xml', 'application/xml', 'application/x-xml'),
+                'rdf'        => array('application/rdf+xml'),
+                'atom'       => array('application/atom+xml'),
+                'rss'        => array('application/rss+xml'),
+                'jsonstream' => array('application/stream+json'),
             ),
             'query'   => $_GET,
             'data'    => $_POST,
@@ -256,6 +190,84 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Receive the request by passing it through transports
+     */
+    public function receive()
+    {
+        foreach($this->_queue as $transport)
+        {
+            if($transport instanceof KDispatcherRequestTransportInterface) {
+                $transport->receive($this);
+            }
+        }
+    }
+
+    /**
+     * Get a transport handler by identifier
+     *
+     * @param   mixed $transport An object that implements ObjectInterface, ObjectIdentifier object
+     *                                 or valid identifier string
+     * @param   array $config An optional associative array of configuration settings
+     * @throws \UnexpectedValueException
+     * @return KDispatcherRequestTransportInterface
+     */
+    public function getTransport($transport, $config = array())
+    {
+        //Create the complete identifier if a partial identifier was passed
+        if (is_string($transport) && strpos($transport, '.') === false)
+        {
+            $identifier = $this->getIdentifier()->toArray();
+
+            if($identifier['package'] != 'dispatcher') {
+                $identifier['path'] = array('dispatcher', 'request', 'transport');
+            } else {
+                $identifier['path'] = array('request', 'transport');
+            }
+
+            $identifier['name'] = $transport;
+            $identifier = $this->getIdentifier($identifier);
+        }
+        else $identifier = $this->getIdentifier($transport);
+
+        if (!isset($this->_transports[$identifier->name]))
+        {
+            $transport = $this->getObject($identifier, array_merge($config, array('request' => $this)));
+
+            if (!($transport instanceof KDispatcherRequestTransportInterface))
+            {
+                throw new \UnexpectedValueException(
+                    "Transport handler $identifier does not implement DispatcherRequestTransportInterface"
+                );
+            }
+
+            $this->_transports[$transport->getIdentifier()->name] = $transport;
+        }
+        else $transport = $this->_transports[$identifier->name];
+
+        return $transport;
+    }
+
+    /**
+     * Attach a transport handler
+     *
+     * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
+     *                            or valid identifier string
+     * @param   array $config  An optional associative array of configuration settings
+     * @return KDispatcherRequestAbstract
+     */
+    public function attachTransport($transport, $config = array())
+    {
+        if (!($transport instanceof KDispatcherRequestTransportInterface)) {
+            $transport = $this->getTransport($transport, $config);
+        }
+
+        //Enqueue the transport handler in the command chain
+        $this->_queue->enqueue($transport, $transport->getPriority());
+
+        return $this;
     }
 
     /**

@@ -21,35 +21,13 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
      * @var boolean
      */
     private $__enabled;
-    
+
     /**
      * Array of profile marks
      *
      * @var array
      */
     private $__profiles;
-
-    /**
-     * Enable the profiler
-     *
-     * @return  KEventPublisherProfiler
-     */
-    public function enable()
-    {
-        $this->__enabled = true;
-        return $this;
-    }
-
-    /**
-     * Disable the profiler
-     *
-     * @return  KEventPublisherProfiler
-     */
-    public function disable()
-    {
-        $this->__enabled = false;
-        return $this;
-    }
 
     /**
      * Publish an event by calling all listeners that have registered to receive it.
@@ -181,7 +159,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     {
         return $this->__profiles;
     }
-    
+
 	/**
      * Get information about current memory usage.
      *
@@ -192,7 +170,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     {
         $size = memory_get_usage(true);
         $unit = array('b','kb','mb','gb','tb','pb');
-                
+
         return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }
 
@@ -276,6 +254,17 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     }
 
     /**
+     * Enable the profiler
+     *
+     * @return  KEventPublisherProfiler
+     */
+    public function setEnabled($enabled)
+    {
+        $this->__enabled = (bool) $enabled;
+        return $this;
+    }
+
+    /**
      * Check of the event profiler is enabled
      *
      * @return bool
@@ -286,7 +275,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     }
 
     /**
-     * Set the decorated event dispatcher
+     * Set the decorated event publisher
      *
      * @param   KEventPublisherInterface $delegate The decorated event publisher
      * @return  KEventPublisherProfiler
@@ -302,7 +291,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     }
 
     /**
-     * Set the decorated object
+     * Get the decorated event publisher
      *
      * @return KEventPublisherInterface
      */

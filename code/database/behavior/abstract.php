@@ -70,9 +70,9 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
      */
     public function save()
     {
-        $this->getTable()->getCommandChain()->disable();
+        $this->getTable()->getCommandChain()->setEnabled(false);
         $this->getMixer()->save();
-        $this->getTable()->getCommandChain()->enable();
+        $this->getTable()->getCommandChain()->setEnabled(true);
 
         return $this->getMixer();
     }
@@ -87,9 +87,9 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
      */
     public function delete()
     {
-        $this->getTable()->getCommandChain()->disable();
+        $this->getTable()->getCommandChain()->setEnabled(false);
         $this->getMixer()->delete();
-        $this->getTable()->getCommandChain()->enable();
+        $this->getTable()->getCommandChain()->setEnabled(true);
 
         return $this->getMixer();
     }

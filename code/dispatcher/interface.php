@@ -33,19 +33,16 @@ interface KDispatcherInterface extends KControllerInterface
     public function setController($controller, $config = array());
 
     /**
-     * Attach an authenticator
+     * Method to get a controller action to be executed
      *
-     * @param  mixed $authenticator An object that implements DispatcherAuthenticatorInterface, an ObjectIdentifier
-     *                              or valid identifier string
-     * @param  array  $config  An optional associative array of configuration options
-     * @return KDispatcherAbstract
+     * @return	string
      */
-    public function addAuthenticator($authenticator, $config = array());
+    public function getControllerAction();
 
     /**
-     * Gets the authenticators
+     * Method to set the controller action to be executed
      *
-     * @return array An array of authenticators
+     * @return	KDispatcherInterface
      */
-    public function getAuthenticators();
+    public function setControllerAction($action);
 }

@@ -72,7 +72,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'content'     => '',
+            'content'     => null,
             'transports'  => array('redirect', 'json', 'http'),
         ));
 
@@ -232,23 +232,6 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     }
 
     /**
-     * Returns true if the response is worth caching under any circumstance.
-     *
-     * Responses that are streamable are considered un cacheable.
-     *
-     * @link http://tools.ietf.org/html/rfc2616#section-14.9.1
-     * @return Boolean true if the response is worth caching, false otherwise
-     */
-    public function isCacheable()
-    {
-        if($this->isStreamable()) {
-            return false;
-        }
-
-        return parent::isCacheable();
-    }
-
-    /**
      * Check if the response is streamable
      *
      * A response is considered streamable, if the Accept-Ranges does not have value 'none' or if the Transfer-Encoding
@@ -314,7 +297,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      */
     public function isDownloadable()
     {
-        if($this->getStream()->getType() == 'file') {
+        if($this->isSuccess() && $this->getStream()->getType() == 'file') {
             return true;
         }
 

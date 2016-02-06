@@ -41,7 +41,8 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
         parent::__construct($config);
 
         $this->__listeners = array();
-        $this->__enabled   = (boolean) $config->enabled;
+
+        $this->__enabled = $config->enabled;
     }
 
     /**
@@ -329,6 +330,17 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
         }
 
         return $result;
+    }
+
+    /**
+     * Enable the profiler
+     *
+     * @return  KEventPublisherAbstract
+     */
+    public function setEnabled($enabled)
+    {
+        $this->__enabled = (bool) $enabled;
+        return $this;
     }
 
     /**

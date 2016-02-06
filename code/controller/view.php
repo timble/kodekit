@@ -49,9 +49,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
         //Attach the toolbars
         $this->addCommandCallback('before.render', '_addToolbars', array('toolbars' => $config->toolbars));
-
-        //Load the controller translations
-        $this->addCommandCallback('before.render', '_loadTranslations');
     }
 
     /**
@@ -67,7 +64,8 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
         $config->append(array(
             'formats' => array('html'),
             'view'    => $this->getIdentifier()->name,
-            'toolbars'  => array()
+            'toolbars'  => array(),
+            'behaviors' => array('localizable'),
          ));
 
         parent::_initialize($config);
@@ -92,26 +90,6 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
 
             $this->getView()->getTemplate()->addFilter('toolbar', array('toolbars' => $this->getToolbars()));
         }
-    }
-
-    /**
-     * Load the controller translations
-     *
-     * @param KControllerContextInterface $context
-     * @return void
-     */
-    protected function _loadTranslations(KControllerContextInterface $context)
-    {
-        $package = $this->getIdentifier()->package;
-        $domain  = $this->getIdentifier()->domain;
-
-        if($domain) {
-            $identifier = 'com://'.$domain.'/'.$package;
-        } else {
-            $identifier = 'com:'.$package;
-        }
-
-        $this->getObject('translator')->load($identifier);
     }
 
     /**

@@ -10,8 +10,8 @@
 /**
  * Asset Template Filter
  *
- * Filter allows to define asset url schemes that are replaced on compile and render. A default media:// scheme is
- * added that is rewritten to '/media/'.
+ * Filter allows to define asset url schemes that are replaced on compile and render. A default assets:// scheme is
+ * added that is rewritten to '/assets/'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Template\Filter
@@ -50,7 +50,7 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'schemes' => array('media://' => '/media/'),
+            'schemes' => array('assets://' => '/assets/'),
         ));
 
         parent::_initialize($config);

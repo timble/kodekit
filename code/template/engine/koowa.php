@@ -23,15 +23,6 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     protected static $_file_types = array('php');
 
     /**
-     * Template stack
-     *
-     * Used to track recursive load calls during template evaluation
-     *
-     * @var array
-     */
-    protected $_stack;
-
-    /**
      * The template buffer
      *
      * @var KFilesystemStreamBuffer
@@ -51,7 +42,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         $this->_stack = array();
 
         //Intercept template exception
-        $this->getObject('exception.handler')->addHandler(array($this, 'handleException'), true);
+        $this->getObject('exception.handler')->addExceptionCallback(array($this, 'handleException'), true);
     }
 
     /**
@@ -138,6 +129,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
 
         //Push the template on the stack
         array_push($this->_stack, array('url' => '', 'file' => $file));
+
         return $this;
     }
 
@@ -159,6 +151,9 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         if ($content === false) {
             throw new RuntimeException(sprintf('The template "%s" cannot be evaluated.', $this->_source));
         }
+
+        //Render the debug information
+        $content = $this->_debug($content);
 
         //Remove the template from the stack
         array_pop($this->_stack);
@@ -369,7 +364,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
 
         if(in_array($type, $this->getFileTypes()) && $this->loadFile($url))
         {
-            $data = array_merge((array) $this->getData(), $data);
+            $data   = array_merge((array) $this->getData(), $data);
             $result = $this->render($data);
         }
         else  $result = $this->getTemplate()->loadFile($file)->render($data);

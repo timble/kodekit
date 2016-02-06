@@ -18,20 +18,6 @@
 interface KEventPublisherInterface extends KObjectHandlable
 {
     /**
-     * Enable the publisher
-     *
-     * @return  KEventPublisherInterface
-     */
-    public function enable();
-
-    /**
-     * Disable the publisher
-     *
-     * @return  KEventPublisherInterface
-     */
-    public function disable();
-
-    /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
      * @param  string|KEventInterface             $event      The event name or a KEventInterface object
@@ -98,6 +84,13 @@ interface KEventPublisherInterface extends KObjectHandlable
      * @return integer|false The event priority or FALSE if the event isn't listened for.
      */
     public function getListenerPriority($event, $listener);
+
+    /**
+     * Enable the profiler
+     *
+     * @return  KEventPublisherInterface
+     */
+    public function setEnabled($enabled);
 
     /**
      * Check of the publisher is enabled

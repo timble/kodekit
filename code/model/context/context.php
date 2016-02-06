@@ -16,6 +16,23 @@
 class KModelContext extends KCommand implements KModelContextInterface
 {
     /**
+     * Constructor.
+     *
+     * @param  array|\Traversable  $attributes An associative array or a Traversable object instance
+     */
+    public function __construct($attributes = array())
+    {
+        KObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof KModelContext)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
+    }
+
+    /**
      * Set the model state
      *
      * @param KModelState $state

@@ -70,6 +70,13 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
             else $identifier = $this->getIdentifier($this->__template);
 
             $this->__template = $this->getObject($identifier);
+
+            if(!$this->__template instanceof KTemplateInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Template: '.get_class($this->__template).' does not implement TemplateInterface'
+                );
+            }
         }
 
         return $this->__template;
@@ -93,7 +100,12 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
         {
             foreach($array as $key => $item)
             {
-                if(is_array($item)) {
+                if(is_array($item))
+                {
+                    if(empty($item)) {
+                        continue;
+                    }
+
                     $item = implode(' ', $item);
                 }
 

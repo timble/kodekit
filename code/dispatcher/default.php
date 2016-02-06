@@ -13,4 +13,4 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-final class KDispatcherDefault extends KDispatcherHttp {}
+final class KDispatcherDefault extends KDispatcher {}

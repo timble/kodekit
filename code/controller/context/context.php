@@ -16,6 +16,23 @@
 class KControllerContext extends KCommand implements KControllerContextInterface
 {
     /**
+     * Constructor.
+     *
+     * @param  array|\Traversable  $attributes An associative array or a Traversable object instance
+     */
+    public function __construct($attributes = array())
+    {
+        KObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof KControllerContext)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
+    }
+
+    /**
      * Get the request object
      *
      * @return KControllerRequestInterface

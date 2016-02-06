@@ -35,7 +35,7 @@ class KObjectConfig implements KObjectConfigInterface
     /**
      * Constructor.
      *
-     * @param  array|KObjectConfig $options An associative array of configuration options or a ObjectConfig instance.
+     * @param  array|KObjectConfigInterface $options An associative array of configuration options or a KObjectConfigInterface instance.
      * @param  bool $readonly  TRUE to not allow modifications of the config data. Default FALSE.
      */
     public function __construct( $options = array(), $readonly = false)
@@ -127,7 +127,7 @@ class KObjectConfig implements KObjectConfigInterface
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|Traversable|KObjectConfig $options A KObjectConfig object an or array of options to be appended
+     * @param  array|Traversable|KObjectConfigInterface $options A KObjectConfigInterface instance an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfig
      */
@@ -154,7 +154,7 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * This method only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfig|Traversable    $config A ObjectConfig object an or array of options to be appended
+     * @param  array|KObjectConfigInterface|Traversable    $config A KObjectConfigInterface instance an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfig
      */
@@ -172,7 +172,7 @@ class KObjectConfig implements KObjectConfigInterface
                     {
                         if(array_key_exists($key, $this->__options))
                         {
-                            if(!empty($value) && ($this->__options[$key] instanceof KObjectConfig)) {
+                            if(!empty($value) && ($this->__options[$key] instanceof KObjectConfigInterface)) {
                                 $this->__options[$key] = $this->__options[$key]->append($value);
                             }
                         }
@@ -213,7 +213,7 @@ class KObjectConfig implements KObjectConfigInterface
             {
                 if(is_array($value) || $value instanceof KObjectConfig)
                 {
-                    if ($value instanceof KObjectConfig) {
+                    if ($value instanceof KObjectConfigInterface) {
                         $count += $value->count($mode);
                     } else {
                         $count += count($value);
@@ -229,9 +229,9 @@ class KObjectConfig implements KObjectConfigInterface
     /**
      * Return the data
      *
-     * If the data being passed is an instance of KObjectConfig the data will be transformed to an associative array.
+     * If the data being passed is an instance of KObjectConfigInterface the data will be transformed to an associative array.
      *
-     * @param mixed|KObjectConfig $data
+     * @param mixed|KObjectConfigInterface $data
      * @return mixed|array
      */
     public static function unbox($data)
@@ -353,7 +353,7 @@ class KObjectConfig implements KObjectConfigInterface
 
         foreach ($this->__options as $value)
         {
-            if ($value instanceof KObjectConfig) {
+            if ($value instanceof KObjectConfigInterface) {
                 $value->setReadOnly();
             }
         }
@@ -416,7 +416,7 @@ class KObjectConfig implements KObjectConfigInterface
         $this->remove($name);
     }
 
- 	/**
+    /**
      * Deep clone of this instance to ensure that nested KObjectConfigs are also cloned.
      *
      * @return void
@@ -426,7 +426,7 @@ class KObjectConfig implements KObjectConfigInterface
         $array = array();
         foreach ($this->__options as $key => $value)
         {
-            if ($value instanceof KObjectConfig || $value instanceof stdClass) {
+            if ($value instanceof KObjectConfigInterface || $value instanceof stdClass) {
                 $array[$key] = clone $value;
             } else {
                 $array[$key] = $value;

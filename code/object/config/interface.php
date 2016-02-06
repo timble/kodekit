@@ -35,7 +35,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @param  string $name
      * @param  mixed  $value
      * @throws RuntimeException If the config is read only
-     * @return KObjectConfig
+     * @return KObjectConfigInterface
      */
     public function set($name, $value);
 
@@ -52,7 +52,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      *
      * @param   string $name The configuration option name.
      * @throws  RuntimeException If the config is read only
-     * @return  KObjectConfig
+     * @return  KObjectConfigInterface
      */
     public function remove( $name );
 
@@ -67,7 +67,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|Traversable|KObjectConfig  $options A KObjectConfig object an or array of options to be added
+     * @param  array|Traversable|KObjectConfigInterface  $options A KObjectConfig object an or array of options to be added
      * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
@@ -78,7 +78,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|Traversable|KObjectConfig  $options A KObjectConfig object an or array of options to be appended
+     * @param  array|Traversable|KObjectConfigInterface  $options A KObjectConfigInterface instance an or array of options to be appended
      * @throws RuntimeException If the config is read only
      * @return KObjectConfigInterface
      */
@@ -87,10 +87,10 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     /**
      * Return the data
      *
-     * If the data being passed is an instance of KObjectConfig the data will be transformed
+     * If the data being passed is an instance of KObjectConfigInterface the data will be transformed
      * to an associative array.
      *
-     * @param mixed|KObjectConfig $data
+     * @param mixed|KObjectConfigInterface $data
      * @return mixed|array
      */
     public static function unbox($data);
@@ -105,7 +105,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     /**
      * Prevent any more modifications being made to this instance.
      *
-     * Useful after merge() has been used to merge multiple Config objects into one object which should then not be
+     * Useful after merge() has been used to merge multiple objects into one object which should then not be
      * modified again.
      *
      * @return KObjectConfigInterface
@@ -113,7 +113,7 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
     public function setReadOnly();
 
     /**
-     * Returns whether this ObjectConfig object is read only or not.
+     * Returns whether this object is read only or not.
      *
      * @return bool
      */

@@ -30,6 +30,15 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     private $__template;
 
     /**
+     * Template stack
+     *
+     * Used to track recursive load calls during template evaluation
+     *
+     * @var array
+     */
+    protected $_stack;
+
+    /**
      * Debug
      *
      * @var boolean
@@ -65,7 +74,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
         $this->_stack = array();
 
         //Set debug
-        $this->_debug        = $config->debug;
+        $this->_debug = $config->debug;
 
         //Set caching
         $this->_cache        = $config->cache;
@@ -186,15 +195,20 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             else $identifier = $this->getIdentifier($this->__template);
 
             $this->__template = $this->getObject($identifier);
+
+            if(!$this->__template instanceof KTemplateInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Template: '.get_class($this->__template).' does not implement TemplateInterface'
+                );
+            }
         }
 
         return $this->__template;
     }
 
     /**
-     * Enable or disable class loading
-     *
-     * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
+     * Enable or disable debug
      *
      * @param bool $debug True or false.
      * @return KTemplateEngineAbstract
@@ -206,7 +220,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     }
 
     /**
-     * Check if the loader is running in debug mode
+     * Check if the template engine is running in debug mode
      *
      * @return bool
      */
@@ -240,5 +254,30 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
         }
 
         return $result;
+    }
+
+    /**
+     * Render debug information
+     *
+     * @param  string  $source  The template source
+     * @return string The rendered template source
+     */
+    public function _debug($source)
+    {
+        //Render debug comments
+        if($this->isDebug())
+        {
+            $template = end($this->_stack);
+            $path     = str_replace(rtrim(Koowa::getInstance()->getRootPath(), '/').'/', '', $template['file']);
+            $type     = $this->getIdentifier()->getName();
+
+            $format  = PHP_EOL.'<!--BEGIN '.$type.':render '.$path.' -->'.PHP_EOL;
+            $format .= '%s';
+            $format .= PHP_EOL.'<!--END '.$type.':render '.$path.' -->'.PHP_EOL;
+
+            $source = sprintf($format, trim($source));
+        }
+
+        return $source;
     }
 }

@@ -54,7 +54,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
         parent::__construct($config);
 
         $this->append(array(
-            'icon'       => 'icon-32-'.$name,
+            'icon'       => 'icon-'.$name,
             'id'         => $name,
             'label'      => ucfirst($name),
             'disabled'   => false,

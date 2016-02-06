@@ -16,7 +16,7 @@
 class KCommand extends KObjectConfig implements KCommandInterface
 {
     /**
-     * The event name
+     * The command name
      *
      * @var array
      */
@@ -45,9 +45,9 @@ class KCommand extends KObjectConfig implements KCommandInterface
     }
 
     /**
-     * Get the event name
+     * Get the command name
      *
-     * @return string	The event name
+     * @return string	The command name
      */
     public function getName()
     {
@@ -55,9 +55,9 @@ class KCommand extends KObjectConfig implements KCommandInterface
     }
 
     /**
-     * Set the event name
+     * Set the command name
      *
-     * @param string $name  The event name
+     * @param string $name  The command name
      * @return KCommand
      */
     public function setName($name)
@@ -102,7 +102,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
         if (!is_array($attributes) && !$attributes instanceof Traversable)
         {
             throw new InvalidArgumentException(sprintf(
-                'Event arguments must be an array or an object implementing the Traversable interface; received "%s"', gettype($attributes)
+                'Command arguments must be an array or an object implementing the Traversable interface; received "%s"', gettype($attributes)
             ));
         }
 
@@ -165,7 +165,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
     /**
      * Get an command property or attribute
      *
-     * If an event property exists the property will be returned, otherwise the attribute will be returned. If no
+     * If an command property exists the property will be returned, otherwise the attribute will be returned. If no
      * property or attribute can be found the method will return NULL.
      *
      * @param  string $name    The property name
@@ -187,7 +187,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
     /**
      * Set a command property or attribute
      *
-     * If an event property exists the property will be set, otherwise an attribute will be added.
+     * If an command property exists the property will be set, otherwise an attribute will be added.
      *
      * @param  string $name
      * @param  mixed  $value

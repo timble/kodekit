@@ -10,42 +10,155 @@
 /**
  * Abstract Dispatcher Authenticator
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
+ * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher\Authenticator
  */
-abstract class KDispatcherAuthenticatorAbstract extends KBehaviorAbstract implements KDispatcherAuthenticatorInterface
+abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDispatcherAuthenticatorInterface
 {
     /**
-     * Authenticate the request
+     * The authentication scheme
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @return bool Returns TRUE if the request could be authenticated, FALSE otherwise.
+     * @var string
      */
-    public function authenticateRequest(KDispatcherContextInterface $context)
+    protected $_scheme;
+
+    /**
+     * The authentication realm
+     *
+     * @var string
+     */
+    protected $_realm;
+
+    /**
+     * The authenticator priority
+     *
+     * @var integer
+     */
+    protected $_priority;
+
+    /**
+     * Login the user if authenticated successfully
+     *
+     * @var boolean
+     */
+    protected $_login_user;
+
+    /**
+     * Constructor.
+     *
+     * @param  KObjectConfig $config Configuration options
+     */
+    public function __construct(KObjectConfig $config)
     {
-        return false;
+        parent::__construct($config);
+
+        $this->_priority = $config->priority;
+
+        $this->_scheme     = $config->scheme;
+        $this->_realm      = $config->realm;
+        $this->_login_user = $config->login_user;
     }
 
     /**
-     * Sign the response
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'priority'   => self::PRIORITY_NORMAL,
+            'scheme'     => $this->getIdentifier()->name,
+            'realm'      => (string) ltrim($this->getObject('request')->getBaseUrl()->getPath(), '/') ?: '',
+            'login_user' => true,
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
+     * Get the authentication scheme
+     *
+     * @link http://tools.ietf.org/html/rfc7235#section-4.1
+     *
+     * @return string The authentication scheme
+     */
+    public function getScheme()
+    {
+        return $this->_scheme;
+    }
+
+    /**
+     * Get the authentication realm
+     *
+     * @link http://tools.ietf.org/html/rfc7235#section-2.2
+     *
+     * @return string The authentication realm
+     */
+    public function getRealm()
+    {
+        return $this->_realm;
+    }
+
+    /**
+     * Get the priority of the filter
+     *
+     * @return  integer The priority level
+     */
+    public function getPriority()
+    {
+        return $this->_priority;
+    }
+
+    /**
+     * Challenge the response
      *
      * @param KDispatcherContextInterface $context	A dispatcher context object
      * @return bool Returns TRUE if the response could be signed, FALSE otherwise.
      */
-    public function signResponse(KDispatcherContextInterface $context)
+    public function challengeResponse(KDispatcherContextInterface $context)
     {
-        return false;
+        $response = $context->getResponse();
+
+        //The response MUST include a WWW-Authenticate header field.
+        if($response->getStatusCode() == KHttpResponse::UNAUTHORIZED) {
+            $response->headers->set('Www-Authenticate', ucfirst($this->getScheme()).' realm="'.$this->getRealm().'"', false);
+        }
     }
 
     /**
-     * Get the methods that are available for mixin based
+     * Log the user in
      *
-     * @param  array           $exclude     An array of public methods to be exclude
-     * @return array An array of methods
+     * @param mixed  $user A user key or name, an array of user data or a UserInterface object. Default NULL
+     * @param array  $data Optional user data
+     * @return bool
      */
-    public function getMixableMethods($exclude = array())
+    public function loginUser($user = null, $data = array())
     {
-        $exclude = array_merge($exclude, array('authenticateRequest', 'signResponse'));
-        return parent::getMixableMethods($exclude);
+        if($this->_login_user && $user)
+        {
+            //Get the user data
+            if(!is_array($user))
+            {
+                if($user instanceof KUserInterface) {
+                    $user = $user->toArray();
+                } else {
+                    $user = $this->getObject('user.provider')->load($user)->toArray();
+                }
+            }
+
+            //Set the user data
+            $data = array_merge($data, (array) $user);
+
+            $this->getObject('user')->setData($data);
+            $this->getObject('user')->setAuthentic(true);
+
+            return true;
+        }
+
+        return false;
     }
 }

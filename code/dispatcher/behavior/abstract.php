@@ -8,14 +8,12 @@
  */
 
 /**
- * KoowaTest
+ * Abstract Dispatcher Behavior
  *
- * @package		Koowa_Tests
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Koowa\Library\Dispatcher\Behavior
  */
-class KoowaTest extends PHPUnit_Framework_TestCase
+abstract class KDispatcherBehaviorAbstract extends KControllerBehaviorAbstract
 {
-    public function testKoowaExists()
-    {
-        $this->assertTrue(class_exists('Koowa'));
-    }
+
 }

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Dispatcher
  */
-class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
+class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
 {
     /**
      * List of methods supported by the dispatcher
@@ -33,9 +33,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
 
         //Set the supported methods
         $this->_methods = KObjectConfig::unbox($config->methods);
-
-        //Load the dispatcher translations
-        $this->addCommandCallback('before.dispatch', '_loadTranslations');
     }
 
     /**
@@ -50,9 +47,8 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     {
         $config->append(array(
             'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
-            'behaviors'      => array('resettable'),
-            'authenticators' => array('csrf'),
-            'limit'          => array('default' => 100)
+            'behaviors'      => array('routable', 'limitable', 'resettable', 'localizable'),
+            'authenticators' => array('csrf')
          ));
 
         parent::_initialize($config);
@@ -63,7 +59,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      *
      * @param  KObjectConfigInterface  $config  Configuration options
      * @param  KObjectManagerInterface $manager A KObjectManagerInterface object
-     * @return KDispatcherDefault
+     * @return KDispatcherInterface
      */
     public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
     {
@@ -81,23 +77,23 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     }
 
     /**
-     * Load the controller translations
+     * Resolve the request
      *
-     * @param KControllerContextInterface $context
-     * @return void
+     * @param KDispatcherContextInterface $context A dispatcher context object
+     * @throw KDispatcherExceptionMethodNotAllowed If the HTTP request method is not allowed.
      */
-    protected function _loadTranslations(KControllerContextInterface $context)
+    protected function _resolveRequest(KDispatcherContextInterface $context)
     {
-        $package = $this->getIdentifier()->package;
-        $domain  = $this->getIdentifier()->domain;
+        //Resolve the controller action
+        $method = strtolower($context->request->getMethod());
 
-        if($domain) {
-            $identifier = 'com://'.$domain.'/'.$package;
-        } else {
-            $identifier = 'com:'.$package;
+        if (!in_array($method, $this->getHttpMethods())) {
+            throw new KDispatcherExceptionMethodNotAllowed('Method '.strtoupper($method).' not allowed');
         }
 
-        $this->getObject('translator')->load($identifier);
+        $this->setControllerAction($method);
+
+        parent::_resolveRequest($context);
     }
 
     /**
@@ -106,58 +102,28 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
      * the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context  A dispatcher context object
-     * @throws  KDispatcherExceptionMethodNotAllowed  If the method is not allowed on the resource.
+     * @param KDispatcherContextInterface $context	A dispatcher context object
      * @return	mixed
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
-        //Redirect if no view information can be found in the request
-        if(!$context->request->query->has('view'))
-        {
-            $url = clone($context->request->getUrl());
-            $url->query['view'] = $this->getController()->getView()->getName();
+        $controller = $this->getController();
 
-            $this->redirect($url);
-        }
-        else
+        if(!$controller instanceof KControllerViewable && !$controller instanceof KControllerModellable)
         {
-            $method = strtolower($context->request->getMethod());
+            $action = strtolower($context->request->query->get('_action', 'alpha'));
 
-            if (!in_array($method, $this->getHttpMethods())) {
-                throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
+            //Throw exception if no action could be determined from the request
+            if(!$action) {
+                throw new KControllerExceptionRequestInvalid('Action not found');
             }
 
-            $view = $this->getRequest()->query->get('view', 'cmd');
-
-            //Set the controller based on the view and pass the view
-            $this->setController($view, array('view' => $view));
-
-            //Execute the component method
-            $this->execute($method, $context);
+            $controller->execute($action, $context);
         }
+        else $this->execute(strtolower($context->request->getMethod()), $context);
 
-        return parent::_actionDispatch($context);
-	}
-
-    /**
-     * Redirect
-     *
-     * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
-     * redirect the dispatcher to another URL after a GET request.
-     *
-     * @param KDispatcherContextInterface $context A dispatcher context object
-     * @return bool
-     */
-    protected function _actionRedirect(KDispatcherContextInterface $context)
-    {
-        $url = $context->param;
-
-        $context->response->setStatus(KDispatcherResponse::MOVED_PERMANENTLY);
-        $context->response->setRedirect($url);
-        $this->send();
-
-        return false;
+        //Send the response
+        return $this->send($context);
     }
 
     /**
@@ -172,27 +138,13 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
     {
         $controller = $this->getController();
 
-        if($controller instanceof KControllerModellable)
-        {
-            $controller->getModel()->getState()->setProperty('limit', 'default', $this->getConfig()->limit->default);
-
-            $limit = $this->getRequest()->query->get('limit', 'int');
-
-            // Set to default if there is no limit. This is done for both unique and non-unique states
-            // so that limit can be transparently used on unique state requests rendering lists.
-            if(empty($limit)) {
-                $limit = $this->getConfig()->limit->default;
-            }
-
-            if($this->getConfig()->limit->max && $limit > $this->getConfig()->limit->max) {
-                $limit = $this->getConfig()->limit->max;
-            }
-
-            $this->getRequest()->query->limit = $limit;
-            $controller->getModel()->getState()->limit = $limit;
+        if($controller instanceof KControllerViewable) {
+            $result = $this->getController()->execute('render', $context);
+        } else {
+            throw new KDispatcherExceptionMethodNotAllowed('Method GET not allowed');
         }
 
-        return $controller->execute('render', $context);
+        return $result;
     }
 
     /**
@@ -203,7 +155,15 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
     protected function _actionHead(KDispatcherContextInterface $context)
     {
-        return $this->execute('get', $context);
+        $controller = $this->getController();
+
+        if($controller instanceof KControllerViewable) {
+            $result =  $this->execute('get', $context);
+        } else {
+            throw new KDispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
+        }
+
+        return $result;
     }
 
     /**
@@ -224,7 +184,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
     protected function _actionPost(KDispatcherContextInterface $context)
     {
-        $result     = false;
         $action     = null;
         $controller = $this->getController();
 
@@ -320,7 +279,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
     protected function _actionDelete(KDispatcherContextInterface $context)
     {
-        $result     = false;
         $controller = $this->getController();
 
         if($controller instanceof KControllerModellable) {
@@ -426,7 +384,7 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             }
         }
 
-        parent::_actionSend($context);
+        return parent::_actionSend($context);
     }
 
     /**
