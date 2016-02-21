@@ -32,7 +32,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         parent::__construct($config);
 
         // Set the model identifier
-        $this->_model = $config->model;
+        $this->setModel($config->model);
     }
 
     /**
@@ -107,11 +107,6 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     {
         if(!$this->_model instanceof KModelInterface)
         {
-            //Make sure we have a model identifier
-            if(!($this->_model instanceof KObjectIdentifier)) {
-                $this->setModel($this->_model);
-            }
-
             $this->_model = $this->getObject($this->_model);
 
             if(!$this->_model instanceof KModelInterface)
