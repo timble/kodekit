@@ -8,12 +8,12 @@
  */
 
 /**
- * Mysqli Database Adapter
+ * Mysqli Database Engine
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Adapter
+ * @package Koowa\Library\Database\Engine
  */
-class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
+class KDatabaseEngineMysqli extends KDatabaseEngineAbstract
 {
     /**
      * Quote for query identifiers
@@ -112,7 +112,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      * Connect to the db
      *
      * @throws RuntimeException
-     * @return KDatabaseAdapterMysqli
+     * @return KDatabaseEngineMysqli
      */
      public function connect()
      {
@@ -147,7 +147,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
     /**
      * Disconnect from db
      *
-     * @return KDatabaseAdapterMysqli
+     * @return KDatabaseEngineMysqli
      */
     public function disconnect()
     {
@@ -175,7 +175,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      * Set the connection
      *
      * @param 	resource 	$resource The connection resource
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseEngineAbstract
      * @throws  InvalidArgumentException If the resource is not an MySQLi instance
      */
     public function setConnection($resource)
@@ -209,7 +209,7 @@ class KDatabaseAdapterMysqli extends KDatabaseAdapterAbstract
      * Set the database name
      *
      * @param 	string 	$database The database name
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseEngineAbstract
      *
      * @throws RuntimeException
      */

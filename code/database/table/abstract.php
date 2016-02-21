@@ -46,11 +46,11 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     protected $_column_map = array();
 
     /**
-     * Database adapter
+     * Database engine
      *
-     * @var KDatabaseAdapterInterface
+     * @var KDatabaseEngineInterface
      */
-    protected $_adapter;
+    protected $_engine;
 
     /**
      * Default values for this table
@@ -71,7 +71,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
 
         $this->_name = $config->name;
         $this->_base = $config->base;
-        $this->_adapter = $config->adapter;
+        $this->_engine = $config->engine;
 
         //Check if the table exists
         if (!$info = $this->getSchema()) {
@@ -128,7 +128,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $name = $this->getIdentifier()->name;
 
         $config->append(array(
-            'adapter'           => 'lib:database.adapter.mysqli',
+            'engine'            => 'lib:database.engine.mysqli',
             'name'              => empty($package) ? $name : $package . '_' . $name,
             'column_map'        => null,
             'filters'           => array(),
@@ -143,48 +143,48 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
     }
 
     /**
-     * Gets the database adapter
+     * Gets the database engine
      *
-     * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
-     * @return KDatabaseAdapterInterface
+     * @throws	\UnexpectedValueException	If the engine doesn't implement KDatabaseEngineInterface
+     * @return KDatabaseEngineInterface
      */
-    public function getAdapter()
+    public function getEngine()
     {
-        if(!$this->_adapter instanceof KDatabaseAdapterInterface)
+        if(!$this->_engine instanceof KDatabaseEngineInterface)
         {
-            $this->_adapter = $this->getObject($this->_adapter);
+            $this->_engine = $this->getObject($this->_engine);
 
-            if(!$this->_adapter instanceof KDatabaseAdapterInterface)
+            if(!$this->_engine instanceof KDatabaseEngineInterface)
             {
                 throw new UnexpectedValueException(
-                    'Adapter: '.get_class($this->_adapter).' does not implement KDatabaseAdapterInterface'
+                    'Engine: '.get_class($this->_engine).' does not implement KDatabaseEngineInterface'
                 );
             }
         }
 
-        return $this->_adapter;
+        return $this->_engine;
     }
 
     /**
-     * Set the database adapter
+     * Set the database engine
      *
-     * @param KDatabaseAdapterInterface $adapter
+     * @param KDatabaseEngineInterface $engine
      * @return KDatabaseQueryInterface
      */
-    public function setAdapter(KDatabaseAdapterInterface $adapter)
+    public function setEngine(KDatabaseEngineInterface $engine)
     {
-        $this->_adapter = $adapter;
+        $this->_engine = $engine;
         return $this;
     }
 
     /**
      * Test the connected status of the table
      *
-     * @return    boolean    Returns TRUE if we have a reference to a live KDatabaseAdapterAbstract object.
+     * @return    boolean    Returns TRUE if we have a reference to a live KDatabaseEngineAbstract object.
      */
     public function isConnected()
     {
-        return (bool)$this->getAdapter();
+        return (bool)$this->getEngine();
     }
 
     /**
@@ -240,7 +240,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         $result = null;
 
         if ($this->isConnected()){
-            $result = $this->getAdapter()->getTableSchema($this->getBase());
+            $result = $this->getEngine()->getTableSchema($this->getBase());
         }
 
         return $result;
@@ -570,7 +570,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                     $key = null;
                 }
 
-                $data = $this->getAdapter()->select($context->query, $context->mode, $key);
+                $data = $this->getEngine()->select($context->query, $context->mode, $key);
 
                 //Map the columns
                 if (($context->mode != KDatabase::FETCH_FIELD) && ($context->mode != KDatabase::FETCH_FIELD_LIST))
@@ -691,7 +691,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             $context->query->values($this->mapColumns($data));
 
             // Execute the insert query.
-            $context->affected = $this->getAdapter()->insert($context->query);
+            $context->affected = $this->getEngine()->insert($context->query);
 
             // Set the status and data before calling the command chain
             if ($context->affected !== false)
@@ -699,7 +699,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
                 if ($context->affected)
                 {
                     if(($column = $this->getIdentityColumn()) && $this->getColumn($this->mapColumns($column, true), true)->autoinc) {
-                        $data[$this->getIdentityColumn()] = $this->getAdapter()->getInsertId();
+                        $data[$this->getIdentityColumn()] = $this->getEngine()->getInsertId();
                     }
 
                     $context->data->setProperties($this->mapColumns($data, true))->setStatus(KDatabase::STATUS_CREATED);
@@ -748,7 +748,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             }
 
             // Execute the update query.
-            $context->affected = $this->getAdapter()->update($context->query);
+            $context->affected = $this->getEngine()->update($context->query);
 
             // Set the status and data before calling the command chain
             if ($context->affected !== false)
@@ -794,7 +794,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
             }
 
             // Execute the delete query.
-            $context->affected = $this->getAdapter()->delete($context->query);
+            $context->affected = $this->getEngine()->delete($context->query);
 
             // Set the query in the context.
             if ($context->affected !== false) {
@@ -822,7 +822,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if ($this->invokeCommand('before.lock', $context) !== false)
         {
             if ($this->isConnected()) {
-                $context->result = $this->getAdapter()->lock($this->getBase());
+                $context->result = $this->getEngine()->lock($this->getBase());
             }
 
             $this->invokeCommand('after.lock', $context);
@@ -846,7 +846,7 @@ abstract class KDatabaseTableAbstract extends KObject implements KDatabaseTableI
         if ($this->invokeCommand('before.unlock', $context) !== false)
         {
             if ($this->isConnected()) {
-                $context->result = $this->getAdapter()->unlock();
+                $context->result = $this->getEngine()->unlock();
             }
 
             $this->invokeCommand('after.unlock', $context);

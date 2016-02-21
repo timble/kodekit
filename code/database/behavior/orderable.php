@@ -100,7 +100,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
                 ->bind(array('new' => $new, 'old' => $old));
             }
 
-            $table->getAdapter()->update($query);
+            $table->getEngine()->update($query);
 
             $this->ordering = $new;
             $this->save();
@@ -124,9 +124,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         settype($base, 'int');
 
         $table  = $this->getTable();
-        $db     = $table->getAdapter();
+        $db     = $table->getEngine();
         $db->execute('SET @order = '.$base);
-        
+
         $query = $this->getObject('lib:database.query.update')
             ->table($table->getBase())
             ->values('ordering = (@order := @order + 1)')
@@ -138,7 +138,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         if ($base) {
             $query->where('ordering >= :ordering')->bind(array(':ordering' => $base));
         }
-        
+
         $db->update($query);
 
         return $this;
@@ -152,8 +152,8 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     protected function getMaxOrdering()
     {
         $table  = $this->getTable();
-        $db     = $table->getAdapter();
-        
+        $db     = $table->getEngine();
+
         $query = $this->getObject('lib:database.query.select')
             ->columns('MAX(ordering)')
             ->table($table->getName());

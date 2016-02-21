@@ -16,24 +16,24 @@
 interface KDatabaseTableInterface
 {
     /**
-     * Gets the database adapter
+     * Gets the database engine
      *
-     * @return KDatabaseAdapterInterface
+     * @return KDatabaseEngineInterface
      */
-    public function getAdapter();
+    public function getEngine();
 
     /**
-     * Set the database adapter
+     * Set the database engine
      *
-     * @param  KDatabaseAdapterInterface $adapter A KDatabaseAdapterInterface object
+     * @param  KDatabaseEngineInterface $engine A DatabaseEngineInterface object
      * @return KDatabaseQueryInterface
      */
-    public function setAdapter(KDatabaseAdapterInterface $adapter);
+    public function setEngine(KDatabaseEngineInterface $engine);
 
     /**
      * Test the connected status of the table
      *
-     * @return    boolean    Returns TRUE if we have a reference to a live KDatabaseAdapterAbstract object.
+     * @return    boolean    Returns TRUE if we have a reference to a live DatabaseEngineInterface.
      */
     public function isConnected();
 

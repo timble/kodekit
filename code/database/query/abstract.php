@@ -16,11 +16,11 @@
 abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
 {
     /**
-     * Database adapter
+     * Database engine
      *
      * @var     object
      */
-    protected $_adapter;
+    protected $_engine;
 
     /**
      * Query parameters to bind
@@ -38,7 +38,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         parent::__construct($config);
 
-        $this->_adapter = $config->adapter;
+        $this->_engine = $config->engine;
         $this->setParameters(KObjectConfig::unbox($config->parameters));
     }
 
@@ -53,7 +53,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'adapter'    => 'lib:database.adapter.mysqli',
+            'engine'    => 'lib:database.engine.mysqli',
             'parameters' => array()
         ));
     }
@@ -96,37 +96,37 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     }
 
     /**
-     * Gets the database adapter
+     * Gets the database engine
      *
-     * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
-     * @return KDatabaseAdapterInterface
+     * @throws	\UnexpectedValueException	If the engine doesn't implement KDatabaseEngineInterface
+     * @return KDatabaseEngineInterface
      */
-    public function getAdapter()
+    public function getEngine()
     {
-        if(!$this->_adapter instanceof KDatabaseAdapterInterface)
+        if(!$this->_engine instanceof KDatabaseEngineInterface)
         {
-            $this->_adapter = $this->getObject($this->_adapter);
+            $this->_engine = $this->getObject($this->_engine);
 
-            if(!$this->_adapter instanceof KDatabaseAdapterInterface)
+            if(!$this->_engine instanceof KDatabaseEngineInterface)
             {
                 throw new UnexpectedValueException(
-                    'Adapter: '.get_class($this->_adapter).' does not implement KDatabaseAdapterInterface'
+                    'Engine: '.get_class($this->_engine).' does not implement KDatabaseEngineInterface'
                 );
             }
         }
 
-        return $this->_adapter;
+        return $this->_engine;
     }
 
     /**
-     * Set the database adapter
+     * Set the database engine
      *
-     * @param KDatabaseAdapterInterface $adapter
+     * @param KDatabaseEngineInterface $engine
      * @return KDatabaseQueryInterface
      */
-    public function setAdapter(KDatabaseAdapterInterface $adapter)
+    public function setEngine(KDatabaseEngineInterface $engine)
     {
-        $this->_adapter = $adapter;
+        $this->_engine = $engine;
         return $this;
     }
 
@@ -154,7 +154,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
 
         if(!$value instanceof KDatabaseQuerySelect) {
             $value = is_object($value) ? (string) $value : $value;
-            $replacement = $this->getAdapter()->quoteValue($value);
+            $replacement = $this->getEngine()->quoteValue($value);
         }
         else $replacement = '('.$value.')';
 
