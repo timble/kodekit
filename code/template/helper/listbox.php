@@ -123,13 +123,13 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
 
         $translator = $this->getObject('translator');
         $options    = array();
-    
+
         $options[] = $this->option(array('label' => $translator->translate('Published'), 'value' => 1 ));
         $options[] = $this->option(array('label' => $translator->translate('Unpublished') , 'value' => 0 ));
-    
+
         //Add the options to the config object
         $config->options = $options;
-    
+
         return $this->optionlist($config);
     }
 
@@ -192,14 +192,34 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         ))->append(array(
             'value'      => $config->name,
             'selected'   => $config->{$config->name},
-            'identifier' => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
             'label'      => $config->value,
         ))->append(array(
             'filter'     => array('sort' => $config->label),
         ));
 
-        $list       = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter))->fetch();
+        //Create the model
+        if(!$config->model instanceof KModelInterface)
+        {
+            if(is_string($config->model) && strpos($config->model, '.') === false) {
+                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model);
+            } else {
+                $identifier = $config->model;
+            }
+
+            $model  = $this->getObject($identifier);
+
+            if(!$model instanceof KModelInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Model: '.get_class($model).' does not implement ModelInterface'
+                );
+            }
+        }
+        else $model = $config->model;
+
+        //Fetch the entities
+        $list = $model->setState(KObjectConfig::unbox($config->filter))->fetch();
 
         //Get the list of items
         $items = array();
