@@ -134,7 +134,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Attach a command to the chain
+     * Attach a command handler to the chain
      *
      * @param   KCommandHandlerInterface  $handler  The command handler
      * @return KCommandChain
@@ -146,7 +146,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Removes a command from the chain
+     * Remove a command handlder from the chain
      *
      * @param  KCommandHandlerInterface  $handler  The command handler
      * @return  KCommandChain
@@ -158,7 +158,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Get the list of handlers enqueue in the chain
+     * Get the list of command handlers enqueued in the chain
      *
      * @return  KObjectQueue   An object queue containing the handlers
      */
@@ -168,7 +168,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Set the priority of a command
+     * Set the priority of a command handler
      *
      * @param  KCommandHandlerInterface $handler   A command handler
      * @param integer                   $priority  The command priority
@@ -181,7 +181,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Get the priority of a command
+     * Get the priority of a command handler
      *
      * @param   KCommandHandlerInterface $handler A command handler
      * @return integer The command priority
@@ -192,7 +192,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Set the break condition
+     * Set the break condition of the chain
      *
      * @param mixed|null $condition The break condition, or NULL to set reset the break condition
      * @return KCommandChain
@@ -204,7 +204,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     }
 
     /**
-     * Get the break condition
+     * Get the break condition of the chain
      *
      * @return mixed|null   Returns the break condition, or NULL if not break condition is set.
      */
