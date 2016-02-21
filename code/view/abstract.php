@@ -316,10 +316,6 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     {
         if(!$this->_model instanceof KModelInterface)
         {
-            if(!($this->_model instanceof KObjectIdentifier)) {
-                $this->setModel($this->_model);
-            }
-
             $this->_model = $this->getObject($this->_model);
 
             if(!$this->_model instanceof KModelInterface)
