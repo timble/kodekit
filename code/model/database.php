@@ -33,7 +33,8 @@ class KModelDatabase extends KModelAbstract
     {
         parent::__construct($config);
 
-        $this->_table = $config->table;
+        //Set the table identifier
+        $this->setTable($config->table);
 
         //Calculate the aliases based on the location of the table
         $model = $database = $this->getTable()->getIdentifier()->toArray();
@@ -158,13 +159,7 @@ class KModelDatabase extends KModelAbstract
      */
     public function getTable()
     {
-        if(!($this->_table instanceof KDatabaseTableInterface))
-        {
-            //Make sure we have a table identifier
-            if(!($this->_table instanceof KObjectIdentifier)) {
-                $this->setTable($this->_table);
-            }
-
+        if(!($this->_table instanceof KDatabaseTableInterface)) {
             $this->_table = $this->getObject($this->_table);
         }
 
