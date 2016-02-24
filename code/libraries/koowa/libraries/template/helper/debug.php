@@ -592,7 +592,8 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             {
                 if ($level < $config->object_depth || $var instanceof Closure)
                 {
-                    $collapsed = $level ? count($var) >= 7 : false;
+                    // @todo count($var) is running _actionCount on model objects
+                    $collapsed = false;//$level ? count($var) >= 7 : false;
 
                     $result  = '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">' . $result . '</span>';
                     $result .= '<div' . ($collapsed ? ' class="koowa-collapsed"' : '') . '>';
