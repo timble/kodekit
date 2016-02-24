@@ -107,17 +107,45 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      */
     public function isSupported()
     {
-        $table = $this->getMixer();
+        $result = true;
+        $table  = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
         if($table instanceof KDatabaseTableInterface)
         {
-            if(!$table->hasColumn('slug'))  {
-                return false;
+            if($table->hasColumn('slug'))
+            {
+                //If unique is NULL use the column metadata
+                if(is_null($this->_unique)) {
+                    $this->_unique = $table->getColumn('slug', true)->unique;
+                }
             }
+            else $result = false;
         }
 
-        return true;
+        return $result;
+    }
+
+    /**
+     * Get the canonical slug
+     *
+     * This function will always return a unique and canonical slug. If the slug is not unique it will prepend the
+     * identity column value.
+     *
+     * @link : https://en.wikipedia.org/wiki/Canonicalization
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        if (!$this->_unique)
+        {
+            $column = $this->getIdentityColumn();
+            $result = $this->{$column} . $this->_separator . $this->slug;
+        }
+        else $result = $this->slug;
+
+        return $result;
     }
 
     /**
@@ -155,6 +183,35 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     }
 
     /**
+     * Create the slug
+     *
+     * @return void
+     */
+    protected function _createSlug()
+    {
+        //Regenerate the slug
+        if($this->isModified('slug')) {
+            $this->slug = $this->_createFilter()->sanitize($this->slug);
+        }
+
+        //Handle empty slug
+        if(empty($this->slug))
+        {
+            $slugs = array();
+            foreach($this->_columns as $column) {
+                $slugs[] = $this->_createFilter()->sanitize($this->$column);
+            }
+
+            $this->slug = implode($this->_separator, array_filter($slugs));
+        }
+
+        //Canonicalize the slug
+        if($this->_unique) {
+            $this->_canonicalizeSlug();
+        }
+    }
+
+    /**
      * Create a sluggable filter
      *
      * @return KFilterSlug
@@ -176,33 +233,6 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     }
 
     /**
-     * Create the slug
-     *
-     * @return void
-     */
-    protected function _createSlug()
-    {
-        //Create the slug filter
-        $filter = $this->_createFilter();
-
-        if(empty($this->slug))
-        {
-            $slugs = array();
-            foreach($this->_columns as $column) {
-                $slugs[] = $filter->sanitize($this->$column);
-            }
-
-            $this->slug = implode($this->_separator, array_filter($slugs));
-        }
-        elseif($this->isModified('slug')) {
-            $this->slug = $filter->sanitize($this->slug);
-        }
-
-        // Canonicalize the slug
-        $this->_canonicalizeSlug();
-    }
-
-    /**
      * Make sure the slug is unique
      *
      * This function checks if the slug already exists and if so appends a number to the slug to make it unique.
@@ -214,11 +244,6 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     {
         $table = $this->getTable();
 
-        //If unique is not set, use the column metadata
-        if(is_null($this->_unique)) {
-            $this->_unique = $table->getColumn('slug', true)->unique;
-        }
-
         //If the slug needs to be unique and it already exists, make it unique
         $query = $this->getObject('lib:database.query.select');
         $query->where('slug = :slug')->bind(array('slug' => $this->slug));
@@ -226,10 +251,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         if (!$this->isNew())
         {
             $query->where($table->getIdentityColumn().' <> :id')
-                  ->bind(array('id' => $this->id));
+                ->bind(array('id' => $this->id));
         }
 
-        if($this->_unique && $table->count($query))
+        if($table->count($query))
         {
             $length = $this->_length ? $this->_length : $table->getColumn('slug')->length;
 
@@ -239,9 +264,9 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
             }
 
             $query = $this->getObject('lib:database.query.select')
-                        ->columns('slug')
-                        ->where('slug LIKE :slug')
-                        ->bind(array('slug' => $this->slug . '-%'));
+                ->columns('slug')
+                ->where('slug LIKE :slug')
+                ->bind(array('slug' => $this->slug . '-%'));
 
             $slugs = $table->select($query, KDatabase::FETCH_FIELD_LIST);
 
