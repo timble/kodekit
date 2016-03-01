@@ -171,11 +171,11 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      */
     public function __get($name)
     {
-        if($name = 'params') {
+        if ($name == 'params') {
             return $this->getParameters();
         }
 
-        return parent::__get($name);
+        return null;
     }
 
     /**
