@@ -55,7 +55,9 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
      */
     public function locate(KObjectIdentifier $identifier, $fallback = true)
     {
-        $class = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
+        /* FIX ME : $class evaluation, dont camelize view name when it is in the $identifier->path
+    	*/
+       $class = KStringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
 
         if(empty($identifier->domain)) {
             $domain  = ucfirst($this->getObject('object.bootstrapper')->getComponentDomain($identifier->package));
