@@ -112,8 +112,10 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
      */
 	protected function _actionDispatch(KDispatcherContextInterface $context)
 	{
+        $view = $context->request->query->get('view', 'cmd');
+
         //Redirect if no view information can be found in the request
-        if(!$context->request->query->has('view'))
+        if(empty($view))
         {
             $url = clone($context->request->getUrl());
             $url->query['view'] = $this->getController()->getView()->getName();
@@ -127,8 +129,6 @@ class KDispatcherHttp extends KDispatcherAbstract implements KObjectInstantiable
             if (!in_array($method, $this->getHttpMethods())) {
                 throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
             }
-
-            $view = $this->getRequest()->query->get('view', 'cmd');
 
             //Set the controller based on the view and pass the view
             $this->setController($view, array('view' => $view));

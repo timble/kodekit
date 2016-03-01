@@ -36,22 +36,24 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
      * Send HTTP headers
      *
      * @param KDispatcherResponseInterface $response
+     * @throws \RuntimeException If the headers have already been sent
      * @return KDispatcherResponseTransportAbstract
      */
     public function sendHeaders(KDispatcherResponseInterface $response)
     {
-        if (!headers_sent())
+        if(!headers_sent($file, $line))
         {
             //Send the status header
             header(sprintf('HTTP/%s %d %s', $response->getVersion(), $response->getStatusCode(), $response->getStatusMessage()));
 
             //Send the other headers
-            $headers = explode("\r\n", trim((string) $response->headers));
+            $headers = explode("\r\n", trim((string) $response->getHeaders()));
 
             foreach ($headers as $header) {
                 header($header, false);
             }
         }
+        else throw new \RuntimeException(sprintf('Headers already send (output started at %s:%s', $file, $line));
 
         return $this;
     }
@@ -64,6 +66,13 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
      */
     public function sendContent(KDispatcherResponseInterface $response)
     {
+        //Make sure the output buffers are cleared
+        $level = ob_get_level();
+        while($level > 0) {
+            ob_end_clean();
+            $level--;
+        }
+
         echo $response->getStream()->toString();
         return $this;
     }

@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Component\Koowa\Filter
  */
-class ComKoowaFilterAlias extends KFilterAbstract implements KFilterTraversable
+class ComKoowaFilterAlias extends KFilterSlug implements KFilterTraversable
 {
     /**
      * Validate a value
@@ -34,6 +34,13 @@ class ComKoowaFilterAlias extends KFilterAbstract implements KFilterTraversable
      */
     public function sanitize($value)
     {
-        return JApplication::stringURLSafe($value);
+        $value = JApplication::stringURLSafe($value);
+
+        //limit length
+        if (mb_strlen($value) > $this->_length) {
+            $value = mb_substr($value, 0, $this->_length);
+        }
+
+        return $value;
     }
 }

@@ -26,7 +26,7 @@ class PlgSystemKoowa extends JPlugin
     public function __construct($subject, $config = array())
     {
         // Check if database type is MySQLi
-        if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
+        if (!(JFactory::getDbo() instanceof JDatabaseDriverMysqli || JFactory::getDbo() instanceof JDatabaseMySQLi))
         {
             if (JFactory::getApplication()->getName() === 'administrator')
             {
