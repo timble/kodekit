@@ -237,7 +237,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
         }
 
         if($this->limit) {
-            $query .= ' LIMIT '.$this->offset.' , '.$this->limit;
+            $query .= ' LIMIT '.$this->limit;
         }
 
         if($this->_parameters) {
