@@ -65,7 +65,7 @@ class KTemplateLocatorComponent extends KTemplateLocatorIdentifier
                 foreach($results as $file)
                 {
                     if($result = $this->realPath($file)) {
-                        break;
+                        break (2);
                     }
                 }
             }
