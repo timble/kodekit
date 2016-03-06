@@ -24,15 +24,6 @@ interface KControllerViewable
     public function getView();
 
     /**
-     * Set the controller view
-     *
-     * @param   mixed   $view   An object that implements ObjectInterface, ObjectIdentifier object
-     *                          or valid identifier string
-     * @return  KControllerInterface
-     */
-    public function setView($view);
-
-    /**
      * Get the supported formats
      *
      * @return array

@@ -22,13 +22,4 @@ interface KControllerModellable
      * @return	KModelInterface
      */
     public function getModel();
-
-    /**
-     * Set the controller model
-     *
-     * @param   mixed   $model An object that implements ObjectInterface, ObjectIdentifier object
-     *                         or valid identifier string
-     * @return	KControllerInterface
-     */
-    public function setModel($model);
 }
