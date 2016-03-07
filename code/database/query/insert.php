@@ -90,16 +90,16 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $engine  = $this->getEngine();
-        $prefix  = $engine->getTablePrefix();
-        $query   = 'INSERT';
+        $driver = $this->getDriver();
+        $prefix = $driver->getTablePrefix();
+        $query  = 'INSERT';
 
         if($this->table) {
-            $query .= ' INTO '.$engine->quoteIdentifier($prefix.$this->table);
+            $query .= ' INTO '.$driver->quoteIdentifier($prefix.$this->table);
         }
 
         if($this->columns) {
-            $query .= '('.implode(', ', array_map(array($engine, 'quoteIdentifier'), $this->columns)).')';
+            $query .= '('.implode(', ', array_map(array($driver, 'quoteIdentifier'), $this->columns)).')';
         }
 
         if($this->values)
@@ -113,7 +113,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
                 {
                     $data = array();
                     foreach($row as $column) {
-                        $data[] = $engine->quoteValue(is_object($column) ? (string) $column : $column);
+                        $data[] = $driver->quoteValue(is_object($column) ? (string) $column : $column);
                     }
 
                     $values[] = '('.implode(', ', $data).')';

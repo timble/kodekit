@@ -145,16 +145,16 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $engine  = $this->getEngine();
-        $prefix  = $engine->getTablePrefix();
-        $query   = 'DELETE';
+        $driver = $this->getDriver();
+        $prefix = $driver->getTablePrefix();
+        $query  = 'DELETE';
 
         if($this->table && $this->join) {
-            $query .= ' '.$engine->quoteIdentifier(!is_numeric(key($this->table)) ? key($this->table) : current($this->table));
+            $query .= ' '.$driver->quoteIdentifier(!is_numeric(key($this->table)) ? key($this->table) : current($this->table));
         }
 
         if($this->table) {
-            $query .= ' FROM '.$engine->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
+            $query .= ' FROM '.$driver->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
         }
 
         if($this->join)
@@ -169,13 +169,13 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
                 }
 
                 if($join['table'] instanceof KDatabaseQuerySelect) {
-                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$engine->quoteIdentifier($alias) : '');
+                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
-                    $tmp .= ' JOIN '.$engine->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
+                    $tmp .= ' JOIN '.$driver->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
                 }
 
                 if($join['condition']) {
-                    $tmp .= ' ON ('.$engine->quoteIdentifier($join['condition']).')';
+                    $tmp .= ' ON ('.$driver->quoteIdentifier($join['condition']).')';
                 }
 
                 $joins[] = $tmp;
@@ -194,7 +194,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
                     $query .= ' '.$where['combination'];
                 }
 
-                $query .= ' '.$engine->quoteIdentifier($where['condition']);
+                $query .= ' '.$driver->quoteIdentifier($where['condition']);
             }
         }
 
@@ -204,7 +204,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
 
             $list = array();
             foreach($this->order as $order) {
-                $list[] = $engine->quoteIdentifier($order['column']).' '.$order['direction'];
+                $list[] = $driver->quoteIdentifier($order['column']).' '.$order['direction'];
             }
 
             $query .= implode(' , ', $list);

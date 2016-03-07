@@ -104,18 +104,18 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $engine  = $this->getEngine();
-        $prefix  = $engine->getTablePrefix();
+        $driver  = $this->getDriver();
+        $prefix  = $driver->getTablePrefix();
         $query   = 'SHOW '.$this->show;
 
         if($this->from)
         {
             $table  = (in_array($this->show, array('FULL COLUMNS', 'COLUMNS', 'INDEX', 'INDEXES', 'KEYS')) ? $prefix : '').$this->from;
-            $query .= ' FROM '.$engine->quoteIdentifier($table);
+            $query .= ' FROM '.$driver->quoteIdentifier($table);
         }
 
         if($this->like) {
-            $query .= ' LIKE '.$engine->quoteIdentifier($this->like);
+            $query .= ' LIKE '.$driver->quoteIdentifier($this->like);
         }
 
         if($this->where)
@@ -128,7 +128,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
                     $query .= ' '.$where['combination'];
                 }
 
-                $query .= ' '.$engine->quoteIdentifier($where['condition']);
+                $query .= ' '.$driver->quoteIdentifier($where['condition']);
             }
         }
 
@@ -153,10 +153,10 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
         if(in_array($this->show, array('FULL TABLES', 'OPEN TABLES', 'TABLE STATUS', 'TABLES')) &&
             ($this->like && $key == 'like' || $this->where && ($key == 'name' || $key == 'table')))
         {
-            $prefix = $this->getEngine()->getTablePrefix();
+            $prefix = $this->getDriver()->getTablePrefix();
         }
 
-        $replacement = $this->getEngine()->quoteValue($prefix.$this->_parameters[$key]);
+        $replacement = $this->getDriver()->quoteValue($prefix.$this->_parameters[$key]);
 
         return is_array($this->_parameters[$key]) ? '('.$replacement.')' : $replacement;
     }

@@ -165,12 +165,12 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $engine  = $this->getEngine();
-        $prefix  = $engine->getTablePrefix();
+        $driver  = $this->getDriver();
+        $prefix  = $driver->getTablePrefix();
         $query   = 'UPDATE ';
 
         if($this->table) {
-            $query .= $engine->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
+            $query .= $driver->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
         }
 
         if($this->join)
@@ -185,13 +185,13 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
                 }
 
                 if($join['table'] instanceof KDatabaseQuerySelect) {
-                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$engine->quoteIdentifier($alias) : '');
+                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
-                    $tmp .= ' JOIN '.$engine->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
+                    $tmp .= ' JOIN '.$driver->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
                 }
 
                 if($join['condition']) {
-                    $tmp .= ' ON ('.$engine->quoteIdentifier($join['condition']).')';
+                    $tmp .= ' ON ('.$driver->quoteIdentifier($join['condition']).')';
                 }
 
                 $joins[] = $tmp;
@@ -204,7 +204,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
         {
             $values = array();
             foreach($this->values as $value) {
-                $values[] = ' '. $engine->quoteIdentifier($value);
+                $values[] = ' '. $driver->quoteIdentifier($value);
             }
 
             $query .= ' SET '.implode(', ', $values);
@@ -220,7 +220,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
                     $query .= ' '.$where['combination'];
                 }
 
-                $query .= ' '.$engine->quoteIdentifier($where['condition']);
+                $query .= ' '.$driver->quoteIdentifier($where['condition']);
             }
         }
 
@@ -230,7 +230,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
 
             $list = array();
             foreach($this->order as $order) {
-                $list[] = $engine->quoteIdentifier($order['column']).' '.$order['direction'];
+                $list[] = $driver->quoteIdentifier($order['column']).' '.$order['direction'];
             }
 
             $query .= implode(' , ', $list);

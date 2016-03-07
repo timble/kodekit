@@ -8,31 +8,31 @@
  */
 
 /**
- * Database Engine Interface
+ * Database Driver Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Engine
+ * @package Koowa\Library\Database\Driver
  */
-interface KDatabaseEngineInterface
+interface KDatabaseDriverInterface
 {
     /**
      * Connect to the db
      *
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function connect();
 
     /**
      * Reconnect to the db
      *
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function reconnect();
 
     /**
      * Disconnect from db
      *
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function disconnect();
 
@@ -50,7 +50,7 @@ interface KDatabaseEngineInterface
      * Set the connection
      *
      * @param 	resource 	$resource The connection resource
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function setConnection($resource);
 
@@ -148,8 +148,8 @@ interface KDatabaseEngineInterface
      * Set the table prefix
      *
      * @param string $prefix The table prefix
-     * @return KDatabaseEngineAbstract
-     * @see KDatabaseEngineAbstract::replaceTableNeedle
+     * @return KDatabaseDriverAbstract
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function setTablePrefix($prefix);
 
@@ -157,7 +157,7 @@ interface KDatabaseEngineInterface
      * Get the table prefix
      *
      * @return string The table prefix
-     * @see KDatabaseEngineAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTablePrefix();
 
@@ -165,7 +165,7 @@ interface KDatabaseEngineInterface
      * Get the table needle
      *
      * @return string The table needle
-     * @see KDatabaseEngineAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTableNeedle();
 

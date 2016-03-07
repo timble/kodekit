@@ -8,12 +8,12 @@
  */
 
 /**
- * Abstract Database Engine
+ * Abstract Database Driver
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Engine
+ * @package Koowa\Library\Database\Driver
  */
-abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngineInterface, KObjectMultiton
+abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDriverInterface, KObjectMultiton
 {
     /**
      * Active state of the connection
@@ -149,7 +149,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
     /**
      * Reconnect to the db
      *
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function reconnect()
     {
@@ -162,7 +162,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
     /**
      * Disconnect from db
      *
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function disconnect()
     {
@@ -183,7 +183,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
      * Set the database name
      *
      * @param 	string 	$database The database name
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     abstract function setDatabase($database);
 
@@ -204,7 +204,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
      * Set the connection
      *
      * @param 	resource    $resource The connection resource
-     * @return  KDatabaseEngineAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function setConnection($resource)
     {
@@ -226,7 +226,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
      * Set character set
      *
      * @param string $charset The character set.
-     * @return KDatabaseEngineAbstract
+     * @return KDatabaseDriverAbstract
      */
     public function setCharset($charset)
     {
@@ -433,8 +433,8 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
      * Set the table prefix
      *
      * @param string $prefix The table prefix
-     * @return KDatabaseEngineAbstract
-     * @see KDatabaseEngineAbstract::replaceTableNeedle
+     * @return KDatabaseDriverAbstract
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function setTablePrefix($prefix)
     {
@@ -446,7 +446,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
      * Get the table prefix
      *
      * @return string The table prefix
-     * @see KDatabaseEngineAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTablePrefix()
     {
@@ -457,7 +457,7 @@ abstract class KDatabaseEngineAbstract extends KObject implements KDatabaseEngin
      * Get the table needle
      *
      * @return string The table needle
-     * @see KDatabaseEngineAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTableNeedle()
     {
