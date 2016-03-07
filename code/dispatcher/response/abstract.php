@@ -247,12 +247,11 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     {
         $request = $this->getRequest();
 
-        $isIE         = (bool) preg_match('#(MSIE|Trident)#', $request->getAgent());
-        $isPDF        = (bool) $this->getContentType() == 'application/pdf';
-        $isInline     = (bool) !$request->isDownload();
-        $isSeekable   = (bool) $this->getStream()->isSeekable();
+        $isPDF        = $this->getContentType() == 'application/pdf';
+        $isInline     = !$request->isDownload();
+        $isSeekable   = $this->getStream()->isSeekable();
 
-        if(!($isIE && $isPDF && $isInline) && $isSeekable)
+        if(!($isPDF && $isInline) && $isSeekable)
         {
             if($this->_headers->get('Transfer-Encoding') == 'chunked') {
                 return true;
@@ -274,6 +273,9 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      * If the request is made by an Ipad, iPod or iPhone user agent the response will never be attachable. iOS browsers
      * cannot handle files send as disposition : attachment.
      *
+     * If the request is made by MS Edge for a pdf file always force the response to be attachable to prevent 'Couldn't
+     * open PDF file' errors in Edge.
+     *
      * @return bool
      */
     public function isAttachable()
@@ -283,6 +285,13 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         if(!preg_match('#(iPad|iPod|iPhone)#', $request->getAgent()))
         {
             if($request->isDownload() || $this->getContentType() == 'application/octet-stream') {
+                return true;
+            }
+        }
+
+        if((preg_match('#(Edge)#', $request->getAgent())) )
+        {
+            if($this->getContentType() == 'application/pdf') {
                 return true;
             }
         }
