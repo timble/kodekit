@@ -50,6 +50,13 @@ interface KViewInterface
     public function has($property);
 
     /**
+     * Get the view data
+     *
+     * @return  array   The view data
+     */
+    public function getData();
+
+    /**
      * Sets the view data
      *
      * @param   array $data The view data
@@ -58,18 +65,19 @@ interface KViewInterface
     public function setData($data);
 
     /**
-     * Get the view data
+     * Get the view parameters
      *
-     * @return  array   The view data
+     * @return  array   The view parameters
      */
-    public function getData();
+    public function getParameters();
 
     /**
-     * Get the name
+     * Sets the view parameters
      *
-     * @return 	string 	The name of the object
+     * @param   array $parameters The view parameters
+     * @return  ViewAbstract
      */
-    public function getName();
+    public function setParameters(array $parameters);
 
     /**
      * Get the title
@@ -79,11 +87,11 @@ interface KViewInterface
     public function getTitle();
 
     /**
-     * Get the format
+     * Set the title
      *
-     * @return 	string 	The format of the view
+     * @return 	string 	The title of the view
      */
-    public function getFormat();
+    public function setTitle($title);
 
     /**
      * Get the content
@@ -155,6 +163,20 @@ interface KViewInterface
      * @return  KViewContext
      */
     public function getContext();
+
+    /**
+     * Get the name
+     *
+     * @return 	string 	The name of the object
+     */
+    public function getName();
+
+    /**
+     * Get the format
+     *
+     * @return 	string 	The format of the view
+     */
+    public function getFormat();
 
     /**
      * Returns the views output

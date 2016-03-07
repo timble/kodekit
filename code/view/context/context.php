@@ -16,6 +16,23 @@
 class KViewContext extends KCommand implements KViewContextInterface
 {
     /**
+     * Constructor.
+     *
+     * @param  array|\Traversable  $attributes An associative array or a Traversable object instance
+     */
+    public function __construct($attributes = array())
+    {
+        KObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof KViewContext)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
+    }
+
+    /**
      * Set the view data
      *
      * @param array $data
@@ -34,5 +51,26 @@ class KViewContext extends KCommand implements KViewContextInterface
     public function getData()
     {
         return KObjectConfig::get('data');
+    }
+
+    /**
+     * Set the view parameters
+     *
+     * @param array $parameters
+     * @return KViewContextTemplate
+     */
+    public function setParameters($parameters)
+    {
+        return KObjectConfig::set('parameters', $parameters);
+    }
+
+    /**
+     * Get the view parameters
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return KObjectConfig::get('parameters');
     }
 }

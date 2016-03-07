@@ -8,24 +8,25 @@
  */
 
 /**
- * View Context Interface
+ * View Templatable Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View\Context
+ * @package Koowa\Library\View
  */
-interface KViewContextInterface extends KCommandInterface
+interface KViewTemplatable
 {
     /**
-     * Get the view data
+     * Get the layout
      *
-     * @return array
+     * @return string The layout name
      */
-    public function getData();
+    public function getLayout();
 
     /**
-     * Get the view parameters
+     * Get the template object attached to the view
      *
-     * @return array
+     *  @throws	\UnexpectedValueException	If the template doesn't implement the TemplateInterface
+     * @return  KTemplateInterface
      */
-    public function getParameters();
+    public function getTemplate();
 }

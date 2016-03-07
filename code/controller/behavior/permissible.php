@@ -53,6 +53,21 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     }
 
     /**
+     * Register a 'can([Execute])' function into the template
+     *
+     * @param KCommandInterface $context
+     * @return void
+     */
+    protected function _beforeRender(KCommandInterface $context)
+    {
+        $controller = $context->getSubject();
+
+        if($controller->getView() instanceof KViewTemplatable) {
+            $controller->getView()->getTemplate()->registerFunction('can', array($this => 'canExecute'));
+        }
+    }
+
+    /**
      * Command handler
      *
      * Only handles before.action commands to check authorization rules.
