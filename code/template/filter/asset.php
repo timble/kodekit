@@ -51,6 +51,7 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract
     {
         $config->append(array(
             'schemes' => array('assets://' => '/assets/'),
+            'priority' => self::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);
