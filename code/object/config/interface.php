@@ -10,8 +10,7 @@
 /**
  * Config Interface
  *
- * KObjectConfig provides a property based interface to an array. Data is can be modified unless the object is marked
- * as readonly.
+ * KObjectConfig provides a property based interface to an array.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Object\Config
@@ -101,23 +100,6 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @return array
      */
     public function toArray();
-
-    /**
-     * Prevent any more modifications being made to this instance.
-     *
-     * Useful after merge() has been used to merge multiple objects into one object which should then not be
-     * modified again.
-     *
-     * @return KObjectConfigInterface
-     */
-    public function setReadOnly();
-
-    /**
-     * Returns whether this object is read only or not.
-     *
-     * @return bool
-     */
-    public function isReadOnly();
 
     /**
      * Get a new instance
