@@ -61,7 +61,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         parent::__construct($config);
 
-        //Set the dispatched state
+        // Set the dispatched state
         $this->_dispatched = $config->dispatched;
 
         // Set the model identifier
@@ -93,7 +93,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $config->append(array(
             'command_chain'     => 'lib:command.chain',
             'command_handlers'  => array('lib:command.handler.event'),
-            'dispatched'		=> false,
+            'dispatched'        => false,
             'request'           => 'lib:controller.request',
             'response'          => 'lib:controller.response',
             'user'              => 'lib:user',

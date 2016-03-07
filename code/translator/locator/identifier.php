@@ -28,7 +28,7 @@ abstract class KTranslatorLocatorIdentifier extends KTranslatorLocatorAbstract
 
         $info   = array(
             'url'     => $identifier,
-            'locale'  => $this->getLocale(),
+            'language' => $this->getLanguage(),
             'path'    => '',
             'domain'  => $identifier->getDomain(),
             'package' => $identifier->getPackage(),

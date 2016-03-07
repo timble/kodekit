@@ -55,34 +55,52 @@ interface KTranslatorInterface
     public function find($url);
 
     /**
-     * Sets the locale
+     * Sets the language
      *
-     * @param string $locale
+     * The language should be a properly formatted language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     * @see $language
+     *
+     * @param string $language The language tag
      * @return KTranslatorInterface
      */
-    public function setLocale($locale);
+    public function setLanguage($language);
 
     /**
-     * Gets the locale
+     * Gets the language
      *
-     * @return string|null
+     * Should return a properly formatted language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @return string|null The language tag
      */
-    public function getLocale();
+    public function getLanguage();
 
     /**
-     * Set the fallback locale
+     * Set the fallback language
      *
-     * @param string $locale The fallback locale.
+     * The language should be a properly formatted language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     * @see $language
+     *
+     * @param string $language The fallback language tag
      * @return KTranslatorInterface
      */
-    public function setLocaleFallback($locale);
+    public function setLanguageFallback($language);
 
     /**
-     * Get the fallback locale
+     * Get the fallback language
      *
-     * @return string The fallback locale.
+     * Should return a properly formatted language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @return string The language tag
      */
-    public function getLocaleFallback();
+    public function getLanguageFallback();
 
     /**
      * Get a catalogue

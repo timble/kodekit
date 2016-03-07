@@ -16,6 +16,33 @@
 interface KDispatcherRequestInterface extends KControllerRequestInterface
 {
     /**
+     * Receive the request by passing it through transports
+     *
+     * @return KDispatcherRequestTransportInterface
+     */
+    public function receive();
+
+    /**
+     * Get a transport handler by identifier
+     *
+     * @param   mixed    $transport    An object that implements ObjectInterface, ObjectIdentifier object
+     *                                 or valid identifier string
+     * @param   array    $config    An optional associative array of configuration settings
+     * @return KDispatcherResponseInterface
+     */
+    public function getTransport($transport, $config = array());
+
+    /**
+     * Attach a transport handler
+     *
+     * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
+     *                            or valid identifier string
+     * @param   array $config  An optional associative array of configuration settings
+     * @return KDispatcherResponseInterface
+     */
+    public function attachTransport($transport, $config = array());
+
+    /**
      * Sets a list of trusted proxies.
      *
      * You should only list the reverse proxies that you manage directly.
@@ -189,6 +216,13 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * @return array Languages ordered in the user browser preferences
      */
     public function getLanguages();
+
+    /**
+     * Get a list of timezones acceptable by the client
+     *
+     * @return array|false
+     */
+    public function getTimezones();
 
     /**
      * Gets a list of charsets acceptable by the client browser.

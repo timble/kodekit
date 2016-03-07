@@ -23,11 +23,11 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
     protected static $_name = '';
 
     /**
-     * The locale
+     * The language
      *
      * @var string
      */
-    protected $_locale;
+    protected $_language;
 
     /**
      * Found locations map
@@ -47,8 +47,8 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
     {
         parent::__construct($config);
 
-        //Set the locale
-        $this->setLocale($config->locale);
+        //Set the language
+        $this->setLanguage($config->language);
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'locale' => 'en-GB'
+            'language' => 'en-GB'
         ));
 
         parent::_initialize($config);
@@ -79,24 +79,32 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
     }
 
     /**
-     * Gets the locale
+     * Gets the language
+     *
+     * Should return a properly formatted IETF language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
      *
      * @return string|null
      */
-    public function getLocale()
+    public function getLanguage()
     {
-        return $this->_locale;
+        return $this->_language;
     }
 
     /**
-     * Sets the locale
+     * Sets the language
      *
-     * @param string $locale
+     * The language should be a properly formatted language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @param string $language
      * @return KTranslatorLocatorAbstract
      */
-    public function setLocale($locale)
+    public function setLanguage($language)
     {
-        $this->_locale = $locale;
+        $this->_language = $language;
         return $this;
     }
 
@@ -108,15 +116,15 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
      */
     public function locate($url)
     {
-        $key = $this->getLocale().'-'.$url;
+        $key = $this->getLanguage().'-'.$url;
 
         if(!isset($this->_locations[$key]))
         {
             $result = array();
             $info   = array(
-                'url'     => $url,
-                'locale'  => $this->getLocale(),
-                'path'    => '',
+                'url'       => $url,
+                'language'  => $this->getLanguage(),
+                'path'      => '',
             );
 
             $this->_locations[$key] = $this->find($info);
@@ -135,9 +143,9 @@ abstract class KTranslatorLocatorAbstract extends KObject implements KTranslator
     {
         $result = array();
 
-        if($info['path'] && $info['locale'])
+        if($info['path'] && $info['language'])
         {
-            $pattern = $info['path'].'/'.$info['locale'].'.*';
+            $pattern = $info['path'].'/'.$info['language'].'.*';
             $results = glob($pattern);
 
             if ($results)
