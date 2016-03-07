@@ -10,7 +10,7 @@
 /**
  * Command Filter
  *
- * A 'command' is a string containing only the characters [A-Za-z0-9.-_]. Used for names of views, controllers, etc
+ * A 'command' is a string containing only the characters [A-Za-z0-9.,-_].
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Filter
@@ -26,7 +26,7 @@ class KFilterCmd extends KFilterAbstract implements KFilterTraversable
     public function validate($value)
     {
         $value = trim($value);
-        $pattern = '/^[A-Za-z0-9.\-_]*$/';
+        $pattern = '/^[A-Za-z0-9.,\-_]*$/';
         return (is_string($value) && (preg_match($pattern, $value)) == 1);
     }
 

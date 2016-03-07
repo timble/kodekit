@@ -65,11 +65,11 @@ final class KModelEntityImmutable extends KModelEntityAbstract
     }
 
     /**
-     * Resets to the default properties
+     * Clear the entity data
      *
-     * @return $this
+     * @return KModelEntityImmutable
      */
-    public function reset()
+    public function clear()
     {
         return $this;
     }
@@ -83,8 +83,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     *
-     * @return  $this
+     * @return  KModelEntityImmutable
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -95,7 +94,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  $this
+     * @return  KModelEntityImmutable
      */
     public function removeProperty($name)
     {
@@ -107,7 +106,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      *
      * @param   mixed   $properties  Either and associative array, an object or a ModelEntityInterface
      * @param   boolean $modified    If TRUE, update the modified information for each property being set.
-     * @return  $this
+     * @return  KModelEntityImmutable
      */
     public function setProperties($properties, $modified = true)
     {
@@ -118,7 +117,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  $this
+     * @return  KModelEntityImmutable
      */
     public function setStatus($status)
     {
@@ -139,7 +138,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  $this
+     * @return  KModelEntityImmutable
      */
     public function setStatusMessage($message)
     {
@@ -162,7 +161,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
     /**
      * Test if the entity is connected to a data store
      *
-     * @return	bool
+     * @return  bool
      */
     public function isConnected()
     {

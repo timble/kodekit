@@ -78,6 +78,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
         $config->append(array(
             'identity_key'     => null,
             'state'            => 'lib:model.state',
+            'state_defaults'   => array(),
             'command_chain'    => 'lib:command.chain',
             'command_handlers' => array('lib:command.handler.event'),
         ));
@@ -110,7 +111,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     }
 
     /**
-     * Create a new entity for the data source
+     * Create a new entity for the data store
      *
      * @param  array $properties Array of entity properties
      * @return  KModelEntityInterface
@@ -211,7 +212,10 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     {
         if(!$this->__state instanceof KModelStateInterface)
         {
-            $this->__state = $this->getObject($this->__state, array('model' => $this));
+            $this->__state = $this->getObject($this->__state, array(
+                'model'    => $this,
+                'defaults' => $this->getConfig()->state_defaults
+            ));
 
             if(!$this->__state instanceof KModelStateInterface)
             {
@@ -240,7 +244,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     }
 
     /**
-     * Create a new entity for the data source
+     * Create a new entity for the data store
      *
      * @param KModelContext $context A model context object
      *
@@ -270,7 +274,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     }
 
     /**
-     * Fetch a new entity from the data source
+     * Fetch a new entity from the data store
      *
      * @param KModelContext $context A model context object
      * @return KModelEntityInterface The entity

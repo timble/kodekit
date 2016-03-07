@@ -84,8 +84,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             $this->_identity_column = $config->identity_column;
         }
 
-        // Reset the row
-        $this->reset();
+        // Clear the row
+        $this->clear();
 
         //Set the status
         if (isset($config->status)) {
@@ -173,11 +173,11 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     }
 
     /**
-     * Reset the row data using the defaults
+     * Clear the row data using the defaults
      *
      * @return KDatabaseRowInterface
      */
-    public function reset()
+    public function clear()
     {
         $this->_data                 = array();
         $this->__modified_properties = array();
@@ -188,6 +188,30 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         }
 
         return $this;
+    }
+
+    /**
+     * Mixin an object
+     *
+     * Reset the computed_properties after a behavior has been mixed that has mixable methods
+     *
+     * @param   mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectMixableInterface
+     * @param  array $config  An optional associative array of configuration options
+     * @return  KObjectMixinInterface
+     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  \UnexpectedValueException If the mixin does not implement the ObjectMixinInterface
+     */
+    public function mixin($mixin, $config = array())
+    {
+        $mixin = parent::mixin($mixin, $config);
+
+        //Reset the computed properties array
+        $methods = $mixin->getMixableMethods();
+        if(!empty($methods)) {
+            $this->__computed_properties = null;
+        }
+
+        return $mixin;
     }
 
     /**
@@ -202,7 +226,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     public function getProperty($name)
     {
         //Handle computed properties
-        if(!$this->hasProperty($name) && !empty($name))
+        if(!parent::offsetExists($name) && $this->hasProperty($name))
         {
             $getter  = 'getProperty'.KStringInflector::camelize($name);
             $methods = $this->getMethods();
@@ -273,7 +297,23 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function hasProperty($name)
     {
-        return parent::offsetExists($name);
+        $result = false;
+
+        //Handle computed properties
+        if(!parent::offsetExists($name))
+        {
+            if(!empty($name))
+            {
+                $properties = $this->getComputedProperties();
+
+                if(isset($properties[$name])) {
+                    $result = true;
+                }
+            }
+        }
+        else $result = true;
+
+        return $result;
     }
 
     /**
@@ -330,9 +370,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     public function setProperties($properties, $modified = true)
     {
         if ($properties instanceof KDatabaseRowInterface) {
-            $properties = $properties->getProperties();
-        } else {
-            $properties = (array) $properties;
+            $properties = $properties->getProperties(false);
         }
 
         foreach ($properties as $property => $value) {
@@ -444,9 +482,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function getHandle()
     {
-        if (isset($this->_identity_column)) {
-            $handle = $this->getProperty($this->_identity_column);
-        } else {
+        if(!$handle = $this->getProperty($this->getIdentityColumn())) {
             $handle = parent::getHandle();
         }
 

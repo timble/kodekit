@@ -91,26 +91,16 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'     => 'lib:command.chain',
-            'command_handlers'  => array('lib:command.handler.event'),
-            'dispatched'        => false,
-            'request'           => 'lib:controller.request',
-            'response'          => 'lib:controller.response',
-            'user'              => 'lib:user',
-            'behaviors'         => array('permissible'),
+            'command_chain'    => 'lib:command.chain',
+            'command_handlers' => array('lib:command.handler.event'),
+            'dispatched'       => false,
+            'request'          => array(),
+            'response'         => array(),
+            'user'             => array(),
+            'behaviors'        => array('permissible'),
         ));
 
         parent::_initialize($config);
-    }
-
-    /**
-     * Has the controller been dispatched
-     *
-     * @return  boolean	Returns true if the controller has been dispatched
-     */
-    public function isDispatched()
-    {
-        return $this->_dispatched;
     }
 
     /**
@@ -252,9 +242,11 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         if(!$this->_request instanceof KControllerRequestInterface)
         {
-            $this->_request = $this->getObject($this->_request,  array(
-                'url'  => $this->getIdentifier(),
-            ));
+            //Setup the request
+            $this->_request->url  = $this->getIdentifier();
+            $this->_request->user = $this->getUser();
+
+            $this->_request = $this->getObject('lib:controller.request', KObjectConfig::unbox($this->_request));
 
             if(!$this->_request instanceof KControllerRequestInterface)
             {
@@ -289,10 +281,11 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         if(!$this->_response instanceof KControllerResponseInterface)
         {
-            $this->_response = $this->getObject($this->_response, array(
-                'request' => $this->getRequest(),
-                'user'    => $this->getUser(),
-            ));
+            //Setup the response
+            $this->_response->request = $this->getRequest();
+            $this->_response->user    = $this->getUser();
+
+            $this->_response = $this->getObject('lib:controller.response', KObjectConfig::unbox($this->_response));
 
             if(!$this->_response instanceof KControllerResponseInterface)
             {
@@ -327,9 +320,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     {
         if(!$this->_user instanceof KUserInterface)
         {
-            $this->_user = $this->getObject($this->_user, array(
-                'request' => $this->getRequest(),
-            ));
+            $this->_user = $this->getObject('user', KObjectConfig::unbox($this->_user));
 
             if(!$this->_user instanceof KUserInterface)
             {
@@ -356,6 +347,16 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         $context->setUser($this->getUser());
 
         return $context;
+    }
+
+    /**
+     * Has the controller been dispatched
+     *
+     * @return  boolean	Returns true if the controller has been dispatched
+     */
+    public function isDispatched()
+    {
+        return $this->_dispatched;
     }
 
     /**
