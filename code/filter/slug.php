@@ -83,9 +83,21 @@ class KFilterSlug extends KFilterAbstract implements KFilterTraversable
      * @param   mixed   $value Variable to be sanitized
      * @return  mixed
      */
-    public function sanitize($value)
+    /**
+     * Sanitize a value
+     *
+     * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents",
+     * replace whitespaces by hyphens and lowercase the result.
+     *
+     * @param   scalar  $value Value to be sanitized
+     * @return	scalar
+     */
+    protected function _sanitize($value)
     {
-        //remove any '-' from the string they will be used as concatenator
+        //remove any quotation and replace with whitespace
+        $value = preg_replace('/\"/', '', $value);
+
+        //remove any '-' from the string they will be used as concatonater
         $value = str_replace($this->_separator, ' ', $value);
 
         //convert to ascii characters
@@ -100,13 +112,13 @@ class KFilterSlug extends KFilterAbstract implements KFilterTraversable
         //remove repeated occurrences of the separator
         $value = preg_replace('/['.preg_quote($this->_separator, '/').']+/', $this->_separator, $value);
 
-        //trim separators around the slug
-        $value = trim($value, $this->_separator);
-
         //limit length
         if (strlen($value) > $this->_length) {
             $value = substr($value, 0, $this->_length);
         }
+
+        //remove unwanted separators from the ends
+        $value = trim($value, $this->_separator);
 
         return $value;
     }
