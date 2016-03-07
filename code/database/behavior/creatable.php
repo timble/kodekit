@@ -25,7 +25,7 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
         $user = null;
 
         if($this->hasProperty('created_by') && !empty($this->created_by)) {
-            $user = $this->getObject('user.provider')->load($this->created_by);
+            $user = $this->getObject('user.provider')->getUser($this->created_by);
         }
 
         return $user;
@@ -72,6 +72,34 @@ class KDatabaseBehaviorCreatable extends KDatabaseBehaviorAbstract
 
         if($this->hasProperty('created_on') && (empty($this->created_on) || $this->created_on == $table->getDefault('created_on'))) {
             $this->created_on  = gmdate('Y-m-d H:i:s');
+        }
+    }
+
+    /**
+     * Set created information
+     *
+     * Requires a 'created_by' column
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _afterSelect(KDatabaseContext $context)
+    {
+        $rowset = $context->data;
+
+        if($rowset instanceof KDatabaseRowsetInterface)
+        {
+            $users = array();
+
+            foreach($rowset as $row)
+            {
+                if(!empty($row->created_by)) {
+                    $users[] = $row->created_by;
+                }
+            }
+
+            //Lazy load the users
+            $this->getObject('user.provider')->fetch($users, true);
         }
     }
 }

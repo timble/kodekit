@@ -13,7 +13,7 @@
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\User\Provider
  */
-class KUserProvider extends KUserProviderAbstract implements KObjectSingleton
+class KUserProvider extends KUserProviderModel implements KObjectSingleton
 {
 
 }

@@ -26,21 +26,39 @@
 interface KUserProviderInterface
 {
     /**
-     * Loads the user for the given username or identifier
+     * Load the user for the given username or identifier
+     *
+     * If the user could not be loaded this method should return an anonymous user with a user 'id' off 0.
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @param bool  $refresh     If TRUE and the user has already been loaded it will be re-loaded.
-     * @return KUserInterface  Returns a KUserInterface object
+     * @return KUserInterface Returns a UserInterface object.
      */
-    public function load($identifier, $refresh = false);
+    public function getUser($identifier);
 
     /**
-     * Fetch the user for the given user identifier from the backend
+     * Set a user in the provider
+     *
+     * @param KUserInterface $user
+     * @return KUserProviderInterface
+     */
+    public function setUser(KUserInterface $user);
+
+    /**
+     * Find a user for the given identifier
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user could not be found.
+     * @return KUserInterface|null Returns a UserInterface object or NULL if the user hasn't been loaded yet
      */
-    public function fetch($identifier);
+    public function findUser($identifier);
+
+    /**
+     * Fetch the user for the given user identifier from the data store
+     *
+     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @param bool   $lazyload  Lazyload the $identifier(s) on the following call to getUser()
+     * @return boolean
+     */
+    public function fetch($identifier, $lazyload= false);
 
     /**
      * Create a user object
@@ -51,18 +69,9 @@ interface KUserProviderInterface
     public function create($data);
 
     /**
-     * Store a user object in the provider
-     *
-     * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @param array $data An associative array of user data
-     * @return KUserInterface     Returns a UserInterface object
-     */
-    public function store($identifier, $data);
-
-    /**
      * Check if a user has already been loaded for a given user identifier
      *
-     * @param string $identifier A unique user identifier, (i.e a username or email address)
+     * @param $identifier
      * @return boolean TRUE if a user has already been loaded. FALSE otherwise
      */
     public function isLoaded($identifier);

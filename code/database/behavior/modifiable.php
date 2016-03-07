@@ -20,7 +20,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param KObjectConfig $config 	An optional ObjectConfig object with configuration options
      * @return void
      */
     protected function _initialize(KObjectConfig $config)
@@ -41,8 +41,8 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     {
         $user = null;
 
-        if($this->has('modified_by') && !empty($this->modified_by)) {
-            $user = $this->getObject('user.provider')->load($this->modified_by);
+        if($this->hasProperty('modified_by') && !empty($this->modified_by)) {
+            $user = $this->getObject('user.provider')->getUser($this->modified_by);
         }
 
         return $user;
@@ -73,25 +73,65 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     /**
      * Set modified information
      *
-     * Requires a 'modified_on' and 'modified_by' column
+     * Requires an 'modified_on' and 'modified_by' column
      *
-     * @param KDatabaseContextInterface $context
+     * @param KDatabaseContext	$context A database context object
      * @return void
      */
-    protected function _beforeUpdate(KDatabaseContextInterface $context)
+    protected function _beforeInsert(KDatabaseContext $context)
+    {
+        if($this->hasProperty('modified_by')) {
+            $this->modified_by = (int) $this->getObject('user')->getId();
+        }
+
+        if($this->hasProperty('modified_on')) {
+            $this->modified_on = gmdate('Y-m-d H:i:s');
+        }
+    }
+
+    /**
+     * Set modified information
+     *
+     * Requires a 'modified_on' and 'modified_by' column
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _beforeUpdate(KDatabaseContext $context)
     {
         //Get the modified columns
-        $modified   = $this->getTable()->filter($this->getProperties(true));
+        $modified  = $this->getTable()->filter($this->getProperties(true));
 
-        if(!empty($modified))
+        if(!empty($modified)) {
+            $this->_beforeInsert($context);
+        }
+    }
+
+    /**
+     * Set created information
+     *
+     * Requires a 'created_by' column
+     *
+     * @param KDatabaseContext	$context A database context object
+     * @return void
+     */
+    protected function _afterSelect(KDatabaseContext $context)
+    {
+        $rowset = $context->data;
+
+        if($rowset instanceof KDatabaseRowsetInterface)
         {
-            if($this->hasProperty('modified_by')) {
-                $this->modified_by = (int) $this->getObject('user')->getId();
+            $users = array();
+
+            foreach($rowset as $row)
+            {
+                if(!empty($row->modified_by)) {
+                    $users[] = $row->modified_by;
+                }
             }
 
-            if($this->hasProperty('modified_on')) {
-                $this->modified_on = gmdate('Y-m-d H:i:s');
-            }
+            //Lazy load the users
+            $this->getObject('user.provider')->fetch($users, true);
         }
     }
 }
