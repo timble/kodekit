@@ -21,7 +21,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      * @var string
      */
     public $table;
-    
+
     /**
      * The join clause
      *
@@ -58,7 +58,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
     public $limit;
 
     /**
-     * Build the table clause 
+     * Build the table clause
      *
      * @param   string $table The name of the table to update.
      * @return  KDatabaseQueryUpdate
@@ -69,7 +69,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
 
         return $this;
     }
-    
+
     /**
      * Build the join clause
      *
@@ -98,7 +98,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the set clause 
+     * Build the set clause
      *
      * @param   array|string $values An array or string of columns to update.
      * @return  $this
@@ -165,14 +165,14 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $adapter = $this->getAdapter();
-        $prefix  = $adapter->getTablePrefix();
+        $driver  = $this->getDriver();
+        $prefix  = $driver->getTablePrefix();
         $query   = 'UPDATE ';
 
         if($this->table) {
-            $query .= $adapter->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
+            $query .= $driver->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
         }
-        
+
         if($this->join)
         {
             $joins = array();
@@ -185,13 +185,13 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
                 }
 
                 if($join['table'] instanceof KDatabaseQuerySelect) {
-                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$adapter->quoteIdentifier($alias) : '');
+                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
-                    $tmp .= ' JOIN '.$adapter->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
+                    $tmp .= ' JOIN '.$driver->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
                 }
 
                 if($join['condition']) {
-                    $tmp .= ' ON ('.$adapter->quoteIdentifier($join['condition']).')';
+                    $tmp .= ' ON ('.$driver->quoteIdentifier($join['condition']).')';
                 }
 
                 $joins[] = $tmp;
@@ -204,7 +204,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
         {
             $values = array();
             foreach($this->values as $value) {
-                $values[] = ' '. $adapter->quoteIdentifier($value);
+                $values[] = ' '. $driver->quoteIdentifier($value);
             }
 
             $query .= ' SET '.implode(', ', $values);
@@ -214,13 +214,13 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
         {
             $query .= ' WHERE';
 
-            foreach($this->where as $where) 
+            foreach($this->where as $where)
             {
                 if(!empty($where['combination'])) {
                     $query .= ' '.$where['combination'];
                 }
 
-                $query .= ' '.$adapter->quoteIdentifier($where['condition']);
+                $query .= ' '.$driver->quoteIdentifier($where['condition']);
             }
         }
 
@@ -230,7 +230,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
 
             $list = array();
             foreach($this->order as $order) {
-                $list[] = $adapter->quoteIdentifier($order['column']).' '.$order['direction'];
+                $list[] = $driver->quoteIdentifier($order['column']).' '.$order['direction'];
             }
 
             $query .= implode(' , ', $list);

@@ -16,18 +16,18 @@
 abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
 {
     /**
-     * Database adapter
-     *
-     * @var     object
-     */
-    protected $_adapter;
-
-    /**
      * Query parameters to bind
      *
      * @var array
      */
     protected $_parameters;
+
+    /**
+     * Database driver
+     *
+     * @var  KDatabaseDriverInterface
+     */
+    private $__driver;
 
     /**
      * Constructor
@@ -38,7 +38,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     {
         parent::__construct($config);
 
-        $this->_adapter = $config->adapter;
+        $this->__driver = $config->driver;
         $this->setParameters(KObjectConfig::unbox($config->parameters));
     }
 
@@ -53,7 +53,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'adapter'    => 'lib:database.adapter.mysqli',
+            'driver'     => 'lib:database.driver.mysqli',
             'parameters' => array()
         ));
     }
@@ -96,37 +96,37 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     }
 
     /**
-     * Gets the database adapter
+     * Gets the database driver
      *
-     * @throws	\UnexpectedValueException	If the adapter doesn't implement KDatabaseAdapterInterface
-     * @return KDatabaseAdapterInterface
+     * @throws	\UnexpectedValueException	If the driver doesn't implement KDatabaseDriverInterface
+     * @return KDatabaseDriverInterface
      */
-    public function getAdapter()
+    public function getDriver()
     {
-        if(!$this->_adapter instanceof KDatabaseAdapterInterface)
+        if(!$this->__driver instanceof KDatabaseDriverInterface)
         {
-            $this->_adapter = $this->getObject($this->_adapter);
+            $this->__driver = $this->getObject($this->__driver);
 
-            if(!$this->_adapter instanceof KDatabaseAdapterInterface)
+            if(!$this->__driver instanceof KDatabaseDriverInterface)
             {
                 throw new UnexpectedValueException(
-                    'Adapter: '.get_class($this->_adapter).' does not implement KDatabaseAdapterInterface'
+                    'Driver: '.get_class($this->__driver).' does not implement KDatabaseDriverInterface'
                 );
             }
         }
 
-        return $this->_adapter;
+        return $this->__driver;
     }
 
     /**
-     * Set the database adapter
+     * Set the database driver
      *
-     * @param KDatabaseAdapterInterface $adapter
+     * @param KDatabaseDriverInterface $driver
      * @return KDatabaseQueryInterface
      */
-    public function setAdapter(KDatabaseAdapterInterface $adapter)
+    public function setDriver(KDatabaseDriverInterface $driver)
     {
-        $this->_adapter = $adapter;
+        $this->__driver = $driver;
         return $this;
     }
 
@@ -154,7 +154,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
 
         if(!$value instanceof KDatabaseQuerySelect) {
             $value = is_object($value) ? (string) $value : $value;
-            $replacement = $this->getAdapter()->quoteValue($value);
+            $replacement = $this->getDriver()->quoteValue($value);
         }
         else $replacement = '('.$value.')';
 

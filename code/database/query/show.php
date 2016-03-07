@@ -44,19 +44,19 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
     public $where = array();
 
     /**
-     * Build the show clause 
+     * Build the show clause
      *
      * @param   string $table The name of the table.
      * @return  KDatabaseQueryShow
      */
-    public function show($table) 
+    public function show($table)
     {
         $this->show = $table;
         return $this;
     }
 
     /**
-     * Build the from clause 
+     * Build the from clause
      *
      * @param   string $from The name of the database or table.
      * @return  $this
@@ -68,7 +68,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the like clause 
+     * Build the like clause
      *
      * @param   string $pattern The pattern to match.
      * @return  KDatabaseQueryShow
@@ -76,7 +76,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
     public function like($pattern)
     {
         $this->like = $pattern;
-    
+
         return $this;
     }
 
@@ -93,7 +93,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
             'condition'   => $condition,
             'combination' => count($this->where) ? $combination : ''
         );
-        
+
         return $this;
     }
 
@@ -104,31 +104,31 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $adapter = $this->getAdapter();
-        $prefix  = $adapter->getTablePrefix();
+        $driver  = $this->getDriver();
+        $prefix  = $driver->getTablePrefix();
         $query   = 'SHOW '.$this->show;
 
         if($this->from)
         {
             $table  = (in_array($this->show, array('FULL COLUMNS', 'COLUMNS', 'INDEX', 'INDEXES', 'KEYS')) ? $prefix : '').$this->from;
-            $query .= ' FROM '.$adapter->quoteIdentifier($table);
+            $query .= ' FROM '.$driver->quoteIdentifier($table);
         }
 
         if($this->like) {
-            $query .= ' LIKE '.$adapter->quoteIdentifier($this->like);
+            $query .= ' LIKE '.$driver->quoteIdentifier($this->like);
         }
 
         if($this->where)
         {
             $query .= ' WHERE';
-            
+
             foreach($this->where as $where)
             {
                 if(!empty($where['combination'])) {
                     $query .= ' '.$where['combination'];
                 }
-            
-                $query .= ' '.$adapter->quoteIdentifier($where['condition']);
+
+                $query .= ' '.$driver->quoteIdentifier($where['condition']);
             }
         }
 
@@ -138,10 +138,10 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
 
         return $query;
     }
-    
+
     /**
      * Callback method for parameter replacement.
-     * 
+     *
      * @param  array  $matches Matches of preg_replace_callback.
      * @return string The replacement string.
      */
@@ -149,15 +149,15 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
     {
         $key    = substr($matches[0], 1);
         $prefix = '';
-        
+
         if(in_array($this->show, array('FULL TABLES', 'OPEN TABLES', 'TABLE STATUS', 'TABLES')) &&
             ($this->like && $key == 'like' || $this->where && ($key == 'name' || $key == 'table')))
         {
-            $prefix = $this->getAdapter()->getTablePrefix();
+            $prefix = $this->getDriver()->getTablePrefix();
         }
-        
-        $replacement = $this->getAdapter()->quoteValue($prefix.$this->_parameters[$key]);
-        
+
+        $replacement = $this->getDriver()->quoteValue($prefix.$this->_parameters[$key]);
+
         return is_array($this->_parameters[$key]) ? '('.$replacement.')' : $replacement;
     }
 }

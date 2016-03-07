@@ -16,24 +16,24 @@
 interface KDatabaseTableInterface
 {
     /**
-     * Gets the database adapter
+     * Gets the database driver
      *
-     * @return KDatabaseAdapterInterface
+     * @return KDatabaseDriverInterface
      */
-    public function getAdapter();
+    public function getDriver();
 
     /**
-     * Set the database adapter
+     * Set the database driver
      *
-     * @param  KDatabaseAdapterInterface $adapter A KDatabaseAdapterInterface object
+     * @param  KDatabaseDriverInterface $driver A DatabaseDriverInterface object
      * @return KDatabaseQueryInterface
      */
-    public function setAdapter(KDatabaseAdapterInterface $adapter);
+    public function setDriver(KDatabaseDriverInterface $driver);
 
     /**
      * Test the connected status of the table
      *
-     * @return    boolean    Returns TRUE if we have a reference to a live KDatabaseAdapterAbstract object.
+     * @return    boolean    Returns TRUE if we have a reference to a live DatabaseDriverInterface.
      */
     public function isConnected();
 

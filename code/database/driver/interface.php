@@ -8,31 +8,31 @@
  */
 
 /**
- * Database Adapter Interface
+ * Database Driver Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Adapter
+ * @package Koowa\Library\Database\Driver
  */
-interface KDatabaseAdapterInterface
+interface KDatabaseDriverInterface
 {
     /**
      * Connect to the db
      *
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function connect();
 
     /**
      * Reconnect to the db
      *
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function reconnect();
 
     /**
      * Disconnect from db
      *
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function disconnect();
 
@@ -50,7 +50,7 @@ interface KDatabaseAdapterInterface
      * Set the connection
      *
      * @param 	resource 	$resource The connection resource
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function setConnection($resource);
 
@@ -93,7 +93,7 @@ interface KDatabaseAdapterInterface
 
     /**
      * Perform a select query.
-     * 
+     *
      * @param   KDatabaseQueryInterface  $query A full SQL query to run. Data inside the query should be properly escaped.
      * @param   integer $mode   The result mode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
      *                          depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
@@ -148,8 +148,8 @@ interface KDatabaseAdapterInterface
      * Set the table prefix
      *
      * @param string $prefix The table prefix
-     * @return KDatabaseAdapterAbstract
-     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     * @return KDatabaseDriverAbstract
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function setTablePrefix($prefix);
 
@@ -157,7 +157,7 @@ interface KDatabaseAdapterInterface
      * Get the table prefix
      *
      * @return string The table prefix
-     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTablePrefix();
 
@@ -165,7 +165,7 @@ interface KDatabaseAdapterInterface
      * Get the table needle
      *
      * @return string The table needle
-     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTableNeedle();
 

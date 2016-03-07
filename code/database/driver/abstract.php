@@ -8,12 +8,12 @@
  */
 
 /**
- * Abstract Database Adapter
+ * Abstract Database Driver
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Adapter
+ * @package Koowa\Library\Database\Driver
  */
-abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdapterInterface, KObjectMultiton
+abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDriverInterface, KObjectMultiton
 {
     /**
      * Active state of the connection
@@ -70,10 +70,10 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * @var string
      */
     protected $_identifier_quote = '`';
-    
+
     /**
      * Character set used for connection
-     * 
+     *
      * @var string
      */
     protected $_charset;
@@ -149,7 +149,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Reconnect to the db
      *
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function reconnect()
     {
@@ -162,7 +162,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
     /**
      * Disconnect from db
      *
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function disconnect()
     {
@@ -183,7 +183,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Set the database name
      *
      * @param 	string 	$database The database name
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     abstract function setDatabase($database);
 
@@ -204,34 +204,34 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Set the connection
      *
      * @param 	resource    $resource The connection resource
-     * @return  KDatabaseAdapterAbstract
+     * @return  KDatabaseDriverAbstract
      */
     public function setConnection($resource)
     {
         $this->_connection = $resource;
         return $this;
     }
-    
+
     /**
      * Get character set
-     * 
+     *
      * @return string
      */
     public function getCharset()
     {
         return $this->_charset;
     }
-    
+
     /**
      * Set character set
-     * 
+     *
      * @param string $charset The character set.
-     * @return KDatabaseAdapterAbstract
+     * @return KDatabaseDriverAbstract
      */
     public function setCharset($charset)
     {
         $this->_charset = $charset;
-        
+
         return $this;
     }
 
@@ -433,8 +433,8 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Set the table prefix
      *
      * @param string $prefix The table prefix
-     * @return KDatabaseAdapterAbstract
-     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     * @return KDatabaseDriverAbstract
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function setTablePrefix($prefix)
     {
@@ -446,7 +446,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Get the table prefix
      *
      * @return string The table prefix
-     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTablePrefix()
     {
@@ -457,7 +457,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
      * Get the table needle
      *
      * @return string The table needle
-     * @see KDatabaseAdapterAbstract::replaceTableNeedle
+     * @see KDatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTableNeedle()
     {
@@ -518,7 +518,7 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
                     $v = $this->_quoteValue($v);
                 }
             }
-    
+
             $value = implode(', ', $value);
         }
         else
@@ -529,10 +529,10 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
                 $value = $this->_quoteValue($value);
             }
         }
-    
+
         return $value;
-    } 
-    
+    }
+
     /**
      * Quotes a single identifier name (table, table alias, table column, index, sequence).  Ignores empty values.
      *
@@ -551,16 +551,16 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
             foreach ($spec as $key => $val) {
                 $spec[$key] = $this->quoteIdentifier($val);
             }
-    
+
             return $spec;
         }
-    
+
         // String spaces around the identifier
         $spec = trim($spec);
-    
+
         // Quote all the lower case parts
         $spec = preg_replace_callback('/(?:\b|#)+(?<![`:@%])([-a-zA-Z0-9.#_]*[a-z][-a-zA-Z0-9.#_]*)(?!`)\b/', array($this, '_quoteIdentifier'), $spec);
-    
+
         return $spec;
     }
 
@@ -679,23 +679,23 @@ abstract class KDatabaseAdapterAbstract extends KObject implements KDatabaseAdap
         if (is_array($name)) {
             $name = $name[0];
         }
-    
+
         $name = trim($name);
-    
+
         //Special cases
         if ($name == '*' || is_numeric($name)) {
             return $name;
         }
-    
+
         if ($pos = strrpos($name, '.'))
         {
             $table = $this->_quoteIdentifier(substr($name, 0, $pos));
             $column = $this->_quoteIdentifier(substr($name, $pos + 1));
-    
+
             $result = "$table.$column";
         }
         else $result = $this->_identifier_quote . $name . $this->_identifier_quote;
-    
+
         return $result;
     }
 }

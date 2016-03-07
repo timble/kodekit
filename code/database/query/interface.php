@@ -39,19 +39,19 @@ interface KDatabaseQueryInterface
     public function setParameters(array $parameters);
 
     /**
-     * Gets the database adapter
+     * Gets the database driver
      *
-     * @return \KDatabaseAdapterInterface
+     * @return KDatabaseDriverInterface
      */
-    public function getAdapter();
-    
+    public function getDriver();
+
     /**
-     * Set the database adapter
+     * Set the database driver
      *
-     * @param  KDatabaseAdapterInterface $adapter A KDatabaseAdapterInterface object
+     * @param  KDatabaseDriverInterface $driver A KDatabaseDriverInterface object
      * @return KDatabaseQueryInterface
      */
-    public function setAdapter(KDatabaseAdapterInterface $adapter);
+    public function setDriver(KDatabaseDriverInterface $driver);
 
     /**
      * Render the query to a string.

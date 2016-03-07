@@ -37,7 +37,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
     public $values = array();
 
     /**
-     * Build the table clause 
+     * Build the table clause
      *
      * @param  string $table The table name.
      * @return KDatabaseQueryInsert
@@ -50,7 +50,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the columns clause 
+     * Build the columns clause
      *
      * @param  array $columns Array of column names.
      * @return KDatabaseQueryInsert
@@ -63,7 +63,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
     }
 
     /**
-     * Build the values clause 
+     * Build the values clause
      *
      * @param  array $values Array of values.
      * @return KDatabaseQueryInsert
@@ -90,16 +90,16 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $adapter = $this->getAdapter();
-        $prefix  = $adapter->getTablePrefix();
-        $query   = 'INSERT';
+        $driver = $this->getDriver();
+        $prefix = $driver->getTablePrefix();
+        $query  = 'INSERT';
 
         if($this->table) {
-            $query .= ' INTO '.$adapter->quoteIdentifier($prefix.$this->table);
+            $query .= ' INTO '.$driver->quoteIdentifier($prefix.$this->table);
         }
 
         if($this->columns) {
-            $query .= '('.implode(', ', array_map(array($adapter, 'quoteIdentifier'), $this->columns)).')';
+            $query .= '('.implode(', ', array_map(array($driver, 'quoteIdentifier'), $this->columns)).')';
         }
 
         if($this->values)
@@ -113,7 +113,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
                 {
                     $data = array();
                     foreach($row as $column) {
-                        $data[] = $adapter->quoteValue(is_object($column) ? (string) $column : $column);
+                        $data[] = $driver->quoteValue(is_object($column) ? (string) $column : $column);
                     }
 
                     $values[] = '('.implode(', ', $data).')';

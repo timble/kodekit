@@ -259,9 +259,9 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
      */
     public function toString()
     {
-        $adapter = $this->getAdapter();
-        $prefix  = $adapter->getTablePrefix();
-        $query   = 'SELECT';
+        $driver = $this->getDriver();
+        $prefix = $driver->getTablePrefix();
+        $query  = 'SELECT';
 
         if($this->columns)
         {
@@ -273,9 +273,9 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
             foreach($this->columns as $alias => $column)
             {
                 if($column instanceof KDatabaseQuerySelect) {
-                    $columns[] = '('.$column.')'.(is_string($alias) ? ' AS '.$adapter->quoteIdentifier($alias) : '');
+                    $columns[] = '('.$column.')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
-                    $columns[] = $adapter->quoteIdentifier($column.(is_string($alias) ? ' AS '.$alias : ''));
+                    $columns[] = $driver->quoteIdentifier($column.(is_string($alias) ? ' AS '.$alias : ''));
                 }
             }
 
@@ -286,9 +286,9 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
         if($this->table)
         {
             if(current($this->table) instanceof KDatabaseQuerySelect) {
-                $table= '('.current($this->table).')'.(!is_numeric(key($this->table)) ? ' AS '.$adapter->quoteIdentifier(key($this->table)) : '');
+                $table= '('.current($this->table).')'.(!is_numeric(key($this->table)) ? ' AS '.$driver->quoteIdentifier(key($this->table)) : '');
             } else {
-                $table = $adapter->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
+                $table = $driver->quoteIdentifier($prefix.current($this->table).(!is_numeric(key($this->table)) ? ' AS '.key($this->table) : ''));
             }
 
             $query .= ' FROM '.$table;
@@ -306,13 +306,13 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
                 }
 
                 if($join['table'] instanceof KDatabaseQuerySelect) {
-                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$adapter->quoteIdentifier($alias) : '');
+                    $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
-                    $tmp .= ' JOIN '.$adapter->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
+                    $tmp .= ' JOIN '.$driver->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));
                 }
 
                 if($join['condition']) {
-                    $tmp .= ' ON ('.$adapter->quoteIdentifier($join['condition']).')';
+                    $tmp .= ' ON ('.$driver->quoteIdentifier($join['condition']).')';
                 }
 
                 $joins[] = $tmp;
@@ -331,7 +331,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
                     $query .= ' '.$where['combination'];
                 }
 
-                $query .= ' '. $adapter->quoteIdentifier($where['condition']);
+                $query .= ' '. $driver->quoteIdentifier($where['condition']);
             }
         }
 
@@ -339,7 +339,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
         {
             $columns = array();
             foreach($this->group as $column) {
-                $columns[] = $adapter->quoteIdentifier($column);
+                $columns[] = $driver->quoteIdentifier($column);
             }
 
             $query .= ' GROUP BY '.implode(' , ', $columns);
@@ -349,7 +349,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
         {
             $columns = array();
             foreach($this->having as $column) {
-                $columns[] = $adapter->quoteIdentifier($column);
+                $columns[] = $driver->quoteIdentifier($column);
             }
 
             $query .= ' HAVING '.implode(' , ', $columns);
@@ -361,7 +361,7 @@ class KDatabaseQuerySelect extends KDatabaseQueryAbstract
 
             $list = array();
             foreach($this->order as $order) {
-                $list[] = $adapter->quoteIdentifier($order['column']).' '.$order['direction'];
+                $list[] = $driver->quoteIdentifier($order['column']).' '.$order['direction'];
             }
 
             $query .= implode(' , ', $list);
