@@ -8,43 +8,21 @@
  */
 
 /**
- * Controller Toolbar Mixin
+ * Commandable Controller Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Koowa\Library\Controller\Behavior
  */
-class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMixinInterface
+class KControllerBehaviorCommandable extends KControllerBehaviorAbstract
 {
     /**
      * List of toolbars
      *
-     * The key holds the toolbar type and the value the toolbar object
+     * The key holds the toolbar type name and the value the toolbar object
      *
      * @var    array
      */
     private $__toolbars = array();
-
-    /**
-     * Constructor
-     *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options.
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        //Add the toolbars
-        $toolbars = (array)KObjectConfig::unbox($config->toolbars);
-
-        foreach ($toolbars as $key => $value)
-        {
-            if (is_numeric($key)) {
-                $this->addToolbar($value);
-            } else {
-                $this->addToolbar($key, $value);
-            }
-        }
-    }
 
     /**
      * Initializes the default configuration for the object
@@ -64,13 +42,44 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
     }
 
     /**
+     * Add the toolbars to the controller
+     *
+     * @param KControllerContextInterface $context
+     * @return void
+     */
+    protected function _beforeRender(KControllerContextInterface $context)
+    {
+        $controller = $context->getSubject();
+
+        // Add toolbars on authenticated requests only.
+        if ($controller->getUser()->isAuthentic())
+        {
+            //Add the toolbars
+            $toolbars = (array)KObjectConfig::unbox($this->getConfig()->toolbars);
+
+            foreach ($toolbars as $key => $value)
+            {
+                if (is_numeric($key)) {
+                    $this->addToolbar($value);
+                } else {
+                    $this->addToolbar($key, $value);
+                }
+            }
+        }
+
+        //Add the template filter and inject the toolbars
+        if($controller->getView() instanceof KViewTemplatable) {
+            $controller->getView()->getTemplate()->addFilter('toolbar', array('toolbars' => $this->getToolbars()));
+        }
+    }
+
+    /**
      * Add a toolbar
      *
      * @param   mixed $toolbar An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @param  array  $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
-     * @return  KObject The mixer object
+     * @param  array   $config   An optional associative array of configuration settings
+     * @return  Object The mixer object
      */
     public function addToolbar($toolbar, $config = array())
     {
@@ -96,10 +105,10 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
         }
 
         if (!($toolbar instanceof KControllerToolbarInterface)) {
-            throw new UnexpectedValueException("Controller toolbar $identifier does not implement KControllerToolbarInterface");
+            throw new \UnexpectedValueException("Controller toolbar $identifier does not implement ControllerToolbarInterface");
         }
 
-        //Store the toolbar to allow for type lookups
+        //Store the toolbar to allow for name lookups
         $this->__toolbars[$toolbar->getType()] = $toolbar;
 
         if ($this->inherits('KCommandMixin')) {
@@ -132,10 +141,10 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
     /**
      * Check if a toolbar exists
      *
-     * @param   string   $type The name of the toolbar
+     * @param   string   $type The type of the toolbar
      * @return  boolean  TRUE if the toolbar exists, FALSE otherwise
      */
-    public function hasToolbar($type = 'actionbar')
+    public function hasToolbar($type)
     {
         return isset($this->__toolbars[$type]);
     }
@@ -143,10 +152,10 @@ class KControllerToolbarMixin extends KObjectMixinAbstract implements KObjectMix
     /**
      * Get a toolbar by type
      *
-     * @param  string  $type   The toolbar name
+     * @param  string  $type   The toolbar type
      * @return KControllerToolbarInterface
      */
-    public function getToolbar($type = 'actionbar')
+    public function getToolbar($type)
     {
         $result = null;
 

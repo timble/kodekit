@@ -20,14 +20,14 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      *
      * @var     array
      */
-    private $__controller = null;
+    private $__controller;
 
     /**
      * The commands
      *
      * @var array
      */
-    protected $_commands = array();
+    private $__commands;
 
     /**
      * The toolbar type
@@ -37,38 +37,59 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     protected $_type;
 
     /**
-     * Constructor
+     * The toolbar title
      *
-     * @param   KObjectConfig $config Configuration options
+     * @var array
+     */
+    protected $_title;
+
+    /**
+     * Constructor.
+     *
+     * @param  KObjectConfig $config An associative array of configuration settings or a ObjectConfig instance.
      */
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
         //Create the commands array
-        $this->_commands = array();
+        $this->__commands = array();
 
         //Set the toolbar type
         $this->_type = $config->type;
 
+        //Set the toolbar title
+        $this->_title = $config->title;
+
         // Set the controller
         $this->setController($config->controller);
+
+        // Add the commands
+        foreach ($config->commands as $key => $value)
+        {
+            if (is_numeric($key)) {
+                $this->addCommand($value);
+            } else {
+                $this->addCommand($key, $value);
+            }
+        }
     }
 
     /**
-     * Initializes the config for the object
+     * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
      * @return  void
      */
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
             'type'       => 'toolbar',
+            'title'      => '',
             'controller' => null,
-            'priority'   => self::PRIORITY_HIGH
+            'commands'   => array(),
         ));
 
         parent::_initialize($config);
@@ -95,9 +116,30 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     }
 
     /**
-     * Get the controller object
+     * Get the toolbar's title
      *
-     * @return  KControllerAbstract
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
+
+    /**
+     * Set the toolbar's title
+     *
+     * @return KControllerToolbarAbstract
+     */
+    public function setTitle($title)
+    {
+        $this->_title = $title;
+        return $this;
+    }
+
+    /**
+     * Get the controller
+     *
+     * @return  KControllerInterface
      */
     public function getController()
     {
@@ -107,13 +149,24 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Set the controller
      *
-     * @param   KControllerInterface $controller Controller
      * @return  KControllerToolbarAbstract
      */
     public function setController(KControllerInterface $controller)
     {
         $this->__controller = $controller;
         return $this;
+    }
+
+    /**
+     * Add a separator
+     *
+     * @return KControllerToolbarInterface
+     */
+    public function addSeparator()
+    {
+        $command = new KControllerToolbarCommand('separator');
+        $this->__commands[] = $command;
+        return $command;
     }
 
     /**
@@ -125,14 +178,11 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      */
     public function addCommand($command, $config = array())
     {
-        if (!($command instanceof  KControllerToolbarCommandInterface)) {
+        if (!($command instanceof KControllerToolbarCommand)) {
             $command = $this->getCommand($command, $config);
         }
 
-        //Set the command parent
-        $command->setParent($command);
-
-        $this->_commands[$command->getName()] = $command;
+        $this->__commands[$command->getName()] = $command;
         return $command;
     }
 
@@ -141,11 +191,11 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      *
      * @param string $name  The command name
      * @param array $config An optional associative array of configuration settings
-     * @return KControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
+     * @return mixed ControllerToolbarCommand if found, false otherwise.
      */
     public function getCommand($name, $config = array())
     {
-        if(!isset($this->_commands[$name]))
+        if(!isset($this->__commands[$name]))
         {
             //Create the config object
             $command = new KControllerToolbarCommand($name, $config);
@@ -172,7 +222,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
                 }
             }
         }
-        else $command = $this->_commands[$name];
+        else $command = $this->__commands[$name];
 
         return $command;
     }
@@ -185,20 +235,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      */
     public function hasCommand($name)
     {
-        return isset($this->_commands[$name]);
-    }
-
-    /**
-     * Removes a command if exists
-     *
-     * @param string $name  The command name
-     * @return $this
-     */
-    public function removeCommand($name)
-    {
-        unset($this->_commands[$name]);
-
-        return $this;
+        return isset($this->__commands[$name]);
     }
 
     /**
@@ -208,41 +245,41 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      */
     public function getCommands()
     {
-        return $this->_commands;
+        return $this->__commands;
     }
 
     /**
      * Get a new iterator
      *
-     * @return  RecursiveArrayIterator
+     * @return  \RecursiveArrayIterator
      */
     public function getIterator()
     {
-        return new RecursiveArrayIterator($this->getCommands());
+        return new \ArrayIterator($this->getCommands());
     }
 
     /**
      * Reset the commands array
      *
-     * @return  KControllerToolbarAbstract
+     * @return KControllerToolbarAbstract
      */
     public function reset()
     {
-        unset($this->_commands);
-        $this->_commands = array();
+        unset($this->__commands);
+        $this->__commands = array();
         return $this;
     }
 
     /**
-     * Return the command count
+     * Returns the number of toolbar commands.
      *
-     * Required by Countable interface
+     * Required by the Countable interface
      *
-     * @return  integer
+     * @return int
      */
     public function count()
     {
-        return count($this->_commands);
+        return count($this->getCommands());
     }
 
     /**
