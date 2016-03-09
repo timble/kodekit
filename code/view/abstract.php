@@ -465,7 +465,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      */
     public function getContext()
     {
-        $context = new ViewContext();
+        $context = new KViewContext();
         $context->setSubject($this);
         $context->setData($this->getData());
         $context->setParameters($this->getParameters());
