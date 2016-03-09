@@ -135,7 +135,12 @@ class KDispatcherBehaviorPermissible extends KDispatcherBehaviorAbstract
             if (!$permission || (is_string($permission) && strpos($permission, '.') === false))
             {
                 $identifier = $mixer->getIdentifier()->toArray();
-                $identifier['path'] = array('dispatcher', 'permission');
+
+                if($identifier['type'] == 'lib') {
+                    $identifier['path'] = array('permission');
+                } else {
+                    $identifier['path'] = array('dispatcher', 'permission');
+                }
 
                 if ($permission) {
                     $identifier['name'] = $permission;
