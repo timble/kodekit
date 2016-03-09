@@ -118,7 +118,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
             $this->_response->request  = $this->getRequest();
             $this->_response->user     = $this->getUser();
 
-            $this->_response = $this->getObject('dispatcher.response', ObjectConfig::unbox($this->_response));
+            $this->_response = $this->getObject('dispatcher.response', KObjectConfig::unbox($this->_response));
 
             if(!$this->_response instanceof KDispatcherResponseInterface)
             {
@@ -333,7 +333,7 @@ abstract class KDispatcherAbstract extends KControllerAbstract implements KDispa
         //Get the error message
         $message = $exception->getMessage();
         if(empty($message)) {
-            $message = HttpResponse::$status_messages[$code];
+            $message = KHttpResponse::$status_messages[$code];
         }
 
         //Store the exception in the context
