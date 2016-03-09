@@ -88,7 +88,13 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
         if (is_string($authenticator) && strpos($authenticator, '.') === false)
         {
             $identifier = $this->getIdentifier()->toArray();
-            $identifier['path'] = array('dispatcher', 'authenticator');
+
+            if($identifier['type'] == 'lib') {
+                $identifier['path'] = array('authenticator');
+            } else {
+                $identifier['path'] = array('dispatcher', 'authenticator');
+            }
+
             $identifier['name'] = $authenticator;
 
             $identifier = $this->getIdentifier($identifier);
