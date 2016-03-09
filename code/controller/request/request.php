@@ -52,6 +52,9 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     {
         parent::__construct($config);
 
+        // Set the user identifier
+        $this->_user = $config->user;
+
         //Set query parameters
         $this->setQuery($config->query);
 
@@ -60,9 +63,6 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
 
         //Set the format
         $this->setFormat($config->format);
-
-        //Set the user
-        $this->setUser($config->user);
     }
 
     /**
@@ -79,7 +79,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
             'query'    => array(),
             'data'     => array(),
             'format'   => 'html',
-            'user'     => null,
+            'user'     => array(),
             'language' => locale_get_default(),
             'timezone' => date_default_timezone_get(),
         ));
@@ -183,10 +183,23 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Get the user object
      *
+     * @throws UnexpectedValueException	If the user doesn't implement the KUserInterface
      * @return KUserInterface
      */
     public function getUser()
     {
+        if(!$this->_user instanceof KUserInterface)
+        {
+            $this->_user = $this->getObject('user', KObjectConfig::unbox($this->_user));
+
+            if(!$this->_user instanceof KUserInterface)
+            {
+                throw new UnexpectedValueException(
+                    'User: '.get_class($this->_user).' does not implement KUserInterface'
+                );
+            }
+        }
+
         return $this->_user;
     }
 
