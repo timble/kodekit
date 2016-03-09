@@ -47,7 +47,7 @@ interface KDatabaseRowsetInterface extends KDatabaseRowInterface
      * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
      * @return KDatabaseRowsetAbstract
      */
-    public function remove(KObjectHandlable $row);
+    public function remove($row);
 
     /**
      * Checks if the collection contains a specific row
@@ -56,5 +56,5 @@ interface KDatabaseRowsetInterface extends KDatabaseRowInterface
      * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains(KObjectHandlable $row);
+    public function contains($row);
 }

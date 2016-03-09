@@ -47,7 +47,7 @@ interface KModelEntityComposable extends KModelEntityInterface
      * @return KModelEntityComposite
      * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
      */
-    public function remove(KObjectHandlable $entity);
+    public function remove($entity);
 
     /**
      * Checks if the collection contains a specific entity
@@ -55,5 +55,5 @@ interface KModelEntityComposable extends KModelEntityInterface
      * @param   KModelEntityInterface $entity
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains(KObjectHandlable $entity);
+    public function contains($entity);
 }

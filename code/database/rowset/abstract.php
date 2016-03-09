@@ -163,7 +163,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
      * @return KDatabaseRowsetAbstract
      */
-    public function remove(KObjectHandlable $row)
+    public function remove($row)
     {
         if (!$row instanceof KDatabaseRowInterface) {
             throw new InvalidArgumentException('Row needs to implement KDatabaseRowInterface');
@@ -179,7 +179,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains(KObjectHandlable $row)
+    public function contains($row)
     {
         if (!$row instanceof KDatabaseRowInterface) {
             throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');

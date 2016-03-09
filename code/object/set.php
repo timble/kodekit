@@ -66,8 +66,12 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      * @param   KObjectHandlable $object
      * @return  boolean TRUE on success FALSE on failure
      */
-    public function insert(KObjectHandlable $object)
+    public function insert($object)
     {
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
         $result = false;
 
         if ($handle = $object->getHandle())
@@ -87,8 +91,12 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      * @param   KObjectHandlable $object
      * @return  KObjectSet
      */
-    public function remove(KObjectHandlable $object)
+    public function remove($object)
     {
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
         if ($this->offsetExists($object)) {
             $this->offsetUnset($object);
         }
@@ -102,8 +110,12 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      * @param   KObjectHandlable $object
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains(KObjectHandlable $object)
+    public function contains($object)
     {
+        if (!$object instanceof KObjectHandlable) {
+            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        }
+
         return $this->offsetExists($object);
     }
 
