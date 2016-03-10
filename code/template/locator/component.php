@@ -37,12 +37,15 @@ class KTemplateLocatorComponent extends KTemplateLocatorIdentifier
         //Get the package
         $package = $info['package'];
 
+        //Get the domain
+        $domain = $info['domain'];
+
         //Base paths
         if($path = $loader->getLocator('component')->getNamespace('\\')) {
             $paths[] = $path.'/'.$package;
         }
 
-        $namespace = $this->getObject('object.bootstrapper')->getComponentNamespace($package);
+        $namespace = $this->getObject('object.bootstrapper')->getComponentNamespace($package, $domain);
         if($path = $loader->getLocator('component')->getNamespace($namespace)) {
             $paths[] = $path;
         }
