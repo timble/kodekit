@@ -30,13 +30,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
     protected $_components;
 
     /**
-     * Component/domain map
-     *
-     * @var array
-     */
-    protected $_domains;
-
-    /**
      * Namespace/path map
      *
      * @var array
@@ -88,7 +81,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
             $config->bootstrapped   = false;
             $config->directories    = array();
             $config->components     = array();
-            $config->domains        = array();
             $config->namespaces     = array();
             $config->files          = array();
             $config->aliases        = array();
@@ -98,7 +90,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
 
         $this->_directories  = KObjectConfig::unbox($config->directories);
         $this->_components   = KObjectConfig::unbox($config->components);
-        $this->_domains      = KObjectConfig::unbox($config->domains);
         $this->_namespaces   = KObjectConfig::unbox($config->namespaces);
         $this->_files        = KObjectConfig::unbox($config->files);
         $this->_applications = KObjectConfig::unbox($config->applications);
@@ -122,7 +113,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
             'bootstrapped' => false,
             'directories'  => array(),
             'components'   => array(),
-            'domains'      => array(),
             'namespaces'   => array(),
             'files'        => array(),
             'aliases'      => array(),
@@ -236,7 +226,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                     'bootstrapped' => true,
                     'directories'  => $this->_directories,
                     'components'   => $this->_components,
-                    'domains'      => $this->_domains,
                     'namespaces'   => $this->_namespaces,
                     'files'        => $this->_files,
                     'applications' => $this->_applications,
@@ -298,21 +287,14 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
         {
             $this->_components[$identifier] = $path;
 
-            //Only register components if the domain is set.
-            if($domain)
-            {
-                //Set the component domain
-                $this->_domains[$name] = $domain;
+            //Set the component namespac
+            $namespace = $this->getComponentNamespace($name, $domain);
+            $this->getObject('manager')
+                ->getClassLoader()
+                ->getLocator('component')
+                ->registerNamespace($namespace, $path);
 
-                //Set the component namespace
-                $namespace = $this->getComponentNamespace($name);
-                $this->getObject('manager')
-                    ->getClassLoader()
-                    ->getLocator('component')
-                    ->registerNamespace($namespace, $path);
-
-                $this->_namespaces[$namespace] = $path;
-            }
+            $this->_namespaces[$namespace] = $path;
 
             //Register the config file
             $this->registerFile($path .'/resources/config/bootstrapper.php');
@@ -347,7 +329,8 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                 //Get the component name (strip prefix if it exists)
                 $parts = explode('_', (string) $dir);
 
-                if(count($parts) > 1) {
+                if(count($parts) > 1)
+                {
                     array_shift($parts);
                     $name = implode('_', $parts);
                 } else {
@@ -416,23 +399,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
     }
 
     /**
-     * Get a registered component domain
-     *
-     * @param string $name    The component name
-     * @return string|null Returns the component domain if the component is registered. NULL otherwise
-     */
-    public function getComponentDomain($name)
-    {
-        $result = null;
-
-        if(isset($this->_domains[$name])) {
-            $result = $this->_domains[$name];
-        }
-
-        return $result;
-    }
-
-    /**
      * Get a registered component path
      *
      * @param string $name    The component name
@@ -479,10 +445,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      */
     public function getComponentIdentifier($name, $domain = null)
     {
-        if(!isset($domain)) {
-            $domain = $this->getComponentDomain($name);
-        }
-
         if($domain) {
             $hash = 'com://'.$domain.'/'.$name;
         } else {

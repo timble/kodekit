@@ -88,14 +88,6 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
     public function getComponents();
 
     /**
-     * Get a registered component domain
-     *
-     * @param string $name    The component name
-     * @return string Returns the component domain if the component is registered. FALSE otherwise
-     */
-    public function getComponentDomain($name);
-
-    /**
      * Get a registered component path
      *
      * @param string $name    The component name
