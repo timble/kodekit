@@ -20,7 +20,7 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
      *
      * @var array
      */
-    protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back', 'options');
+    protected static $_default_buttons = array('save', 'apply', 'cancel', 'new', 'delete', 'publish', 'unpublish', 'export', 'back');
 
     /**
      * Initializes the config for the object
@@ -194,7 +194,8 @@ class ComKoowaControllerToolbarActionbar extends KControllerToolbarActionbar
                 )
             ));
         }
-        
+
+        $command->label = 'Configure';
         $command->icon = sprintf('icon-32-%s', $icon);
         // Need to do a JRoute call here, otherwise component is turned into option in the query string by our router
         $command->attribs['href'] = JRoute::_('index.php?'.$link, false);
