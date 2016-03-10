@@ -34,7 +34,7 @@ class KTranslatorLocatorComponent extends KTranslatorLocatorIdentifier
         $loader = $this->getObject('manager')->getClassLoader();
 
         //Base paths
-        $namespace = $this->getObject('object.bootstrapper')->getComponentNamespace($info['package']);
+        $namespace = $this->getObject('object.bootstrapper')->getComponentNamespace($info['package'], $info['domain']);
         if($path = $loader->getLocator('component')->getNamespace($namespace)) {
             $paths[] = $path;
         }
