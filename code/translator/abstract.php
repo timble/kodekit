@@ -71,7 +71,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'language'          => 'en-GB',
+            'language'          => locale_get_default(),
             'language_fallback' => 'en-GB',
             'cache'             =>  Koowa::getInstance()->isCache(),
             'cache_namespace'   => 'nooku',
