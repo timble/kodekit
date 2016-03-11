@@ -92,7 +92,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * @param   KModelEntityInterface $entity
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains(KObjectHandlable $entity)
+    public function contains($entity)
     {
         return $this->fetch()->contains($entity);
     }
@@ -106,7 +106,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * @return KModelEntityComposite
      * @throws \InvalidArgumentException if the object doesn't implement ModelEntityInterface
      */
-    public function remove(KObjectHandlable $entity)
+    public function remove($entity)
     {
         return $this->fetch()->remove($entity);
     }

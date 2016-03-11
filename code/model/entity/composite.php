@@ -190,7 +190,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
      * @return KModelEntityComposite
      */
-    public function remove(KObjectHandlable $entity)
+    public function remove($entity)
     {
         if (!$entity instanceof KModelEntityInterface) {
             throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
@@ -206,7 +206,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains(KObjectHandlable $entity)
+    public function contains($entity)
     {
         if (!$entity instanceof KModelEntityInterface) {
             throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
