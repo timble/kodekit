@@ -122,8 +122,16 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
 
             if (!$response->headers->has('Content-Disposition'))
             {
-                // basename does not work if the string starts with a UTF character
-                $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
+                if ($response->headers->has('X-Content-Disposition-Filename'))
+                {
+                    $filename = $response->headers->get('X-Content-Disposition-Filename');
+                    $response->headers->remove('X-Content-Disposition-Filename');
+                }
+                else
+                {
+                    // basename does not work if the string starts with a UTF character
+                    $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
+                }
 
                 // Android cuts file names after #
                 if (stripos($user_agent, 'Android')) {
