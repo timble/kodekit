@@ -287,7 +287,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
         {
             $this->_components[$identifier] = $path;
 
-            //Set the component namespac
+            //Register the component namespace
             $namespace = $this->getComponentNamespace($name, $domain);
             $this->getObject('manager')
                 ->getClassLoader()
@@ -445,7 +445,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      */
     public function getComponentIdentifier($name, $domain = null)
     {
-        if($domain) {
+        if($domain && ($domain != $name)) {
             $hash = 'com://'.$domain.'/'.$name;
         } else {
             $hash = 'com:'.$name;
