@@ -247,57 +247,40 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
     }
 
     /**
-     * Register an application
-     *
-     * @param string  $name  The application name
-     * @param string  $path  The application path
-     * @return KObjectBootstrapper
-     */
-    public function registerApplication($name, $path, $bootstrap = false)
-    {
-        $this->_applications[$name] = $path;
-
-        //Register the components for bootstrapping
-        if($bootstrap)
-        {
-            $this->registerComponents($path);
-            $this->getObject('manager')->getClassLoader()->setBasePath($path);
-        }
-
-        return $this;
-    }
-
-    /**
      * Register a component to be bootstrapped.
      *
      * If the component contains a /resources/config/bootstrapper.php file it will be registered. Class and object
-     * locators will be setup for domain only components.
+     * locators will be setup if the component is bootstrapped
      *
      * @param string $name      The component name
      * @param string $path      The component path
      * @param string $domain    The component domain. Domain is optional and can be NULL
+     * @param bool    $bootstrap If TRUE bootstrap the component. Default TRUE
      * @return KObjectBootstrapper
      */
-    public function registerComponent($name, $path, $domain = null)
+    public function registerComponent($name, $path, $domain = null, $bootstrap = true)
     {
         $identifier = $this->getComponentIdentifier($name, $domain);
 
-        //Prevent registering a component twice
         if(!isset($this->_components[$identifier]))
         {
+            //Register the component path
             $this->_components[$identifier] = $path;
 
-            //Register the component namespace
-            $namespace = $this->getComponentNamespace($name, $domain);
-            $this->getObject('manager')
-                ->getClassLoader()
-                ->getLocator('component')
-                ->registerNamespace($namespace, $path);
+            if($bootstrap)
+            {
+                //Register the component namespace
+                $namespace = $this->getComponentNamespace($name, $domain);
+                $this->getObject('manager')
+                    ->getClassLoader()
+                    ->getLocator('component')
+                    ->registerNamespace($namespace, $path);
 
-            $this->_namespaces[$namespace] = $path;
+                $this->_namespaces[$namespace] = $path;
 
-            //Register the config file
-            $this->registerFile($path .'/resources/config/bootstrapper.php');
+                //Register the config file
+                $this->registerFile($path .'/resources/config/bootstrapper.php');
+            }
         }
 
         return $this;
@@ -310,9 +293,10 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      *
      * @param string  $directory
      * @param string $domain    The component domain. Domain is optional and can be NULL
+     * @param bool    $bootstrap If TRUE bootstrap all the components in the directory. Default TRUE
      * @return KObjectBootstrapper
      */
-    public function registerComponents($directory, $domain = null)
+    public function registerComponents($directory, $domain = null, $bootstrap = true)
     {
         if(!isset($this->_directories[$directory]))
         {
@@ -337,7 +321,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                     $name = $parts[0];
                 }
 
-                $this->registerComponent($name, $path, $domain);
+                $this->registerComponent($name, $path, $domain, $bootstrap);
             }
 
             $this->_directories[$directory] = true;
@@ -359,33 +343,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
         }
 
         return $this;
-    }
-
-    /**
-     * Get the registered applications
-     *
-     * @return array
-     */
-    public function getApplications()
-    {
-        return array_keys($this->_applications);
-    }
-
-    /**
-     * Get an application path
-     *
-     * @param string  $name   The application name
-     * @return string|null Returns the application path if the application was registered. NULL otherwise
-     */
-    public function getApplicationPath($name)
-    {
-        $result = null;
-
-        if(isset($this->_applications[$name])) {
-            $result = $this->_applications[$name];
-        }
-
-        return $result;
     }
 
     /**
