@@ -676,7 +676,10 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
             //Set loader basepath if we are locating inside an application
             if($this->isRegistered('object.bootstrapper'))
             {
-                if($path = $this->getObject('object.bootstrapper')->getApplicationPath($identifier->domain)) {
+                $package = $identifier->package;
+                $domain  = $identifier->domain;
+
+                if($path = $this->getObject('object.bootstrapper')->getComponentPath($package, $domain)) {
                     $this->getClassLoader()->setBasePath($path);
                 }
             }
