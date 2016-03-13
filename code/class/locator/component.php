@@ -83,7 +83,7 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             if(!count($parts))
             {
                 //Exception for framework components. Follow library structure. Don't load classes from root.
-                if(isset($this->_namespaces[$namespace])) {
+                if($this->getNamespace($namespace)) {
                     $path = $file.'/'.$file;
                 } else {
                     $path = $file;
@@ -94,25 +94,11 @@ class KClassLocatorComponent extends KClassLocatorAbstract
             //Switch basepath
             if ($this->getNamespace($namespace)) {
                 $basepath = $this->getNamespace($namespace);
-            } else {
-                $basepath = $basepath.'/com_'.$package;
             }
 
             $result =  $basepath.'/'.$path.'.php';
             if(!is_file($result)) {
                 $result = $basepath.'/'.$path.'/'.$file.'.php';
-            }
-
-            // Check plural views/ folder for view classes
-            if (!is_file($result) && strpos($result, '/view/') !== false)
-            {
-                $count         = 1;
-                $singular_path = str_replace('view/', 'views/', $path, $count);
-
-                $result =  $basepath.'/'.$singular_path.'.php';
-                if(!is_file($result)) {
-                    $result = $basepath.'/'.$singular_path.'/'.$file.'.php';
-                }
             }
 
             return $result;
