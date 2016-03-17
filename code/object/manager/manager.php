@@ -671,29 +671,15 @@ final class KObjectManager implements KObjectInterface, KObjectManagerInterface,
         $class = $this->__registry->getClass($identifier);
 
         //If the class is FALSE we have tried to locate it already, do not locate it again.
-        if($class !== false)
+        if(empty($class) && ($class !== false))
         {
-            //Set loader basepath if we are locating inside an application
-            if($this->isRegistered('object.bootstrapper'))
+            $class = $this->_locators[$identifier->getType()]->locate($identifier, $fallback);
+
+            //If we are falling back set the class in the registry
+            if($fallback)
             {
-                $package = $identifier->package;
-                $domain  = $identifier->domain;
-
-                if($path = $this->getObject('object.bootstrapper')->getComponentPath($package, $domain)) {
-                    $this->getClassLoader()->setBasePath($path);
-                }
-            }
-
-            if(empty($class))
-            {
-                $class = $this->_locators[$identifier->getType()]->locate($identifier, $fallback);
-
-                //If we are falling back set the class in the registry
-                if($fallback)
-                {
-                    if(!$this->__registry->get($identifier) instanceof KObjectInterface) {
-                        $this->__registry->setClass($identifier, $class);
-                    }
+                if(!$this->__registry->get($identifier) instanceof KObjectInterface) {
+                    $this->__registry->setClass($identifier, $class);
                 }
             }
         }
