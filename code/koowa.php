@@ -122,14 +122,7 @@ class Koowa
         $manager = KObjectManager::getInstance($config);
 
         //Register the component class locator
-        $manager->getClassLoader()->registerLocator(new KClassLocatorComponent(
-            array(
-                'namespaces' => array(
-                    '\\'    => $this->_base_path.'/components',
-                    'Koowa' => dirname(dirname(__FILE__))
-                )
-            )
-        ));
+        $manager->getClassLoader()->registerLocator(new KClassLocatorComponent());
 
         //Register the component object locator
         $manager->registerLocator('lib:object.locator.component');
