@@ -23,30 +23,6 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
     protected static $_name = 'com';
 
     /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options.
-     * @return  void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'sequence' => array(
-                'Com<Package><Class>',
-                'Com<Package><Path><File>',
-                'ComKoowa<Path><File>',
-                'ComKoowa<Path>Default',
-                'K<Path><File>',
-                'K<Path>Default'
-            )
-        ));
-
-        parent::_initialize($config);
-    }
-
-    /**
      * Returns a fully qualified class name for a given identifier.
      *
      * @param KObjectIdentifier $identifier An identifier object
@@ -84,9 +60,42 @@ class KObjectLocatorComponent extends KObjectLocatorAbstract
             'package'    => $package,
             'domain'     => $domain,
             'path'       => $path,
-            'file'       => $file
+            'file'       => $file,
         );
 
         return $this->find($info, $fallback);
+    }
+
+    /**
+     * Get the list of class templates for an identifier
+     *
+     * @param string $identifier The package identifier
+     * @return array The class templates for the identifier
+     */
+    public function getClassTemplates($identifier)
+    {
+        //Identifier
+        $templates = array();
+
+        //Fallback
+        if($namespaces = $this->getIdentifierNamespaces($identifier))
+        {
+            foreach($namespaces as $namespace)
+            {
+                //Handle class prefix vs class namespace
+                if(strpos($namespace, '\\')) {
+                    $namespace .= '\\';
+                }
+
+                $templates[] = $namespace.'<Class>';
+                $templates[] = $namespace.'<Path><File>';
+            }
+        }
+
+        //Library
+        $templates[] = 'K<Path><File>';
+        $templates[] = 'K<Path>Default';
+
+        return $templates;
     }
 }

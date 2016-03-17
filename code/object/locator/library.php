@@ -23,22 +23,18 @@ class KObjectLocatorLibrary extends KObjectLocatorAbstract
     protected static $_name = 'lib';
 
     /**
-     * Initializes the options for the object
+     * Get the list of location templates for an identifier
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options.
-     * @return  void
+     * @param string $identifier The package identifier
+     * @return string The class location templates for the identifier
      */
-    protected function _initialize(KObjectConfig $config)
+    public function getClassTemplates($identifier)
     {
-        $config->append(array(
-            'sequence' => array(
-                'K<Package><Class>',
-                'K<Package><Path>Default',
-            )
-        ));
+        $templates = array(
+            'K<Package><Class>',
+            'K<Package><Path>Default',
+        );
 
-        parent::_initialize($config);
+        return $templates;
     }
 }

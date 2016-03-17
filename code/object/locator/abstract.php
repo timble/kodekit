@@ -23,40 +23,11 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     protected static $_name = '';
 
     /**
-     * The class prefix sequence in FIFO order
+     * Locator identifiers
      *
      * @var array
      */
-    protected $_sequence = array();
-
-    /**
-     * Constructor.
-     *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_sequence = KObjectConfig::unbox($config->sequence);
-    }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param  KObjectConfig $config An optional KObjectConfig object with configuration options.
-     * @return  void
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'sequence' => array(),
-        ));
-
-        parent::_initialize($config);
-    }
+    protected $_identifiers = array();
 
     /**
      * Returns a fully qualified class name for a given identifier.
@@ -79,7 +50,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
             'package'    => $package,
             'domain'     => $domain,
             'path'       => $path,
-            'file'       => $file
+            'file'       => $file,
         );
 
         return $this->find($info, $fallback);
@@ -94,14 +65,22 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      */
     public function find(array $info, $fallback = true)
     {
-        $result = false;
+        $result   = false;
+
+        if(!empty($info['domain'])) {
+            $identifier = $this->getName().'://'.$info['domain'].'/'.$info['package'];
+        } else {
+            $identifier = $this->getName().':'.$info['package'];
+        }
+
+        $templates = $this->getClassTemplates(strtolower($identifier));
 
         //Find the class
-        foreach($this->_sequence as $template)
+        foreach($templates as $template)
         {
             $class = str_replace(
-                array('<Package>'     ,'<Path>'      ,'<File>'      , '<Class>'),
-                array($info['package'], $info['path'], $info['file'], $info['class']),
+                array('<Domain>',      '<Package>'     ,'<Path>'      ,'<File>'      , '<Class>'),
+                array($info['domain'], $info['package'], $info['path'], $info['file'], $info['class']),
                 $template
             );
 
@@ -120,6 +99,38 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     }
 
     /**
+     * Get the list of class templates for an identifier
+     *
+     * @param string $identifier The package identifier
+     * @return array The class templates for the identifier
+     */
+    abstract public function getClassTemplates($identifier);
+
+    /**
+     * Register an identifier
+     *
+     * @param  string       $identifier
+     * @param  string|array $namespace(s) Sequence of fallback namespaces
+     * @return KObjectLocatorAbstract
+     */
+    public function registerIdentifier($identifier, $namespaces)
+    {
+        $this->_identifiers[$identifier] = (array) $namespaces;
+        return $this;
+    }
+
+    /**
+     * Get the namespace(s) for the identifier
+     *
+     * @param string $identifier The package identifier
+     * @return array|false The namespace(s) or FALSE if the identifier does not exist.
+     */
+    public function getIdentifierNamespaces($identifier)
+    {
+        return isset($this->_identifiers[$identifier]) ?  $this->_identifiers[$identifier] : false;
+    }
+
+    /**
      * Get the name
      *
      * @return string
@@ -127,15 +138,5 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     public static function getName()
     {
         return static::$_name;
-    }
-
-    /**
-     * Get the locator fallback sequence
-     *
-     * @return array
-     */
-    public function getSequence()
-    {
-        return $this->_sequence;
     }
 }
