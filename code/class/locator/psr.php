@@ -29,13 +29,12 @@ class KClassLocatorPsr extends KClassLocatorAbstract
      * Get the path based on a class name
      *
      * @param  string $class     The class name
-     * @param  string $basepath  The base path
      * @return string|boolean   Returns the path on success FALSE on failure
      */
-    public function locate($class, $basepath = null)
+    public function locate($class)
     {
         //Find the class
-        foreach($this->getNamespaces() as $prefix => $basepath)
+        foreach($this->getNamespaces() as $prefix => $basepaths)
         {
             if(strpos('\\'.$class, '\\'.$prefix) !== 0) {
                 continue;
@@ -47,9 +46,12 @@ class KClassLocatorPsr extends KClassLocatorAbstract
 
             $path = str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $class) . '.php';
 
-            $file = $basepath.'/'.$path;
-            if (is_file($file)) {
-                return $file;
+            foreach($basepaths as $basepath)
+            {
+                $result = $basepath . '/' .$path;
+                if (is_file($result)) {
+                    break;
+                }
             }
         }
 

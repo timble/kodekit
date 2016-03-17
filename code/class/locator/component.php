@@ -16,26 +16,26 @@
  *
  * Class names need to be prefixed with 'Com'. Each folder in the file structure must be represented in the class name.
  *
- * Classname : Com[Name][Path][To][File]
- * Location  : .../components/com_name/path/to/file.php
+ * Classname : [Name][Path][To][File]
+ * Location  : .../components/name/path/to/file.php
  *
  * Exceptions
  *
  * 1. An exception is made for files where the last segment of the file path and the file name are the same. In this case
  * class name can use a shorter syntax where the last segment of the path is omitted.
  *
- * Location  : .../components/com_foo/bar/bar.php
- * Classname : ComFooBar instead of ComFooBarBar
+ * Location  : .../components/foo/bar/bar.php
+ * Classname : FooBar instead of FooBarBar
  *
  * Note : This only applies to classes that are loaded from a registered component namespace when a class is located in
- * the global namespace it will follow the default rule eg, ComFooBar will be located in .../components/com_foo/bar.php
+ * the global namespace it will follow the default rule eg, FooBar will be located in .../components/foo/bar.php
  *
  * 2. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
  * the word 'Exception' is transformed to lower case.  Exceptions are loaded from the .../Exception folder relative to
  * their path.
  *
- * Classname : Com[Name][Path][To]Exception[FileNameForException]
- * Location  : .../components/com_foo/path/to/exception/filenameforexception.php
+ * Classname : [Name][Path][To]Exception[FileNameForException]
+ * Location  : .../components/foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Koowa\Library\Class\Locator
@@ -53,52 +53,61 @@ class KClassLocatorComponent extends KClassLocatorAbstract
      * Get a fully qualified path based on a class name
      *
      * @param  string $class     The class name
-     * @param  string $basepath  The base path
      * @return string|bool       Returns the path on success FALSE on failure
      */
-    public function locate($class, $basepath = null)
+    public function locate($class)
     {
+        $result = false;
+
         //Find the class
-        if (substr($class, 0, 3) === 'Com')
+        foreach($this->getNamespaces() as $namespace => $basepaths)
         {
+            if(empty($namespace) && strpos($class, '\\')) {
+                continue;
+            }
+
+            if(strpos('\\'.$class, '\\'.$namespace) !== 0) {
+                continue;
+            }
+
+            //Remove the namespace from the class name
+            $classname = ltrim(substr($class, strlen($namespace)), '\\');
+
             /*
              * Exception rule for Exception classes
              *
              * Transform class to lower case to always load the exception class from the /exception/ folder.
              */
-            if ($pos = strpos($class, 'Exception'))
+            if($pos = strpos($classname, 'Exception'))
             {
-                $filename = substr($class, $pos + strlen('Exception'));
-                $class    = str_replace($filename, ucfirst(strtolower($filename)), $class);
+                $filename  = substr($classname, $pos + strlen('Exception'));
+                $classname = str_replace($filename, ucfirst(strtolower($filename)), $classname);
             }
 
-            $word    = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $class));
-            $parts   = explode(' ', $word);
+            $parts = explode(' ', strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname)));
 
-            array_shift($parts);
-            $package   = array_shift($parts);
-            $namespace = ucfirst($package);
-            $file 	   = array_pop($parts);
+            $file  = array_pop($parts);
 
-            if(!count($parts))
+            if(count($parts)){
+                $path = implode('/', $parts) . '/' . $file;
+            } else {
+                $path = $file . '/' . $file;
+            }
+
+            $paths = array(
+                $path . '.php',
+                $path . '/' . $file . '.php'
+            );
+
+            foreach($basepaths as $basepath)
             {
-                //Exception for framework components. Follow library structure. Don't load classes from root.
-                if($this->getNamespace($namespace)) {
-                    $path = $file.'/'.$file;
-                } else {
-                    $path = $file;
+                foreach($paths as $path)
+                {
+                    $result = $basepath . '/' .$path;
+                    if (is_file($result)) {
+                        break (2);
+                    }
                 }
-            }
-            else $path = implode('/', $parts).'/'.$file;
-
-            //Switch basepath
-            if ($this->getNamespace($namespace)) {
-                $basepath = $this->getNamespace($namespace);
-            }
-
-            $result =  $basepath.'/'.$path.'.php';
-            if(!is_file($result)) {
-                $result = $basepath.'/'.$path.'/'.$file.'.php';
             }
 
             return $result;
