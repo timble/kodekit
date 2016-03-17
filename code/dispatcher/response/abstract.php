@@ -234,11 +234,12 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     /**
      * Check if the response is streamable
      *
-     * A response is considered streamable, if the Accept-Ranges does not have value 'none' or if the Transfer-Encoding
-     * is set the chunked.
+     * A response is considered streamable, if the Accept-Ranges does not have value 'none' or if the
+     * Transfer-Encoding is set the chunked.
      *
-     * If the request is made by a IE user agent for a PDF file that is not attached the response will not be streamable.
-     * The build in IE PDF viewer cannot handle inline rendering of PDF files when the file is streamed.
+     * If the request is made for a PDF file that is not attached the response will not be streamable.
+     * The build in PDF viewer in IE and Chrome cannot handle inline rendering of PDF files when the
+     * file is streamed.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.5
      * @return bool
@@ -247,9 +248,9 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     {
         $request = $this->getRequest();
 
-        $isPDF        = $this->getContentType() == 'application/pdf';
-        $isInline     = !$request->isDownload();
-        $isSeekable   = $this->getStream()->isSeekable();
+        $isPDF        = (bool) $this->getContentType() == 'application/pdf';
+        $isInline     = (bool) !$request->isDownload();
+        $isSeekable   = (bool) $this->getStream()->isSeekable();
 
         if(!($isPDF && $isInline) && $isSeekable)
         {
