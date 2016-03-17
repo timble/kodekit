@@ -174,7 +174,7 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
         $option = $this->getIdentifier()->package;
         $view   = $this->getController()->getView()->getName();
 
-        $command->href = 'option=com_'.$option.'&view='.$view.'&'.$query;
+        $command->href = 'component='.$option.'&view='.$view.'&'.$query;
     }
 
     /**
