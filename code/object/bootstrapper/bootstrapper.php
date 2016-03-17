@@ -16,14 +16,14 @@
 final class KObjectBootstrapper extends KObject implements KObjectBootstrapperInterface, KObjectSingleton
 {
     /**
-     * List of registered directories
+     * List of bootstrapped directories
      *
      * @var array
      */
     protected $_directories;
 
     /**
-     * List of registered components
+     * List of bootstrapped components
      *
      * @var array
      */
@@ -35,13 +35,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      * @var array
      */
     protected $_namespaces;
-
-    /**
-     * List of registered applications
-     *
-     * @var array
-     */
-    protected $_applications;
 
     /**
      * List of config files
@@ -85,17 +78,14 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
             $config->files          = array();
             $config->aliases        = array();
             $config->identifiers    = array();
-            $config->applications   = array();
         }
 
         $this->_directories  = KObjectConfig::unbox($config->directories);
         $this->_components   = KObjectConfig::unbox($config->components);
         $this->_namespaces   = KObjectConfig::unbox($config->namespaces);
         $this->_files        = KObjectConfig::unbox($config->files);
-        $this->_applications = KObjectConfig::unbox($config->applications);
         $this->_aliases      = KObjectConfig::unbox($config->aliases);
         $this->_identifiers  = KObjectConfig::unbox($config->identifiers);
-
     }
 
     /**
@@ -117,7 +107,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
             'files'        => array(),
             'aliases'      => array(),
             'identifiers'  => array(),
-            'applications' => array(),
         ));
 
         parent::_initialize($config);
@@ -132,21 +121,9 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      */
     public function bootstrap()
     {
-        $identifiers = $this->_identifiers;
-        $aliases     = $this->_aliases;
-
         if(!$this->isBootstrapped())
         {
             $manager = $this->getObject('manager');
-
-            /*
-             * Setup the component class locator
-             *
-             * Locators are always setup as the  cannot be cached in the registry objects.
-             */
-            foreach($this->_namespaces as $namespace => $path) {
-                $manager->getClassLoader()->getLocator('component')->registerNamespace($namespace, $path);
-            }
 
             /*
              * Load resources
@@ -157,16 +134,18 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
             {
                 $factory = $this->getObject('object.config.factory');
 
-                foreach($this->_files as $filename)
+                foreach($this->_files as $path)
                 {
-                    $array = $factory->fromFile($filename, false);
+                    $array = $factory->fromFile($path, false);
 
+                    //Priority
                     if(isset($array['priority'])) {
                         $priority = $array['priority'];
                     } else {
                         $priority = self::PRIORITY_NORMAL;
                     }
 
+                    //Aliases
                     if(isset($array['aliases']))
                     {
                         if(!isset($aliases[$priority])) {
@@ -176,6 +155,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                         $aliases[$priority] = array_merge($aliases[$priority], $array['aliases']);;
                     }
 
+                    //Identifiers
                     if(isset($array['identifiers']))
                     {
                         if(!isset($identifiers[$priority])) {
@@ -187,10 +167,10 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                 }
 
                 /*
-                * Set the identifiers
-                *
-                * Collect identifiers by priority and then flatten the array.
-                */
+                 * Set the identifiers
+                 *
+                 * Collect identifiers by priority and then flatten the array.
+                 */
                 $identifiers_flat = array();
 
                 krsort($identifiers);
@@ -203,10 +183,10 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                 }
 
                 /*
-                * Set the aliases
-                *
-                * Collect aliases by priority and then flatten the array.
-                */
+                 * Set the aliases
+                 *
+                 * Collect aliases by priority and then flatten the array.
+                 */
                 $aliases_flat = array();
 
                 foreach ($aliases as $priority => $merges) {
@@ -228,62 +208,37 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                     'components'   => $this->_components,
                     'namespaces'   => $this->_namespaces,
                     'files'        => $this->_files,
-                    'applications' => $this->_applications,
                     'aliases'      => $aliases_flat,
                 ));
 
                 $manager->setIdentifier($identifier)
-                        ->setObject('lib:object.bootstrapper', $this);
+                    ->setObject('lib:object.bootstrapper', $this);
             }
             else
             {
-                foreach($aliases as $alias => $identifier) {
+                foreach($this->_aliases as $alias => $identifier) {
                     $manager->registerAlias($identifier, $alias);
                 }
             }
 
+            /*
+             * Setup the component class locator
+             *
+             * Locators are always setup as the  cannot be cached in the registry objects.
+             */
+            foreach($this->_namespaces as $identifier => $namespaces)
+            {
+                //Register the namespace in the component class locator
+                foreach($namespaces as $namespace => $paths) {
+                    $manager->getClassLoader()->getLocator('component')->registerNamespace($namespace, $paths);
+                }
+
+                //Register the namespace in the component objects locator
+                $manager->getLocator('com')->registerIdentifier($identifier, array_keys($namespaces));
+            }
+
             $this->_bootstrapped = true;
         }
-    }
-
-    /**
-     * Register a component to be bootstrapped.
-     *
-     * If the component contains a /resources/config/bootstrapper.php file it will be registered. Class and object
-     * locators will be setup if the component is bootstrapped
-     *
-     * @param string $name      The component name
-     * @param string $path      The component path
-     * @param string $domain    The component domain. Domain is optional and can be NULL
-     * @param bool    $bootstrap If TRUE bootstrap the component. Default TRUE
-     * @return KObjectBootstrapper
-     */
-    public function registerComponent($name, $path, $domain = null, $bootstrap = true)
-    {
-        $identifier = $this->getComponentIdentifier($name, $domain);
-
-        if(!isset($this->_components[$identifier]))
-        {
-            //Register the component path
-            $this->_components[$identifier] = $path;
-
-            if($bootstrap)
-            {
-                //Register the component namespace
-                $namespace = $this->getComponentNamespace($name, $domain);
-                $this->getObject('manager')
-                    ->getClassLoader()
-                    ->getLocator('component')
-                    ->registerNamespace($namespace, $path);
-
-                $this->_namespaces[$namespace] = $path;
-
-                //Register the config file
-                $this->registerFile($path .'/resources/config/bootstrapper.php');
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -292,36 +247,21 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      * All the first level directories are assumed to be component folders and will be registered.
      *
      * @param string  $directory
-     * @param string $domain    The component domain. Domain is optional and can be NULL
      * @param bool    $bootstrap If TRUE bootstrap all the components in the directory. Default TRUE
      * @return KObjectBootstrapper
      */
-    public function registerComponents($directory, $domain = null, $bootstrap = true)
+    public function registerComponents($directory, $bootstrap = true)
     {
         if(!isset($this->_directories[$directory]))
         {
-            foreach (new DirectoryIterator($directory) as $dir)
+            foreach (new \DirectoryIterator($directory) as $dir)
             {
                 //Only get the component directory names
                 if ($dir->isDot() || !$dir->isDir() || !preg_match('/^[a-zA-Z]+/', $dir->getBasename())) {
                     continue;
                 }
 
-                //Get the component path
-                $path = $dir->getPathname();
-
-                //Get the component name (strip prefix if it exists)
-                $parts = explode('_', (string) $dir);
-
-                if(count($parts) > 1)
-                {
-                    array_shift($parts);
-                    $name = implode('_', $parts);
-                } else {
-                    $name = $parts[0];
-                }
-
-                $this->registerComponent($name, $path, $domain, $bootstrap);
+                $this->registerComponent($dir->getPathname(), $bootstrap);
             }
 
             $this->_directories[$directory] = true;
@@ -331,15 +271,101 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
     }
 
     /**
-     * Register a configuration file to be bootstrapped
+     * Register a component to be bootstrapped.
      *
-     * @param string $filename The absolute path to the file
+     * Class and object locators will be setup based on the information in the composer.json file.
+     * If the component contains a /resources/config/bootstrapper.php file it will be registered.
+     *
+     * @param string $path          The component path
+     * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
+     * @param array  $directories   Additional array of directories
      * @return KObjectBootstrapper
      */
-    public function registerFile($filename)
+    public function registerComponent($path, $bootstrap = true, array $directories = array())
     {
-        if(file_exists($filename)) {
-            $this->_files[$filename] = $filename;
+        $hash = md5($path);
+
+        if(!isset($this->_components[$hash]))
+        {
+            if(file_exists($path.'/component.json'))
+            {
+                $array = $this->getObject('object.config.factory')->fromFile($path . '/component.json');
+
+                if (isset($array['identifier']))
+                {
+                    $identifier = $array['identifier'];
+
+                    //Set the components
+                    if(!isset($this->_components[$identifier])) {
+                        $this->_components[$identifier] = array($path);
+                    } else {
+                        $this->_components[$identifier][] = $path;
+                    }
+
+                    //Merge the additional directories
+                    $this->_components[$identifier] = array_merge(
+                        $this->_components[$identifier],
+                        $directories
+                    );
+
+                    //Set the namespace
+                    if ($array['namespace'])
+                    {
+                        $namespace = $array['namespace'];
+
+                        if(isset($this->_namespaces[$identifier]))
+                        {
+                            if(isset($this->_namespaces[$identifier][$namespace])) {
+                                $this->_namespaces[$identifier][$namespace][] = $path;
+                            } else {
+                                $this->_namespaces[$identifier][$namespace] = array($path);
+                            }
+                        }
+                        else $this->_namespaces[$identifier] = array($namespace => array($path));
+
+                        //Merge the additional directories
+                        $this->_namespaces[$identifier][$namespace] = array_merge(
+                            $this->_namespaces[$identifier][$namespace],
+                            $directories
+                        );
+                    }
+
+                    if($array['extends'])
+                    {
+                        $extends = $array['extends'];
+
+                        if(isset($this->_namespaces[$extends]))
+                        {
+                            $this->_namespaces[$identifier] = array_merge(
+                                $this->_namespaces[$identifier],
+                                $this->_namespaces[$extends]
+                            );
+                        }
+                    }
+                }
+
+                //Register the config file
+                if ($bootstrap && file_exists($path . '/resources/config/bootstrapper.php')) {
+                    $this->registerFile($path . '/resources/config/bootstrapper.php');
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Register a configuration file to be bootstrapped
+     *
+     * @param string $path  The absolute path to the file
+     * @return KObjectBootstrapper
+     */
+    public function registerFile($path)
+    {
+        $hash = md5($path);
+
+        if(!isset($this->_files[$hash])) {
+            $this->_files[$hash] = $path;
         }
 
         return $this;
@@ -348,11 +374,42 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
     /**
      * Get the registered components
      *
+     * @param string $domain  The component domain. Domain is optional and can be NULL
      * @return array
      */
-    public function getComponents()
+    public function getComponents($domain = null)
     {
-        return array_keys($this->_components);
+        $components = $result = array_keys($this->_components);
+
+        if($domain)
+        {
+            foreach($components as $key => $component)
+            {
+                if(strpos($component, 'com://'.$domain) !== false) {
+                    unset($components[$key]);
+                }
+            }
+        }
+
+        return $components;
+    }
+
+    /**
+     * Get a hash based on a name and domain
+     *
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return string The hash
+     */
+    public function getComponentIdentifier($name, $domain = null)
+    {
+        if($domain && ($domain != $name)) {
+            $hash = 'com://'.$domain.'/'.$name;
+        } else {
+            $hash = 'com:'.$name;
+        }
+
+        return $hash;
     }
 
     /**
@@ -372,43 +429,6 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
         }
 
         return $result;
-    }
-
-    /**
-     * Get a registered component domain
-     *
-     * @param string $name    The component name
-     * @param string $domain  The component domain. Domain is optional and can be NULL
-     * @return string|null Returns the component class namespace if the component is registered. NULL otherwise
-     */
-    public function getComponentNamespace($name, $domain = null)
-    {
-        $result = null;
-
-        $identifier = $this->getComponentIdentifier($name, $domain);
-        if(isset($this->_components[$identifier])) {
-            $result = ucfirst($name);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get a hash based on a name and domain
-     *
-     * @param string $name    The component name
-     * @param string $domain  The component domain. Domain is optional and can be NULL
-     * @return string The hash
-     */
-    public function getComponentIdentifier($name, $domain = null)
-    {
-        if($domain && ($domain != $name)) {
-            $hash = 'com://'.$domain.'/'.$name;
-        } else {
-            $hash = 'com:'.$name;
-        }
-
-        return $hash;
     }
 
     /**

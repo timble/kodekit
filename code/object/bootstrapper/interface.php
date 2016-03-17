@@ -32,38 +32,36 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
     public function bootstrap();
 
     /**
-     * Register a component to be bootstrapped.
-     *
-     * If the component contains a /resources/config/bootstrapper.php file it will be registered. Class and object
-     * locators will be setup if the component is bootstrapped
-     *
-     * @param string $name      The component name
-     * @param string $path      The component path
-     * @param string $domain    The component domain. Domain is optional and can be NULL
-     * @param bool    $bootstrap If TRUE bootstrap the component. Default TRUE
-     * @return KObjectBootstrapper
-     */
-    public function registerComponent($name, $path, $domain = null, $bootstrap = true);
-
-    /**
      * Register components from a directory to be bootstrapped
      *
      * All the first level directories are assumed to be component folders and will be registered.
      *
      * @param string  $directory
-     * @param string $domain    The component domain. Domain is optional and can be NULL
      * @param bool    $bootstrap If TRUE bootstrap all the components in the directory. Default TRUE
      * @return KObjectBootstrapper
      */
-    public function registerComponents($directory, $domain = null, $bootstrap = true);
+    public function registerComponents($directory, $bootstrap = true);
+
+    /**
+     * Register a component to be bootstrapped.
+     *
+     * Class and object locators will be setup based on the information in the composer.json file.
+     * If the component contains a /resources/config/bootstrapper.php file it will be registered.
+     *
+     * @param string $path          The component path
+     * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
+     * @param array  $directories   Additional array of directories
+     * @return KObjectBootstrapper
+     */
+    public function registerComponent($path, $bootstrap = true, array $directories = array());
 
     /**
      * Register a configuration file to be bootstrapped
      *
-     * @param string $filename The absolute path to the file
+     * @param string $path  The absolute path to the file
      * @return KObjectBootstrapperInterface
      */
-    public function registerFile($filename);
+    public function registerFile($path);
 
     /**
      * Get the registered components
@@ -80,15 +78,6 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      * @return string Returns the component path if the component is registered. FALSE otherwise
      */
     public function getComponentPath($name, $domain = null);
-
-    /**
-     * Get a registered component domain
-     *
-     * @param string $name    The component name
-     * @param string $domain  The component domain. Domain is optional and can be NULL
-     * @return string|null Returns the component class namespace if the component is registered. NULL otherwise
-     */
-    public function getComponentNamespace($name, $domain = null);
 
     /**
      * Get a hash based on a name and domain
