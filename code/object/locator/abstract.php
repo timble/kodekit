@@ -65,8 +65,10 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      */
     public function find(array $info, $fallback = true)
     {
-        $result   = false;
+        $result = false;
+        $missed = array();
 
+        //Get the class templates
         if(!empty($info['domain'])) {
             $identifier = $this->getName().'://'.$info['domain'].'/'.$info['package'];
         } else {
@@ -84,7 +86,8 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
                 $template
             );
 
-            if(class_exists($class))
+            //Do not try to locate a class twice
+            if(!isset($missed[$class]) && class_exists($class))
             {
                 $result = $class;
                 break;
@@ -93,6 +96,9 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
             if(!$fallback) {
                 break;
             }
+
+            //Mark the class
+            $missed[$class] = false;
         }
 
         return $result;
