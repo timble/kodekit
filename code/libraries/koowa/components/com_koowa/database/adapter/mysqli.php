@@ -50,10 +50,61 @@ class ComKoowaDatabaseAdapterMysqli extends KDatabaseAdapterMysqli
     {
         $db = JFactory::getDBO();
 
+        //Set the table prefix
         $config->append(array(
-            'connection'   => $db->getConnection(),
             'table_prefix' => $db->getPrefix(),
         ));
+
+        //Set the database connection
+        if (false/*JFactory::getDbo() instanceof JDatabaseDriverMysqli || JFactory::getDbo() instanceof JDatabaseMySQLi*/)
+        {
+            $config->append(array(
+                'connection'   => $db->getConnection(),
+            ));
+        }
+        else
+        {
+            $conf = JFactory::getConfig();
+            $host = $conf->get('host');
+
+            /*
+             * Unlike mysql_connect(), mysqli_connect() takes the port and socket as separate arguments. Therefore, we
+             * have to extract them from the host string.
+             */
+            $tmp = substr(strstr($host, ':'), 1);
+            if (!empty($tmp))
+            {
+                // Get the port number or socket name
+                if (is_numeric($tmp))
+                {
+                    $config->append(array(
+                        'port' => $tmp
+                    ));
+                }
+                else
+                {
+                    $config->append(array(
+                        'socket' => $tmp
+                    ));
+                }
+
+                // Extract the host name only
+                $host = substr($host, 0, strlen($host) - (strlen($tmp) + 1));
+
+                // This will take care of the following notation: ":3306"
+                if ($host == '') {
+                    $host = 'localhost';
+                }
+            }
+
+            $config->append(array(
+                'auto_connect' => true,
+                'host'         => $host,
+                'username'     => $conf->get('user'),
+                'password'     => $conf->get('password'),
+                'database'     => $conf->get('db'),
+            ));
+        }
 
         parent::_initialize($config);
     }
