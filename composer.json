@@ -1,15 +1,19 @@
 {
-    "name": "nooku/nooku-framework",
-    "license": "GPLv3",
-    "description": "Nooku Framework is an open-source extension framework for Joomla",
+    "name": "timble/kodekit",
+    "license": "MPLv2",
+    "description": "Kodekit is a Component Framework",
     "keywords": [
-        "joomla",
-        "extension",
         "framework",
-        "nooku"
+        "component",
+        "kodekit"
     ],
-    "homepage": "https://github.com/nooku/nooku-framework",
+    "homepage": "https://github.com/timble/kodekit",
     "authors": [
+        {
+            "name": "Johan Janssens",
+            "email": "johan@janssens.me",
+            "homepage": "http://about.me/johanjanssens"
+        },
         {
             "name": "Timble",
             "email": "info@timble.net",
