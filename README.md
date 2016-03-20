@@ -58,7 +58,7 @@ See the list of [contributors](https://github.com/timble/kodekit/contributors).
 
 ## License 
 
-Kodekit is free and open-source software licensed under the [GPLv3 license](LICENSE.txt).
+Kodekit is free and open-source software licensed under the [MPL v2.0 license](LICENSE.txt).
 
 ## Community
 
