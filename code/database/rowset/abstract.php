@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Database Rowset
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Rowset
+ * @package Kodekit\Library\Database\Rowset
  */
-abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRowsetInterface
+abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowsetInterface
 {
     /**
      * Name of the identity column in the rowset
@@ -32,7 +34,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * The entity protoype
      *
-     * @var  KModelEntityInterface
+     * @var  ModelEntityInterface
      */
     protected $_prototype;
 
@@ -46,10 +48,10 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KDatabaseRowsetAbstract
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return DatabaseRowsetAbstract
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -88,10 +90,10 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'table'           => $this->getIdentifier()->name,
@@ -110,24 +112,24 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * being inserted. By default the prototype will be cloned. The row will be stored by it's identity_column if
      * set or otherwise by it's object handle.
      *
-     * @param   KDatabaseRowInterface|array $row  A DatabaseRowInterface object or an array of row properties
+     * @param   DatabaseRowInterface|array $row  A DatabaseRowInterface object or an array of row properties
      * @param   string  $status     The row status
-     * @return  KDatabaseRowsetAbstract
+     * @return  DatabaseRowsetAbstract
      */
     public function insert($row, $status = null)
     {
-        if(!$row instanceof KDatabaseRowInterface)
+        if(!$row instanceof DatabaseRowInterface)
         {
-            if (!is_array($row) && !$row instanceof Traversable)
+            if (!is_array($row) && !$row instanceof \Traversable)
             {
-                throw new InvalidArgumentException(
+                throw new \InvalidArgumentException(
                     'Row must be an array or an object implementing the Traversable interface; received "%s"', gettype($row)
                 );
             }
 
             if($this->_prototypable)
             {
-                if(!$this->_prototype instanceof KDatabaseRowInterface) {
+                if(!$this->_prototype instanceof DatabaseRowInterface) {
                     $this->_prototype = $this->getTable()->createRow();
                 }
 
@@ -159,14 +161,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * The row will be removed based on it's identity_column if set or otherwise by it's object handle.
      *
-     * @param  KObjectHandlable|KDatabaseRowInterface $row
-     * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
-     * @return KDatabaseRowsetAbstract
+     * @param  ObjectHandlable|DatabaseRowInterface $row
+     * @throws \InvalidArgumentException if the object doesn't implement DatabaseRowInterface
+     * @return DatabaseRowsetAbstract
      */
     public function remove($row)
     {
-        if (!$row instanceof KDatabaseRowInterface) {
-            throw new InvalidArgumentException('Row needs to implement KDatabaseRowInterface');
+        if (!$row instanceof DatabaseRowInterface) {
+            throw new \InvalidArgumentException('Row needs to implement DatabaseRowInterface');
         }
 
         return parent::remove($row);
@@ -175,14 +177,14 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Checks if the collection contains a specific row
      *
-     * @param  KObjectHandlable|KDatabaseRowInterface $row
-     * @throws \InvalidArgumentException if the object doesn't implement KDatabaseRowInterface
+     * @param  ObjectHandlable|DatabaseRowInterface $row
+     * @throws \InvalidArgumentException if the object doesn't implement DatabaseRowInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
     public function contains($row)
     {
-        if (!$row instanceof KDatabaseRowInterface) {
-            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
+        if (!$row instanceof DatabaseRowInterface) {
+            throw new \InvalidArgumentException('Entity needs to implement ModelEntityInterface');
         }
 
         return parent::contains($row);
@@ -196,13 +198,13 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      *
      * @param   array   $properties The entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function create(array $properties = array(), $status = null)
     {
         if($this->_prototypable)
         {
-            if(!$this->_prototype instanceof KDatabaseRowInterface) {
+            if(!$this->_prototype instanceof DatabaseRowInterface) {
                 $this->_prototype = $this->getTable()->createRow();
             }
 
@@ -233,7 +235,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * This functions accepts either a know position or associative array of key/value pairs
      *
      * @param   string|array  $needle The position or the key or an associative array of column data to match
-     * @return  KDatabaseRowsetInterface Returns a rowset if successful. Otherwise NULL.
+     * @return  DatabaseRowsetInterface Returns a rowset if successful. Otherwise NULL.
      */
     public function find($needle)
     {
@@ -318,7 +320,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Clear the rowset
      *
-     * @return KDatabaseRowsetAbstract
+     * @return DatabaseRowsetAbstract
      */
     public function clear()
     {
@@ -348,7 +350,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KDatabaseRowsetAbstract
+     * @return  DatabaseRowsetAbstract
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -379,7 +381,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function removeProperty($name)
     {
@@ -410,9 +412,9 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
     /**
      * Set the properties
      *
-     * @param   mixed   $properties Either and associative array, an object or a KDatabaseRow
+     * @param   mixed   $properties Either and associative array, an object or a DatabaseRow
      * @param   boolean $modified   If TRUE, update the modified information for each column being set.
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function setProperties($properties, $modified = true)
     {
@@ -468,7 +470,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KDatabaseRowsetAbstract
+     * @return  DatabaseRowsetAbstract
      */
     public function setStatus($status)
     {
@@ -499,7 +501,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KDatabaseRowsetAbstract
+     * @return  DatabaseRowsetAbstract
      */
     public function setStatusMessage($message)
     {
@@ -526,22 +528,22 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Function catches DatabaseTableExceptions that are thrown for tables that
      * don't exist. If no table object can be created the function will return FALSE.
      *
-     * @return KDatabaseTableAbstract
+     * @return DatabaseTableAbstract
      */
     public function getTable()
     {
         if ($this->_table !== false)
         {
-            if (!($this->_table instanceof KDatabaseTableInterface))
+            if (!($this->_table instanceof DatabaseTableInterface))
             {
                 //Make sure we have a table identifier
-                if (!($this->_table instanceof KObjectIdentifier)) {
+                if (!($this->_table instanceof ObjectIdentifier)) {
                     $this->setTable($this->_table);
                 }
 
                 try {
                     $this->_table = $this->getObject($this->_table);
-                } catch (RuntimeException $e) {
+                } catch (\RuntimeException $e) {
                     $this->_table = false;
                 }
             }
@@ -556,24 +558,24 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * @param    mixed    $table  An object that implements ObjectInterface, ObjectIdentifier object or valid
      *                            identifier string
      * @throws  \UnexpectedValueException If the identifier is not a table identifier
-     * @return  KDatabaseRowsetAbstract
+     * @return  DatabaseRowsetAbstract
      */
     public function setTable($table)
     {
-        if (!($table instanceof KDatabaseTableInterface))
+        if (!($table instanceof DatabaseTableInterface))
         {
             if (is_string($table) && strpos($table, '.') === false)
             {
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('database', 'table');
-                $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
+                $identifier['name'] = StringInflector::pluralize(StringInflector::underscore($table));
 
                 $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($table);
 
             if ($identifier->path[1] != 'table') {
-                throw new UnexpectedValueException('Identifier: ' . $identifier . ' is not a table identifier');
+                throw new \UnexpectedValueException('Identifier: ' . $identifier . ' is not a table identifier');
             }
 
             $table = $identifier;
@@ -679,7 +681,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Remove a property
      *
      * @param   string  $property The property name.
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     final public function __unset($property)
     {
@@ -692,7 +694,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
      * Search the mixin method map and call the method or forward the call to each row
      *
      * This function implements a just in time mixin strategy. Available table behaviors are only mixed when needed.
-     * Lazy mixing is triggered by calling KDatabaseRowTable::is[Behaviorable]();
+     * Lazy mixing is triggered by calling DatabaseRowTable::is[Behaviorable]();
      *
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
@@ -705,7 +707,7 @@ abstract class KDatabaseRowsetAbstract extends KObjectSet implements KDatabaseRo
 
         if ($this->isConnected())
         {
-            $parts = KStringInflector::explode($method);
+            $parts = StringInflector::explode($method);
 
             //Check if a behavior is mixed
             if ($parts[0] == 'is' && isset($parts[1]))

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Database Driver
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Driver
+ * @package Kodekit\Library\Database\Driver
  */
-abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDriverInterface, KObjectMultiton
+abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverInterface, ObjectMultiton
 {
     /**
      * Active state of the connection
@@ -81,11 +83,11 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * Recognized key values include 'command_chain', 'charset', 'table_prefix',
      * (this list is not meant to be comprehensive).
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(ObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -129,10 +131,10 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'charset'       => 'UTF-8',
@@ -149,7 +151,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Reconnect to the db
      *
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function reconnect()
     {
@@ -162,7 +164,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Disconnect from db
      *
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function disconnect()
     {
@@ -183,7 +185,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Set the database name
      *
      * @param 	string 	$database The database name
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     abstract function setDatabase($database);
 
@@ -204,7 +206,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Set the connection
      *
      * @param 	resource    $resource The connection resource
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function setConnection($resource)
     {
@@ -226,7 +228,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Set character set
      *
      * @param string $charset The character set.
-     * @return KDatabaseDriverAbstract
+     * @return DatabaseDriverAbstract
      */
     public function setCharset($charset)
     {
@@ -250,18 +252,18 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      *
      * Use for SELECT and anything that returns rows.
      *
-     * @param   KDatabaseQueryInterface $query The query object.
+     * @param   DatabaseQueryInterface $query The query object.
      * @param   integer              $mode  The fetch mode. Controls how the result will be returned to the subject.
-     *                                      This value must be one of the KDatabase::FETCH_* constants.
+     *                                      This value must be one of the Database::FETCH_* constants.
      * @param   string               $key   The column name of the index to use.
-     * @throws  \InvalidArgumentException If the query is not an instance of KDatabaseQuerySelect or KDatabaseQueryShow
+     * @throws  \InvalidArgumentException If the query is not an instance of DatabaseQuerySelect or DatabaseQueryShow
      * @return  mixed     The return value of this function on success depends on the fetch type.
      *                    In all cases, FALSE is returned on failure.
      */
-    public function select(KDatabaseQueryInterface $query, $mode = KDatabase::FETCH_ARRAY_LIST, $key = '')
+    public function select(DatabaseQueryInterface $query, $mode = Database::FETCH_ARRAY_LIST, $key = '')
     {
-        if (!$query instanceof KDatabaseQuerySelect && !$query instanceof KDatabaseQueryShow) {
-            throw new InvalidArgumentException('Query must be an instance of KDatabaseQuerySelect or KDatabaseQueryShow');
+        if (!$query instanceof DatabaseQuerySelect && !$query instanceof DatabaseQueryShow) {
+            throw new \InvalidArgumentException('Query must be an instance of DatabaseQuerySelect or DatabaseQueryShow');
         }
 
         $context  = $this->getContext();
@@ -271,33 +273,33 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
         // Execute the insert operation
         if ($this->invokeCommand('before.select', $context) !== false)
         {
-            if ($result = $this->execute($context->query, KDatabase::RESULT_USE))
+            if ($result = $this->execute($context->query, Database::RESULT_USE))
             {
                 switch ($context->mode)
                 {
-                    case KDatabase::FETCH_ROW         :
-                    case KDatabase::FETCH_ARRAY       :
+                    case Database::FETCH_ROW         :
+                    case Database::FETCH_ARRAY       :
                         $context->result = $this->_fetchArray($result);
                         break;
 
-                    case KDatabase::FETCH_ROWSET      :
-                    case KDatabase::FETCH_ARRAY_LIST  :
+                    case Database::FETCH_ROWSET      :
+                    case Database::FETCH_ARRAY_LIST  :
                         $context->result = $this->_fetchArrayList($result, $key);
                         break;
 
-                    case KDatabase::FETCH_FIELD       :
+                    case Database::FETCH_FIELD       :
                         $context->result = $this->_fetchField($result, $key);
                         break;
 
-                    case KDatabase::FETCH_FIELD_LIST  :
+                    case Database::FETCH_FIELD_LIST  :
                         $context->result = $this->_fetchFieldList($result, $key);
                         break;
 
-                    case KDatabase::FETCH_OBJECT      :
+                    case Database::FETCH_OBJECT      :
                         $context->result = $this->_fetchObject($result);
                         break;
 
-                    case KDatabase::FETCH_OBJECT_LIST :
+                    case Database::FETCH_OBJECT_LIST :
                         $context->result = $this->_fetchObjectList($result, $key);
                         break;
 
@@ -309,17 +311,17 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
             $this->invokeCommand('after.select', $context);
         }
 
-        return KObjectConfig::unbox($context->result);
+        return ObjectConfig::unbox($context->result);
     }
 
     /**
      * Insert a row of data into a table.
      *
-     * @param KDatabaseQueryInsert $query The query object.
+     * @param DatabaseQueryInsert $query The query object.
      * @return bool|integer  If the insert query was executed returns the number of rows updated, or 0 if
      *                          no rows where updated, or -1 if an error occurred. Otherwise FALSE.
      */
-    public function insert(KDatabaseQueryInsert $query)
+    public function insert(DatabaseQueryInsert $query)
     {
         $context = $this->getContext();
         $context->query = $query;
@@ -345,11 +347,11 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Update a table with specified data.
      *
-     * @param  KDatabaseQueryUpdate $query The query object.
+     * @param  DatabaseQueryUpdate $query The query object.
      * @return integer  If the update query was executed returns the number of rows updated, or 0 if
      *                     no rows where updated, or -1 if an error occurred. Otherwise FALSE.
      */
-    public function update(KDatabaseQueryUpdate $query)
+    public function update(DatabaseQueryUpdate $query)
     {
         $context = $this->getContext();
         $context->query = $query;
@@ -374,10 +376,10 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Delete rows from the table.
      *
-     * @param  KDatabaseQueryDelete $query The query object.
+     * @param  DatabaseQueryDelete $query The query object.
      * @return integer     Number of rows affected, or -1 if an error occurred.
      */
-    public function delete(KDatabaseQueryDelete $query)
+    public function delete(DatabaseQueryDelete $query)
     {
         $context = $this->getContext();
         $context->query = $query;
@@ -399,18 +401,18 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Use and other queries that don't return rows
      *
      * @param  string      $query The query to run. Data inside the query should be properly escaped.
-     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE, KDatabase::RESULT_STORE
-     *                     or KDatabase::MULTI_QUERY depending on the desired behavior.
-     *                     By default, KDatabase::RESULT_STORE is used. If you use KDatabase::RESULT_USE all subsequent
+     * @param  integer     $mode  The result made, either the constant Database::RESULT_USE, Database::RESULT_STORE
+     *                     or Database::MULTI_QUERY depending on the desired behavior.
+     *                     By default, Database::RESULT_STORE is used. If you use Database::RESULT_USE all subsequent
      *                     calls will return error Commands out of sync unless you free the result first.
      * @throws \RuntimeException If the query could not be executed
      * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                     For other successful queries  return TRUE.
      */
-    public function execute($query, $mode = KDatabase::RESULT_STORE)
+    public function execute($query, $mode = Database::RESULT_STORE)
     {
         // Add or replace the database table prefix.
-        if (!($query instanceof KDatabaseQueryInterface)) {
+        if (!($query instanceof DatabaseQueryInterface)) {
             $query = $this->replaceTableNeedle($query);
         }
 
@@ -418,7 +420,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
 
         if ($result === false)
         {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 $this->getConnection()->error . ' of the following query : ' . $query, $this->getConnection()->errno
             );
         }
@@ -433,8 +435,8 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Set the table prefix
      *
      * @param string $prefix The table prefix
-     * @return KDatabaseDriverAbstract
-     * @see KDatabaseDriverAbstract::replaceTableNeedle
+     * @return DatabaseDriverAbstract
+     * @see DatabaseDriverAbstract::replaceTableNeedle
      */
     public function setTablePrefix($prefix)
     {
@@ -446,7 +448,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Get the table prefix
      *
      * @return string The table prefix
-     * @see KDatabaseDriverAbstract::replaceTableNeedle
+     * @see DatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTablePrefix()
     {
@@ -457,7 +459,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Get the table needle
      *
      * @return string The table needle
-     * @see KDatabaseDriverAbstract::replaceTableNeedle
+     * @see DatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTableNeedle()
     {
@@ -467,11 +469,11 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Get a database context object
      *
-     * @return  KDatabaseContext
+     * @return  DatabaseContext
      */
     public function getContext()
     {
-        $context = new KDatabaseContext();
+        $context = new DatabaseContext();
         $context->setSubject($this);
 
         return $context;
@@ -568,17 +570,17 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Execute a query
      *
      * @param  string      $query The query to run. Data inside the query should be properly escaped.
-     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE, KDatabase::RESULT_STORE
-     *                            or KDatabase::MULTI_QUERY depending on the desired behavior.
+     * @param  integer     $mode  The result made, either the constant Database::RESULT_USE, Database::RESULT_STORE
+     *                            or Database::MULTI_QUERY depending on the desired behavior.
      * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                     For other successful queries  return TRUE.
      */
-    abstract protected function _executeQuery($query, $mode = KDatabase::RESULT_STORE);
+    abstract protected function _executeQuery($query, $mode = Database::RESULT_STORE);
 
    /**
      * Fetch the first field of the first row
      *
-     * @param   mysqli_result   $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result   $result The result object. A result set identifier returned by the select() function
      * @param   integer         $key    The index to use
      * @return  mixed           The value returned in the query or null if the query failed.
      */
@@ -587,7 +589,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Fetch an array of single field results
      *
-     * @param   mysqli_result   $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result   $result The result object. A result set identifier returned by the select() function
      * @param   integer         $key    The index to use
      * @return  array           A sequential array of returned rows.
      */
@@ -596,7 +598,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Fetch the first row of a result set as an associative array
      *
-     * @param   mysqli_result   $sql The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result   $sql The result object. A result set identifier returned by the select() function
      * @return array
      */
     abstract protected function _fetchArray($sql);
@@ -607,7 +609,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
      * Returns <var>null</var> if the query fails.
      *
-     * @param   mysqli_result   $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result   $result The result object. A result set identifier returned by the select() function
      * @param   string          $key    The column name of the index to use
      * @return  array   If key is empty as sequential list of returned records.
      */
@@ -616,7 +618,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
     /**
      * Fetch the first row of a result set as an object
      *
-     * @param   mysqli_result  $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result  $result The result object. A result set identifier returned by the select() function
      * @param object
      */
     abstract protected function _fetchObject($result);
@@ -627,7 +629,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
      * Returns <var>null</var> if the query fails.
      *
-     * @param   mysqli_result  $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result  $result The result object. A result set identifier returned by the select() function
      * @param   string         $key    The column name of the index to use
      * @return  array   If <var>key</var> is empty as sequential array of returned rows.
      */
@@ -637,7 +639,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Parse the raw table schema information
      *
      * @param   object  $info The raw table schema information
-     * @return KDatabaseSchemaTable
+     * @return DatabaseSchemaTable
      */
     abstract protected function _parseTableInfo($info);
 
@@ -645,7 +647,7 @@ abstract class KDatabaseDriverAbstract extends KObject implements KDatabaseDrive
      * Parse the raw column schema information
      *
      * @param   object  $info The raw column schema information
-     * @return KDatabaseSchemaColumn
+     * @return DatabaseSchemaColumn
      */
     abstract protected function _parseColumnInfo($info);
 

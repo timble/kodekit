@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Action Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Kodekit\Library\Controller\Toolbar
  */
-abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
+abstract class ControllerToolbarActionbar extends ControllerToolbarAbstract
 {
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(ObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -33,10 +35,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'type'  => 'actionbar',
@@ -48,9 +50,9 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Add default toolbar commands and set the toolbar title
      * .
-     * @param KControllerContextInterface	$context A controller context object
+     * @param ControllerContextInterface	$context A controller context object
      */
-    protected function _afterRead(KControllerContextInterface $context)
+    protected function _afterRead(ControllerContextInterface $context)
     {
         $controller = $this->getController();
 
@@ -70,9 +72,9 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Add default action commands
      * .
-     * @param KControllerContextInterface $context A command context object
+     * @param ControllerContextInterface $context A command context object
      */
-    protected function _afterBrowse(KControllerContextInterface $context)
+    protected function _afterBrowse(ControllerContextInterface $context)
     {
         $controller = $this->getController();
 
@@ -88,10 +90,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * New toolbar command
      *
-     * @param   KControllerToolbarCommand $command  A ControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandNew(KControllerToolbarCommand $command)
+    protected function _commandNew(ControllerToolbarCommand $command)
     {
         if (empty($command->href))
         {
@@ -103,10 +105,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Delete toolbar command
      *
-     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandDelete(KControllerToolbarCommand $command)
+    protected function _commandDelete(ControllerToolbarCommand $command)
     {
         $translator = $this->getObject('translator');
         $command->append(array(
@@ -120,10 +122,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Enable toolbar command
      *
-     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandEnable(KControllerToolbarCommand $command)
+    protected function _commandEnable(ControllerToolbarCommand $command)
     {
         $command->icon = 'icon-publish';
 
@@ -138,10 +140,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Disable toolbar command
      *
-     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandDisable(KControllerToolbarCommand $command)
+    protected function _commandDisable(ControllerToolbarCommand $command)
     {
         $command->icon = 'icon-unpublish';
 
@@ -156,10 +158,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Export Toolbar Command
      *
-     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandExport(KControllerToolbarCommand $command)
+    protected function _commandExport(ControllerToolbarCommand $command)
     {
         //Get the states
         $states = $this->getController()->getModel()->getState()->getValues();
@@ -180,10 +182,10 @@ abstract class KControllerToolbarActionbar extends KControllerToolbarAbstract
     /**
      * Modal toolbar command
      *
-     * @param   KControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
      * @return  void
      */
-    protected function _commandDialog(KControllerToolbarCommand $command)
+    protected function _commandDialog(ControllerToolbarCommand $command)
     {
         $command->append(array(
             'href'	  => ''

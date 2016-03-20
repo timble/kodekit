@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Internal Url Filter
@@ -13,9 +15,9 @@
  * Check if an refers to a legal URL inside the system. Use when redirecting to an URL that was passed in a request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-class KFilterInternalurl extends KFilterAbstract implements KFilterTraversable
+class FilterInternalurl extends FilterAbstract implements FilterTraversable
 {
     /**
      * Validate a value
@@ -29,7 +31,7 @@ class KFilterInternalurl extends KFilterAbstract implements KFilterTraversable
             return false;
         }
 
-        if(stripos($value, (string)  $this->getObject('request')->getUrl()->toString(KHttpUrl::SCHEME | KHttpUrl::HOST)) !== 0) {
+        if(stripos($value, (string)  $this->getObject('request')->getUrl()->toString(HttpUrl::SCHEME | HttpUrl::HOST)) !== 0) {
             return false;
         }
 

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Kodekit\Library\Template
  */
-class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTemplateHelperable, KObjectInstantiable
+class Template extends TemplateAbstract implements TemplateFilterable, TemplateHelperable, ObjectInstantiable
 {
     /**
      * The template parameters
@@ -32,7 +34,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
     /**
      * Filter queue
      *
-     * @var	KObjectQueue
+     * @var	ObjectQueue
      */
     private $__filter_queue;
 
@@ -41,9 +43,9 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      *
      * Prevent creating instances of this class by making the constructor private
      *
-     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -51,7 +53,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         $this->__filter_queue = $this->getObject('lib:object.queue');
 
         //Attach the filters
-        $filters = KObjectConfig::unbox($config->filters);
+        $filters = ObjectConfig::unbox($config->filters);
 
         foreach ($filters as $key => $value)
         {
@@ -71,10 +73,10 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'parameters' => array(),
@@ -84,8 +86,8 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
                 'helper'     => array($this, 'invokeHelper'),
                 'parameters' => array($this, 'getParameters')
             ),
-            'cache'           => Koowa::getInstance()->isCache(),
-            'cache_namespace' => 'koowa',
+            'cache'           => \Kodekit::getInstance()->isCache(),
+            'cache_namespace' => 'kodekit',
         ));
 
         parent::_initialize($config);
@@ -94,11 +96,11 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
     /**
      * Instantiate the translator and decorate with the cache decorator if cache is enabled.
      *
-     * @param   KObjectConfigInterface  $config   A ObjectConfig object with configuration options
-     * @param   KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return  KTemplateInterface
+     * @param   ObjectConfigInterface  $config   A ObjectConfig object with configuration options
+     * @param   ObjectManagerInterface	$manager  A ObjectInterface object
+     * @return  TemplateInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)
     {
         $class    = $manager->getClass($config->object_identifier);
         $instance = new $class($config);
@@ -123,7 +125,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      *
      * @param   string  $url      The template url
      * @throws \InvalidArgumentException If the template could not be located
-     * @return KTemplate
+     * @return Template
      */
     public function loadFile($url)
     {
@@ -131,7 +133,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
         if (!$file = $locator->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         //Create the template engine
@@ -157,7 +159,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      *
      * @param  string   $source  The template content
      * @param  integer  $type    The template type.
-     * @return KTemplate
+     * @return Template
      */
     public function loadString($source, $type = null)
     {
@@ -189,7 +191,7 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
     {
         parent::render($data);
 
-        if($this->_source instanceof KTemplateEngineInterface)
+        if($this->_source instanceof TemplateEngineInterface)
         {
             $this->_source = $this->_source->render($data);
             $this->_source = $this->filter();
@@ -237,18 +239,18 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      * Set the template parameters
      *
      * @param  array $parameters Set the template parameters
-     * @return KTemplate
+     * @return Template
      */
     public function setParameters($parameters)
     {
-        $this->__parameters = new KObjectConfig($parameters);
+        $this->__parameters = new ObjectConfig($parameters);
         return $this;
     }
 
     /**
      * Get the model state object
      *
-     * @return KObjectConfigInterface
+     * @return ObjectConfigInterface
      */
     public function getParameters()
     {
@@ -284,11 +286,11 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
 
         //Call the helper function
         if (!is_callable(array($helper, $function))) {
-            throw new BadMethodCallException(get_class($helper) . '::' . $function . ' not supported.');
+            throw new \BadMethodCallException(get_class($helper) . '::' . $function . ' not supported.');
         }
 
         //Merge the parameters if helper asks for it
-        if ($helper instanceof KTemplateHelperParameterizable) {
+        if ($helper instanceof TemplateHelperParameterizable) {
             $params = array_merge($this->getParameters()->toArray(), $params);
         }
 
@@ -301,8 +303,8 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      * @param    mixed $helper ObjectIdentifierInterface
      * @param    array $config An optional associative array of configuration settings
      *
-     * @throws  UnexpectedValueException
-     * @return  KTemplateHelperInterface
+     * @throws  \UnexpectedValueException
+     * @return  TemplateHelperInterface
      */
     public function createHelper($helper, $config = array())
     {
@@ -325,10 +327,10 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         $helper = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
         //Check the helper interface
-        if (!($helper instanceof KTemplateHelperInterface))
+        if (!($helper instanceof TemplateHelperInterface))
         {
-            throw new UnexpectedValueException(
-                "Template helper $identifier does not implement KTemplateHelperInterface"
+            throw new \UnexpectedValueException(
+                "Template helper $identifier does not implement TemplateHelperInterface"
             );
         }
 
@@ -341,8 +343,8 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      * @param   mixed $filter An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
      * @param   array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
-     * @return KTemplateAbstract
+     * @throws \UnexpectedValueException
+     * @return TemplateAbstract
      */
     public function addFilter($filter, $config = array())
     {
@@ -361,10 +363,10 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
         {
             $filter = $this->getObject($identifier, array_merge($config, array('template' => $this)));
 
-            if (!($filter instanceof KTemplateFilterInterface))
+            if (!($filter instanceof TemplateFilterInterface))
             {
-                throw new UnexpectedValueException(
-                    "Template filter $identifier does not implement KTemplateFilterInterface"
+                throw new \UnexpectedValueException(
+                    "Template filter $identifier does not implement TemplateFilterInterface"
                 );
             }
 
@@ -394,8 +396,8 @@ class KTemplate extends KTemplateAbstract implements KTemplateFilterable, KTempl
      *
      * @param   mixed $filter       An object that implements ObjectInterface, ObjectIdentifier object
      *                              or valid identifier string
-     * @throws UnexpectedValueException
-     * @return KTemplateFilterInterface|null
+     * @throws \UnexpectedValueException
+     * @return TemplateFilterInterface|null
      */
     public function getFilter($filter)
     {

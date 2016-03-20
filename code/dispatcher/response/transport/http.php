@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Default Dispatcher Response Transport
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response\Transport
+ * @package Kodekit\Library\Dispatcher\Response\Transport
  */
-class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstract
+class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstract
 {
     /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param 	KObjectConfig $config 	An optional ObjectConfig object with configuration options.
+     * @param 	ObjectConfig $config 	An optional ObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_LOW,
@@ -35,11 +37,11 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
     /**
      * Send HTTP headers
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @throws \RuntimeException If the headers have already been send
-     * @return KDispatcherResponseTransportAbstract
+     * @return DispatcherResponseTransportAbstract
      */
-    public function sendHeaders(KDispatcherResponseInterface $response)
+    public function sendHeaders(DispatcherResponseInterface $response)
     {
         if(!headers_sent($file, $line))
         {
@@ -61,10 +63,10 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
     /**
      * Sends content for the current web response.
      *
-     * @param KDispatcherResponseInterface $response
-     * @return KDispatcherResponseTransportAbstract
+     * @param DispatcherResponseInterface $response
+     * @return DispatcherResponseTransportAbstract
      */
-    public function sendContent(KDispatcherResponseInterface $response)
+    public function sendContent(DispatcherResponseInterface $response)
     {
         //Make sure the output buffers are cleared
         $level = ob_get_level();
@@ -87,21 +89,21 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
      * @link http://tools.ietf.org/html/rfc2616
      * @link http://tools.ietf.org/html/rfc7235
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return boolean  Returns true if the response has been send, otherwise FALSE
      */
-    public function send(KDispatcherResponseInterface $response)
+    public function send(DispatcherResponseInterface $response)
     {
         $request = $response->getRequest();
 
         //Make sure we do not have body content for 204, 205 and 305 status codes
-        $codes = array(KHttpResponse::NO_CONTENT, KHttpResponse::NOT_MODIFIED, KHttpResponse::RESET_CONTENT);
+        $codes = array(HttpResponse::NO_CONTENT, HttpResponse::NOT_MODIFIED, HttpResponse::RESET_CONTENT);
         if (in_array($response->getStatusCode(), $codes)) {
             $response->setContent(null);
         }
 
         //Remove location header if we are not redirecting and the status code is not 201
-        if(!$response->isRedirect() && $response->getStatusCode() !== KHttpResponse::CREATED)
+        if(!$response->isRedirect() && $response->getStatusCode() !== HttpResponse::CREATED)
         {
             if($response->headers->has('Location')) {
                 $response->headers->remove('Location');
@@ -124,7 +126,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         if($response->isDownloadable())
         {
             //Last-Modified header
-            if($time = $response->getStream()->getTime(KFilesystemStreamInterface::TIME_MODIFIED)) {
+            if($time = $response->getStream()->getTime(FilesystemStreamInterface::TIME_MODIFIED)) {
                 $response->setLastModified($time);
             };
 
@@ -170,7 +172,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
 
         //Add Last-Modified header if not present
         if(!$response->headers->has('Last-Modified')) {
-            $response->setLastModified(new DateTime('now'));
+            $response->setLastModified(new \DateTime('now'));
         }
 
         //Add Content-Length if not present
@@ -184,7 +186,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         }
 
         //Modifies the response so that it conforms to the rules defined for a 304 status code.
-        if($response->getStatusCode() == KHttpResponse::NOT_MODIFIED)
+        if($response->getStatusCode() == HttpResponse::NOT_MODIFIED)
         {
             $response->setContent(null);
 
@@ -205,7 +207,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         }
 
         //Modifies the response so that it conforms to the rules defined for a 401 status code.
-        if($response->getStatusCode() == KHttpResponse::UNAUTHORIZED)
+        if($response->getStatusCode() == HttpResponse::UNAUTHORIZED)
         {
             //The response MUST include a WWW-Authenticate header field, use 'unknown' scheme.
             //@link : http://tools.ietf.org/html/rfc7235 (updated spec)

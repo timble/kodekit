@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Message Headers
@@ -15,20 +17,20 @@
  * @link http://tools.ietf.org/html/rfc2616#section-4.2
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Message
+ * @package Kodekit\Library\Http\Message
  */
-class KHttpMessageHeaders extends KObjectArray
+class HttpMessageHeaders extends ObjectArray
 {
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
-        $headers = KObjectConfig::unbox($config->headers);
+        $headers = ObjectConfig::unbox($config->headers);
         foreach ($headers as $key => $values) {
             $this->set($key, $values);
         }
@@ -39,10 +41,10 @@ class KHttpMessageHeaders extends KObjectArray
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'headers' => array(),
@@ -98,7 +100,7 @@ class KHttpMessageHeaders extends KObjectArray
      * @param string       $key     The key
      * @param string|array $values  The value or an array of values
      * @param boolean      $replace Whether to replace the actual value of not (true by default)
-     * @return KHttpMessageHeaders
+     * @return HttpMessageHeaders
      */
     public function set($key, $values, $replace = true)
     {
@@ -119,7 +121,7 @@ class KHttpMessageHeaders extends KObjectArray
      * This function will not add headers that already exist.
      *
      * @param array $headers An array of HTTP headers
-     * @return KHttpMessageHeaders
+     * @return HttpMessageHeaders
      */
     public function add(array $headers)
     {
@@ -157,7 +159,7 @@ class KHttpMessageHeaders extends KObjectArray
      * Removes a header nu name
      *
      * @param string $key The HTTP header name
-     * @return KHttpMessageHeaders
+     * @return HttpMessageHeaders
      */
     public function remove($key)
     {
@@ -169,7 +171,7 @@ class KHttpMessageHeaders extends KObjectArray
     /**
      * Clear the current HTTP headers
      *
-     * @return KHttpMessageHeaders
+     * @return HttpMessageHeaders
      */
     public function clear()
     {

@@ -1,10 +1,10 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
 
 /**
@@ -25,6 +25,38 @@ if(extension_loaded('apc') && !function_exists('apc_exists'))
         apc_fetch($keys,$result);
 
         return $result;
+    }
+}
+
+/**
+ * PHP 5.5 compatibility
+ */
+if (!function_exists('json_last_error_msg'))
+{
+    function json_last_error_msg()
+    {
+        switch (json_last_error())
+        {
+            case JSON_ERROR_DEPTH:
+                $error = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $error = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $error = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $error = 'Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $error = 'Unknown Error';
+        }
+
+        return $error;
     }
 }
 
@@ -53,16 +85,6 @@ if (!function_exists('mb_strlen'))
 
 if (!function_exists('mb_substr'))
 {
-    /*
-     * Joomla checks if mb_substr exists to determine the availability of mbstring extension
-     * Loading JString before providing the replacement function makes sure everything works
-     */
-    if (class_exists('JLoader') && is_callable(array('JLoader', 'import')))
-    {
-        JLoader::import('joomla.string.string');
-        JLoader::load('JString');
-    }
-
     function mb_substr($str, $offset, $length = NULL)
     {
         // generates E_NOTICE

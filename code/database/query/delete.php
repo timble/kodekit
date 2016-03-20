@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Delete Database Query
  *
  * @author  Gergo Erdosi <https://github.com/gergoerdosi>
- * @package Koowa\Library\Database\Query
+ * @package Kodekit\Library\Database\Query
  */
-class KDatabaseQueryDelete extends KDatabaseQueryAbstract
+class DatabaseQueryDelete extends DatabaseQueryAbstract
 {
     /**
      * The table element
@@ -54,7 +56,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      * Build the table clause
      *
      * @param  array|string $table The table string or array name.
-     * @return KDatabaseQueryDelete
+     * @return DatabaseQueryDelete
      */
     public function table($table)
     {
@@ -68,7 +70,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      * @param string $table      The table name to join to.
      * @param string $condition  The join condition statement.
      * @param string|array $type The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
-     * @return KDatabaseQueryDelete
+     * @return DatabaseQueryDelete
      */
     public function join($table, $condition = null, $type = 'LEFT')
     {
@@ -94,7 +96,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      *
      * @param   string  $condition The condition.
      * @param   string  $combination Combination type, defaults to 'AND'.
-     * @return  KDatabaseQueryDelete
+     * @return  DatabaseQueryDelete
      */
     public function where($condition, $combination = 'AND')
     {
@@ -111,7 +113,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      *
      * @param   array|string  $columns    A string or array of ordering columns.
      * @param   string        $direction Either DESC or ASC.
-     * @return  KDatabaseQueryDelete
+     * @return  DatabaseQueryDelete
      */
     public function order($columns, $direction = 'ASC')
     {
@@ -130,7 +132,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
      * Build the limit clause
      *
      * @param   integer $limit Number of items to update.
-     * @return  KDatabaseQueryDelete
+     * @return  DatabaseQueryDelete
      */
     public function limit($limit)
     {
@@ -168,7 +170,7 @@ class KDatabaseQueryDelete extends KDatabaseQueryAbstract
                     $tmp .= ' '.$join['type'];
                 }
 
-                if($join['table'] instanceof KDatabaseQuerySelect) {
+                if($join['table'] instanceof DatabaseQuerySelect) {
                     $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
                     $tmp .= ' JOIN '.$driver->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));

@@ -1,37 +1,39 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Cache Object Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Registry
+ * @package Kodekit\Library\Object\Registry
  */
-class KObjectRegistryCache extends KObjectRegistry
+class ObjectRegistryCache extends ObjectRegistry
 {
     /**
      * The root registry namespace
      *
      * @var string
      */
-    protected $_namespace = 'koowa';
+    protected $_namespace = 'kodekit';
 
     /**
      * Constructor
      *
-     * @return KObjectRegistryCache
-     * @throws RuntimeException    If the APC PHP extension is not enabled or available
+     * @return ObjectRegistryCache
+     * @throws \RuntimeException    If the APC PHP extension is not enabled or available
      */
     public function __construct()
     {
         if (!static::isSupported()) {
-            throw new RuntimeException('Unable to use KObjectRegistryCache. APC is not enabled.');
+            throw new \RuntimeException('Unable to use ObjectRegistryCache. APC is not enabled.');
         }
     }
 
@@ -68,9 +70,9 @@ class KObjectRegistryCache extends KObjectRegistry
     /**
      * Register a class for an identifier
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @param string                   $class      The class
-     * @return KObjectRegistry
+     * @return ObjectRegistry
      */
     public function setClass($identifier, $class)
     {
@@ -125,7 +127,7 @@ class KObjectRegistryCache extends KObjectRegistry
      */
     public function offsetSet($offset, $identifier)
     {
-        if($identifier instanceof KObjectIdentifierInterface)
+        if($identifier instanceof ObjectIdentifierInterface)
         {
             $data = array(
                 'identifier' =>  $identifier,

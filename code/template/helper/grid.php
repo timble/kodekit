@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Grid Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHelperParameterizable
+class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelperParameterizable
 {
     /**
      * Render a radio field
@@ -23,7 +25,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
      */
     public function radio($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'entity'  		=> null,
             'attribs' => array()
@@ -57,7 +59,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
      */
     public function checkbox($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'entity'  		=> null,
             'attribs' => array()
@@ -94,7 +96,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
      */
     public function search($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'search'          => null,
             'submit_on_clear' => true,
@@ -173,7 +175,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
      */
     public function sort($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'title'     => '',
             'column'    => '',
@@ -236,7 +238,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
     {
         $translator = $this->getObject('translator');
 
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'entity'    => null,
             'field'     => 'enabled',
@@ -276,7 +278,7 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
     {
         $translator = $this->getObject('translator');
 
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'entity'    => null,
             'field'     => 'enabled',
@@ -296,19 +298,19 @@ class KTemplateHelperGrid extends KTemplateHelperAbstract implements KTemplateHe
     /**
      * Get the locked information
      *
-     * @param  array|KObjectConfig $config An optional configuration array.
-     * @throws UnexpectedValueException
+     * @param  array|ObjectConfig $config An optional configuration array.
+     * @throws \UnexpectedValueException
      * @return string The locked by "name" "date" message
      */
     public function lock_message($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'entity' => null
         ));
 
-        if (!($config->entity instanceof KModelEntityInterface)) {
-            throw new UnexpectedValueException('$config->entity should be a KModelEntityInterface instance');
+        if (!($config->entity instanceof ModelEntityInterface)) {
+            throw new \UnexpectedValueException('$config->entity should be a ModelEntityInterface instance');
         }
 
         $entity = $config->entity;

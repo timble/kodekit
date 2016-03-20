@@ -1,23 +1,25 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Filter
  *
- * If the filter implements KFilterTraversable it will be decorated with KFilterIterator to allow iterating over the data
- * being filtered in case of an array of a Traversable object. If a filter does not implement KFilterTraversable the data
+ * If the filter implements FilterTraversable it will be decorated with FilterIterator to allow iterating over the data
+ * being filtered in case of an array of a Traversable object. If a filter does not implement FilterTraversable the data
  * will be passed directly to the filter.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-abstract class KFilterAbstract extends KObject implements KFilterInterface, KObjectInstantiable
+abstract class FilterAbstract extends Object implements FilterInterface, ObjectInstantiable
 {
     /**
      * The filter errors
@@ -36,9 +38,9 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -57,10 +59,10 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_NORMAL,
@@ -70,20 +72,20 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     }
 
     /**
-     * Create filter and decorate it with KFilterIterator if the filter implements KFilterTraversable
+     * Create filter and decorate it with FilterIterator if the filter implements FilterTraversable
      *
-     * @param   KObjectConfigInterface  $config    Configuration options
-     * @param   KObjectManagerInterface $manager A KObjectManagerInterface object
-     * @return KFilterInterface
-     * @see KFilterTraversable
+     * @param   ObjectConfigInterface  $config    Configuration options
+     * @param   ObjectManagerInterface $manager A ObjectManagerInterface object
+     * @return FilterInterface
+     * @see FilterTraversable
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)
     {
         //Create the singleton
         $class    = $manager->getClass($config->object_identifier);
         $instance = new $class($config);
 
-        if($instance instanceof KFilterTraversable) {
+        if($instance instanceof FilterTraversable) {
             $instance = $instance->decorate('lib:filter.iterator');
         }
 
@@ -117,7 +119,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
     /**
      * Resets any generated errors for the filter
      *
-     * @return KFilterAbstract
+     * @return FilterAbstract
      */
     public function reset()
     {
@@ -139,7 +141,7 @@ abstract class KFilterAbstract extends KObject implements KFilterInterface, KObj
      * Add an error message
      *
      * @param string $message The error message
-     * @return KFilterAbstract
+     * @return FilterAbstract
      */
     public function addError($message)
     {

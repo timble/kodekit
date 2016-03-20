@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Markdown Template Filter
@@ -13,9 +15,9 @@
  * Filter to parse <ktml:markdown></ktml:markdown> tags. Content should be valid markdown and will be converted to html.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Filter
+ * @package Kodekit\Library\Template\Filter
  */
-class KTemplateFilterMarkdown extends KTemplateFilterAbstract
+class TemplateFilterMarkdown extends TemplateFilterAbstract
 {
     /**
      * Replace <ktml:markdown></ktml:markdown> and parse contained markdown to html

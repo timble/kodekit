@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Queue
@@ -23,10 +25,10 @@
  * @link http://en.wikipedia.org/wiki/Priority_queue
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Kodekit\Library\Object
  * @see     http://www.php.net/manual/en/class.splpriorityqueue.php
  */
-class KObjectQueue extends KObject implements Iterator, Countable
+class ObjectQueue extends Object implements \Iterator, \Countable
 {
     /**
      * Object list
@@ -53,22 +55,22 @@ class KObjectQueue extends KObject implements Iterator, Countable
      * Constructor
      *
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->__object_list   = new ArrayObject();
-        $this->__priority_list = new ArrayObject();
+        $this->__object_list   = new \ArrayObject();
+        $this->__priority_list = new \ArrayObject();
     }
 
     /**
      * Inserts an object to the queue.
      *
-     * @param   KObjectHandlable $object    A KObject instance
+     * @param   ObjectHandlable $object    A Object instance
      * @param   integer          $priority  The associated priority
      * @return  boolean TRUE on success FALSE on failure
      */
-    public function enqueue( KObjectHandlable $object, $priority)
+    public function enqueue( ObjectHandlable $object, $priority)
     {
         $result = false;
 
@@ -79,7 +81,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
             $this->__priority_list->offsetSet($handle, $priority);
             $this->__priority_list->asort();
 
-            if($object instanceof KObjectInterface) {
+            if($object instanceof ObjectInterface) {
                 $this->__identifier_list[$handle] = $object->getIdentifier();
             }
 
@@ -92,10 +94,10 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Removes an object from the queue
      *
-     * @param   KObjectHandlable $object A KObject instance
+     * @param   ObjectHandlable $object A Object instance
      * @return  boolean TRUE on success FALSE on failure
      */
-    public function dequeue( KObjectHandlable $object)
+    public function dequeue( ObjectHandlable $object)
     {
         $result = false;
 
@@ -106,7 +108,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
                 $this->__object_list->offsetUnset($handle);
                 $this->__priority_list->offsetUnSet($handle);
 
-                if($object instanceof KObjectInterface) {
+                if($object instanceof ObjectInterface) {
                     unset($this->__identifier_list[$handle]);
                 }
 
@@ -120,11 +122,11 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Set the priority of an object in the queue
      *
-     * @param KObjectHandlable $object    A command object
+     * @param ObjectHandlable $object    A command object
      * @param integer          $priority  The priority
-     * @return KObjectQueue
+     * @return ObjectQueue
      */
-    public function setPriority(KObjectHandlable $object, $priority)
+    public function setPriority(ObjectHandlable $object, $priority)
     {
         if($handle = $object->getHandle())
         {
@@ -141,10 +143,10 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Get the priority of an object in the queue
      *
-     * @param   KObjectHandlable $object A KObject instance
+     * @param   ObjectHandlable $object A Object instance
      * @return  integer|boolean The command priority or FALSE if the command isn't enqueued
      */
-    public function getPriority(KObjectHandlable $object)
+    public function getPriority(ObjectHandlable $object)
     {
         $result = false;
 
@@ -172,12 +174,12 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Check if the queue has an item with the given identifier
      *
-     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @return boolean
      */
     public function hasIdentifier($identifier)
     {
-        if(!$identifier instanceof KObjectIdentifierInterface) {
+        if(!$identifier instanceof ObjectIdentifierInterface) {
             $identifier = $this->getIdentifier($identifier);
         }
 
@@ -187,10 +189,10 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Check if the queue contains a given object
      *
-     * @param KObjectHandlable $object
+     * @param ObjectHandlable $object
      * @return bool
      */
-    public function contains(KObjectHandlable $object)
+    public function contains(ObjectHandlable $object)
     {
         $result = false;
 
@@ -218,7 +220,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
      *
      * Required by the Iterator interface
      *
-     * @return  object KObjectQueue
+     * @return  object ObjectQueue
      */
     public function rewind()
     {
@@ -279,7 +281,7 @@ class KObjectQueue extends KObject implements Iterator, Countable
     /**
      * Return the object from the top of the queue
      *
-     * @return  KObject or NULL is queue is empty
+     * @return  Object or NULL is queue is empty
      */
     public function top()
     {

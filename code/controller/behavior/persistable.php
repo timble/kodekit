@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Persistable Dispatcher Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Behavior
+ * @package Kodekit\Library\Controller\Behavior
  */
-class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
+class ControllerBehaviorPersistable extends ControllerBehaviorAbstract
 {
     /**
      * Check if the behavior is supported
@@ -28,7 +30,7 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
         $mixer   = $this->getMixer();
         $request = $mixer->getRequest();
 
-        if ($mixer instanceof KControllerModellable && $mixer->isDispatched() && $request->isGet() && $request->getFormat() === 'html') {
+        if ($mixer instanceof ControllerModellable && $mixer->isDispatched() && $request->isGet() && $request->getFormat() === 'html') {
             return true;
         }
 
@@ -38,10 +40,10 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
     /**
      * Returns a key based on the context to persist state values
      *
-     * @param 	KControllerContextInterface $context The active controller context
+     * @param 	ControllerContextInterface $context The active controller context
      * @return  string
      */
-    protected function _getStateKey(KControllerContextInterface $context)
+    protected function _getStateKey(ControllerContextInterface $context)
     {
         $view   = $this->getView()->getIdentifier();
         $layout = $this->getView()->getLayout();
@@ -56,10 +58,10 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
      * This functions merges the request information with any model state information that was saved in the session and
      * returns the result.
      *
-     * @param 	KControllerContextInterface $context The active controller context
+     * @param 	ControllerContextInterface $context The active controller context
      * @return 	void
      */
-    protected function _beforeBrowse(KControllerContextInterface $context)
+    protected function _beforeBrowse(ControllerContextInterface $context)
     {
         $query = $context->getRequest()->query;
 
@@ -71,10 +73,10 @@ class KControllerBehaviorPersistable extends KControllerBehaviorAbstract
     /**
      * Saves the model state in the session
      *
-     * @param 	KControllerContextInterface $context The active controller context
+     * @param 	ControllerContextInterface $context The active controller context
      * @return 	void
      */
-    protected function _afterBrowse(KControllerContextInterface $context)
+    protected function _afterBrowse(ControllerContextInterface $context)
     {
         $state  = $this->getModel()->getState();
 

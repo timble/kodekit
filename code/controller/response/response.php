@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Controller Response
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Response
+ * @package Kodekit\Library\Controller\Response
  */
-class KControllerResponse extends KHttpResponse implements KControllerResponseInterface
+class ControllerResponse extends HttpResponse implements ControllerResponseInterface
 {
     /**
      * Request object
@@ -39,9 +41,9 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config	An optional KObjectConfig object with configuration options.
+     * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -60,10 +62,10 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config    An optional ObjectConfig object with configuration options.
+     * @param   ObjectConfig $config    An optional ObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'request' => null,
@@ -76,10 +78,10 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Set the request object
      *
-     * @param KControllerRequestInterface $request A request object
-     * @return KControllerResponse
+     * @param ControllerRequestInterface $request A request object
+     * @return ControllerResponse
      */
-    public function setRequest(KControllerRequestInterface $request)
+    public function setRequest(ControllerRequestInterface $request)
     {
         $this->_request = $request;
         return $this;
@@ -88,7 +90,7 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Get the request object
      *
-     * @return KControllerRequestInterface
+     * @return ControllerRequestInterface
      */
     public function getRequest()
     {
@@ -98,10 +100,10 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Set the user object
      *
-     * @param KUserInterface $user A request object
-     * @return KControllerResponse
+     * @param UserInterface $user A request object
+     * @return ControllerResponse
      */
-    public function setUser(KUserInterface $user)
+    public function setUser(UserInterface $user)
     {
         $this->_user = $user;
         return $this;
@@ -110,7 +112,7 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
     /**
      * Get the user object
      *
-     * @return KUserInterface
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -129,9 +131,9 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
      * @param  string   $location   The redirect location
      * @param  string   $message    The flash message
      * @param  string   $type       The flash message category type. Default is 'success'.
-     * @throws InvalidArgumentException If the location is empty
-     * @throws UnexpectedValueException If the location is not a string, or cannot be cast to a string
-     * @return KControllerResponse
+     * @throws \InvalidArgumentException If the location is empty
+     * @throws \UnexpectedValueException If the location is not a string, or cannot be cast to a string
+     * @return ControllerResponse
      */
     public function setRedirect($location, $message = '', $type = self::FLASH_SUCCESS)
     {
@@ -139,12 +141,12 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
         {
             if (!is_string($location) && !is_numeric($location) && !is_callable(array($location, '__toString')))
             {
-                throw new UnexpectedValueException(
+                throw new \UnexpectedValueException(
                     'The Response location must be a string or object implementing __toString(), "'.gettype($location).'" given.'
                 );
             }
         }
-        else throw new InvalidArgumentException('Cannot redirect to an empty URL.');
+        else throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
 
         //Add the message
         if(!empty($message)) {
@@ -170,14 +172,14 @@ class KControllerResponse extends KHttpResponse implements KControllerResponseIn
      *
      * @param  string $message The flash message
      * @param string  $type Message category type. Default is 'success'.
-     * @throws UnexpectedValueException
-     * @return KControllerResponse
+     * @throws \UnexpectedValueException
+     * @return ControllerResponse
      */
     public function addMessage($message, $type = self::FLASH_SUCCESS)
     {
         if (!is_string($message) && !is_callable(array($message, '__toString')))
         {
-            throw new UnexpectedValueException(
+            throw new \UnexpectedValueException(
                 'The flash message must be a string or object implementing __toString(), "'.gettype($message).'" given.'
             );
         }

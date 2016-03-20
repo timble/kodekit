@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Block Template Filter
@@ -25,9 +27,9 @@
  * if at least two blocks have been injected.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Filter
+ * @package Kodekit\Library\Template\Filter
  */
-class KTemplateFilterBlock extends KTemplateFilterDecorator
+class TemplateFilterBlock extends TemplateFilterDecorator
 {
     /**
      * Names list of blocks
@@ -54,7 +56,7 @@ class KTemplateFilterBlock extends KTemplateFilterDecorator
      *
      * @param string $name The name of the block
      * @param array  $data The data of the block
-     * @return KTemplateFilterBlock
+     * @return TemplateFilterBlock
      */
     public function addBlock($name, array $data)
     {
@@ -99,7 +101,7 @@ class KTemplateFilterBlock extends KTemplateFilterDecorator
      * Clear the blocks by name
      *
      * @param string $name The name of the block
-     * @return KTemplateFilterBlock
+     * @return TemplateFilterBlock
      */
     public function clearBlocks($name)
     {
@@ -316,7 +318,7 @@ class KTemplateFilterBlock extends KTemplateFilterDecorator
         //Use the stream buffer to evaluate the condition
         $str = '<?php return ' . implode(' ', $words) .';';
 
-        $buffer = $this->getObject('filesystem.stream.factory')->createStream('koowa-buffer://temp', 'w+b');
+        $buffer = $this->getObject('filesystem.stream.factory')->createStream('kodekit-buffer://temp', 'w+b');
         $buffer->truncate(0);
         $buffer->write($str);
 

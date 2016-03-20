@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Equatable Interface
@@ -13,9 +15,9 @@
  * Used to test if two objects are equal
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Kodekit\Library\Object
  */
-interface KObjectEquatable
+interface ObjectEquatable
 {
     /**
      * The equality comparison should neither be done by referential equality nor by comparing object handles
@@ -24,8 +26,8 @@ interface KObjectEquatable
      * However, you do not need to compare every object attribute, but only those that are relevant for assessing
      * whether both objects are identical or not.
      *
-     * @param KObjectInterface $object
+     * @param ObjectInterface $object
      * @return Boolean
      */
-    public function equals(KObjectInterface $object);
+    public function equals(ObjectInterface $object);
 }

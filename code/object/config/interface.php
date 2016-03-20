@@ -1,22 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Config Interface
  *
- * KObjectConfig provides a property based interface to an array.
+ * ObjectConfig provides a property based interface to an array.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Config
+ * @package Kodekit\Library\Object\Config
  */
-interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countable
+interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Countable
 {
+    /**
+     * Get a new instance
+     *
+     * @return ObjectConfigInterface
+     */
+    public static function getInstance();
+
     /**
      * Retrieve a configuration option
      *
@@ -33,8 +42,8 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      *
      * @param  string $name
      * @param  mixed  $value
-     * @throws RuntimeException If the config is read only
-     * @return KObjectConfigInterface
+     * @throws \RuntimeException If the config is read only
+     * @return ObjectConfigInterface
      */
     public function set($name, $value);
 
@@ -50,8 +59,8 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * Remove a configuration option
      *
      * @param   string $name The configuration option name.
-     * @throws  RuntimeException If the config is read only
-     * @return  KObjectConfigInterface
+     * @throws  \RuntimeException If the config is read only
+     * @return  ObjectConfigInterface
      */
     public function remove( $name );
 
@@ -66,9 +75,9 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|Traversable|KObjectConfigInterface  $options A KObjectConfig object an or array of options to be added
-     * @throws RuntimeException If the config is read only
-     * @return KObjectConfigInterface
+     * @param  array|\Traversable|ObjectConfigInterface  $options A ObjectConfig object an or array of options to be added
+     * @throws \RuntimeException If the config is read only
+     * @return ObjectConfigInterface
      */
     public function merge($options);
 
@@ -77,19 +86,19 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      *
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|Traversable|KObjectConfigInterface  $options A KObjectConfigInterface instance an or array of options to be appended
-     * @throws RuntimeException If the config is read only
-     * @return KObjectConfigInterface
+     * @param  array|\Traversable|ObjectConfigInterface  $options A ObjectConfigInterface instance an or array of options to be appended
+     * @throws \RuntimeException If the config is read only
+     * @return ObjectConfigInterface
      */
     public function append($options);
 
     /**
      * Return the data
      *
-     * If the data being passed is an instance of KObjectConfigInterface the data will be transformed
+     * If the data being passed is an instance of ObjectConfigInterface the data will be transformed
      * to an associative array.
      *
-     * @param mixed|KObjectConfigInterface $data
+     * @param mixed|ObjectConfigInterface $data
      * @return mixed|array
      */
     public static function unbox($data);
@@ -100,11 +109,4 @@ interface KObjectConfigInterface extends IteratorAggregate, ArrayAccess, Countab
      * @return array
      */
     public function toArray();
-
-    /**
-     * Get a new instance
-     *
-     * @return KObjectConfigInterface
-     */
-    public function getInstance();
 }

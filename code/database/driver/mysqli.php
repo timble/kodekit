@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Mysqli Database Driver
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Driver
+ * @package Kodekit\Library\Database\Driver
  */
-class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
+class DatabaseDriverMysqli extends DatabaseDriverAbstract
 {
     /**
      * Quote for query identifiers
@@ -57,7 +59,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
         // date & time
         'date'              => 'date'     ,
         'time'              => 'time'     ,
-        'datetime'          => 'timestamp',
+        '\DateTime'          => 'timestamp',
         'timestamp'         => 'int'  ,
         'year'              => 'int'  ,
 
@@ -91,10 +93,10 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options.
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'database'  => '',
@@ -111,14 +113,14 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
     /**
      * Connect to the db
      *
-     * @throws RuntimeException
-     * @return KDatabaseDriverMysqli
+     * @throws \RuntimeException
+     * @return DatabaseDriverMysqli
      */
      public function connect()
      {
         $oldErrorReporting = error_reporting(0);
 
-        $mysqli = new mysqli(
+        $mysqli = new \mysqli(
             $this->getConfig()->host,
             $this->getConfig()->username,
             $this->getConfig()->password,
@@ -130,7 +132,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
         error_reporting($oldErrorReporting);
 
         if (mysqli_connect_errno()) {
-            throw new RuntimeException('Connect failed: (' . mysqli_connect_errno() . ') ' . mysqli_connect_error(), mysqli_connect_errno());
+            throw new \RuntimeException('Connect failed: (' . mysqli_connect_errno() . ') ' . mysqli_connect_error(), mysqli_connect_errno());
         }
 
         // If supported, request real datatypes from MySQL instead of returning everything as a string.
@@ -147,7 +149,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
     /**
      * Disconnect from db
      *
-     * @return KDatabaseDriverMysqli
+     * @return DatabaseDriverMysqli
      */
     public function disconnect()
     {
@@ -168,20 +170,20 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      */
     public function isConnected()
     {
-        return ($this->_connection instanceof MySQLi) && @$this->_connection->ping();
+        return ($this->_connection instanceof \MySQLi) && @$this->_connection->ping();
     }
 
     /**
      * Set the connection
      *
      * @param 	resource 	$resource The connection resource
-     * @return  KDatabaseDriverAbstract
-     * @throws  InvalidArgumentException If the resource is not an MySQLi instance
+     * @return  DatabaseDriverAbstract
+     * @throws  \InvalidArgumentException If the resource is not an MySQLi instance
      */
     public function setConnection($resource)
     {
-        if(!($resource instanceof MySQLi)) {
-            throw new InvalidArgumentException('Not a MySQLi connection');
+        if(!($resource instanceof \MySQLi)) {
+            throw new \InvalidArgumentException('Not a MySQLi connection');
         }
 
         $this->_connection = $resource;
@@ -200,7 +202,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
             $query = $this->getObject('lib:database.query.select')
                 ->columns('DATABASE()');
 
-            $this->_database = $this->select($query, KDatabase::FETCH_FIELD);
+            $this->_database = $this->select($query, Database::FETCH_FIELD);
         }
         return $this->_database;
     }
@@ -209,14 +211,14 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Set the database name
      *
      * @param 	string 	$database The database name
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      *
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     public function setDatabase($database)
     {
         if(!$this->_connection->select_db($database)) {
-            throw new RuntimeException('Could not connect with database : '.$database);
+            throw new \RuntimeException('Could not connect with database : '.$database);
         }
 
         $this->_database = $database;
@@ -227,7 +229,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Retrieves the table schema information about the given table
      *
      * @param 	string 	$table A table name or a list of table names
-     * @return	KDatabaseSchemaTable
+     * @return	DatabaseSchemaTable
      */
     public function getTableSchema($table)
     {
@@ -259,7 +261,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
 
         if($this->invokeCommand('before.lock', $context) !== false)
         {
-            $context->result = $this->execute($context->query, KDatabase::RESULT_USE);
+            $context->result = $this->execute($context->query, Database::RESULT_USE);
             $this->invokeCommand('after.lock', $context);
         }
 
@@ -282,7 +284,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
 
         if($this->invokeCommand('before.unlock', $context) !== false)
         {
-            $context->result = $this->execute($context->query, KDatabase::RESULT_USE);
+            $context->result = $this->execute($context->query, Database::RESULT_USE);
             $this->invokeCommand('after.unlock', $context);
         }
 
@@ -293,14 +295,14 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Execute a query
      *
      * @param  string      $query The query to run. Data inside the query should be properly escaped.
-     * @param  integer     $mode  The result made, either the constant KDatabase::RESULT_USE, KDatabase::RESULT_STORE
-     *                            or KDatabase::MULTI_QUERY depending on the desired behavior.
+     * @param  integer     $mode  The result made, either the constant Database::RESULT_USE, Database::RESULT_STORE
+     *                            or Database::MULTI_QUERY depending on the desired behavior.
      * @return mixed       For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                     For other successful queries  return TRUE.
      */
-    protected function _executeQuery($query, $mode = KDatabase::RESULT_STORE)
+    protected function _executeQuery($query, $mode = Database::RESULT_STORE)
     {
-        if ($mode === KDatabase::MULTI_QUERY)
+        if ($mode === Database::MULTI_QUERY)
         {
             $connection = $this->getConnection();
             $result     = $connection->multi_query((string)$query);
@@ -323,7 +325,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
     /**
      * Fetch the first field of the first row
      *
-     * @param	mysqli_result  	$result The result object. A result set identifier returned by the select() function
+     * @param	\mysqli_result  	$result The result object. A result set identifier returned by the select() function
      * @param   integer         $key    The index to use
      * @return  mixed           The value returned in the query or null if the query failed.
      */
@@ -343,7 +345,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Fetch an array of single field results
      *
      *
-     * @param   mysqli_result  	$result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result  	$result The result object. A result set identifier returned by the select() function
      * @param   integer         $key    The index to use
      * @return  array           A sequential array of returned rows.
      */
@@ -363,7 +365,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
     /**
      * Fetch the first row of a result set as an associative array
      *
-     * @param   mysqli_result   $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result   $result The result object. A result set identifier returned by the select() function
      * @return array
      */
     protected function _fetchArray($result)
@@ -380,7 +382,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
      * Returns <var>null</var> if the query fails.
      *
-     * @param   mysqli_result   $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result   $result The result object. A result set identifier returned by the select() function
      * @param   string          $key    The column name of the index to use
      * @return  array   If key is empty as sequential list of returned records.
      */
@@ -404,7 +406,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
     /**
      * Fetch the first row of a result set as an object
      *
-     * @param   mysqli_result  $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result  $result The result object. A result set identifier returned by the select() function
      * @return  object
      */
     protected function _fetchObject($result)
@@ -421,7 +423,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * If <var>key</var> is not empty then the returned array is indexed by the value of the database key.
      * Returns <var>null</var> if the query fails.
      *
-     * @param   mysqli_result  $result The result object. A result set identifier returned by the select() function
+     * @param   \mysqli_result  $result The result object. A result set identifier returned by the select() function
      * @param   string         $key    The column name of the index to use
      * @return  array   If <var>key</var> is empty as sequential array of returned rows.
      */
@@ -458,7 +460,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Retrieves the table schema information about the given tables
      *
      * @param   string $table  A table name.
-     * @return  KDatabaseSchemaTable or null if the table doesn't exist.
+     * @return  DatabaseSchemaTable or null if the table doesn't exist.
      */
     protected function _fetchTableInfo($table)
     {
@@ -468,7 +470,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
             ->like(':like')
             ->bind(array('like' => $table));
 
-        if($info = $this->select($query, KDatabase::FETCH_OBJECT)) {
+        if($info = $this->select($query, Database::FETCH_OBJECT)) {
             $return = $this->_parseTableInfo($info);
         }
 
@@ -488,7 +490,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
             ->show('FULL COLUMNS')
             ->from($table);
 
-        if($columns = $this->select($query, KDatabase::FETCH_OBJECT_LIST))
+        if($columns = $this->select($query, Database::FETCH_OBJECT_LIST))
         {
             foreach($columns as $column)
             {
@@ -516,7 +518,7 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
             ->show('INDEX')
             ->from($table);
 
-        if($indexes = $this->select($query, KDatabase::FETCH_OBJECT_LIST))
+        if($indexes = $this->select($query, Database::FETCH_OBJECT_LIST))
         {
             foreach($indexes as $index) {
                 $return[$index->Key_name][$index->Seq_in_index] = $index;
@@ -530,11 +532,11 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Parses the raw table schema information
      *
      * @param   object  $info  The raw table schema information.
-     * @return  KDatabaseSchemaTable
+     * @return  DatabaseSchemaTable
      */
     protected function _parseTableInfo($info)
     {
-        $table              = new KDatabaseSchemaTable();
+        $table              = new DatabaseSchemaTable();
         $table->name        = $info->Name;
         $table->engine      = $info->Engine;
         $table->type        = $info->Comment == 'VIEW' ? 'VIEW' : 'BASE';
@@ -551,13 +553,13 @@ class KDatabaseDriverMysqli extends KDatabaseDriverAbstract
      * Parse the raw column schema information
      *
      * @param   object  $info The raw column schema information
-     * @return  KDatabaseSchemaColumn
+     * @return  DatabaseSchemaColumn
      */
     protected function _parseColumnInfo($info)
     {
         list($type, $length, $scope) = $this->_parseColumnType($info->Type);
 
-        $column           = new KDatabaseSchemaColumn();
+        $column           = new DatabaseSchemaColumn();
         $column->name     = $info->Field;
         $column->type     = $type;
         $column->length   = $length ? $length : null;

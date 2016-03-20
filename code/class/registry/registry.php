@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Class Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class
+ * @package Kodekit\Library\Class
  */
-class KClassRegistry extends ArrayObject implements KClassRegistryInterface
+class ClassRegistry extends \ArrayObject implements ClassRegistryInterface
 {
     /**
      * The identifier aliases
@@ -44,7 +46,7 @@ class KClassRegistry extends ArrayObject implements KClassRegistryInterface
      *
      * @param  string $class
      * @param  string $path
-     * @return KClassRegistry
+     * @return ClassRegistry
      */
     public function set($class, $path)
     {
@@ -67,7 +69,7 @@ class KClassRegistry extends ArrayObject implements KClassRegistryInterface
      * Remove a class from the registry
      *
      * @param  string $class
-     * @return  KClassRegistry
+     * @return  ClassRegistry
      */
     public function remove($class)
     {
@@ -78,7 +80,7 @@ class KClassRegistry extends ArrayObject implements KClassRegistryInterface
     /**
      * Clears out all objects from the registry
      *
-     * @return  KClassRegistry
+     * @return  ClassRegistry
      */
     public function clear()
     {
@@ -114,7 +116,7 @@ class KClassRegistry extends ArrayObject implements KClassRegistryInterface
      *
      * @param string $class
      * @param string $alias
-     * @return KClassRegistry
+     * @return ClassRegistry
      */
     public function alias($class, $alias)
     {

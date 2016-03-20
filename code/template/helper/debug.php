@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Debug Template Helper
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperDebug extends KTemplateHelperBehavior
+class TemplateHelperDebug extends TemplateHelperBehavior
 {
     /**
      * A string identifier for a known IDE/text editor,
@@ -42,9 +44,9 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -69,10 +71,10 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'editor'   => '',
@@ -102,11 +104,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      */
     public function dump($config = array())
     {
-        // Have to do this to avoid array to KObjectConfig conversion
+        // Have to do this to avoid array to ObjectConfig conversion
         $value = $config['value'];
         unset($config['value']);
 
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'string_length'  => 128,
             'object_depth'   => 4,
@@ -133,7 +135,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
     }
 
     /**
-     * Removes Joomla root from a filename replacing them with the plain text equivalents.
+     * Removes root path from a filename replacing them with the plain text equivalents.
      *
      * Useful for debugging when you want to display a shorter path.
      *
@@ -142,11 +144,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      */
     public function path($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'file'   => '',
             'line'   => '',
-            'root'   => Koowa::getInstance()->getRootPath(),
+            'root'   => \Kodekit::getInstance()->getRootPath(),
             'editor' => $this->_editor,
         ));
 
@@ -187,7 +189,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      */
     public function source($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'padding' => 5,
             'file'    => '',
@@ -257,7 +259,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      */
     public function trace($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'trace'      => null,
             'statements' => array('include', 'include_once', 'require', 'require_once')
@@ -315,12 +317,12 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
                     if (isset($step['class']))
                     {
                         if (method_exists($step['class'], $step['function'])) {
-                            $reflection = new ReflectionMethod($step['class'], $step['function']);
+                            $reflection = new \ReflectionMethod($step['class'], $step['function']);
                         } else {
-                            $reflection = new ReflectionMethod($step['class'], '__call');
+                            $reflection = new \ReflectionMethod($step['class'], '__call');
                         }
                     }
-                    else  $reflection = new ReflectionFunction($step['function']);
+                    else  $reflection = new \ReflectionFunction($step['function']);
 
                     // Get the function parameters
                     $params = $reflection->getParameters();
@@ -376,13 +378,13 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Used to handles recursion in arrays and objects.
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpVar($var, KObjectConfig $config, $level = 0)
+    protected function _dumpVar($var, ObjectConfig $config, $level = 0)
     {
-        if(!$var instanceof KObjectIdentifierInterface)
+        if(!$var instanceof ObjectIdentifierInterface)
         {
             if (method_exists($this, $method = '_dump' . strtoupper(gettype($var)))) {
                 $result = $this->$method($var, $config, $level);
@@ -399,11 +401,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump a NULL
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpNull($var, KObjectConfig $config, $level = 0)
+    protected function _dumpNull($var, ObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-null">NULL</span>'."\n";
     }
@@ -412,11 +414,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump a boolean
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpBoolean($var, KObjectConfig $config, $level = 0)
+    protected function _dumpBoolean($var, ObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-bool">bool</span> '.($var ? 'TRUE' : 'FALSE');
     }
@@ -425,11 +427,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump an integer
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpInteger($var, KObjectConfig $config, $level = 0)
+    protected function _dumpInteger($var, ObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-integer">'.$var.'</span>';
     }
@@ -438,11 +440,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump a float
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpDouble($var, KObjectConfig $config, $level = 0)
+    protected function _dumpDouble($var, ObjectConfig $config, $level = 0)
     {
         $var = is_finite($var) ? ($tmp = json_encode($var)) . (strpos($tmp, '.') === FALSE ? '.0' : '') : var_export($var, TRUE);
 
@@ -453,11 +455,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump a string
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpString($var, KObjectConfig $config, $level = 0)
+    protected function _dumpString($var, ObjectConfig $config, $level = 0)
     {
         if (mb_strlen($var) > $config->string_length) {
             $str = $this->getTemplate()->escape(mb_substr($var, 0, $config->string_length)).'&nbsp;&hellip;';
@@ -472,11 +474,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump an array
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpArray($var, KObjectConfig $config, $level = 0)
+    protected function _dumpArray($var, ObjectConfig $config, $level = 0)
     {
         static $marker;
 
@@ -526,17 +528,17 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump an object
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpObject($var, KObjectConfig $config, $level = 0)
+    protected function _dumpObject($var, ObjectConfig $config, $level = 0)
     {
         $fields = $this->_getObjectVars($var);
 
-        if ($var instanceof Closure)
+        if ($var instanceof \Closure)
         {
-            $rc     = new ReflectionFunction($var);
+            $rc     = new \ReflectionFunction($var);
             $fields = array();
 
             foreach ($rc->getParameters() as $param) {
@@ -551,11 +553,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             );
         }
 
-        if ($var instanceof SplFileInfo) {
+        if ($var instanceof \SplFileInfo) {
             $fields = array('path' => $var->getPathname());
         }
 
-        if ($var instanceof SplObjectStorage)
+        if ($var instanceof \SplObjectStorage)
         {
             $fields = array();
             foreach (clone $var as $obj) {
@@ -563,22 +565,22 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
             }
         }
 
-        if ($var instanceof KObjectInterface) {
+        if ($var instanceof ObjectInterface) {
             unset($fields['__methods']);
         }
 
-        if ($var instanceof KObjectManager) {
+        if ($var instanceof ObjectManager) {
             $fields = array();
         }
 
-        if ($var instanceof KObjectConfigInterface) {
+        if ($var instanceof ObjectConfigInterface) {
             $fields = $var->toArray();
         }
 
         $result = '';
         $result .= '<span class="koowa-dump-object">' . get_class($var) . '</span>';
 
-        if($var instanceof KObjectInterface) {
+        if($var instanceof ObjectInterface) {
             $result .= '<span class="koowa-dump-identifier">(' . $var->getIdentifier() . ')</span>';
         }
 
@@ -591,7 +593,7 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
         {
             if (!in_array($var, $list, true))
             {
-                if ($level < $config->object_depth || $var instanceof Closure)
+                if ($level < $config->object_depth || $var instanceof \Closure)
                 {
                     // @todo count($var) is running _actionCount on model objects
                     $collapsed = false;//$level ? count($var) >= 7 : false;
@@ -631,11 +633,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump an object
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpResource($var, KObjectConfig $config, $level = 0)
+    protected function _dumpResource($var, ObjectConfig $config, $level = 0)
     {
         $type = get_resource_type($var);
 
@@ -666,11 +668,11 @@ class KTemplateHelperDebug extends KTemplateHelperBehavior
      * Dump an identifier
      *
      * @param   mixed         $var    Variable to dump
-     * @param   KObjectConfig $config The configuration options
+     * @param   ObjectConfig $config The configuration options
      * @param   integer       $level  Current recursion level (internal usage only)
      * @return  string
      */
-    protected function _dumpIdentifier($var, KObjectConfig $config, $level = 0)
+    protected function _dumpIdentifier($var, ObjectConfig $config, $level = 0)
     {
         return '<span class="koowa-dump-identifier">'.$var.'</span>'."\n";
     }

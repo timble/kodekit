@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Chunked FileSystem Stream Iterator
@@ -13,23 +15,23 @@
  * Pulls out chunks from an inner stream iterator and yields the chunks as arrays.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream\Iterator
+ * @package Kodekit\Library\Filesystem\Stream\Iterator
  */
-class KFilesystemStreamIteratorChunked implements OuterIterator, Countable
+class FilesystemStreamIteratorChunked implements \OuterIterator, \Countable
 {
     /**
      * The inner stream iterator
      *
      * @var int
      */
-    private $__iterator;
+    private $__inneriterator;
 
     /**
      * Constructor.
      *
-     * @param KFilesystemStreamIterator $iterator  A FilesystemStream object
+     * @param FilesystemStreamIterator $iterator  A FilesystemStream object
      */
-    public function __construct(KFilesystemStreamIterator $iterator)
+    public function __construct(FilesystemStreamIterator $iterator)
     {
         $this->__inneriterator = $iterator;
     }
@@ -38,13 +40,13 @@ class KFilesystemStreamIteratorChunked implements OuterIterator, Countable
      * Seeks to a given chunk position in the stream
      *
      * @param int $position
-     * @throws OutOfBoundsException If the position is not seekable.
+     * @throws \OutOfBoundsException If the position is not seekable.
      * @return void
      */
     public function seek($position)
     {
         if ($position > $this->count()) {
-            throw new OutOfBoundsException('Invalid seek position ('.$position.')');
+            throw new \OutOfBoundsException('Invalid seek position ('.$position.')');
         }
 
         $chunk_size = $this->getChunkSize();
@@ -126,7 +128,7 @@ class KFilesystemStreamIteratorChunked implements OuterIterator, Countable
     /**
      * Get the stream object
      *
-     * @return KFilesystemStreamIterator
+     * @return FilesystemStreamIterator
      */
     public function getInnerIterator()
     {

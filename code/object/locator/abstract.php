@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Object Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Locator
+ * @package Kodekit\Library\Object\Locator
  */
-abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorInterface
+abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInterface
 {
     /**
      * The locator name
@@ -32,15 +34,15 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
     /**
      * Returns a fully qualified class name for a given identifier.
      *
-     * @param KObjectIdentifier $identifier An identifier object
+     * @param ObjectIdentifier $identifier An identifier object
      * @param bool  $fallback   Use the fallback sequence to locate the identifier
      * @return string|false  Return the class name on success, returns FALSE on failure
      */
-    public function locate(KObjectIdentifier $identifier, $fallback = true)
+    public function locate(ObjectIdentifier $identifier, $fallback = true)
     {
-        $domain  = empty($identifier->domain) ? 'koowa' : ucfirst($identifier->domain);
+        $domain  = empty($identifier->domain) ? 'kodekit' : ucfirst($identifier->domain);
         $package = ucfirst($identifier->package);
-        $path    = KStringInflector::camelize(implode('_', $identifier->path));
+        $path    = StringInflector::camelize(implode('_', $identifier->path));
         $file    = ucfirst($identifier->name);
         $class   = $path.$file;
 
@@ -117,7 +119,7 @@ abstract class KObjectLocatorAbstract extends KObject implements KObjectLocatorI
      *
      * @param  string       $identifier
      * @param  string|array $namespace(s) Sequence of fallback namespaces
-     * @return KObjectLocatorAbstract
+     * @return ObjectLocatorAbstract
      */
     public function registerIdentifier($identifier, $namespaces)
     {

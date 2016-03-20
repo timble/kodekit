@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Show Database Query
  *
  * @author  Gergo Erdosi <https://github.com/gergoerdosi>
- * @package Koowa\Library\Database\Query
+ * @package Kodekit\Library\Database\Query
  */
-class KDatabaseQueryShow extends KDatabaseQueryAbstract
+class DatabaseQueryShow extends DatabaseQueryAbstract
 {
     /**
      * The show clause.
@@ -47,7 +49,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      * Build the show clause
      *
      * @param   string $table The name of the table.
-     * @return  KDatabaseQueryShow
+     * @return  DatabaseQueryShow
      */
     public function show($table)
     {
@@ -71,7 +73,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      * Build the like clause
      *
      * @param   string $pattern The pattern to match.
-     * @return  KDatabaseQueryShow
+     * @return  DatabaseQueryShow
      */
     public function like($pattern)
     {
@@ -85,7 +87,7 @@ class KDatabaseQueryShow extends KDatabaseQueryAbstract
      *
      * @param   string $condition   The condition.
      * @param   string $combination Combination type, defaults to 'AND'.
-     * @return  KDatabaseQueryShow
+     * @return  DatabaseQueryShow
      */
     public function where($condition, $combination = 'AND')
     {

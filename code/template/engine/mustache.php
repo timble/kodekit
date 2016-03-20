@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Mustache Template Engine
@@ -13,9 +15,9 @@
  * @link https://github.com/bobthecow/mustache.php
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Nooku\Library\Template\Abstract
+ * @package Kodekit\Library\Template\Engine\Mustache
  */
-class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustache_Loader
+class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache_Loader
 {
     /**
      * The engine file types
@@ -41,9 +43,9 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
     /**
      * Constructor
      *
-     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -52,7 +54,7 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
 
         $self = $this;
 
-        $this->_mustache = new Mustache_Engine(array(
+        $this->_mustache = new \Mustache_Engine(array(
             'loader' => $this,
             'cache'  => $this->_cache ? $this->_cache_path : null,
             'escape' => function($value) use($self) {
@@ -69,13 +71,13 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'strict_callables' => false,
-            'pragmas'          => array(Mustache_Engine::PRAGMA_FILTERS),
+            'pragmas'          => array(\Mustache_Engine::PRAGMA_FILTERS),
         ));
 
         parent::_initialize($config);
@@ -85,9 +87,9 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
      * Load a template by path
      *
      * @param   string  $url The template url
-     * @throws InvalidArgumentException If the template could not be located
-     * @throws RuntimeException         If the template could not be loaded
-     * @return KTemplateEngineMustache|string Returns a string when called by Mustache
+     * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException         If the template could not be loaded
+     * @return TemplateEngineMustache|string Returns a string when called by Mustache
      */
     public function loadFile($url)
     {
@@ -104,7 +106,7 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
      * Set the template content from a string
      *
      * @param  string  $source  The template source
-     * @return KTemplateEngineMustache
+     * @return TemplateEngineMustache
      */
     public function loadString($source)
     {
@@ -130,8 +132,8 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
     {
         parent::render($data);
 
-        if(!$this->_mustache_template instanceof Mustache_Template) {
-            throw new RuntimeException(sprintf('The template cannot be rendered'));
+        if(!$this->_mustache_template instanceof \Mustache_Template) {
+            throw new \RuntimeException(sprintf('The template cannot be rendered'));
         }
 
         //Render the template
@@ -164,7 +166,7 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
             array_push($this->_stack, array('url' => $url, 'file' => $file));
 
             if(!$this->_source = file_get_contents($file)) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+                throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
         }
         else $this->_source = $this->getTemplate()->loadFile($file)->render($this->getData());
@@ -176,7 +178,7 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
      * Locate the template
      *
      * @param  string  $url The template url
-     * @throws InvalidArgumentException If the template could not be located
+     * @throws \InvalidArgumentException If the template could not be located
      * @return string   The template real path
      */
     protected function _locate($url)
@@ -198,7 +200,7 @@ class KTemplateEngineMustache extends KTemplateEngineAbstract implements Mustach
 
         //Locate the template
         if (!$file = $locator->setBasePath($base)->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         return $file;

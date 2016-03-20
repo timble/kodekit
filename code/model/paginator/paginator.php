@@ -1,24 +1,26 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Paginator Model
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Paginator
+ * @package Kodekit\Library\Model\Paginator
  */
-class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
+class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
 {
     /**
      * Get the pages
      *
-     * @return KObjectConfig A KObjectConfig object that holds the page information
+     * @return ObjectConfig A ObjectConfig object that holds the page information
      */
     public function getPages()
     {
@@ -28,25 +30,25 @@ class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
     /**
      * Set a configuration element
      *
-     * @param  string 
-     * @param  mixed 
+     * @param  string
+     * @param  mixed
      * @return void
      */
     public function set($name, $value)
     {
         parent::set($name, $value);
-        
+
         //Only calculate the limit and offset if we have a total
         if($this->total)
         {
             $this->limit  = (int) max($this->limit, 1);
             $this->offset = (int) max($this->offset, 0);
-        
+
             if($this->limit > $this->total) {
                 $this->offset = 0;
             }
-           
-            if(!$this->limit) 
+
+            if(!$this->limit)
             {
                 $this->offset = 0;
                 $this->limit  = $this->total;
@@ -61,11 +63,11 @@ class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
             $this->current = (int) floor($this->offset / $this->limit) + 1;
         }
     }
-    
+
  	/**
      * Implements lazy loading of the pages config property.
      *
-     * @param string 
+     * @param string
      * @return mixed
      */
     public function get($name, $default = null)
@@ -73,10 +75,10 @@ class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
         if($name == 'pages' && !isset($this->pages)) {
             $this->pages = $this->_pages();
         }
-        
+
         return parent::get($name);
     }
-   
+
  	/**
      * Get a list of pages
      *
@@ -84,14 +86,14 @@ class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
      */
     protected function _pages()
     {
-        $pages = new KObjectConfig();
+        $pages = new ObjectConfig();
         $current  = ($this->current - 1) * $this->limit;
-        
+
         // First
         $offset = 0;
         $class  = $offset == $this->offset ? 'pagination__first disabled' : 'pagination__first';
         $pages->first = array('title' => 'First', 'page' => 1, 'offset' => $offset, 'limit' => $this->limit, 'attribs' => array('class' => $class));
-      
+
         // Previous
         $offset = max(0, ($this->current - 2) * $this->limit);
         $class  = $offset == $this->offset ? 'pagination__previous disabled' : 'pagination__previous';
@@ -104,22 +106,22 @@ class KModelPaginator extends KObjectConfig implements KModelPaginatorInterface
             $class = $offset == $this->offset ? 'pagination__offset active' : 'pagination__offset';
             $offsets[] = array('title' => $page, 'page' => $page, 'offset' => $offset, 'limit' => $this->limit, 'attribs' => array('class' => $class));
         }
-        
+
         $pages->offsets = $offsets;
-        
+
         // Next
         $offset = min(($this->count-1) * $this->limit, ($this->current) * $this->limit);
         $class  = $offset == $this->offset ? 'pagination__next disabled' : 'pagination__next';
         $pages->next = array('title' => 'Next', 'page' => $this->current + 1, 'offset' => $offset, 'limit' => $this->limit, 'rel' => 'next', 'attribs' => array('class' => $class));
-       
+
         // Last
         $offset = ($this->count - 1) * $this->limit;
         $class  = $offset == $this->offset ? 'pagination__last disabled' : 'pagination__last';
         $pages->last = array('title' => 'Last', 'page' => $this->count, 'offset' => $offset, 'limit' => $this->limit, 'attribs' => array('class' => $class));
-        
+
         return $pages;
     }
-    
+
     /**
      * Get the offset for each page, optionally with a range
      *

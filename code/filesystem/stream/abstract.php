@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract FileSystem Stream
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream
+ * @package Kodekit\Library\Filesystem\Stream
  */
-abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemStreamInterface
+abstract class FilesystemStreamAbstract extends Object implements FilesystemStreamInterface
 {
     /**
      * The stream name
@@ -109,9 +111,9 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     /**
      * Object constructor
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(ObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -121,7 +123,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         $this->_type    = $config->type;
         $this->_path    = $config->path;
         $this->_mode    = $config->mode;
-        $this->_options = KObjectConfig::unbox($config->options);
+        $this->_options = ObjectConfig::unbox($config->options);
 
         //Attach stream filters
         foreach($config->filters as $key => $filter)
@@ -139,10 +141,10 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'path'       => null,
@@ -168,9 +170,9 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * Opens the stream
      *
      * @param string $mode The mode used to open the file, as detailed for fopen().
-     * @throws BadMethodCallException If open is not supported on the stream
-     * @throws RuntimeException If the stream cannot be opened.
-     * @return KFilesystemStreamAbstract|false Return a stream object or FALSE on failure.
+     * @throws \BadMethodCallException If open is not supported on the stream
+     * @throws \RuntimeException If the stream cannot be opened.
+     * @return FilesystemStreamAbstract|false Return a stream object or FALSE on failure.
      */
     public function open()
     {
@@ -195,14 +197,14 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
 
             if ($this->_resource === false)
             {
-                throw new RuntimeException(sprintf(
+                throw new \RuntimeException(sprintf(
                     'Failed to open stream "%s" with mode "%s"', $path, $this->getMode()
                 ));
             }
 
             return true;
         }
-        else throw new BadMethodCallException('The stream "'.self::getName().'" does not support open.');
+        else throw new \BadMethodCallException('The stream "'.self::getName().'" does not support open.');
 
         return false;
     }
@@ -214,8 +216,8 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      *
      * @param integer|null $length How many bytes of data from the current position should be returned. Defaults to -1
      *                            (use the chunk size, default 8192 bytes).
-     * @throws BadMethodCallException If read is not supported.
-     * @throws LogicException If read is not allowed.
+     * @throws \BadMethodCallException If read is not supported.
+     * @throws \LogicException If read is not allowed.
      * @return string If there are less than count bytes available, return as many as are available. If no more data is
      *                available, return either FALSE or an empty string.
      */
@@ -226,12 +228,12 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         if($resource = $this->getResource())
         {
             if (!$this->isReadable()) {
-                throw new LogicException('The stream does not allow read.');
+                throw new \LogicException('The stream does not allow read.');
             } else {
                 $result = fread($resource, $length < 0 ? $this->getChunkSize() : $length);
             }
         }
-        else throw new BadMethodCallException('The stream "'.self::getName().'" does not support read.');
+        else throw new \BadMethodCallException('The stream "'.self::getName().'" does not support read.');
 
         return $result;
     }
@@ -287,12 +289,12 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      *  LOCK_NB if you don't want flock() to block while locking.
      *
      * @param integer $operation One of the LOCK_* constants
-     * @throws BadMethodCallException if lock is not supported.
+     * @throws \BadMethodCallException if lock is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function lock($operation)
     {
-        throw new BadMethodCallException('The stream  "'.self::getName().'" does not support lock.');
+        throw new \BadMethodCallException('The stream  "'.self::getName().'" does not support lock.');
     }
 
     /**
@@ -300,12 +302,12 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      *
      * This method is called when closing the stream (LOCK_UN).
      *
-     * @throws BadMethodCallException if unlock is not supported.
+     * @throws \BadMethodCallException if unlock is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function unlock()
     {
-        throw new BadMethodCallException('The stream "'.self::getName().'" does not support unlock.');
+        throw new \BadMethodCallException('The stream "'.self::getName().'" does not support unlock.');
     }
 
     /**
@@ -316,8 +318,8 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * Note : Don't forget to update the current position of the stream by number of bytes that were successfully written.
      *
      * @param string $data Should be stored into the underlying stream.
-     * @throws BadMethodCallException if write is not supported.
-     * @throws LogicException If write is not allowed.
+     * @throws \BadMethodCallException if write is not supported.
+     * @throws |LogicException If write is not allowed.
      * @return int Should return the number of bytes that were successfully stored, or 0 if none could be stored.
      */
     public function write($data)
@@ -327,12 +329,12 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         if($resource = $this->getResource())
         {
             if (!$this->isWritable()) {
-                throw new LogicException('The stream does not allow write.');
+                throw new \LogicException('The stream does not allow write.');
             } else {
                 $result = fwrite($resource, $data);
             }
         }
-        else throw new BadMethodCallException('The stream "'.self::getName().'" does not support write.');
+        else throw new \BadMethodCallException('The stream "'.self::getName().'" does not support write.');
 
         return $result;
     }
@@ -340,21 +342,21 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     /**
      * Copy data from one stream to another stream
      *
-     * @param resource|KFilesystemStreamInterface $stream The stream resource to copy the data too
+     * @param resource|FilesystemStreamInterface $stream The stream resource to copy the data too
      * @return bool Returns TRUE on success, FALSE on failure
      */
     public function copy($stream)
     {
         if($this->getResource())
         {
-            if (!$stream instanceof KFilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
+            if (!$stream instanceof FilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
             {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'Stream must be on object implementing the FilesystemStreamInterface or a resource of type "stream".'
                 ));
             }
 
-            if($stream instanceof KFilesystemStreamInterface) {
+            if($stream instanceof FilesystemStreamInterface) {
                 $resource = $stream->getResource();
             } else {
                 $resource = $stream;
@@ -370,18 +372,18 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * Rename a stream
      *
      * @param string $path  The URL which the stream should be renamed to.
-     * @throws BadMethodCallException if rename is not supported.
+     * @throws \BadMethodCallException if rename is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function rename($path)
     {
-        throw new BadMethodCallException('The stream "'.self::getName().'" does not support rename.');
+        throw new \BadMethodCallException('The stream "'.self::getName().'" does not support rename.');
     }
 
     /**
      * Delete a file
      *
-     * @throws BadMethodCallException if unlink is not supported.
+     * @throws \BadMethodCallException if unlink is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function unlink()
@@ -398,7 +400,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
                 return true;
             }
         }
-        else throw new BadMethodCallException('The stream "'.self::getName().'" does not support unlink.');
+        else throw new \BadMethodCallException('The stream "'.self::getName().'" does not support unlink.');
 
         return false;
     }
@@ -424,7 +426,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * If no target stream is being passed and you have cached data that is not yet stored into the underlying storage,
      * you should do so now
      *
-     * @param resource|KFilesystemStreamInterface|null $stream The stream resource to flush the data too
+     * @param resource|FilesystemStreamInterface|null $stream The stream resource to flush the data too
      * @param int  $length  The total bytes to flush, if -1 the stream will be flushed until eof. The limit should
      *                      lie within the total size of the stream.
      * @return boolean Should return TRUE if the cached data was successfully stored (or if there was no data to store),
@@ -434,14 +436,14 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
     {
         if($this->getResource() && $stream !== NULL)
         {
-            if (!$stream instanceof KFilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
+            if (!$stream instanceof FilesystemStreamInterface && !is_resource($stream) && !get_resource_type($stream) == 'stream')
             {
-                throw new InvalidArgumentException(sprintf(
-                    'Stream must be on object implementing the KFilesystemStreamInterface or a resource of type "stream".'
+                throw new \InvalidArgumentException(sprintf(
+                    'Stream must be on object implementing the FilesystemStreamInterface or a resource of type "stream".'
                 ));
             }
 
-            if($stream instanceof KFilesystemStreamInterface) {
+            if($stream instanceof FilesystemStreamInterface) {
                 $resource = $stream->getResource();
             } else {
                 $resource = $stream;
@@ -580,13 +582,13 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      *                      or a filesystem symlink). This flag specified that only information about the link itself
      *                      should be returned, not the resource pointed to by the link. This flag is set in response
      *                      to calls to lstat(), is_link(), or filetype().
-     * @throws BadMethodCallException if info is not supported.
+     * @throws \BadMethodCallException if info is not supported.
      * @return array See http://php.net/stat
      */
     public function getInfo($link = false)
     {
         if(!$this->getResource()) {
-            throw new BadMethodCallException('The stream "'.self::getName().'" does not support stat.');
+            throw new \BadMethodCallException('The stream "'.self::getName().'" does not support stat.');
         }
 
         if($this->isLocal()) {
@@ -682,7 +684,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         $info = $this->getInfo();
 
         if(isset($info[$time])) {
-            $result = new DateTime('@'.$info[$time]);
+            $result = new \DateTime('@'.$info[$time]);
         }
 
         return $result;
@@ -702,14 +704,14 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * Set the stream resource
      *
      * @param resource $resource  Stream resource
-     * @throws RuntimeException  If the resource is not a valid 'stream' resource.
-     * @return KFilesystemStreamAbstract
+     * @throws \RuntimeException  If the resource is not a valid 'stream' resource.
+     * @return FilesystemStreamAbstract
      */
     public function setResource($resource)
     {
         if(get_resource_type($resource) !== 'stream')
         {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 "Not a valid 'stream' resource; received a '%s' resource", get_resource_type($resource)
             ));
         }
@@ -733,7 +735,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
      * Set the chunk size using during read operation
      *
      * @param integer $size The chunk size in bytes
-     * @return KFilesystemStreamAbstract
+     * @return FilesystemStreamAbstract
      */
     public function setChunkSize($size)
     {
@@ -826,7 +828,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
                 //Make sure the class
                 $class = $this->getObject('manager')->getClass($identifier);
 
-                if(array_key_exists('KFilesystemStreamFilterInterface', class_implements($class)))
+                if(array_key_exists(__NAMESPACE__.'\FilesystemStreamFilterInterface', class_implements($class)))
                 {
                     $filter = $class::getName();
 
@@ -1060,7 +1062,7 @@ abstract class KFilesystemStreamAbstract extends KObject implements KFilesystemS
         try {
             $result = $this->toString();
         } catch (Exception $e) {
-            trigger_error('KFilesystemStreamAbstract::__toString exception: '. (string) $e, E_USER_ERROR);
+            trigger_error(__NAMESPACE__.'\FilesystemStreamAbstract::__toString exception: '. (string) $e, E_USER_ERROR);
         }
 
         return $result;

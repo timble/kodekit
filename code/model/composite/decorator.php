@@ -1,25 +1,27 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Composite Model
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Kodekit\Library\Model
  */
-class KModelCompositeDecorator extends KObjectDecorator implements KModelInterface, KModelEntityComposable
+class ModelCompositeDecorator extends ObjectDecorator implements ModelInterface, ModelEntityComposable
 {
     /**
      * Create a new entity for the data store
      *
      * @param  array $properties Array of entity properties
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function create(array $properties = array())
     {
@@ -29,7 +31,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Fetch an entity from the data store using the the model state
      *
-     * @return KModelEntityComposite
+     * @return ModelEntityComposite
      */
     public function fetch()
     {
@@ -50,7 +52,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * Reset the model data and state
      *
      * @param  array $modified List of changed state names
-     * @return KModelInterface
+     * @return ModelInterface
      */
     public function reset(array $modified = array())
     {
@@ -64,9 +66,9 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * entity being inserted. By default the entity will be cloned. The entity will be stored by it's identity_key
      * if set or otherwise by it's object handle.
      *
-     * @param   KModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
+     * @param   ModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function insert($entity, $status = null)
     {
@@ -79,7 +81,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * This functions accepts either a know position or associative array of property/value pairs
      *
      * @param 	string $needle The position or the key to search for
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function find($needle)
     {
@@ -89,7 +91,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Checks if the model contains a specific entity
      *
-     * @param   KModelEntityInterface $entity
+     * @param   ModelEntityInterface $entity
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
     public function contains($entity)
@@ -102,8 +104,8 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      *
      * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
      *
-     * @param  KModelEntityInterface $entity
-     * @return KModelEntityComposite
+     * @param  ModelEntityInterface $entity
+     * @return ModelEntityComposite
      * @throws \InvalidArgumentException if the object doesn't implement ModelEntityInterface
      */
     public function remove($entity)
@@ -117,7 +119,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * This performs an intelligent insert/update and reloads the properties
      * with fresh data from the table on success.
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function save()
     {
@@ -127,7 +129,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Deletes the entity form the data store
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function delete()
     {
@@ -137,7 +139,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Clear the entity data
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function clear()
     {
@@ -199,7 +201,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
      *
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -221,7 +223,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * Remove a property
      *
      * @param   string  $property The property name.
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function removeProperty($name)
     {
@@ -244,7 +246,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      *
      * @param   mixed   $properties  Either and associative array, an object or a ModelEntityInterface
      * @param   boolean $modified    If TRUE, update the modified information for each column being set.
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setProperties($properties, $modified = true)
     {
@@ -275,7 +277,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * Set the status
      *
      * @param   string|null $status The status value or NULL to reset the status
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setStatus($status)
     {
@@ -296,7 +298,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setStatusMessage($message)
     {
@@ -308,7 +310,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
      *
      * @param  array $values Set the state values
      *
-     * @return KModelInterface
+     * @return ModelInterface
      */
     public function setState(array $values)
     {
@@ -318,7 +320,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Method to get state object
      *
-     * @return  KModelStateInterface  The model state object
+     * @return  ModelStateInterface  The model state object
      */
     public function getState()
     {
@@ -416,14 +418,14 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Set the decorated model
      *
-     * @param   KModelInterface $delegate The decorated model
-     * @return  KModelCompositeDecorator
+     * @param   ModelInterface $delegate The decorated model
+     * @return  ModelCompositeDecorator
      * @throws \InvalidArgumentException If the delegate is not a model
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KModelInterface) {
-            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement KModelInterface');
+        if (!$delegate instanceof ModelInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement ModelInterface');
         }
 
         return parent::setDelegate($delegate);
@@ -432,7 +434,7 @@ class KModelCompositeDecorator extends KObjectDecorator implements KModelInterfa
     /**
      * Get the decorated model
      *
-     * @return KModelInterface
+     * @return ModelInterface
      */
     public function getDelegate()
     {

@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Recursable Database Behavior
@@ -13,14 +15,14 @@
  * By default requires a 'parent_id' table column. Column can be configured using the 'parent_column' config option.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorRecursable extends DatabaseBehaviorAbstract
 {
     /**
      * Nodes
      *
-     * @var KDatabaseRowsetInterface
+     * @var DatabaseRowsetInterface
      */
     private $__nodes;
 
@@ -41,9 +43,9 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config = null)
+    public function __construct(ObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -55,10 +57,10 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'parent_column' => 'parent_id'
@@ -86,7 +88,7 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
     /**
      * Get the children
      *
-     * @return  KDatabaseRowsetInterface|null
+     * @return  DatabaseRowsetInterface|null
      */
     public function getChildren()
     {
@@ -96,7 +98,7 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
         {
             $parent = $this->id;
 
-            if(!$this->__children[$parent] instanceof KDatabaseRowsetInterface)
+            if(!$this->__children[$parent] instanceof DatabaseRowsetInterface)
             {
                 $this->__children[$parent] = $this->getTable()->createRowset(array(
                     'data' => $this->__children[$parent]
@@ -112,7 +114,7 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
     /**
      * Get the nodes
      *
-     * @return KDatabaseRowsetInterface
+     * @return DatabaseRowsetInterface
      */
     public function getNodes()
     {
@@ -124,7 +126,7 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
      *
      * @param integer $max_level The maximum allowed level. 0 is used for any level
      * @param integer $parent    The key of the parent to start recursing from. 0 is used for the top level
-     * @return KDatabaseIteratorRecursive
+     * @return DatabaseIteratorRecursive
      * @throws \OutOfBoundsException If a parent key is specified that doesn't exist.
      */
     public function getRecursiveIterator($max_level = 0, $parent = 0)
@@ -140,7 +142,7 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
             $config = array();
         }
 
-        $iterator = new KDatabaseIteratorRecursive($this->getTable()->createRowset($config), $max_level);
+        $iterator = new DatabaseIteratorRecursive($this->getTable()->createRowset($config), $max_level);
         return $iterator;
     }
 
@@ -167,7 +169,7 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
     {
         $row = $this->getMixer();
 
-        if($row instanceof KDatabaseRowInterface)
+        if($row instanceof DatabaseRowInterface)
         {
             if(!$row->hasProperty($this->_parent_column))  {
                 return false;
@@ -180,15 +182,15 @@ class KDatabaseBehaviorRecursable extends KDatabaseBehaviorAbstract
     /**
      * Filter the rowset
      *
-     * @param KDatabaseContext $context
+     * @param DatabaseContext $context
      */
-    protected function _afterSelect(KDatabaseContext $context)
+    protected function _afterSelect(DatabaseContext $context)
     {
         if(!$context->query->isCountQuery())
         {
-            $rowset = KObjectConfig::unbox($context->data);
+            $rowset = ObjectConfig::unbox($context->data);
 
-            if ($rowset instanceof KDatabaseRowsetInterface)
+            if ($rowset instanceof DatabaseRowsetInterface)
             {
                 //Store the nodes
                 $this->__nodes    = $rowset;

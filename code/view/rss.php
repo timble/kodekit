@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Rss View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-class KViewRss extends KViewTemplate
+class ViewRss extends ViewTemplate
 {
     /**
      * Initializes the config for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObjectConfig $config	An optional KObject object with configuration options
+     * @param ObjectConfig $config	An optional Object object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'mimetype' => 'application/rss+xml',
@@ -52,7 +54,7 @@ class KViewRss extends KViewTemplate
      * @param   string  $route   The query string used to create the route
      * @param   boolean $fqr     If TRUE create a fully qualified route. Default TRUE.
      * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return  KDispatcherRouterRoute The route
+     * @return  DispatcherRouterRoute The route
      */
     public function getRoute($route = '', $fqr = true, $escape = true)
     {
@@ -62,10 +64,10 @@ class KViewRss extends KViewTemplate
     /**
      * Prepend the xml prolog
      *
-     * @param KViewContext  $context A view context object
+     * @param ViewContext  $context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(KViewContext $context)
+    protected function _actionRender(ViewContext $context)
     {
         //Prepend the xml prolog
         $result  = '<?xml version="1.0" encoding="utf-8" ?>';

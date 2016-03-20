@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Metadata User Session Container
@@ -13,9 +15,9 @@
  * Session container that stores session metadata and provides utility functions.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User\Session\Container
+ * @package Kodekit\Library\User\Session\Container
  */
-class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
+class UserSessionContainerMetadata extends UserSessionContainerAbstract
 {
     /**
      * Maximum session lifetime
@@ -48,7 +50,7 @@ class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
      * automatically during session start.
      *
      * @param integer $lifetime The session lifetime in seconds
-     * @return KUserSessionContainerMetadata
+     * @return UserSessionContainerMetadata
      */
     public function setLifetime($lifetime)
     {
@@ -195,7 +197,7 @@ class KUserSessionContainerMetadata extends KUserSessionContainerAbstract
     public function _createNonce($secret, $timeout = 180)
     {
         if (is_string($secret) == false || strlen($secret) < 10) {
-            throw new InvalidArgumentException("Missing valid secret");
+            throw new \InvalidArgumentException("Missing valid secret");
         }
 
         $salt = $this->_createSalt(12);

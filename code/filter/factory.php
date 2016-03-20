@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Filter Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-class KFilterFactory extends KObject implements KObjectSingleton
+class FilterFactory extends Object implements ObjectSingleton
 {
     /**
-     * Factory method for KFilterChain classes.
+     * Factory method for FilterChain classes.
      *
      * Method accepts an array of filter names, or filter object identifiers and will create a chained filter
      * using a FIFO approach.
      *
      * @param   string|array $identifier Filter identifier(s)
-     * @param   object|array $config     An optional KObjectConfig object with configuration options
-     * @return  KFilterInterface
+     * @param   object|array $config     An optional ObjectConfig object with configuration options
+     * @return  FilterInterface
      */
     public function createChain($identifier, $config = array())
     {
@@ -41,15 +43,15 @@ class KFilterFactory extends KObject implements KObjectSingleton
     }
 
     /**
-     * Factory method for KFilter classes.
+     * Factory method for Filter classes.
      *
-     * If the filter is not an identifier this function will create it directly instead of going through the KObject
+     * If the filter is not an identifier this function will create it directly instead of going through the Object
      * identification process.
      *
      * @param   string  $filter Filter identifier
-     * @param   object|array $config     An optional KObjectConfig object with configuration options
-     * @throws	UnexpectedValueException	When the filter does not implement FilterInterface
-     * @return  KFilterInterface
+     * @param   object|array $config     An optional ObjectConfig object with configuration options
+     * @throws	\UnexpectedValueException	When the filter does not implement FilterInterface
+     * @return  FilterInterface
      */
     public function createFilter($filter, $config = array())
     {
@@ -63,8 +65,8 @@ class KFilterFactory extends KObject implements KObjectSingleton
         $filter = $this->getObject($identifier, $config);
 
         //Check the filter interface
-        if(!($filter instanceof KFilterInterface)) {
-            throw new UnexpectedValueException('Filter:'.get_class($filter).' does not implement FilterInterface');
+        if(!($filter instanceof FilterInterface)) {
+            throw new \UnexpectedValueException('Filter:'.get_class($filter).' does not implement FilterInterface');
         }
 
         return $filter;
@@ -76,7 +78,7 @@ class KFilterFactory extends KObject implements KObjectSingleton
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
      * @return mixed The result of the function
-     * @throws BadMethodCallException   If method could not be found
+     * @throws \BadMethodCallException   If method could not be found
      */
     public function __call($method, $arguments)
     {

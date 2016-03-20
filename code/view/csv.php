@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Csv View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-class KViewCsv extends KViewAbstract
+class ViewCsv extends ViewAbstract
 {
     /**
      * Character used for quoting
@@ -41,10 +43,10 @@ class KViewCsv extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'version'     => '1.0',
@@ -62,10 +64,10 @@ class KViewCsv extends KViewAbstract
     /**
      * Return the views output
      *
-     * @param KViewContext  $context A view context object
+     * @param ViewContext  $context A view context object
      * @return string   The output of the view
      */
-    protected function _actionRender(KViewContext $context)
+    protected function _actionRender(ViewContext $context)
     {
         $rows    = '';
         $columns = array();

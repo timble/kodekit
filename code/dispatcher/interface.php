@@ -1,24 +1,26 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Dispatcher Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Kodekit\Library\Dispatcher
  */
-interface KDispatcherInterface extends KControllerInterface
+interface DispatcherInterface extends ControllerInterface
 {
     /**
      * Method to get a controller object
      *
-     * @return  KControllerAbstract
+     * @return  ControllerAbstract
      */
     public function getController();
 
@@ -28,7 +30,7 @@ interface KDispatcherInterface extends KControllerInterface
      * @param   mixed   $controller An object that implements ControllerInterface, ObjectIdentifier object
      *                              or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return	KDispatcherInterface
+     * @return	DispatcherInterface
      */
     public function setController($controller, $config = array());
 
@@ -42,7 +44,7 @@ interface KDispatcherInterface extends KControllerInterface
     /**
      * Method to set the controller action to be executed
      *
-     * @return	KDispatcherInterface
+     * @return	DispatcherInterface
      */
     public function setControllerAction($action);
 }

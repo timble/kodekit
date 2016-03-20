@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Identifier
@@ -14,11 +16,11 @@
  * methods for derived formats.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Identifier
+ * @package Kodekit\Library\Object\Identifier
  *
  * @property string $name object name
  */
-class KObjectIdentifier implements KObjectIdentifierInterface
+class ObjectIdentifier implements ObjectIdentifierInterface
 {
     /**
      * The identifier config
@@ -30,7 +32,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     /**
      * The runtime config
      *
-     * @var KObjectConfig
+     * @var ObjectConfig
      */
     protected $_config = null;
 
@@ -81,7 +83,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      *
      * @param  string|array $identifier Identifier string or array in type://domain/package.[.path].name format
      * @param	array       $config     An optional associative array of configuration settings.
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier cannot be parsed
      */
     public function __construct($identifier, array $config = array())
     {
@@ -89,7 +91,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
         if(!is_array($identifier))
         {
             if(false === $parts = parse_url($identifier)) {
-                throw new KObjectExceptionInvalidIdentifier('Identifier cannot be parsed : '.$identifier);
+                throw new ObjectExceptionInvalidIdentifier('Identifier cannot be parsed : '.$identifier);
             }
 
             // Set the type
@@ -213,12 +215,12 @@ class KObjectIdentifier implements KObjectIdentifierInterface
      *
      * This function will lazy create a config object is one does not exist yet.
      *
-     * @return KObjectConfig
+     * @return ObjectConfig
      */
     public function getConfig()
     {
-        if(!$this->_config instanceof KObjectConfig) {
-            $this->_config = new KObjectConfig($this->__config);
+        if(!$this->_config instanceof ObjectConfig) {
+            $this->_config = new ObjectConfig($this->__config);
         }
 
         return $this->_config;
@@ -227,7 +229,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     /**
      * Get the mixin registry
      *
-     * @return KObjectConfig
+     * @return ObjectConfig
      */
     public function getMixins()
     {
@@ -241,7 +243,7 @@ class KObjectIdentifier implements KObjectIdentifierInterface
     /**
      * Get the decorators
      *
-     *  @return KObjectConfig
+     *  @return ObjectConfig
      */
     public function getDecorators()
     {

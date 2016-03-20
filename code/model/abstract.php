@@ -1,24 +1,26 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Model
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Kodekit\Library\Model
  */
-abstract class KModelAbstract extends KObject implements KModelInterface, KCommandCallbackDelegate
+abstract class ModelAbstract extends Object implements ModelInterface, CommandCallbackDelegate
 {
     /**
      * A state object
      *
-     * @var KModelStateInterface
+     * @var ModelStateInterface
      */
     private $__state;
 
@@ -32,7 +34,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Entity object
      *
-     * @var KModelEntityInterface
+     * @var ModelEntityInterface
      */
     protected $_entity;
 
@@ -46,9 +48,9 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config    An optional KObjectConfig object with configuration options
+     * @param  ObjectConfig $config    An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -70,10 +72,10 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'identity_key'     => null,
@@ -89,7 +91,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Fetch an entity from the data store
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     final public function fetch()
     {
@@ -104,7 +106,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
                 $this->invokeCommand('after.fetch', $context);
             }
 
-            $this->_entity = KObjectConfig::unbox($context->entity);
+            $this->_entity = ObjectConfig::unbox($context->entity);
         }
 
         return $this->_entity;
@@ -114,7 +116,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      * Create a new entity for the data store
      *
      * @param  array $properties Array of entity properties
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     final public function create(array $properties = array())
     {
@@ -127,7 +129,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
             $this->invokeCommand('after.create', $context);
         }
 
-        $this->_entity = KObjectConfig::unbox($context->entity);
+        $this->_entity = ObjectConfig::unbox($context->entity);
 
         return $this->_entity;
     }
@@ -150,7 +152,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
                 $this->invokeCommand('after.count', $context);
             }
 
-            $this->_count = KObjectConfig::unbox($context->count);
+            $this->_count = ObjectConfig::unbox($context->count);
         }
 
         return $this->_count;
@@ -173,7 +175,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
             $this->invokeCommand('after.reset', $context);
         }
 
-        $this->_count = KObjectConfig::unbox($context->count);
+        $this->_count = ObjectConfig::unbox($context->count);
 
         return $this;
     }
@@ -182,10 +184,10 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      * Invoke a command handler
      *
      * @param string            $method   The name of the method to be executed
-     * @param KCommandInterface  $command   The command
+     * @param CommandInterface  $command   The command
      * @return mixed Return the result of the handler.
      */
-    public function invokeCommandCallback($method, KCommandInterface $command)
+    public function invokeCommandCallback($method, CommandInterface $command)
     {
         return $this->$method($command);
     }
@@ -194,7 +196,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      * Set the model state values
      *
      * @param  array $values Set the state values
-     * @return KModelAbstract
+     * @return ModelAbstract
      */
     public function setState(array $values)
     {
@@ -205,22 +207,22 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Get the model state object
      *
-     * @throws UnexpectedValueException
-     * @return KModelStateInterface  The model state object
+     * @throws \UnexpectedValueException
+     * @return ModelStateInterface  The model state object
      */
     public function getState()
     {
-        if(!$this->__state instanceof KModelStateInterface)
+        if(!$this->__state instanceof ModelStateInterface)
         {
             $this->__state = $this->getObject($this->__state, array(
                 'model'    => $this,
                 'defaults' => $this->getConfig()->state_defaults
             ));
 
-            if(!$this->__state instanceof KModelStateInterface)
+            if(!$this->__state instanceof ModelStateInterface)
             {
-                throw new UnexpectedValueException(
-                    'State: '.get_class($this->__state).' does not implement KModelStateInterface'
+                throw new \UnexpectedValueException(
+                    'State: '.get_class($this->__state).' does not implement ModelStateInterface'
                 );
             }
         }
@@ -231,11 +233,11 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Get the model context
      *
-     * @return  KModelContext
+     * @return  ModelContext
      */
     public function getContext()
     {
-        $context = new KModelContext();
+        $context = new ModelContext();
         $context->setSubject($this);
         $context->setState($this->getState());
         $context->setIdentityKey($this->_identity_key);
@@ -246,23 +248,23 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Create a new entity for the data store
      *
-     * @param KModelContext $context A model context object
+     * @param ModelContext $context A model context object
      *
-     * @return KModelEntityInterface The entity
+     * @return ModelEntityInterface The entity
      */
-    protected function _actionCreate(KModelContext $context)
+    protected function _actionCreate(ModelContext $context)
     {
         //Get the data
-        $data = KModelContext::unbox($context->entity);
+        $data = ModelContext::unbox($context->entity);
 
         //Create the entity identifier
         $identifier = $this->getIdentifier()->toArray();
         $identifier['path'] = array('model', 'entity');
 
         if(!is_numeric(key($data))) {
-            $identifier['name'] = KStringInflector::singularize($identifier['name']);
+            $identifier['name'] = StringInflector::singularize($identifier['name']);
         } else {
-            $identifier['name'] = KStringInflector::pluralize($identifier['name']);
+            $identifier['name'] = StringInflector::pluralize($identifier['name']);
         }
 
         $options = array(
@@ -276,14 +278,14 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Fetch a new entity from the data store
      *
-     * @param KModelContext $context A model context object
-     * @return KModelEntityInterface The entity
+     * @param ModelContext $context A model context object
+     * @return ModelEntityInterface The entity
      */
-    protected function _actionFetch(KModelContext $context)
+    protected function _actionFetch(ModelContext $context)
     {
         $identifier = $this->getIdentifier()->toArray();
         $identifier['path'] = array('model', 'entity');
-        $identifier['name'] = KStringInflector::pluralize($identifier['name']);
+        $identifier['name'] = StringInflector::pluralize($identifier['name']);
 
         $options = array(
             'identity_key' => $context->getIdentityKey()
@@ -295,10 +297,10 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Get the total number of entities
      *
-     * @param KModelContext $context A model context object
+     * @param ModelContext $context A model context object
      * @return integer  The total number of entities
      */
-    protected function _actionCount(KModelContext $context)
+    protected function _actionCount(ModelContext $context)
     {
         return count($this->fetch());
     }
@@ -306,10 +308,10 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Reset the model
      *
-     * @param KModelContext $context A model context object
+     * @param ModelContext $context A model context object
      * @return void
      */
-    protected function _actionReset(KModelContext $context)
+    protected function _actionReset(ModelContext $context)
     {
         $this->_entity = null;
         $this->_count  = null;
@@ -322,7 +324,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return  KModelAbstract
+     * @return  ModelAbstract
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */
@@ -352,7 +354,7 @@ abstract class KModelAbstract extends KObject implements KModelInterface, KComma
     /**
      * Fetch the data when model is invoked.
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function __invoke()
     {

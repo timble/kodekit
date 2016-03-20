@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Template View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
+abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
 {
     /**
      * Template identifier (com://APP/COMPONENT.template.NAME)
@@ -39,9 +41,9 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -60,10 +62,10 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'auto_fetch'         => true,
@@ -84,10 +86,10 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
     /**
      * Return the views output
      *
-     * @param KViewContext  $context A view context object
+     * @param ViewContext  $context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(KViewContext $context)
+    protected function _actionRender(ViewContext $context)
     {
         $format = $this->getFormat(); //format cannot be changed through context
         $layout = $context->layout;
@@ -105,7 +107,7 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
             }
         }
 
-        $data = KObjectConfig::unbox($context->data);
+        $data = ObjectConfig::unbox($context->data);
 
         //Render the template
         $this->_content = $this->getTemplate()
@@ -122,10 +124,10 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
      * This function will always fetch the model state. Model data will only be fetched if the auto_fetch property is
      * set to TRUE.
      *
-     * @param KViewContext  $context A view context object
+     * @param ViewContext  $context A view context object
      * @return void
      */
-    protected function _fetchData(KViewContext $context)
+    protected function _fetchData(ViewContext $context)
     {
         $model = $this->getModel();
 
@@ -159,15 +161,15 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
     /**
      * Get the template object attached to the view
      *
-     * @throws UnexpectedValueException    If the template doesn't implement the TemplateInterface
-     * @return  KTemplateInterface
+     * @throws \UnexpectedValueException    If the template doesn't implement the TemplateInterface
+     * @return  TemplateInterface
      */
     public function getTemplate()
     {
-        if (!$this->_template instanceof KTemplateInterface)
+        if (!$this->_template instanceof TemplateInterface)
         {
             //Make sure we have a template identifier
-            if (!($this->_template instanceof KObjectIdentifier)) {
+            if (!($this->_template instanceof ObjectIdentifier)) {
                 $this->setTemplate($this->_template);
             }
 
@@ -178,10 +180,10 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
 
             $this->_template = $this->getObject($this->_template, $options);
 
-            if(!$this->_template instanceof KTemplateInterface)
+            if(!$this->_template instanceof TemplateInterface)
             {
-                throw new UnexpectedValueException(
-                    'Template: '.get_class($this->_template).' does not implement KTemplateInterface'
+                throw new \UnexpectedValueException(
+                    'Template: '.get_class($this->_template).' does not implement TemplateInterface'
                 );
             }
         }
@@ -192,14 +194,14 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
     /**
      * Method to set a template object attached to the view
      *
-     * @param   mixed   $template An object that implements KObjectInterface, an object that implements
-     *                            KObjectIdentifierInterface or valid identifier string
-     * @throws  UnexpectedValueException    If the identifier is not a table identifier
-     * @return  KViewAbstract
+     * @param   mixed   $template An object that implements ObjectInterface, an object that implements
+     *                            ObjectIdentifierInterface or valid identifier string
+     * @throws  \UnexpectedValueException    If the identifier is not a table identifier
+     * @return  ViewAbstract
      */
     public function setTemplate($template)
     {
-        if (!($template instanceof KTemplateInterface))
+        if (!($template instanceof TemplateInterface))
         {
             if (is_string($template) && strpos($template, '.') === false)
             {
@@ -249,7 +251,7 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
      * @param string|array $route   The query string used to create the route
      * @param boolean $fqr          If TRUE create a fully qualified route. Default TRUE.
      * @param boolean $escape       If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return  KDispatcherRouterRoute The route
+     * @return  DispatcherRouterRoute The route
      */
     public function getRoute($route = '', $fqr = true, $escape = true)
     {
@@ -282,11 +284,11 @@ abstract class KViewTemplate extends KViewAbstract  implements KViewTemplatable
     /**
      * Get the view context
      *
-     * @return  KViewContext
+     * @return  ViewContext
      */
     public function getContext()
     {
-        $context = new KViewContextTemplate(parent::getContext());
+        $context = new ViewContextTemplate(parent::getContext());
         $context->setLayout($this->getLayout());
 
         return $context;

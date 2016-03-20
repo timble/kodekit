@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Event Publisher Interface
@@ -13,51 +15,51 @@
  * Interface provides a topic based event publishing mechanism. Higher priority event listeners are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event\Publisher
+ * @package Kodekit\Library\Event\Publisher
  */
-interface KEventPublisherInterface extends KObjectHandlable
+interface EventPublisherInterface extends ObjectHandlable
 {
     /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * @param  string|KEventInterface             $event      The event name or a KEventInterface object
-     * @param  array|Traversable|KEventInterface  $attributes An associative array, an object implementing the
-     *                                                        KEventInterface or a Traversable object
+     * @param  string|EventInterface             $event      The event name or a EventInterface object
+     * @param  array|Traversable|EventInterface  $attributes An associative array, an object implementing the
+     *                                                        EventInterface or a Traversable object
      * @param  mixed                              $target     The event target
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return null|KEventInterface Returns the event object. If the chain is not enabled will return NULL.
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return null|EventInterface Returns the event object. If the chain is not enabled will return NULL.
      */
     public function publishEvent($event, $attributes = array(), $target = null);
 
     /**
      * Add an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
      * @param integer                 $priority  The event priority, usually between 1 (high priority) and 5 (lowest),
      *                                            default is 3 (normal)
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherAbstract
      */
-    public function addListener($event, $listener, $priority = KEventInterface::PRIORITY_NORMAL);
+    public function addListener($event, $listener, $priority = EventInterface::PRIORITY_NORMAL);
 
     /**
      * Remove an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherAbstract
      */
     public function removeListener($event, $listener);
 
     /**
      * Get a list of listeners for a specific event
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
+     * @param string|EventInterface  $event     The event name or a EventInterface object
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
      * @return array An array containing the listeners ordered by priority
      */
     public function getListeners($event);
@@ -65,22 +67,22 @@ interface KEventPublisherInterface extends KObjectHandlable
     /**
      * Set the priority of a listener
      *
-     * @param  string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param  string|EventInterface  $event     The event name or a EventInterface object
      * @param  callable                $listener  The listener
      * @param  integer                 $priority  The event priority
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherAbstract
      */
     public function setListenerPriority($event, $listener, $priority);
 
     /**
      * Get the priority of an event
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
      * @return integer|false The event priority or FALSE if the event isn't listened for.
      */
     public function getListenerPriority($event, $listener);
@@ -88,7 +90,7 @@ interface KEventPublisherInterface extends KObjectHandlable
     /**
      * Enable the profiler
      *
-     * @return  KEventPublisherInterface
+     * @return  EventPublisherInterface
      */
     public function setEnabled($enabled);
 

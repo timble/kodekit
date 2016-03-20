@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Sluggable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
 {
     /**
      * The column name from where to generate the slug, or a set of column names to concatenate for generating the slug.
@@ -64,13 +66,13 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config = null)
+    public function __construct( ObjectConfig $config = null)
     {
         parent::__construct($config);
 
-        $this->_columns   = (array) KObjectConfig::unbox($config->columns);
+        $this->_columns   = (array) ObjectConfig::unbox($config->columns);
         $this->_separator = $config->separator;
         $this->_updatable = $config->updatable;
         $this->_length    = $config->length;
@@ -82,10 +84,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'columns'   => 'title',
@@ -111,7 +113,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
         $table  = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
-        if($table instanceof KDatabaseTableInterface)
+        if($table instanceof DatabaseTableInterface)
         {
             if($table->hasColumn('slug'))
             {
@@ -156,10 +158,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Requires a 'slug' column
      *
-     * @param  KDatabaseContextInterface $context
+     * @param  DatabaseContextInterface $context
      * @return void
      */
-    protected function _beforeInsert(KDatabaseContextInterface $context)
+    protected function _beforeInsert(DatabaseContextInterface $context)
     {
         $this->_createSlug();
     }
@@ -172,10 +174,10 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
      *
      * Requires a 'slug' column
      *
-     * @param  KDatabaseContextInterface $context
+     * @param  DatabaseContextInterface $context
      * @return void
      */
-    protected function _beforeUpdate(KDatabaseContextInterface $context)
+    protected function _beforeUpdate(DatabaseContextInterface $context)
     {
         if($this->_updatable) {
             $this->_createSlug();
@@ -214,7 +216,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
     /**
      * Create a sluggable filter
      *
-     * @return KFilterSlug
+     * @return FilterSlug
      */
     protected function _createFilter()
     {
@@ -268,7 +270,7 @@ class KDatabaseBehaviorSluggable extends KDatabaseBehaviorAbstract
                 ->where('slug LIKE :slug')
                 ->bind(array('slug' => $this->slug . '-%'));
 
-            $slugs = $table->select($query, KDatabase::FETCH_FIELD_LIST);
+            $slugs = $table->select($query, Database::FETCH_FIELD_LIST);
 
             $i = 1;
             while(in_array($this->slug.'-'.$i, $slugs)) {

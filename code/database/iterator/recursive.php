@@ -1,28 +1,30 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Recursive Database Iterator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseIteratorRecursive extends \RecursiveIteratorIterator
+class DatabaseIteratorRecursive extends \RecursiveIteratorIterator
 {
     /**
      * Constructor
      *
-     * @param KDatabaseRowsetInterface $rowset
+     * @param DatabaseRowsetInterface $rowset
      * @param integer $max_level The maximum allowed level. 0 is used for any level
-     * @return KDatabaseIteratorRecursive
+     * @return DatabaseIteratorRecursive
      */
-    public function __construct(KDatabaseRowsetInterface $rowset, $max_level = 0)
+    public function __construct(DatabaseRowsetInterface $rowset, $max_level = 0)
     {
         parent::__construct(static::_createInnerIterator($rowset), \RecursiveIteratorIterator::SELF_FIRST);
 
@@ -62,7 +64,7 @@ class KDatabaseIteratorRecursive extends \RecursiveIteratorIterator
      * Set the maximum iterator level
      *
      * @param int $max
-     * @return KDatabaseIteratorRecursive
+     * @return DatabaseIteratorRecursive
      */
     public function setMaxLevel($max = 0)
     {
@@ -84,10 +86,10 @@ class KDatabaseIteratorRecursive extends \RecursiveIteratorIterator
     /**
      * Create a recursive iterator from a rowset
      *
-     * @param KDatabaseRowsetInterface $rowset
+     * @param DatabaseRowsetInterface $rowset
      * @return \RecursiveIterator
      */
-    protected static function _createInnerIterator(KDatabaseRowsetInterface $rowset)
+    protected static function _createInnerIterator(DatabaseRowsetInterface $rowset)
     {
         $iterator = new \RecursiveArrayIterator($rowset->getIterator());
         $iterator = new \RecursiveCachingIterator($iterator, \CachingIterator::TOSTRING_USE_KEY);

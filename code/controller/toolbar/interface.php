@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Controller Toolbar Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Kodekit\Library\Controller\Toolbar
  */
-interface KControllerToolbarInterface extends IteratorAggregate, Countable
+interface ControllerToolbarInterface extends \IteratorAggregate, \Countable
 {
     /**
      * Get the toolbar's name
@@ -34,7 +36,7 @@ interface KControllerToolbarInterface extends IteratorAggregate, Countable
      *
      * @param   string	$name    The command name
      * @param	array   $config  An optional associative array of configuration settings
-     * @return  KControllerToolbarCommandInterface  The command object that was added
+     * @return  ControllerToolbarCommandInterface  The command object that was added
      */
     public function addCommand($name, $config = array());
 
@@ -43,7 +45,7 @@ interface KControllerToolbarInterface extends IteratorAggregate, Countable
      *
      * @param string $name  The command name
      * @param array $config  An optional associative array of configuration settings
-     * @return KControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
+     * @return ControllerToolbarCommandInterface|boolean A toolbar command if found, false otherwise.
      */
     public function getCommand($name, $config = array()) ;
 

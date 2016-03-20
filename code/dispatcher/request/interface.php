@@ -1,24 +1,26 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Dispatcher Request Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Request
+ * @package Kodekit\Library\Dispatcher\Request
  */
-interface KDispatcherRequestInterface extends KControllerRequestInterface
+interface DispatcherRequestInterface extends ControllerRequestInterface
 {
     /**
      * Receive the request by passing it through transports
      *
-     * @return KDispatcherRequestTransportInterface
+     * @return DispatcherRequestTransportInterface
      */
     public function receive();
 
@@ -28,7 +30,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * @param   mixed    $transport    An object that implements ObjectInterface, ObjectIdentifier object
      *                                 or valid identifier string
      * @param   array    $config    An optional associative array of configuration settings
-     * @return KDispatcherResponseInterface
+     * @return DispatcherResponseInterface
      */
     public function getTransport($transport, $config = array());
 
@@ -38,7 +40,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                            or valid identifier string
      * @param   array $config  An optional associative array of configuration settings
-     * @return KDispatcherResponseInterface
+     * @return DispatcherResponseInterface
      */
     public function attachTransport($transport, $config = array());
 
@@ -48,7 +50,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * You should only list the reverse proxies that you manage directly.
      *
      * @param array $proxies A list of trusted proxies
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function setProxies(array $proxies);
 
@@ -63,14 +65,14 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * Set the request cookies
      *
      * @param  array $cookies
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function setCookies($cookies);
 
     /**
      * Get the request cookies
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function getCookies();
 
@@ -78,14 +80,14 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * Set the request files
      *
      * @param  array $files
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function setFiles($files);
 
     /**
      * Get the request files
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function getFiles();
 
@@ -124,7 +126,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * @link     http://en.wikipedia.org/wiki/HTTP_referrer
      *
      * @param   boolean  $isInternal Only allow internal url's
-     * @return  KHttpUrl A HttpUrl object
+     * @return  HttpUrl A HttpUrl object
      */
     public function getReferrer($isInternal = true);
 
@@ -169,7 +171,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * Set the base URL for which the request is executed.
      *
      * @param string $url
-     * @return KDispatcherRequest
+     * @return DispatcherRequest
      */
     public function setBaseUrl($url);
 
@@ -184,7 +186,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * Set the base path for which the request is executed.
      *
      * @param string $path
-     * @return KDispatcherRequest
+     * @return DispatcherRequest
      */
     public function setBasePath($path);
 
@@ -206,7 +208,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      * @param string       $format     The format
      * @param string|array $mime_types The associated mime types (the preferred one must be the first as it will be used
      *                                as the content type)
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function addFormat($format, $mime_types);
 
@@ -236,7 +238,7 @@ interface KDispatcherRequestInterface extends KControllerRequestInterface
      *
      *  @link : http://tools.ietf.org/html/rfc2616#section-14.35
      *
-     * @throws KHttpExceptionRangeNotSatisfied If the range info is not valid or if the start offset is large then the end offset
+     * @throws HttpExceptionRangeNotSatisfied If the range info is not valid or if the start offset is large then the end offset
      * @return array List of request ranges
      */
     public function getRanges();

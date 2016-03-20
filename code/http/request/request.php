@@ -1,20 +1,22 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Request
+ * @package Kodekit\Library\Http\Request
  * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5
  */
-class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
+class HttpRequest extends HttpMessage implements HttpRequestInterface
 {
     // Methods
     const GET     = 'GET';
@@ -37,17 +39,17 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     /**
      * URL of the request regardless of the server
      *
-     * @var KHttpUrl
+     * @var HttpUrl
      */
     protected $_url;
 
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KHttpRequest
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return HttpRequest
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -63,10 +65,10 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'method'  => self::GET,
@@ -93,7 +95,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
      * Set the method for this request
      *
      * @param  string $method
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return HttpRequest
      */
     public function setMethod($method)
@@ -101,7 +103,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
         $method = strtoupper($method);
 
         if (!defined('static::'.$method)) {
-            throw new InvalidArgumentException('Invalid HTTP method passed');
+            throw new \InvalidArgumentException('Invalid HTTP method passed');
         }
 
         $this->_method = $method;
@@ -133,7 +135,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     /**
      * Return the Url of the request regardless of the server
      *
-     * @return  KHttpUrl A HttpUrl object
+     * @return  HttpUrl A HttpUrl object
      */
     public function getUrl()
     {
@@ -288,7 +290,7 @@ class KHttpRequest extends KHttpMessage implements KHttpRequestInterface
     {
         parent::__clone();
 
-        if($this->_url instanceof KHttpUrl) {
+        if($this->_url instanceof HttpUrl) {
             $this->_url = clone $this->_url;
         }
     }

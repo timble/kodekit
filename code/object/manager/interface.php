@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Manager Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Manager
+ * @package Kodekit\Library\Object\Manager
  */
-interface KObjectManagerInterface
+interface ObjectManagerInterface
 {
     /**
      * Get an object instance based on an object identifier
@@ -21,23 +23,23 @@ interface KObjectManagerInterface
      * If the object implements the ObjectInstantiable interface the manager will delegate object instantiation
      * to the object itself.
      *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param   mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @param   array $config     An optional associative array of configuration settings.
-     * @return  KObjectInterface  Return object on success, throws exception on failure
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws	KObjectExceptionInvalidObject     If the object doesn't implement the KObjectInterface
-     * @throws  KObjectExceptionNotFound          If object cannot be loaded
-     * @throws  KObjectExceptionNotInstantiated   If object cannot be instantiated
+     * @return  ObjectInterface  Return object on success, throws exception on failure
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws	ObjectExceptionInvalidObject     If the object doesn't implement the ObjectInterface
+     * @throws  ObjectExceptionNotFound          If object cannot be loaded
+     * @throws  ObjectExceptionNotInstantiated   If object cannot be instantiated
      */
     public function getObject($identifier, array $config = array());
 
     /**
      * Insert the object instance using the identifier
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @param object $object     The object instance to store
-     * @return KObjectManagerInterface
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @return ObjectManagerInterface
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function setObject($identifier, $object);
 
@@ -45,14 +47,14 @@ interface KObjectManagerInterface
      * Returns an identifier object.
      *
      * Accepts various types of parameters and returns a valid identifier. Parameters can either be an
-     * object that implements KObjectInterface, or a KObjectIdentifier object, or valid identifier
+     * object that implements ObjectInterface, or a ObjectIdentifier object, or valid identifier
      * string. Function recursively resolves identifier aliases and returns the aliased identifier.
      *
      * If no identifier is passed the object identifier of this object will be returned.
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return KObjectIdentifier
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return ObjectIdentifier
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function getIdentifier($identifier = null);
 
@@ -62,10 +64,10 @@ interface KObjectManagerInterface
      * This function will reset the identifier if it has already been set. Use this very carefully as it can have
      * unwanted side-effects.
      *
-     * @param KObjectIdentifier  $identifier An ObjectIdentifier
-     * @return KObjectManager
+     * @param ObjectIdentifier  $identifier An ObjectIdentifier
+     * @return ObjectManager
      */
-    public function setIdentifier(KObjectIdentifier $identifier);
+    public function setIdentifier(ObjectIdentifier $identifier);
 
     /**
      * Check if an identifier exists
@@ -78,7 +80,7 @@ interface KObjectManagerInterface
     /**
      * Get the identifier class
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @param bool  $fallback   Use fallbacks when locating the class. Default is TRUE.
      * @return string|false  Returns the class name or false if the class could not be found.
      */
@@ -88,8 +90,8 @@ interface KObjectManagerInterface
      * Get the object configuration
      *
      * @param mixed  $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @return KObjectConfig
-     * @throws KObjectExceptionInvalidIdentifier  If the identifier is not valid
+     * @return ObjectConfig
+     * @throws ObjectExceptionInvalidIdentifier  If the identifier is not valid
      */
     public function getConfig($identifier = null);
 
@@ -100,11 +102,11 @@ interface KObjectManagerInterface
      * with the represented by the identifier if the object is registered in the object manager. This mostly applies to
      * singletons but can also apply to other objects that are manually registered.
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param mixed $mixin      An KObjectIdentifier, identifier string or object implementing ObjectMixinInterface
-     * @return KObjectManagerInterface
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @see KObjectMixable::mixin()
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @param mixed $mixin      An ObjectIdentifier, identifier string or object implementing ObjectMixinInterface
+     * @return ObjectManagerInterface
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @see ObjectMixable::mixin()
      */
     public function registerMixin($identifier, $mixin);
 
@@ -115,30 +117,30 @@ interface KObjectManagerInterface
      * also decorated if the object is registered in the object manager. This mostly applies to singletons but can also
      * apply to other objects that are manually registered.
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @param mixed $decorator  An KObjectIdentifier, identifier string or object implementing KObjectDecoratorInterface
-     * @return KObjectManagerInterface
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @see KObjectDecoratable::decorate()
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @param mixed $decorator  An ObjectIdentifier, identifier string or object implementing ObjectDecoratorInterface
+     * @return ObjectManagerInterface
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @see ObjectDecoratable::decorate()
      */
     public function registerDecorator($identifier, $decorator);
 
     /**
      * Set an alias for an identifier
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @param string $alias     The identifier alias
-     * @return KObjectManager
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @return ObjectManager
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function registerAlias($identifier, $alias);
 
     /**
      * Get the aliases for an identifier
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @return array An array of aliases
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function getAliases($identifier);
 
@@ -147,8 +149,8 @@ interface KObjectManagerInterface
      *
      * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectLocatorInterface
      * @param array $config
-     * @return KObjectManagerInterface
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @return ObjectManagerInterface
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function registerLocator($identifier, array $config = array());
 
@@ -156,31 +158,31 @@ interface KObjectManagerInterface
      * Get a registered object locator based on his type
      *
      * @param string $type The locator type
-     * @return KObjectLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     * @return ObjectLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
      */
     public function getLocator($type);
 
     /**
      * Get the class loader
      *
-     * @return KClassLoaderInterface
+     * @return ClassLoaderInterface
      */
     public function getClassLoader();
 
     /**
      * Set the class loader
      *
-     * @param KClassLoaderInterface $loader
-     * @return KObjectManagerInterface
+     * @param ClassLoaderInterface $loader
+     * @return ObjectManagerInterface
      */
-    public function setClassLoader(KClassLoaderInterface $loader);
+    public function setClassLoader(ClassLoaderInterface $loader);
 
     /**
      * Check if the object instance exists based on the identifier
      *
-     * @param mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @return boolean Returns TRUE on success or FALSE on failure.
-     * @throws KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws ObjectExceptionInvalidIdentifier If the identifier is not valid
      */
     public function isRegistered($identifier);
 
@@ -203,7 +205,7 @@ interface KObjectManagerInterface
     /**
      * Check if the identifier is an alias
      *
-     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @return boolean Returns TRUE if the identifiers is an alias FALSE otherwise
      */
     public function isAlias($identifier);

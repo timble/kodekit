@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Action bar Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperActionbar extends KTemplateHelperAbstract
+class TemplateHelperActionbar extends TemplateHelperAbstract
 {
     /**
      * Render the action bar commands
@@ -23,7 +25,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function render($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'toolbar' => null,
             'title'   => null,
@@ -77,12 +79,12 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
     /**
      * Render a action bar command
      *
-     * @param   array|KObjectConfig   $config An optional array with configuration options
+     * @param   array|ObjectConfig   $config An optional array with configuration options
      * @return  string  Html
      */
     public function command($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'command' => NULL
         ));
@@ -117,7 +119,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
         }
 
         $attribs = clone $command->attribs;
-        $attribs->class = implode(" ", KObjectConfig::unbox($attribs->class));
+        $attribs->class = implode(" ", ObjectConfig::unbox($attribs->class));
 
         $html = '<div class="btn-group" id="'.$id.'">';
         $html .= '<a '.$this->buildAttributes($attribs).'>';
@@ -141,7 +143,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function title($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'command' => NULL,
         ));
@@ -172,7 +174,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function separator($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'command' => NULL
         ));
@@ -188,7 +190,7 @@ class KTemplateHelperActionbar extends KTemplateHelperAbstract
      */
     public function dialog($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'command' => NULL
         ));

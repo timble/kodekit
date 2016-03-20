@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * File Template Locator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator
+ * @package Kodekit\Library\Template\Locator
  */
-class KTemplateLocatorFile extends KTemplateLocatorAbstract
+class TemplateLocatorFile extends TemplateLocatorAbstract
 {
     /**
      * The locator name
@@ -26,7 +28,7 @@ class KTemplateLocatorFile extends KTemplateLocatorAbstract
      * Find a template path
      *
      * @param array  $info  The path information
-     * @throws RuntimeException If the no base path exists while trying to locate a partial.
+     * @throws \RuntimeException If the no base path exists while trying to locate a partial.
      * @return string|false The real template path or FALSE if the template could not be found
      */
     public function find(array $info)
@@ -35,7 +37,7 @@ class KTemplateLocatorFile extends KTemplateLocatorAbstract
         if(dirname($info['url']) === '.')
         {
             if(empty($info['base'])) {
-                throw new RuntimeException('Cannot qualify partial template path');
+                throw new \RuntimeException('Cannot qualify partial template path');
             }
 
             $path = dirname($info['base']);

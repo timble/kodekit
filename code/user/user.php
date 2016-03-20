@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * User Singleton
@@ -15,9 +17,9 @@
  * conflicts.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Kodekit\Library\User
  */
-class KUser extends KUserAbstract implements KObjectSingleton
+class User extends UserAbstract implements ObjectSingleton
 {
     /**
      * User authentication status for this request
@@ -179,7 +181,7 @@ class KUser extends KUserAbstract implements KObjectSingleton
      *
      * This function will create a session object if it hasn't been created yet.
      *
-     * @return KUserSessionInterface
+     * @return UserSessionInterface
      */
     public function getSession()
     {
@@ -200,14 +202,14 @@ class KUser extends KUserAbstract implements KObjectSingleton
      * Set the user properties from an array
      *
      * @param  array $properties An associative array
-     * @return KUser
+     * @return User
      */
     public function setProperties($properties)
     {
         parent::setProperties($properties);
 
         //Set the user data
-        $this->getSession()->set('user', KObjectConfig::unbox($properties));
+        $this->getSession()->set('user', ObjectConfig::unbox($properties));
 
         return $this;
     }
@@ -229,7 +231,7 @@ class KUser extends KUserAbstract implements KObjectSingleton
      *
      * @param string $name The parameter name
      * @param  mixed $value The parameter value
-     * @return KUser
+     * @return User
      */
     public function set($name, $value)
     {
@@ -252,7 +254,7 @@ class KUser extends KUserAbstract implements KObjectSingleton
      * Removes an user parameter
      *
      * @param string $name The parameter name
-     * @return KUser
+     * @return User
      */
     public function remove($name)
     {

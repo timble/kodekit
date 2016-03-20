@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Database Query Interface
  *
  * @author  Gergo Erdosi <https://github.com/gergoerdosi>
- * @package Koowa\Library\Database\Query
+ * @package Kodekit\Library\Database\Query
  */
-interface KDatabaseQueryInterface
+interface DatabaseQueryInterface
 {
     /**
      * Bind values to a corresponding named placeholders in the query.
@@ -26,7 +28,7 @@ interface KDatabaseQueryInterface
     /**
      * Get the query parameters
      *
-     * @return KObjectArray
+     * @return ObjectArray
      */
     public function getParameters();
 
@@ -34,24 +36,24 @@ interface KDatabaseQueryInterface
      * Set the query parameters
      *
      * @param array $parameters  The query parameters
-     * @return KDatabaseQueryInterface
+     * @return DatabaseQueryInterface
      */
     public function setParameters(array $parameters);
 
     /**
      * Gets the database driver
      *
-     * @return KDatabaseDriverInterface
+     * @return DatabaseDriverInterface
      */
     public function getDriver();
 
     /**
      * Set the database driver
      *
-     * @param  KDatabaseDriverInterface $driver A KDatabaseDriverInterface object
-     * @return KDatabaseQueryInterface
+     * @param  DatabaseDriverInterface $driver A DatabaseDriverInterface object
+     * @return DatabaseQueryInterface
      */
-    public function setDriver(KDatabaseDriverInterface $driver);
+    public function setDriver(DatabaseDriverInterface $driver);
 
     /**
      * Render the query to a string.

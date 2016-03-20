@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Set
@@ -14,14 +16,14 @@
  * other collection types, rather than retrieving a specific element from a set, one typically tests if a object is
  * contained in the set.
  *
- * KObjectSet implements an associative container that stores objects, and in which the object themselves are the keys.
+ * ObjectSet implements an associative container that stores objects, and in which the object themselves are the keys.
  * Objects are stored in the set in FIFO order.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Kodekit\Library\Object
  * @see     http://www.php.net/manual/en/class.splobjectstorage.php
  */
-class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Countable, Serializable
+class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Countable, \Serializable
 {
     /**
      * The objects
@@ -33,14 +35,14 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  A ObjectConfig object with configuration options
-     * @return KObjectSet
+     * @param ObjectConfig $config  A ObjectConfig object with configuration options
+     * @return ObjectSet
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->_data = KObjectConfig::unbox($config->data);
+        $this->_data = ObjectConfig::unbox($config->data);
     }
 
     /**
@@ -48,10 +50,10 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'data' => array(),
@@ -63,13 +65,13 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
     /**
      * Inserts an object in the set
      *
-     * @param   KObjectHandlable $object
+     * @param   ObjectHandlable $object
      * @return  boolean TRUE on success FALSE on failure
      */
     public function insert($object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         $result = false;
@@ -88,13 +90,13 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      *
      * All numerical array keys will be modified to start counting from zero while literal keys won't be touched.
      *
-     * @param   KObjectHandlable $object
-     * @return  KObjectSet
+     * @param   ObjectHandlable $object
+     * @return  ObjectSet
      */
     public function remove($object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         if ($this->offsetExists($object)) {
@@ -107,13 +109,13 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
     /**
      * Checks if the set contains a specific object
      *
-     * @param   KObjectHandlable $object
+     * @param   ObjectHandlable $object
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
     public function contains($object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         return $this->offsetExists($object);
@@ -122,10 +124,10 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
     /**
      * Merge-in another object set
      *
-     * @param   KObjectSet  $set
-     * @return  KObjectSet
+     * @param   ObjectSet  $set
+     * @return  ObjectSet
      */
-    public function merge(KObjectSet $set)
+    public function merge(ObjectSet $set)
     {
         foreach ($set as $object) {
             $this->insert($object);
@@ -139,14 +141,14 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      *
      * Required by interface ArrayAccess
      *
-     * @param   KObjectHandlable $object
+     * @param   ObjectHandlable $object
      * @return  bool Returns TRUE if the object exists in the storage, and FALSE otherwise
-     * @throws  \InvalidArgumentException if the object doesn't implement KObjectHandlable
+     * @throws  \InvalidArgumentException if the object doesn't implement ObjectHandlable
      */
     public function offsetExists($object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         return isset($this->_data[$object->getHandle()]);
@@ -157,14 +159,14 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      *
      * Required by interface ArrayAccess
      *
-     * @param   KObjectHandlable $object
-     * @return  KObjectHandlable
-     * @throws  \InvalidArgumentException if the object doesn't implement KObjectHandlable
+     * @param   ObjectHandlable $object
+     * @return  ObjectHandlable
+     * @throws  \InvalidArgumentException if the object doesn't implement ObjectHandlable
      */
     public function offsetGet($object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         return $this->_data[$object->getHandle()];
@@ -176,13 +178,13 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      * Required by interface ArrayAccess
      *
      * @param   mixed             $offset The array offset [unused]
-     * @param   KObjectHandlable  $object
-     * @return  KObjectSet
+     * @param   ObjectHandlable  $object
+     * @return  ObjectSet
      */
     public function offsetSet($offset, $object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         $this->_data[$object->getHandle()] = $object;
@@ -194,14 +196,14 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      *
      * Required by interface ArrayAccess
      *
-     * @param   KObjectHandlable  $object
-     * @return  KObjectSet
-     * @throws  \InvalidArgumentException if the object doesn't implement the KObjectHandlable interface
+     * @param   ObjectHandlable  $object
+     * @return  ObjectSet
+     * @throws  \InvalidArgumentException if the object doesn't implement the ObjectHandlable interface
      */
     public function offsetUnset($object)
     {
-        if (!$object instanceof KObjectHandlable) {
-            throw new InvalidArgumentException('Object needs to implement KObjectHandlable');
+        if (!$object instanceof ObjectHandlable) {
+            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
         unset($this->_data[$object->getHandle()]);
@@ -247,7 +249,7 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
     /**
      * Return the first object in the set
      *
-     * @return KObjectHandlable or NULL is queue is empty
+     * @return ObjectHandlable or NULL is queue is empty
      */
     public function top()
     {
@@ -268,7 +270,7 @@ class KObjectSet extends KObject implements IteratorAggregate, ArrayAccess, Coun
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->_data);
+        return new \ArrayIterator($this->_data);
     }
 
     /**

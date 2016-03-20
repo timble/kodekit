@@ -1,31 +1,33 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Listbox Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperListbox extends KTemplateHelperSelect
+class TemplateHelperListbox extends TemplateHelperSelect
 {
     /**
      * Adds the option to enhance the select box using Select2
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string
      */
     public function optionlist($config = array())
     {
         $translator = $this->getObject('translator');
 
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'prompt'    => '- '.$translator->translate('Select').' -',
             'options'   => array(),
@@ -83,7 +85,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      */
     public function enabled( $config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -112,7 +114,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      */
     public function published($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'name'      => 'enabled',
             'attribs'   => array(),
@@ -150,7 +152,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      */
     protected function _render($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new ObjectConfig($config);
         $config->append(array(
             'autocomplete' => false
         ));
@@ -176,17 +178,17 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'label' option is specified the 'value' option will be used instead.
      *
-     * @param 	array|KObjectConfig 	$config An optional array with configuration options
+     * @param 	array|ObjectConfig 	$config An optional array with configuration options
      * @return	string	Html
      * @see __call()
      */
     protected function _listbox($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'name'       => '',
             'attribs'    => array(),
-            'model'      => KStringInflector::pluralize($this->getIdentifier()->package),
+            'model'      => StringInflector::pluralize($this->getIdentifier()->package),
             'deselect'   => true,
             'unique'     => true
         ))->append(array(
@@ -199,17 +201,17 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         ));
 
         //Create the model
-        if(!$config->model instanceof KModelInterface)
+        if(!$config->model instanceof ModelInterface)
         {
             if(is_string($config->model) && strpos($config->model, '.') === false) {
-                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.KStringInflector::pluralize($config->model);
+                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.StringInflector::pluralize($config->model);
             } else {
                 $identifier = $config->model;
             }
 
             $model  = $this->getObject($identifier);
 
-            if(!$model instanceof KModelInterface)
+            if(!$model instanceof ModelInterface)
             {
                 throw new \UnexpectedValueException(
                     'Model: '.get_class($model).' does not implement ModelInterface'
@@ -219,7 +221,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         else $model = $config->model;
 
         //Fetch the entities
-        $list = $model->setState(KObjectConfig::unbox($config->filter))->fetch();
+        $list = $model->setState(ObjectConfig::unbox($config->filter))->fetch();
 
         //Get the list of items
         $items = array();
@@ -241,7 +243,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         }
 
         //Compose the selected array
-        if($config->selected instanceof KModelEntityInterface)
+        if($config->selected instanceof ModelEntityInterface)
         {
             $selected = array();
             foreach($config->selected as $entity) {
@@ -260,20 +262,20 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
     /**
      * Renders a listbox with autocomplete behavior
      *
-     * @see    ComKoowaTemplateHelperBehavior::_listbox
+     * @see    TemplateHelperBehavior::_listbox
      *
-     * @param  array|KObjectConfig    $config
+     * @param  array|ObjectConfig    $config
      * @return string	The html output
      */
     protected function _autocomplete($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'name'     => '',
             'attribs'  => array(
                 'id' => 'select2-element-'.mt_rand(1000, 100000)
             ),
-            'model'    => KStringInflector::pluralize($this->getIdentifier()->package),
+            'model'    => StringInflector::pluralize($this->getIdentifier()->package),
             'validate' => true,
             'prompt'   => '- '.$this->getObject('translator')->translate('Select').' -',
             'deselect' => true,
@@ -300,7 +302,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
             );
 
             if ($config->filter) {
-                $parts = array_merge($parts, KObjectConfig::unbox($config->filter));
+                $parts = array_merge($parts, ObjectConfig::unbox($config->filter));
             }
 
             $config->url = $this->getTemplate()->route($parts, false, false);
@@ -318,10 +320,10 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         {
             $selected = $config->selected;
 
-            if(!$selected instanceof KModelEntityInterface)
+            if(!$selected instanceof ModelEntityInterface)
             {
-                $model     = $this->getObject($config->identifier)->setState(KObjectConfig::unbox($config->filter));
-                $selected  = $model->setState(array($config->value => KObjectConfig::unbox($selected)))->fetch();
+                $model     = $this->getObject($config->identifier)->setState(ObjectConfig::unbox($config->filter));
+                $selected  = $model->setState(array($config->value => ObjectConfig::unbox($selected)))->fetch();
             }
 
             foreach($selected as $entity)
@@ -356,7 +358,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
      *
      * @param  string   $method The function name
      * @param  array    $arguments The function arguments
-     * @throws BadMethodCallException   If method could not be found
+     * @throws \BadMethodCallException   If method could not be found
      * @return mixed The result of the function
      */
     public function __call($method, $arguments)
@@ -365,7 +367,7 @@ class KTemplateHelperListbox extends KTemplateHelperSelect
         {
             $config = $arguments[0];
             if(!isset($config['name'])) {
-                $config['name']  = KStringInflector::singularize(strtolower($method));
+                $config['name']  = StringInflector::singularize(strtolower($method));
             }
 
             return $this->_render($config);

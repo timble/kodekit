@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://www.nooku.org
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright	Copyright (C) 2007 - 2015 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		git://git.assembla.com/nooku-framework.git for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Standard Class Locator
@@ -13,10 +15,10 @@
  * PSR-4 compliant autoloader. Allows autoloading of namespaced classes.
  *
  * @author  Ercan Ozkaya <http://github.com/ercanozkaya>
- * @package Koowa\Library\Class\Locator
+ * @package Kodekit\Library\Class\Locator
  * @link    http://www.php-fig.org/psr/psr-4/
  */
-class KClassLocatorPsr extends KClassLocatorAbstract
+class ClassLocatorPsr extends ClassLocatorAbstract
 {
     /**
      * The type

@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Message User Session Container
@@ -15,9 +17,9 @@
  * across redirects.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User\Session\Container
+ * @package Kodekit\Library\User\Session\Container
  */
-class KUserSessionContainerMessage extends KUserSessionContainerAbstract
+class UserSessionContainerMessage extends UserSessionContainerAbstract
 {
     /**
      * The previous flash messages
@@ -63,7 +65,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      *
      * @param string       $type    Message category type.
      * @param string|array $messages
-     * @return KUserSessionContainerMessage
+     * @return UserSessionContainerMessage
      */
     public function set($type, $messages)
     {
@@ -89,7 +91,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      * Removes current flash messages for a given type
      *
      * @param string $type  Message category type.
-     * @return KUserSessionContainerMessage
+     * @return UserSessionContainerMessage
      */
     public function remove($type)
     {
@@ -100,7 +102,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
     /**
      * Clears out all current flash messages
      *
-     * @return KUserSessionContainerMessage
+     * @return UserSessionContainerMessage
      */
     public function clear()
     {
@@ -112,7 +114,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      * Add new flash messages
      *
      * @param array $messages An of messages per type
-     * @return KUserSessionContainerMessage
+     * @return UserSessionContainerMessage
      */
     public function add(array $messages)
     {
@@ -128,7 +130,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      * by passing the $_SESSION to this function.
      *
      * @param array $session The session data to load by reference.
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function load(array &$session)
     {
@@ -159,7 +161,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      */
     public function offsetGet($offset)
     {
-        return KObjectArray::offsetGet($offset);
+        return ObjectArray::offsetGet($offset);
     }
 
     /**
@@ -190,7 +192,7 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      */
     public function offsetExists($offset)
     {
-        return KObjectArray::offsetExists($offset);
+        return ObjectArray::offsetExists($offset);
     }
 
     /**
@@ -203,6 +205,6 @@ class KUserSessionContainerMessage extends KUserSessionContainerAbstract
      */
     public function offsetUnset($offset)
     {
-        KObjectArray::offsetUnset($offset);
+        ObjectArray::offsetUnset($offset);
     }
 }

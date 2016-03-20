@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Translator Helper
@@ -13,18 +15,18 @@
  * Adds translation keys used in JavaScript to the translator object
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperTranslator extends KTemplateHelperAbstract
+class TemplateHelperTranslator extends TemplateHelperAbstract
 {
     public function script($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'strings' => array()
         ));
 
-        $strings    = KObjectConfig::unbox($config->strings);
+        $strings    = ObjectConfig::unbox($config->strings);
         $translator = $this->getObject('translator');
 
         $translations = array();

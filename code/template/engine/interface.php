@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Engine Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Engine
+ * @package Kodekit\Library\Template\Engine
  */
-interface KTemplateEngineInterface extends KTemplateInterface
+interface TemplateEngineInterface extends TemplateInterface
 {
     /**
      * Cache the template source to a file
@@ -33,7 +35,7 @@ interface KTemplateEngineInterface extends KTemplateInterface
     /**
      * Get the template object
      *
-     * @return  KTemplateInterface	The template object
+     * @return  TemplateInterface	The template object
      */
     public function getTemplate();
 
@@ -50,7 +52,7 @@ interface KTemplateEngineInterface extends KTemplateInterface
      * If debug is enabled the engine will throw an exception if caching fails.
      *
      * @param bool $debug True or false.
-     * @return KTemplateEngineInterface
+     * @return TemplateEngineInterface
      */
     public function setDebug($debug);
 

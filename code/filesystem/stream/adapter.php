@@ -1,27 +1,29 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * FileSystem Stream Adapter
  *
- * A generic stream sitting between PHP and streams implementing KFilesystemStreamInterface. Instances of this class
- * are created by PHP itself and therefore are unknown to Koowa object manager.
+ * A generic stream sitting between PHP and streams implementing FilesystemStreamInterface. Instances of this class
+ * are created by PHP itself and therefore are unknown to Kodekit object manager.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream
+ * @package Kodekit\Library\Filesystem\Stream
  */
-final class KFilesystemStreamAdapter
+final class FilesystemStreamAdapter
 {
     /**
      * The stream object
      *
-     * @var KFilesystemStreamInterface
+     * @var FilesystemStreamInterface
      */
     private $__stream;
 
@@ -41,13 +43,13 @@ final class KFilesystemStreamAdapter
      * @param string $url    The stream url
      * @param string $mode   The type of access required for this stream. (see Table 1 of the fopen() reference);
      * @param bool   $trigger_error Raise errors using trigger_error.
-     * @return KFilesystemStreamInterface|false
+     * @return FilesystemStreamInterface|false
      */
     public function createStream($url, $mode, $trigger_error = false)
     {
         try
         {
-            $this->__stream = KObjectManager::getInstance()
+            $this->__stream = ObjectManager::getInstance()
                 ->getObject('filesystem.stream.factory')
                 ->createStream($url, $mode, $this->context);
         }
@@ -68,7 +70,7 @@ final class KFilesystemStreamAdapter
     /**
      * Get the stream
      *
-     * @return KFilesystemStreamInterface|null
+     * @return FilesystemStreamInterface|null
      */
     public function getStream()
     {

@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Behavior Mixin
@@ -14,9 +16,9 @@
  * cannot be overridden by attaching a behaviors with the same.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Behavior
+ * @package Kodekit\Library\Behavior
  */
-class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
+class BehaviorMixin extends CommandMixin implements BehaviorMixinInterface
 {
     /**
      * List of behaviors
@@ -30,14 +32,14 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Add the behaviors in FIFO order
-        $behaviors = (array) KObjectConfig::unbox($config->behaviors);
+        $behaviors = (array) ObjectConfig::unbox($config->behaviors);
 
         foreach ($behaviors as $key => $value)
         {
@@ -54,10 +56,10 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config   An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config   An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         parent::_initialize($config);
 
@@ -69,11 +71,11 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
     /**
      * Add a behavior
      *
-     * @param   mixed $behavior An object that implements KBehaviorInterface, an KObjectIdentifier
+     * @param   mixed $behavior An object that implements BehaviorInterface, an ObjectIdentifier
      *                            or valid identifier string
      * @param   array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
-     * @return  KObject The mixer object
+     * @throws \UnexpectedValueException
+     * @return  Object The mixer object
      */
     public function addBehavior($behavior, $config = array())
     {
@@ -94,7 +96,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
         }
         else
         {
-            if($behavior instanceof KBehaviorInterface) {
+            if($behavior instanceof BehaviorInterface) {
                 $identifier = $behavior->getIdentifier();
             } else {
                 $identifier = $this->getIdentifier($behavior);
@@ -105,14 +107,14 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
         if (!$this->hasCommandHandler($identifier))
         {
             //Create the behavior object
-            if (!($behavior instanceof KBehaviorInterface))
+            if (!($behavior instanceof BehaviorInterface))
             {
                 $config['mixer'] = $this->getMixer();
                 $behavior = $this->getObject($identifier, $config);
             }
 
-            if (!($behavior instanceof KBehaviorInterface)) {
-                throw new UnexpectedValueException("Behavior $identifier does not implement KBehaviorInterface");
+            if (!($behavior instanceof BehaviorInterface)) {
+                throw new \UnexpectedValueException("Behavior $identifier does not implement BehaviorInterface");
             }
 
             if(!$this->hasBehavior($behavior->getName()))
@@ -149,7 +151,7 @@ class KBehaviorMixin extends KCommandMixin implements KBehaviorMixinInterface
      * Get a behavior by name
      *
      * @param  string  $name   The behavior name
-     * @return KBehaviorInterface
+     * @return BehaviorInterface
      */
     public function getBehavior($name)
     {

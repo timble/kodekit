@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Form Template Filter
@@ -16,10 +18,10 @@
  * filter adds the action url query params as hidden fields to comply with the html form standard.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Filter
+ * @package Kodekit\Library\Template\Filter
  * @see         http://www.w3.org/TR/html401/interact/forms.html#h-17.13.3.4
  */
-class KTemplateFilterForm extends KTemplateFilterAbstract
+class TemplateFilterForm extends TemplateFilterAbstract
 {
     /**
      * The form token value
@@ -38,9 +40,9 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config = null)
+    public function __construct( ObjectConfig $config = null)
     {
         parent::__construct($config);
 
@@ -53,10 +55,10 @@ class KTemplateFilterForm extends KTemplateFilterAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'token_value'   => '',

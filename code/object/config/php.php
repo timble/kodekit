@@ -1,27 +1,29 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Config Php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Config
+ * @package Kodekit\Library\Object\Config
  */
-class KObjectConfigPhp extends KObjectConfigFormat
+class ObjectConfigPhp extends ObjectConfigFormat
 {
     /**
      * Read from a string and create an array
      *
      * @param  string   $string
-     * @param  bool     $object     If TRUE return a KObjectConfig, if FALSE return an array. Default TRUE.
-     * @throws DomainException
-     * @return KObjectConfigPhp|array
+     * @param  bool     $object     If TRUE return a ObjectConfig, if FALSE return an array. Default TRUE.
+     * @throws \DomainException
+     * @return ObjectConfigPhp|array
      */
     public function fromString($string, $object = true)
     {
@@ -32,7 +34,7 @@ class KObjectConfigPhp extends KObjectConfigFormat
             $data = eval($string);
 
             if($data === false) {
-                throw new DomainException('Cannot evaluate data from PHP string');
+                throw new \DomainException('Cannot evaluate data from PHP string');
             }
         }
 
@@ -56,13 +58,13 @@ class KObjectConfigPhp extends KObjectConfigFormat
      *
      * @param  string $filename
      * @param  bool    $object  If TRUE return a ConfigObject, if FALSE return an array. Default TRUE.
-     * @throws RuntimeException If file doesn't exist is not readable or cannot be included.
-     * @return KObjectConfigPhp|array
+     * @throws \RuntimeException If file doesn't exist is not readable or cannot be included.
+     * @return ObjectConfigPhp|array
      */
     public function fromFile($filename, $object = true)
     {
         if (!is_file($filename) || !is_readable($filename)) {
-            throw new RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
+            throw new \RuntimeException(sprintf("File '%s' doesn't exist or not readable", $filename));
         }
 
         $data = $this->_includeFile($filename);

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
  * @copyright   Copyright (C) 2015 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Dispatcher Request Transport Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Dispatcher\Request\Transport
+ * @package Kodekit\Library\Dispatcher\Request\Transport
  */
-interface KDispatcherRequestTransportInterface
+interface DispatcherRequestTransportInterface
 {
     /**
      * Priority levels
@@ -27,9 +29,9 @@ interface KDispatcherRequestTransportInterface
     /**
      * Receive the request
      *
-     * @param KDispatcherRequestInterface $request
+     * @param DispatcherRequestInterface $request
      */
-    public function receive(KDispatcherRequestInterface $request);
+    public function receive(DispatcherRequestInterface $request);
 
     /**
      * Get the priority of a behavior

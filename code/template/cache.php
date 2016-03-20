@@ -1,39 +1,41 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Cache
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Kodekit\Library\Template
  */
-class KTemplateCache extends KObjectDecorator implements KTemplateInterface
+class TemplateCache extends ObjectDecorator implements TemplateInterface
 {
     /**
      * The registry cache namespace
      *
      * @var boolean
      */
-    protected $_namespace = 'koowa';
+    protected $_namespace = 'kodekit';
 
     /**
      * Constructor
      *
-     * @param KObjectConfig  $config  A ObjectConfig object with optional configuration options
-     * @throws RuntimeException  If the APC PHP extension is not enabled or available
+     * @param ObjectConfig  $config  A ObjectConfig object with optional configuration options
+     * @throws \RuntimeException  If the APC PHP extension is not enabled or available
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         if (!static::isSupported()) {
-            throw new RuntimeException('Unable to use TemplateEngineCache. APC is not enabled.');
+            throw new \RuntimeException('Unable to use TemplateEngineCache. APC is not enabled.');
         }
     }
 
@@ -63,7 +65,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      *
      * @param   string  $url    The template url
      * @throws \InvalidArgumentException If the template could not be found
-     * @return KTemplateInterface
+     * @return TemplateInterface
      */
     public function loadFile($url)
     {
@@ -75,7 +77,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      * Set the template content from a string
      *
      * @param  string   $content The template content
-     * @return KTemplateInterface
+     * @return TemplateInterface
      */
     public function loadString($content)
     {
@@ -87,8 +89,8 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      * Render the template
      *
      * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @throws  InvalidArgumentException If the template could not be located
-     * @return KTemplateInterface
+     * @throws  \InvalidArgumentException If the template could not be located
+     * @return TemplateInterface
      */
     public function render(array $data = array())
     {
@@ -123,7 +125,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      *
      * @param string  $name      The function name
      * @param string  $function  The callable
-     * @return KTemplateEngineInterface
+     * @return TemplateEngineInterface
      */
     public function registerFunction($name, $function)
     {
@@ -135,7 +137,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
      * Unregister a function
      *
      * @param string    $name   The function name
-     * @return KTemplateEngineInterface
+     * @return TemplateEngineInterface
      */
     public function unregisterFunction($name)
     {
@@ -156,14 +158,14 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     /**
      * Set the decorated translator
      *
-     * @param   KTemplateEngineInterface $delegate The decorated template engine
-     * @return  KTemplateCache
-     * @throws  InvalidArgumentException If the delegate does not implement the TranslatorInterface
+     * @param   TemplateEngineInterface $delegate The decorated template engine
+     * @return  TemplateCache
+     * @throws  \InvalidArgumentException If the delegate does not implement the TranslatorInterface
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KTemplateEngineInterface) {
-            throw new InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TemplateEngineInterface');
+        if (!$delegate instanceof TemplateEngineInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TemplateEngineInterface');
         }
 
         return parent::setDelegate($delegate);
@@ -172,7 +174,7 @@ class KTemplateCache extends KObjectDecorator implements KTemplateInterface
     /**
      * Get the decorated object
      *
-     * @return KTemplateCache
+     * @return TemplateCache
      */
     public function getDelegate()
     {

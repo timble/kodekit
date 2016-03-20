@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Response Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Response
+ * @package Kodekit\Library\Http\Response
  */
-interface KHttpResponseInterface extends KHttpMessageInterface
+interface HttpResponseInterface extends HttpMessageInterface
 {
     /**
      * Set HTTP status code and (optionally) message
@@ -23,7 +25,7 @@ interface KHttpResponseInterface extends KHttpMessageInterface
      * @param  integer $code
      * @param  string  $message
      * @throws \InvalidArgumentException
-     * @return KHttpResponse
+     * @return HttpResponse
      */
     public function setStatus($code, $message = null);
 
@@ -63,12 +65,12 @@ interface KHttpResponseInterface extends KHttpMessageInterface
     public function getContentType();
 
     /**
-     * Returns the Date header as a DateTime instance.
+     * Returns the Date header as a \DateTime instance.
      *
      * @see http://tools.ietf.org/html/rfc2616#section-14.18
      *
-     * @return DateTime A \DateTime instance
-     * @throws RuntimeException When the header is not parseable
+     * @return \DateTime A \DateTime instance
+     * @throws \RuntimeException When the header is not parseable
      */
     public function getDate();
 
@@ -77,52 +79,52 @@ interface KHttpResponseInterface extends KHttpMessageInterface
      *
      * @see http://tools.ietf.org/html/rfc2616#section-14.18
      *
-     * @param  DateTime $date A \DateTime instance
+     * @param  \DateTime $date A \DateTime instance
      * @return HttpResponse
      */
-    public function setDate(DateTime $date);
+    public function setDate(\DateTime $date);
 
     /**
-     * Returns the Last-Modified HTTP header as a DateTime instance.
+     * Returns the Last-Modified HTTP header as a \DateTime instance.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.29
      *
-     * @return DateTime A DateTime instance
+     * @return \DateTime A \DateTime instance
      */
     public function getLastModified();
 
     /**
-     * Sets the Last-Modified HTTP header with a DateTime instance.
+     * Sets the Last-Modified HTTP header with a \DateTime instance.
      *
      * If passed a null value, it removes the header.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.29
      *
-     * @param  DateTime $date A \DateTime instance
-     * @return KHttpResponseInterface
+     * @param  \DateTime $date A \DateTime instance
+     * @return HttpResponseInterface
      */
-    public function setLastModified(DateTime $date = null);
+    public function setLastModified(\DateTime $date = null);
 
     /**
-     * Returns the value of the Expires header as a DateTime instance.
+     * Returns the value of the Expires header as a \DateTime instance.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.21
      *
-     * @return DateTime A DateTime instance
+     * @return \DateTime A \DateTime instance
      */
     public function getExpires();
 
     /**
-     * Sets the Expires HTTP header with a DateTime instance.
+     * Sets the Expires HTTP header with a \DateTime instance.
      *
      * If passed a null value, it removes the header.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.21
      *
-     * @param  DateTime $date A \DateTime instance
+     * @param  \DateTime $date A \DateTime instance
      * @return HttpResponse
      */
-    public function setExpires(DateTime $date = null);
+    public function setExpires(\DateTime $date = null);
 
     /**
      * Returns the literal value of the ETag HTTP header.

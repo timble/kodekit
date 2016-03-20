@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Xml Filter
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-class KFilterXml extends KFilterAbstract
+class FilterXml extends FilterAbstract
 {
     /**
      * Validate a value
@@ -25,7 +27,7 @@ class KFilterXml extends KFilterAbstract
     {
         try {
             $config = $this->getObject('object.config.factory')->fromString('xml', $value);
-        } catch(RuntimeException $e) {
+        } catch(\RuntimeException $e) {
             $config = null;
         }
 
@@ -36,11 +38,11 @@ class KFilterXml extends KFilterAbstract
      * Sanitize a value
      *
      * @param   mixed  $value Value to be sanitized
-     * @return  KObjectConfig
+     * @return  ObjectConfig
      */
     public function sanitize($value)
     {
-        if(!$value instanceof KObjectConfig)
+        if(!$value instanceof ObjectConfig)
         {
             if(is_string($value)) {
                 $value = $this->getObject('object.config.factory')->fromString('xml', $value);

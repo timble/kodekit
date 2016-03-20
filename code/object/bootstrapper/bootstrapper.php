@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Bootstrapper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Bootstrapper
+ * @package Kodekit\Library\Object\Bootstrapper
  */
-final class KObjectBootstrapper extends KObject implements KObjectBootstrapperInterface, KObjectSingleton
+final class ObjectBootstrapper extends Object implements ObjectBootstrapperInterface, ObjectSingleton
 {
     /**
      * List of bootstrapped directories
@@ -60,9 +62,9 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -80,12 +82,12 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
             $config->identifiers    = array();
         }
 
-        $this->_directories  = KObjectConfig::unbox($config->directories);
-        $this->_components   = KObjectConfig::unbox($config->components);
-        $this->_namespaces   = KObjectConfig::unbox($config->namespaces);
-        $this->_files        = KObjectConfig::unbox($config->files);
-        $this->_aliases      = KObjectConfig::unbox($config->aliases);
-        $this->_identifiers  = KObjectConfig::unbox($config->identifiers);
+        $this->_directories  = ObjectConfig::unbox($config->directories);
+        $this->_components   = ObjectConfig::unbox($config->components);
+        $this->_namespaces   = ObjectConfig::unbox($config->namespaces);
+        $this->_files        = ObjectConfig::unbox($config->files);
+        $this->_aliases      = ObjectConfig::unbox($config->aliases);
+        $this->_identifiers  = ObjectConfig::unbox($config->identifiers);
     }
 
     /**
@@ -93,10 +95,10 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'force_reload' => false,
@@ -179,7 +181,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                 }
 
                 foreach ($identifiers_flat as $identifier => $config) {
-                    $manager->setIdentifier(new KObjectIdentifier($identifier, $config));
+                    $manager->setIdentifier(new ObjectIdentifier($identifier, $config));
                 }
 
                 /*
@@ -202,7 +204,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
                  *
                  * If cache is enabled this will prevent the bootstrapper from reloading the config resources
                  */
-                $identifier = new KObjectIdentifier('lib:object.bootstrapper', array(
+                $identifier = new ObjectIdentifier('lib:object.bootstrapper', array(
                     'bootstrapped' => true,
                     'directories'  => $this->_directories,
                     'components'   => $this->_components,
@@ -248,7 +250,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      *
      * @param string  $directory
      * @param bool    $bootstrap If TRUE bootstrap all the components in the directory. Default TRUE
-     * @return KObjectBootstrapper
+     * @return ObjectBootstrapper
      */
     public function registerComponents($directory, $bootstrap = true)
     {
@@ -279,7 +281,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      * @param string $path          The component path
      * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
      * @param array  $directories   Additional array of directories
-     * @return KObjectBootstrapper
+     * @return ObjectBootstrapper
      */
     public function registerComponent($path, $bootstrap = true, array $directories = array())
     {
@@ -358,7 +360,7 @@ final class KObjectBootstrapper extends KObject implements KObjectBootstrapperIn
      * Register a configuration file to be bootstrapped
      *
      * @param string $path  The absolute path to the file
-     * @return KObjectBootstrapper
+     * @return ObjectBootstrapper
      */
     public function registerFile($path)
     {

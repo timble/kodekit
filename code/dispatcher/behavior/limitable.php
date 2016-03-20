@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
  * @copyright   Copyright (C) 2015 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Limitable Dispatcher Behavior
@@ -13,19 +15,19 @@
  * Sets a maximum and a default limit for GET requests
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Behavior
+ * @package Kodekit\Library\Dispatcher\Behavior
  */
-class KDispatcherBehaviorLimitable extends KDispatcherBehaviorAbstract
+class DispatcherBehaviorLimitable extends DispatcherBehaviorAbstract
 {
     /**
      * Initializes the default configuration for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'default' => 100,
@@ -37,14 +39,14 @@ class KDispatcherBehaviorLimitable extends KDispatcherBehaviorAbstract
     /**
      * Sets a maximum and a default limit for GET requests
      *
-     * @param 	KDispatcherContextInterface $context The active command context
+     * @param 	DispatcherContextInterface $context The active command context
      * @return 	void
      */
-    protected function _beforeGet(KDispatcherContextInterface $context)
+    protected function _beforeGet(DispatcherContextInterface $context)
     {
         $controller = $this->getController();
 
-        if($controller instanceof KControllerModellable)
+        if($controller instanceof ControllerModellable)
         {
             $controller->getModel()->getState()->setProperty('limit', 'default', $this->getConfig()->default);
 

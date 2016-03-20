@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Config Yaml
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Config
+ * @package Kodekit\Library\Object\Config
  */
-class KObjectConfigYaml extends KObjectConfigFormat
+class ObjectConfigYaml extends ObjectConfigFormat
 {
     /**
      * YAML encoder callback
@@ -32,7 +34,7 @@ class KObjectConfigYaml extends KObjectConfigFormat
     /**
      * Constructor.
      *
-     * @param   array|KObjectConfigInterface An associative array of configuration options or a KObjectConfigInterface instance.
+     * @param   array|ObjectConfigInterface An associative array of configuration options or a ObjectConfigInterface instance.
      */
     public function __construct( $options = array() )
     {
@@ -71,13 +73,13 @@ class KObjectConfigYaml extends KObjectConfigFormat
      * Set callback for encoding YAML
      *
      * @param  callable $encoder the encoder to set
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return void
      */
     public static function setEncoder($encoder)
     {
         if (!is_callable($encoder)) {
-            throw new InvalidArgumentException('Invalid parameter to setEncoder(). Must be callable');
+            throw new \InvalidArgumentException('Invalid parameter to setEncoder(). Must be callable');
         }
 
         self::$_encoder = $encoder;
@@ -97,13 +99,13 @@ class KObjectConfigYaml extends KObjectConfigFormat
      * Set callback for decoding YAML
      *
      * @param  callable $decoder the decoder to set
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return void
      */
     public static function setDecoder($decoder)
     {
         if (!is_callable($decoder)) {
-            throw new InvalidArgumentException('Invalid parameter to setDecoder(). Must be callable');
+            throw new \InvalidArgumentException('Invalid parameter to setDecoder(). Must be callable');
         }
 
         self::$_decoder = $decoder;
@@ -113,10 +115,10 @@ class KObjectConfigYaml extends KObjectConfigFormat
      * Read from a YAML string and create a config object
      *
      * @param  string   $string
-     * @param  bool     $object  If TRUE return a KObjectConfigYaml, if FALSE return an array. Default TRUE.
-     * @throws DomainException
-     * @throws RuntimeException
-     * @return KObjectConfigYaml|array
+     * @param  bool     $object  If TRUE return a ObjectConfigYaml, if FALSE return an array. Default TRUE.
+     * @throws \DomainException
+     * @throws \RuntimeException
+     * @return ObjectConfigYaml|array
      */
     public function fromString($string, $object = true)
     {
@@ -131,11 +133,11 @@ class KObjectConfigYaml extends KObjectConfigFormat
                 $data = call_user_func($decoder, $string);
 
                 if($data === false) {
-                    throw new DomainException('Cannot parse YAML string');
+                    throw new \DomainException('Cannot parse YAML string');
                 }
             }
         }
-        else throw new RuntimeException("No Yaml decoder specified");
+        else throw new \RuntimeException("No Yaml decoder specified");
 
         return $object ? $this->merge($data) : $data;
     }
@@ -154,7 +156,7 @@ class KObjectConfigYaml extends KObjectConfigFormat
             $data   = $this->toArray();
             $result = call_user_func($encoder, $data);
         }
-        else throw new RuntimeException("No Yaml encoder specified");
+        else throw new \RuntimeException("No Yaml encoder specified");
 
         return $result;
     }

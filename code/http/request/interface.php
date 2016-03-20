@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Request
+ * @package Kodekit\Library\Http\Request
  */
-interface KHttpRequestInterface extends KHttpMessageInterface
+interface HttpRequestInterface extends HttpMessageInterface
 {
     /**
      * Set the method for this request
      *
      * @param  string $method
-     * @throws InvalidArgumentException
-     * @return KHttpRequestInterface
+     * @throws \InvalidArgumentException
+     * @return HttpRequestInterface
      */
     public function setMethod($method);
 
@@ -34,16 +36,16 @@ interface KHttpRequestInterface extends KHttpMessageInterface
     /**
      * Set the url for this request
      *
-     * @param string|KHttpUrl   $url
-     * @throws InvalidArgumentException If the url is not an instance of KHttpUrl or a string
-     * @return KHttpRequest
+     * @param string|HttpUrl   $url
+     * @throws \InvalidArgumentException If the url is not an instance of HttpUrl or a string
+     * @return HttpRequest
      */
     public function setUrl($url);
 
     /**
      * Return the url for this request
      *
-     * @return KHttpUrl
+     * @return HttpUrl
      */
     public function getUrl();
 

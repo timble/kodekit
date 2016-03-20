@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * View Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View\Context
+ * @package Kodekit\Library\View\Context
  */
-class KViewContext extends KCommand implements KViewContextInterface
+class ViewContext extends Command implements ViewContextInterface
 {
     /**
      * Constructor.
@@ -22,10 +24,10 @@ class KViewContext extends KCommand implements KViewContextInterface
      */
     public function __construct($attributes = array())
     {
-        KObjectConfig::__construct($attributes);
+        ObjectConfig::__construct($attributes);
 
         //Set the subject and the name
-        if($attributes instanceof KViewContext)
+        if($attributes instanceof ViewContext)
         {
             $this->setSubject($attributes->getSubject());
             $this->setName($attributes->getName());
@@ -36,11 +38,11 @@ class KViewContext extends KCommand implements KViewContextInterface
      * Set the view data
      *
      * @param array $data
-     * @return KViewContext
+     * @return ViewContext
      */
     public function setData($data)
     {
-        return KObjectConfig::set('data', $data);
+        return ObjectConfig::set('data', $data);
     }
 
     /**
@@ -50,18 +52,18 @@ class KViewContext extends KCommand implements KViewContextInterface
      */
     public function getData()
     {
-        return KObjectConfig::get('data');
+        return ObjectConfig::get('data');
     }
 
     /**
      * Set the view parameters
      *
      * @param array $parameters
-     * @return KViewContextTemplate
+     * @return ViewContextTemplate
      */
     public function setParameters($parameters)
     {
-        return KObjectConfig::set('parameters', $parameters);
+        return ObjectConfig::set('parameters', $parameters);
     }
 
     /**
@@ -71,6 +73,6 @@ class KViewContext extends KCommand implements KViewContextInterface
      */
     public function getParameters()
     {
-        return KObjectConfig::get('parameters');
+        return ObjectConfig::get('parameters');
     }
 }

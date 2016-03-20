@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
  /**
   * Template Interface
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
-  * @package Koowa\Library\Template
+  * @package Kodekit\Library\Template
   */
-interface KTemplateInterface
+interface TemplateInterface
 {
     /**
      * Load a template by url
      *
      * @param   string  $url    The template url
      * @throws \InvalidArgumentException If the template could not be located
-     * @return KTemplateInterface
+     * @return TemplateInterface
      */
     public function loadFile($url);
 
@@ -28,7 +30,7 @@ interface KTemplateInterface
      * Load a template from a string
      *
      * @param  string   $content The template content
-     * @return KTemplateInterface
+     * @return TemplateInterface
      */
     public function loadString($content);
 
@@ -61,7 +63,7 @@ interface KTemplateInterface
      *
      * @param string  $name      The function name
      * @param string  $function  The callable
-     * @return KTemplateInterface
+     * @return TemplateInterface
      */
     public function registerFunction($name, $function);
 
@@ -69,7 +71,7 @@ interface KTemplateInterface
      * Unregister a template function
      *
      * @param string    $name   The function name
-     * @return KTemplateInterface
+     * @return TemplateInterface
      */
     public function unregisterFunction($name);
 }

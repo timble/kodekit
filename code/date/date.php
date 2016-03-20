@@ -1,31 +1,33 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Date
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Date
+ * @package Kodekit\Library\Date
  */
-class KDate extends KObject implements KDateInterface
+class Date extends Object implements DateInterface
 {
     /**
      * The date object
      *
-     * @var DateTime
+     * @var \DateTime
      */
     protected $_date;
 
     /**
      * Constructor.
      *
-     * @param  KObjectConfig $config A KObjectConfig object with configuration options
+     * @param  ObjectConfig $config A ObjectConfig object with configuration options
      */
     public function __construct($config)
     {
@@ -37,7 +39,7 @@ class KDate extends KObject implements KDateInterface
         }
 
         //Set the date
-        $this->_date = new DateTime($config->date, $config->timezone);
+        $this->_date = new \DateTime($config->date, $config->timezone);
     }
 
     /**
@@ -45,10 +47,10 @@ class KDate extends KObject implements KDateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'date'       => 'now',
@@ -80,7 +82,7 @@ class KDate extends KObject implements KDateInterface
 
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
         $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
-        $now     = new DateTime();
+        $now     = new \DateTime();
 
         if($now != $this->_date)
         {
@@ -137,7 +139,7 @@ class KDate extends KObject implements KDateInterface
      * Alters the timestamp
      *
      * @param string $modify A date/time string
-     * @return KDate Returns the KDate object or FALSE on failure.
+     * @return Date Returns the Date object or FALSE on failure.
      */
     public function modify($modify)
     {
@@ -149,12 +151,12 @@ class KDate extends KObject implements KDateInterface
     }
 
     /**
-     * Resets the current time of the DateTime object to a different time.
+     * Resets the current time of the \DateTime object to a different time.
      *
      * @param integer $year     Year of the date.
      * @param integer $month    Month of the date.
      * @param integer $day      Day of the date.
-     * @return KDate or FALSE on failure.
+     * @return Date or FALSE on failure.
      */
     public function setDate($year, $month, $day)
     {
@@ -166,12 +168,12 @@ class KDate extends KObject implements KDateInterface
     }
 
     /**
-     * Resets the current date of the DateTime object to a different date.
+     * Resets the current date of the \DateTime object to a different date.
      *
      * @param integer $hour     Hour of the time.
      * @param integer $minute   Minute of the time.
      * @param integer $second  Second of the time.
-     * @return KDate or FALSE on failure.
+     * @return Date or FALSE on failure.
      */
     public function setTime($hour, $minute, $second = 0)
     {
@@ -186,7 +188,7 @@ class KDate extends KObject implements KDateInterface
      * Sets the date and time based on an Unix timestamp.
      *
      * @param DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
-     * @return KDate or FALSE on failure.
+     * @return Date or FALSE on failure.
      */
     public function setTimezone(DateTimeZone $timezone)
     {
@@ -198,7 +200,7 @@ class KDate extends KObject implements KDateInterface
     }
 
     /**
-     * Return time zone relative to given DateTime
+     * Return time zone relative to given \DateTime
      *
      * @return DateTimeZone Returns a DateTimeZone object or FALSE on failure.
      */
@@ -211,7 +213,7 @@ class KDate extends KObject implements KDateInterface
      * Sets the date and time based on an Unix timestamp
      *
      * @param integer $timestamp Unix timestamp representing the date.
-     * @return KDate or FALSE on failure.
+     * @return Date or FALSE on failure.
      */
     public function setTimestamp($timestamp)
     {

@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Message Parameters
@@ -13,21 +15,21 @@
  * Container class that handles the aggregations of HTTP parameters as a collection
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Message
+ * @package Kodekit\Library\Http\Message
  */
-class KHttpMessageParameters extends KObjectArray
+class HttpMessageParameters extends ObjectArray
 {
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Add the parameters
-        $this->add(KObjectConfig::unbox($config->parameters));
+        $this->add(ObjectConfig::unbox($config->parameters));
     }
 
     /**
@@ -35,10 +37,10 @@ class KHttpMessageParameters extends KObjectArray
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'parameters' => array(),
@@ -66,7 +68,7 @@ class KHttpMessageParameters extends KObjectArray
             }
 
             // Filter the data
-            if(!($filter instanceof KFilterInterface)) {
+            if(!($filter instanceof FilterInterface)) {
                 $filter = $this->getObject('filter.factory')->createChain($filter);
             }
 
@@ -109,7 +111,7 @@ class KHttpMessageParameters extends KObjectArray
             }
 
             // Filter the data
-            if(!($filter instanceof KFilterInterface)) {
+            if(!($filter instanceof FilterInterface)) {
                 $filter = $this->getObject('filter.factory')->createChain($filter);
             }
 
@@ -127,13 +129,13 @@ class KHttpMessageParameters extends KObjectArray
      * @param   mixed   $value     Parameter value
      * @param   boolean $replace    Whether to replace the actual value or not (true by default)
      * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function set($identifier, $value, $replace = true)
     {
         if (!is_null($value) && !is_scalar($value) && !is_array($value) && !is_callable(array($value, '__toString')))
         {
-            throw new UnexpectedValueException(
+            throw new \UnexpectedValueException(
                 'The http parameter value must be a string or object implementing __toString(), "'.gettype($value).'" given.'
             );
         }
@@ -179,7 +181,7 @@ class KHttpMessageParameters extends KObjectArray
      * This function will not add parameters that already exist.
      *
      * @param array $parameters An array of HTTP headers
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function add(array $parameters)
     {
@@ -194,7 +196,7 @@ class KHttpMessageParameters extends KObjectArray
      * Removes a parameter.
      *
      * @param string $identifier The parameter name
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function remove($identifier)
     {
@@ -215,7 +217,7 @@ class KHttpMessageParameters extends KObjectArray
     /**
      * Clear the current parameters
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function clear()
     {

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model State Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\State
+ * @package Kodekit\Library\Model\State
  */
-interface KModelStateInterface
+interface ModelStateInterface
 {
     /**
      * Insert a new state
@@ -25,7 +27,7 @@ interface KModelStateInterface
      * @param   array    $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
      * @param   boolean  $internal If TRUE the state will be considered internal and should not be included in a routes.
      *                             Default FALSE.
-     * @return  KModelStateInterface
+     * @return  ModelStateInterface
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array(), $internal = false);
 
@@ -43,7 +45,7 @@ interface KModelStateInterface
      *
      * @param  	string 	$name The state name.
      * @param  	mixed  	$value The state value.
-     * @return 	KModelStateInterface
+     * @return 	ModelStateInterface
      */
     public function set($name, $value = null);
 
@@ -59,14 +61,14 @@ interface KModelStateInterface
      * Remove an existing state
      *
      * @param   string $name The name of the state
-     * @return  KModelStateInterface
+     * @return  ModelStateInterface
      */
     public function remove($name);
 
     /**
      * Reset all state data and revert to the default state
      *
-     * @return KModelStateInterface
+     * @return ModelStateInterface
      */
     public function reset();
 
@@ -84,7 +86,7 @@ interface KModelStateInterface
      * to NULL.
      *
      * @param   array $data An associative array of state values by name
-     * @return  KModelState
+     * @return  ModelState
      */
     public function setValues(array $data);
 
@@ -104,7 +106,7 @@ interface KModelStateInterface
      * @param string $name      The name of the state
      * @param string $property  The name of the property
      * @param mixed  $value     The value of the property
-     * @return KModelStateInterface
+     * @return ModelStateInterface
      */
     public function setProperty($name, $property, $value);
 

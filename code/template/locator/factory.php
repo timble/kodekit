@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Locator Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator
+ * @package Kodekit\Library\Template\Locator
  */
-class KTemplateLocatorFactory extends KObject implements KObjectSingleton
+class TemplateLocatorFactory extends Object implements ObjectSingleton
 {
     /**
      * Registered locators
@@ -25,14 +27,14 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config Configuration options
+     * @param ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Register the locators
-        $locators = KObjectConfig::unbox($config->locators);
+        $locators = ObjectConfig::unbox($config->locators);
 
         foreach ($locators as $key => $value)
         {
@@ -49,10 +51,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'locators' => array(
@@ -70,10 +72,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      *
      * @param  string $url  The template url
      * @param  array $config  An optional associative array of configuration options
-     * @throws InvalidArgumentException If the path is not valid
-     * @throws RuntimeException         If the locator isn't registered
-     * @throws UnexpectedValueException If the locator object doesn't implement the TemplateLocatorInterface
-     * @return KTemplateLocatorInterface
+     * @throws \InvalidArgumentException If the path is not valid
+     * @throws \RuntimeException         If the locator isn't registered
+     * @throws \UnexpectedValueException If the locator object doesn't implement the TemplateLocatorInterface
+     * @return TemplateLocatorInterface
      */
     public function createLocator($url, array $config = array())
     {
@@ -93,7 +95,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
         //Locator not supported
         if(!in_array($name, $this->getLocators()))
         {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Unable to find the template locator "%s" - did you forget to register it ?', $name
             ));
         }
@@ -102,10 +104,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
         $identifier = $this->getLocator($name);
         $locator    = $this->getObject($identifier, $config);
 
-        if(!$locator instanceof KTemplateLocatorInterface)
+        if(!$locator instanceof TemplateLocatorInterface)
         {
-            throw new UnexpectedValueException(
-                'Locator: '.get_class($locator).' does not implement KTemplateLocatorInterface'
+            throw new \UnexpectedValueException(
+                'Locator: '.get_class($locator).' does not implement TemplateLocatorInterface'
             );
         }
 
@@ -119,7 +121,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      *
      * @param string $identifier A locator identifier string
      * @param  array $config  An optional associative array of configuration options
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function registerLocator($identifier, array $config = array())
@@ -129,10 +131,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!$class || !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
+        if(!$class || !array_key_exists(__NAMESPACE__.'\TemplateLocatorInterface', class_implements($class)))
         {
-            throw new UnexpectedValueException(
-                'Locator: '.$identifier.' does not implement KTemplateLocatorInterface'
+            throw new \UnexpectedValueException(
+                'Locator: '.$identifier.' does not implement TemplateLocatorInterface'
             );
         }
 
@@ -151,7 +153,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      * Unregister a locator
      *
      * @param string $identifier A locator object identifier string or locator name
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function unregisterLocator($identifier)
@@ -163,10 +165,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\TemplateLocatorInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Locator: '.$identifier.' does not implement KTemplateLocatorInterface'
+                throw new \UnexpectedValueException(
+                    'Locator: '.$identifier.' does not implement TemplateLocatorInterface'
                 );
             }
 
@@ -218,7 +220,7 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
      * Check if the locator is registered
      *
      * @param string $identifier A locator object identifier string or locator name
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool TRUE if the locator is a registered, FALSE otherwise.
      */
     public function isRegistered($identifier)
@@ -228,10 +230,10 @@ class KTemplateLocatorFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KTemplateLocatorInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\TemplateLocatorInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Locator: '.$identifier.' does not implement KTemplateLocatorInterface'
+                throw new \UnexpectedValueException(
+                    'Locator: '.$identifier.' does not implement TemplateLocatorInterface'
                 );
             }
 

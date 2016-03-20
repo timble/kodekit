@@ -1,22 +1,24 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Decorator
  *
- * The object decorator implements the same interface as KObject and can only be used to decorate objects extending from
- * KObject. To decorate an object that does not extend from KObject use KObjectDecoratorAbstract instead.
+ * The object decorator implements the same interface as Object and can only be used to decorate objects extending from
+ * Object. To decorate an object that does not extend from Object use ObjectDecoratorAbstract instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Decorator
+ * @package Kodekit\Library\Object\Decorator
  */
-abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObjectInterface, KObjectMixable, KObjectDecoratable
+abstract class ObjectDecorator extends ObjectDecoratorAbstract implements ObjectInterface, ObjectMixable, ObjectDecoratable
 {
     /**
      * Checks if the decorated object or one of it's mixin's inherits from a class.
@@ -28,7 +30,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
     {
         $delegate = $this->getDelegate();
 
-        if ($delegate instanceof KObjectMixable) {
+        if ($delegate instanceof ObjectMixable) {
             $result = $delegate->inherits($class);
         } else {
             $result = $delegate instanceof $class;
@@ -42,9 +44,9 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   mixed $mixin   A KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param   mixed $mixin   A ObjectIdentifier, identifier string or object implementing ObjectMixinInterface
      * @param   array $config  An optional associative array of configuration options
-     * @return  KObjectDecorator
+     * @return  ObjectDecorator
      */
     public function mixin($mixin, $config = array())
     {
@@ -58,11 +60,11 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      * When using decorate(), the decorator will be re-decorated. The decorator needs to extend from
      * ObjectDecorator.
      *
-     * @param   mixed $decorator An KObjectIdentifier, identifier string or object implementing KObjectDecorator
+     * @param   mixed $decorator An ObjectIdentifier, identifier string or object implementing ObjectDecorator
      * @param   array $config    An optional associative array of configuration options
-     * @return  KObjectDecoratorInterface
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws  UnexpectedValueException If the decorator does not extend from ObjectDecorator
+     * @return  ObjectDecoratorInterface
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  \UnexpectedValueException If the decorator does not extend from ObjectDecorator
      */
     public function decorate($decorator, $config = array())
     {
@@ -77,14 +79,14 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
     /**
      * Set the decorated object
      *
-     * @param   KObjectInterface $delegate The object to decorate
-     * @return  KObjectDecorator
-     * @throws  InvalidArgumentException If the delegate does not extend from KObject
+     * @param   ObjectInterface $delegate The object to decorate
+     * @return  ObjectDecorator
+     * @throws  \InvalidArgumentException If the delegate does not extend from Object
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KObjectInterface) {
-            throw new InvalidArgumentException('Delegate needs to extend from KObject');
+        if (!$delegate instanceof ObjectInterface) {
+            throw new \InvalidArgumentException('Delegate needs to extend from Object');
         }
 
         return parent::setDelegate($delegate);
@@ -106,7 +108,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      * Get an object identifier.
      *
      * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @return KObjectIdentifier
+     * @return ObjectIdentifier
      */
     public function getIdentifier($identifier = null)
     {
@@ -117,7 +119,7 @@ abstract class KObjectDecorator extends KObjectDecoratorAbstract implements KObj
      * Get the object configuration
      *
      * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @return KObjectConfig
+     * @return ObjectConfig
      */
     public function getConfig($identifier = null)
     {

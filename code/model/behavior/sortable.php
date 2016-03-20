@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Sortable Model Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Behavior
+ * @package Kodekit\Library\Model\Behavior
  */
-class KModelBehaviorSortable extends KModelBehaviorAbstract
+class ModelBehaviorSortable extends ModelBehaviorAbstract
 {
     /**
      * Insert the model states
      *
-     * @param KObjectMixable $mixer
+     * @param ObjectMixable $mixer
      */
-    public function onMixin(KObjectMixable $mixer)
+    public function onMixin(ObjectMixable $mixer)
     {
         parent::onMixin($mixer);
 
@@ -32,10 +34,10 @@ class KModelBehaviorSortable extends KModelBehaviorAbstract
     /**
      * Split the sort state if format is [column,ASC|DESC]
      *
-     * @param   KModelContextInterface $context A model context object
+     * @param   ModelContextInterface $context A model context object
      * @return  void
      */
-    protected function _afterReset(KModelContextInterface $context)
+    protected function _afterReset(ModelContextInterface $context)
     {
         if($context->modified == 'sort' && strpos($context->state->sort, ',') !== false)
         {
@@ -55,14 +57,14 @@ class KModelBehaviorSortable extends KModelBehaviorAbstract
     /**
      * Add order query
      *
-     * @param   KModelContextInterface $context A model context object
+     * @param   ModelContextInterface $context A model context object
      * @return  void
      */
-    protected function _beforeFetch(KModelContextInterface $context)
+    protected function _beforeFetch(ModelContextInterface $context)
     {
         $model = $context->getSubject();
 
-        if ($model instanceof KModelDatabase && !$context->state->isUnique())
+        if ($model instanceof ModelDatabase && !$context->state->isUnique())
         {
             $state = $context->state;
 

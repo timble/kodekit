@@ -1,31 +1,33 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Controller Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Request
+ * @package Kodekit\Library\Controller\Request
  */
-class KControllerRequest extends KHttpRequest implements KControllerRequestInterface
+class ControllerRequest extends HttpRequest implements ControllerRequestInterface
 {
     /**
      * The request query
      *
-     * @var KHttpMessageParameters
+     * @var HttpMessageParameters
      */
     protected $_query;
 
     /**
      * The request data
      *
-     * @var KHttpMessageParameters
+     * @var HttpMessageParameters
      */
     protected $_data;
 
@@ -46,9 +48,9 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Constructor
      *
-     * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
+     * @param ObjectConfig|null $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -70,10 +72,10 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'query'    => array(),
@@ -90,7 +92,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Return the Url of the request regardless of the server
      *
-     * @return  KHttpUrl A HttpUrl object
+     * @return  HttpUrl A HttpUrl object
      */
     public function getUrl()
     {
@@ -106,7 +108,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      * Set the request query
      *
      * @param  array $parameters
-     * @return KControllerRequest
+     * @return ControllerRequest
      */
     public function setQuery($parameters)
     {
@@ -117,7 +119,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Get the request query
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function getQuery()
     {
@@ -128,7 +130,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      * Set the request data
      *
      * @param  array $parameters
-     * @return KControllerRequest
+     * @return ControllerRequest
      */
     public function setData($parameters)
     {
@@ -139,7 +141,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Get the request query
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function getData()
     {
@@ -160,7 +162,7 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
      * Set the request format
      *
      * @param $format
-     * @return KControllerRequest
+     * @return ControllerRequest
      */
     public function setFormat($format)
     {
@@ -171,10 +173,10 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Set the user object
      *
-     * @param KUserInterface $user A request object
-     * @return KControllerRequest
+     * @param UserInterface $user A request object
+     * @return ControllerRequest
      */
-    public function setUser(KUserInterface $user)
+    public function setUser(UserInterface $user)
     {
         $this->_user = $user;
         return $this;
@@ -183,19 +185,19 @@ class KControllerRequest extends KHttpRequest implements KControllerRequestInter
     /**
      * Get the user object
      *
-     * @throws UnexpectedValueException	If the user doesn't implement the KUserInterface
-     * @return KUserInterface
+     * @throws \UnexpectedValueException	If the user doesn't implement the UserInterface
+     * @return UserInterface
      */
     public function getUser()
     {
-        if(!$this->_user instanceof KUserInterface)
+        if(!$this->_user instanceof UserInterface)
         {
-            $this->_user = $this->getObject('user', KObjectConfig::unbox($this->_user));
+            $this->_user = $this->getObject('user', ObjectConfig::unbox($this->_user));
 
-            if(!$this->_user instanceof KUserInterface)
+            if(!$this->_user instanceof UserInterface)
             {
-                throw new UnexpectedValueException(
-                    'User: '.get_class($this->_user).' does not implement KUserInterface'
+                throw new \UnexpectedValueException(
+                    'User: '.get_class($this->_user).' does not implement UserInterface'
                 );
             }
         }

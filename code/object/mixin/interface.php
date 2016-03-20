@@ -1,44 +1,46 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Mixin Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Mixin
+ * @package Kodekit\Library\Object\Mixin
  */
-interface KObjectMixinInterface extends KObjectHandlable
+interface ObjectMixinInterface extends ObjectHandlable
 {
 	/**
      * Get the mixer object
      *
-     * @return KObject The mixer object
+     * @return Object The mixer object
      */
     public function getMixer();
 
     /**
      * Set the mixer object
      *
-     * @param  KObjectMixable $mixer The mixer object
-     * @return KObjectMixinInterface
+     * @param  ObjectMixable $mixer The mixer object
+     * @return ObjectMixinInterface
      */
-    public function setMixer(KObjectMixable $mixer);
+    public function setMixer(ObjectMixable $mixer);
 
     /**
      * Mixin Notifier
      *
      * This function is called when the mixin is being mixed. It will get the mixer passed in.
      *
-     * @param KObjectMixable $mixer The mixer object
+     * @param ObjectMixable $mixer The mixer object
      * @return void
      */
-    public function onMixin(KObjectMixable $mixer);
+    public function onMixin(ObjectMixable $mixer);
 
     /**
      * Get a list of all the available methods

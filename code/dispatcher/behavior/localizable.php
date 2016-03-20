@@ -1,27 +1,29 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Localizable Dispatcher Behavior
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Behavior
+ * @package Kodekit\Library\Dispatcher\Behavior
  */
-class KDispatcherBehaviorLocalizable extends KDispatcherBehaviorAbstract
+class DispatcherBehaviorLocalizable extends DispatcherBehaviorAbstract
 {
     /**
      * Load the language
      *
-     * @param   KViewContextInterface $context A view context object
+     * @param   ViewContextInterface $context A view context object
      * @return  void
      */
-    protected function _beforeDispatch(KDispatcherContextInterface $context)
+    protected function _beforeDispatch(DispatcherContextInterface $context)
     {
         $context->getSubject()->loadLanguage();
     }

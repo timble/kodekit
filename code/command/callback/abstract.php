@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Command Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command\Callback
+ * @package Kodekit\Library\Command\Callback
  */
-abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
+abstract class CommandCallbackAbstract extends ObjectMixinAbstract
 {
     /**
      * Array of command callbacks
@@ -39,9 +41,9 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
     /**
      * Constructor
      *
-     * @param KObjectConfig  $config  An optional KObjectConfig object with configuration options
+     * @param ObjectConfig  $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -54,10 +56,10 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'break_condition' => false,
@@ -69,24 +71,24 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
     /**
      * Invoke a command by calling all the registered callbacks
      *
-     * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
-     * @param  array|Traversable         $attributes An associative array or a Traversable object
-     * @param  KObjectInterface          $subject    The command subject
+     * @param  string|CommandInterface  $command    The command name or a CommandInterface object
+     * @param  array|\Traversable       $attributes An associative array or a Traversable object
+     * @param  ObjectInterface          $subject    The command subject
      * @return mixed|null If a callback break, returns the break condition. NULL otherwise.
      */
     public function invokeCallbacks($command, $attributes = null, $subject = null)
     {
         //Make sure we have an command object
-        if (!$command instanceof KCommandInterface)
+        if (!$command instanceof CommandInterface)
         {
-            if($attributes instanceof KCommandInterface)
+            if($attributes instanceof CommandInterface)
             {
                 $name    = $command;
                 $command = $attributes;
 
                 $command->setName($name);
             }
-            else $command = new KCommand($command, $attributes, $subject);
+            else $command = new Command($command, $attributes, $subject);
         }
 
         foreach($this->getCommandCallbacks($command->getName()) as $handler)
@@ -110,10 +112,10 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
      * Invoke a command callback
      *
      * @param string             $method    The name of the method to be executed
-     * @param KCommandInterface  $command   The command
+     * @param CommandInterface  $command   The command
      * @return mixed Return the result of the handler.
      */
-    public function invokeCommandCallback($method, KCommandInterface $command)
+    public function invokeCommandCallback($method, CommandInterface $command)
     {
         return $this->$method($command);
     }
@@ -125,21 +127,21 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
      * change or add parameters for existing handlers.
      *
      * @param  	string          $command  The command name to register the handler for
-     * @param 	string|Closure  $method   The name of a method or a Closure object
-     * @param   array|object    $params   An associative array of config parameters or a KObjectConfig object
-     * @throws  InvalidArgumentException If the method does not exist
-     * @return  KCommandCallbackAbstract
+     * @param 	string|\Closure  $method   The name of a method or a Closure object
+     * @param   array|object    $params   An associative array of config parameters or a ObjectConfig object
+     * @throws  \InvalidArgumentException If the method does not exist
+     * @return  CommandCallbackAbstract
      */
     public function addCommandCallback($command, $method, $params = array())
     {
-        $params  = (array) KObjectConfig::unbox($params);
+        $params  = (array) ObjectConfig::unbox($params);
         $command = strtolower($command);
 
         if (!isset($this->__command_callbacks[$command]) ) {
             $this->__command_callbacks[$command] = array();
         }
 
-        if($method instanceof Closure) {
+        if($method instanceof \Closure) {
             $index = spl_object_hash($method);
         } else {
             $index = $method;
@@ -159,8 +161,8 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
      * Remove a callback
      *
      * @param  	string	        $command  The command to unregister the handler from
-     * @param 	string|Closure	$method   The name of the method or a Closure object to unregister
-     * @return  KCommandCallbackAbstract
+     * @param 	string|\Closure	$method   The name of the method or a Closure object to unregister
+     * @return  CommandCallbackAbstract
      */
     public function removeCommandCallback($command, $method)
     {
@@ -168,7 +170,7 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
 
         if (isset($this->__command_callbacks[$command]) )
         {
-            if($method instanceof Closure) {
+            if($method instanceof \Closure) {
                 $index = spl_object_hash($method);
             } else {
                 $index = $method;
@@ -204,7 +206,7 @@ abstract class KCommandCallbackAbstract extends KObjectMixinAbstract
      * Set the break condition
      *
      * @param mixed|null $condition The break condition, or NULL to set reset the break condition
-     * @return KCommandChain
+     * @return CommandChain
      */
     public function setBreakCondition($condition)
     {

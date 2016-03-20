@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object
@@ -13,9 +15,9 @@
  * Provides getters and setters, mixin, object handles
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Kodekit\Library\Object
  */
-class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KObjectDecoratable
+class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectDecoratable
 {
     /**
      * Class methods
@@ -27,21 +29,21 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     /**
      * The object identifier
      *
-     * @var KObjectIdentifier
+     * @var ObjectIdentifier
      */
     private $__object_identifier;
 
     /**
      * The object manager
      *
-     * @var KObjectManager
+     * @var ObjectManager
      */
     private $__object_manager;
 
     /**
      * The object config
      *
-     * @var KObjectConfig
+     * @var ObjectConfig
      */
     private $__object_config;
 
@@ -55,9 +57,9 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config)
+    public function __construct( ObjectConfig $config)
     {
         //Set the object manager
         if(isset($config->object_manager)) {
@@ -73,7 +75,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         $this->_initialize($config);
 
         //Add the mixins
-        $mixins = (array) KObjectConfig::unbox($config->mixins);
+        $mixins = (array) ObjectConfig::unbox($config->mixins);
 
         foreach ($mixins as $key => $value)
         {
@@ -85,7 +87,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         }
 
         //Register the decorators
-        $decorators = (array) KObjectConfig::unbox($config->decorators);
+        $decorators = (array) ObjectConfig::unbox($config->decorators);
 
         foreach ($decorators as $key => $value)
         {
@@ -105,10 +107,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'mixins'     => array(),
@@ -121,23 +123,23 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @param   mixed $mixin   An KObjectIdentifier, identifier string or object implementing KObjectMixinInterface
+     * @param   mixed $mixin   An ObjectIdentifier, identifier string or object implementing ObjectMixinInterface
      * @param   array $config  An optional associative array of configuration options
-     * @return  KObjectMixinInterface
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws  UnexpectedValueException If the mixin does not implement the KObjectMixinInterface
+     * @return  ObjectMixinInterface
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  \UnexpectedValueException If the mixin does not implement the ObjectMixinInterface
      */
     public function mixin($mixin, $config = array())
     {
-        if (!($mixin instanceof KObjectMixinInterface))
+        if (!($mixin instanceof ObjectMixinInterface))
         {
-            if (!($mixin instanceof KObjectIdentifier)) {
+            if (!($mixin instanceof ObjectIdentifier)) {
                $identifier = $this->getIdentifier($mixin);
             } else {
                 $identifier = $mixin;
             }
 
-            $config = new KObjectConfig($config);
+            $config = new ObjectConfig($config);
             $config->mixer = $this;
 
             $class = $this->getObject('manager')->getClass($identifier);
@@ -148,10 +150,10 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         * Check if the mixin extends from ObjectMixin to ensure it's implementing the
         * ObjectMixinInterface and ObjectHandable interfaces.
         */
-        if(!$mixin instanceof KObjectMixinInterface)
+        if(!$mixin instanceof ObjectMixinInterface)
         {
-            throw new UnexpectedValueException(
-                'Mixin: '.get_class($mixin).' does not implement KObjectMixinInterface'
+            throw new \UnexpectedValueException(
+                'Mixin: '.get_class($mixin).' does not implement ObjectMixinInterface'
             );
         }
 
@@ -181,25 +183,25 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * Decorate the object
      *
      * When using decorate(), the object will be decorated by the decorator. The decorator needs to extend from
-     * KObjectDecorator.
+     * ObjectDecorator.
      *
-     * @param   mixed $decorator An KObjectIdentifier, identifier string or object implementing KObjectDecorator
+     * @param   mixed $decorator An ObjectIdentifier, identifier string or object implementing ObjectDecorator
      * @param   array $config    An optional associative array of configuration options
-     * @return  KObjectDecoratorInterface
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
-     * @throws  UnexpectedValueException If the decorator does not extend from KObjectDecorator
+     * @return  ObjectDecoratorInterface
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @throws  \UnexpectedValueException If the decorator does not extend from ObjectDecorator
      */
     public function decorate($decorator, $config = array())
     {
-        if (!($decorator instanceof KObjectDecorator))
+        if (!($decorator instanceof ObjectDecorator))
         {
-            if (!($decorator instanceof KObjectIdentifier)) {
+            if (!($decorator instanceof ObjectIdentifier)) {
                 $identifier = $this->getIdentifier($decorator);
             } else {
                 $identifier = $decorator;
             }
 
-            $config = new KObjectConfig($config);
+            $config = new ObjectConfig($config);
             $config->delegate = $this;
 
             $class     = $this->getObject('manager')->getClass($identifier);
@@ -207,13 +209,13 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         }
 
         /*
-         * Check if the decorator extends from KObjectDecorator to ensure it's implementing the
-         * KObjectInterface, KObjectHandable, ObjectMixable and KObjectDecoratable interfaces.
+         * Check if the decorator extends from ObjectDecorator to ensure it's implementing the
+         * ObjectInterface, ObjectHandable, ObjectMixable and ObjectDecoratable interfaces.
          */
-        if(!$decorator instanceof KObjectDecorator)
+        if(!$decorator instanceof ObjectDecorator)
         {
-            throw new UnexpectedValueException(
-                'Decorator: '.get_class($decorator).' does not extend from KObjectDecorator'
+            throw new \UnexpectedValueException(
+                'Decorator: '.get_class($decorator).' does not extend from ObjectDecorator'
             );
         }
 
@@ -273,7 +275,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         {
             $methods = array();
 
-            $reflection = new ReflectionClass($this);
+            $reflection = new \ReflectionClass($this);
             foreach ($reflection->getMethods() as $method) {
                 $methods[$method->name] = $method->name;
             }
@@ -287,16 +289,16 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     /**
      * Get an instance of a class based on a class identifier only creating it if it doesn't exist yet.
      *
-     * @param   mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
+     * @param   mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
      * @param	array $config     An optional associative array of configuration settings.
-     * @return	KObjectInterface Return object on success, throws exception on failure
-     * @throws	RuntimeException if the object manager has not been defined.
-     * @see 	KObjectInterface
+     * @return	ObjectInterface Return object on success, throws exception on failure
+     * @throws	\RuntimeException if the object manager has not been defined.
+     * @see 	ObjectInterface
      */
     final public function getObject($identifier, array $config = array())
     {
         if(!isset($this->__object_manager)) {
-            throw new RuntimeException("Failed to call ".get_class($this)."::getObject(). No object_manager object defined.");
+            throw new \RuntimeException("Failed to call ".get_class($this)."::getObject(). No object_manager object defined.");
         }
 
         return $this->__object_manager->getObject($identifier, $config);
@@ -305,17 +307,17 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     /**
      * Gets the object identifier.
      *
-     * @param  mixed $identifier An KObjectIdentifier, identifier string or object implementing KObjectInterface
-     * @return KObjectIdentifier
-     * @throws	RuntimeException if the object manager has not been defined.
-     * @see 	KObjectInterface
+     * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
+     * @return ObjectIdentifier
+     * @throws	\RuntimeException if the object manager has not been defined.
+     * @see 	ObjectInterface
      */
     final public function getIdentifier($identifier = null)
     {
         if(isset($identifier))
         {
             if(!isset($this->__object_manager)) {
-                throw new RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No object_manager object defined.");
+                throw new \RuntimeException("Failed to call ".get_class($this)."::getIdentifier(). No object_manager object defined.");
             }
 
             $result = $this->__object_manager->getIdentifier($identifier);
@@ -332,7 +334,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * resolves identifier aliases and returns the aliased identifier.
      *
      * @param  mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectInterface
-     * @return KObjectConfig
+     * @return ObjectConfig
      */
     final public function getConfig($identifier = null)
     {
@@ -354,7 +356,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
     {
         foreach ($this->_mixed_methods as $method => $object)
         {
-            if (is_object($object) && !($object instanceof Closure)){
+            if (is_object($object) && !($object instanceof \Closure)){
                 $this->_mixed_methods[$method] = clone $object;
             }
         }
@@ -366,7 +368,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
      * @return mixed The result of the function
-     * @throws BadMethodCallException   If method could not be found
+     * @throws \BadMethodCallException   If method could not be found
      */
     public function __call($method, $arguments)
     {
@@ -374,7 +376,7 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
         {
             $result = null;
 
-            if ($this->_mixed_methods[$method] instanceof Closure)
+            if ($this->_mixed_methods[$method] instanceof \Closure)
             {
                 $closure = $this->_mixed_methods[$method];
 
@@ -428,6 +430,6 @@ class KObject implements KObjectInterface, KObjectMixable, KObjectHandlable, KOb
             return $result;
         }
 
-        throw new BadMethodCallException('Call to undefined method :' . $method);
+        throw new \BadMethodCallException('Call to undefined method :' . $method);
     }
 }

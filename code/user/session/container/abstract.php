@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract User Session Container
@@ -14,9 +16,9 @@
  * the namespace character is a dot ('.')
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User\Session\Container
+ * @package Kodekit\Library\User\Session\Container
  */
-abstract class KUserSessionContainerAbstract extends KObjectArray implements KUserSessionContainerInterface
+abstract class UserSessionContainerAbstract extends ObjectArray implements UserSessionContainerInterface
 {
     /**
      * The root attribute session namespace
@@ -38,10 +40,10 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return  KUserSessionContainerAbstract
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return  UserSessionContainerAbstract
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -57,9 +59,9 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'namespace' => '__'.$this->getIdentifier()->name,
@@ -95,7 +97,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      *
      * @param   mixed   $identifier Attribute identifier, eg foo.bar
      * @param   string  $value      Attribute value
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function set($identifier, $value)
     {
@@ -118,7 +120,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      * Removes an attribute
      *
      * @param string $identifier Attribute identifier, eg foo.bar
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function remove($identifier)
     {
@@ -129,7 +131,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
     /**
      * Clears out all attributes
      *
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function clear()
     {
@@ -141,7 +143,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      * Adds new attributes the active session.
      *
      * @param array $attributes An array of attributes
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function add(array $attributes)
     {
@@ -160,7 +162,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      * by passing the $_SESSION to this function.
      *
      * @param array $session The session data to load by reference.
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function load(array &$session)
     {
@@ -176,7 +178,7 @@ abstract class KUserSessionContainerAbstract extends KObjectArray implements KUs
      * Set the session attributes namespace
      *
      * @param string $namespace The session attributes namespace
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function setNamespace($namespace)
     {

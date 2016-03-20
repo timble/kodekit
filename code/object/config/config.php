@@ -1,22 +1,23 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
 
+namespace Kodekit\Library;
+
 /**
- * KObjectConfig
+ * ObjectConfig
  *
- * KObjectConfig provides a property based interface to an array. Data is can be modified unless the object is marked
- * as readonly.
+ * ObjectConfig provides a property based interface to an array.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Config
+ * @package Kodekit\Library\Object\Config
  */
-class KObjectConfig implements KObjectConfigInterface
+class ObjectConfig implements ObjectConfigInterface
 {
     /**
      * The configuration options
@@ -28,11 +29,22 @@ class KObjectConfig implements KObjectConfigInterface
     /**
      * Constructor.
      *
-     * @param  array|KObjectConfigInterface $options An associative array of configuration options or a KObjectConfigInterface instance.
+     * @param  array|ObjectConfigInterface $options An associative array of configuration options or a ObjectConfigInterface instance.
      */
     public function __construct($options = array())
     {
         $this->merge($options);
+    }
+
+    /**
+     * Get a new instance
+     *
+     * @return ObjectConfigInterface
+     */
+    public static function getInstance()
+    {
+        $instance = new static(array());
+        return $instance;
     }
 
     /**
@@ -59,8 +71,8 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * @param  string $name
      * @param  mixed  $value
-     * @throws RuntimeException If the config is read only
-     * @return KObjectConfig
+     * @throws \RuntimeException If the config is read only
+     * @return ObjectConfig
      */
     public function set($name, $value)
     {
@@ -88,8 +100,8 @@ class KObjectConfig implements KObjectConfigInterface
      * Remove a configuration option
      *
      * @param   string $name The configuration option name.
-     * @throws  RuntimeException If the config is read only
-     * @return  KObjectConfig
+     * @throws  \RuntimeException If the config is read only
+     * @return  ObjectConfig
      */
     public function remove( $name )
     {
@@ -109,15 +121,15 @@ class KObjectConfig implements KObjectConfigInterface
      * - Items in $options with INTEGER keys will be appended.
      * - Items in $options with STRING keys will overwrite current values.
      *
-     * @param  array|Traversable|KObjectConfigInterface $options A KObjectConfigInterface instance an or array of options to be appended
-     * @throws RuntimeException If the config is read only
-     * @return KObjectConfig
+     * @param  array|\Traversable|ObjectConfigInterface $options A ObjectConfigInterface instance an or array of options to be appended
+     * @throws \RuntimeException If the config is read only
+     * @return ObjectConfig
      */
     public function merge($options)
     {
         $options = self::unbox($options);
 
-        if (is_array($options) || $options instanceof Traversable)
+        if (is_array($options) || $options instanceof \Traversable)
         {
             foreach ($options as $key => $value) {
                 $this->set($key, $value);
@@ -132,15 +144,15 @@ class KObjectConfig implements KObjectConfigInterface
      *
      * This method only adds keys that don't exist and it filters out any duplicate values
      *
-     * @param  array|KObjectConfigInterface|Traversable    $config A KObjectConfigInterface instance an or array of options to be appended
-     * @throws RuntimeException If the config is read only
-     * @return KObjectConfig
+     * @param  array|ObjectConfigInterface|\Traversable    $config A ObjectConfigInterface instance an or array of options to be appended
+     * @throws \RuntimeException If the config is read only
+     * @return ObjectConfig
      */
     public function append($options)
     {
         $options = self::unbox($options);
 
-        if(is_array($options) || $options instanceof Traversable)
+        if(is_array($options) || $options instanceof \Traversable)
         {
             if(!is_numeric(key($options)))
             {
@@ -148,7 +160,7 @@ class KObjectConfig implements KObjectConfigInterface
                 {
                     if(array_key_exists($key, $this->__options))
                     {
-                        if(!empty($value) && ($this->__options[$key] instanceof KObjectConfigInterface)) {
+                        if(!empty($value) && ($this->__options[$key] instanceof ObjectConfigInterface)) {
                             $this->__options[$key] = $this->__options[$key]->append($value);
                         }
                     }
@@ -185,9 +197,9 @@ class KObjectConfig implements KObjectConfigInterface
             $data  = $this->__options;
             foreach ($data as $key => $value)
             {
-                if(is_array($value) || $value instanceof KObjectConfig)
+                if(is_array($value) || $value instanceof ObjectConfig)
                 {
-                    if ($value instanceof KObjectConfigInterface) {
+                    if ($value instanceof ObjectConfigInterface) {
                         $count += $value->count($mode);
                     } else {
                         $count += count($value);
@@ -203,38 +215,24 @@ class KObjectConfig implements KObjectConfigInterface
     /**
      * Return the data
      *
-     * If the data being passed is an instance of KObjectConfigInterface the data will be transformed to an associative array.
+     * If the data being passed is an instance of ObjectConfigInterface the data will be transformed to an associative array.
      *
-     * @param mixed|KObjectConfigInterface $data
+     * @param mixed|ObjectConfigInterface $data
      * @return mixed|array
      */
     public static function unbox($data)
     {
-        return ($data instanceof KObjectConfig) ? $data->toArray() : $data;
-    }
-
-
-    /**
-     * Get a new instance
-     *
-     * @return KObjectConfigInterface
-     */
-    public function getInstance()
-    {
-        $class    = get_class($this);
-        $instance = new $class(array());
-
-        return $instance;
+        return ($data instanceof ObjectConfig) ? $data->toArray() : $data;
     }
 
     /**
      * Get a new iterator
      *
-     * @return  ArrayIterator
+     * @return  \ArrayIterator
      */
     public function getIterator()
     {
-        return new RecursiveArrayIterator($this->__options);
+        return new \RecursiveArrayIterator($this->__options);
     }
 
     /**
@@ -303,7 +301,7 @@ class KObjectConfig implements KObjectConfigInterface
         $data  = $this->__options;
         foreach ($data as $key => $value)
         {
-            if ($value instanceof KObjectConfig) {
+            if ($value instanceof ObjectConfig) {
                 $array[$key] = $value->toArray();
             } else {
                 $array[$key] = $value;
@@ -359,7 +357,7 @@ class KObjectConfig implements KObjectConfigInterface
     }
 
     /**
-     * Deep clone of this instance to ensure that nested KObjectConfigs are also cloned.
+     * Deep clone of this instance to ensure that nested ObjectConfigs are also cloned.
      *
      * @return void
      */
@@ -368,7 +366,7 @@ class KObjectConfig implements KObjectConfigInterface
         $array = array();
         foreach ($this->__options as $key => $value)
         {
-            if ($value instanceof KObjectConfigInterface || $value instanceof stdClass) {
+            if ($value instanceof ObjectConfigInterface || $value instanceof \stdClass) {
                 $array[$key] = clone $value;
             } else {
                 $array[$key] = $value;

@@ -1,22 +1,24 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Mixin
  *
- * This class does not extend from KObject and acts as a special core class that is intended to offer semi-multiple
- * inheritance features to KObject derived classes.
+ * This class does not extend from Object and acts as a special core class that is intended to offer semi-multiple
+ * inheritance features to Object derived classes.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Mixin
+ * @package Kodekit\Library\Object\Mixin
  */
-abstract class KObjectMixinAbstract implements KObjectMixinInterface
+abstract class ObjectMixinAbstract implements ObjectMixinInterface
 {
     /**
      * The object doing the mixin
@@ -42,9 +44,9 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
     /**
      * Object constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         //Initialise
         $this->_initialize($config);
@@ -60,10 +62,10 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'mixer' => null,
@@ -73,7 +75,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
   	/**
      * Get the mixer object
      *
-     * @return KObject The mixer object
+     * @return Object The mixer object
      */
     public function getMixer()
     {
@@ -83,10 +85,10 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
     /**
      * Set the mixer object
      *
-     * @param  KObjectMixable $mixer The mixer object
-     * @return KObjectMixinInterface
+     * @param  ObjectMixable $mixer The mixer object
+     * @return ObjectMixinInterface
      */
-    public function setMixer(KObjectMixable $mixer)
+    public function setMixer(ObjectMixable $mixer)
     {
         $this->__mixer = $mixer;
         return $this;
@@ -97,10 +99,10 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * This function is called when the mixin is being mixed. It will get the mixer passed in.
      *
-     * @param KObjectMixable $mixer The mixer object
+     * @param ObjectMixable $mixer The mixer object
      * @return void
      */
-    public function onMixin(KObjectMixable $mixer)
+    public function onMixin(ObjectMixable $mixer)
     {
         $this->setMixer($mixer);
     }
@@ -129,7 +131,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
         {
             $methods = array();
 
-            $reflection = new ReflectionClass($this);
+            $reflection = new \ReflectionClass($this);
             foreach($reflection->getMethods() as $method) {
                 $methods[$method->name] = $method->name;
             }
@@ -160,14 +162,14 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
             $methods = array();
 
             //Get all the public methods
-            $reflection = new ReflectionClass($this);
-            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            $reflection = new \ReflectionClass($this);
+            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 $methods[$method->name] = $this;
             }
 
             //Remove the base class methods
-            $reflection = new ReflectionClass(__CLASS__);
-            foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
+            $reflection = new \ReflectionClass(__CLASS__);
+            foreach($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
             {
                 if(isset($methods[$method->name])) {
                     unset($methods[$method->name]);
@@ -236,7 +238,7 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
      *
      * @param  string   $method     The function name
      * @param  array    $arguments  The function arguments
-     * @throws BadMethodCallException   If method could not be found
+     * @throws \BadMethodCallException   If method could not be found
      * @return mixed The result of the function
      */
     public function __call($method, $arguments)
@@ -269,6 +271,6 @@ abstract class KObjectMixinAbstract implements KObjectMixinInterface
             return $result;
         }
 
-        throw new BadMethodCallException('Call to undefined method :'.$method);
+        throw new \BadMethodCallException('Call to undefined method :'.$method);
     }
 }

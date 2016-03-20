@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Database Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Context
+ * @package Kodekit\Library\Database\Context
  */
-class KDatabaseContext extends KCommand implements KDatabaseContextInterface
+class DatabaseContext extends Command implements DatabaseContextInterface
 {
     /**
      * Constructor.
@@ -22,28 +24,28 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      */
     public function __construct($attributes = array())
     {
-        KObjectConfig::__construct($attributes);
+        ObjectConfig::__construct($attributes);
     }
 
     /**
      * Get the query object
      *
-     * @return KDatabaseQueryInterface|string
+     * @return DatabaseQueryInterface|string
      */
     public function getQuery()
     {
-        return KObjectConfig::get('query');
+        return ObjectConfig::get('query');
     }
 
     /**
      * Set the query object
      *
-     * @param KDatabaseQueryInterface|string $query
-     * @return KDatabaseContext
+     * @param DatabaseQueryInterface|string $query
+     * @return DatabaseContext
      */
     public function setQuery($query)
     {
-        return KObjectConfig::set('query', $query);
+        return ObjectConfig::set('query', $query);
     }
 
     /**
@@ -53,17 +55,17 @@ class KDatabaseContext extends KCommand implements KDatabaseContextInterface
      */
     public function getAffected()
     {
-        return KObjectConfig::get('affected');
+        return ObjectConfig::get('affected');
     }
 
     /**
      * Get the number of affected rows
      *
      * @param integer $affected
-     * @return KDatabaseContext
+     * @return DatabaseContext
      */
     public function setAffected($affected)
     {
-        return KObjectConfig::set('affected', $affected);
+        return ObjectConfig::set('affected', $affected);
     }
 }

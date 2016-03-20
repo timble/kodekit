@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Engine Factory
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Engine
+ * @package Kodekit\Library\Template\Engine
  */
-class KTemplateEngineFactory extends KObject implements KObjectSingleton
+class TemplateEngineFactory extends Object implements ObjectSingleton
 {
     /**
      * Registered engines
@@ -25,14 +27,14 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config Configuration options
+     * @param ObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config)
+    public function __construct( ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Register the engines
-        $engines = KObjectConfig::unbox($config->engines);
+        $engines = ObjectConfig::unbox($config->engines);
 
         foreach ($engines as $key => $value)
         {
@@ -49,17 +51,17 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'debug'      => Koowa::getInstance()->isDebug(),
-            'cache'      => Koowa::getInstance()->isCache(),
+            'debug'      => \Kodekit::getInstance()->isDebug(),
+            'cache'      => \Kodekit::getInstance()->isCache(),
             'cache_path' => '',
             'engines'    => array(
-                'lib:template.engine.koowa'
+                'lib:template.engine.kodekit'
             ),
         ));
     }
@@ -72,10 +74,10 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      * @param  string $url    The template url or engine type
      * @param  array $config  An optional associative array of configuration options
      *
-     * @throws InvalidArgumentException If the path is not valid
-     * @throws RuntimeException         If the engine isn't registered
-     * @throws UnexpectedValueException If the engine object doesn't implement the TemplateEngineInterface
-     * @return KTemplateEngineInterface
+     * @throws \InvalidArgumentException If the path is not valid
+     * @throws \RuntimeException         If the engine isn't registered
+     * @throws \UnexpectedValueException If the engine object doesn't implement the TemplateEngineInterface
+     * @return TemplateEngineInterface
      */
     public function createEngine($url, array $config = array())
     {
@@ -87,7 +89,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
         //Engine not supported
         if(!in_array($type, $this->getFileTypes()))
         {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Unable to find a template engine for the "%s" file format - did you forget to register it ?', $type
             ));
         }
@@ -96,10 +98,10 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
         $identifier = $this->getEngine($type);
         $engine     = $this->getObject($identifier, $config);
 
-        if(!$engine instanceof KTemplateEngineInterface)
+        if(!$engine instanceof TemplateEngineInterface)
         {
-            throw new UnexpectedValueException(
-                'Engine: '.get_class($engine).' does not implement KTemplateEngineInterface'
+            throw new \UnexpectedValueException(
+                'Engine: '.get_class($engine).' does not implement TemplateEngineInterface'
             );
         }
 
@@ -113,7 +115,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      *
      * @param string $identifier A engine identifier string
      * @param  array $config  An optional associative array of configuration options
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function registerEngine($identifier, array $config = array())
@@ -123,10 +125,10 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!$class || !array_key_exists('KTemplateEngineInterface', class_implements($class)))
+        if(!$class || !array_key_exists(__NAMESPACE__.'\TemplateEngineInterface', class_implements($class)))
         {
-            throw new UnexpectedValueException(
-                'Engine: '.$identifier.' does not implement KTemplateEngineInterface'
+            throw new \UnexpectedValueException(
+                'Engine: '.$identifier.' does not implement TemplateEngineInterface'
             );
         }
 
@@ -156,7 +158,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      * Unregister an engine
      *
      * @param string $identifier A engine object identifier string or file type
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function unregisterEngine($identifier)
@@ -168,10 +170,10 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KTemplateEngineInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\TemplateEngineInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Engine: '.$identifier.' does not implement KTemplateEngineInterface'
+                throw new \UnexpectedValueException(
+                    'Engine: '.$identifier.' does not implement TemplateEngineInterface'
                 );
             }
 
@@ -229,7 +231,7 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
      * Check if the engine is registered
      *
      * @param string $identifier A engine object identifier string or a file type
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool TRUE if the engine is a registered, FALSE otherwise.
      */
     public function isRegistered($identifier)
@@ -239,10 +241,10 @@ class KTemplateEngineFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KTemplateEngineInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\TemplateEngineInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Engine: '.$identifier.' does not implement KTemplateEngineInterface'
+                throw new \UnexpectedValueException(
+                    'Engine: '.$identifier.' does not implement TemplateEngineInterface'
                 );
             }
 

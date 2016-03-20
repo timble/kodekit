@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Component Class Locator
@@ -17,30 +19,30 @@
  * Class names need to be prefixed with 'Com'. Each folder in the file structure must be represented in the class name.
  *
  * Classname : [Name][Path][To][File]
- * Location  : .../components/name/path/to/file.php
+ * Location  : .../name/path/to/file.php
  *
  * Exceptions
  *
  * 1. An exception is made for files where the last segment of the file path and the file name are the same. In this case
  * class name can use a shorter syntax where the last segment of the path is omitted.
  *
- * Location  : .../components/foo/bar/bar.php
+ * Location  : .../foo/bar/bar.php
  * Classname : FooBar instead of FooBarBar
  *
  * Note : This only applies to classes that are loaded from a registered component namespace when a class is located in
- * the global namespace it will follow the default rule eg, FooBar will be located in .../components/foo/bar.php
+ * the global namespace it will follow the default rule eg, FooBar will be located in .../foo/bar.php
  *
  * 2. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
  * the word 'Exception' is transformed to lower case.  Exceptions are loaded from the .../Exception folder relative to
  * their path.
  *
  * Classname : [Name][Path][To]Exception[FileNameForException]
- * Location  : .../components/foo/path/to/exception/filenameforexception.php
+ * Location  : .../foo/path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Locator
+ * @package Kodekit\Library\Class\Locator
  */
-class KClassLocatorComponent extends KClassLocatorAbstract
+class ClassLocatorComponent extends ClassLocatorAbstract
 {
     /**
      * The locator name

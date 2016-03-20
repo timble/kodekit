@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Dispatcher Authenticator
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Authenticator
+ * @package Kodekit\Library\Dispatcher\Authenticator
  */
-abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDispatcherAuthenticatorInterface
+abstract class DispatcherAuthenticatorAbstract extends Object implements DispatcherAuthenticatorInterface
 {
     /**
      * The authentication scheme
@@ -46,9 +48,9 @@ abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDisp
     /**
      * Constructor.
      *
-     * @param  KObjectConfig $config Configuration options
+     * @param  ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -64,10 +66,10 @@ abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDisp
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'   => self::PRIORITY_NORMAL,
@@ -116,15 +118,15 @@ abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDisp
     /**
      * Challenge the response
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context	A dispatcher context object
      * @return bool Returns TRUE if the response could be signed, FALSE otherwise.
      */
-    public function challengeResponse(KDispatcherContextInterface $context)
+    public function challengeResponse(DispatcherContextInterface $context)
     {
         $response = $context->getResponse();
 
         //The response MUST include a WWW-Authenticate header field.
-        if($response->getStatusCode() == KHttpResponse::UNAUTHORIZED) {
+        if($response->getStatusCode() == HttpResponse::UNAUTHORIZED) {
             $response->headers->set('Www-Authenticate', ucfirst($this->getScheme()).' realm="'.$this->getRealm().'"', false);
         }
     }
@@ -143,7 +145,7 @@ abstract class KDispatcherAuthenticatorAbstract extends KObject implements KDisp
             //Get the user data
             if(!is_array($user))
             {
-                if($user instanceof KUserInterface) {
+                if($user instanceof UserInterface) {
                     $user = $user->toArray();
                 } else {
                     $user = $this->getObject('user.provider')->getUser($user)->toArray();

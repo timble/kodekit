@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model Entity Collection
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Entity
+ * @package Kodekit\Library\Model\Entity
  */
-class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
+class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
 {
     /**
      * Name of the identity key in the collection
@@ -32,17 +34,17 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
     /**
      * The entity prototype
      *
-     * @var  KModelEntityInterface
+     * @var  ModelEntityInterface
      */
     protected $_prototype;
 
     /**
      * Constructor
      *
-     * @param KObjectConfig  $config  An optional KObjectConfig object with configuration options
-     * @return KModelEntityComposite
+     * @param ObjectConfig  $config  An optional ObjectConfig object with configuration options
+     * @return ModelEntityComposite
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -66,10 +68,10 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'data'         => null,
@@ -87,13 +89,13 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * entity being inserted. By default the entity will be cloned. The entity will be stored by it's identity_key
      * if set or otherwise by it's object handle.
      *
-     * @param   KModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
+     * @param   ModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function insert($entity, $status = null)
     {
-        if(!$entity instanceof KModelEntityInterface)
+        if(!$entity instanceof ModelEntityInterface)
         {
             if (!is_array($entity) && !$entity instanceof \Traversable)
             {
@@ -104,11 +106,11 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
 
             if($this->_prototypable)
             {
-                if(!$this->_prototype instanceof KModelEntityInterface)
+                if(!$this->_prototype instanceof ModelEntityInterface)
                 {
                     $identifier = $this->getIdentifier()->toArray();
                     $identifier['path'] = array('model', 'entity');
-                    $identifier['name'] = KStringInflector::singularize($this->getIdentifier()->name);
+                    $identifier['name'] = StringInflector::singularize($this->getIdentifier()->name);
 
                     //The entity default options
                     $options = array(
@@ -128,7 +130,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
             {
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('model', 'entity');
-                $identifier['name'] = KStringInflector::singularize($this->getIdentifier()->name);
+                $identifier['name'] = StringInflector::singularize($this->getIdentifier()->name);
 
                 //The entity default options
                 $options = array(
@@ -153,7 +155,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * This functions accepts either a know position or associative array of property/value pairs
      *
      * @param   string|array  $needle The position or the key or an associative array of column data to match
-     * @return  KModelEntityComposite Returns a collection if successful. Otherwise NULL.
+     * @return  ModelEntityComposite Returns a collection if successful. Otherwise NULL.
      */
     public function find($needle)
     {
@@ -186,14 +188,14 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      *
      * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
      *
-     * @param  KModelEntityInterface $entity
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
-     * @return KModelEntityComposite
+     * @param  ModelEntityInterface $entity
+     * @throws \InvalidArgumentException if the object doesn't implement ModelEntityInterface
+     * @return ModelEntityComposite
      */
     public function remove($entity)
     {
-        if (!$entity instanceof KModelEntityInterface) {
-            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
+        if (!$entity instanceof ModelEntityInterface) {
+            throw new \InvalidArgumentException('Entity needs to implement ModelEntityInterface');
         }
 
         return parent::remove($entity);
@@ -202,14 +204,14 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
     /**
      * Checks if the collection contains a specific entity
      *
-     * @param   KModelEntityInterface $entity
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
+     * @param   ModelEntityInterface $entity
+     * @throws \InvalidArgumentException if the object doesn't implement ModelEntityInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
     public function contains($entity)
     {
-        if (!$entity instanceof KModelEntityInterface) {
-            throw new InvalidArgumentException('Entity needs to implement KModelEntityInterface');
+        if (!$entity instanceof ModelEntityInterface) {
+            throw new \InvalidArgumentException('Entity needs to implement ModelEntityInterface');
         }
 
         return parent::contains($entity);
@@ -272,7 +274,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
     /**
      * Clear the collection
      *
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function clear()
     {
@@ -312,7 +314,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -343,7 +345,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function removeProperty($name)
     {
@@ -374,9 +376,9 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
     /**
      * Set the properties
      *
-     * @param   mixed   $properties Either and associative array, an object or a KModelEntityInterface
+     * @param   mixed   $properties Either and associative array, an object or a ModelEntityInterface
      * @param   boolean $modified   If TRUE, update the modified information for each column being set.
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function setProperties($properties, $modified = true)
     {
@@ -428,7 +430,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function setStatus($status)
     {
@@ -459,7 +461,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function setStatusMessage($message)
     {
@@ -570,7 +572,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      * Remove a property
      *
      * @param   string  $property The property name.
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     final public function __unset($property)
     {
@@ -582,7 +584,7 @@ class KModelEntityComposite extends KObjectSet implements KModelEntityComposable
      *
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
-     * @throws BadMethodCallException   If method could not be found
+     * @throws \BadMethodCallException   If method could not be found
      * @return mixed The result of the function
      */
     public function __call($method, $arguments)

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Behavior Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperBehavior extends KTemplateHelperAbstract
+class TemplateHelperBehavior extends TemplateHelperAbstract
 {
     /**
      * Array which holds a list of loaded Javascript libraries
@@ -25,12 +27,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads koowa.js
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string
      */
     public function koowa($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug' => false
         ));
@@ -55,12 +57,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
      *
      * You can do window.jQuery = window.$ = window.kQuery; to use the default names
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string
      */
     public function jquery($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug' => false
         ));
@@ -80,12 +82,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Add Bootstrap JS and CSS a modal box
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string   The html output
      */
     public function bootstrap($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug' => false,
             'css'   => true,
@@ -115,12 +117,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Render a modal box
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string   The html output
      */
     public function modal($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug'    => false,
             'selector' => '.koowa-modal',
@@ -166,12 +168,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Renders an overlay
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string
      */
     public function overlay($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'url'       => '',
             'options'   => array(),
@@ -184,7 +186,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         // Load the necessary files if they haven't yet been loaded
         if (!isset(self::$_loaded['overlay']))
         {
-            $html .= $this->koowa();
+            $html .= $this->kodekit();
             $html .= '<ktml:script src="assets://js/koowa.overlay.js" />';
 
             $html .= '
@@ -232,12 +234,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads the Forms.Validator class and connects it to Koowa.Controller.Form
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string   The html output
      */
     public function validator($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug' => false,
             'selector' => '.-koowa-form',
@@ -252,7 +254,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
         if(!isset(self::$_loaded['validator']))
         {
             $html .= $this->jquery();
-            $html .= $this->koowa();
+            $html .= $this->kodekit();
 
             $html .= '<ktml:script src="assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/patch.validator.js" />';
@@ -286,12 +288,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
      *
      * @see    http://ivaynberg.github.io/select2/select-2.1.html
      *
-     * @param  array|KObjectConfig $config
+     * @param  array|ObjectConfig $config
      * @return string   The html output
      */
     public function select2($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'cleanup' => false,
             'debug'   => false,
@@ -331,12 +333,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads the autocomplete behavior and attaches it to a specified element
      *
-     * @param  array|KObjectConfig $config
+     * @param  array|ObjectConfig $config
      * @return string   The html output
      */
     public function autocomplete($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'element'  => null,
             'options'  => array(
@@ -361,7 +363,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
 
         $html ='';
 
-        if (!$config->options->url instanceof KHttpUrl) {
+        if (!$config->options->url instanceof HttpUrl) {
             $config->options->url = $this->getObject('lib:http.url', array('url' => $config->options->url));
         }
 
@@ -393,13 +395,13 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
      *
      * @note   If no 'element' option is passed, then only assets will be loaded.
      *
-     * @param  array|KObjectConfig $config
-     * @throws InvalidArgumentException
+     * @param  array|ObjectConfig $config
+     * @throws \InvalidArgumentException
      * @return string    The html output
      */
     public function tree($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug'   => false,
             'element' => '',
@@ -418,7 +420,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
          */
         if (!isset(self::$_loaded['tree']))
         {
-            $html .= $this->koowa();
+            $html .= $this->kodekit();
             $html .= '<ktml:script src="assets://js/jqtree'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 
@@ -461,7 +463,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 foreach($required as $key)
                 {
                     if(!isset($data[$key])) {
-                        throw new InvalidArgumentException('Data must contain required param: '.$key);
+                        throw new \InvalidArgumentException('Data must contain required param: '.$key);
                     }
                 }
             }
@@ -482,12 +484,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Render a tooltip
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string   *The html output
      */
     public function tooltip($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'selector' => '.koowa-tooltip',
             'data'     => 'koowa-tooltip',
@@ -533,12 +535,12 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     /**
      * Loads the calendar behavior and attaches it to a specified element
      *
-     * @param array|KObjectConfig $config
+     * @param array|ObjectConfig $config
      * @return string   The html output
      */
     public function calendar($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug'   => false,
             'offset'  => 'UTC',
@@ -576,8 +578,8 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 $config->offset = $config->user_offset ?: $config->server_offset;
             }
 
-            $timezone               = new DateTimeZone($config->offset);
-            $config->offset_seconds = $timezone->getOffset(new DateTime());
+            $timezone               = new \DateTimeZone($config->offset);
+            $config->offset_seconds = $timezone->getOffset(new \DateTime());
         }
 
         if ($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00')
@@ -586,7 +588,7 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
                 $config->value = strftime($config->format);
             }
 
-            $date = new DateTime($config->value, new DateTimeZone('UTC'));
+            $date = new \DateTime($config->value, new \DateTimeZone('UTC'));
 
             $config->value = strftime($config->format, ((int)$date->format('U')) + $config->offset_seconds);
         } else {
@@ -659,10 +661,10 @@ class KTemplateHelperBehavior extends KTemplateHelperAbstract
     }
 
     /**
-     * @param KObjectConfig $config
+     * @param ObjectConfig $config
      * @return string
      */
-    protected function _loadCalendarScripts(KObjectConfig $config)
+    protected function _loadCalendarScripts(ObjectConfig $config)
     {
         $html = '';
 

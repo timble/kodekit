@@ -1,22 +1,24 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Array
  *
- * The KObjectArray class provides provides the main functionality of an array and at the same time implement the
- * features of KObject
+ * The ObjectArray class provides provides the main functionality of an array and at the same time implement the
+ * features of Object
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
+ * @package Kodekit\Library\Object
  */
-class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Serializable, Countable
+class ObjectArray extends Object implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
     /**
      * The data for each key in the array (key => value).
@@ -28,14 +30,14 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
-     * @return KObjectArray
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return ObjectArray
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->_data = KObjectConfig::unbox($config->data);
+        $this->_data = ObjectConfig::unbox($config->data);
     }
 
     /**
@@ -43,10 +45,10 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'data' => array(),
@@ -123,11 +125,11 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
     /**
      * Get a new iterator
      *
-     * @return  ArrayIterator
+     * @return  \ArrayIterator
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->_data);
+        return new \ArrayIterator($this->_data);
     }
 
     /**
@@ -174,7 +176,7 @@ class KObjectArray extends KObject implements IteratorAggregate, ArrayAccess, Se
      */
     public static function fromArray(array $data)
     {
-        return new static(new KObjectConfig(array('data' => $data)));
+        return new static(new ObjectConfig(array('data' => $data)));
     }
 
     /**

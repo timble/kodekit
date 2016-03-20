@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Dispatcher Response Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response
+ * @package Kodekit\Library\Dispatcher\Response
  */
-interface KDispatcherResponseInterface extends KControllerResponseInterface
+interface DispatcherResponseInterface extends ControllerResponseInterface
 {
     /**
      * Send the response
@@ -25,15 +27,15 @@ interface KDispatcherResponseInterface extends KControllerResponseInterface
     /**
      * Sets the response content using a stream
      *
-     * @param KFilesystemStreamInterface $stream  The stream object
-     * @return KDispatcherResponseInterface
+     * @param FilesystemStreamInterface $stream  The stream object
+     * @return DispatcherResponseInterface
      */
-    public function setStream(KFilesystemStreamInterface $stream);
+    public function setStream(FilesystemStreamInterface $stream);
 
     /**
      * Get the stream resource
      *
-     * @return KFilesystemStreamInterface
+     * @return FilesystemStreamInterface
      */
     public function getStream();
 
@@ -43,7 +45,7 @@ interface KDispatcherResponseInterface extends KControllerResponseInterface
      * @param   mixed    $transport    An object that implements ObjectInterface, ObjectIdentifier object
      *                                 or valid identifier string
      * @param   array    $config    An optional associative array of configuration settings
-     * @return KDispatcherResponseInterface
+     * @return DispatcherResponseInterface
      */
     public function getTransport($transport, $config = array());
 
@@ -53,7 +55,7 @@ interface KDispatcherResponseInterface extends KControllerResponseInterface
      * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                            or valid identifier string
      * @param   array $config  An optional associative array of configuration settings
-     * @return KDispatcherResponseInterface
+     * @return DispatcherResponseInterface
      */
     public function attachTransport($transport, $config = array());
 }

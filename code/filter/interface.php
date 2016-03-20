@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Filter Interface
@@ -13,9 +15,9 @@
  * Validate or sanitize data
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-interface KFilterInterface extends KObjectHandlable
+interface FilterInterface extends ObjectHandlable
 {
     /**
      * Priority levels
@@ -47,7 +49,7 @@ interface KFilterInterface extends KObjectHandlable
     /**
      * Resets any generated errors for the filter
      *
-     * @return KFilterInterface
+     * @return FilterInterface
      */
     public function reset();
 
@@ -62,7 +64,7 @@ interface KFilterInterface extends KObjectHandlable
      * Add an error message
      *
      * @param string $message The error message
-     * @param KFilterInterface
+     * @param FilterInterface
      */
     public function addError($message);
 

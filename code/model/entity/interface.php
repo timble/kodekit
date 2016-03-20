@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model Entity Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Entity
+ * @package Kodekit\Library\Model\Entity
  */
-interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializable, Countable
+interface ModelEntityInterface extends \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
     /**
      * Entity States
@@ -31,21 +33,21 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * This performs an intelligent insert/update and reloads the properties
      * with fresh data from the table on success.
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function save();
 
     /**
      * Deletes the entity form the data store
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function delete();
 
     /**
      * Clear the entity data
      *
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function clear();
 
@@ -74,7 +76,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
      *
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setProperty($name, $value, $modified = true);
 
@@ -90,7 +92,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function removeProperty($name);
 
@@ -105,9 +107,9 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
     /**
      * Set the properties
      *
-     * @param   mixed   $properties  Either and associative array, an object or a KModelEntityInterface
+     * @param   mixed   $properties  Either and associative array, an object or a ModelEntityInterface
      * @param   boolean $modified    If TRUE, update the modified information for each column being set.
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setProperties($properties, $modified = true);
 
@@ -129,7 +131,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Set the status
      *
      * @param   string|null $status The status value or NULL to reset the status
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setStatus($status);
 
@@ -144,7 +146,7 @@ interface KModelEntityInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KModelEntityInterface
+     * @return  ModelEntityInterface
      */
     public function setStatusMessage($message);
 

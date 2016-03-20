@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Paginator Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperPaginator extends KTemplateHelperSelect
+class TemplateHelperPaginator extends TemplateHelperSelect
 {
     /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         if($config->total != 0)
         {
@@ -68,12 +70,12 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
     /**
      * Render a select box with limit values
      *
-     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @param   array|ObjectConfig     $config An optional array with configuration options
      * @return  string  Html select box
      */
     public function limit($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'limit'	  => 0,
             'attribs' => array(),
@@ -83,7 +85,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
         $html     = '';
         $selected = 0;
         $options  = array();
-        $values   = KObjectConfig::unbox($config->values);
+        $values   = ObjectConfig::unbox($config->values);
 
         if ($config->limit && !in_array($config->limit, $values)) {
             $values[] = $config->limit;
@@ -117,7 +119,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
      */
     public function pagination($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'total'      => 0,
             'display'    => 2,
@@ -191,7 +193,7 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
     /**
      * Generates a pagination link
      *
-     * @param KObject $page Page object
+     * @param Object $page Page object
      * @param string  $title Page title
      * @return string
      */
@@ -200,11 +202,8 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
         $url   = $this->getObject('request')->getUrl();
         $query = $url->getQuery(true);
 
-        //For compatibility with Joomla use limitstart instead of offset
-        $query['limit']      = $page->limit;
-        $query['limitstart'] = $page->offset;
-
-        unset($query['offset']);
+        $query['limit'] = $page->limit;
+        $query['offset'] = $page->offset;
 
         $url->setQuery($query);
 
@@ -220,10 +219,10 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
     /**
      * Get a list of pages
      *
-     * @param   KObjectConfig $config
+     * @param   ObjectConfig $config
      * @return  array   Returns and array of pages information
      */
-    protected function _items(KObjectConfig $config)
+    protected function _items(ObjectConfig $config)
     {
         $elements  = array();
 
@@ -267,10 +266,10 @@ class KTemplateHelperPaginator extends KTemplateHelperSelect
     /**
      * Get the offset for each page, optionally with a range
      *
-     * @param   KObjectConfig $config
+     * @param   ObjectConfig $config
      * @return  array   Page number => offset
      */
-    protected function _offsets(KObjectConfig $config)
+    protected function _offsets(ObjectConfig $config)
     {
         if($display = $config->display)
         {

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Registry
+ * @package Kodekit\Library\Object\Registry
  */
-class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
+class ObjectRegistry extends \ArrayObject implements ObjectRegistryInterface
 {
     /**
      * The identifier classes
@@ -32,8 +34,8 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Get a an object from the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
-     * @return KObjectInterface   The object or NULL if the identifier could not be found
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return ObjectInterface   The object or NULL if the identifier could not be found
      */
     public function get($identifier)
     {
@@ -51,14 +53,14 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Set an object in the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @param  mixed $data
-     * @return KObjectIdentifier The object identifier that was set in the registry.
+     * @return ObjectIdentifier The object identifier that was set in the registry.
      */
     public function set($identifier, $data = null)
     {
         if($data == null) {
-            $data = is_string($identifier) ? new KObjectIdentifier($identifier) : $identifier;
+            $data = is_string($identifier) ? new ObjectIdentifier($identifier) : $identifier;
         }
 
         $this->offsetSet((string) $identifier, $data);
@@ -68,7 +70,7 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Check if an object exists in the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return boolean
      */
     public function has($identifier)
@@ -79,8 +81,8 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Remove an object from the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
-     * @return KObjectRegistry
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return ObjectRegistry
      */
     public function remove($identifier)
     {
@@ -91,7 +93,7 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Clears out all objects from the registry
      *
-     * @return KObjectRegistry
+     * @return ObjectRegistry
      */
     public function clear()
     {
@@ -103,7 +105,7 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
      * Try to find an object based on an identifier string
      *
      * @param   mixed  $identifier
-     * @return  KObjectIdentifier  An ObjectIdentifier or NULL if the identifier does not exist.
+     * @return  ObjectIdentifier  An ObjectIdentifier or NULL if the identifier does not exist.
      */
     public function find($identifier)
     {
@@ -119,7 +121,7 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
         {
             $result = $this->offsetGet($identifier);
 
-            if($result instanceof KObjectInterface) {
+            if($result instanceof ObjectInterface) {
                 $result = $result->getIdentifier();
             }
         }
@@ -131,9 +133,9 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Register an alias for an identifier
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @param mixed  $alias  The alias
-     * @return KObjectRegistry
+     * @return ObjectRegistry
      */
     public function alias($identifier, $alias)
     {
@@ -151,9 +153,9 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Register a class for an identifier
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @param string $class The class
-     * @return KObjectRegistry
+     * @return ObjectRegistry
      */
     public function setClass($identifier, $class)
     {
@@ -168,7 +170,7 @@ class KObjectRegistry extends ArrayObject implements KObjectRegistryInterface
     /**
      * Get the identifier class
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return string|false|null  Returns the class name or FALSE if the class could not be found.
      */
     public function getClass($identifier)

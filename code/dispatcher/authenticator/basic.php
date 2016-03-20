@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Form Dispatcher Authenticator
@@ -17,19 +19,19 @@
  * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Authenticator
+ * @package Kodekit\Library\Dispatcher\Authenticator
  */
-class KDispatcherAuthenticatorBasic extends KDispatcherAuthenticatorAbstract
+class DispatcherAuthenticatorBasic extends DispatcherAuthenticatorAbstract
 {
     /**
      * Initializes the default configuration for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_HIGH,
@@ -41,10 +43,10 @@ class KDispatcherAuthenticatorBasic extends KDispatcherAuthenticatorAbstract
     /**
      * Authenticate using email and password credentials
      *
-     * @param KDispatcherContextInterface $context A dispatcher context object
+     * @param DispatcherContextInterface $context A dispatcher context object
      * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
-    public function authenticateRequest(KDispatcherContextInterface $context)
+    public function authenticateRequest(DispatcherContextInterface $context)
     {
         $request = $context->request;
 
@@ -67,12 +69,12 @@ class KDispatcherAuthenticatorBasic extends KDispatcherAuthenticatorAbstract
                     {
                         //Check user password
                         if (!$user->verifyPassword($password)) {
-                            throw new KControllerExceptionRequestNotAuthenticated('Wrong password');
+                            throw new ControllerExceptionRequestNotAuthenticated('Wrong password');
                         }
 
                         //Check user enabled
                         if (!$user->isEnabled()) {
-                            throw new KControllerExceptionRequestNotAuthenticated('Account disabled');
+                            throw new ControllerExceptionRequestNotAuthenticated('Account disabled');
                         }
 
                         //Login the user
@@ -80,9 +82,9 @@ class KDispatcherAuthenticatorBasic extends KDispatcherAuthenticatorAbstract
 
                         return true;
                     }
-                    else throw new KControllerExceptionRequestNotAuthenticated('Wrong username');
+                    else throw new ControllerExceptionRequestNotAuthenticated('Wrong username');
                 }
-                else throw new KControllerExceptionRequestNotAuthenticated('Invalid username');
+                else throw new ControllerExceptionRequestNotAuthenticated('Invalid username');
             }
         }
     }

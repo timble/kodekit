@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Event Publisher Profiler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event\Publisher
+ * @package Kodekit\Library\Event\Publisher
  */
-class KEventPublisherProfiler extends KObjectDecorator implements KEventPublisherInterface
+class EventPublisherProfiler extends ObjectDecorator implements EventPublisherInterface
 {
     /**
      * Enabled status of the profiler
@@ -32,18 +34,18 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * @param  string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param  string|EventInterface  $event     The event name or a EventInterface object
      * @param  array|Traversable       $attributes An associative array or a Traversable object
-     * @param  KObjectInterface        $target    The event target
-     * @return null|KEventInterface Returns the event object. If the chain is not enabled will return NULL.
+     * @param  ObjectInterface        $target    The event target
+     * @return null|EventInterface Returns the event object. If the chain is not enabled will return NULL.
      */
     public function publishEvent($event, $attributes = array(), $target = null)
     {
         if ($this->isEnabled())
         {
             //Make sure we have an event object
-            if (!$event instanceof KEventInterface) {
-                $event = new KEvent($event, $attributes, $target);
+            if (!$event instanceof EventInterface) {
+                $event = new Event($event, $attributes, $target);
             }
 
             //Notify the listeners
@@ -60,7 +62,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
                     'period'   => microtime(true) - $start,
                     'time'     => microtime(true),
                     'memory'   => $this->getMemoryUsage(),
-                    'target'   => $target instanceof KObjectInterface ? $target->getIdentifier() : $target,
+                    'target'   => $target instanceof ObjectInterface ? $target->getIdentifier() : $target,
                     'listener' => $listener
                 );
 
@@ -79,15 +81,15 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Add an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
      * @param integer                 $priority  The event priority, usually between 1 (high priority) and 5 (lowest),
      *                                            default is 3 (normal)
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherProfiler
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherProfiler
      */
-    public function addListener($event, $listener, $priority = KEventInterface::PRIORITY_NORMAL)
+    public function addListener($event, $listener, $priority = EventInterface::PRIORITY_NORMAL)
     {
         $this->getDelegate()->addListener($event, $listener, $priority);
         return $this;
@@ -96,11 +98,11 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Remove an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherProfiler
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherProfiler
      */
     public function removeListener($event, $listener)
     {
@@ -111,8 +113,8 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Get a list of listeners for a specific event
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
+     * @param string|EventInterface  $event     The event name or a EventInterface object
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
      * @return array An array containing the listeners ordered by priority
      */
     public function getListeners($event)
@@ -123,12 +125,12 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Set the priority of a listener
      *
-     * @param  string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param  string|EventInterface  $event     The event name or a EventInterface object
      * @param  callable                $listener  The listener
      * @param  integer                 $priority  The event priority
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherProfiler
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherProfiler
      */
     public function setListenerPriority($event, $listener, $priority)
     {
@@ -139,10 +141,10 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Get the priority of an event
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
      * @return integer|false The event priority or FALSE if the event isn't listened for.
      */
     public function getListenerPriority($event, $listener)
@@ -186,7 +188,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
 
         if(is_callable($listener))
         {
-            if (get_class('Closure') && $listener instanceof Closure)
+            if (get_class('Closure') && $listener instanceof \Closure)
             {
                 $info += array(
                     'type'   => 'Closure',
@@ -198,11 +200,11 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
             {
                 try
                 {
-                    $r = new ReflectionFunction($listener);
+                    $r = new \ReflectionFunction($listener);
                     $file = $r->getFileName();
                     $line = $r->getStartLine();
                 }
-                catch (ReflectionException $e)
+                catch (\ReflectionException $e)
                 {
                     $file = null;
                     $line = null;
@@ -228,11 +230,11 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
 
                 try
                 {
-                    $r = new ReflectionMethod($class, $listener[1]);
+                    $r = new \ReflectionMethod($class, $listener[1]);
                     $file = $r->getFileName();
                     $line = $r->getStartLine();
                 }
-                catch (ReflectionException $e)
+                catch (\ReflectionException $e)
                 {
                     $file = null;
                     $line = null;
@@ -256,7 +258,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Enable the profiler
      *
-     * @return  KEventPublisherProfiler
+     * @return  EventPublisherProfiler
      */
     public function setEnabled($enabled)
     {
@@ -277,14 +279,14 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Set the decorated event publisher
      *
-     * @param   KEventPublisherInterface $delegate The decorated event publisher
-     * @return  KEventPublisherProfiler
-     * @throws  InvalidArgumentException If the delegate is not an event publisher
+     * @param   EventPublisherInterface $delegate The decorated event publisher
+     * @return  EventPublisherProfiler
+     * @throws  \InvalidArgumentException If the delegate is not an event publisher
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KEventPublisherInterface) {
-            throw new InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement KEventPublisherInterface');
+        if (!$delegate instanceof EventPublisherInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement EventPublisherInterface');
         }
 
         return parent::setDelegate($delegate);
@@ -293,7 +295,7 @@ class KEventPublisherProfiler extends KObjectDecorator implements KEventPublishe
     /**
      * Get the decorated event publisher
      *
-     * @return KEventPublisherInterface
+     * @return EventPublisherInterface
      */
     public function getDelegate()
     {

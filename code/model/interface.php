@@ -1,32 +1,34 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Kodekit\Library\Model
  */
-interface KModelInterface
+interface ModelInterface
 {
     /**
      * Create a new entity for the data store
      *
      * @param  array $properties Array of entity properties
-     * @return  KModelEntityComposite
+     * @return  ModelEntityComposite
      */
     public function create(array $properties = array());
 
     /**
      * Fetch an entity from the data store using the model state
      *
-     * @return KModelEntityComposite
+     * @return ModelEntityComposite
      */
     public function fetch();
 
@@ -41,7 +43,7 @@ interface KModelInterface
      * Reset the model data and state
      *
      * @param  array $modified List of changed state names
-     * @return KModelInterface
+     * @return ModelInterface
      */
     public function reset(array $modified = array());
 
@@ -50,14 +52,14 @@ interface KModelInterface
      *
      * @param  array $values Set the state values
      *
-     * @return KModelInterface
+     * @return ModelInterface
      */
     public function setState(array $values);
 
     /**
      * Method to get state object
      *
-     * @return  KModelStateInterface  The model state object
+     * @return  ModelStateInterface  The model state object
      */
     public function getState();
 }

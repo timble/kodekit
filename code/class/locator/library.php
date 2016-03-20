@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Library Class Locator
@@ -23,7 +25,7 @@
  * 1. An exception is made for files where the last segment of the file path and the file name are the same. In this case
  * class name can use a shorter syntax where the last segment of the path is omitted.
  *
- * Location  : koowa/libraries/foo/bar/bar.php
+ * Location  : kodekit/library/foo/bar/bar.php
  * Classname : KFooBar instead KFooBarBar
  *
  * 2. An exception is made for exception class names. Exception class names are only party case sensitive. The part after
@@ -34,9 +36,9 @@
  * Location  : namespace/.../path/to/exception/filenameforexception.php
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Locator
+ * @package Kodekit\Library\Class\Locator
  */
-class KClassLocatorLibrary extends KClassLocatorAbstract
+class ClassLocatorLibrary extends ClassLocatorAbstract
 {
     /**
      * The locator name

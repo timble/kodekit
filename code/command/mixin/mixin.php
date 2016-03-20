@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Command Mixin
@@ -13,14 +15,14 @@
  * Class can be used as a mixin in classes that want to implement a chain of responsibility or chain of command pattern.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command\Mixin
+ * @package Kodekit\Library\Command\Mixin
  */
-class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInterface, KCommandHandlerInterface
+class CommandMixin extends CommandCallbackAbstract implements CommandMixinInterface, CommandHandlerInterface
 {
     /**
      * Chain of command object
      *
-     * @var KCommandChainInterface
+     * @var CommandChainInterface
      */
     private $__command_chain;
 
@@ -34,15 +36,15 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Object constructor
      *
-     * @param   KObjectConfig $config Configuration options
-     * @throws InvalidArgumentException
+     * @param   ObjectConfig $config Configuration options
+     * @throws \InvalidArgumentException
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         if(is_null($config->command_chain)) {
-            throw new InvalidArgumentException('command_chain [KCommandChainInterface] config option is required');
+            throw new \InvalidArgumentException('command_chain [CommandChainInterface] config option is required');
         }
 
         //Create a command chain object
@@ -52,7 +54,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
         $this->_priority = $config->priority;
 
         //Add the event subscribers
-        $handlers = (array) KObjectConfig::unbox($config->command_handlers);
+        $handlers = (array) ObjectConfig::unbox($config->command_handlers);
 
         foreach ($handlers as $key => $value)
         {
@@ -78,10 +80,10 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'command_chain'     => 'lib:command.chain',
@@ -97,10 +99,10 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      *
      * This function is called when the mixin is being mixed. It will get the mixer passed in.
      *
-     * @param KObjectMixable $mixer The mixer object
+     * @param ObjectMixable $mixer The mixer object
      * @return void
      */
-    public function onMixin(KObjectMixable $mixer)
+    public function onMixin(ObjectMixable $mixer)
     {
         parent::onMixin($mixer);
 
@@ -111,11 +113,11 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Execute the callbacks
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
      * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
-    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
         return parent::invokeCallbacks($command, $this->getMixer());
     }
@@ -126,9 +128,9 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      * If a command handler returns the 'break condition' the executing is halted. If no break condition is specified the
      * the command chain will execute all command handlers, regardless of the handler result returned.
      *
-     * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
-     * @param  array|Traversable         $attributes An associative array or a Traversable object
-     * @param  KObjectInterface          $subject    The command subject
+     * @param  string|CommandInterface  $command    The command name or a CommandInterface object
+     * @param  array|\Traversable       $attributes An associative array or a Traversable object
+     * @param  ObjectInterface          $subject    The command subject
      * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
     public function invokeCommand($command, $attributes = null, $subject = null)
@@ -140,14 +142,14 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      * Invoke a command callback or delegate invocation to the mixer
      *
      * @param string             $method    The name of the method to be executed
-     * @param KCommandInterface  $command   The command
+     * @param CommandInterface  $command   The command
      * @return mixed Return the result of the handler.
      */
-    public function invokeCommandCallback($method, KCommandInterface $command)
+    public function invokeCommandCallback($method, CommandInterface $command)
     {
         $mixer = $this->getMixer();
 
-        if($mixer instanceof KCommandCallbackDelegate) {
+        if($mixer instanceof CommandCallbackDelegate) {
             $result = $mixer->invokeCommandCallback($method, $command);
         } else {
             $result = $mixer->$method($command);
@@ -159,20 +161,20 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Get the chain of command object
      *
-     * @throws UnexpectedValueException
-     * @return  KCommandChainInterface
+     * @throws \UnexpectedValueException
+     * @return  CommandChainInterface
      */
     public function getCommandChain()
     {
-        if(!$this->__command_chain instanceof KCommandChainInterface)
+        if(!$this->__command_chain instanceof CommandChainInterface)
         {
             $config = array('break_condition' => $this->getBreakCondition());
             $this->__command_chain = $this->getObject($this->__command_chain, $config);
 
-            if(!$this->__command_chain instanceof KCommandChainInterface)
+            if(!$this->__command_chain instanceof CommandChainInterface)
             {
-                throw new UnexpectedValueException(
-                    'CommandChain: '.get_class($this->__command_chain).' does not implement KCommandChainInterface'
+                throw new \UnexpectedValueException(
+                    'CommandChain: '.get_class($this->__command_chain).' does not implement CommandChainInterface'
                 );
             }
         }
@@ -183,10 +185,10 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Set the chain of command object
      *
-     * @param   KCommandChainInterface $chain A command chain object
-     * @return  KObjectInterface The mixer object
+     * @param   CommandChainInterface $chain A command chain object
+     * @return  ObjectInterface The mixer object
      */
-    public function setCommandChain(KCommandChainInterface $chain)
+    public function setCommandChain(CommandChainInterface $chain)
     {
         $this->__command_chain = $chain;
         return $this->getMixer();
@@ -199,16 +201,16 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
      * change or add parameters for existing handlers.
      *
      * @param  	string          $command  The command name to register the handler for
-     * @param 	string|Closure  $method   The name of the method or a Closure object
-     * @param   array|object    $params   An associative array of config parameters or a KObjectConfig object
-     * @throws  InvalidArgumentException If the method does not exist
-     * @return  KCommandMixin
+     * @param 	string|\Closure  $method   The name of the method or a Closure object
+     * @param   array|object    $params   An associative array of config parameters or a ObjectConfig object
+     * @throws  \InvalidArgumentException If the method does not exist
+     * @return  CommandMixin
      */
     public function addCommandCallback($command, $method, $params = array())
     {
         if (is_string($method) && !method_exists($this->getMixer(), $method))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Method does not exist '.get_class().'::'.$method
             );
         }
@@ -219,11 +221,11 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Attach a command to the chain
      *
-     * @param  mixed $handler An object that implements KCommandHandlerInterface, an KObjectIdentifier
+     * @param  mixed $handler An object that implements CommandHandlerInterface, an ObjectIdentifier
      *                        or valid identifier string
      * @param  array $config An optional associative array of configuration options
-     * @throws UnexpectedValueException
-     * @return KObjectInterface The mixer object
+     * @throws \UnexpectedValueException
+     * @return ObjectInterface The mixer object
      */
     public function addCommandHandler($handler, $config = array())
     {
@@ -238,7 +240,7 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
         }
         else
         {
-            if($handler instanceof KCommandHandlerInterface) {
+            if($handler instanceof CommandHandlerInterface) {
                 $identifier = $handler->getIdentifier();
             } else {
                 $identifier = $this->getIdentifier($handler);
@@ -247,14 +249,14 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
 
         if (!$this->getCommandChain()->getHandlers()->hasIdentifier($identifier))
         {
-            if (!($handler instanceof KCommandHandlerInterface)) {
+            if (!($handler instanceof CommandHandlerInterface)) {
                 $handler = $this->getObject($identifier, $config);
             }
 
-            if (!($handler instanceof KCommandHandlerInterface))
+            if (!($handler instanceof CommandHandlerInterface))
             {
-                throw new UnexpectedValueException(
-                    "Command Handler $identifier does not implement KCommandHandlerInterface"
+                throw new \UnexpectedValueException(
+                    "Command Handler $identifier does not implement CommandHandlerInterface"
                 );
             }
 
@@ -268,10 +270,10 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Removes a command from the chain
      *
-     * @param  KCommandHandlerInterface  $handler  The command handler
-     * @return KObjectInterface The mixer object
+     * @param  CommandHandlerInterface  $handler  The command handler
+     * @return ObjectInterface The mixer object
      */
-    public function removeCommandHandler(KCommandHandlerInterface $handler)
+    public function removeCommandHandler(CommandHandlerInterface $handler)
     {
         $this->getCommandChain()->removeHandler($handler);
         return $this->getMixer();
@@ -280,13 +282,13 @@ class KCommandMixin extends KCommandCallbackAbstract implements KCommandMixinInt
     /**
      * Check if a command handler exists
      *
-     * @param  mixed $handler An object that implements KCommandHandlerInterface, an KObjectIdentifier
+     * @param  mixed $handler An object that implements CommandHandlerInterface, an ObjectIdentifier
      *                        or valid identifier string
      * @return  boolean TRUE if the behavior exists, FALSE otherwise
      */
     public function hasCommandHandler($handler)
     {
-        if($handler instanceof KCommandHandlerInterface) {
+        if($handler instanceof CommandHandlerInterface) {
             $identifier = $handler->getIdentifier();
         } else {
             $identifier = $this->getIdentifier($handler);

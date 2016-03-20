@@ -1,22 +1,24 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Object Decorator
  *
  * The abstract object decorator allows to decorate any object. To decorate an object that extends from
- * KObject use KObjectDecorator instead.
+ * Object use ObjectDecorator instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Decorator
+ * @package Kodekit\Library\Object\Decorator
  */
-abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
+abstract class ObjectDecoratorAbstract implements ObjectDecoratorInterface
 {
     /**
      * Class methods
@@ -35,9 +37,9 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
     /**
      * Constructor
      *
-     * @param  KObjectConfig  $config  A KObjectConfig object with optional configuration options
+     * @param  ObjectConfig  $config  A ObjectConfig object with optional configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         //Initialise the object
         $this->_initialize($config);
@@ -53,10 +55,10 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'delegate' => null,
@@ -77,13 +79,13 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      * Set the decorated object
      *
      * @param   object $delegate The decorated object
-     * @return  KObjectDecoratorAbstract
-     * @throws  InvalidArgumentException If the delegate is not an object
+     * @return  ObjectDecoratorAbstract
+     * @throws  \InvalidArgumentException If the delegate is not an object
      */
     public function setDelegate($delegate)
     {
         if (!is_object($delegate)) {
-            throw new InvalidArgumentException('Delegate needs to be an object, '.gettype($delegate).' given');
+            throw new \InvalidArgumentException('Delegate needs to be an object, '.gettype($delegate).' given');
         }
 
         $this->__delegate = $delegate;
@@ -97,7 +99,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      *
      * @param object $delegate The object being decorated
      * @return void
-     * @throws  InvalidArgumentException If the delegate is not an object
+     * @throws  \InvalidArgumentException If the delegate is not an object
      */
     public function onDecorate($delegate)
     {
@@ -116,7 +118,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
     {
         $delegate = $this->getDelegate();
 
-        if($delegate instanceof KObjectHandlable) {
+        if($delegate instanceof ObjectHandlable) {
             $handle = $delegate->getHandle();
         } else {
             $handle = spl_object_hash($this);
@@ -139,9 +141,9 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
             $methods = array();
             $object = $this->getDelegate();
 
-            if (!($object instanceof KObjectMixable))
+            if (!($object instanceof ObjectMixable))
             {
-                $reflection = new ReflectionClass($object);
+                $reflection = new \ReflectionClass($object);
                 foreach ($reflection->getMethods() as $method) {
                     $methods[] = $method->name;
                 }
@@ -210,7 +212,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
      *
      * @param  string     $method    The function name
      * @param  array      $arguments The function arguments
-     * @throws BadMethodCallException     If method could not be found
+     * @throws \BadMethodCallException     If method could not be found
      * @return mixed The result of the function
      */
     public function __call($method, $arguments)
@@ -218,7 +220,7 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
         $delegate = $this->getDelegate();
 
         //Check if the method exists
-        if ($delegate instanceof KObjectMixable)
+        if ($delegate instanceof ObjectMixable)
         {
             $methods = $delegate->getMethods();
             $exists = in_array($method, $methods);
@@ -259,6 +261,6 @@ abstract class KObjectDecoratorAbstract implements KObjectDecoratorInterface
             return $result;
         }
 
-        throw new BadMethodCallException('Call to undefined method :' . $method);
+        throw new \BadMethodCallException('Call to undefined method :' . $method);
     }
 }

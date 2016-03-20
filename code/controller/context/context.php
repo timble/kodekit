@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Controller Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Context
+ * @package Kodekit\Library\Controller\Context
  */
-class KControllerContext extends KCommand implements KControllerContextInterface
+class ControllerContext extends Command implements ControllerContextInterface
 {
     /**
      * Constructor.
@@ -22,10 +24,10 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function __construct($attributes = array())
     {
-        KObjectConfig::__construct($attributes);
+        ObjectConfig::__construct($attributes);
 
         //Set the subject and the name
-        if($attributes instanceof KControllerContext)
+        if($attributes instanceof ControllerContext)
         {
             $this->setSubject($attributes->getSubject());
             $this->setName($attributes->getName());
@@ -35,64 +37,64 @@ class KControllerContext extends KCommand implements KControllerContextInterface
     /**
      * Get the request object
      *
-     * @return KControllerRequestInterface
+     * @return ControllerRequestInterface
      */
     public function getRequest()
     {
-        return KObjectConfig::get('request');
+        return ObjectConfig::get('request');
     }
 
     /**
      * Set the request object
      *
-     * @param KControllerRequestInterface $request
-     * @return KControllerContext
+     * @param ControllerRequestInterface $request
+     * @return ControllerContext
      */
-    public function setRequest(KControllerRequestInterface $request)
+    public function setRequest(ControllerRequestInterface $request)
     {
-        return KObjectConfig::set('request', $request);
+        return ObjectConfig::set('request', $request);
     }
 
     /**
      * Get the response object
      *
-     * @return KControllerResponseInterface
+     * @return ControllerResponseInterface
      */
     public function getResponse()
     {
-        return KObjectConfig::get('response');
+        return ObjectConfig::get('response');
     }
 
     /**
      * Set the response object
      *
-     * @param KControllerResponseInterface $response
-     * @return KControllerContext
+     * @param ControllerResponseInterface $response
+     * @return ControllerContext
      */
-    public function setResponse(KControllerResponseInterface $response)
+    public function setResponse(ControllerResponseInterface $response)
     {
-        return KObjectConfig::set('response', $response);
+        return ObjectConfig::set('response', $response);
     }
 
     /**
      * Get the user object
      *
-     * @return KUserInterface
+     * @return UserInterface
      */
     public function getUser()
     {
-        return KObjectConfig::get('user');
+        return ObjectConfig::get('user');
     }
 
     /**
      * Set the user object
      *
-     * @param KUserInterface $user
+     * @param UserInterface $user
      * @return $this
      */
-    public function setUser(KUserInterface $user)
+    public function setUser(UserInterface $user)
     {
-        return KObjectConfig::set('user', $user);
+        return ObjectConfig::set('user', $user);
     }
 
     /**
@@ -102,17 +104,17 @@ class KControllerContext extends KCommand implements KControllerContextInterface
      */
     public function getAction()
     {
-        return KObjectConfig::get('action');
+        return ObjectConfig::get('action');
     }
 
     /**
      * Set the controller action
      *
      * @param string $action
-     * @return KControllerContext
+     * @return ControllerContext
      */
     public function setAction($action)
     {
-        return KObjectConfig::set('action', $action);
+        return ObjectConfig::set('action', $action);
     }
 }

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Locator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Locator
+ * @package Kodekit\Library\Template\Locator
  */
-interface KTemplateLocatorInterface
+interface TemplateLocatorInterface
 {
     /**
      * Get the locator name
@@ -26,7 +28,7 @@ interface KTemplateLocatorInterface
      * Sets the base path
      *
      * @param string $path  The path (used to resolved partials).
-     * @return KTemplateLocatorInterface
+     * @return TemplateLocatorInterface
      */
     public function setBasePath($path);
 
@@ -41,7 +43,7 @@ interface KTemplateLocatorInterface
      * Find the template path
      *
      * @param  string $url   The Template url
-     * @throws RuntimeException If the no base path exists while trying to locate a partial.
+     * @throws \RuntimeException If the no base path exists while trying to locate a partial.
      * @return string|false The real template path or FALSE if the template could not be found
      */
     public function locate($url);

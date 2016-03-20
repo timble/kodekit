@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Date Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperDate extends KTemplateHelperAbstract
+class TemplateHelperDate extends TemplateHelperAbstract
 {
     /**
      * Returns formatted date according to current local and adds time offset.
@@ -25,7 +27,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
     {
         $translator = $this->getObject('translator');
 
-        $config = new KObjectConfig($config);
+        $config = new ObjectConfig($config);
         $config->append(array(
             'date'     => 'now',
             'timezone' => date_default_timezone_get(),
@@ -40,7 +42,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
             try
             {
                 $date = $this->getObject('lib:date', array('date' => $config->date, 'timezone' => 'UTC'));
-                $date->setTimezone(new DateTimeZone($config->timezone));
+                $date->setTimezone(new \DateTimeZone($config->timezone));
 
                 $return = $date->format($config->format);
             }
@@ -58,7 +60,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
      */
     public function humanize($config = array())
     {
-        $config = new KObjectConfig($config);
+        $config = new ObjectConfig($config);
         $config->append(array(
             'date'      => 'now',
             'timezone'  => date_default_timezone_get(),
@@ -74,7 +76,7 @@ class KTemplateHelperDate extends KTemplateHelperAbstract
             try
             {
                 $date = $this->getObject('date', array('date' => $config->date, 'timezone' => 'UTC'));
-                $date->setTimezone(new DateTimeZone($config->timezone));
+                $date->setTimezone(new \DateTimeZone($config->timezone));
 
                 $result = $date->humanize($config->period);
             }

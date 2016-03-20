@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Select Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplateHelperParameterizable
+class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHelperParameterizable
 {
     /**
      * Generates an HTML select option
@@ -23,7 +25,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
      */
     public function option($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'id'        => null,
             'name'      => 'id',
@@ -34,14 +36,14 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
             'attribs'   => array(),
         ));
 
-        $option = new stdClass;
+        $option = new \stdClass;
         $option->id       = $config->id;
         $option->name     = $config->name;
         $option->value 	  = $config->value;
         $option->label    = trim( $config->label ) ? $config->label : $config->value;
         $option->disabled = $config->disabled;
         $option->level    = $config->level;
-        $option->attribs  = KObjectConfig::unbox($config->attribs);
+        $option->attribs  = ObjectConfig::unbox($config->attribs);
 
         if($config->level) {
             $option->attribs['class'] = array('level'.$config->level);
@@ -57,12 +59,12 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
     /**
      * Generates an HTML select list
      *
-     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @param   array|ObjectConfig     $config An optional array with configuration options
      * @return  string  Html
      */
     public function optionlist($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'options'   => array(),
             'name'      => 'id',
@@ -100,7 +102,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
 
                 if(!is_null($config->selected))
                 {
-                    if ($config->selected instanceof KObjectConfig)
+                    if ($config->selected instanceof ObjectConfig)
                     {
                         foreach ($config->selected as $selected)
                         {
@@ -131,12 +133,12 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
     /**
      * Generates an HTML radio list
      *
-     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @param   array|ObjectConfig     $config An optional array with configuration options
      * @return  string  Html
      */
     public function radiolist($config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'options' 	=> array(),
             'legend'    => null,
@@ -185,12 +187,12 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
     /**
      * Generates an HTML check list
      *
-     * @param   array|KObjectConfig     $config An optional array with configuration options
+     * @param   array|ObjectConfig     $config An optional array with configuration options
      * @return  string	Html
      */
     public function checklist( $config = array())
     {
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'options' 	=> array(),
             'legend'    => null,
@@ -218,7 +220,7 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
 
             $extra = '';
 
-            if ($config->selected instanceof KObjectConfig)
+            if ($config->selected instanceof ObjectConfig)
             {
                 foreach ($config->selected as $selected)
                 {
@@ -254,14 +256,14 @@ class KTemplateHelperSelect extends KTemplateHelperAbstract implements KTemplate
 	/**
 	 * Generates an HTML boolean radio list
 	 *
-	 * @param   array|KObjectConfig     $config An optional array with configuration options
+	 * @param   array|ObjectConfig     $config An optional array with configuration options
 	 * @return  string  Html
 	 */
     public function booleanlist($config = array())
     {
         $translator = $this->getObject('translator');
 
-        $config = new KObjectConfigJson($config);
+        $config = new ObjectConfigJson($config);
         $config->append(array(
             'name'   	=> '',
             'attribs'	=> array(),

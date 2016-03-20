@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Command Chain
@@ -14,9 +16,9 @@
  * priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command\Chain
+ * @package Kodekit\Library\Command\Chain
  */
-interface KCommandChainInterface
+interface CommandChainInterface
 {
     /**
      * Execute a command by executing all registered handlers
@@ -24,9 +26,9 @@ interface KCommandChainInterface
      * If a command handler returns the 'break condition' the executing is halted. If no break condition is specified the
      * the command chain will execute all command handlers, regardless of the handler result returned.
      *
-     * @param string|KCommandInterface  $command    The command name or a KCommandInterface object
-     * @param array|Traversable         $attributes An associative array or a Traversable object
-     * @param KObjectInterface          $subject    The command subject
+     * @param string|CommandInterface  $command    The command name or a CommandInterface object
+     * @param array|\Traversable       $attributes An associative array or a Traversable object
+     * @param ObjectInterface          $subject    The command subject
      * @return mixed|null If a handlers breaks, returns the break condition. NULL otherwise.
      */
     public function execute($command, $attributes = array(), $subject = null);
@@ -34,48 +36,48 @@ interface KCommandChainInterface
     /**
      * Attach a command to the chain
      *
-     * @param KCommandHandlerInterface  $handler  The command handler
-     * @return KCommandChainInterface
+     * @param CommandHandlerInterface  $handler  The command handler
+     * @return CommandChainInterface
      */
-    public function addHandler(KCommandHandlerInterface $handler);
+    public function addHandler(CommandHandlerInterface $handler);
 
     /**
      * Removes a command from the chain
      *
-     * @param  KCommandHandlerInterface  $handler  The command handler
-     * @return  KCommandChain
+     * @param  CommandHandlerInterface  $handler  The command handler
+     * @return  CommandChain
      */
-    public function removeHandler(KCommandHandlerInterface $handler);
+    public function removeHandler(CommandHandlerInterface $handler);
 
     /**
      * Get the list of handler enqueue in the chain
      *
-     * @return  KObjectQueue   An object queue containing the handlers
+     * @return  ObjectQueue   An object queue containing the handlers
      */
     public function getHandlers();
 
     /**
      * Set the priority of a command handler
      *
-     * @param KCommandHandlerInterface $handler   A command handler
+     * @param CommandHandlerInterface $handler   A command handler
      * @param integer                   $priority  The command priority
-     * @return KCommandChainInterface
+     * @return CommandChainInterface
      */
-    public function setHandlerPriority(KCommandHandlerInterface $handler, $priority);
+    public function setHandlerPriority(CommandHandlerInterface $handler, $priority);
 
     /**
      * Get the priority of a command handlers
      *
-     * @param  KCommandHandlerInterface $handler A command handler
+     * @param  CommandHandlerInterface $handler A command handler
      * @return integer The command priority
      */
-    public function getHandlerPriority(KCommandHandlerInterface $handler);
+    public function getHandlerPriority(CommandHandlerInterface $handler);
 
     /**
      * Set the break condition
      *
      * @param mixed|null $condition The break condition, or NULL to set reset the break condition
-     * @return KCommandChainInterface
+     * @return CommandChainInterface
      */
     public function setBreakCondition($condition);
 
@@ -89,7 +91,7 @@ interface KCommandChainInterface
     /**
      * Enable the chain
      *
-     * @return  KCommandChainInterface
+     * @return  CommandChainInterface
      */
     public function setEnabled($enabled);
 

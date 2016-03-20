@@ -1,31 +1,33 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Filter Chain
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-class KFilterChain extends KObject implements KFilterInterface
+class FilterChain extends Object implements FilterInterface
 {
     /**
      * The filter queue
      *
-     * @var	KObjectQueue
+     * @var	ObjectQueue
      */
     protected $_queue;
 
     /**
      * The last filter
      *
-     * @var KFilterInterface
+     * @var FilterInterface
      */
     protected $_last;
 
@@ -41,10 +43,10 @@ class KFilterChain extends KObject implements KFilterInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_NORMAL,
@@ -56,9 +58,9 @@ class KFilterChain extends KObject implements KFilterInterface
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -109,7 +111,7 @@ class KFilterChain extends KObject implements KFilterInterface
     /**
      * Resets any generated errors for the filter chain
      *
-     * @return KFilterChain
+     * @return FilterChain
      */
     public function reset()
     {
@@ -123,14 +125,14 @@ class KFilterChain extends KObject implements KFilterInterface
     /**
      * Add a filter to the queue based on priority
      *
-     * @param KFilterInterface  $filter A Filter
+     * @param FilterInterface  $filter A Filter
      * @param integer           $priority The command priority, usually between 1 (high priority) and 5 (lowest),
      *                                    default is 3. If no priority is set, the command priority will be used
      *                                    instead.
      *
-     * @return KFilterChain
+     * @return FilterChain
      */
-    public function addFilter(KFilterInterface $filter, $priority = null)
+    public function addFilter(FilterInterface $filter, $priority = null)
     {
         //Store reference to be used for filter chaining
         $this->_last = $filter;
@@ -159,7 +161,7 @@ class KFilterChain extends KObject implements KFilterInterface
      * Add an error message to the top filter in the queue
      *
      * @param string $message The error message to add
-     * @return KFilterChain
+     * @return FilterChain
      */
     public function addError($message)
     {
@@ -183,12 +185,12 @@ class KFilterChain extends KObject implements KFilterInterface
      * @param  string   $method    The function name
      * @param  array    $arguments The function arguments
      * @return mixed The result of the function
-     * @throws BadMethodCallException   If method could not be found
+     * @throws \BadMethodCallException   If method could not be found
      */
     public function __call($method, $arguments)
     {
         //Call the method on the filter if it exists
-        if($this->_last instanceof KFilterInterface)
+        if($this->_last instanceof FilterInterface)
         {
             $methods = $this->_last->getMethods();
 

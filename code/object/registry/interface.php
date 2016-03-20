@@ -1,41 +1,43 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Registry Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Registry
+ * @package Kodekit\Library\Object\Registry
  */
-interface KObjectRegistryInterface
+interface ObjectRegistryInterface
 {
     /**
      * Get a an object from the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
-     * @return KObjectInterface   The object
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return ObjectInterface   The object
      */
     public function get($identifier);
 
     /**
      * Set an object in the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @param  mixed $data
-     * @return KObjectIdentifier The object identifier that was set in the registry.
+     * @return ObjectIdentifier The object identifier that was set in the registry.
      */
     public function set($identifier, $data = null);
 
     /**
      * Check if an object exists in the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return  boolean
      */
     public function has($identifier);
@@ -43,15 +45,15 @@ interface KObjectRegistryInterface
     /**
      * Remove an object from the registry
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
-     * @return KObjectRegistryInterface
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @return ObjectRegistryInterface
      */
     public function remove($identifier);
 
     /**
      * Clears out all objects from the registry
      *
-     * @return  KObjectRegistryInterface
+     * @return  ObjectRegistryInterface
      */
     public function clear();
 
@@ -59,32 +61,32 @@ interface KObjectRegistryInterface
      * Try to find an object based on an identifier string
      *
      * @param   mixed  $identifier
-     * @return  KObjectIdentifier  An ObjectIdentifier or NULL if the identifier does not exist.
+     * @return  ObjectIdentifier  An ObjectIdentifier or NULL if the identifier does not exist.
      */
     public function find($identifier);
 
     /**
      * Add an alias for an identifier
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
-     * @param  KObjectIdentifier|string $alias      The alias
-     * @return KObjectRegistry
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $alias      The alias
+     * @return ObjectRegistry
      */
     public function alias($identifier, $alias);
 
     /**
      * Register a class for an identifier
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @param mixed $alias The alias
-     * @return KObjectRegistryInterface
+     * @return ObjectRegistryInterface
      */
     public function setClass($identifier, $class);
 
     /**
      * Get the identifier class
      *
-     * @param  KObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
+     * @param  ObjectIdentifier|string $identifier An ObjectIdentifier, identifier string
      * @return string|false|null  Returns the class name or FALSE if the class could not be found.
      */
     public function getClass($identifier);

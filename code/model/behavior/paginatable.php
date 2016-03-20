@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Paginatable Model Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Behavior
+ * @package Kodekit\Library\Model\Behavior
  */
-class KModelBehaviorPaginatable extends KModelBehaviorAbstract
+class ModelBehaviorPaginatable extends ModelBehaviorAbstract
 {
     /**
      * Insert the model states
      *
-     * @param KObjectMixable $mixer
+     * @param ObjectMixable $mixer
      */
-    public function onMixin(KObjectMixable $mixer)
+    public function onMixin(ObjectMixable $mixer)
     {
         parent::onMixin($mixer);
 
@@ -32,11 +34,11 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
     /**
      * Get the model paginator object
      *
-     * @return  KModelPaginator  The model paginator object
+     * @return  ModelPaginator  The model paginator object
      */
     public function getPaginator()
     {
-        $paginator = new KModelPaginator(array(
+        $paginator = new ModelPaginator(array(
             'offset' => (int)$this->getState()->offset,
             'limit'  => (int)$this->getState()->limit,
             'total'  => (int)$this->count(),
@@ -48,14 +50,14 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
     /**
      * Add limit query
      *
-     * @param   KModelContextInterface $context A model context object
+     * @param   ModelContextInterface $context A model context object
      * @return    void
      */
-    protected function _beforeFetch(KModelContextInterface $context)
+    protected function _beforeFetch(ModelContextInterface $context)
     {
         $model = $context->getSubject();
 
-        if ($model instanceof KModelDatabase && !$context->state->isUnique())
+        if ($model instanceof ModelDatabase && !$context->state->isUnique())
         {
             $state = $context->state;
             $limit = $state->limit;
@@ -88,12 +90,12 @@ class KModelBehaviorPaginatable extends KModelBehaviorAbstract
     /**
      * Recalculate offset
      *
-     * @param   KModelContextInterface $context A model context object
+     * @param   ModelContextInterface $context A model context object
      * @return    void
      */
-    protected function _afterReset(KModelContextInterface $context)
+    protected function _afterReset(ModelContextInterface $context)
     {
-        $modified = (array) KObjectConfig::unbox($context->modified);
+        $modified = (array) ObjectConfig::unbox($context->modified);
         if (in_array('limit', $modified))
         {
             $limit = $context->state->limit;

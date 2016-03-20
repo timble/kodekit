@@ -1,37 +1,39 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Cache Class Registry
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Registry
+ * @package Kodekit\Library\Class\Registry
  */
-class KClassRegistryCache extends KClassRegistry
+class ClassRegistryCache extends ClassRegistry
 {
     /**
      * The registry cache namespace
      *
      * @var boolean
      */
-    protected $_namespace = 'koowa';
+    protected $_namespace = 'kodekit';
 
     /**
      * Constructor
      *
-     * @return KClassRegistryCache
-     * @throws RuntimeException    If the APC PHP extension is not enabled or available
+     * @return ClassRegistryCache
+     * @throws \RuntimeException    If the APC PHP extension is not enabled or available
      */
     public function __construct()
     {
         if (!static::isSupported()) {
-            throw new RuntimeException('Unable to use KClassRegistryCache. APC is not enabled.');
+            throw new \RuntimeException('Unable to use ClassRegistryCache. APC is not enabled.');
         }
     }
 

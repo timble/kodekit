@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Asset Template Filter
@@ -14,9 +16,9 @@
  * added that is rewritten to '/assets/'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Filter
+ * @package Kodekit\Library\Template\Filter
  */
-class KTemplateFilterAsset extends KTemplateFilterAbstract
+class TemplateFilterAsset extends TemplateFilterAbstract
 {
     /**
      * The schemes
@@ -28,9 +30,9 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -44,10 +46,10 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'schemes' => array('assets://' => '/assets/'),
@@ -62,7 +64,7 @@ class KTemplateFilterAsset extends KTemplateFilterAbstract
      *
      * @param string $alias  Scheme to be appended
      * @param mixed  $path   The path to replace the scheme
-     * @return KTemplateFilterAsset
+     * @return TemplateFilterAsset
      */
     public function addScheme($alias, $path)
     {

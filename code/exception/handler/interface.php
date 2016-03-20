@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Exception Handler Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Handler
+ * @package Kodekit\Library\Exception\Handler
  */
-interface KExceptionHandlerInterface
+interface ExceptionHandlerInterface
 {
     /**
      * Error Levels
@@ -50,7 +52,7 @@ interface KExceptionHandlerInterface
      * @param  callable $callback
      * @param  bool $prepend If true, the callback will be prepended instead of appended.
      * @throws \InvalidArgumentException If the callback is not a callable
-     * @return KExceptionHandlerInterface
+     * @return ExceptionHandlerInterface
      */
     public function addExceptionCallback($callback, $prepend = false );
 
@@ -59,7 +61,7 @@ interface KExceptionHandlerInterface
      *
      * @param  callable $callback
      * @throws \InvalidArgumentException If the callback is not a callable
-     * @return KExceptionHandlerInterface
+     * @return ExceptionHandlerInterface
      */
     public function removeExceptionCallback($callback);
 
@@ -73,7 +75,7 @@ interface KExceptionHandlerInterface
     /**
      * Get the handled exception stack
      *
-     * @return  KObjectStack   An object stack containing the handled exceptions
+     * @return  ObjectStack   An object stack containing the handled exceptions
      */
     public function getExceptions();
 
@@ -100,7 +102,7 @@ interface KExceptionHandlerInterface
      * @param   Exception  $exception  The exception to be handled
      * @return  void
      */
-    public function handleException(Exception $exception);
+    public function handleException(\Exception $exception);
 
     /**
      * Check if an exception type is enabled

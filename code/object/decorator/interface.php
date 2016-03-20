@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Decorator Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Decorator
+ * @package Kodekit\Library\Object\Decorator
  */
-interface KObjectDecoratorInterface
+interface ObjectDecoratorInterface
 {
     /**
      * Get the decorated object
@@ -26,8 +28,8 @@ interface KObjectDecoratorInterface
      * Set the decorated object
      *
      * @param   object $delegate The object to decorate
-     * @return  KObjectDecoratorInterface
-     * @throws  InvalidArgumentException If the delegate is not an object
+     * @return  ObjectDecoratorInterface
+     * @throws  \InvalidArgumentException If the delegate is not an object
      */
     public function setDelegate($delegate);
 
@@ -46,7 +48,7 @@ interface KObjectDecoratorInterface
      * This function is called when an object is being decorated. It will get the delegate passed in.
      *
      * @param  object $delegate The object being decorated
-     * @throws InvalidArgumentException If the delegate is not an object
+     * @throws \InvalidArgumentException If the delegate is not an object
      * @return void
      */
     public function onDecorate($delegate);

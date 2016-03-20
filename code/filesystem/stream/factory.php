@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Filesystem Stream Factory
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream
+ * @package Kodekit\Library\Filesystem\Stream
  */
-final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
+final class FilesystemStreamFactory extends Object implements ObjectSingleton
 {
     /**
      * Registered stream
@@ -32,9 +34,9 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config)
+    public function __construct( ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -51,13 +53,13 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'stream_prefix'  => 'koowa-',
+            'stream_prefix'  => 'kodekit-',
             'streams'        => array('lib:filesystem.stream.buffer'),
         ));
 
@@ -74,11 +76,11 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
      * @param string         $mode      The type of access required for this stream. (see Table 1 of the fopen() reference);
      * @param array|resource $context   Either an array of a resource of type 'stream-context' created with stream_create_context()
      * @param bool           $auto_open IF TRUE automatically open the stream. Default TRUE.
-     * @throws InvalidArgumentException If the url is not valid
-     * @throws RuntimeException         If the stream isn't registered
-     * @throws UnexpectedValueException	If the stream object doesn't implement the KFilesystemStreamInterface
-     * @throws RuntimeException         If the stream cannot be opened.
-     * @return KFilesystemStreamInterface
+     * @throws \InvalidArgumentException If the url is not valid
+     * @throws \RuntimeException         If the stream isn't registered
+     * @throws \UnexpectedValueException	If the stream object doesn't implement the FilesystemStreamInterface
+     * @throws \RuntimeException         If the stream cannot be opened.
+     * @return FilesystemStreamInterface
      */
     public function createStream($path, $mode = 'rb', $context = array())
     {
@@ -98,7 +100,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         //Invalid context
         if (!is_null($context) && !is_array($context) && !is_resource($context) && !get_resource_type($context) == 'stream-context')
         {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Context must be an array or a resource of type stream-context; received "%s"', gettype($context)
             ));
         }
@@ -106,7 +108,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         //Stream not supported
         if(!$this->isRegistered($name))
         {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Unable to find the filesystem stream "%s" - did you forget to register it ?', $name
             ));
         }
@@ -126,17 +128,17 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             'mode'    => $mode
         ));
 
-        if(!$stream instanceof KFilesystemStreamInterface)
+        if(!$stream instanceof FilesystemStreamInterface)
         {
-            throw new UnexpectedValueException(
-                'Stream: '.get_class($stream).' does not implement KFilesystemStreamInterface'
+            throw new \UnexpectedValueException(
+                'Stream: '.get_class($stream).' does not implement FilesystemStreamInterface'
             );
         }
 
         //Automatically open the stream
         try {
             $stream->open();
-        } catch (BadMethodCallException $e) {
+        } catch (\BadMethodCallException $e) {
             //Do nothing if the stream doesn't support open
         }
 
@@ -151,7 +153,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
      * with the prefix.
      *
      * @param string $identifier A stream identifier string
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function registerStream($identifier)
@@ -161,10 +163,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+        if(!$class || !array_key_exists(__NAMESPACE__.'\FilesystemStreamInterface', class_implements($class)))
         {
-            throw new UnexpectedValueException(
-                'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
+            throw new \UnexpectedValueException(
+                'Stream: '.$identifier.' does not implement FilesystemStreamInterface'
             );
         }
 
@@ -172,7 +174,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
 
         if (!empty($name) && !$this->isRegistered($this->_stream_prefix.$name))
         {
-            if($result = stream_wrapper_register($this->_stream_prefix.$name, 'KFilesystemStreamAdapter')) {
+            if($result = stream_wrapper_register($this->_stream_prefix.$name, __NAMESPACE__.'\FilesystemStreamAdapter')) {
                 $this->__streams[$this->_stream_prefix.$name] = $identifier;
             }
         }
@@ -184,7 +186,7 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
      * Unregister a stream
      *
      * @param string $identifier A stream object identifier string or stream name
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function unregisterStream($identifier)
@@ -196,10 +198,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\FilesystemStreamInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
+                throw new \UnexpectedValueException(
+                    'Stream: '.$identifier.' does not implement FilesystemStreamInterface'
                 );
             }
 
@@ -263,10 +265,10 @@ final class KFilesystemStreamFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KFilesystemStreamInterface', class_implements($class)))
+            if(!$class || !array_key_exists('FilesystemStreamInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Stream: '.$identifier.' does not implement KFilesystemStreamInterface'
+                throw new \UnexpectedValueException(
+                    'Stream: '.$identifier.' does not implement FilesystemStreamInterface'
                 );
             }
 

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Helperable Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template
+ * @package Kodekit\Library\Template
  */
-interface KTemplateHelperable
+interface TemplateHelperable
 {
     /**
      * Invoke a template helper
@@ -26,7 +28,7 @@ interface KTemplateHelperable
      * @param    string   $identifier Name of the helper, dot separated including the helper function to call
      * @param    array    $config     An optional associative array of functions parameters to be passed to the helper
      * @return   string   Helper output
-     * @throws   BadMethodCallException If the helper function cannot be called.
+     * @throws   \BadMethodCallException If the helper function cannot be called.
      */
     public function invokeHelper($identifier, $config = array());
 
@@ -35,7 +37,7 @@ interface KTemplateHelperable
      *
      * @param    mixed    $helper ObjectIdentifierInterface
      * @param    array    $config An optional associative array of configuration settings
-     * @return  KTemplateHelperInterface
+     * @return  TemplateHelperInterface
      */
     public function createHelper($helper, $config = array());
 }

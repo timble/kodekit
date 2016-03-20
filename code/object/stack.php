@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
  /**
   * Object Stack
@@ -17,17 +19,17 @@
   * @link http://en.wikipedia.org/wiki/Stack_(abstract_data_type)
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
-  * @package Koowa\Library\Object
+  * @package Kodekit\Library\Object
   */
-class KObjectStack extends KObject implements Iterator, Countable, Serializable
-{ 
+class ObjectStack extends Object implements \Iterator, \Countable, \Serializable
+{
     /**
      * The object container
      *
      * @var array
      */
     private $__object_stack = array();
-    
+
     /**
      * Peeks at the element from the end of the stack
      *
@@ -37,19 +39,19 @@ class KObjectStack extends KObject implements Iterator, Countable, Serializable
     {
         return end($this->__object_stack);
     }
-      
+
     /**
      * Pushes an element at the end of the stack
      *
      * @param  mixed $object
-     * @return KObjectStack
+     * @return ObjectStack
      */
     public function push($object)
     {
         $this->__object_stack[] = $object;
         return $this;
     }
-    
+
     /**
      * Pops an element from the end of the stack
      *
@@ -64,7 +66,7 @@ class KObjectStack extends KObject implements Iterator, Countable, Serializable
      * Counts the number of elements
      *
      * Required by the Countable interface
-     * 
+     *
      * @return integer	The number of elements
      */
     public function count()
@@ -77,7 +79,7 @@ class KObjectStack extends KObject implements Iterator, Countable, Serializable
      *
      * Required by the Iterator interface
      *
-     * @return	object KObjectQueue
+     * @return	object ObjectQueue
      */
     public function rewind()
     {
@@ -179,11 +181,11 @@ class KObjectStack extends KObject implements Iterator, Countable, Serializable
 
     /**
      * Check to see if the registry is empty
-     * 
+     *
      * @return boolean	Return TRUE if the registry is empty, otherwise FALSE
      */
     public function isEmpty()
     {
         return empty($this->_object_stack);
-    }  
+    }
 }

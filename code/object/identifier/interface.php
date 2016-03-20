@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Identifier Interface
@@ -14,16 +16,16 @@
  * methods for derived formats.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Identifier
+ * @package Kodekit\Library\Object\Identifier
  */
-interface KObjectIdentifierInterface extends Serializable
+interface ObjectIdentifierInterface extends \Serializable
 {
     /**
      * Constructor
      *
      * @param  string|array $identifier Identifier string or array in type://domain/package.[.path].name format
      * @param   array       $config     An optional associative array of configuration settings.
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier cannot be parsed
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier cannot be parsed
      */
     public function __construct($identifier, array $config = array());
 
@@ -65,21 +67,21 @@ interface KObjectIdentifierInterface extends Serializable
     /**
      * Get the config
      *
-     * @return KObjectConfig
+     * @return ObjectConfig
      */
     public function getConfig();
 
     /**
      * Get the mixins
      *
-     *  @return  KObjectConfig
+     *  @return  ObjectConfig
      */
     public function getMixins();
 
     /**
      * Get the decorators
      *
-     *  @return  KObjectConfig
+     *  @return  ObjectConfig
      */
     public function getDecorators();
 

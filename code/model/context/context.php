@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Context
+ * @package Kodekit\Library\Model\Context
  */
-class KModelContext extends KCommand implements KModelContextInterface
+class ModelContext extends Command implements ModelContextInterface
 {
     /**
      * Constructor.
@@ -22,10 +24,10 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function __construct($attributes = array())
     {
-        KObjectConfig::__construct($attributes);
+        ObjectConfig::__construct($attributes);
 
         //Set the subject and the name
-        if($attributes instanceof KModelContext)
+        if($attributes instanceof ModelContext)
         {
             $this->setSubject($attributes->getSubject());
             $this->setName($attributes->getName());
@@ -35,13 +37,13 @@ class KModelContext extends KCommand implements KModelContextInterface
     /**
      * Set the model state
      *
-     * @param KModelState $state
+     * @param ModelState $state
      *
-     * @return KModelContext
+     * @return ModelContext
      */
     public function setState($state)
     {
-        return KObjectConfig::set('state', $state);
+        return ObjectConfig::set('state', $state);
     }
 
     /**
@@ -51,18 +53,18 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function getState()
     {
-        return KObjectConfig::get('state');
+        return ObjectConfig::get('state');
     }
 
     /**
      * Set the model entity
      *
-     * @param KModelEntityInterface $entity
-     * @return KModelContext
+     * @param ModelEntityInterface $entity
+     * @return ModelContext
      */
     public function setEntity($entity)
     {
-        return KObjectConfig::set('entity', $entity);
+        return ObjectConfig::set('entity', $entity);
     }
 
     /**
@@ -72,7 +74,7 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function getEntity()
     {
-        return KObjectConfig::get('entity');
+        return ObjectConfig::get('entity');
     }
 
     /**
@@ -82,17 +84,17 @@ class KModelContext extends KCommand implements KModelContextInterface
      */
     public function getIdentityKey()
     {
-        return KObjectConfig::get('identity_key');
+        return ObjectConfig::get('identity_key');
     }
 
     /**
      * Set the identity key
      *
      * @param mixed $value
-     * @return KModelContext
+     * @return ModelContext
      */
     public function setIdentityKey($value)
     {
-        return KObjectConfig::set('identity_key', $value);
+        return ObjectConfig::set('identity_key', $value);
     }
 }

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Bootstrapper Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Bootstrapper
+ * @package Kodekit\Library\Object\Bootstrapper
  */
-interface KObjectBootstrapperInterface extends KObjectHandlable
+interface ObjectBootstrapperInterface extends ObjectHandlable
 {
     /**
      * Priority levels
@@ -38,7 +40,7 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      *
      * @param string  $directory
      * @param bool    $bootstrap If TRUE bootstrap all the components in the directory. Default TRUE
-     * @return KObjectBootstrapper
+     * @return ObjectBootstrapper
      */
     public function registerComponents($directory, $bootstrap = true);
 
@@ -51,7 +53,7 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      * @param string $path          The component path
      * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
      * @param array  $directories   Additional array of directories
-     * @return KObjectBootstrapper
+     * @return ObjectBootstrapper
      */
     public function registerComponent($path, $bootstrap = true, array $directories = array());
 
@@ -59,7 +61,7 @@ interface KObjectBootstrapperInterface extends KObjectHandlable
      * Register a configuration file to be bootstrapped
      *
      * @param string $path  The absolute path to the file
-     * @return KObjectBootstrapperInterface
+     * @return ObjectBootstrapperInterface
      */
     public function registerFile($path);
 

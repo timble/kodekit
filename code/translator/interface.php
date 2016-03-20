@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright	Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link		https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Translator Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator
+ * @package Kodekit\Library\Translator
  */
-interface KTranslatorInterface
+interface TranslatorInterface
 {
     /**
      * Translates a string and handles parameter replacements
@@ -32,7 +34,7 @@ interface KTranslatorInterface
      * @param array   $strings Strings to choose from
      * @param integer $number The umber of items
      * @param array   $parameters An array of parameters
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return string Translated string
      */
     public function choose(array $strings, $number, array $parameters = array());
@@ -63,7 +65,7 @@ interface KTranslatorInterface
      * @see $language
      *
      * @param string $language The language tag
-     * @return KTranslatorInterface
+     * @return TranslatorInterface
      */
     public function setLanguage($language);
 
@@ -87,7 +89,7 @@ interface KTranslatorInterface
      * @see $language
      *
      * @param string $language The fallback language tag
-     * @return KTranslatorInterface
+     * @return TranslatorInterface
      */
     public function setLanguageFallback($language);
 
@@ -105,17 +107,17 @@ interface KTranslatorInterface
     /**
      * Get a catalogue
      *
-     * @throws  UnexpectedValueException    If the catalogue doesn't implement the TranslatorCatalogueInterface
-     * @return KTranslatorCatalogueInterface The translator catalogue.
+     * @throws  \UnexpectedValueException    If the catalogue doesn't implement the TranslatorCatalogueInterface
+     * @return TranslatorCatalogueInterface The translator catalogue.
      */
     public function getCatalogue();
 
     /**
      * Set a catalogue
      *
-     * @param   mixed   $catalogue An object that implements KObjectInterface, KObjectIdentifier object
+     * @param   mixed   $catalogue An object that implements ObjectInterface, ObjectIdentifier object
      *                             or valid identifier string
-     * @return KTranslatorInterface
+     * @return TranslatorInterface
      */
     public function setCatalogue($catalogue);
 

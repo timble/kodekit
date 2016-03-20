@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Controller Response Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Response
+ * @package Kodekit\Library\Controller\Response
  */
-interface KControllerResponseInterface extends KHttpResponseInterface
+interface ControllerResponseInterface extends HttpResponseInterface
 {
     /**
      * Flash messages types
@@ -28,30 +30,30 @@ interface KControllerResponseInterface extends KHttpResponseInterface
     /**
      * Set the request object
      *
-     * @param KControllerRequestInterface $request A request object
-     * @return KControllerResponse
+     * @param ControllerRequestInterface $request A request object
+     * @return ControllerResponse
      */
-    public function setRequest(KControllerRequestInterface $request);
+    public function setRequest(ControllerRequestInterface $request);
 
     /**
      * Get the request object
      *
-     * @return KControllerRequestInterface
+     * @return ControllerRequestInterface
      */
     public function getRequest();
 
     /**
      * Set the user object
      *
-     * @param KUserInterface $user A user object
-     * @return KControllerResponse
+     * @param UserInterface $user A user object
+     * @return ControllerResponse
      */
-    public function setUser(KUserInterface $user);
+    public function setUser(UserInterface $user);
 
     /**
      * Get the user object
      *
-     * @return KUserInterface
+     * @return UserInterface
      */
     public function getUser();
 
@@ -66,9 +68,9 @@ interface KControllerResponseInterface extends KHttpResponseInterface
      * @param  string   $location   The redirect location
      * @param  string   $message    The flash message
      * @param  string   $type       The flash message category type. Default is 'success'.
-     * @throws InvalidArgumentException If the location is empty
-     * @throws UnexpectedValueException If the location is not a string, or cannot be cast to a string
-     * @return KControllerResponse
+     * @throws \InvalidArgumentException If the location is empty
+     * @throws \UnexpectedValueException If the location is not a string, or cannot be cast to a string
+     * @return ControllerResponse
      */
     public function setRedirect($location, $message = '', $type = self::FLASH_SUCCESS);
 
@@ -80,7 +82,7 @@ interface KControllerResponseInterface extends KHttpResponseInterface
      *
      * @param  string   $message   The flash message
      * @param  string   $type      Message category type. Default is 'success'.
-     * @return KControllerResponse
+     * @return ControllerResponse
      */
     public function addMessage($message, $type = self::FLASH_SUCCESS);
 

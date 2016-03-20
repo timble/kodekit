@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Translator Locator Interface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator
+ * @package Kodekit\Library\Translator\Locator
  */
-interface KTranslatorLocatorInterface
+interface TranslatorLocatorInterface
 {
     /**
      * Get the locator name
@@ -30,7 +32,7 @@ interface KTranslatorLocatorInterface
      * @link https://tools.ietf.org/html/rfc5646
      *
      * @param string $language
-     * @return KTranslatorLocatorInterface
+     * @return TranslatorLocatorInterface
      */
     public function setLanguage($language);
 

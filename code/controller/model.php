@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Model Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Kodekit\Library\Controller
  */
-abstract class KControllerModel extends KControllerView implements KControllerModellable
+abstract class ControllerModel extends ControllerView implements ControllerModellable
 {
     /**
      * Model object or identifier (com://APP/COMPONENT.model.NAME)
@@ -25,9 +27,9 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -40,10 +42,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'model'	=> $this->getIdentifier()->name,
@@ -59,13 +61,13 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * not contain view information try to get the view from based on the model state instead. If the model is unique
      * use a singular view name, if not unique use a plural view name.
      *
-     * @return  KViewInterface
+     * @return  ViewInterface
      */
     public function getView()
     {
-        if(!$this->_view instanceof KViewInterface)
+        if(!$this->_view instanceof ViewInterface)
         {
-            if(!$this->_view instanceof KObjectIdentifier)
+            if(!$this->_view instanceof ObjectIdentifier)
             {
                 if(is_string($this->_view) && strpos($this->_view, '.') === false )
                 {
@@ -74,9 +76,9 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                         $view = $this->getIdentifier()->name;
 
                         if($this->getModel()->getState()->isUnique()) {
-                            $view = KStringInflector::singularize($view);
+                            $view = StringInflector::singularize($view);
                         } else {
-                            $view = KStringInflector::pluralize($view);
+                            $view = StringInflector::pluralize($view);
                         }
                     }
                     else $view = $this->getRequest()->query->get('view', 'cmd');
@@ -101,18 +103,18 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * Get the model object attached to the controller
      *
      * @throws  \UnexpectedValueException   If the model doesn't implement the ModelInterface
-     * @return  KModelInterface
+     * @return  ModelInterface
      */
     public function getModel()
     {
-        if(!$this->_model instanceof KModelInterface)
+        if(!$this->_model instanceof ModelInterface)
         {
             $this->_model = $this->getObject($this->_model);
 
-            if(!$this->_model instanceof KModelInterface)
+            if(!$this->_model instanceof ModelInterface)
             {
-                throw new UnexpectedValueException(
-                    'Model: '.get_class($this->_model).' does not implement KModelInterface'
+                throw new \UnexpectedValueException(
+                    'Model: '.get_class($this->_model).' does not implement ModelInterface'
                 );
             }
 
@@ -126,19 +128,19 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Method to set a model object attached to the controller
      *
-     * @param   mixed   $model An object that implements KObjectInterface, KObjectIdentifier object
+     * @param   mixed   $model An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @return	KControllerView
+     * @return	ControllerView
      */
     public function setModel($model)
     {
-        if(!($model instanceof KModelInterface))
+        if(!($model instanceof ModelInterface))
         {
             if(is_string($model) && strpos($model, '.') === false )
             {
                 // Model names are always plural
-                if(KStringInflector::isSingular($model)) {
-                    $model = KStringInflector::pluralize($model);
+                if(StringInflector::isSingular($model)) {
+                    $model = StringInflector::pluralize($model);
                 }
 
                 $identifier         = $this->getIdentifier()->toArray();
@@ -163,10 +165,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      * This function translates a GET request into a read or browse action. If the view name is singular a read action
      * will be executed, if plural a browse action will be executed.
      *
-     * @param   KControllerContextInterface $context A command context object
+     * @param   ControllerContextInterface $context A command context object
      * @return  string|bool The rendered output of the view or FALSE if something went wrong
      */
-    protected function _actionRender(KControllerContextInterface $context)
+    protected function _actionRender(ControllerContextInterface $context)
     {
         $result = false;
 
@@ -178,16 +180,17 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
             $result = parent::_actionRender($context);
         }
 
+
         return $result;
     }
 
     /**
      * Generic browse action, fetches an entity collection
      *
-     * @param   KControllerContextInterface	$context A controller context object
-     * @return  KModelEntityInterface An entity object containing the selected entities
+     * @param   ControllerContextInterface	$context A controller context object
+     * @return  ModelEntityInterface An entity object containing the selected entities
      */
-    protected function _actionBrowse(KControllerContextInterface $context)
+    protected function _actionBrowse(ControllerContextInterface $context)
     {
         $entity = $this->getModel()->fetch();
         return $entity;
@@ -196,13 +199,13 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic read action, fetches a single entity
      *
-     * @param    KControllerContextInterface $context A controller context object
-     * @throws   KControllerExceptionResourceNotFound
-     * @return   KModelEntityInterface
+     * @param    ControllerContextInterface $context A controller context object
+     * @throws   ControllerExceptionResourceNotFound
+     * @return   ModelEntityInterface
      */
-    protected function _actionRead(KControllerContextInterface $context)
+    protected function _actionRead(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof KModelEntityInterface)
+        if(!$context->result instanceof ModelEntityInterface)
         {
             if($this->getModel()->getState()->isUnique())
             {
@@ -211,7 +214,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 if(!count($entity))
                 {
                     $name   = ucfirst($this->getView()->getName());
-                    throw new KControllerExceptionResourceNotFound($name.' Not Found');
+                    throw new ControllerExceptionResourceNotFound($name.' Not Found');
                 }
             }
             else $entity = $this->getModel()->create();
@@ -224,13 +227,13 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic edit action, saves over an existing entity collection
      *
-     * @param   KControllerContextInterface	$context A command context object
-     * @throws  KControllerExceptionResourceNotFound   If the resource could not be found
-     * @return  KModelEntityInterface
+     * @param   ControllerContextInterface	$context A command context object
+     * @throws  ControllerExceptionResourceNotFound   If the resource could not be found
+     * @return  ModelEntityInterface
      */
-    protected function _actionEdit(KControllerContextInterface $context)
+    protected function _actionEdit(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof KModelEntityInterface) {
+        if(!$context->result instanceof ModelEntityInterface) {
             $entities = $this->getModel()->fetch();
         } else {
             $entities = $context->result;
@@ -244,10 +247,10 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
 
             //Only set the reset content status if the action explicitly succeeded
             if($entities->save() === true) {
-                $context->response->setStatus(KHttpResponse::RESET_CONTENT);
+                $context->response->setStatus(HttpResponse::RESET_CONTENT);
             }
         }
-        else throw new KControllerExceptionResourceNotFound('Resource could not be found');
+        else throw new ControllerExceptionResourceNotFound('Resource could not be found');
 
         return $entities;
     }
@@ -255,13 +258,13 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic add action, saves a new entity
      *
-     * @param   KControllerContextInterface	$context A controller context object
-     * @throws  KControllerExceptionActionFailed If the delete action failed on the data entity
-     * @return  KModelEntityInterface
+     * @param   ControllerContextInterface	$context A controller context object
+     * @throws  ControllerExceptionActionFailed If the delete action failed on the data entity
+     * @return  ModelEntityInterface
      */
-    protected function _actionAdd(KControllerContextInterface $context)
+    protected function _actionAdd(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof KModelEntityInterface) {
+        if(!$context->result instanceof ModelEntityInterface) {
             $entity = $this->getModel()->create($context->request->data->toArray());
         } else {
             $entity = $context->result;
@@ -271,11 +274,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
         if($entity->save() === false)
         {
             $error = $entity->getStatusMessage();
-            throw new KControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
+            throw new ControllerExceptionActionFailed($error ? $error : 'Add Action Failed');
         }
         else
         {
-            if ($entity instanceof KModelEntityInterface)
+            if ($entity instanceof ModelEntityInterface)
             {
                 $url = clone $context->request->getUrl();
 
@@ -290,7 +293,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
                 else $url->query[$entity->getIdentityKey()] = $entity->getProperty($entity->getIdentityKey());
 
                 $context->response->headers->set('Location', (string) $url);
-                $context->response->setStatus(KHttpResponse::CREATED);
+                $context->response->setStatus(HttpResponse::CREATED);
             }
         }
 
@@ -300,14 +303,14 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
     /**
      * Generic delete function, deletes an existing entity collection
      *
-     * @param    KControllerContextInterface $context A controller context object
-     * @throws   KControllerExceptionResourceNotFound
-     * @throws   KControllerExceptionActionFailed
-     * @return   KModelEntityInterface An entity object containing the deleted entities
+     * @param    ControllerContextInterface $context A controller context object
+     * @throws   ControllerExceptionResourceNotFound
+     * @throws   ControllerExceptionActionFailed
+     * @return   ModelEntityInterface An entity object containing the deleted entities
      */
-    protected function _actionDelete(KControllerContextInterface $context)
+    protected function _actionDelete(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof KModelEntityInterface) {
+        if(!$context->result instanceof ModelEntityInterface) {
             $entities = $this->getModel()->fetch();
         } else {
             $entities = $context->result;
@@ -323,11 +326,11 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
             if($entities->delete() === false)
             {
                 $error = $entities->getStatusMessage();
-                throw new KControllerExceptionActionFailed($error ? $error : 'Delete Action Failed');
+                throw new ControllerExceptionActionFailed($error ? $error : 'Delete Action Failed');
             }
-            else $context->response->setStatus(KHttpResponse::NO_CONTENT);
+            else $context->response->setStatus(HttpResponse::NO_CONTENT);
         }
-        else throw new KControllerExceptionResourceNotFound('Resource Not Found');
+        else throw new ControllerExceptionResourceNotFound('Resource Not Found');
 
         return $entities;
     }
@@ -340,7 +343,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return  KControllerModel
+     * @return  ControllerModel
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */
@@ -353,7 +356,7 @@ abstract class KControllerModel extends KControllerView implements KControllerMo
             $data = !empty($args) ? $args[0] : array();
 
             //Set the data in the request
-            if(!($data instanceof KCommandInterface))
+            if(!($data instanceof CommandInterface))
             {
                 //Make sure the data is cleared on HMVC calls
                 $this->getRequest()->getData()->clear();

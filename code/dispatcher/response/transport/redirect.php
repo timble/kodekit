@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Redirect Dispatcher Response Transport
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response\Transport
+ * @package Kodekit\Library\Dispatcher\Response\Transport
  */
-class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportHttp
+class DispatcherResponseTransportRedirect extends DispatcherResponseTransportHttp
 {
     /**
      * Initializes the config for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_HIGH,
@@ -37,10 +39,10 @@ class KDispatcherResponseTransportRedirect extends KDispatcherResponseTransportH
      *
      * If this is a redirect response, send the response and stop the transport handler chain.
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return boolean
      */
-    public function send(KDispatcherResponseInterface $response)
+    public function send(DispatcherResponseInterface $response)
     {
         if($response->isRedirect())
         {

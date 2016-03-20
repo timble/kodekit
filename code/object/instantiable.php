@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Instantiable Interface
@@ -13,17 +15,17 @@
  * The interface signals the ObjectManager to delegate object instantiation.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object
- * @see     KObjectManager::getObject()
+ * @package Kodekit\Library\Object
+ * @see     ObjectManager::getObject()
  */
-interface KObjectInstantiable
+interface ObjectInstantiable
 {
     /**
      * Instantiate the object
      *
-     * @param   KObjectConfigInterface $config      Configuration options
-     * @param   KObjectManagerInterface $manager    A KObjectManagerInterface object
-     * @return  KObjectInterface
+     * @param   ObjectConfigInterface $config      Configuration options
+     * @param   ObjectManagerInterface $manager    A ObjectManagerInterface object
+     * @return  ObjectInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager);
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager);
 }

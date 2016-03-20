@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Controller
@@ -13,9 +15,9 @@
  * Note: Concrete controllers must have a singular name
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Kodekit\Library\Controller
  */
-abstract class KControllerAbstract extends KObject implements KControllerInterface, KCommandCallbackDelegate
+abstract class ControllerAbstract extends Object implements ControllerInterface, CommandCallbackDelegate
 {
     /**
      * The class actions
@@ -55,9 +57,9 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      */
-    public function __construct( KObjectConfig $config)
+    public function __construct( ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -85,10 +87,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'command_chain'    => 'lib:command.chain',
@@ -107,12 +109,12 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string                      $action  The action to execute
-     * @param   KControllerContextInterface $context A command context object
+     * @param   ControllerContextInterface $context A command context object
      * @throws  Exception
-     * @throws  BadMethodCallException
+     * @throws  \BadMethodCallException
      * @return  mixed|bool The value returned by the called method, false in error case.
      */
-    public function execute($action, KControllerContextInterface $context)
+    public function execute($action, ControllerContextInterface $context)
     {
         $action  = strtolower($action);
 
@@ -138,7 +140,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
                 }
                 else
                 {
-                    throw new KControllerExceptionActionNotImplemented(
+                    throw new ControllerExceptionActionNotImplemented(
                         "Can't execute '$action', method: '$method' does not exist"
                     );
                 }
@@ -159,10 +161,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      * Invoke a command handler
      *
      * @param string             $method    The name of the method to be executed
-     * @param KCommandInterface  $command   The command
+     * @param CommandInterface  $command   The command
      * @return mixed Return the result of the handler.
      */
-    public function invokeCommandCallback($method, KCommandInterface $command)
+    public function invokeCommandCallback($method, CommandInterface $command)
     {
         return $this->$method($command);
     }
@@ -172,14 +174,14 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
      *
      * When using mixin(), the calling object inherits the methods of the mixed in objects, in a LIFO order.
      *
-     * @@param   mixed  $mixin  An object that implements KObjectMixinInterface, KObjectIdentifier object
+     * @@param   mixed  $mixin  An object that implements ObjectMixinInterface, ObjectIdentifier object
      *                          or valid identifier string
      * @param    array $config  An optional associative array of configuration options
-     * @return  KObject
+     * @return  Object
      */
     public function mixin($mixin, $config = array())
     {
-        if ($mixin instanceof KControllerBehaviorAbstract)
+        if ($mixin instanceof ControllerBehaviorAbstract)
         {
             $actions = $this->getActions();
 
@@ -223,10 +225,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Set the request object
      *
-     * @param KControllerRequestInterface $request A request object
-     * @return KControllerAbstract
+     * @param ControllerRequestInterface $request A request object
+     * @return ControllerAbstract
      */
-    public function setRequest(KControllerRequestInterface $request)
+    public function setRequest(ControllerRequestInterface $request)
     {
         $this->_request = $request;
         return $this;
@@ -235,23 +237,23 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Get the request object
      *
-     * @throws UnexpectedValueException	If the request doesn't implement the ControllerRequestInterface
-     * @return KControllerRequestInterface
+     * @throws \UnexpectedValueException	If the request doesn't implement the ControllerRequestInterface
+     * @return ControllerRequestInterface
      */
     public function getRequest()
     {
-        if(!$this->_request instanceof KControllerRequestInterface)
+        if(!$this->_request instanceof ControllerRequestInterface)
         {
             //Setup the request
             $this->_request->url  = $this->getIdentifier();
             $this->_request->user = $this->getUser();
 
-            $this->_request = $this->getObject('lib:controller.request', KObjectConfig::unbox($this->_request));
+            $this->_request = $this->getObject('lib:controller.request', ObjectConfig::unbox($this->_request));
 
-            if(!$this->_request instanceof KControllerRequestInterface)
+            if(!$this->_request instanceof ControllerRequestInterface)
             {
-                throw new UnexpectedValueException(
-                    'Request: '.get_class($this->_request).' does not implement KControllerRequestInterface'
+                throw new \UnexpectedValueException(
+                    'Request: '.get_class($this->_request).' does not implement ControllerRequestInterface'
                 );
             }
         }
@@ -262,10 +264,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Set the response object
      *
-     * @param KControllerResponseInterface $response A response object
-     * @return KControllerAbstract
+     * @param ControllerResponseInterface $response A response object
+     * @return ControllerAbstract
      */
-    public function setResponse(KControllerResponseInterface $response)
+    public function setResponse(ControllerResponseInterface $response)
     {
         $this->_response = $response;
         return $this;
@@ -274,23 +276,23 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Get the response object
      *
-     * @throws	UnexpectedValueException	If the response doesn't implement the ControllerResponseInterface
-     * @return KControllerResponseInterface
+     * @throws	\UnexpectedValueException	If the response doesn't implement the ControllerResponseInterface
+     * @return ControllerResponseInterface
      */
     public function getResponse()
     {
-        if(!$this->_response instanceof KControllerResponseInterface)
+        if(!$this->_response instanceof ControllerResponseInterface)
         {
             //Setup the response
             $this->_response->request = $this->getRequest();
             $this->_response->user    = $this->getUser();
 
-            $this->_response = $this->getObject('lib:controller.response', KObjectConfig::unbox($this->_response));
+            $this->_response = $this->getObject('lib:controller.response', ObjectConfig::unbox($this->_response));
 
-            if(!$this->_response instanceof KControllerResponseInterface)
+            if(!$this->_response instanceof ControllerResponseInterface)
             {
-                throw new UnexpectedValueException(
-                    'Response: '.get_class($this->_response).' does not implement KControllerResponseInterface'
+                throw new \UnexpectedValueException(
+                    'Response: '.get_class($this->_response).' does not implement ControllerResponseInterface'
                 );
             }
         }
@@ -301,10 +303,10 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Set the user object
      *
-     * @param KUserInterface $user A request object
-     * @return KControllerAbstract
+     * @param UserInterface $user A request object
+     * @return ControllerAbstract
      */
-    public function setUser(KUserInterface $user)
+    public function setUser(UserInterface $user)
     {
         $this->_user = $user;
         return $this;
@@ -313,19 +315,19 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Get the user object
      *
-     * @throws UnexpectedValueException	If the user doesn't implement the KUserInterface
-     * @return KUserInterface
+     * @throws \UnexpectedValueException	If the user doesn't implement the UserInterface
+     * @return UserInterface
      */
     public function getUser()
     {
-        if(!$this->_user instanceof KUserInterface)
+        if(!$this->_user instanceof UserInterface)
         {
-            $this->_user = $this->getObject('user', KObjectConfig::unbox($this->_user));
+            $this->_user = $this->getObject('user', ObjectConfig::unbox($this->_user));
 
-            if(!$this->_user instanceof KUserInterface)
+            if(!$this->_user instanceof UserInterface)
             {
-                throw new UnexpectedValueException(
-                    'User: '.get_class($this->_user).' does not implement KUserInterface'
+                throw new \UnexpectedValueException(
+                    'User: '.get_class($this->_user).' does not implement UserInterface'
                 );
             }
         }
@@ -336,11 +338,11 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
     /**
      * Get the controller context
      *
-     * @return  KControllerContext
+     * @return  ControllerContext
      */
     public function getContext()
     {
-        $context = new KControllerContext();
+        $context = new ControllerContext();
         $context->setSubject($this);
         $context->setRequest($this->getRequest());
         $context->setResponse($this->getResponse());
@@ -379,7 +381,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
             $data = !empty($args) ? $args[0] : array();
 
             //Create a context object
-            if(!($data instanceof KCommandInterface))
+            if(!($data instanceof CommandInterface))
             {
                 $context = $this->getContext();
 
@@ -398,7 +400,7 @@ abstract class KControllerAbstract extends KObject implements KControllerInterfa
         if (!isset($this->_mixed_methods[$method]))
         {
             //Check if a behavior is mixed
-            $parts = KStringInflector::explode($method);
+            $parts = StringInflector::explode($method);
 
             if ($parts[0] == 'is' && isset($parts[1])) {
                 return false;

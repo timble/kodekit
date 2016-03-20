@@ -1,27 +1,29 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Object Config Xml
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Object\Config
+ * @package Kodekit\Library\Object\Config
  */
-class KObjectConfigXml extends KObjectConfigFormat
+class ObjectConfigXml extends ObjectConfigFormat
 {
     /**
      * Read from a string and create an array
      *
      * @param  string   $string
-     * @param  bool     $object  If TRUE return a KObjectConfig, if FALSE return an array. Default TRUE.
-     * @throws DomainException
-     * @return KObjectConfigXml|array
+     * @param  bool     $object  If TRUE return a ObjectConfig, if FALSE return an array. Default TRUE.
+     * @throws \DomainException
+     * @return ObjectConfigXml|array
      */
     public function fromString($string, $object = true)
     {
@@ -32,7 +34,7 @@ class KObjectConfigXml extends KObjectConfigFormat
             $xml  = simplexml_load_string($string);
 
             if($xml === false) {
-                throw new DomainException('Cannot parse XML string');
+                throw new \DomainException('Cannot parse XML string');
             }
 
             foreach ($xml->children() as $node) {

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract View Controller
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller
+ * @package Kodekit\Library\Controller
  */
-abstract class KControllerView extends KControllerAbstract implements KControllerViewable
+abstract class ControllerView extends ControllerAbstract implements ControllerViewable
 {
     /**
      * View object or identifier (com://APP/COMPONENT.view.NAME.FORMAT)
@@ -32,9 +34,9 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -42,7 +44,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
         $this->_view = $config->view;
 
         //Set the supported formats
-        $this->_formats = KObjectConfig::unbox($config->formats);
+        $this->_formats = ObjectConfig::unbox($config->formats);
     }
 
     /**
@@ -50,10 +52,10 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'formats' => array('html'),
@@ -72,15 +74,15 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Get the view object attached to the controller
      *
-     * @throws	UnexpectedValueException	If the views doesn't implement the KViewInterface
-     * @return	KViewInterface
+     * @throws	\UnexpectedValueException	If the views doesn't implement the ViewInterface
+     * @return	ViewInterface
      */
     public function getView()
     {
-        if(!$this->_view instanceof KViewInterface)
+        if(!$this->_view instanceof ViewInterface)
         {
             //Make sure we have a view identifier
-            if(!($this->_view instanceof KObjectIdentifier)) {
+            if(!($this->_view instanceof ObjectIdentifier)) {
                 $this->setView($this->_view);
             }
 
@@ -88,16 +90,16 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             $config = array(
                 'url'	     => clone $this->getObject('request')->getUrl(),
                 'layout'     => $this->getRequest()->getQuery()->get('layout', 'identifier'),
-                'auto_fetch' => $this instanceof KControllerModellable
+                'auto_fetch' => $this instanceof ControllerModellable
             );
 
             $this->_view = $this->getObject($this->_view, $config);
 
-            //Make sure the view implements KViewInterface
-            if(!$this->_view instanceof KViewInterface)
+            //Make sure the view implements ViewInterface
+            if(!$this->_view instanceof ViewInterface)
             {
-                throw new UnexpectedValueException(
-                    'View: '.get_class($this->_view).' does not implement KViewInterface'
+                throw new \UnexpectedValueException(
+                    'View: '.get_class($this->_view).' does not implement ViewInterface'
                 );
             }
         }
@@ -108,13 +110,13 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
     /**
      * Method to set a view object attached to the controller
      *
-     * @param   mixed   $view An object that implements KObjectInterface, KObjectIdentifier object
+     * @param   mixed   $view An object that implements ObjectInterface, ObjectIdentifier object
      *                  or valid identifier string
-     * @return  object  A KViewInterface object or a KObjectIdentifier object
+     * @return  object  A ViewInterface object or a ObjectIdentifier object
      */
     public function setView($view)
     {
-        if(!($view instanceof KViewInterface))
+        if(!($view instanceof ViewInterface))
         {
             if(is_string($view) && strpos($view, '.') === false )
             {
@@ -157,11 +159,11 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
      * This function will check if the format is supported and if not throw a 406 Not Accepted exception. It will also
      * set the rendered output in the response after it has been created.
      *
-     * @param  KControllerContextInterface $context A command context object
-     * @throws KControllerExceptionFormatNotSupported If the requested format is not supported for the resource
+     * @param  ControllerContextInterface $context A command context object
+     * @throws ControllerExceptionFormatNotSupported If the requested format is not supported for the resource
      * @return string|bool The rendered output of the view or false if something went wrong
      */
-    protected function _actionRender(KControllerContextInterface $context)
+    protected function _actionRender(ControllerContextInterface $context)
     {
         $format = $this->getRequest()->getFormat();
 
@@ -174,7 +176,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             $view->setContent($context->response->getContent());
 
             //Render the view
-            $param = KObjectConfig::unbox($context->param);
+            $param = ObjectConfig::unbox($context->param);
 
             if(is_array($param)) {
                 $data = (array) $param;
@@ -187,7 +189,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
             //Set the data in the response
             $context->response->setContent($content, $view->mimetype);
         }
-        else throw new KControllerExceptionFormatNotSupported('Format: '.$format.' not supported');
+        else throw new ControllerExceptionFormatNotSupported('Format: '.$format.' not supported');
 
         return $content;
     }
@@ -200,7 +202,7 @@ abstract class KControllerView extends KControllerAbstract implements KControlle
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return	KControllerView
+     * @return	ControllerView
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */

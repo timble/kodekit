@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Unsupported Media Type Http Exception
@@ -14,9 +16,9 @@
  * requested resource for the requested method.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Exception\Unsupported
+ * @package Kodekit\Library\Http\Exception\Unsupported
  */
-class KHttpExceptionUnsupportedMediaType extends KHttpExceptionAbstract
+class HttpExceptionUnsupportedMediaType extends HttpExceptionAbstract
 {
-    protected $code = KHttpResponse::UNSUPPORTED_MEDIA_TYPE;
+    protected $code = HttpResponse::UNSUPPORTED_MEDIA_TYPE;
 }

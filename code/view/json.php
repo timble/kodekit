@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Json View
@@ -14,9 +16,9 @@
  *
  * @see     http://jsonapi.org/
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-class KViewJson extends KViewAbstract
+class ViewJson extends ViewAbstract
 {
     /**
      * JSON API version
@@ -55,16 +57,16 @@ class KViewJson extends KViewAbstract
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         $this->_version = $config->version;
 
-        $this->_text_fields = KObjectConfig::unbox($config->text_fields);
-        $this->_fields      = KObjectConfig::unbox($config->fields);
+        $this->_text_fields = ObjectConfig::unbox($config->text_fields);
+        $this->_fields      = ObjectConfig::unbox($config->fields);
 
         $query = $this->getUrl()->getQuery(true);
         if (!empty($query['fields']) && is_array($query['fields']))
@@ -87,10 +89,10 @@ class KViewJson extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'version'     => '1.0',
@@ -109,17 +111,17 @@ class KViewJson extends KViewAbstract
      * If the view 'content'  is empty the output will be generated based on the model data, if it set it will
      * be returned instead.
      *
-     * @param KViewContext  $context A view context object
+     * @param ViewContext  $context A view context object
      * @return string A RFC4627-compliant JSON string, which may also be embedded into HTML.
      */
-    protected function _actionRender(KViewContext $context)
+    protected function _actionRender(ViewContext $context)
     {
         //Serialise
         if (!is_string($this->_content))
         {
             // Root should be JSON object, not array
             if (is_array($this->_content) && count($this->_content) === 0) {
-                $this->_content = new ArrayObject();
+                $this->_content = new \ArrayObject();
             }
 
             // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
@@ -136,7 +138,7 @@ class KViewJson extends KViewAbstract
      * @param   string|array    $route   The query string used to create the route
      * @param   boolean         $fqr     If TRUE create a fully qualified route. Default TRUE.
      * @param   boolean         $escape  If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return  KDispatcherRouterRoute The route
+     * @return  DispatcherRouterRoute The route
      */
     public function getRoute($route = '', $fqr = true, $escape = false)
     {
@@ -150,9 +152,9 @@ class KViewJson extends KViewAbstract
      *
      * @return array
      */
-    protected function _fetchData(KViewContext $context)
+    protected function _fetchData(ViewContext $context)
     {
-        $output = new ArrayObject(array(
+        $output = new \ArrayObject(array(
             'jsonapi' => array(
                 'version' => $this->_version,
             ),
@@ -201,11 +203,11 @@ class KViewJson extends KViewAbstract
      * Creates a resource object specified by JSON API
      *
      * @see   http://jsonapi.org/format/#document-resource-objects
-     * @param KModelEntityInterface  $entity   Document row
+     * @param ModelEntityInterface  $entity   Document row
      * @param array $config Resource configuration.
      * @return array The array with data to be encoded to json
      */
-    protected function _createResource(KModelEntityInterface $entity, array $config = array())
+    protected function _createResource(ModelEntityInterface $entity, array $config = array())
     {
         $config = array_merge(array(
             'links'         => true,
@@ -214,7 +216,7 @@ class KViewJson extends KViewAbstract
 
         $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
         $data   = array(
-            'type' => $this->_callCustomMethod($entity, 'type') ?: KStringInflector::pluralize($entity->getIdentifier()->name),
+            'type' => $this->_callCustomMethod($entity, 'type') ?: StringInflector::pluralize($entity->getIdentifier()->name),
             'id'   => $this->_callCustomMethod($entity, 'id') ?: $entity->{$entity->getIdentityKey()},
             'attributes' => $this->_callCustomMethod($entity, 'attributes') ?: $entity->toArray()
         );
@@ -248,10 +250,10 @@ class KViewJson extends KViewAbstract
      * Creates a resource object and returns a resource identifier object specified by JSON API
      *
      * @see   http://jsonapi.org/format/#document-resource-identifier-objects
-     * @param KModelEntityInterface $entity
+     * @param ModelEntityInterface $entity
      * @return array
      */
-    protected function _includeResource(KModelEntityInterface $entity)
+    protected function _includeResource(ModelEntityInterface $entity)
     {
         $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
         $cache  = $entity->getIdentifier()->name.'-'.$entity->getHandle();
@@ -275,10 +277,10 @@ class KViewJson extends KViewAbstract
      * Creates resource objects and returns an array of resource identifier objects specified by JSON API
      *
      * @see   http://jsonapi.org/format/#document-resource-identifier-objects
-     * @param KModelEntityInterface $entities
+     * @param ModelEntityInterface $entities
      * @return array
      */
-    protected function _includeCollection(KModelEntityInterface $entities)
+    protected function _includeCollection(ModelEntityInterface $entities)
     {
         $result = array('data' => array());
 
@@ -297,13 +299,13 @@ class KViewJson extends KViewAbstract
      * If the entity is of type foo and the method is links, this method will return the results of
      * _getFooLinks method if possible
      *
-     * @param KModelEntityInterface $entity
+     * @param ModelEntityInterface $entity
      * @param string $method
      * @return mixed Method results or false if the method not exists
      */
-    protected function _callCustomMethod(KModelEntityInterface $entity, $method)
+    protected function _callCustomMethod(ModelEntityInterface $entity, $method)
     {
-        $name   = KStringInflector::singularize($entity->getIdentifier()->name);
+        $name   = StringInflector::singularize($entity->getIdentifier()->name);
         $method = '_get'.ucfirst($name).ucfirst($method);
 
         if ($method !== '_getEntity'.ucfirst($method) && method_exists($this, $method)) {
@@ -317,10 +319,10 @@ class KViewJson extends KViewAbstract
      *
      * It can be overridden by creating a _getFooLinks method where foo is the entity type
      *
-     * @param KModelEntityInterface  $entity
+     * @param ModelEntityInterface  $entity
      * @return string
      */
-    protected function _getEntityRoute(KModelEntityInterface $entity)
+    protected function _getEntityRoute(ModelEntityInterface $entity)
     {
         $package = $this->getIdentifier()->package;
         $view    = $entity->getIdentifier()->name;
@@ -331,11 +333,11 @@ class KViewJson extends KViewAbstract
     /**
      * Converts links in the content from relative to absolute
      *
-     * @param KViewContextInterface $context
+     * @param ViewContextInterface $context
      */
-    protected function _convertRelativeLinks(KViewContextInterface $context)
+    protected function _convertRelativeLinks(ViewContextInterface $context)
     {
-        if (is_array($this->_content) || $this->_content instanceof Traversable) {
+        if (is_array($this->_content) || $this->_content instanceof \Traversable) {
             $this->_processLinks($this->_content);
         }
     }
@@ -343,11 +345,11 @@ class KViewJson extends KViewAbstract
     /**
      * Converts links in the content array from relative to absolute
      *
-     * @param Traversable|array $array
+     * @param \Traversable|array $array
      */
     protected function _processLinks(&$array)
     {
-        $base = $this->getUrl()->toString(KHttpUrl::AUTHORITY);
+        $base = $this->getUrl()->toString(HttpUrl::AUTHORITY);
 
         foreach ($array as $key => &$value)
         {

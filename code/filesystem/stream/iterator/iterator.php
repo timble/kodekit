@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * FileSystem Stream Iterator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream
+ * @package Kodekit\Library\Filesystem\Stream
  */
-class KFilesystemStreamIterator implements SeekableIterator
+class FilesystemStreamIterator implements \SeekableIterator
 {
     /**
      * Size of each chunk
@@ -32,9 +34,9 @@ class KFilesystemStreamIterator implements SeekableIterator
     /**
      * Constructor.
      *
-     * @param KFilesystemStreamInterface $stream  A FilesystemStream object
+     * @param FilesystemStreamInterface $stream  A FilesystemStream object
      */
-    public function __construct(KFilesystemStreamInterface $stream)
+    public function __construct(FilesystemStreamInterface $stream)
     {
         $this->_chunk      = '';
         $this->__stream    = $stream;
@@ -44,12 +46,12 @@ class KFilesystemStreamIterator implements SeekableIterator
      * Seeks to a given position in the stream
      *
      * @param int $position
-     * @throws OutOfBoundsException If the position is not seekable.
+     * @throws \OutOfBoundsException If the position is not seekable.
      */
     public function seek($position)
     {
         if ($position > $this->getStream()->getSize()) {
-            throw new OutOfBoundsException('Invalid seek position ('.$position.')');
+            throw new \OutOfBoundsException('Invalid seek position ('.$position.')');
         }
 
         $this->getStream()->seek($position, SEEK_SET);
@@ -118,7 +120,7 @@ class KFilesystemStreamIterator implements SeekableIterator
     /**
      * Get the stream object
      *
-     * @return KFilesystemStreamInterface
+     * @return FilesystemStreamInterface
      */
     public function getStream()
     {

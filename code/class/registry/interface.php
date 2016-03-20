@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Class Registry Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class\Registry
+ * @package Kodekit\Library\Class\Registry
  */
-interface KClassRegistryInterface
+interface ClassRegistryInterface
 {
     /**
      * Get a class from the registry
@@ -28,7 +30,7 @@ interface KClassRegistryInterface
      *
      * @param  string $class
      * @param  string $path
-     * @return KClassRegistryInterface
+     * @return ClassRegistryInterface
      */
     public function set($class, $path);
 
@@ -44,14 +46,14 @@ interface KClassRegistryInterface
      * Remove a class from the registry
      *
      * @param  string $class
-     * @return  KClassRegistryInterface
+     * @return  ClassRegistryInterface
      */
     public function remove($class);
 
     /**
      * Clears out all classes from the registry
      *
-     * @return  KClassRegistryInterface
+     * @return  ClassRegistryInterface
      */
     public function clear();
 
@@ -68,7 +70,7 @@ interface KClassRegistryInterface
      *
      * @param string $class
      * @param string $alias
-     * @return KClassRegistryInterface
+     * @return ClassRegistryInterface
      */
     public function alias($class, $alias);
 

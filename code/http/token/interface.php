@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Token Interface
@@ -14,9 +16,9 @@
  * @see http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Token
+ * @package Kodekit\Library\Http\Token
  */
-interface KHttpTokenInterface
+interface HttpTokenInterface
 {
     /**
      * Get the token type
@@ -34,7 +36,7 @@ interface KHttpTokenInterface
      * either "JWT" or "http://openid.net/specs/jwt/1.0".
      *
      * @param string $type
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setType($type);
 
@@ -51,8 +53,8 @@ interface KHttpTokenInterface
      * Sets cryptographic algorithm used to secure the token.
      *
      * @param string $algorithm The signing algorithm. Supported algorithms are 'HS256', 'HS384' and 'HS512' or none
-     * @throws DomainException If an unsupported algorithm was specified
-     * @return KHttpToken
+     * @throws \DomainException If an unsupported algorithm was specified
+     * @return HttpToken
      */
     public function setAlgorithm($algorithm);
 
@@ -73,7 +75,7 @@ interface KHttpTokenInterface
      * sensitive string containing a String Or URI value.  Use of this claim is OPTIONAL.
      *
      * @param string $issuer
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setIssuer($issuer);
 
@@ -95,18 +97,18 @@ interface KHttpTokenInterface
      * Use of this claim is OPTIONAL.
      *
      * @param string $subject
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setSubject($subject);
 
     /**
      * Get the expiration time of the token.
      *
-     * The value of the claim parameter 'exp' as DateTime.
+     * The value of the claim parameter 'exp' as \DateTime.
      *
-     * @return DateTime A \DateTime instance
-     * @throws RuntimeException If the data could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if the token doesn't contain and expiration time
+     * @return \DateTime A \DateTime instance
+     * @throws \RuntimeException If the data could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if the token doesn't contain and expiration time
      */
     public function getExpireTime();
 
@@ -116,19 +118,19 @@ interface KHttpTokenInterface
      * Sets the 'exp' claim in the JWT claim segment. This claim identifies the expiration time on or after which the
      * token MUST NOT be accepted for processing
      *
-     * @param  DateTime $date A DateTime instance
-     * @return KHttpResponse
+     * @param  \DateTime $date A \DateTime instance
+     * @return HttpResponse
      */
-    public function setExpireTime(DateTime $date);
+    public function setExpireTime(\DateTime $date);
 
     /**
      * Get the issue time of the token.
      *
-     * The value of the claim parameter 'iat' as DateTime.
+     * The value of the claim parameter 'iat' as \DateTime.
      *
-     * @return DateTime A \DateTime instance
-     * @throws RuntimeException If the data could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if the token doesn't contain and expiration time
+     * @return \DateTime A \DateTime instance
+     * @throws \RuntimeException If the data could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if the token doesn't contain and expiration time
      */
     public function getIssueTime();
 
@@ -138,10 +140,10 @@ interface KHttpTokenInterface
      * This method sets the 'iat' claim in the JWT claim segment. This claim identifies the UTC time at which the JWT
      * was issued.
      *
-     * @param  DateTime $date A DateTime instance
-     * @return KHttpToken
+     * @param  \DateTime $date A \DateTime instance
+     * @return HttpToken
      */
-    public function setIssueTime(DateTime $date);
+    public function setIssueTime(\DateTime $date);
 
     /**
      * Get a claim
@@ -156,7 +158,7 @@ interface KHttpTokenInterface
      *
      * @param string $name  The name if the claim
      * @param mixed  $value The value of the claim
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setClaim($name, $value);
 
@@ -197,8 +199,8 @@ interface KHttpTokenInterface
      * Decode from JWT string
      *
      * @param string      $token  A serialised token
-     * @return KHttpToken
-     * @throws InvalidArgumentException If the token is invalid
+     * @return HttpToken
+     * @throws \InvalidArgumentException If the token is invalid
      */
     public function fromString($token);
 

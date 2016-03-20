@@ -1,30 +1,32 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KObjectInstantiable
+abstract class DatabaseBehaviorAbstract extends BehaviorAbstract implements ObjectInstantiable
 {
     /**
      * Instantiate the object
      *
      * If the behavior is auto mixed also lazy mix it into related row objects.
      *
-     * @param 	KObjectConfigInterface  $config	  A KObjectConfig object with configuration options
-     * @param 	KObjectManagerInterface	$manager  A KObjectInterface object
-     * @return  KDatabaseBehaviorAbstract
+     * @param 	ObjectConfigInterface  $config	  A ObjectConfig object with configuration options
+     * @param 	ObjectManagerInterface	$manager  A ObjectInterface object
+     * @return  DatabaseBehaviorAbstract
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)
     {
         $class    = $manager->getClass($config->object_identifier);
         $instance = new $class($config);
@@ -34,7 +36,7 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
         {
             $identifier = $instance->getMixer()->getIdentifier()->toArray();
             $identifier['path'] = array('database', 'row');
-            $identifier['name'] = KStringInflector::singularize($identifier['name']);
+            $identifier['name'] = StringInflector::singularize($identifier['name']);
 
             $manager->registerMixin($identifier, $instance);
         }
@@ -45,14 +47,14 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
     /**
      * Command handler
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
      * @return array|mixed Returns an array of the handler results in FIFO order. If a handler returns not NULL and the
      *                     returned value equals the break condition of the chain the break condition will be returned.
      */
-    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
-        if ($command->data instanceof KDatabaseRowInterface) {
+        if ($command->data instanceof DatabaseRowInterface) {
             $this->setMixer($command->data);
         }
 
@@ -62,11 +64,11 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
 	/**
      * Saves the row or rowset in the database.
      *
-     * This function specialises the KDatabaseRow or KDatabaseRowset save function and auto-disables the tables command
+     * This function specialises the DatabaseRow or DatabaseRowset save function and auto-disables the tables command
      * chain to prevent recursive looping.
      *
-     * @return KDatabaseRowAbstract or KDatabaseRowsetAbstract
-     * @see KDatabaseRow::save or KDatabaseRowset::save
+     * @return DatabaseRowAbstract or DatabaseRowsetAbstract
+     * @see DatabaseRow::save or DatabaseRowset::save
      */
     public function save()
     {
@@ -80,10 +82,10 @@ abstract class KDatabaseBehaviorAbstract extends KBehaviorAbstract implements KO
     /**
      * Deletes the row form the database.
      *
-     * This function specialises the KDatabaseRow or KDatabaseRowset delete function and auto-disables the tables command
+     * This function specialises the DatabaseRow or DatabaseRowset delete function and auto-disables the tables command
      * chain to prevent recursive looping.
      *
-     * @return KDatabaseRowAbstract
+     * @return DatabaseRowAbstract
      */
     public function delete()
     {

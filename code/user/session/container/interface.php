@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Session Container Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User\Session\Container
+ * @package Kodekit\Library\User\Session\Container
  */
-interface KUserSessionContainerInterface
+interface UserSessionContainerInterface
 {
     /**
      * Get a an attribute
@@ -29,7 +31,7 @@ interface KUserSessionContainerInterface
      *
      * @param   mixed   $identifier Attribute identifier, eg foo.bar
      * @param   mixed   $value      Attribute value
-     * @return KUserSessionContainerInterface
+     * @return UserSessionContainerInterface
      */
     public function set($identifier, $value);
 
@@ -45,14 +47,14 @@ interface KUserSessionContainerInterface
      * Removes an attribute
      *
      * @param string $identifier Attribute identifier, eg foo.bar
-     * @return  KUserSessionContainerInterface
+     * @return  UserSessionContainerInterface
      */
     public function remove($identifier);
 
     /**
      * Clears out all attributes
      *
-     * @return  KUserSessionContainerInterface
+     * @return  UserSessionContainerInterface
      */
     public function clear();
 
@@ -60,7 +62,7 @@ interface KUserSessionContainerInterface
      * Adds new attributes
      *
      * @param array $attributes An array of attributes
-     * @return  KUserSessionContainerInterface
+     * @return  UserSessionContainerInterface
      */
     public function add(array $attributes);
 
@@ -72,7 +74,7 @@ interface KUserSessionContainerInterface
      * by passing the $_SESSION to this function.
      *
      * @param array $session The session data to load by reference.
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function load(array &$session);
 
@@ -87,7 +89,7 @@ interface KUserSessionContainerInterface
      * Set the session attributes namespace
      *
      * @param string $namespace The session attributes namespace
-     * @return KUserSessionContainerAbstract
+     * @return UserSessionContainerAbstract
      */
     public function setNamespace($namespace);
 

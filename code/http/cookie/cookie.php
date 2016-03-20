@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Cookie
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Cookie
+ * @package Kodekit\Library\Http\Cookie
  */
-class KHttpCookie extends KObject implements KHttpCookieInterface
+class HttpCookie extends Object implements HttpCookieInterface
 {
     /**
      * The name of the cookie
@@ -80,10 +82,10 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
-     * @return KHttpCookie
+     * @param ObjectConfig|null $config  An optional ObjectConfig object with configuration options
+     * @return HttpCookie
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -98,10 +100,10 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'name'      => '',
@@ -121,18 +123,18 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * @param string $name The name of the cookie
      * @throws \InvalidArgumentException    If the cookie name is not valid or is empty
-     * @return KHttpCookie
+     * @return HttpCookie
      */
     public function setName($name)
     {
         //Check for invalid cookie name (from PHP source code)
         if (preg_match("/[=,; \t\r\n\013\014]/", $name)) {
-            throw new InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $name));
+            throw new \InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $name));
         }
 
         //Check for empty cookie name
         if (empty($name)) {
-            throw new InvalidArgumentException('The cookie name cannot be empty.');
+            throw new \InvalidArgumentException('The cookie name cannot be empty.');
         }
 
         $this->_name = $name;
@@ -144,12 +146,12 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      *
      * @param integer|string|\DateTime $expire The expiration time of the cookie
      * @throws \InvalidArgumentException    If the cookie expiration time is not valid
-     * @return KHttpCookie
+     * @return HttpCookie
      */
     public function setExpire($expire)
     {
         // Convert expiration time to a Unix timestamp
-        if ($expire instanceof DateTime) {
+        if ($expire instanceof \DateTime) {
             $expire = $expire->format('U');
         }
 
@@ -158,7 +160,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
             $expire = strtotime($expire);
 
             if ($expire === false || $expire === -1) {
-                throw new InvalidArgumentException('The cookie expiration time is not valid.');
+                throw new \InvalidArgumentException('The cookie expiration time is not valid.');
             }
         }
 
@@ -170,7 +172,7 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
      * Set the cookie path
      *
      * @param string $path The cookie path
-     * @return KHttpCookie
+     * @return HttpCookie
      */
     public function setPath($path)
     {
@@ -227,10 +229,10 @@ class KHttpCookie extends KObject implements KHttpCookieInterface
             $str .= urlencode($this->value);
 
             if ($this->_expire !== 0) {
-                $str .= '; expires=' . gmdate(DateTime::COOKIE, $this->_expire);
+                $str .= '; expires=' . gmdate(\DateTime::COOKIE, $this->_expire);
             }
         }
-        else $str .= 'deleted; expires=' . gmdate(DateTime::COOKIE, time() - 31536001);
+        else $str .= 'deleted; expires=' . gmdate(\DateTime::COOKIE, time() - 31536001);
 
         if ($this->_path) {
             $str .= '; path=' . $this->_path;

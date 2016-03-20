@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Exception Event Publisher
@@ -14,23 +16,23 @@
  * the listeners.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event\Publisher
+ * @package Kodekit\Library\Event\Publisher
  */
-class KEventPublisherException extends KEventPublisherAbstract
+class EventPublisherException extends EventPublisherAbstract
 {
     /**
      * The exception handler
      *
-     * @var KExceptionHandlerInterface
+     * @var ExceptionHandlerInterface
      */
     private $__exception_handler;
 
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -46,10 +48,10 @@ class KEventPublisherException extends KEventPublisherAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
            'exception_handler' => 'exception.handler'
@@ -64,12 +66,12 @@ class KEventPublisherException extends KEventPublisherAbstract
      * @param   Exception           $exception  The exception to be published.
      * @param  array|Traversable    $attributes An associative array or a Traversable object
      * @param  mixed                $target     The event target
-     * @return  KEventException
+     * @return  EventException
      */
     public function publishException(Exception $exception, $attributes = array(), $target = null)
     {
         //Make sure we have an event object
-        $event = new KEventException('onException', $attributes, $target);
+        $event = new EventException('onException', $attributes, $target);
         $event->setException($exception);
 
         parent::publishEvent($event);
@@ -78,19 +80,19 @@ class KEventPublisherException extends KEventPublisherAbstract
     /**
      * Get the chain of command object
      *
-     * @throws UnexpectedValueException
-     * @return KExceptionHandlerInterface
+     * @throws \UnexpectedValueException
+     * @return ExceptionHandlerInterface
      */
     public function getExceptionHandler()
     {
-        if(!$this->__exception_handler instanceof KExceptionHandlerInterface)
+        if(!$this->__exception_handler instanceof ExceptionHandlerInterface)
         {
             $this->__exception_handler = $this->getObject($this->__exception_handler);
 
-            if(!$this->__exception_handler instanceof KExceptionHandler)
+            if(!$this->__exception_handler instanceof ExceptionHandler)
             {
-                throw new UnexpectedValueException(
-                    'Exception Handler: '.get_class($this->__exception_handler).' does not implement KExceptionHandlerInterface'
+                throw new \UnexpectedValueException(
+                    'Exception Handler: '.get_class($this->__exception_handler).' does not implement ExceptionHandlerInterface'
                 );
             }
         }
@@ -101,10 +103,10 @@ class KEventPublisherException extends KEventPublisherAbstract
     /**
      * Set the exception handler object
      *
-     * @param   KExceptionHandlerInterface $handler An exception handler object
-     * @return  KEventPublisherException
+     * @param   ExceptionHandlerInterface $handler An exception handler object
+     * @return  EventPublisherException
      */
-    public function setExceptionHandler(KExceptionHandlerInterface $handler)
+    public function setExceptionHandler(ExceptionHandlerInterface $handler)
     {
         $this->__exception_handler = $handler;
 
@@ -121,7 +123,7 @@ class KEventPublisherException extends KEventPublisherAbstract
     /**
      * Enable the profiler
      *
-     * @return  KEventPublisherException
+     * @return  EventPublisherException
      */
     public function setEnabled($enabled)
     {

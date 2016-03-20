@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model State
@@ -17,9 +19,9 @@
  * the insert() function.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\State
+ * @package Kodekit\Library\Model\State
  */
-class KModelState extends KObjectArray implements KModelStateInterface
+class ModelState extends ObjectArray implements ModelStateInterface
 {
     /**
      * Model object
@@ -38,25 +40,25 @@ class KModelState extends KObjectArray implements KModelStateInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig $config An optional KObjectConfig object with configuration options
-     * @throws UnexpectedValueException
-     * @throws InvalidArgumentException
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
+     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         if (empty($config->model))
         {
-            throw new InvalidArgumentException(
-                'model [KModelInterface] config option is required'
+            throw new \InvalidArgumentException(
+                'model [ModelInterface] config option is required'
             );
         }
 
-        if(!$config->model instanceof KModelInterface)
+        if(!$config->model instanceof ModelInterface)
         {
-            throw new UnexpectedValueException(
-                'Model: '.get_class($config->model).' does not implement KModelInterface'
+            throw new \UnexpectedValueException(
+                'Model: '.get_class($config->model).' does not implement ModelInterface'
             );
         }
 
@@ -69,9 +71,9 @@ class KModelState extends KObjectArray implements KModelStateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'model'    => null,
@@ -92,7 +94,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      *                             state is unqiue.
      * @param   boolean  $internal If TRUE the state will be considered internal and should not be included in a routes.
      *                             Default FALSE.
-     * @return  KModelState
+     * @return  ModelState
      */
     public function insert($name, $filter, $default = null, $unique = false, $required = array(), $internal = false)
     {
@@ -142,7 +144,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * @param   string        $name
      * @param   scalar|array  $value
      * @throws \UnexpectedValueException If the value is not a scalar or an array
-     * @return  KModelState
+     * @return  ModelState
      */
     public function set($name, $value = null)
     {
@@ -175,7 +177,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * Remove an existing state
      *
      * @param   string $name The name of the state
-     * @return  KModelState
+     * @return  ModelState
      */
     public function remove( $name )
     {
@@ -187,7 +189,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * Reset all state data and revert to the default state
      *
      * @param   boolean $default If TRUE use defaults when resetting. Default is TRUE
-     * @return KModelState
+     * @return ModelState
      */
     public function reset($default = true)
     {
@@ -213,7 +215,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * Set the state values from an array
      *
      * @param   array $data An associative array of state values by name
-     * @return  KModelState
+     * @return  ModelState
      */
     public function setValues(array $data)
     {
@@ -282,7 +284,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
      * @param string $name      The name of the state
      * @param string $property  The name of the property
      * @param mixed  $value     The value of the property
-     * @return KModelState
+     * @return ModelState
      */
     public function setProperty($name, $property, $value)
     {
@@ -483,7 +485,7 @@ class KModelState extends KObjectArray implements KModelStateInterface
 
             $filter = $state->filter;
 
-            if(!($filter instanceof KFilterInterface)) {
+            if(!($filter instanceof FilterInterface)) {
                 $filter =  $this->getObject('filter.factory')->createChain($filter);
             }
 
