@@ -119,7 +119,7 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
         }
 
 
-            //Add file related information if we are serving a file
+        //Add file related information if we are serving a file
         if($response->isDownloadable())
         {
             //Last-Modified header
@@ -128,38 +128,50 @@ class KDispatcherResponseTransportHttp extends KDispatcherResponseTransportAbstr
             };
 
             $user_agent = $response->getRequest()->getAgent();
-            // basename does not work if the string starts with a UTF character
-            $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
 
-            // Android cuts file names after #
-            if (stripos($user_agent, 'Android')) {
-                $filename = str_replace('#', '_', $filename);
-            }
-
-            $disposition = array('filename' => '"'.$filename.'"');
-
-            // IE7 and 8 accepts percent encoded file names as the filename value
-            // Other browsers (except Safari) use filename* header starting with UTF-8''
-            $encoded_name = rawurlencode($filename);
-
-            if($encoded_name !== $filename)
+            if (!$response->headers->has('Content-Disposition'))
             {
-                if (preg_match('/(?i)MSIE [4-8]/i', $user_agent)) {
-                    $disposition['filename'] = '"'.$encoded_name.'"';
+                if ($response->headers->has('X-Content-Disposition-Filename'))
+                {
+                    $filename = $response->headers->get('X-Content-Disposition-Filename');
+                    $response->headers->remove('X-Content-Disposition-Filename');
                 }
-                elseif (!stripos($user_agent, 'AppleWebkit')) {
-                    $disposition['filename*'] = 'UTF-8\'\''.$encoded_name;
+                else
+                {
+                    // basename does not work if the string starts with a UTF character
+                    $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
                 }
-            }
 
-            //Disposition header
-            $response->headers->set('Content-Disposition', array_merge(array('inline'), $disposition));
+                // Android cuts file names after #
+                if (stripos($user_agent, 'Android')) {
+                    $filename = str_replace('#', '_', $filename);
+                }
+
+                $disposition = array('filename' => '"'.$filename.'"');
+
+                // IE7 and 8 accepts percent encoded file names as the filename value
+                // Other browsers (except Safari) use filename* header starting with UTF-8''
+                $encoded_name = rawurlencode($filename);
+
+                if($encoded_name !== $filename)
+                {
+                    if (preg_match('/(?i)MSIE [4-8]/i', $user_agent)) {
+                        $disposition['filename'] = '"'.$encoded_name.'"';
+                    }
+                    elseif (!stripos($user_agent, 'AppleWebkit')) {
+                        $disposition['filename*'] = 'UTF-8\'\''.$encoded_name;
+                    }
+                }
+
+                //Disposition header
+                array_unshift($disposition, $response->isAttachable() ? 'attachment' : 'inline');
+
+                $response->headers->set('Content-Disposition', $disposition);
+            }
 
             //Force a download by the browser by setting the disposition to 'attachment'.
-            if($response->isAttachable())
-            {
+            if($response->isAttachable()) {
                 $response->setContentType('application/octet-stream');
-                $response->headers->set('Content-Disposition', array_merge(array('attachment'), $disposition));
             }
 
             //Explicitly disable the IE pause button
