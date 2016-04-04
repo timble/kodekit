@@ -84,6 +84,7 @@ abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverIn
      * Constructor.
      *
      * @param   ObjectConfig $config Configuration options
+     *
      * Recognized key values include 'command_chain', 'charset', 'table_prefix',
      * (this list is not meant to be comprehensive).
      */
@@ -138,8 +139,8 @@ abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverIn
     {
         $config->append(array(
             'charset'       => 'UTF-8',
-            'table_prefix'  => 'jos_',
-            'table_needle'  => '#__',
+            'table_prefix'  => null,
+            'table_needle'  => null,
             'command_chain' => 'lib:command.chain',
             'connection'    => null,
             'auto_connect'  => false,
@@ -488,12 +489,14 @@ abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverIn
      */
     public function replaceTableNeedle($sql, $replace = null)
     {
-        $needle  = $this->getTableNeedle();
-        $replace = isset($replace) ? $replace : $this->getTablePrefix();
-        $sql     = trim( $sql );
+        if($needle  = $this->getTableNeedle())
+        {
+            $replace = isset($replace) ? $replace : $this->getTablePrefix();
+            $sql     = trim( $sql );
 
-        $pattern = "($needle(?=[a-z0-9]))";
-        $sql = preg_replace($pattern, $replace, $sql);
+            $pattern = "($needle(?=[a-z0-9]))";
+            $sql = preg_replace($pattern, $replace, $sql);
+        }
 
         return $sql;
     }
