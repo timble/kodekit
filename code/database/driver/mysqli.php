@@ -59,7 +59,7 @@ class DatabaseDriverMysqli extends DatabaseDriverAbstract
         // date & time
         'date'              => 'date'     ,
         'time'              => 'time'     ,
-        '\DateTime'          => 'timestamp',
+        'datetime'          => 'timestamp',
         'timestamp'         => 'int'  ,
         'year'              => 'int'  ,
 

@@ -34,8 +34,8 @@ class Date extends Object implements DateInterface
         parent::__construct($config);
 
         //Set the date
-        if (!($config->timezone instanceof DateTimeZone)) {
-            $config->timezone = new DateTimeZone($config->timezone);
+        if (!($config->timezone instanceof \DateTimeZone)) {
+            $config->timezone = new \DateTimeZone($config->timezone);
         }
 
         //Set the date
@@ -187,10 +187,10 @@ class Date extends Object implements DateInterface
     /**
      * Sets the date and time based on an Unix timestamp.
      *
-     * @param DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
+     * @param \DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
      * @return Date or FALSE on failure.
      */
-    public function setTimezone(DateTimeZone $timezone)
+    public function setTimezone(\DateTimeZone $timezone)
     {
         if($this->_date->setTimezone($timezone) === false) {
             return false;
@@ -202,7 +202,7 @@ class Date extends Object implements DateInterface
     /**
      * Return time zone relative to given \DateTime
      *
-     * @return DateTimeZone Returns a DateTimeZone object or FALSE on failure.
+     * @return \DateTimeZone Returns a DateTimeZone object or FALSE on failure.
      */
     public function getTimezone()
     {

@@ -889,8 +889,8 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
                     $data[$key] = null;
                 }
 
-                // If type is date, time or \DateTime and value is like 0000-00-00 00:00:00.
-                $date_types = array('date', 'time', '\DateTime');
+                // If type is date, time or datetime and value is like 0000-00-00 00:00:00.
+                $date_types = array('date', 'time', 'datetime');
                 if (in_array($column->type, $date_types) && !preg_match('/[^-0:\s]/', $data[$key])) {
                     $data[$key] = null;
                 }

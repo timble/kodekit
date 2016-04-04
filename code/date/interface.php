@@ -64,17 +64,17 @@ interface DateInterface extends ObjectHandlable
     /**
      * Return time zone relative to given \DateTime
      *
-     * @return DateTimeZone Return a DateTimeZone object on success or FALSE on failure.
+     * @return \DateTimeZone Return a DateTimeZone object on success or FALSE on failure.
      */
     public function getTimezone();
 
     /**
      * Sets the date and time based on an Unix timestamp.
      *
-     * @param DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
+     * @param \DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
      * @return DateInterface or FALSE on failure.
      */
-    public function setTimezone(DateTimeZone $timezone);
+    public function setTimezone(\DateTimeZone $timezone);
 
     /**
      * Gets the Unix timestamp.
