@@ -132,8 +132,8 @@ class UserSessionAbstract extends Object implements UserSessionInterface
         $config->append(array(
             'handler'    => 'file',
             'user'       => null,
-            'name'       => '',
-            'id'         => 'KSESSIONID',
+            'name'       => 'KSESSIONID',
+            'id'         => '',
             'lifetime'   => ini_get('session.gc_maxlifetime'),
             'namespace'  => '__kodekit',
             'options' => array(
@@ -467,7 +467,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
             }
 
             //Re-load the session containers
-            $this->refesh();
+            $this->refresh();
 
             // Destroy an expired session
             if ($this->getContainer('metadata')->isExpired()) {

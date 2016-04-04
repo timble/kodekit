@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Filter
  */
-class KemplateFilterInclude extends TemplateFilterTag
+class TemplateFilterInclude extends TemplateFilterTag
 {
     /**
      * Parse the text for style tags
