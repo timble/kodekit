@@ -697,10 +697,10 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     {
         if(!$this->_base_url instanceof HttpUrl)
         {
-            $base = $this->getObject('lib:http.url', array('url' => $this->getUrl()->toString(HttpUrl::AUTHORITY)));
-            $base->setUrl($this->getBasePath());
+            $base = clone $this->getUrl();
+            $base->setUrl(rtrim((string)$this->_base_url, '/'));
 
-            $this->_base_url = $base;
+            $this->_base_url = $this->getObject('lib:http.url', array('url' => $base->toString(HttpUrl::BASE)));
         }
 
         return $this->_base_url;
