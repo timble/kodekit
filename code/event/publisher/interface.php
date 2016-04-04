@@ -23,7 +23,7 @@ interface EventPublisherInterface extends ObjectHandlable
      * Publish an event by calling all listeners that have registered to receive it.
      *
      * @param  string|EventInterface             $event      The event name or a EventInterface object
-     * @param  array|Traversable|EventInterface  $attributes An associative array, an object implementing the
+     * @param  array|\Traversable|EventInterface  $attributes An associative array, an object implementing the
      *                                                        EventInterface or a Traversable object
      * @param  mixed                              $target     The event target
      * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface

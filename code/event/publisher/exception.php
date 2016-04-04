@@ -64,11 +64,11 @@ class EventPublisherException extends EventPublisherAbstract
      * Publish an 'onException' event by calling all listeners that have registered to receive it.
      *
      * @param   Exception           $exception  The exception to be published.
-     * @param  array|Traversable    $attributes An associative array or a Traversable object
+     * @param  array|\Traversable    $attributes An associative array or a Traversable object
      * @param  mixed                $target     The event target
      * @return  EventException
      */
-    public function publishException(Exception $exception, $attributes = array(), $target = null)
+    public function publishException(\Exception $exception, $attributes = array(), $target = null)
     {
         //Make sure we have an event object
         $event = new EventException('onException', $attributes, $target);

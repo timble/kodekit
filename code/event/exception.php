@@ -22,7 +22,7 @@ class EventException extends Event implements Exception
      *
      * @param Exception $exception
      */
-    public function setException(Exception $exception)
+    public function setException(\Exception $exception)
     {
         return ObjectConfig::set('exception', $exception);
     }
