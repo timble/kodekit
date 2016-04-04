@@ -1,12 +1,16 @@
 /**
+ * Kodekit - http://timble.net/kodekit
+ *
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
+ */
+
+/**
  * Koowa jqTree wrapper
  *
  * Customized instance of jqTree to render a list of categories in a tree structure.
  * It deals with turning a flat list into a hierarchy structure that jqTree understands.
- *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		https://github.com/nooku/nooku-framework for the canonical source repository
  * @requires    Koowa.Class, jqTree plugin
  */
 
