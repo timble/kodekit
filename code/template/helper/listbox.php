@@ -154,8 +154,30 @@ class TemplateHelperListbox extends TemplateHelperSelect
     {
         $config = new ObjectConfig($config);
         $config->append(array(
-            'autocomplete' => false
+            'autocomplete' => false,
+            'model'        => StringInflector::pluralize($this->getIdentifier()->package)
         ));
+
+        if(!$config->model instanceof ModelInterface)
+        {
+            if(is_string($config->model) && strpos($config->model, '.') === false) {
+                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.StringInflector::pluralize($config->model);
+            } else {
+                $identifier = $config->model;
+            }
+
+            $model  = $this->getObject($identifier);
+
+            if(!$model instanceof ModelInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Model: '.get_class($model).' does not implement ModelInterface'
+                );
+            }
+
+            //Set the model
+            $config->model = $model;
+        }
 
         if($config->autocomplete) {
             $result = $this->_autocomplete($config);
@@ -188,7 +210,6 @@ class TemplateHelperListbox extends TemplateHelperSelect
         $config->append(array(
             'name'       => '',
             'attribs'    => array(),
-            'model'      => StringInflector::pluralize($this->getIdentifier()->package),
             'deselect'   => true,
             'unique'     => true
         ))->append(array(
@@ -201,24 +222,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
         ));
 
         //Create the model
-        if(!$config->model instanceof ModelInterface)
-        {
-            if(is_string($config->model) && strpos($config->model, '.') === false) {
-                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.StringInflector::pluralize($config->model);
-            } else {
-                $identifier = $config->model;
-            }
-
-            $model  = $this->getObject($identifier);
-
-            if(!$model instanceof ModelInterface)
-            {
-                throw new \UnexpectedValueException(
-                    'Model: '.get_class($model).' does not implement ModelInterface'
-                );
-            }
-        }
-        else $model = $config->model;
+        $model = $config->model;
 
         //Fetch the entities
         $list = $model->setState(ObjectConfig::unbox($config->filter))->fetch();
@@ -275,7 +279,6 @@ class TemplateHelperListbox extends TemplateHelperSelect
             'attribs'  => array(
                 'id' => 'select2-element-'.mt_rand(1000, 100000)
             ),
-            'model'    => StringInflector::pluralize($this->getIdentifier()->package),
             'validate' => true,
             'prompt'   => '- '.$this->getObject('translator')->translate('Select').' -',
             'deselect' => true,
@@ -284,7 +287,6 @@ class TemplateHelperListbox extends TemplateHelperSelect
             'options'    => array('multiple' => (bool) $config->attribs->multiple),
             'value'      => $config->name,
             'selected'   => $config->{$config->name},
-            'identifier' => 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.model.'.$config->model
         ))->append(array(
             'label'      => $config->value,
         ))->append(array(
@@ -294,7 +296,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
 
         if (!$config->url)
         {
-            $identifier = $this->getIdentifier($config->identifier);
+            $identifier = $config->model->getIdentifier();
             $parts      = array(
                 'component' => $identifier->package,
                 'view'      => $identifier->name,
