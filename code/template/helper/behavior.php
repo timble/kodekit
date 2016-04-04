@@ -186,7 +186,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         // Load the necessary files if they haven't yet been loaded
         if (!isset(self::$_loaded['overlay']))
         {
-            $html .= $this->kodekit();
+            $html .= $this->koowa();
             $html .= '<ktml:script src="assets://js/koowa.overlay.js" />';
 
             $html .= '
@@ -205,7 +205,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $url = $this->getObject('lib:http.url', array('url' => $config->url));
 
         if(!isset($url->query['format'])) {
-            $url->query['format'] = 'overlay';
+            $url->query['format'] = 'html';
         }
 
         $attribs = $this->buildAttributes($config->attribs);
@@ -254,7 +254,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!isset(self::$_loaded['validator']))
         {
             $html .= $this->jquery();
-            $html .= $this->kodekit();
+            $html .= $this->koowa();
 
             $html .= '<ktml:script src="assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/patch.validator.js" />';
@@ -280,6 +280,55 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             self::$_loaded[$signature] = true;
         }
 
+        return $html;
+    }
+
+    /**
+     * Keep session alive
+     *
+     * This will send an ascynchronous request to the server via AJAX on an interval in miliseconds
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return string    The html output
+     */
+    public function keepalive($config = array())
+    {
+        $config = new ObjectConfigJson($config);
+        $config->append(array(
+            'refresh' => 15 * 60000, //default refresh is 15min
+            'url'     => $this->getTemplate()->route('', false, false),
+        ));
+        $html = '';
+        // Only load once
+        if (!isset(self::$_loaded['keepalive']))
+        {
+            $session = $this->getObject('user')->getSession();
+            if($session->isActive())
+            {
+                //Get the config session lifetime
+                $lifetime = $session->getLifetime() * 1000;
+
+                //Refresh time is 1 minute less than the lifetime
+                $refresh =  ($lifetime <= 60000) ? 30000 : $lifetime - 60000;
+            }
+            else $refresh = (int) $config->refresh;
+
+            // Longest refresh period is one hour to prevent integer overflow.
+            if ($refresh > 3600000 || $refresh <= 0) {
+                $refresh = 3600000;
+            }
+
+            // Build the keep alive script.
+            $html =
+                "<script>
+                Koowa.keepalive =  function() {
+                    var request = new Request({method: 'get', url: '" . $config->url . "'}).send();
+                }
+                window.addEvent('domready', function() { Koowa.keepalive.periodical('" . $refresh . "'); });
+            </script>";
+
+            self::$_loaded['keepalive'] = true;
+        }
         return $html;
     }
 
@@ -420,7 +469,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
          */
         if (!isset(self::$_loaded['tree']))
         {
-            $html .= $this->kodekit();
+            $html .= $this->koowa();
             $html .= '<ktml:script src="assets://js/jqtree'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
 
