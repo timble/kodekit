@@ -107,7 +107,7 @@ class Kodekit
         if(isset($config['vendor_path'])) {
             $this->_vendor_path = $config['vendor_path'];
         } else {
-            $this->_vendor_path = $this->_root_path.'/libraries/vendor';
+            $this->_vendor_path = $this->_root_path.'/vendor';
         }
 
         //Load the legacy functions
