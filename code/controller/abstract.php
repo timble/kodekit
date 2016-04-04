@@ -126,6 +126,7 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
         $context_action = $context->getAction();
         $context->setAction($action);
 
+
         //Execute the action
         if($this->invokeCommand('before.'.$action, $context) !== false)
         {

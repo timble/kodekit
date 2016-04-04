@@ -180,7 +180,6 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
             $result = parent::_actionRender($context);
         }
 
-
         return $result;
     }
 
