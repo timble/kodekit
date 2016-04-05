@@ -131,22 +131,24 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
     {
         if($display = $this->display)
         {
-            $start  = (int) max($this->current - $display, 1);
-            $start  = min($this->count, $start);
+            $start  = min($this->count, (int) max($this->current - $display, 1));
             $stop   = (int) min($this->current + $display, $this->count);
+
+            $pages = range($start, $stop);
+
+            if ($this->current > 2) {
+                array_unshift($pages, 1, 2);
+            }
+
+            if ($this->count - $this->current > 2) {
+                array_push($pages, $this->count-1, $this->count);
+            }
         }
-        else // show all pages
-        {
-            $start = 1;
-            $stop = $this->count;
-        }
+        else $pages = range(1, $this->count);
 
         $result = array();
-        if($start > 0)
-        {
-            foreach(range($start, $stop) as $pagenumber) {
-                $result[$pagenumber] =  ($pagenumber-1) * $this->limit;
-            }
+        foreach($pages as $pagenumber) {
+            $result[$pagenumber] =  ($pagenumber-1) * $this->limit;
         }
 
         return $result;

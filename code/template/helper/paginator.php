@@ -18,53 +18,49 @@ namespace Kodekit\Library;
 class TemplateHelperPaginator extends TemplateHelperSelect
 {
     /**
-     * Initializes the options for the object
+     * Render item pagination
      *
-     * Called from {@link __construct()} as a first step of object instantiation.
+     * @see     http://developer.yahoo.com/ypatterns/navigation/pagination/
      *
-     * @param   ObjectConfig $config Configuration options
-     * @return  void
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
-    protected function _initialize(ObjectConfig $config)
+    public function pagination($config = array())
     {
-        if($config->total != 0)
+        $config = new ModelPaginator($config);
+        $config->append(array(
+            'total'      => 0,
+            'display'    => 4,
+            'offset'     => 0,
+            'limit'      => 0,
+            'attribs'    => array(),
+            'show_limit' => true,
+            'show_count' => true,
+            'page_rows'  => array(10, 20, 50, 100)
+        ))->append(array(
+            'show_pages' => $config->count !== 1
+        ));
+
+        $translator = $this->getObject('translator');
+
+        // Do not show pagination when $config->limit is lower then $config->total
+        if($config->total > $config->limit)
         {
-            $config->limit  = (int) max($config->limit, 0);
-            $config->offset = (int) max($config->offset, 0);
-
-            if($config->limit > $config->total) {
-                $config->offset = 0;
+            $html = '';
+            if($config->show_limit) {
+                $html .= '<div class="pagination__limit">'.$translator('Display NUM').' '.$this->limit($config).'</div>';
             }
 
-            if(!$config->limit)
-            {
-                $config->offset = 0;
-                $config->limit  = $config->total;
+            if($config->show_pages) {
+                $html .=  $this->pages($config);
             }
 
-            $config->count  = (int) ceil($config->total / $config->limit);
-
-            if($config->offset > $config->total) {
-                $config->offset = ($config->count-1) * $config->limit;
+            if($config->show_count) {
+                $html .= '<div class="pagination__count"> '.$translator('Page').' '.$config->current.' '.$translator('of').' '.$config->count.'</div>';
             }
-
-            $config->current = (int) floor($config->offset / $config->limit) + 1;
+            return $html;
         }
-        else
-        {
-            $config->limit   = 0;
-            $config->offset  = 0;
-            $config->count   = 0;
-            $config->current = 0;
-
-            $config->show_pages = false;
-        }
-
-        if ($config->count === 1) {
-            $config->show_pages = false;
-        }
-
-        parent::_initialize($config);
+        return false;
     }
 
     /**
@@ -77,17 +73,18 @@ class TemplateHelperPaginator extends TemplateHelperSelect
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'limit'	  => 0,
-            'attribs' => array(),
-            'values'  => array(5, 10, 15, 20, 25, 30, 50, 100)
+            'limit'	    => 0,
+            'attribs'   => array(),
+            'page_rows' => array(10, 20, 50, 100)
         ));
 
         $html     = '';
         $selected = 0;
         $options  = array();
-        $values   = ObjectConfig::unbox($config->values);
+        $values   = ObjectConfig::unbox($config->page_rows);
 
-        if ($config->limit && !in_array($config->limit, $values)) {
+        if ($config->limit && !in_array($config->limit, $values))
+        {
             $values[] = $config->limit;
             sort($values);
         }
@@ -110,189 +107,65 @@ class TemplateHelperPaginator extends TemplateHelperSelect
     }
 
     /**
-     * Render item pagination
-     *
-     * @see     http://developer.yahoo.com/ypatterns/navigation/pagination/
+     * Render a list of pages links
      *
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function pagination($config = array())
+    public function pages($config = array())
     {
-        $config = new ObjectConfigJson($config);
+        $config = new ModelPaginator($config);
         $config->append(array(
-            'total'      => 0,
-            'display'    => 2,
-            'offset'     => 0,
-            'limit'      => 0,
-            'show_limit' => true,
-            'show_count' => false
-        ))->append(array(
-            'show_pages' => $config->count !== 1
+            'total'    => 0,
+            'display'  => 4,
+            'offset'   => 0,
+            'limit'    => 0,
+            'attribs'  => array(),
         ));
 
-        $this->_initialize($config);
-
-        $html = '<div class="pagination pagination-toolbar">';
-
-        if($config->show_limit) {
-            $html .= '<div class="limit">'.$this->limit($config).'</div>';
+        $html = '<ul class="pagination">';
+        if($config->offset) {
+            $html .= $this->link($config->pages->prev);
         }
 
-        if ($config->show_pages)
-        {
-            $html .= '<ul class="pagination-list">';
-            $html .=  $this->_pages($this->_items($config));
-            $html .= '</ul>';
+        foreach($config->pages->offsets as $offset) {
+            $html .= $this->link($offset);
         }
 
-        if($config->show_count) {
-            $html .= sprintf($this->getObject('translator')->translate('Page %s of %s'), $config->current, $config->count);
+        if($config->total > ($config->offset + $config->limit)) {
+            $html .= $this->link($config->pages->next);
         }
-
-        $html .= '</div>';
+        $html .= '</ul>';
 
         return $html;
     }
 
     /**
-     * Render a list of page links
+     * Render a page link
      *
-     * @param   array   $pages An array of page data
-     * @return  string  Html
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
      */
-    protected function _pages($pages)
+    public function link($config)
     {
-        $html = '';
+        $config = new ObjectConfig($config);
+        $config->append(array(
+            'title'   => '',
+            'current' => false,
+            'active'  => false,
+            'offset'  => 0,
+            'limit'   => 0,
+            'rel'      => '',
+            'attribs'  => array(),
+        ));
 
-        //$html .= $pages['first']->active ? '<li>'.$this->_link($pages['first'], '<i class="icon-fast-backward icon-first"></i>').'</li>' : '';
+        $route = $this->getTemplate()->route('limit='.$config->limit.'&offset='.$config->offset);
+        $rel   = !empty($config->rel) ? 'rel="'.$config->rel.'"' : '';
 
-        $html .= $pages['previous']->active ? '<li>'.$this->_link($pages['previous'], '&laquo;').'</li>' : '';
-
-        $previous = null;
-        foreach ($pages['pages'] as $page)
-        {
-            if ($previous && $page->page - $previous->page > 1) {
-                $html .= '<li class="disabled"><a>&hellip;</a></li>';
-            }
-
-            $html .= '<li class="'.($page->active && !$page->current ? '' : 'active').'">';
-            $html .= $this->_link($page, $page->page);
-            $html .= '</li>';
-
-            $previous = $page;
-        }
-
-        $html  .= $pages['next']->active ? '<li>'.$this->_link($pages['next'], '&raquo;').'</li>' : '';
-
-        //$html  .= $pages['last']->active ? '<li>'.$this->_link($pages['last'], '<i class="icon-fast-forward icon-last"></i>').'</li>' : '';
+        $html = '<li '.$this->buildAttributes($config->attribs).'>';
+        $html .= '<a href="'.$route.'" '.$rel.'>'.$this->getObject('translator')->translate($config->title).'</a>';
+        $html .= '</li>';
 
         return $html;
-    }
-
-    /**
-     * Generates a pagination link
-     *
-     * @param Object $page Page object
-     * @param string  $title Page title
-     * @return string
-     */
-    protected function _link($page, $title)
-    {
-        $url   = $this->getObject('request')->getUrl();
-        $query = $url->getQuery(true);
-
-        $query['limit'] = $page->limit;
-        $query['offset'] = $page->offset;
-
-        $url->setQuery($query);
-
-        if ($page->active && !$page->current) {
-            $html = '<a href="'.$url.'">'.$this->getObject('translator')->translate($title).'</a>';
-        } else {
-            $html = '<a>'.$this->getObject('translator')->translate($title).'</a>';
-        }
-
-        return $html;
-    }
-
-    /**
-     * Get a list of pages
-     *
-     * @param   ObjectConfig $config
-     * @return  array   Returns and array of pages information
-     */
-    protected function _items(ObjectConfig $config)
-    {
-        $elements  = array();
-
-        // First
-        $offset  = 0;
-        $active  = $offset != $config->offset;
-        $props   = array('page' => 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active );
-
-        $elements['first'] = (object) $props;
-
-        // Previous
-        $offset  = max(0, ($config->current - 2) * $config->limit);
-        $active  = $offset != $config->offset;
-        $props   = array('page' => $config->current - 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
-        $elements['previous'] = (object) $props;
-
-        // Pages
-        $elements['pages'] = array();
-        foreach($this->_offsets($config) as $page => $offset)
-        {
-            $current = $offset == $config->offset;
-            $props = array('page' => $page, 'offset' => $offset, 'limit' => $config->limit, 'current' => $current, 'active' => !$current);
-            $elements['pages'][] = (object) $props;
-        }
-
-        // Next
-        $offset  = min(($config->count-1) * $config->limit, ($config->current) * $config->limit);
-        $active  = $offset != $config->offset;
-        $props   = array('page' => $config->current + 1, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
-        $elements['next'] = (object) $props;
-
-        // Last
-        $offset  = ($config->count - 1) * $config->limit;
-        $active  = $offset != $config->offset;
-        $props   = array('page' => $config->count, 'offset' => $offset, 'limit' => $config->limit, 'current' => false, 'active' => $active);
-        $elements['last'] = (object) $props;
-
-        return $elements;
-    }
-
-    /**
-     * Get the offset for each page, optionally with a range
-     *
-     * @param   ObjectConfig $config
-     * @return  array   Page number => offset
-     */
-    protected function _offsets(ObjectConfig $config)
-    {
-        if($display = $config->display)
-        {
-            $start  = min($config->count, (int) max($config->current - $display, 1));
-            $stop   = (int) min($config->current + $display, $config->count);
-
-            $pages = range($start, $stop);
-
-            if ($config->current > 2) {
-                array_unshift($pages, 1, 2);
-            }
-
-            if ($config->count - $config->current > 2) {
-                array_push($pages, $config->count-1, $config->count);
-            }
-        }
-        else $pages = range(1, $config->count);
-
-        $result = array();
-        foreach($pages as $pagenumber) {
-            $result[$pagenumber] =  ($pagenumber-1) * $config->limit;
-        }
-
-        return $result;
     }
 }
