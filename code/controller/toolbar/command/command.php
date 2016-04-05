@@ -53,7 +53,8 @@ class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbar
             'id'         => $name,
             'label'      => ucfirst($name),
             'disabled'   => false,
-            'title'		 => '',
+            'allowed'    => true,
+            'title'      => '',
             'href'       => null,
             'attribs'    => array(
                 'class'  => array(),
@@ -70,7 +71,7 @@ class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbar
     /**
      * Get the command name
      *
-     * @return string	The command name
+     * @return string   The command name
      */
     public function getName()
     {
