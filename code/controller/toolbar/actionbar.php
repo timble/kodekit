@@ -15,21 +15,8 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Controller\Toolbar
  */
-abstract class ControllerToolbarActionbar extends ControllerToolbarAbstract
+class ControllerToolbarActionbar extends ControllerToolbarAbstract
 {
-    /**
-     * Constructor
-     *
-     * @param   ObjectConfig $config Configuration options
-     */
-    public function __construct(ObjectConfig $config = null)
-    {
-        parent::__construct($config);
-
-        //Add a title command
-        $this->addTitle($config->title, $config->icon);
-    }
-
     /**
      * Initializes the config for the object
      *
