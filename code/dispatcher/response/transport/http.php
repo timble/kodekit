@@ -121,8 +121,7 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
             }
         }
 
-
-            //Add file related information if we are serving a file
+        //Add file related information if we are serving a file
         if($response->isDownloadable())
         {
             //Last-Modified header
@@ -130,19 +129,28 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
                 $response->setLastModified($time);
             };
 
-            $user_agent = $response->getRequest()->getAgent();
-            // basename does not work if the string starts with a UTF character
-            $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
+            //Allow to define a custom filename
+            if ($response->headers->has('X-Content-Disposition-Filename'))
+            {
+                $filename = $response->headers->get('X-Content-Disposition-Filename');
+                $response->headers->remove('X-Content-Disposition-Filename');
+            }
+            else
+            {
+                //basename does not work if the string starts with a UTF character
+                $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
+            }
 
-            // Android cuts file names after #
+            //Android cuts file names after #
+            $user_agent = $response->getRequest()->getAgent();
             if (stripos($user_agent, 'Android')) {
                 $filename = str_replace('#', '_', $filename);
             }
 
             $disposition = array('filename' => '"'.$filename.'"');
 
-            // IE7 and 8 accepts percent encoded file names as the filename value
-            // Other browsers (except Safari) use filename* header starting with UTF-8''
+            //IE7 and 8 accepts percent encoded file names as the filename value
+            //Other browsers (except Safari) use filename* header starting with UTF-8''
             $encoded_name = rawurlencode($filename);
 
             if($encoded_name !== $filename)
