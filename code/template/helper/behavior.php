@@ -25,32 +25,6 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     protected static $_loaded = array();
 
     /**
-     * Loads koowa.js
-     *
-     * @param array|ObjectConfig $config
-     * @return string
-     */
-    public function koowa($config = array())
-    {
-        $config = new ObjectConfigJson($config);
-        $config->append(array(
-            'debug' => false
-        ));
-
-        $html = $this->jquery();
-
-        if (!isset(self::$_loaded['koowa']))
-        {
-            $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/koowa'.($config->debug ? '' : '.min').'.js" />';
-
-            self::$_loaded['koowa'] = true;
-        }
-
-        return $html;
-    }
-
-    /**
      * Loads jQuery under a global variable called kQuery.
      *
      * If debug config property is set, an uncompressed version will be included.
@@ -67,14 +41,28 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             'debug' => false
         ));
 
-        $html = '';
+        $html = '<ktml:script src="assets://js/jquery'.($config->debug ? '' : '.min').'.js" />';
+        $html .= '<ktml:script src="assets://js/koowa.kquery.js" />';
 
-        if (!isset(self::$_loaded['jquery']))
-        {
-            $html .= '<ktml:script src="assets://js/jquery'.($config->debug ? '' : '.min').'.js" />';
+        return $html;
+    }
 
-            self::$_loaded['jquery'] = true;
-        }
+    /**
+     * Loads koowa.js
+     *
+     * @param array|ObjectConfig $config
+     * @return string
+     */
+    public function koowa($config = array())
+    {
+        $config = new ObjectConfigJson($config);
+        $config->append(array(
+            'debug' => false
+        ));
+
+        $html = $this->jquery();
+        $html .= '<ktml:script src="assets://js/koowa'.($config->debug ? '' : '.min').'.js" />';
+        $html .= '<ktml:style src="assets://css/koowa.css" />';
 
         return $html;
     }
@@ -204,6 +192,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         $url = $this->getObject('lib:http.url', array('url' => $config->url));
 
+        //Force format to 'html'
         if(!isset($url->query['format'])) {
             $url->query['format'] = 'html';
         }
@@ -253,7 +242,6 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if(!isset(self::$_loaded['validator']))
         {
-            $html .= $this->jquery();
             $html .= $this->koowa();
 
             $html .= '<ktml:script src="assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
@@ -356,7 +344,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!isset(self::$_loaded['select2']))
         {
-            $html .= $this->jquery();
+            $html .= $this->koowa();
             $html .= '<ktml:script src="assets://js/select2'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/koowa.select2.js" />';
 
