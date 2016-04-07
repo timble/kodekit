@@ -28,7 +28,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'toolbar' => null,
-            'attribs' => array('class' => array('toolbar'))
+            'attribs' => array('class' => array('koowa-toolbar'))
         ));
 
         $html = '';
