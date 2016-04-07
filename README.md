@@ -1,6 +1,6 @@
 # Kodekit
 
-## What is Kodedit?
+## What is Kodekit?
 
 Kodekit is a open-source component framework written in PHP. Developed and maintained by [Timble](http://timble.net) 
 with the help of passionate developers from all over the world.
