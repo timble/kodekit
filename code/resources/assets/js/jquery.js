@@ -9596,4 +9596,4 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 })( window );
 
-window.kQuery = jQuery.noConflict(true);
+window.kQuery = jQuery.noConflict();
