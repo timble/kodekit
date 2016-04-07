@@ -12,8 +12,9 @@ namespace Kodekit\Library;
 /**
  * Asset Template Filter
  *
- * Filter allows to define asset url schemes that are replaced on compile and render. A default assets:// scheme is
- * added that is rewritten to '/assets/'.
+ * Filter allows to define asset url schemes that are replaced on render.
+ *
+ * A default assets:// scheme is added that is rewritten to '/assets/'.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Filter
@@ -80,9 +81,12 @@ class TemplateFilterAsset extends TemplateFilterAbstract
      */
     public function filter(&$text)
     {
-        $text = str_replace(
-            array_keys($this->_schemes),
-            array_values($this->_schemes),
-            $text);
+        if(!empty($this->_schemes))
+        {
+            $text = str_replace(
+                array_keys($this->_schemes),
+                array_values($this->_schemes),
+                $text);
+        }
     }
 }
