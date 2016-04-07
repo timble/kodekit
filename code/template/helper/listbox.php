@@ -18,6 +18,59 @@ namespace Kodekit\Library;
 class TemplateHelperListbox extends TemplateHelperSelect
 {
     /**
+     * Generates an HTML optionlist based on the distinct data from a model column.
+     *
+     * The column used will be defined by the name -> value => column options in cascading order.
+     *
+     * If no 'model' name is specified the model identifier will be created using the helper identifier. The model name
+     * will be the pluralised package name.
+     *
+     * If no 'value' option is specified the 'name' option will be used instead. If no 'text'  option is specified the
+     * 'value' option will be used instead.
+     *
+     * @param 	array 	$config An optional array with configuration options
+     * @return	string	Html
+     * @see __call()
+     */
+    public function render($config = array())
+    {
+        $config = new ObjectConfig($config);
+        $config->append(array(
+            'autocomplete' => false,
+            'model'        => StringInflector::pluralize($this->getIdentifier()->package)
+        ));
+
+        if(!$config->model instanceof ModelInterface)
+        {
+            if(is_string($config->model) && strpos($config->model, '.') === false) {
+                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.StringInflector::pluralize($config->model);
+            } else {
+                $identifier = $config->model;
+            }
+
+            $model  = $this->getObject($identifier);
+
+            if(!$model instanceof ModelInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Model: '.get_class($model).' does not implement ModelInterface'
+                );
+            }
+
+            //Set the model
+            $config->model = $model;
+        }
+
+        if($config->autocomplete) {
+            $result = $this->__autocomplete($config);
+        } else {
+            $result = $this->__listbox($config);
+        }
+
+        return $result;
+    }
+
+    /**
      * Adds the option to enhance the select box using Select2
      *
      * @param array|ObjectConfig $config
@@ -136,56 +189,50 @@ class TemplateHelperListbox extends TemplateHelperSelect
     }
 
     /**
-     * Generates an HTML optionlist based on the distinct data from a model column.
+     * Generates an HTML timezones listbox
      *
-     * The column used will be defined by the name -> value => column options in cascading order.
-     *
-     * If no 'model' name is specified the model identifier will be created using the helper identifier. The model name
-     * will be the pluralised package name.
-     *
-     * If no 'value' option is specified the 'name' option will be used instead. If no 'text'  option is specified the
-     * 'value' option will be used instead.
-     *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
-     * @see __call()
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
-    protected function _render($config = array())
+    public function timezones($config = array())
     {
         $config = new ObjectConfig($config);
         $config->append(array(
-            'autocomplete' => false,
-            'model'        => StringInflector::pluralize($this->getIdentifier()->package)
+            'name'      => 'timezone',
+            'attribs'   => array(),
+            'deselect'  => true,
+            'prompt'    => '- '.$this->getObject('translator')->translate('Select Time Zone').' -',
         ));
 
-        if(!$config->model instanceof ModelInterface)
+        if ($config->deselect) {
+            $options[] = $this->option(array('label' => $config->prompt, 'value' => ''));
+        }
+
+        foreach (\DateTimeZone::listIdentifiers() as $identifier)
         {
-            if(is_string($config->model) && strpos($config->model, '.') === false) {
-                $identifier = 'com:'.$this->getIdentifier()->package.'.model.'.StringInflector::pluralize($config->model);
-            } else {
-                $identifier = $config->model;
-            }
-
-            $model  = $this->getObject($identifier);
-
-            if(!$model instanceof ModelInterface)
+            if (strpos($identifier, '/'))
             {
-                throw new \UnexpectedValueException(
-                    'Model: '.get_class($model).' does not implement ModelInterface'
-                );
+                list($group, $locale) = explode('/', $identifier, 2);
+                $groups[$group][] = str_replace('_', ' ', $locale);
             }
-
-            //Set the model
-            $config->model = $model;
         }
 
-        if($config->autocomplete) {
-            $result = $this->_autocomplete($config);
-        } else {
-            $result = $this->_listbox($config);
+        $options[] = $this->option(array('label' => 'Coordinated Universal Time', 'value' => 'UTC'));
+        foreach ($groups as $group => $locales)
+        {
+            foreach ($locales as $locale) {
+                $options[$group][] = $this->option(array('label' => $locale, 'value' => str_replace(' ', '_', $group.'/'.$locale)));
+            }
         }
 
-        return $result;
+        $list = $this->optionlist(array(
+            'options'   => $options,
+            'name'      => $config->name,
+            'selected'  => $config->selected,
+            'attribs'   => $config->attribs
+        ));
+
+        return $list;
     }
 
     /**
@@ -204,7 +251,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * @return	string	Html
      * @see __call()
      */
-    protected function _listbox($config = array())
+    private function __listbox($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -266,12 +313,10 @@ class TemplateHelperListbox extends TemplateHelperSelect
     /**
      * Renders a listbox with autocomplete behavior
      *
-     * @see    TemplateHelperBehavior::_listbox
-     *
      * @param  array|ObjectConfig    $config
      * @return string	The html output
      */
-    protected function _autocomplete($config = array())
+    private function __autocomplete($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -372,7 +417,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 $config['name']  = StringInflector::singularize(strtolower($method));
             }
 
-            return $this->_render($config);
+            return $this->render($config);
         }
 
         return parent::__call($method, $arguments);
