@@ -57,6 +57,42 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
     }
 
     /**
+     * Generates a select option list
+     *
+     * @param   array   $config An optional array with configuration options
+     * @return  array   An array of objects containing the option attributes
+     */
+    public function options( $config = array() )
+    {
+        $config = new ObjectConfig($config);
+        $config->append(array(
+            'entity'    => array(),
+            'name'      => 'id',
+            'value'     => 'id',
+            'label'     => 'id',
+            'disabled'  => null,
+            'attribs'   => array(),
+        ));
+        $options = array();
+        foreach($config->entity as $entity)
+        {
+            $option = array(
+                'id'       => isset($entity->{$config->name}) ? $entity->{$config->name} : null,
+                'name'     => $config->name,
+                'disabled' => $config->disabled,
+                'attribs'  => ObjectConfig::unbox($config->attribs),
+                'value'    => $entity->{$config->value},
+                'label'    => $entity->{$config->label},
+            );
+            if($config->entity instanceof \RecursiveIteratorIterator) {
+                $option['level'] = $config->entity->getDepth() + 1;
+            }
+            $options[] = $this->option($option);
+        }
+        return $options;
+    }
+
+    /**
      * Generates an HTML select list
      *
      * @param   array|ObjectConfig     $config An optional array with configuration options
