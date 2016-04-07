@@ -38,7 +38,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false
+            'debug' => \Kodekit::getInstance()->isDebug(),
         ));
 
         $html = '<ktml:script src="assets://js/jquery'.($config->debug ? '' : '.min').'.js" />';
@@ -57,7 +57,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false
+            'debug' => \Kodekit::getInstance()->isDebug(),
         ));
 
         $html = $this->jquery();
@@ -77,8 +77,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false,
-            'css'   => true,
+            'debug' => \Kodekit::getInstance()->isDebug(),
+            'css'        => true,
             'javascript' => false
         ));
 
@@ -112,7 +112,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug'    => false,
+            'debug'    => \Kodekit::getInstance()->isDebug(),
             'selector' => '.koowa-modal',
             'data'     => 'koowa-modal',
             'options'  => array('type' => 'image')
@@ -230,7 +230,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false,
+            'debug'    => \Kodekit::getInstance()->isDebug(),
             'selector' => '.-koowa-form',
             'options'  => array(
                 'ignoreTitle' => true,
@@ -333,7 +333,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'cleanup' => false,
-            'debug'   => false,
+            'debug'   => \Kodekit::getInstance()->isDebug(),
             'element' => '.select2-listbox',
             'options' => array(
                 'width' => 'resolve'
@@ -579,7 +579,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug'   => false,
+            'debug'   => \Kodekit::getInstance()->isDebug(),
             'offset'  => 'UTC',
             'user_offset'    => $this->getObject('user')->getParameter('timezone'),
             'server_offset'  => date_default_timezone_get(),
