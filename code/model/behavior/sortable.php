@@ -68,7 +68,7 @@ class ModelBehaviorSortable extends ModelBehaviorAbstract
         {
             $state = $context->state;
 
-            $sort      = trim($state->sort);
+            $sort      = $state->sort;
             $direction = strtoupper($state->direction);
             $columns   = array_keys($this->getTable()->getColumns());
 
