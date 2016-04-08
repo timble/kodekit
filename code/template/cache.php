@@ -90,12 +90,11 @@ class TemplateCache extends ObjectDecorator implements TemplateInterface
      *
      * @param   array   $data     An associative array of data to be extracted in local template scope
      * @throws  \InvalidArgumentException If the template could not be located
-     * @return TemplateInterface
+     * @return string The rendered template source
      */
     public function render(array $data = array())
     {
-        $this->getDelegate()->render($data);
-        return $this;
+        return $this->getDelegate()->render($data);
     }
 
     /**
@@ -158,14 +157,14 @@ class TemplateCache extends ObjectDecorator implements TemplateInterface
     /**
      * Set the decorated translator
      *
-     * @param   TemplateEngineInterface $delegate The decorated template engine
+     * @param   TemplateInterface $delegate The decorated template
      * @return  TemplateCache
      * @throws  \InvalidArgumentException If the delegate does not implement the TranslatorInterface
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof TemplateEngineInterface) {
-            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TemplateEngineInterface');
+        if (!$delegate instanceof TemplateInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TemplateInterface');
         }
 
         return parent::setDelegate($delegate);
