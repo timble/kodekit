@@ -29,7 +29,7 @@ class Kodekit
      *
      * @var string
      */
-    const VERSION = '3.0-beta1';
+    const VERSION = '3.0.0-beta.2';
 
     /**
      * Debug state
