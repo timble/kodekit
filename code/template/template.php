@@ -191,11 +191,11 @@ class Template extends TemplateAbstract implements TemplateFilterable, TemplateH
     {
         parent::render($data);
 
-        if($this->_source instanceof TemplateEngineInterface)
-        {
+        if($this->_source instanceof TemplateEngineInterface) {
             $this->_source = $this->_source->render($data);
-            $this->_source = $this->filter();
         }
+
+        $this->_source = $this->filter();
 
         return $this->_source;
     }
