@@ -1,20 +1,41 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Url Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Url
+ * @package Kodekit\Library\Http\Url
  */
-interface KHttpUrlInterface
+interface HttpUrlInterface
 {
+    /**
+     * The url parts
+     *
+     * @see toString()
+     */
+    const SCHEME   = 1;
+    const USER     = 2;
+    const PASS     = 4;
+    const HOST     = 8;
+    const PORT     = 16;
+    const PATH     = 32;
+    const QUERY    = 64;
+    const FRAGMENT = 128;
+
+    const USERINFO  = 6;   //User info
+    const AUTHORITY = 31;  //Authority
+    const BASE      = 63;  //Hierarchical part
+    const FULL      = 255; //Complete url
+
     /**
      * Parse the url from a string
      *
@@ -23,7 +44,7 @@ interface KHttpUrlInterface
      *
      * @param   string|array  $url Part(s) of an URL in form of a string or associative array like parse_url() returns
      * @throws  \UnexpectedValueException If the url is not an array a string or cannot be casted to one.
-     * @return  KHttpUrl
+     * @return  HttpUrl
      * @see     parse_url()
      */
     public function setUrl($url);
@@ -39,7 +60,7 @@ interface KHttpUrlInterface
      * Set the URL scheme
      *
      * @param  string $scheme
-     * @return  KHttpUrl
+     * @return  HttpUrl
      */
     public function setScheme($scheme);
 
@@ -54,7 +75,7 @@ interface KHttpUrlInterface
      * Set the URL user
      *
      * @param  string $user
-     * @return KHttpUrl
+     * @return HttpUrl
      */
     public function setUser($user);
 
@@ -69,7 +90,7 @@ interface KHttpUrlInterface
      * Set the URL password
      *
      * @param  string $pass
-     * @return KHttpUrl
+     * @return HttpUrl
      */
     public function setPass($pass);
 
@@ -84,7 +105,7 @@ interface KHttpUrlInterface
      * Set the URL Host
      *
      * @param  string $host
-     * @return KHttpUrl
+     * @return HttpUrl
      */
     public function setHost($host);
 
@@ -99,7 +120,7 @@ interface KHttpUrlInterface
      * Set the port part of the URL
      *
      * @param  integer $port
-     * @return KHttpUrl
+     * @return HttpUrl
      */
     public function setPort($port);
 
@@ -119,7 +140,7 @@ interface KHttpUrlInterface
      * @param   string|array  $path The path string or array of elements to use; for example,"/foo/bar/baz/dib".
      *                              A leading slash will *not* create an empty first element; if the string has a
      *                              leading slash, it is ignored.
-     * @return  KHttpUrl
+     * @return  HttpUrl
      */
     public function setPath($path);
 
@@ -140,7 +161,7 @@ interface KHttpUrlInterface
      *
      * @param   string|array  $query  The query string to use; for example `foo=bar&baz=dib`.
      * @param   boolean       $merge  If TRUE the data in $query will be merged instead of replaced. Default FALSE.
-     * @return  KHttpUrl
+     * @return  HttpUrl
      */
     public function setQuery($query, $merge = false);
 
@@ -155,7 +176,7 @@ interface KHttpUrlInterface
      * Set the URL fragment part
      *
      * @param  string $fragment
-     * @return KHttpUrl
+     * @return HttpUrl
      */
     public function setFragment($fragment);
 
@@ -163,7 +184,7 @@ interface KHttpUrlInterface
      * Enable/disable URL escaping
      *
      * @param bool $escape
-     * @return KHttpUrlInterface
+     * @return HttpUrlInterface
      */
     public function setEscape($escape);
 
@@ -178,7 +199,7 @@ interface KHttpUrlInterface
      * Build the url from an array
      *
      * @param   array  $parts Associative array like parse_url() returns.
-     * @return  KHttpUrl
+     * @return  HttpUrl
      * @see     parse_url()
      */
     public static function fromArray(array $parts);
@@ -190,7 +211,7 @@ interface KHttpUrlInterface
      *
      * @param   string  $url
      * @throws  \UnexpectedValueException If the url is not a string or cannot be casted to one.
-     * @return  KHttpUrl
+     * @return  HttpUrl
      * @see     parse_url()
      */
     public static function fromString($url);
@@ -207,8 +228,8 @@ interface KHttpUrlInterface
     /**
      * Check if two url's are equal
      *
-     * @param KHttpUrlInterface $url
+     * @param HttpUrlInterface $url
      * @return Boolean
      */
-    public function equals(KHttpUrlInterface $url);
+    public function equals(HttpUrlInterface $url);
 }

@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Jwt Dispatcher Authenticator
@@ -26,14 +28,14 @@
  * the user.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Authenticator
+ * @package Kodekit\Library\Dispatcher\Authenticator
  */
-class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
+class DispatcherAuthenticatorJwt extends DispatcherAuthenticatorAbstract
 {
     /**
      * The JWT token
      *
-     * @var KHttpToken
+     * @var HttpToken
      */
     private $__token;
 
@@ -79,9 +81,9 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config Configuration options
+     * @param ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -98,10 +100,10 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
@@ -118,7 +120,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     /**
      * Return the JWT authorisation token
      *
-     * @return KHttpToken  The authorisation token or NULL if no token could be found
+     * @return HttpToken  The authorisation token or NULL if no token could be found
      */
     public function getSecret()
     {
@@ -128,7 +130,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     /**
      * Return the JWT authorisation token
      *
-     * @return KHttpToken  The authorisation token or NULL if no token could be found
+     * @return HttpToken  The authorisation token or NULL if no token could be found
      */
     public function getToken()
     {
@@ -174,10 +176,10 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
      *
      * If not user passed, the context user object will be used.
      *
-     * @param KUserInterface $user The user object. Default NULL
+     * @param UserInterface $user The user object. Default NULL
      * @return string  The signed authorisation token
      */
-    public function createToken(KUserInterface $user = null)
+    public function createToken(UserInterface $user = null)
     {
         if(!$user) {
             $user = $this->getObject('user');
@@ -193,11 +195,11 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
     /**
      * Authenticate using a JWT token
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
-     * @throws KControllerExceptionRequestNotAuthenticated
+     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @throws ControllerExceptionRequestNotAuthenticated
      * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
-    public function authenticateRequest(KDispatcherContextInterface $context)
+    public function authenticateRequest(DispatcherContextInterface $context)
     {
         if($token = $this->getToken())
         {
@@ -210,7 +212,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
                 if($this->_check_expire)
                 {
                     if(!$token->getExpireTime() || $token->isExpired()) {
-                        throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
+                        throw new ControllerExceptionRequestNotAuthenticated('Token Expired');
                     }
                 }
 
@@ -218,7 +220,7 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
                 if($this->_check_age)
                 {
                     if (!$token->getIssueTime() || $token->getAge() > $this->_max_age) {
-                        throw new KControllerExceptionRequestNotAuthenticated('Token Expired');
+                        throw new ControllerExceptionRequestNotAuthenticated('Token Expired');
                     }
                 }
                 //Ensure the user exists
@@ -226,18 +228,18 @@ class KDispatcherAuthenticatorJwt extends KDispatcherAuthenticatorAbstract
                 {
                     //Ensure we have a username
                     if(empty($user)) {
-                        throw new KControllerExceptionRequestNotAuthenticated('Invalid User');
+                        throw new ControllerExceptionRequestNotAuthenticated('Invalid User');
                     }
 
                     if($this->getObject('user.provider')->getUser($user)->getId() == 0) {
-                        throw new KControllerExceptionRequestNotAuthenticated('User Not Found');
+                        throw new ControllerExceptionRequestNotAuthenticated('User Not Found');
                     }
                 }
 
                 //Login the user
                 return $this->loginUser($user, $data);
             }
-            else throw new KControllerExceptionRequestNotAuthenticated('Invalid Token');
+            else throw new ControllerExceptionRequestNotAuthenticated('Invalid Token');
         }
     }
 }

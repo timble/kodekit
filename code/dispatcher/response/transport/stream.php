@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Stream Dispatcher Response Transport
@@ -33,12 +35,12 @@
  * finished receiving data for that chunk. The data transfer is terminated by a final chunk of length zero.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response\Transport
+ * @package Kodekit\Library\Dispatcher\Response\Transport
  * @see http://en.wikipedia.org/wiki/Byte_serving
  * @see http://en.wikipedia.org/wiki/Chunked_transfer_encoding
  * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
  */
-class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHttp
+class DispatcherResponseTransportStream extends DispatcherResponseTransportHttp
 {
     /**
      * Byte offset
@@ -59,10 +61,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
@@ -74,11 +76,11 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
     /**
      * Get the byte offset
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return int The byte offset
-     * @throws KHttpExceptionRangeNotSatisfied   If the byte offset is outside of the total size of the file
+     * @throws HttpExceptionRangeNotSatisfied   If the byte offset is outside of the total size of the file
      */
-    public function getOffset(KDispatcherResponseInterface $response)
+    public function getOffset(DispatcherResponseInterface $response)
     {
         if(!isset($this->_offset))
         {
@@ -93,7 +95,7 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
                 }
 
                 if ($offset > $this->getFileSize($response)) {
-                    throw new KHttpExceptionRangeNotSatisfied('Invalid range');
+                    throw new HttpExceptionRangeNotSatisfied('Invalid range');
                 }
             }
 
@@ -106,10 +108,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
     /**
      * Get the byte range
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return int The last byte offset
      */
-    public function getRange(KDispatcherResponseInterface $response)
+    public function getRange(DispatcherResponseInterface $response)
     {
         if(!isset($this->_range))
         {
@@ -138,10 +140,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
     /**
      * Get the file size
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return int The file size in bytes
      */
-    public function getFileSize(KDispatcherResponseInterface $response)
+    public function getFileSize(DispatcherResponseInterface $response)
     {
         return $response->getStream()->getSize();
     }
@@ -152,10 +154,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
      * This functions returns a md5 hash of same format as Apache does. Eg "%ino-%size-%mtime" using the file info.
      * @link http://stackoverflow.com/questions/44937/how-do-you-make-an-etag-that-matches-apache
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return string
      */
-    public function getFileEtag(KDispatcherResponseInterface $response)
+    public function getFileEtag(DispatcherResponseInterface $response)
     {
         $info = $response->getStream()->getInfo();
         $etag = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
@@ -169,10 +171,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
      * We flush(stream) the data to the output buffer based on the chunk size and range information provided in the
      * request. The default chunk size is 8 MB.
      *
-     * @param KDispatcherResponseInterface $response
-     * @return KDispatcherResponseTransportRedirect
+     * @param DispatcherResponseInterface $response
+     * @return DispatcherResponseTransportRedirect
      */
-    public function sendContent(KDispatcherResponseInterface $response)
+    public function sendContent(DispatcherResponseInterface $response)
     {
         if ($response->isSuccess())
         {
@@ -221,10 +223,10 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
     /**
      * Send HTTP response
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return boolean
      */
-    public function send(KDispatcherResponseInterface $response)
+    public function send(DispatcherResponseInterface $response)
     {
         $request  = $response->getRequest();
 
@@ -250,7 +252,7 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
                     $range  = $this->getRange($response);
                     $size   = $this->getFileSize($response);
 
-                    $response->setStatus(KHttpResponse::PARTIAL_CONTENT);
+                    $response->setStatus(HttpResponse::PARTIAL_CONTENT);
                     $response->headers->set('Content-Length', $range - $offset + 1);
                     $response->headers->set('Content-Range', sprintf('bytes %s-%s/%s', $offset, $range, $size));
                 }
@@ -264,7 +266,7 @@ class KDispatcherResponseTransportStream extends KDispatcherResponseTransportHtt
                      *
                      * @see : http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
                      */
-                    if($response->getStatusCode() == KHttpResponse::REQUESTED_RANGE_NOT_SATISFIED)
+                    if($response->getStatusCode() == HttpResponse::REQUESTED_RANGE_NOT_SATISFIED)
                     {
                         $size = $this->getFileSize($response);
                         $response->headers->set('Content-Range', sprintf('bytes */%s', $size));

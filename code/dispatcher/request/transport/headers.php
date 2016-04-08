@@ -1,24 +1,26 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
  * @copyright   Copyright (C) 2015 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Dispatcher request transport for request headers
  *
  * Pushes the request headers into the headers object
  *
- * @see     \KHttpRequestHeaders
+ * @see     \HttpRequestHeaders
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Dispatcher\Request\Transport
+ * @package Kodekit\Library\Dispatcher\Request\Transport
  */
-class KDispatcherRequestTransportHeaders extends KDispatcherRequestTransportAbstract
+class DispatcherRequestTransportHeaders extends DispatcherRequestTransportAbstract
 {
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_HIGH,
@@ -30,9 +32,9 @@ class KDispatcherRequestTransportHeaders extends KDispatcherRequestTransportAbst
     /**
      * Receive request
      *
-     * @param KDispatcherRequestInterface $request
+     * @param DispatcherRequestInterface $request
      */
-    public function receive(KDispatcherRequestInterface $request)
+    public function receive(DispatcherRequestInterface $request)
     {
         //Set the headers
         $headers = array();

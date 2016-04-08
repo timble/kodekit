@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Fragment Dispatcher
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Kodekit\Library\Dispatcher
  */
-class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
+class DispatcherFragment extends DispatcherAbstract implements ObjectInstantiable, ObjectMultiton
 {
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -33,10 +35,10 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObjectConfig $config 	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config 	An optional ObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'dispatched'        => false,
@@ -51,11 +53,11 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
     /**
      * Force creation of a singleton
      *
-     * @param 	KObjectConfig            $config	  A ObjectConfig object with configuration options
-     * @param 	KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return  KDispatcherInterface
+     * @param 	ObjectConfig            $config	  A ObjectConfig object with configuration options
+     * @param 	ObjectManagerInterface	$manager  A ObjectInterface object
+     * @return  DispatcherInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)
     {
         //Add the object alias to allow easy access to the singleton
         $manager->registerAlias($config->object_identifier, 'dispatcher.fragment');
@@ -72,12 +74,12 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
     /**
      * Get the request object
      *
-     * @throws	UnexpectedValueException	If the request doesn't implement the DispatcherRequestInterface
-     * @return KDispatcherRequest
+     * @throws	\UnexpectedValueException	If the request doesn't implement the DispatcherRequestInterface
+     * @return DispatcherRequest
      */
     public function getRequest()
     {
-        if(!$this->_request instanceof KDispatcherRequestInterface) {
+        if(!$this->_request instanceof DispatcherRequestInterface) {
             $this->_request = clone $this->getObject('dispatcher.request');
         }
 
@@ -87,12 +89,12 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
     /**
      * Get the response object
      *
-     * @throws	UnexpectedValueException	If the response doesn't implement the DispatcherResponseInterface
-     * @return KDispatcherResponse
+     * @throws	\UnexpectedValueException	If the response doesn't implement the DispatcherResponseInterface
+     * @return DispatcherResponse
      */
     public function getResponse()
     {
-        if(!$this->_response instanceof KDispatcherResponseInterface) {
+        if(!$this->_response instanceof DispatcherResponseInterface) {
             $this->_response = clone $this->getObject('dispatcher.response', array(
                 'request' => $this->getRequest(),
                 'user'    => $this->getUser()
@@ -105,11 +107,11 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
     /**
      * Resolve the request
      *
-     * @param KDispatcherContextInterface $context A dispatcher context object
+     * @param DispatcherContextInterface $context A dispatcher context object
      */
-    protected function _resolveRequest(KDispatcherContextInterface $context)
+    protected function _resolveRequest(DispatcherContextInterface $context)
     {
-        if($controller = KObjectConfig::unbox($context->param))
+        if($controller = ObjectConfig::unbox($context->param))
         {
             $url = $this->getObject('lib:http.url', array('url' => $controller));
 
@@ -117,7 +119,7 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
             $context->request->query->clear()->add($url->getQuery(true));
 
             //Set the controller
-            $identifier = $url->toString(KHttpUrl::BASE);
+            $identifier = $url->toString(HttpUrl::BASE);
             $identifier = $this->getIdentifier($identifier);
 
             $this->setController($identifier);
@@ -133,10 +135,10 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
      * Function makes an internal sub-request, based on the information in the request and passing along the context
      * and will return the result.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context	A dispatcher context object
      * @return	mixed
      */
-    protected function _actionInclude(KDispatcherContextInterface $context)
+    protected function _actionInclude(DispatcherContextInterface $context)
     {
         return $this->_actionDispatch($context);
     }
@@ -144,10 +146,10 @@ class KDispatcherFragment extends KDispatcherAbstract implements KObjectInstanti
     /**
      * Send the response
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context	A dispatcher context object
      * @return mixed
      */
-    protected function _actionSend(KDispatcherContextInterface $context)
+    protected function _actionSend(DispatcherContextInterface $context)
     {
         return $context->result;
     }

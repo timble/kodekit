@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * X-Sendfile Dispatcher Response Transport
@@ -15,21 +17,21 @@
  * contents from redirected location to the client, thus freeing up the backend to handle other requests.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response\Transport
+ * @package Kodekit\Library\Dispatcher\Response\Transport
  * @see Apache   : https://tn123.org/mod_xsendfile/
  * @see Nginx    : http://wiki.nginx.org/XSendfile
  */
-class KDispatcherResponseTransportSendfile extends KDispatcherResponseTransportHttp
+class DispatcherResponseTransportSendfile extends DispatcherResponseTransportHttp
 {
     /**
      * Initializes the config for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_HIGH,
@@ -41,10 +43,10 @@ class KDispatcherResponseTransportSendfile extends KDispatcherResponseTransportH
     /**
      * Discard all output and send the file specified by the header instead using server internals.
      *
-     * @param KDispatcherResponseInterface $response
-     * @return KDispatcherResponseTransportRedirect
+     * @param DispatcherResponseInterface $response
+     * @return DispatcherResponseTransportRedirect
      */
-    public function sendContent(KDispatcherResponseInterface $response)
+    public function sendContent(DispatcherResponseInterface $response)
     {
         return;
     }
@@ -57,10 +59,10 @@ class KDispatcherResponseTransportSendfile extends KDispatcherResponseTransportH
      * - Apache : X-Sendfile
      * - Nginx  : X-Accel-Redirect
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return boolean
      */
-    public function send(KDispatcherResponseInterface $response)
+    public function send(DispatcherResponseInterface $response)
     {
         if($response->isDownloadable())
         {
@@ -82,7 +84,7 @@ class KDispatcherResponseTransportSendfile extends KDispatcherResponseTransportH
             if(strpos($server, 'nginx') !== FALSE)
             {
                 $path = $response->getStream()->getPath();
-                $path = preg_replace('/'.preg_quote(Koowa::getInstance()->getRootPath(), '/').'/', '', $path, 1);
+                $path = preg_replace('/'.preg_quote(\Kodekit::getInstance()->getRootPath(), '/').'/', '', $path, 1);
 
                 $response->headers->set('X-Accel-Redirect' , $path);
                 return parent::send($response);

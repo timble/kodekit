@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Controller Toolbar Command
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Kodekit\Library\Controller\Toolbar
  */
-class KControllerToolbarCommand extends KObjectConfig implements KControllerToolbarCommandInterface
+class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbarCommandInterface
 {
     /**
      * The command name
@@ -32,7 +34,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     /**
      * Toolbar object
      *
-     * @var KControllerToolbarInterface
+     * @var ControllerToolbarInterface
      */
     private $__toolbar = null;
 
@@ -40,7 +42,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
      * Constructor.
      *
      * @param	string $name The command name
-     * @param   array|KObjectConfig 	An associative array of configuration settings or a ObjectConfig instance.
+     * @param   array|ObjectConfig 	An associative array of configuration settings or a ObjectConfig instance.
      */
     public function __construct( $name, $config = array() )
     {
@@ -51,7 +53,8 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
             'id'         => $name,
             'label'      => ucfirst($name),
             'disabled'   => false,
-            'title'		 => '',
+            'allowed'    => true,
+            'title'      => '',
             'href'       => null,
             'attribs'    => array(
                 'class'  => array(),
@@ -68,7 +71,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     /**
      * Get the command name
      *
-     * @return string	The command name
+     * @return string   The command name
      */
     public function getName()
     {
@@ -90,11 +93,11 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
      *
      * @param   string	$command The command name
      * @param	mixed	$config  Parameters to be passed to the command
-     * @return  KControllerToolbarCommand  The command that was added
+     * @return  ControllerToolbarCommand  The command that was added
      */
     public function addCommand($command, $config = array())
     {
-        if (!($command instanceof KControllerToolbarCommand)) {
+        if (!($command instanceof ControllerToolbarCommand)) {
             $command = $this->getCommand($command, $config);
         }
 
@@ -157,7 +160,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     public function set($name, $value)
     {
         if (is_array($value)) {
-            $value = new KObjectConfig($value);
+            $value = new ObjectConfig($value);
         }
 
         parent::set($name, $value);
@@ -166,7 +169,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     /**
      * Get the toolbar object
      *
-     * @return KControllerToolbarInterface
+     * @return ControllerToolbarInterface
      */
     public function getToolbar()
     {
@@ -176,10 +179,10 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
     /**
      * Set the parent node
      *
-     * @param KControllerToolbarInterface $toolbar The toolbar this command belongs too
-     * @return KControllerToolbarCommand
+     * @param ControllerToolbarInterface $toolbar The toolbar this command belongs too
+     * @return ControllerToolbarCommand
      */
-    public function setToolbar(KControllerToolbarInterface $toolbar )
+    public function setToolbar(ControllerToolbarInterface $toolbar )
     {
         $this->__toolbar = $toolbar;
         return $this;
@@ -195,7 +198,7 @@ class KControllerToolbarCommand extends KObjectConfig implements KControllerTool
      */
     public function __call($method, $args)
     {
-        $parts = KStringInflector::explode($method);
+        $parts = StringInflector::explode($method);
 
         if($parts[0] == 'add' && isset($parts[1]))
         {

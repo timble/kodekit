@@ -1,100 +1,73 @@
-Nooku Framework
-===============
+# Kodekit
 
-What is Nooku Framework?
--------------------------
+## What is Kodekit?
 
-Nooku Framework is a open-source **extension framework** for **[Joomla](http://www.joomla.org)**. Developed and maintained by
-[Timble](http://timble.net) with the help of passionate developers from all over the world.
+Kodekit is a open-source component framework written in PHP. Developed and maintained by [Timble](http://timble.net) 
+with the help of passionate developers from all over the world.
 
-Nooku Framework can be installed in Joomla as a plugin and lets you focus on the "business" logic of your extension. By
-doing most of the repetitive work for you [boilerplate code][boilerplate] is eliminated which greatly reduces the time
-to develop Joomla extensions.
+Kodekit can be installed through composer helps you to focus on the "business" logic of your components. By doing 
+most of the repetitive work for you [boilerplate code][boilerplate] is eliminated which greatly reduces the time to 
+develop solutions.
 
-The design pattern based architecture makes your extension more flexible: your extension becomes more **re-usable**,
-**replaceable** and more easily **extensible**. Additionally Nooku Framework provides you with excellent **out-of-the-box
+The design pattern based architecture makes your components more flexible: they becomes more **re-usable**,
+**replaceable** and more easily **extensible**. Additionally Kodekit provides you with excellent **out-of-the-box
  security** features.
 
-Nooku Framework uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering)
-and includes everything needed to create Joomla extensions according to the [Hierarchical Model-View-Contoller][HMVC]
+Kodekit uses a [component based architecture](http://en.wikipedia.org/wiki/Component-based_software_engineering)
+and includes everything needed to create components according to the [Hierarchical Model-View-Contoller][HMVC]
 **(HMVC)** pattern.
 
-Why Nooku Framework?
---------------------
+## Why Kodekit?
 
-Nooku Framework is built to help developers create **custom** Joomla extensions and tries to solve following problems:
+Kodekit is built to help developers create **custom** applications out of pre-build and re-usable components and tries 
+to solve following problems:
 
-* Abstract differences between Joomla versions 2.x and 3.x.
-* Provide a solid modern and lean architecture for building extensions.
-* Allow extensions to be more flexible and extended easily.
+* Abstract differences between different PHP versions
+* Provide a solid modern and lean architecture for building applications.
+* Allow applications to be more flexible and extended easily.
 
-Who is Nooku Framework for ?
-----------------------------
+## Who is Kodekit for ?
 
-Nooku Framework is for developers creating custom Joomla extensions. The framework can only be installed using Composer
-and cannot be installed using the Joomla installer. If you are a developer who wishes to distribute the framework as part
-of an installable package please [contact us](http://www.timble.net/contact/) first.
+Kodekit is for developers creating custom applications. The framework can only be installed using Composer. If you are 
+a developer who wishes to distribute the framework as part of an installable package please 
+[contact us](http://www.timble.net/contact/) first.
 
-Production Ready
-----------------
+## Production Ready
 
-The framework uses a conservative development approach focused on the lowest common denominator, at time of writing this
-is Joomla 2.5 and PHP 5.3. The framework is fully forwards compatible with Joomla 3.x and PHP 5.x.
+Kodekit uses a conservative development approach focused on the lowest common denominator, at time of writing this
+is PHP 5.5.
 
 The framework follows the [semantic versioning standard](http://semver.org/). Rest assured : it's designed for stability
 and compatibility. We promise that all minor versions will be 100% backwards compatible. Only in major versions backwards
 compatibility is not guaranteed.
 
-*Note* : If you are looking for the the greatest and latest stuff we are working on check out [Nooku Platform][nooku-platform],
-a fork from Joomla that is being completely rebuild using Nooku Framework.
-
-Requirements
-------------
-
-* Joomla 2.5 and 3.x
-* PHP 5.3 or newer
-* MySQL 5.x
-
-Installation
-------------
-
-Go to the root directory of your Joomla installation in command line and execute this command:
+## Installation
 
 ```
-composer require nooku/nooku-framework:2.*
+composer require timble/kodekit:3.*
 ```
 
-Contributing
-------------
+## Contributing
 
-We appreciate any contribution to Nooku Framework, whether it is related to bugs, grammar, or simply a suggestion or
-improvement. We ask that any contribution follows a few simple guidelines in order to be properly received.
+Kodekit is an open source, community-driven project. Contributions are welcome from everyone. 
+We have [contributing guidelines](CONTRIBUTING.md) to help you get started.
 
-We follow the [GitFlow][gitflow-model] branching model, from development to release. If you are not familiar with it,
-there are several guides and tutorials to make you understand what it is about. If you haven't, you will probably want
-to get started by installing this very good collection of [git extensions][gitflow-extensions].
+## Contributors
 
-What you should know before submitting a pull request :
+See the list of [contributors](https://github.com/timble/kodekit/contributors).
 
-- If you are submitting a bug-fix, or an enhancement that is not a breaking change, submit your pull request to the
-branch corresponding to the latest stable release of the framework, such as the 2.0 `release` branch
--  If you are submitting a breaking change or an entirely new feature, submit your pull request against the `develop`
-branch.
-- It's very well appreciated, and highly suggested, to start a new feature branch whenever you want to make changes or
-add functionalities. It will make it much easier for us to just checkout your feature branch and test it, before merging
-it into `develop`
-- We will not consider pull requests made to the `master`.
+## License 
 
-License
--------
+Kodekit is free and open-source software licensed under the [MPL v2.0 license](LICENSE.txt).
 
-Nooku Framework is open-source software licensed under the [GPLv3 license](LICENSE.txt).
+## Community
+
+Keep track of development and community news.
+
+* Follow [@timbleHQ on Twitter](https://twitter.com/timbleHQ)
+* Join [timble/kodekit on Gitter](http://gitter.im/timble/kodekit)
+* Read the [Timble Blog](https://www.timble.net/blog/)
+* Subscribe to the [Timble Newsletter](https://www.timble.net/newsletter/)
 
 [HMVC]: http://en.wikipedia.org/wiki/Hierarchical_model%E2%80%93view%E2%80%93controller
 [boilerplate]: http://en.wikipedia.org/wiki/Boilerplate_code
-
-[nooku-platform]: https://github.com/nooku/nooku-platform
-[nooku-framework]: https://github.com/nooku/nooku-framework
-
-[gitflow-model]: http://nvie.com/posts/a-successful-git-branching-model/
-[gitflow-extensions]: https://github.com/nvie/gitflow

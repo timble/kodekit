@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Buffer FileSystem Stream
@@ -25,9 +27,9 @@
  * stream is closed.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream
+ * @package Kodekit\Library\Filesystem\Stream
  */
-class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
+class FilesystemStreamBuffer extends FilesystemStreamAbstract
 {
     /**
      * The stream name
@@ -60,7 +62,7 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
     /**
      * Opens the stream
      *
-     * @throws RuntimeException If the stream cannot be opened.
+     * @throws \RuntimeException If the stream cannot be opened.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function open()
@@ -78,7 +80,7 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
                 }
 
                 if ($this->_resource === false) {
-                    throw new RuntimeException(sprintf('Cannot get content from file : "%s"', $path));
+                    throw new \RuntimeException(sprintf('Cannot get content from file : "%s"', $path));
                 }
             }
 
@@ -108,8 +110,8 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
      *
      * @param integer|null $bytes How many bytes of data from the current position should be returned. If NULL use the
      *                            chunk size, default 8192
-     * @throws BadMethodCallException If read is not supported.
-     * @throws LogicException If read is not allowed.
+     * @throws \BadMethodCallException If read is not supported.
+     * @throws \LogicException If read is not allowed.
      * @return string If there are less than count bytes available, return as many as are available. If no more data is
      *                available, return either FALSE or an empty string.
      */
@@ -126,7 +128,7 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
             }
             else $result = parent::read($bytes);
         }
-        else throw new LogicException('The stream does not allow read.');
+        else throw new \LogicException('The stream does not allow read.');
 
         return $result;
     }
@@ -199,7 +201,7 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
      * Note : Don't forget to update the current position of the stream by number of bytes that were successfully written.
      *
      * @param string $data Should be stored into the underlying stream.
-     * @throws LogicException If write is not allowed.
+     * @throws \LogicException If write is not allowed.
      * @return int Should return the number of bytes that were successfully stored, or 0 if none could be stored.
      */
     public function write($data)
@@ -303,7 +305,7 @@ class KFilesystemStreamBuffer extends KFilesystemStreamAbstract
 
                     if ($handle === false)
                     {
-                        throw new RuntimeException(sprintf(
+                        throw new \RuntimeException(sprintf(
                             'File "%s" cannot be opened with mode "%s"', $path, $this->getMode()
                         ));
                     }

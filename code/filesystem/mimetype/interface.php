@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * FileSystem Mimetype Resolver Interface
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Filesystem\Mimetype
+ * @package Kodekit\Library\Filesystem\Mimetype
  */
-interface KFilesystemMimetypeInterface
+interface FilesystemMimetypeInterface
 {
     /**
      * Find the mime type of the file with the given path.
@@ -26,10 +28,10 @@ interface KFilesystemMimetypeInterface
     /**
      * Find the mime type of the given stream
      *
-     * @param KFilesystemStreamInterface $stream
+     * @param FilesystemStreamInterface $stream
      * @return string The mime type or NULL, if none could be guessed
      */
-    public function fromStream(KFilesystemStreamInterface $stream);
+    public function fromStream(FilesystemStreamInterface $stream);
 
     /**
      * Check if the finder is supported

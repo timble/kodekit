@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Cookie Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Cookie
+ * @package Kodekit\Library\Http\Cookie
  */
-interface KHttpCookieInterface
+interface HttpCookieInterface
 {
     /**
      * Set the cookie name
      *
      * @param string $name The name of the cookie
-     * @throws InvalidArgumentException    If the cookie name is not valid or is empty
-     * @return KHttpCookie
+     * @throws \InvalidArgumentException    If the cookie name is not valid or is empty
+     * @return HttpCookie
      */
     public function setName($name);
 
@@ -28,8 +30,8 @@ interface KHttpCookieInterface
      * Set the cookie expiration time
      *
      * @param integer|string|\DateTime $expire The expiration time of the cookie
-     * @throws InvalidArgumentException    If the cookie expiration time is not valid
-     * @return KHttpCookie
+     * @throws \InvalidArgumentException    If the cookie expiration time is not valid
+     * @return HttpCookie
      */
     public function setExpire($expire);
 
@@ -37,7 +39,7 @@ interface KHttpCookieInterface
      * Set the cookie path
      *
      * @param string $path The cookie path
-     * @return KHttpCookie
+     * @return HttpCookie
      */
     public function setPath($path);
 

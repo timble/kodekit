@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Token
@@ -22,9 +24,9 @@
  * @see http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Token
+ * @package Kodekit\Library\Http\Token
  */
-class KHttpToken extends KObject implements KHttpTokenInterface
+class HttpToken extends Object implements HttpTokenInterface
 {
     /**
      * The algorithm constants
@@ -66,9 +68,9 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -84,10 +86,10 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KObjectConfig $config  An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'type'      => 'JWT' ,
@@ -116,7 +118,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * either "JWT" or "http://openid.net/specs/jwt/1.0".
      *
      * @param string $type
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setType($type)
     {
@@ -140,8 +142,8 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * Sets cryptographic algorithm used to secure the token.
      *
      * @param string $algorithm The signing algorithm. Supported algorithms are 'HS256', 'HS384' and 'HS512' or none
-     * @throws DomainException If an unsupported algorithm was specified
-     * @return KHttpToken
+     * @throws \DomainException If an unsupported algorithm was specified
+     * @return HttpToken
      */
     public function setAlgorithm($algorithm)
     {
@@ -153,7 +155,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         );
 
         if (!isset($algorithms[$algorithm])) {
-            throw new DomainException('Algorithm not supported');
+            throw new \DomainException('Algorithm not supported');
         }
 
         $this->_header['alg'] = $algorithm;
@@ -187,7 +189,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * sensitive string containing a String Or URI value.  Use of this claim is OPTIONAL.
      *
      * @param string $issuer
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setIssuer($issuer)
     {
@@ -221,7 +223,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * Use of this claim is OPTIONAL.
      *
      * @param string $subject
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setSubject($subject)
     {
@@ -232,11 +234,11 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     /**
      * Get the expiration time of the token.
      *
-     * The value of the claim parameter 'exp' as DateTime.
+     * The value of the claim parameter 'exp' as \DateTime.
      *
-     * @return DateTime A \DateTime instance
-     * @throws RuntimeException If the data could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if the token doesn't contain and expiration time
+     * @return \DateTime A \DateTime instance
+     * @throws \RuntimeException If the data could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if the token doesn't contain and expiration time
      */
     public function getExpireTime()
     {
@@ -244,10 +246,10 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         if(isset($this->_claims['exp']))
         {
             $value = $this->_claims['exp'];
-            $date   = new DateTime('@'.$value);
+            $date   = new \DateTime('@'.$value);
 
             if ($date === false) {
-                throw new RuntimeException(sprintf('The token expire time is not parseable (%s).', $value));
+                throw new \RuntimeException(sprintf('The token expire time is not parseable (%s).', $value));
             }
         };
 
@@ -260,12 +262,12 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * Sets the 'exp' claim in the JWT claim segment. This claim identifies the expiration time on or after which the
      * token MUST NOT be accepted for processing
      *
-     * @param  DateTime $date A DateTime instance
+     * @param  \DateTime $date A \DateTime instance
      * @return $this
      */
-    public function setExpireTime(DateTime $date)
+    public function setExpireTime(\DateTime $date)
     {
-        $date->setTimezone(new DateTimeZone('UTC'));
+        $date->setTimezone(new \DateTimeZone('UTC'));
         $this->_claims['exp'] = (int)$date->format('U');
 
         return $this;
@@ -274,11 +276,11 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     /**
      * Get the issue time of the token.
      *
-     * The value of the claim parameter 'iat' as DateTime.
+     * The value of the claim parameter 'iat' as \DateTime.
      *
-     * @return DateTime A \DateTime instance
-     * @throws RuntimeException If the data could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if the token doesn't contain and expiration time
+     * @return \DateTime A \DateTime instance
+     * @throws \RuntimeException If the data could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if the token doesn't contain and expiration time
      */
     public function getIssueTime()
     {
@@ -286,10 +288,10 @@ class KHttpToken extends KObject implements KHttpTokenInterface
         if(isset($this->_claims['iat']))
         {
             $value = $this->_claims['iat'];
-            $date  = new DateTime('@'.$value);
+            $date  = new \DateTime('@'.$value);
 
             if ($date === false) {
-                throw new RuntimeException(sprintf('The token issue time is not parseable (%s).', $value));
+                throw new \RuntimeException(sprintf('The token issue time is not parseable (%s).', $value));
             }
         };
 
@@ -302,12 +304,12 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * This method sets the 'iat' claim in the JWT claim segment. This claim identifies the UTC time at which the JWT
      * was issued.
      *
-     * @param  DateTime $date A DateTime instance
-     * @return KHttpToken
+     * @param  \DateTime $date A \DateTime instance
+     * @return HttpToken
      */
-    public function setIssueTime(DateTime $date)
+    public function setIssueTime(\DateTime $date)
     {
-        $date->setTimezone(new DateTimeZone('UTC'));
+        $date->setTimezone(new \DateTimeZone('UTC'));
         $this->_claims['iat'] = (int)$date->format('U');
 
         return $this;
@@ -334,7 +336,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      *
      * @param string $name  The name if the claim
      * @param mixed  $value The value of the claim
-     * @return KHttpToken
+     * @return HttpToken
      */
     public function setClaim($name, $value)
     {
@@ -402,7 +404,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      */
     public function toString()
     {
-        $date = new DateTime('now');
+        $date = new \DateTime('now');
 
         //Make sure we have an issue time
         if (!isset($this->_claims['iat'])) {
@@ -423,8 +425,8 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      * Decode from JWT string
      *
      * @param string      $token  A serialised token
-     * @return KHttpToken
-     * @throws InvalidArgumentException If the token is invalid
+     * @return HttpToken
+     * @throws \InvalidArgumentException If the token is invalid
      */
     public function fromString($token)
     {
@@ -444,7 +446,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
                 $this->setAlgorithm('none');
             }
         }
-        else throw new InvalidArgumentException(sprintf('The token "%s" is an invalid JWT', $token));
+        else throw new \InvalidArgumentException(sprintf('The token "%s" is an invalid JWT', $token));
 
         return $this;
     }
@@ -499,7 +501,7 @@ class KHttpToken extends KObject implements KHttpTokenInterface
     {
         if (isset($this->_claims['exp']) && is_numeric($this->_claims['exp']))
         {
-            $now  = new DateTime('now');
+            $now  = new \DateTime('now');
             return ($now->format('U') - $this->_claims['exp']) > 0;
         }
 
@@ -511,14 +513,14 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      *
      * @param object|array $input A PHP object or array
      * @return string JSON representation of the PHP object or array
-     * @throws DomainException Provided object could not be encoded to valid JSON
+     * @throws \DomainException Provided object could not be encoded to valid JSON
      */
     protected function _toJson($input)
     {
         $json = json_encode($input);
 
         if($json === false) {
-            throw new DomainException('Error encoding JSON data');
+            throw new \DomainException('Error encoding JSON data');
         }
 
         return $json;
@@ -529,14 +531,14 @@ class KHttpToken extends KObject implements KHttpTokenInterface
      *
      * @param string $input JSON string
      * @return array Array representation of JSON string
-     * @throws DomainException Provided string was invalid JSON
+     * @throws \DomainException Provided string was invalid JSON
      */
     protected function _fromJson($input)
     {
         $obj = json_decode($input, true);
 
         if($obj === false) {
-            throw new DomainException('Error decoding JSON data');
+            throw new \DomainException('Error decoding JSON data');
         }
 
         return $obj;

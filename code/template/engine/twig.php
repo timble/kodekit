@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Twig Template Engine
@@ -13,9 +15,9 @@
  *  @link https://github.com/fabpot/Twig
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Engine
+ * @package Kodekit\Library\Template\Engine
  */
-class KTemplateEngineTwig extends KTemplateEngineAbstract
+class TemplateEngineTwig extends TemplateEngineAbstract
 {
     /**
      * The engine file types
@@ -41,16 +43,16 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
     /**
      * Constructor
      *
-     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Reset the stack
         $this->_stack = array();
 
-        $this->_twig = new Twig_Environment($this,  array(
+        $this->_twig = new \Twig_Environment($this,  array(
             'cache'       => $this->_cache ? $this->_cache_path : false,
             'auto_reload' => $this->_cache_reload,
             'debug'       => $config->debug,
@@ -62,7 +64,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
         //Register functions in twig
         foreach($this->_functions as $name => $callable)
         {
-            $function = new Twig_SimpleFunction($name, $callable);
+            $function = new \Twig_SimpleFunction($name, $callable);
             $this->_twig->addFunction($function);
         }
     }
@@ -72,9 +74,9 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $self = $this;
 
@@ -96,9 +98,9 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      * Load a template by path
      *
      * @param  string  $url      The template url
-     * @throws InvalidArgumentException If the template could not be located
-     * @throws RuntimeException         If the template could not be loaded
-     * @return KTemplateEngineTwig|string Returns a string when called by Twig.
+     * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException         If the template could not be loaded
+     * @return TemplateEngineTwig|string Returns a string when called by Twig.
      */
     public function loadFile($url)
     {
@@ -114,7 +116,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      * Set the template content from a string
      *
      * @param  string  $content  The template content
-     * @return KTemplateEngineTwig
+     * @return TemplateEngineTwig
      */
     public function loadString($content)
     {
@@ -132,15 +134,15 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      * Render a template
      *
      * @param  array   $data   The data to pass to the template
-     * @throws RuntimeException If the template could not be evaluated
+     * @throws \RuntimeException If the template could not be evaluated
      * @return string The rendered template source
      */
     public function render(array $data = array())
     {
         parent::render();
 
-        if(!$this->_twig_template instanceof Twig_Template) {
-            throw new RuntimeException(sprintf('The template cannot be rendered'));
+        if(!$this->_twig_template instanceof \Twig_Template) {
+            throw new \RuntimeException(sprintf('The template cannot be rendered'));
         }
 
         //Render the template
@@ -159,7 +161,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      * Unregister a function
      *
      * @param string    $name   The function name
-     * @return KTemplateEngineTwig
+     * @return TemplateEngineTwig
      */
     public function unregisterFunction($name)
     {
@@ -189,7 +191,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
         if(in_array($type, $this->getFileTypes()))
         {
             if(!$this->_source = file_get_contents($file)) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+                throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
         }
         else $this->_source = $this->getTemplate()->loadFile($file)->render($this->getData());
@@ -201,7 +203,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
      * Locate the template
      *
      * @param   string  $url The template url
-     * @throws InvalidArgumentException If the template could not be located
+     * @throws \InvalidArgumentException If the template could not be located
      * @return string   The template real path
      */
     protected function _locate($url)
@@ -223,7 +225,7 @@ class KTemplateEngineTwig extends KTemplateEngineAbstract
 
         //Locate the template
         if (!$file = $locator->setBasePath($base)->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         return $file;

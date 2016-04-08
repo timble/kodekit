@@ -1,31 +1,33 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Dispatcher Response
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response
+ * @package Kodekit\Library\Dispatcher\Response
  */
-abstract class KDispatcherResponseAbstract extends KControllerResponse implements KDispatcherResponseInterface
+abstract class DispatcherResponseAbstract extends ControllerResponse implements DispatcherResponseInterface
 {
     /**
      * Stream resource
      *
-     * @var KFilesystemStreamInterface
+     * @var FilesystemStreamInterface
      */
     private $__stream;
 
     /**
      * The transport queue
      *
-     * @var	KObjectQueue
+     * @var	ObjectQueue
      */
     protected $_queue;
 
@@ -39,9 +41,9 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -49,7 +51,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         $this->_queue = $this->getObject('lib:object.queue');
 
         //Attach the response transport handlers
-        $transports = (array) KObjectConfig::unbox($config->transports);
+        $transports = (array) ObjectConfig::unbox($config->transports);
 
         foreach ($transports as $key => $value)
         {
@@ -66,10 +68,10 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config    An optional ObjectConfig object with configuration options.
+     * @param   ObjectConfig $config    An optional ObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'content'     => null,
@@ -90,7 +92,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     {
         foreach($this->_queue as $transport)
         {
-            if($transport instanceof KDispatcherResponseTransportInterface)
+            if($transport instanceof DispatcherResponseTransportInterface)
             {
                 if($transport->send($this) == true) {
                     return true;
@@ -114,7 +116,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     public function setContent($content, $type = null)
     {
         //Refresh the buffer
-        if($this->__stream instanceof KFilesystemStreamInterface)
+        if($this->__stream instanceof FilesystemStreamInterface)
         {
             $this->__stream->truncate(0);
             $this->__stream->write($content);
@@ -131,7 +133,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      *
      * See @link http://www.php.net/manual/en/wrappers.php for a list of default PHP stream protocols and wrappers.
      *
-     * @return KFilesystemStreamInterface
+     * @return FilesystemStreamInterface
      */
     public function getStream()
     {
@@ -142,7 +144,7 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
 
             if(!$this->getObject('filter.path')->validate($content))
             {
-                $stream = $factory->createStream('koowa-buffer://memory', 'w+b');
+                $stream = $factory->createStream('kodekit-buffer://memory', 'w+b');
                 $stream->write($content);
             }
             else $stream = $factory->createStream($content, 'rb');
@@ -157,10 +159,10 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
     /**
      * Sets the response content using a stream
      *
-     * @param KFilesystemStreamInterface $stream  The stream object
-     * @return KDispatcherResponseAbstract
+     * @param FilesystemStreamInterface $stream  The stream object
+     * @return DispatcherResponseAbstract
      */
-    public function setStream(KFilesystemStreamInterface $stream)
+    public function setStream(FilesystemStreamInterface $stream)
     {
         $this->__stream = $stream;
         return $this;
@@ -172,8 +174,8 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      * @param   mixed $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                                 or valid identifier string
      * @param   array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
-     * @return KDispatcherResponseAbstract
+     * @throws \UnexpectedValueException
+     * @return DispatcherResponseAbstract
      */
     public function getTransport($transport, $config = array())
     {
@@ -197,9 +199,9 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
         {
             $transport = $this->getObject($identifier, array_merge($config, array('response' => $this)));
 
-            if (!($transport instanceof KDispatcherResponseTransportInterface))
+            if (!($transport instanceof DispatcherResponseTransportInterface))
             {
-                throw new UnexpectedValueException(
+                throw new \UnexpectedValueException(
                     "Transport handler $identifier does not implement DispatcherResponseTransportInterface"
                 );
             }
@@ -217,11 +219,11 @@ abstract class KDispatcherResponseAbstract extends KControllerResponse implement
      * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                            or valid identifier string
      * @param   array $config  An optional associative array of configuration settings
-     * @return KDispatcherResponseAbstract
+     * @return DispatcherResponseAbstract
      */
     public function attachTransport($transport, $config = array())
     {
-        if (!($transport instanceof KDispatcherResponseTransportInterface)) {
+        if (!($transport instanceof DispatcherResponseTransportInterface)) {
             $transport = $this->getTransport($transport, $config);
         }
 

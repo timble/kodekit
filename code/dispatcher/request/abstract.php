@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Dispatcher Request
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Request
+ * @package Kodekit\Library\Dispatcher\Request
  */
-abstract class KDispatcherRequestAbstract extends KControllerRequest implements KDispatcherRequestInterface
+abstract class DispatcherRequestAbstract extends ControllerRequest implements DispatcherRequestInterface
 {
     /**
      * Mimetype to format mappings
@@ -25,21 +27,21 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * The request cookies
      *
-     * @var KHttpMessageParameters
+     * @var HttpMessageParameters
      */
     protected $_cookies;
 
     /**
      * The request files
      *
-     * @var KHttpMessageParameters
+     * @var HttpMessageParameters
      */
     protected $_files;
 
     /**
      * Base url of the request.
      *
-     * @var KHttpUrl
+     * @var HttpUrl
      */
     protected $_base_url;
 
@@ -53,14 +55,14 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Root url of the request.
      *
-     * @var KHttpUrl
+     * @var HttpUrl
      */
     protected $_root;
 
     /**
      * Referrer of the request
      *
-     * @var KHttpUrl
+     * @var HttpUrl
      */
     protected $_referrer;
 
@@ -95,7 +97,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * The transport queue
      *
-     * @var	KObjectQueue
+     * @var	ObjectQueue
      */
     protected $_queue;
 
@@ -109,9 +111,9 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -119,7 +121,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         $this->_queue = $this->getObject('lib:object.queue');
 
         //Attach the request transport handlers
-        $transports = (array) KObjectConfig::unbox($config->transports);
+        $transports = (array) ObjectConfig::unbox($config->transports);
 
         foreach ($transports as $key => $value)
         {
@@ -131,7 +133,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         }
 
         //Set the trusted proxies
-        $this->setProxies(KObjectConfig::unbox($config->proxies));
+        $this->setProxies(ObjectConfig::unbox($config->proxies));
 
         //Set files parameters
         $this->setFiles($config->files);
@@ -146,7 +148,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         $this->setBasePath($config->base_path);
 
         //Set the formats
-        foreach(KObjectConfig::unbox($config->formats) as $format => $mimetypes) {
+        foreach(ObjectConfig::unbox($config->formats) as $format => $mimetypes) {
             $this->addFormat($format, $mimetypes);
         }
 
@@ -165,10 +167,10 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'transports'  => array('server', 'headers', 'data'),
@@ -202,13 +204,13 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Receive the request by passing it through transports
      *
-     * @return KDispatcherRequestTransportInterface
+     * @return DispatcherRequestTransportInterface
      */
     public function receive()
     {
         foreach($this->_queue as $transport)
         {
-            if($transport instanceof KDispatcherRequestTransportInterface) {
+            if($transport instanceof DispatcherRequestTransportInterface) {
                 $transport->receive($this);
             }
         }
@@ -223,7 +225,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      *                                 or valid identifier string
      * @param   array $config An optional associative array of configuration settings
      * @throws \UnexpectedValueException
-     * @return KDispatcherRequestTransportInterface
+     * @return DispatcherRequestTransportInterface
      */
     public function getTransport($transport, $config = array())
     {
@@ -247,7 +249,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
         {
             $transport = $this->getObject($identifier, array_merge($config, array('request' => $this)));
 
-            if (!($transport instanceof KDispatcherRequestTransportInterface))
+            if (!($transport instanceof DispatcherRequestTransportInterface))
             {
                 throw new \UnexpectedValueException(
                     "Transport handler $identifier does not implement DispatcherRequestTransportInterface"
@@ -267,11 +269,11 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * @param   mixed  $transport An object that implements ObjectInterface, ObjectIdentifier object
      *                            or valid identifier string
      * @param   array $config  An optional associative array of configuration settings
-     * @return KDispatcherRequestAbstract
+     * @return DispatcherRequestAbstract
      */
     public function attachTransport($transport, $config = array())
     {
-        if (!($transport instanceof KDispatcherRequestTransportInterface)) {
+        if (!($transport instanceof DispatcherRequestTransportInterface)) {
             $transport = $this->getTransport($transport, $config);
         }
 
@@ -287,7 +289,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * You should only list the reverse proxies that you manage directly.
      *
      * @param array $proxies A list of trusted proxies
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function setProxies(array $proxies)
     {
@@ -309,7 +311,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * Set the request cookies
      *
      * @param  array $parameters
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function setCookies($parameters)
     {
@@ -319,7 +321,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Get the request cookies
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function getCookies()
     {
@@ -330,7 +332,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * Set the request files
      *
      * @param  array $parameters
-     * @return KDispatcherRequestInterface
+     * @return DispatcherRequestInterface
      */
     public function setFiles($parameters)
     {
@@ -340,7 +342,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Get the request files
      *
-     * @return KHttpMessageParameters
+     * @return HttpMessageParameters
      */
     public function getFiles()
     {
@@ -379,7 +381,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * Sets the request method.
      *
      * @param string $method
-     * @return KDispatcherRequest
+     * @return DispatcherRequest
      */
     public function setMethod($method)
     {
@@ -487,7 +489,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
 
         // Make sure host does not contain forbidden characters (see RFC 952 and RFC 2181)
         if ($host && !preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host)) {
-            throw new UnexpectedValueException('Invalid Host');
+            throw new \UnexpectedValueException('Invalid Host');
         }
 
         return $host;
@@ -517,7 +519,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Return the Url of the request regardless of the server
      *
-     * @return  KHttpUrl A HttpUrl object
+     * @return  HttpUrl A HttpUrl object
      */
     public function getUrl()
     {
@@ -606,7 +608,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * @link http://en.wikipedia.org/wiki/HTTP_referrer
      *
      * @param   boolean  $isInternal Only allow internal url's
-     * @return  KHttpUrl|null  A HttpUrl object or NULL if no referrer could be found
+     * @return  HttpUrl|null  A HttpUrl object or NULL if no referrer could be found
      */
     public function getReferrer($isInternal = true)
     {
@@ -623,7 +625,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
 
         if(isset($this->_referrer) && $isInternal)
         {
-            $url = $this->_referrer->toString(KHttpUrl::SCHEME | KHttpUrl::HOST);
+            $url = $this->_referrer->toString(HttpUrl::SCHEME | HttpUrl::HOST);
             if(!$this->getObject('lib:filter.internalurl')->validate($url)) {
                 return null;
             }
@@ -635,12 +637,12 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Sets the referrer for the request
      *
-     * @param  string|KHttpUrlInterface $referrer
+     * @param  string|HttpUrlInterface $referrer
      * @return $this
      */
     public function setReferrer($referrer)
     {
-        if(!($referrer instanceof KHttpUrlInterface)) {
+        if(!($referrer instanceof HttpUrlInterface)) {
             $referrer = $this->getObject('lib:http.url', array('url' => $referrer));
         }
 
@@ -689,16 +691,16 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
     /**
      * Returns the base URL from which this request is executed.
      *
-     * @return  KHttpUrl  A HttpUrl object
+     * @return  HttpUrl  A HttpUrl object
      */
     public function getBaseUrl()
     {
-        if(!$this->_base_url instanceof KHttpUrl)
+        if(!$this->_base_url instanceof HttpUrl)
         {
-            $base = $this->getObject('lib:http.url', array('url' => $this->getUrl()->toString(KHttpUrl::AUTHORITY)));
-            $base->setUrl($this->getBasePath());
+            $base = clone $this->getUrl();
+            $base->setUrl(rtrim((string)$this->_base_url, '/'));
 
-            $this->_base_url = $base;
+            $this->_base_url = $this->getObject('lib:http.url', array('url' => $base->toString(HttpUrl::BASE)));
         }
 
         return $this->_base_url;
@@ -708,7 +710,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * Set the base URL for which the request is executed.
      *
      * @param string $url
-     * @return KDispatcherRequest
+     * @return DispatcherRequest
      */
     public function setBaseUrl($url)
     {
@@ -743,7 +745,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * Set the base path for which the request is executed.
      *
      * @param string $path
-     * @return KDispatcherRequest
+     * @return DispatcherRequest
      */
     public function setBasePath($path)
     {
@@ -826,7 +828,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      * @param string       $format     The format
      * @param string|array $mime_types The associated mime types (the preferred one must be the first as it will be used
      *                                as the content type)
-     * @return KDispatcherRequest
+     * @return DispatcherRequest
      */
     public function addFormat($format, $mime_types)
     {
@@ -972,7 +974,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
      *
      * @link : http://tools.ietf.org/html/rfc2616#section-14.35
      *
-     * @throws KHttpExceptionRangeNotSatisfied If the range info is not valid or if the start offset is large then the end offset
+     * @throws HttpExceptionRangeNotSatisfied If the range info is not valid or if the start offset is large then the end offset
      * @return array List of request ranges
      */
     public function getRanges()
@@ -986,7 +988,7 @@ abstract class KDispatcherRequestAbstract extends KControllerRequest implements 
                 $range  = $this->_headers->get('Range');
 
                 if(!preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $range)) {
-                    throw new KHttpExceptionRangeNotSatisfied('Invalid range');
+                    throw new HttpExceptionRangeNotSatisfied('Invalid range');
                 }
 
                 $ranges = explode(',', substr($range, 6));

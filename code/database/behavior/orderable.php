@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Orderable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorOrderable extends DatabaseBehaviorAbstract
 {
     /**
      * Check if the behavior is supported
@@ -27,7 +29,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
         $table = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
-        if($table instanceof KDatabaseTableInterface)
+        if($table instanceof DatabaseTableInterface)
         {
             if(!$table->hasColumn('ordering'))  {
                 return false;
@@ -44,17 +46,17 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * 	   $query->where('category_id = :category_id')->bind(array('category_id' => $this->id));
      * </code>
      *
-     * @param   KDatabaseQuerySelect $query
+     * @param   DatabaseQuerySelect $query
      * @return  void
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function _buildQueryWhere($query)
     {
-        if(!$query instanceof KDatabaseQuerySelect && !$query instanceof KDatabaseQueryUpdate)
+        if(!$query instanceof DatabaseQuerySelect && !$query instanceof DatabaseQueryUpdate)
         {
-            throw new InvalidArgumentException(
-                'Query must be an instance of KDatabaseQuerySelect or KDatabaseQueryUpdate'
+            throw new \InvalidArgumentException(
+                'Query must be an instance of DatabaseQuerySelect or DatabaseQueryUpdate'
             );
         }
     }
@@ -65,7 +67,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * Requires an 'ordering' column
      *
      * @param   integer $change Amount to move up or down
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function order($change)
     {
@@ -116,7 +118,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      * Resetting starts at $base to allow creating space in sequence for later record insertion.
      *
      * @param   integer $base Order at which to start resetting.
-     * @return  KDatabaseBehaviorOrderable
+     * @return  DatabaseBehaviorOrderable
      */
     public function reorder($base = 0)
     {
@@ -160,7 +162,7 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
 
         $this->_buildQueryWhere($query);
 
-        return (int) $db->select($query, KDatabase::FETCH_FIELD);
+        return (int) $db->select($query, Database::FETCH_FIELD);
     }
 
     /**
@@ -168,10 +170,10 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
      *
      * This performs an intelligent insert/update and reloads the properties with fresh data from the table on success.
      *
-     * @param   KDatabaseContextInterface $context
-     * @return KDatabaseRowAbstract
+     * @param   DatabaseContextInterface $context
+     * @return DatabaseRowAbstract
      */
-    protected function _beforeInsert(KDatabaseContextInterface $context)
+    protected function _beforeInsert(DatabaseContextInterface $context)
     {
         if($this->hasProperty('ordering'))
         {
@@ -186,9 +188,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Changes the rows ordering if the virtual order field is set. Order is relative to the row's current position.
      *
-     * @param   KDatabaseContextInterface $context
+     * @param   DatabaseContextInterface $context
      */
-    protected function _beforeUpdate(KDatabaseContextInterface $context)
+    protected function _beforeUpdate(DatabaseContextInterface $context)
     {
         if(isset($this->order) && $this->hasProperty('ordering')) {
             $this->order($this->order);
@@ -198,9 +200,9 @@ class KDatabaseBehaviorOrderable extends KDatabaseBehaviorAbstract
     /**
      * Clean up the ordering after an item was deleted
      *
-     * @param   KDatabaseContextInterface $context
+     * @param   DatabaseContextInterface $context
      */
-    protected function _afterDelete(KDatabaseContextInterface $context)
+    protected function _afterDelete(DatabaseContextInterface $context)
     {
         $this->reorder();
     }

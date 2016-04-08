@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Translator Catalogue
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Catalogue
+ * @package Kodekit\Library\Translator\Catalogue
  */
-abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTranslatorCatalogueInterface
+abstract class TranslatorCatalogueAbstract extends ObjectArray implements TranslatorCatalogueInterface
 {
     /**
      * Get a string from the registry
@@ -31,7 +33,7 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
      *
      * @param  string $string
      * @param  string $translation
-     * @return KTranslatorCatalogueAbstract
+     * @return TranslatorCatalogueAbstract
      */
     public function set($string, $translation)
     {
@@ -54,7 +56,7 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
      * Remove a string from the registry
      *
      * @param  string $string
-     * @return KTranslatorCatalogueAbstract
+     * @return TranslatorCatalogueAbstract
      */
     public function remove($string)
     {
@@ -83,7 +85,7 @@ abstract class KTranslatorCatalogueAbstract extends KObjectArray implements KTra
     /**
      * Clears out all strings from the registry
      *
-     * @return  KTranslatorCatalogueAbstract
+     * @return  TranslatorCatalogueAbstract
      */
     public function clear()
     {

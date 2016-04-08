@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Dispatcher
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher
+ * @package Kodekit\Library\Dispatcher
  */
-class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KObjectMultiton
+class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, ObjectMultiton
 {
     /**
      * List of methods supported by the dispatcher
@@ -25,14 +27,14 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Set the supported methods
-        $this->_methods = KObjectConfig::unbox($config->methods);
+        $this->_methods = ObjectConfig::unbox($config->methods);
     }
 
     /**
@@ -40,10 +42,10 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param 	KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param 	ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
@@ -57,11 +59,11 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     /**
      * Force creation of a singleton
      *
-     * @param  KObjectConfigInterface  $config  Configuration options
-     * @param  KObjectManagerInterface $manager A KObjectManagerInterface object
-     * @return KDispatcherInterface
+     * @param  ObjectConfigInterface  $config  Configuration options
+     * @param  ObjectManagerInterface $manager A ObjectManagerInterface object
+     * @return DispatcherInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)
     {
         //Merge alias configuration into the identifier
         $config->append($manager->getIdentifier('dispatcher')->getConfig());
@@ -79,16 +81,16 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     /**
      * Resolve the request
      *
-     * @param KDispatcherContextInterface $context A dispatcher context object
-     * @throw KDispatcherExceptionMethodNotAllowed If the HTTP request method is not allowed.
+     * @param DispatcherContextInterface $context A dispatcher context object
+     * @throw DispatcherExceptionMethodNotAllowed If the HTTP request method is not allowed.
      */
-    protected function _resolveRequest(KDispatcherContextInterface $context)
+    protected function _resolveRequest(DispatcherContextInterface $context)
     {
         //Resolve the controller action
         $method = strtolower($context->request->getMethod());
 
         if (!in_array($method, $this->getHttpMethods())) {
-            throw new KDispatcherExceptionMethodNotAllowed('Method '.strtoupper($method).' not allowed');
+            throw new DispatcherExceptionMethodNotAllowed('Method '.strtoupper($method).' not allowed');
         }
 
         $this->setControllerAction($method);
@@ -102,20 +104,20 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
      * the request and passing along the context.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context	A dispatcher context object
      * @return	mixed
      */
-	protected function _actionDispatch(KDispatcherContextInterface $context)
+	protected function _actionDispatch(DispatcherContextInterface $context)
 	{
         $controller = $this->getController();
 
-        if(!$controller instanceof KControllerViewable && !$controller instanceof KControllerModellable)
+        if(!$controller instanceof ControllerViewable && !$controller instanceof ControllerModellable)
         {
             $action = strtolower($context->request->query->get('_action', 'alpha'));
 
             //Throw exception if no action could be determined from the request
             if(!$action) {
-                throw new KControllerExceptionRequestInvalid('Action not found');
+                throw new ControllerExceptionRequestInvalid('Action not found');
             }
 
             $controller->execute($action, $context);
@@ -131,17 +133,17 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      *
      * This function translates a GET request into a render action.
      *
-     * @param KDispatcherContextInterface $context  A dispatcher context object
-     * @return KModelEntityInterface
+     * @param DispatcherContextInterface $context  A dispatcher context object
+     * @return ModelEntityInterface
      */
-    protected function _actionGet(KDispatcherContextInterface $context)
+    protected function _actionGet(DispatcherContextInterface $context)
     {
         $controller = $this->getController();
 
-        if($controller instanceof KControllerViewable) {
-            $result = $this->getController()->execute('render', $context);
+        if($controller instanceof ControllerViewable) {
+            $result = $controller->execute('render', $context);
         } else {
-            throw new KDispatcherExceptionMethodNotAllowed('Method GET not allowed');
+            throw new DispatcherExceptionMethodNotAllowed('Method GET not allowed');
         }
 
         return $result;
@@ -150,17 +152,17 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     /**
      * Head method
      *
-     * @param KDispatcherContextInterface $context  A dispatcher context object
-     * @return KModelEntityInterface
+     * @param DispatcherContextInterface $context  A dispatcher context object
+     * @return ModelEntityInterface
      */
-    protected function _actionHead(KDispatcherContextInterface $context)
+    protected function _actionHead(DispatcherContextInterface $context)
     {
         $controller = $this->getController();
 
-        if($controller instanceof KControllerViewable) {
+        if($controller instanceof ControllerViewable) {
             $result =  $this->execute('get', $context);
         } else {
-            throw new KDispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
+            throw new DispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
         }
 
         return $result;
@@ -175,19 +177,19 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      * If an _action parameter exists in the request data it will be used instead. If no action can be found an bad
      * request exception will be thrown.
      *
-     * @param   KDispatcherContextInterface $context  A dispatcher context object
-     * @throws  KDispatcherExceptionMethodNotAllowed  The action specified in the request is not allowed for the
+     * @param   DispatcherContextInterface $context  A dispatcher context object
+     * @throws  DispatcherExceptionMethodNotAllowed  The action specified in the request is not allowed for the
      *          entity identified by the Request-URI. The response MUST include an Allow header containing a list of
      *          valid actions for the requested entity.
-     * @throws  KControllerExceptionRequestInvalid    The action could not be found based on the info in the request.
-     * @return  KModelEntityInterface
+     * @throws  ControllerExceptionRequestInvalid    The action could not be found based on the info in the request.
+     * @return  ModelEntityInterface
      */
-    protected function _actionPost(KDispatcherContextInterface $context)
+    protected function _actionPost(DispatcherContextInterface $context)
     {
         $action     = null;
         $controller = $this->getController();
 
-        if($controller instanceof KControllerModellable)
+        if($controller instanceof ControllerModellable)
         {
             //Get the action from the request data
             if($context->request->data->has('_action'))
@@ -195,25 +197,25 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
                 $action = strtolower($context->request->data->get('_action', 'alnum'));
 
                 if(in_array($action, array('browse', 'read', 'render'))) {
-                    throw new KDispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
+                    throw new DispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
                 }
             }
             else
             {
                 //Determine the action based on the model state
-                if($controller instanceof KControllerModellable) {
+                if($controller instanceof ControllerModellable) {
                     $action = $controller->getModel()->getState()->isUnique() ? 'edit' : 'add';
                 }
             }
 
             //Throw exception if no action could be determined from the request
             if(!$action) {
-                throw new KControllerExceptionRequestInvalid('Action not found');
+                throw new ControllerExceptionRequestInvalid('Action not found');
             }
 
             $result = $controller->execute($action, $context);
         }
-        else throw new KDispatcherExceptionMethodNotAllowed('Method POST not allowed');
+        else throw new DispatcherExceptionMethodNotAllowed('Method POST not allowed');
 
         return $result;
     }
@@ -227,16 +229,16 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      *
      * If the entity already exists it will be completely replaced based on the data available in the request.
      *
-     * @param   KDispatcherContextInterface $context    A dispatcher context object
-     * @throws  KControllerExceptionRequestInvalid  If the model state is not unique
-     * @return  KModelEntityInterface
+     * @param   DispatcherContextInterface $context    A dispatcher context object
+     * @throws  ControllerExceptionRequestInvalid  If the model state is not unique
+     * @return  ModelEntityInterface
      */
-    protected function _actionPut(KDispatcherContextInterface $context)
+    protected function _actionPut(DispatcherContextInterface $context)
     {
         $action     = null;
         $controller = $this->getController();
 
-        if($controller instanceof KControllerModellable)
+        if($controller instanceof ControllerModellable)
         {
             if($controller->getModel()->getState()->isUnique())
             {
@@ -254,16 +256,16 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
                 $state = $controller->getModel()->getState()->getValues(true);
                 $entity->setProperties($state);
             }
-            else throw new KControllerExceptionRequestInvalid('Resource not found');
+            else throw new ControllerExceptionRequestInvalid('Resource not found');
 
             //Throw exception if no action could be determined from the request
             if(!$action) {
-                throw new KControllerExceptionRequestInvalid('Resource not found');
+                throw new ControllerExceptionRequestInvalid('Resource not found');
             }
 
             $result = $controller->execute($action, $context);
         }
-        else throw new KDispatcherExceptionMethodNotAllowed('Method PUT not allowed');
+        else throw new DispatcherExceptionMethodNotAllowed('Method PUT not allowed');
 
         return $result;
     }
@@ -273,18 +275,18 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      *
      * This function translates a DELETE request into a delete action.
      *
-     * @param   KDispatcherContextInterface $context A dispatcher context object
-     * @throws  KDispatcherExceptionMethodNotAllowed
-     * @return  KModelEntityInterface
+     * @param   DispatcherContextInterface $context A dispatcher context object
+     * @throws  DispatcherExceptionMethodNotAllowed
+     * @return  ModelEntityInterface
      */
-    protected function _actionDelete(KDispatcherContextInterface $context)
+    protected function _actionDelete(DispatcherContextInterface $context)
     {
         $controller = $this->getController();
 
-        if($controller instanceof KControllerModellable) {
+        if($controller instanceof ControllerModellable) {
             $result = $controller->execute('delete', $context);
         } else {
-            throw new KDispatcherExceptionMethodNotAllowed('Method DELETE not allowed');
+            throw new DispatcherExceptionMethodNotAllowed('Method DELETE not allowed');
         }
 
         return $result;
@@ -293,16 +295,16 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
     /**
      * Options method
      *
-     * @param   KDispatcherContextInterface $context    A dispatcher context object
+     * @param   DispatcherContextInterface $context    A dispatcher context object
      * @return  string  The allowed actions; e.g., `GET, POST [add, edit, cancel, save], PUT, DELETE`
      */
-    protected function _actionOptions(KDispatcherContextInterface $context)
+    protected function _actionOptions(DispatcherContextInterface $context)
     {
         $agent   = $context->request->getAgent();
         $pattern = '#(?:Microsoft Office (?:Protocol|Core|Existence)|Microsoft-WebDAV)#i';
 
         if (preg_match($pattern, $agent)) {
-            throw new KDispatcherExceptionMethodNotAllowed('Method not allowed');
+            throw new DispatcherExceptionMethodNotAllowed('Method not allowed');
         }
 
         $methods = array();
@@ -356,7 +358,7 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
      *
      * {@inheritdoc}
      */
-    protected function _actionSend(KDispatcherContextInterface $context)
+    protected function _actionSend(DispatcherContextInterface $context)
     {
         $request  = $this->getRequest();
         $response = $this->getResponse();
@@ -366,14 +368,14 @@ class KDispatcher extends KDispatcherAbstract implements KObjectInstantiable, KO
             if ($response->isSuccess())
             {
                 //Render the controller and set the result in the response body
-                if($response->getStatusCode() !== KHttpResponse::NO_CONTENT) {
+                if($response->getStatusCode() !== HttpResponse::NO_CONTENT) {
                     $context->result = $this->getController()->execute('render', $context);
                 }
             }
             else
             {
                 //Add an Allow header to the response
-                if($response->getStatusCode() === KHttpResponse::METHOD_NOT_ALLOWED)
+                if($response->getStatusCode() === HttpResponse::METHOD_NOT_ALLOWED)
                 {
                     try {
                         $this->_actionOptions($context);

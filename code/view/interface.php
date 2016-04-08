@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * View Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-interface KViewInterface
+interface ViewInterface
 {
     /**
      * Execute an action by triggering a method in the derived class.
@@ -28,7 +30,7 @@ interface KViewInterface
      *
      * @param   string  $property The property name.
      * @param   mixed   $value    The property value.
-     * @return  KViewAbstract
+     * @return  ViewAbstract
      */
     public function set($property, $value);
 
@@ -60,7 +62,7 @@ interface KViewInterface
      * Sets the view data
      *
      * @param   array $data The view data
-     * @return  KViewInterface
+     * @return  ViewInterface
      */
     public function setData($data);
 
@@ -104,41 +106,41 @@ interface KViewInterface
      * Get the content
      *
      * @param  string $content The content of the view
-     * @return KViewInterface
+     * @return ViewInterface
      */
     public function setContent($content);
 
     /**
      * Get the model object attached to the controller
      *
-     * @return	KModelInterface
+     * @return	ModelInterface
      */
     public function getModel();
 
     /**
      * Method to set a model object attached to the view
      *
-     * @param   mixed   $model An object that implements KObjectInterface, KObjectIdentifier object
+     * @param   mixed   $model An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @throws	UnexpectedValueException	If the identifier is not a table identifier
-     * @return	KViewInterface
+     * @throws	\UnexpectedValueException	If the identifier is not a table identifier
+     * @return	ViewInterface
      */
     public function setModel($model);
 
     /**
      * Get the view url
      *
-     * @return  KHttpUrl  A HttpUrl object
+     * @return  HttpUrl  A HttpUrl object
      */
     public function getUrl();
 
     /**
      * Set the view url
      *
-     * @param KHttpUrl $url   A KHttpUrl object or a string
-     * @return  KViewAbstract
+     * @param HttpUrl $url   A HttpUrl object or a string
+     * @return  ViewAbstract
      */
-    public function setUrl(KHttpUrl $url);
+    public function setUrl(HttpUrl $url);
 
     /**
      * Get a route based on a full or partial query string
@@ -153,14 +155,14 @@ interface KViewInterface
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  KDispatcherRouterRoute The route
+     * @return  DispatcherRouterRoute The route
      */
     public function getRoute($route, $fqr = true, $escape = true);
 
     /**
      * Get the view context
      *
-     * @return  KViewContext
+     * @return  ViewContext
      */
     public function getContext();
 

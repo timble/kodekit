@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Event
@@ -13,9 +15,9 @@
  * You can call the method stopPropagation() to abort the execution of further listeners in your event listener.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Kodekit\Library\Event
  */
-class KEvent extends KObjectConfig implements KEventInterface
+class Event extends ObjectConfig implements EventInterface
 {
     /**
      * The propagation state of the event
@@ -34,7 +36,7 @@ class KEvent extends KObjectConfig implements KEventInterface
     /**
      * Target of the event
      *
-     * @var KObjectInterface
+     * @var ObjectInterface
      */
     protected $_target;
 
@@ -42,8 +44,8 @@ class KEvent extends KObjectConfig implements KEventInterface
      * Constructor.
      *
      * @param  string              $name       The event name
-     * @param  array|Traversable   $attributes An associative array or a Traversable object instance
-     * @param  KObjectInterface    $target     The event target
+     * @param  array|\Traversable   $attributes An associative array or a Traversable object instance
+     * @param  ObjectInterface    $target     The event target
      */
     public function __construct($name = '', $attributes = array(), $target = null)
     {
@@ -52,6 +54,17 @@ class KEvent extends KObjectConfig implements KEventInterface
         $this->setName($name);
         $this->setTarget($target);
         $this->setAttributes($attributes);
+    }
+
+    /**
+     * Get a new instance
+     *
+     * @return ObjectConfig
+     */
+    final static public function getInstance()
+    {
+        $instance = new ObjectConfig(array());
+        return $instance;
     }
 
     /**
@@ -68,7 +81,7 @@ class KEvent extends KObjectConfig implements KEventInterface
      * Set the event name
      *
      * @param string $name  The event name
-     * @return KEvent
+     * @return Event
      */
     public function setName($name)
     {
@@ -90,7 +103,7 @@ class KEvent extends KObjectConfig implements KEventInterface
      * Set the event target
      *
      * @param mixed $target The event target
-     * @return KEvent
+     * @return Event
      */
     public function setTarget($target)
     {
@@ -103,15 +116,15 @@ class KEvent extends KObjectConfig implements KEventInterface
      *
      * Overwrites existing attributes
      *
-     * @param  array|Traversable $attributes
-     * @throws InvalidArgumentException If the attributes are not an array or are not traversable.
-     * @return KEvent
+     * @param  array|\Traversable $attributes
+     * @throws \InvalidArgumentException If the attributes are not an array or are not traversable.
+     * @return Event
      */
     public function setAttributes($attributes)
     {
-        if (!is_array($attributes) && !$attributes instanceof Traversable)
+        if (!is_array($attributes) && !$attributes instanceof \Traversable)
         {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Event attributes must be an array or an object implementing the Traversable interface; received "%s"', gettype($attributes)
             ));
         }
@@ -153,7 +166,7 @@ class KEvent extends KObjectConfig implements KEventInterface
      *
      * @param  string $name The attribute
      * @param  mixed $value
-     * @return KEvent
+     * @return Event
      */
     public function setAttribute($name, $value)
     {
@@ -177,23 +190,12 @@ class KEvent extends KObjectConfig implements KEventInterface
      * If multiple event listeners are connected to the same event, no further event listener will be triggered once
      * any trigger calls stopPropagation().
      *
-     * @return KEvent
+     * @return Event
      */
     public function stopPropagation()
     {
         $this->_propagate = false;
         return $this;
-    }
-
-    /**
-     * Get a new instance
-     *
-     * @return KObjectConfig
-     */
-    final public function getInstance()
-    {
-        $instance = new KObjectConfig(array());
-        return $instance;
     }
 
     /**
@@ -225,7 +227,7 @@ class KEvent extends KObjectConfig implements KEventInterface
      *
      * @param  string $name
      * @param  mixed  $value
-     * @return KEvent
+     * @return Event
      */
     final public function set($name, $value)
     {

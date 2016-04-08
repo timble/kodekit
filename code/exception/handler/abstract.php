@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Exception Handler
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Exception\Handler
+ * @package Kodekit\Library\Exception\Handler
  */
-class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInterface
+class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterface
 {
     /**
      * The exception callbacks
@@ -65,9 +67,9 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -98,10 +100,10 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'exception_callbacks' => array(),
@@ -117,7 +119,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      * Enable exception handling
      *
      * @param integer $type The type of exceptions to enable
-     * @return KExceptionHandler
+     * @return ExceptionHandler
      */
     public function enable($type = self::TYPE_ALL)
     {
@@ -146,7 +148,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      * Disable exception handling
      *
      * @param integer $type The type of exceptions to disable
-     * @return KExceptionHandler
+     * @return ExceptionHandler
      */
     public function disable($type = self::TYPE_ALL)
     {
@@ -177,7 +179,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      * @param  callable $callback
      * @param  bool $prepend If true, the callback will be prepended instead of appended.
      * @throws \InvalidArgumentException If the callback is not a callable
-     * @return KExceptionHandlerAbstract
+     * @return ExceptionHandlerAbstract
      */
     public function addExceptionCallback($callback, $prepend = false )
     {
@@ -202,7 +204,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
      *
      * @param  callable $callback
      * @throws \InvalidArgumentException If the callback is not a callable
-     * @return KExceptionHandlerAbstract
+     * @return ExceptionHandlerAbstract
      */
     public function removeExceptionCallback($callback)
     {
@@ -233,7 +235,7 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
     /**
      * Get the handled exception stack
      *
-     * @return  KObjectStack   An object stack containing the handled exceptions
+     * @return  ObjectStack   An object stack containing the handled exceptions
      */
     public function getExceptions()
     {
@@ -367,8 +369,8 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
             {
                 if ($this->getErrorReporting() & $level)
                 {
-                    $exception = new KExceptionError(
-                        $message, KHttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line
+                    $exception = new ExceptionError(
+                        $message, HttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line
                     );
 
                     $result = $this->handleException($exception);
@@ -402,8 +404,8 @@ class KExceptionHandlerAbstract extends KObject implements KExceptionHandlerInte
 
                 if ($this->getErrorReporting() & $level)
                 {
-                    $exception = new KExceptionFailure(
-                        $error['message'], KHttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']
+                    $exception = new ExceptionFailure(
+                        $error['message'], HttpResponse::INTERNAL_SERVER_ERROR, $level, $error['file'], $error['line']
                     );
 
                     $this->handleException($exception);

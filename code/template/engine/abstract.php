@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Template Engine
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Engine
+ * @package Kodekit\Library\Template\Engine
  */
-abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTemplateEngineInterface
+abstract class TemplateEngineAbstract extends TemplateAbstract implements TemplateEngineInterface
 {
     /**
      * The engine file types
@@ -25,7 +27,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     /**
      * Template object
      *
-     * @var	KTemplateInterface
+     * @var	TemplateInterface
      */
     private $__template;
 
@@ -62,9 +64,9 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     /**
      * Constructor
      *
-     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -87,13 +89,13 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'debug'        => Koowa::getInstance()->isDebug(),
-            'cache'        => Koowa::getInstance()->isCache(),
+            'debug'        => \Kodekit::getInstance()->isDebug(),
+            'cache'        => \Kodekit::getInstance()->isCache(),
             'cache_path'   => '',
             'cache_reload' => true,
             'template'     => 'default',
@@ -131,7 +133,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             if(!is_dir($path) && (false === @mkdir($path, 0777, true) && !is_dir($path)))
             {
                 if($this->isDebug()) {
-                    throw new RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
+                    throw new \RuntimeException(sprintf('The template cache path "%s" does not exist', $path));
                 } else {
                     return false;
                 }
@@ -140,7 +142,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             if(!is_writable($path))
             {
                 if($this->isDebug()) {
-                    throw new RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
+                    throw new \RuntimeException(sprintf('The template cache path "%s" is not writable', $path));
                 } else {
                     return false;
                 }
@@ -152,7 +154,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
             if(@file_put_contents($file, $source) === false)
             {
                 if($this->isDebug()) {
-                    throw new RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
+                    throw new \RuntimeException(sprintf('The template cannot be cached in "%s"', $file));
                 } else {
                     return false;
                 }
@@ -180,11 +182,11 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
     /**
      * Gets the template object
      *
-     * @return  KTemplateInterface	The template object
+     * @return  TemplateInterface	The template object
      */
     public function getTemplate()
     {
-        if(!$this->__template instanceof KTemplateInterface)
+        if(!$this->__template instanceof TemplateInterface)
         {
             if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
             {
@@ -196,7 +198,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
 
             $this->__template = $this->getObject($identifier);
 
-            if(!$this->__template instanceof KTemplateInterface)
+            if(!$this->__template instanceof TemplateInterface)
             {
                 throw new \UnexpectedValueException(
                     'Template: '.get_class($this->__template).' does not implement TemplateInterface'
@@ -211,7 +213,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
      * Enable or disable debug
      *
      * @param bool $debug True or false.
-     * @return KTemplateEngineAbstract
+     * @return TemplateEngineAbstract
      */
     public function setDebug($debug)
     {
@@ -268,7 +270,7 @@ abstract class KTemplateEngineAbstract extends KTemplateAbstract implements KTem
         if($this->isDebug())
         {
             $template = end($this->_stack);
-            $path     = str_replace(rtrim(Koowa::getInstance()->getRootPath(), '/').'/', '', $template['file']);
+            $path     = str_replace(rtrim(\Kodekit::getInstance()->getRootPath(), '/').'/', '', $template['file']);
             $type     = $this->getIdentifier()->getName();
 
             $format  = PHP_EOL.'<!--BEGIN '.$type.':render '.$path.' -->'.PHP_EOL;

@@ -1,34 +1,36 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract User
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Kodekit\Library\User
  */
-abstract class KUserAbstract extends KObject implements KUserInterface
+abstract class UserAbstract extends Object implements UserInterface
 {
     /**
      * The user properties
      *
-     * @var KObjectConfig
+     * @var ObjectConfig
      */
     private $__properties;
 
     /**
      * Constructor
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options.
-     * @return KUserAbstract
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @return UserAbstract
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -41,10 +43,10 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'properties' => array(
@@ -71,18 +73,18 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      * Set the user properties from an array
      *
      * @param  array $data An associative array of data
-     * @return KUserAbstract
+     * @return UserAbstract
      */
     public function setProperties($properties)
     {
-        $this->__properties = new KObjectConfigJson($properties);
+        $this->__properties = new ObjectConfigJson($properties);
         return $this;
     }
 
     /**
      * Get the user properties
      *
-     * @return KObjectConfigJson
+     * @return ObjectConfigJson
      */
     public function getProperties()
     {
@@ -150,7 +152,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getRoles()
     {
-        return KObjectConfig::unbox($this->getProperties()->roles);
+        return (array) ObjectConfig::unbox($this->getProperties()->roles);
     }
 
     /**
@@ -162,7 +164,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     public function hasRole($role)
     {
         $roles = (array) $role;
-        return (bool) array_intersect($this->getRoles(), $roles);
+        return (bool) array_intersect((array) $this->getRoles(), $roles);
     }
 
     /**
@@ -172,7 +174,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getGroups()
     {
-        return KObjectConfig::unbox($this->getProperties()->groups);
+        return ObjectConfig::unbox($this->getProperties()->groups);
     }
 
     /**
@@ -218,7 +220,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function getParameters()
     {
-        return KObjectConfig::unbox($this->getProperties()->parameters);
+        return ObjectConfig::unbox($this->getProperties()->parameters);
     }
 
     /**
@@ -282,7 +284,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      *
      * @param   mixed   $name    Parameter name
      * @param   mixed   $value   Parameter value
-     * @return KUserAbstract
+     * @return UserAbstract
      */
     public function set($name, $value)
     {
@@ -305,7 +307,7 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      * Removes an user parameter
      *
      * @param   mixed   $name    Parameter name
-     * @return KUserAbstract
+     * @return UserAbstract
      */
     public function remove($name)
     {
@@ -316,12 +318,12 @@ abstract class KUserAbstract extends KObject implements KUserInterface
     /**
      * Check if the user is equal
      *
-     * @param  KUserInterface $user
+     * @param  UserInterface $user
      * @return Boolean
      */
-    public function equals(KObjectInterface $user)
+    public function equals(ObjectInterface $user)
     {
-        if($user instanceof KUserInterface)
+        if($user instanceof UserInterface)
         {
             if($user->getEmail() == $this->getEmail())
             {
@@ -341,6 +343,6 @@ abstract class KUserAbstract extends KObject implements KUserInterface
      */
     public function toArray()
     {
-        return KObjectConfig::unbox($this->getProperties());
+        return ObjectConfig::unbox($this->getProperties());
     }
 }

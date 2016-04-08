@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Event Publisher
@@ -13,9 +15,9 @@
  * Implementation provides a topic based event publishing mechanism. Higher priority event listeners are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event\Publisher
+ * @package Kodekit\Library\Event\Publisher
  */
-abstract class KEventPublisherAbstract extends KObject implements KEventPublisherInterface
+abstract class EventPublisherAbstract extends Object implements EventPublisherInterface
 {
     /**
      * List of event listeners
@@ -34,9 +36,9 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -50,10 +52,10 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'enabled' => true,
@@ -65,7 +67,7 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Enable the publisher
      *
-     * @return  KEventPublisherAbstract
+     * @return  EventPublisherAbstract
      */
     public function enable()
     {
@@ -76,7 +78,7 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Disable the publisher
      *
-     * @return  KEventPublisherAbstract
+     * @return  EventPublisherAbstract
      */
     public function disable()
     {
@@ -87,35 +89,35 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * @param  string|KEventInterface             $event      The event name or a KEventInterface object
-     * @param  array|Traversable|KEventInterface  $attributes An associative array, an object implementing the
-     *                                                        KEventInterface or a Traversable object
+     * @param  string|EventInterface             $event      The event name or a EventInterface object
+     * @param  array|Traversable|EventInterface  $attributes An associative array, an object implementing the
+     *                                                        EventInterface or a Traversable object
      * @param  mixed                              $target     The event target
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return null|KEventInterface Returns the event object. If the chain is not enabled will return NULL.
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return null|EventInterface Returns the event object. If the chain is not enabled will return NULL.
      */
     public function publishEvent($event, $attributes = array(), $target = null)
     {
         if ($this->isEnabled())
         {
-            if(!is_string($event) && !$event instanceof KEventInterface)
+            if(!is_string($event) && !$event instanceof EventInterface)
             {
-                throw new InvalidArgumentException(
-                    'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
+                throw new \InvalidArgumentException(
+                    'The event must be a string or implement the EventInterface, "'.gettype($event).'" given.'
                 );
             }
 
             //Make sure we have an event object
-            if (!$event instanceof KEventInterface)
+            if (!$event instanceof EventInterface)
             {
-                if($attributes instanceof KEventInterface)
+                if($attributes instanceof EventInterface)
                 {
                     $name  = $event;
                     $event = $attributes;
 
                     $event->setName($name);
                 }
-                else $event = new KEvent($event, $attributes, $target);
+                else $event = new Event($event, $attributes, $target);
             }
 
             //Notify the listeners
@@ -139,31 +141,31 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Add an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
      * @param integer                 $priority  The event priority, usually between 1 (high priority) and 5 (lowest),
      *                                            default is 3 (normal)
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherAbstract
      */
-    public function addListener($event, $listener, $priority = KEvent::PRIORITY_NORMAL)
+    public function addListener($event, $listener, $priority = Event::PRIORITY_NORMAL)
     {
         if (!is_callable($listener))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The listener must be a callable, "'.gettype($listener).'" given.'
             );
         }
 
-        if (!is_string($event) && !$event instanceof KEventInterface)
+        if (!is_string($event) && !$event instanceof EventInterface)
         {
-            throw new InvalidArgumentException(
-                'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
+            throw new \InvalidArgumentException(
+                'The event must be a string or implement the EventInterface, "'.gettype($event).'" given.'
             );
         }
 
-        if($event instanceof KEventInterface) {
+        if($event instanceof EventInterface) {
             $event = $event->getName();
         }
 
@@ -176,29 +178,29 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Remove an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherAbstract
      */
     public function removeListener($event, $listener)
     {
         if (!is_callable($listener))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The listener must be a callable, "'.gettype($listener).'" given.'
             );
         }
 
-        if (!is_string($event) && !$event instanceof KEventInterface)
+        if (!is_string($event) && !$event instanceof EventInterface)
         {
-            throw new InvalidArgumentException(
-                'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
+            throw new \InvalidArgumentException(
+                'The event must be a string or implement the EventInterface, "'.gettype($event).'" given.'
             );
         }
 
-        if($event instanceof KEventInterface) {
+        if($event instanceof EventInterface) {
             $event = $event->getName();
         }
 
@@ -218,22 +220,22 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Get a list of listeners for a specific event
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
+     * @param string|EventInterface  $event     The event name or a EventInterface object
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
      * @return array An array containing the listeners ordered by priority
      */
     public function getListeners($event)
     {
         $result = array();
 
-        if (!is_string($event) && !$event instanceof KEventInterface)
+        if (!is_string($event) && !$event instanceof EventInterface)
         {
-            throw new InvalidArgumentException(
-                'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
+            throw new \InvalidArgumentException(
+                'The event must be a string or implement the EventInterface, "'.gettype($event).'" given.'
             );
         }
 
-        if($event instanceof KEventInterface) {
+        if($event instanceof EventInterface) {
             $event = $event->getName();
         }
 
@@ -250,30 +252,30 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Set the priority of an event
      *
-     * @param  string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param  string|EventInterface  $event     The event name or a EventInterface object
      * @param  callable                $listener  The listener
      * @param  integer                 $priority  The event priority
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException If the event is not a string or does not implement the KEventInterface
-     * @return KEventPublisherAbstract
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException If the event is not a string or does not implement the EventInterface
+     * @return EventPublisherAbstract
      */
     public function setListenerPriority($event, $listener, $priority)
     {
         if (!is_callable($listener))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The listener must be a callable, "'.gettype($listener).'" given.'
             );
         }
 
-        if (!is_string($event) && !$event instanceof KEventInterface)
+        if (!is_string($event) && !$event instanceof EventInterface)
         {
-            throw new InvalidArgumentException(
-                'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
+            throw new \InvalidArgumentException(
+                'The event must be a string or implement the EventInterface, "'.gettype($event).'" given.'
             );
         }
 
-        if($event instanceof KEventInterface) {
+        if($event instanceof EventInterface) {
             $event = $event->getName();
         }
 
@@ -292,10 +294,10 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Get the priority of an event
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
      * @return integer|false The event priority or FALSE if the event isn't listened for.
      */
     public function getListenerPriority($event, $listener)
@@ -304,19 +306,19 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
 
         if (!is_callable($listener))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The listener must be a callable, "'.gettype($listener).'" given.'
             );
         }
 
-        if (!is_string($event) && !$event instanceof KEventInterface)
+        if (!is_string($event) && !$event instanceof EventInterface)
         {
-            throw new InvalidArgumentException(
-                'The event must be a string or implement the KEventInterface, "'.gettype($event).'" given.'
+            throw new \InvalidArgumentException(
+                'The event must be a string or implement the EventInterface, "'.gettype($event).'" given.'
             );
         }
 
-        if($event instanceof KEventInterface) {
+        if($event instanceof EventInterface) {
             $event = $event->getName();
         }
 
@@ -335,7 +337,7 @@ abstract class KEventPublisherAbstract extends KObject implements KEventPublishe
     /**
      * Enable the profiler
      *
-     * @return  KEventPublisherAbstract
+     * @return  EventPublisherAbstract
      */
     public function setEnabled($enabled)
     {

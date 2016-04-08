@@ -1,34 +1,36 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Database Table Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Table
+ * @package Kodekit\Library\Database\Table
  */
-interface KDatabaseTableInterface
+interface DatabaseTableInterface
 {
     /**
      * Gets the database driver
      *
-     * @return KDatabaseDriverInterface
+     * @return DatabaseDriverInterface
      */
     public function getDriver();
 
     /**
      * Set the database driver
      *
-     * @param  KDatabaseDriverInterface $driver A DatabaseDriverInterface object
-     * @return KDatabaseQueryInterface
+     * @param  DatabaseDriverInterface $driver A DatabaseDriverInterface object
+     * @return DatabaseQueryInterface
      */
-    public function setDriver(KDatabaseDriverInterface $driver);
+    public function setDriver(DatabaseDriverInterface $driver);
 
     /**
      * Test the connected status of the table
@@ -64,14 +66,14 @@ interface KDatabaseTableInterface
     /**
      * Gets the schema of the table
      *
-     * @return  object|null Returns a KDatabaseSchemaTable object or NULL if the table doesn't exists
+     * @return  object|null Returns a DatabaseSchemaTable object or NULL if the table doesn't exists
      */
     public function getSchema();
 
     /**
      * Get the table context
      *
-     * @return  KCommand
+     * @return  Command
      */
     public function getContext();
 
@@ -89,7 +91,7 @@ interface KDatabaseTableInterface
      *
      * @param  string  $name The name of the column
      * @param  boolean $base If TRUE, get the column information from the base table. Default is FALSE.
-     * @return KDatabaseSchemaColumn  Returns a KDatabaseSchemaColumn object or NULL if the column does not exist
+     * @return DatabaseSchemaColumn  Returns a DatabaseSchemaColumn object or NULL if the column does not exist
      */
     public function getColumn($name, $base = false);
 
@@ -97,7 +99,7 @@ interface KDatabaseTableInterface
      * Gets the columns for the table
      *
      * @param   boolean  $base If TRUE, get the column information from the base table.
-     * @return  array    Associative array of KDatabaseSchemaColumn objects
+     * @return  array    Associative array of DatabaseSchemaColumn objects
      */
     public function getColumns($base = false);
 
@@ -124,7 +126,7 @@ interface KDatabaseTableInterface
      *
      * @param string $column The name of the identity column
      * @throws \DomainException If the column is not unique
-     * @return KDatabaseTableAbstract
+     * @return DatabaseTableAbstract
      */
     public function setIdentityColumn($column);
 
@@ -155,7 +157,7 @@ interface KDatabaseTableInterface
      *
      * @param string   $column The name of the column
      * @param string   $value The value for the column
-     * @return KDatabaseTableAbstract
+     * @return DatabaseTableAbstract
      */
     public function setDefault($column, $value);
 
@@ -163,7 +165,7 @@ interface KDatabaseTableInterface
      * Get an instance of a row object for this table
      *
      * @param    array $options An optional associative array of configuration settings.
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function createRow(array $options = array());
 
@@ -171,7 +173,7 @@ interface KDatabaseTableInterface
      * Get an instance of a rowset object for this table
      *
      * @param    array $options An optional associative array of configuration settings.
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function createRowset(array $options = array());
 
@@ -180,17 +182,17 @@ interface KDatabaseTableInterface
      *
      * This function will return an empty rowset if called without a parameter.
      *
-     * @param mixed    $query KDatabaseQuery, query string, array of row id's, or an id or null
+     * @param mixed    $query DatabaseQuery, query string, array of row id's, or an id or null
      * @param integer  $mode  The database fetch style.
      * @param array    $options An optional associative array of configuration options.
-     * @return  KDatabaseRowInterface or KDatabaseRowsetInterface depending on the mode.
+     * @return  DatabaseRowInterface or DatabaseRowsetInterface depending on the mode.
      */
-    public function select($query = null, $mode = KDatabase::FETCH_ROWSET, array $options = array());
+    public function select($query = null, $mode = Database::FETCH_ROWSET, array $options = array());
 
     /**
      * Count table rows
      *
-     * @param   mixed   $query KDatabaseQuery object or query string or null to count all rows
+     * @param   mixed   $query DatabaseQuery object or query string or null to count all rows
      * @return  int     Number of rows
      */
     public function count($query = null);
@@ -198,26 +200,26 @@ interface KDatabaseTableInterface
     /**
      * Table insert method
      *
-     * @param  KDatabaseRowInterface $row A KDatabaseRow object
+     * @param  DatabaseRowInterface $row A DatabaseRow object
      * @return bool|integer Returns the number of rows inserted, or FALSE if insert query was not executed.
      */
-    public function insert(KDatabaseRowInterface $row);
+    public function insert(DatabaseRowInterface $row);
 
     /**
      * Table update method
      *
-     * @param  KDatabaseRowInterface $row  A KDatabaseRowInterface object
+     * @param  DatabaseRowInterface $row  A DatabaseRowInterface object
      * @return boolean|integer  Returns the number of rows updated, or FALSE if insert query was not executed.
      */
-    public function update(KDatabaseRowInterface $row);
+    public function update(DatabaseRowInterface $row);
 
     /**
      * Table delete method
      *
-     * @param  KDatabaseRowInterface $row A KDatabaseRow object
+     * @param  DatabaseRowInterface $row A DatabaseRow object
      * @return bool|integer Returns the number of rows deleted, or FALSE if delete query was not executed.
      */
-    public function delete(KDatabaseRowInterface $row);
+    public function delete(DatabaseRowInterface $row);
 
     /**
      * Lock the table.

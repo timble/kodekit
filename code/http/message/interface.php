@@ -1,32 +1,34 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Message Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Message
+ * @package Kodekit\Library\Http\Message
  */
-interface KHttpMessageInterface
+interface HttpMessageInterface
 {
     /**
      * Set the header parameters
      *
      * @param  array $parameters
-     * @return KHttpMessageInterface
+     * @return HttpMessageInterface
      */
     public function setHeaders($parameters);
 
     /**
      * Get the headers container
      *
-     * @return KHttpMessageHeaders
+     * @return HttpMessageHeaders
      */
     public function getHeaders();
 
@@ -34,7 +36,7 @@ interface KHttpMessageInterface
      * Sets the HTTP protocol version (1.0 or 1.1).
      *
      * @param string $version The HTTP protocol version
-     * @return KHttpMessage
+     * @return HttpMessage
      */
     public function setVersion($version);
 
@@ -52,7 +54,7 @@ interface KHttpMessageInterface
      *
      * @param mixed  $content   The content
      * @param string $type      The content type
-     * @throws UnexpectedValueException If the content is not a string are cannot be casted to a string.
+     * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
      * @return HttpMessage
      */
     public function setContent($content, $type = null);
@@ -68,7 +70,7 @@ interface KHttpMessageInterface
      * Sets the message content type
      *
      * @param string $type Content type
-     * @return KHttpMessage
+     * @return HttpMessage
      */
     public function setContentType($type);
 

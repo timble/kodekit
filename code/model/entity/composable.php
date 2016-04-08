@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Traversable Model Entity Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Entity
+ * @package Kodekit\Library\Model\Entity
  */
-interface KModelEntityComposable extends KModelEntityInterface
+interface ModelEntityComposable extends ModelEntityInterface
 {
     /**
      * Insert a new entity
@@ -22,9 +24,9 @@ interface KModelEntityComposable extends KModelEntityInterface
      * entity being inserted. By default the entity will be cloned. The entity will be stored by it's identity_key
      * if set or otherwise by it's object handle.
      *
-     * @param   KModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
+     * @param   ModelEntityInterface|array $entity  A ModelEntityInterface object or an array of entity properties
      * @param   string  $status     The entity status
-     * @return  KModelEntityComposable
+     * @return  ModelEntityComposable
      */
     public function insert($entity, $status = null);
 
@@ -34,7 +36,7 @@ interface KModelEntityComposable extends KModelEntityInterface
      * This functions accepts either a know position or associative array of property/value pairs
      *
      * @param string $needle The position or the key to search for
-     * @return KModelEntityInterface
+     * @return ModelEntityInterface
      */
     public function find($needle);
 
@@ -43,16 +45,16 @@ interface KModelEntityComposable extends KModelEntityInterface
      *
      * The entity will be removed based on it's identity_key if set or otherwise by it's object handle.
      *
-     * @param  KModelEntityInterface $entity
-     * @return KModelEntityComposite
-     * @throws InvalidArgumentException if the object doesn't implement KModelEntityInterface
+     * @param  ModelEntityInterface $entity
+     * @return ModelEntityComposite
+     * @throws \InvalidArgumentException if the object doesn't implement ModelEntityInterface
      */
     public function remove($entity);
 
     /**
      * Checks if the collection contains a specific entity
      *
-     * @param   KModelEntityInterface $entity
+     * @param   ModelEntityInterface $entity
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
     public function contains($entity);

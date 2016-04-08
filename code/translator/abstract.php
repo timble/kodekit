@@ -1,20 +1,22 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Translator
  *
  * @author  Arunas Mazeika <https://github.com/arunasmazeika>
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator
+ * @package Kodekit\Library\Translator
  */
-abstract class KTranslatorAbstract extends KObject implements KTranslatorInterface, KObjectInstantiable
+abstract class TranslatorAbstract extends Object implements TranslatorInterface, ObjectInstantiable
 {
     /**
      * Language
@@ -33,7 +35,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * The translator catalogue.
      *
-     * @var KTranslatorCatalogueInterface
+     * @var TranslatorCatalogueInterface
      */
     protected $_catalogue;
 
@@ -47,9 +49,9 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config Configuration options
+     * @param ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -65,16 +67,16 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'language'          => locale_get_default(),
             'language_fallback' => 'en-GB',
-            'cache'             =>  Koowa::getInstance()->isCache(),
-            'cache_namespace'   => 'nooku',
+            'cache'             =>  \Kodekit::getInstance()->isCache(),
+            'cache_namespace'   => 'kodekit',
             'catalogue'         => 'default',
         ));
 
@@ -84,11 +86,11 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * Instantiate the translator and decorate with the cache decorator if cache is enabled.
      *
-     * @param   KObjectConfigInterface  $config   A ObjectConfig object with configuration options
-     * @param   KObjectManagerInterface	$manager  A ObjectInterface object
-     * @return  KTranslatorInterface
+     * @param   ObjectConfigInterface  $config   A ObjectConfig object with configuration options
+     * @param   ObjectManagerInterface	$manager  A ObjectInterface object
+     * @return  TranslatorInterface
      */
-    public static function getInstance(KObjectConfigInterface $config, KObjectManagerInterface $manager)
+    public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)
     {
         $class    = $manager->getClass($config->object_identifier);
         $instance = new $class($config);
@@ -146,10 +148,10 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     public function choose(array $strings, $number, array $parameters = array())
     {
         if (count($strings) < 2) {
-            throw new InvalidArgumentException('Choose method requires at least 2 strings to choose from');
+            throw new \InvalidArgumentException('Choose method requires at least 2 strings to choose from');
         }
 
-        $choice = KTranslatorInflector::getPluralPosition($number, $this->getLanguage());
+        $choice = TranslatorInflector::getPluralPosition($number, $this->getLanguage());
 
         if ($choice !== 0)
         {
@@ -236,7 +238,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      * @see $language
      *
      * @param string $language  The language tag
-     * @return KTranslatorAbstract
+     * @return TranslatorAbstract
      */
     public function setLanguage($language)
     {
@@ -283,7 +285,7 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
      * @see $language
      *
      * @param string $language The fallback language tag
-     * @return KTranslatorAbstract
+     * @return TranslatorAbstract
      */
     public function setLanguageFallback($language)
     {
@@ -308,23 +310,23 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * Get a catalogue
      *
-     * @throws	UnexpectedValueException	If the catalogue doesn't implement the TranslatorCatalogueInterface
-     * @return KTranslatorCatalogueInterface The translator catalogue.
+     * @throws	\UnexpectedValueException	If the catalogue doesn't implement the TranslatorCatalogueInterface
+     * @return TranslatorCatalogueInterface The translator catalogue.
      */
     public function getCatalogue()
     {
-        if (!$this->_catalogue instanceof KTranslatorCatalogueInterface)
+        if (!$this->_catalogue instanceof TranslatorCatalogueInterface)
         {
-            if(!($this->_catalogue instanceof KObjectIdentifier)) {
+            if(!($this->_catalogue instanceof ObjectIdentifier)) {
                 $this->setCatalogue($this->_catalogue);
             }
 
             $this->_catalogue = $this->getObject($this->_catalogue);
         }
 
-        if(!$this->_catalogue instanceof KTranslatorCatalogueInterface)
+        if(!$this->_catalogue instanceof TranslatorCatalogueInterface)
         {
-            throw new UnexpectedValueException(
+            throw new \UnexpectedValueException(
                 'Catalogue: '.get_class($this->_catalogue).' does not implement TranslatorCatalogueInterface'
             );
         }
@@ -335,13 +337,13 @@ abstract class KTranslatorAbstract extends KObject implements KTranslatorInterfa
     /**
      * Set a catalogue
      *
-     * @param   mixed   $catalogue An object that implements KObjectInterface, KObjectIdentifier object
+     * @param   mixed   $catalogue An object that implements ObjectInterface, ObjectIdentifier object
      *                             or valid identifier string
-     * @return KTranslatorAbstract
+     * @return TranslatorAbstract
      */
     public function setCatalogue($catalogue)
     {
-        if(!($catalogue instanceof KModelInterface))
+        if(!($catalogue instanceof ModelInterface))
         {
             if(is_string($catalogue) && strpos($catalogue, '.') === false )
             {

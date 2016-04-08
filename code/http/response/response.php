@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Response
@@ -14,9 +16,9 @@
  * @link http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Response
+ * @package Kodekit\Library\Http\Response
  */
-class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
+class HttpResponse extends HttpMessage implements HttpResponseInterface
 {
     /**
      * The response status code
@@ -141,10 +143,10 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig|null $config  An optional ObjectConfig object with configuration options
-     * @return KHttpResponse
+     * @param ObjectConfig|null $config  An optional ObjectConfig object with configuration options
+     * @return HttpResponse
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -153,7 +155,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         $this->setStatus($config->status_code, $config->status_message);
 
         if (!$this->_headers->has('Date')) {
-            $this->setDate(new DateTime(null, new DateTimeZone('UTC')));
+            $this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
         }
     }
 
@@ -162,10 +164,10 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'content'        => '',
@@ -182,7 +184,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      * Set the header parameters
      *
      * @param  array $headers
-     * @return KHttpResponse
+     * @return HttpResponse
      */
     public function setHeaders($headers)
     {
@@ -196,15 +198,15 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      *
      * @param  integer $code
      * @param  string $message
-     * @throws InvalidArgumentException
-     * @return KHttpResponse
+     * @throws \InvalidArgumentException
+     * @return HttpResponse
      */
     public function setStatus($code, $message = null)
     {
         if (!is_numeric($code) || !isset(self::$status_messages[$code]))
         {
             $code = is_scalar($code) ? $code : gettype($code);
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf('Invalid status code provided: "%s"', $code)
             );
         }
@@ -248,7 +250,7 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      * @see http://tools.ietf.org/html/rfc2616#section-14.17
      *
      * @param string $type Content type
-     * @return KHttpResponse
+     * @return HttpResponse
      */
     public function setContentType($type)
     {
@@ -271,24 +273,24 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     }
 
     /**
-     * Returns the Date header as a DateTime instance.
+     * Returns the Date header as a \DateTime instance.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.18
      *
-     * @throws RuntimeException If the Date header could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if no Date header exists
+     * @throws \RuntimeException If the Date header could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if no Date header exists
      */
     public function getDate()
     {
-        $date = new DateTime();
+        $date = new \DateTime();
 
         if ($this->_headers->has('Date'))
         {
             $value = $this->_headers->get('Date');
-            $date  = new DateTime(date(DATE_RFC2822, strtotime($value)));
+            $date  = new \DateTime(date(DATE_RFC2822, strtotime($value)));
 
             if ($date === false) {
-                throw new RuntimeException(sprintf('The Last-Modified HTTP header is not parseable (%s).', $value));
+                throw new \RuntimeException(sprintf('The Last-Modified HTTP header is not parseable (%s).', $value));
             }
         }
 
@@ -300,24 +302,24 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
      *
      * @see http://tools.ietf.org/html/rfc2616#section-14.18
      *
-     * @param  DateTime $date A DateTime instance
-     * @return KHttpResponse
+     * @param  \DateTime $date A \DateTime instance
+     * @return HttpResponse
      */
-    public function setDate(DateTime $date)
+    public function setDate(\DateTime $date)
     {
-        $date->setTimezone(new DateTimeZone('UTC'));
+        $date->setTimezone(new \DateTimeZone('UTC'));
         $this->_headers->set('Date', $date->format('D, d M Y H:i:s').' GMT');
 
         return $this;
     }
 
     /**
-     * Returns the Last-Modified HTTP header as a DateTime instance.
+     * Returns the Last-Modified HTTP header as a \DateTime instance.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.29
      *
-     * @throws RuntimeException If the Last-Modified header could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if no Last-Modified header exists
+     * @throws \RuntimeException If the Last-Modified header could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if no Last-Modified header exists
      */
     public function getLastModified()
     {
@@ -326,10 +328,10 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if ($this->_headers->has('Last-Modified'))
         {
             $value = $this->_headers->get('Last-Modified');
-            $date  = new DateTime(date(DATE_RFC2822, strtotime($value)));
+            $date  = new \DateTime(date(DATE_RFC2822, strtotime($value)));
 
             if ($date === false) {
-                throw new RuntimeException(sprintf('The Last-Modified HTTP header is not parseable (%s).', $value));
+                throw new \RuntimeException(sprintf('The Last-Modified HTTP header is not parseable (%s).', $value));
             }
         }
 
@@ -337,21 +339,21 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     }
 
     /**
-     * Sets the Last-Modified HTTP header with a DateTime instance.
+     * Sets the Last-Modified HTTP header with a \DateTime instance.
      *
      * If passed a null value, it removes the header.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.29
      *
-     * @param  DateTime $date A \DateTime instance
-     * @return KHttpResponse
+     * @param  \DateTime $date A \DateTime instance
+     * @return HttpResponse
      */
-    public function setLastModified(DateTime $date = null)
+    public function setLastModified(\DateTime $date = null)
     {
         if ($date !== null)
         {
             $date = clone $date;
-            $date->setTimezone(new DateTimeZone('UTC'));
+            $date->setTimezone(new \DateTimeZone('UTC'));
             $this->_headers->set('Last-Modified', $date->format('D, d M Y H:i:s').' GMT');
         }
         else $this->_headers->remove('Last-Modified');
@@ -360,12 +362,12 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     }
 
     /**
-     * Returns the value of the Expires header as a DateTime instance.
+     * Returns the value of the Expires header as a \DateTime instance.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.21
      *
-     * @throws RuntimeException If the Expires header could not be parsed
-     * @return DateTime|null A DateTime instance or NULL if no Expires header exists
+     * @throws \RuntimeException If the Expires header could not be parsed
+     * @return \DateTime|null A \DateTime instance or NULL if no Expires header exists
      */
     public function getExpires()
     {
@@ -374,10 +376,10 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
         if ($this->_headers->has('Expires'))
         {
             $value = $this->_headers->get('Expires');
-            $date  = new DateTime(date(DATE_RFC2822, strtotime($value)));
+            $date  = new \DateTime(date(DATE_RFC2822, strtotime($value)));
 
             if ($date === false) {
-                throw new RuntimeException(sprintf('The Expires HTTP header is not parseable (%s).', $value));
+                throw new \RuntimeException(sprintf('The Expires HTTP header is not parseable (%s).', $value));
             }
         }
 
@@ -385,21 +387,21 @@ class KHttpResponse extends KHttpMessage implements KHttpResponseInterface
     }
 
     /**
-     * Sets the Expires HTTP header with a DateTime instance.
+     * Sets the Expires HTTP header with a \DateTime instance.
      *
      * If passed a null value, it removes the header.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.21
      *
-     * @param  DateTime $date A \DateTime instance
+     * @param  \DateTime $date A \DateTime instance
      * @return HttpResponse
      */
-    public function setExpires(DateTime $date = null)
+    public function setExpires(\DateTime $date = null)
     {
         if (null !== $date)
         {
             $date = clone $date;
-            $date->setTimezone(new DateTimeZone('UTC'));
+            $date->setTimezone(new \DateTimeZone('UTC'));
             $this->_headers->set('Expires', $date->format('D, d M Y H:i:s').' GMT');
 
         } else $this->_headers->remove('Expires');

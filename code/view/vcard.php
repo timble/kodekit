@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Vcard View
@@ -13,11 +15,11 @@
  * Complies to version 2.1 of the vCard specification
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  * @see     http://www.imc.org/pdi/
  * @see     http://en.wikipedia.org/wiki/VCard
  */
-class KViewVcard extends KViewAbstract
+class ViewVcard extends ViewAbstract
 {
     /**
      * The Vcard properties
@@ -31,10 +33,10 @@ class KViewVcard extends KViewAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'mimetype' => 'text/x-vcard; version=2.1',
@@ -46,10 +48,10 @@ class KViewVcard extends KViewAbstract
     /**
      * Return the views output
      *
-     * @param KViewContext	$context A view context object
+     * @param ViewContext	$context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(KViewContext $context)
+    protected function _actionRender(ViewContext $context)
     {
         //Set the filename
         $filename = $this->getObject('lib:filter.filename')->sanitize($this->_properties['FN']);
@@ -85,7 +87,7 @@ class KViewVcard extends KViewAbstract
      * @param   string  $additional Additional name
      * @param   string  $prefix Prefix
      * @param   string  $suffix Suffix
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setName( $family = '', $first = '', $additional = '', $prefix = '', $suffix = '' )
     {
@@ -98,7 +100,7 @@ class KViewVcard extends KViewAbstract
      * The formatted name string
      *
      * @param   string  $name Name
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setFormattedName($name)
     {
@@ -112,7 +114,7 @@ class KViewVcard extends KViewAbstract
      * This property is based on the X.520 Organization Name attribute and the X.520 Organization Unit attribute
      *
      * @param   string  $org Organisation
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setOrg( $org )
     {
@@ -125,7 +127,7 @@ class KViewVcard extends KViewAbstract
      * within an organization (V. P. Research and Development)
      *
      * @param   string  $title Title
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setTitle( $title )
     {
@@ -137,7 +139,7 @@ class KViewVcard extends KViewAbstract
      * The role, occupation, or business category within an organization (eg. Executive)
      *
      * @param   string  $role Role
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setRole( $role )
     {
@@ -151,7 +153,7 @@ class KViewVcard extends KViewAbstract
      *
      * @param   string $number Phone number
      * @param   string $type Type [PREF|WORK|HOME|VOICE|FAX|MSG|CELL|PAGER|BBS|CAR|MODEM|ISDN|VIDEO] or a combination, e.g. "PREF;WORK;VOICE"
-     * @return   KViewVCard
+     * @return   ViewVCard
      */
     public function setPhoneNumber($number, $type = 'PREF;WORK;VOICE')
     {
@@ -170,7 +172,7 @@ class KViewVcard extends KViewAbstract
      * @param   string $zip Zip
      * @param   string $country Country
      * @param   string $type Type [DOM|INTL|POSTAL|PARCEL|HOME|WORK] or a combination e.g. "WORK;PARCEL;POSTAL"
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setAddress( $postoffice = '', $extended = '', $street = '', $city = '', $region = '', $zip = '', $country = '', $type = 'WORK;POSTAL' )
     {
@@ -197,7 +199,7 @@ class KViewVcard extends KViewAbstract
      * @param   string $zip Zip
      * @param   string $country Country
      * @param   string $type Type [DOM|INTL|POSTAL|PARCEL|HOME|WORK] or a combination e.g. "WORK;PARCEL;POSTAL"
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setLabel($postoffice = '', $extended = '', $street = '', $city = '', $region = '', $zip = '', $country = '', $type = 'WORK;POSTAL')
     {
@@ -244,7 +246,7 @@ class KViewVcard extends KViewAbstract
      * The address for electronic mail communication
      *
      * @param   string $address Email
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setEmail($address)
     {
@@ -257,7 +259,7 @@ class KViewVcard extends KViewAbstract
      *
      * @param   string $url Url
      * @param   string $type Type [WORK|HOME]
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setVcardURL($url, $type = 'WORK')
     {
@@ -270,7 +272,7 @@ class KViewVcard extends KViewAbstract
      *
      * @param   string $photo Photo data to be encoded
      * @param   string $type Type [GIF|JPEG]
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setPhoto($photo, $type = 'JPEG')
     {
@@ -282,7 +284,7 @@ class KViewVcard extends KViewAbstract
      * Date of birth of the individual
      *
      * @param   string $date Date YYYY-MM-DD
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setBirthday($date)
     {
@@ -295,7 +297,7 @@ class KViewVcard extends KViewAbstract
      * Specifies supplemental information or a comment that is associated with the vCard
      *
      * @param   string $note Note
-     * @return  KViewVCard
+     * @return  ViewVCard
      */
     public function setNote($note)
     {
@@ -309,7 +311,7 @@ class KViewVcard extends KViewAbstract
      * @param   string|array    $route   The query string used to create the route
      * @param   boolean $fqr    If TRUE create a fully qualified route. Default TRUE.
      * @param   boolean $escape If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return  KHttpUrl        The route
+     * @return  HttpUrl        The route
      */
     public function getRoute($route = '', $fqr = true, $escape = false)
     {

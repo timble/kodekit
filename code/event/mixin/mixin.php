@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Event Mixin
@@ -14,14 +16,14 @@
  * listeners.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Event\Mixin
+ * @package Kodekit\Library\Event\Mixin
  */
-class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
+class EventMixin extends ObjectMixinAbstract implements EventMixinInterface
 {
     /**
      * Event publisher object
      *
-     * @var KEventPublisherInterface
+     * @var EventPublisherInterface
      */
     private $__event_publisher;
 
@@ -38,15 +40,15 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Object constructor
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
-     * @throws InvalidArgumentException
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
+     * @throws \InvalidArgumentException
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         if (is_null($config->event_publisher)) {
-            throw new InvalidArgumentException('event_publisher [KEventPublisherInterface] config option is required');
+            throw new \InvalidArgumentException('event_publisher [EventPublisherInterface] config option is required');
         }
 
         //Set the event dispatcher
@@ -58,7 +60,7 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
         }
 
         //Add the event subscribers
-        $subscribers = (array) KObjectConfig::unbox($config->event_subscribers);
+        $subscribers = (array) ObjectConfig::unbox($config->event_subscribers);
 
         foreach ($subscribers as $key => $value)
         {
@@ -75,10 +77,10 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'event_publisher'   => 'event.publisher',
@@ -92,12 +94,12 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Publish an event by calling all listeners that have registered to receive it.
      *
-     * @param  string|KEventInterface             $event      The event name or a KEventInterface object
-     * @param  array|Traversable|KEventInterface  $attributes An associative array, an object implementing the
-     *                                                        KEventInterface or a Traversable object
+     * @param  string|EventInterface             $event      The event name or a EventInterface object
+     * @param  array|Traversable|EventInterface  $attributes An associative array, an object implementing the
+     *                                                        EventInterface or a Traversable object
      * @param  mixed                              $target     The event target
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return null|KEventInterface Returns the event object. If the chain is not enabled will return NULL.
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return null|EventInterface Returns the event object. If the chain is not enabled will return NULL.
      */
     public function publishEvent($event, $attributes = array(), $target = null)
     {
@@ -107,19 +109,19 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Get the event publisher
      *
-     * @throws UnexpectedValueException
-     * @return  KEventPublisherInterface
+     * @throws \UnexpectedValueException
+     * @return  EventPublisherInterface
      */
     public function getEventPublisher()
     {
-        if(!$this->__event_publisher instanceof KEventPublisherInterface)
+        if(!$this->__event_publisher instanceof EventPublisherInterface)
         {
             $this->__event_publisher = $this->getObject($this->__event_publisher);
 
-            if(!$this->__event_publisher instanceof KEventPublisherInterface)
+            if(!$this->__event_publisher instanceof EventPublisherInterface)
             {
-                throw new UnexpectedValueException(
-                    'EventPublisher: '.get_class($this->__event_publisher).' does not implement KEventPublisherInterface'
+                throw new \UnexpectedValueException(
+                    'EventPublisher: '.get_class($this->__event_publisher).' does not implement EventPublisherInterface'
                 );
             }
         }
@@ -130,10 +132,10 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Set the event publisher
      *
-     * @param   KEventPublisherInterface  $publisher An event publisher object
+     * @param   EventPublisherInterface  $publisher An event publisher object
      * @return  Object  The mixer object
      */
-    public function setEventPublisher(KEventPublisherInterface $publisher)
+    public function setEventPublisher(EventPublisherInterface $publisher)
     {
         $this->__event_publisher = $publisher;
         return $this->getMixer();
@@ -142,15 +144,15 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Add an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
      * @param integer                 $priority  The event priority, usually between 1 (high priority) and 5 (lowest),
      *                                            default is 3 (normal)
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KObjectInterface The mixer
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return ObjectInterface The mixer
      */
-    public function addEventListener($event, $listener, $priority = KEventInterface::PRIORITY_NORMAL)
+    public function addEventListener($event, $listener, $priority = EventInterface::PRIORITY_NORMAL)
     {
         $this->getEventPublisher()->addListener($event, $listener, $priority);
         return $this->getMixer();
@@ -159,11 +161,11 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Remove an event listener
      *
-     * @param string|KEventInterface  $event     The event name or a KEventInterface object
+     * @param string|EventInterface  $event     The event name or a EventInterface object
      * @param callable                $listener  The listener
-     * @throws InvalidArgumentException If the listener is not a callable
-     * @throws InvalidArgumentException  If the event is not a string or does not implement the KEventInterface
-     * @return KObjectInterface The mixer
+     * @throws \InvalidArgumentException If the listener is not a callable
+     * @throws \InvalidArgumentException  If the event is not a string or does not implement the EventInterface
+     * @return ObjectInterface The mixer
      */
     public function removeEventListener($event, $listener)
     {
@@ -177,11 +179,11 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
      * @param mixed  $subscriber An object that implements ObjectInterface, ObjectIdentifier object
      *                           or valid identifier string
      * @param array  $config     An optional associative array of configuration options
-     * @return KObjectInterface The mixer
+     * @return ObjectInterface The mixer
      */
     public function addEventSubscriber($subscriber, $config = array())
     {
-        if (!($subscriber instanceof KEventSubscriberInterface)) {
+        if (!($subscriber instanceof EventSubscriberInterface)) {
             $subscriber = $this->getEventSubscriber($subscriber, $config);
         }
 
@@ -192,10 +194,10 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
     /**
      * Remove an event subscriber
      *
-     * @param  KEventSubscriberInterface  $subscriber An event subscriber
-     * @return KObjectInterface The mixer
+     * @param  EventSubscriberInterface  $subscriber An event subscriber
+     * @return ObjectInterface The mixer
      */
-    public function removeEventSubscriber(KEventSubscriberInterface $subscriber)
+    public function removeEventSubscriber(EventSubscriberInterface $subscriber)
     {
         $subscriber->unsubscribe($this->getEventPublisher());
         return $this->getMixer();
@@ -209,12 +211,12 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
      * @param  mixed $subscriber An object that implements ObjectInterface, ObjectIdentifier object
      *                          or valid identifier string
      * @param  array  $config   An optional associative array of configuration settings
-     * @throws UnexpectedValueException    If the subscriber is not implementing the EventSubscriberInterface
-     * @return KEventSubscriberInterface
+     * @throws \UnexpectedValueException    If the subscriber is not implementing the EventSubscriberInterface
+     * @return EventSubscriberInterface
      */
     public function getEventSubscriber($subscriber, $config = array())
     {
-        if (!($subscriber instanceof KObjectIdentifier))
+        if (!($subscriber instanceof ObjectIdentifier))
         {
             //Create the complete identifier if a partial identifier was passed
             if (is_string($subscriber) && strpos($subscriber, '.') === false)
@@ -234,10 +236,10 @@ class KEventMixin extends KObjectMixinAbstract implements KEventMixinInterface
             $subscriber = $this->getObject($identifier, $config);
 
             //Check the event subscriber interface
-            if (!($subscriber instanceof KEventSubscriberInterface))
+            if (!($subscriber instanceof EventSubscriberInterface))
             {
-                throw new UnexpectedValueException(
-                    "Event Subscriber $identifier does not implement KEventSubscriberInterface"
+                throw new \UnexpectedValueException(
+                    "Event Subscriber $identifier does not implement EventSubscriberInterface"
                 );
             }
         }

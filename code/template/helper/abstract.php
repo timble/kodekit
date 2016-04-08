@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Template Helper
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Helper
+ * @package Kodekit\Library\Template\Helper
  */
-abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelperInterface
+abstract class TemplateHelperAbstract extends Object implements TemplateHelperInterface
 {
     /**
      * Template object
@@ -25,10 +27,10 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     /**
      * Constructor
      *
-     * @throws UnexpectedValueException    If no 'template' config option was passed
-     * @throws InvalidArgumentException    If the model config option does not implement TemplateInterface
+     * @throws \UnexpectedValueException    If no 'template' config option was passed
+     * @throws \InvalidArgumentException    If the model config option does not implement TemplateInterface
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -40,10 +42,10 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'template' => 'default',
@@ -55,11 +57,11 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     /**
      * Gets the template object
      *
-     * @return  KTemplateInterface	The template object
+     * @return  TemplateInterface	The template object
      */
     public function getTemplate()
     {
-        if(!$this->__template instanceof KTemplateInterface)
+        if(!$this->__template instanceof TemplateInterface)
         {
             if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
             {
@@ -71,7 +73,7 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
 
             $this->__template = $this->getObject($identifier);
 
-            if(!$this->__template instanceof KTemplateInterface)
+            if(!$this->__template instanceof TemplateInterface)
             {
                 throw new \UnexpectedValueException(
                     'Template: '.get_class($this->__template).' does not implement TemplateInterface'
@@ -92,8 +94,8 @@ abstract class KTemplateHelperAbstract extends KObject implements KTemplateHelpe
     {
         $output = array();
 
-        if($array instanceof KObjectConfig) {
-            $array = KObjectConfig::unbox($array);
+        if($array instanceof ObjectConfig) {
+            $array = ObjectConfig::unbox($array);
         }
 
         if(is_array($array))

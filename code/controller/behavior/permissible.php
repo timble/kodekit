@@ -1,33 +1,35 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Permissible Controller Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Behavior
+ * @package Kodekit\Library\Controller\Behavior
  */
-class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
+class ControllerBehaviorPermissible extends ControllerBehaviorAbstract
 {
     /**
      * The permission object
      *
-     * @var KControllerPermissionInterface
+     * @var ControllerPermissionInterface
      */
     protected $_permission;
 
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -39,10 +41,10 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
@@ -55,14 +57,14 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
     /**
      * Register a 'can([Execute])' function into the template
      *
-     * @param KCommandInterface $context
+     * @param CommandInterface $context
      * @return void
      */
-    protected function _beforeRender(KCommandInterface $context)
+    protected function _beforeRender(CommandInterface $context)
     {
         $controller = $context->getSubject();
 
-        if($controller->getView() instanceof KViewTemplatable) {
+        if($controller->getView() instanceof ViewTemplatable) {
             $controller->getView()->getTemplate()->registerFunction('can', array($this => 'canExecute'));
         }
     }
@@ -72,13 +74,13 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      *
      * Only handles before.action commands to check authorization rules.
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
-     * @throws  KControllerExceptionRequestForbidden      If the user is authentic and the actions is not allowed.
-     * @throws  KControllerExceptionRequestNotAuthorized  If the user is not authentic and the action is not allowed.
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
+     * @throws  ControllerExceptionRequestForbidden      If the user is authentic and the actions is not allowed.
+     * @throws  ControllerExceptionRequestNotAuthorized  If the user is not authentic and the action is not allowed.
      * @return  boolean Return TRUE if action is permitted. FALSE otherwise.
      */
-    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
         $parts = explode('.', $command->getName());
 
@@ -96,9 +98,9 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
                         $message = 'User account is disabled';
                     }
 
-                    throw new KControllerExceptionRequestForbidden($message);
+                    throw new ControllerExceptionRequestForbidden($message);
                 }
-                else throw new KControllerExceptionRequestNotAuthorized($message);
+                else throw new ControllerExceptionRequestNotAuthorized($message);
 
                 return false;
             }
@@ -135,15 +137,15 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      *
      * This function is called when the mixin is being mixed. It will get the mixer passed in.
      *
-     * @param KObjectMixable $mixer The mixer object
+     * @param ObjectMixable $mixer The mixer object
      * @return void
      */
-    public function onMixin(KObjectMixable $mixer)
+    public function onMixin(ObjectMixable $mixer)
     {
         parent::onMixin($mixer);
 
         //Create and mixin the permission if it's doesn't exist yet
-        if (!$this->_permission instanceof KControllerPermissionInterface)
+        if (!$this->_permission instanceof ControllerPermissionInterface)
         {
             $permission = $this->_permission;
 
@@ -159,7 +161,7 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
                 $permission = $this->getIdentifier($identifier);
             }
 
-            if (!$permission instanceof KObjectIdentifierInterface) {
+            if (!$permission instanceof ObjectIdentifierInterface) {
                 $permission = $this->getIdentifier($permission);
             }
 
@@ -177,6 +179,6 @@ class KControllerBehaviorPermissible extends KControllerBehaviorAbstract
      */
     public function getHandle()
     {
-        return KObjectMixinAbstract::getHandle();
+        return ObjectMixinAbstract::getHandle();
     }
 }

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Hittable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorHittable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorHittable extends DatabaseBehaviorAbstract
 {
     /**
      * Check if the behavior is supported
@@ -27,7 +29,7 @@ class KDatabaseBehaviorHittable extends KDatabaseBehaviorAbstract
         $table = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
-        if($table instanceof KDatabaseTableInterface)
+        if($table instanceof DatabaseTableInterface)
         {
             if(!$table->hasColumn('hits'))  {
                 return false;

@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Database Model
@@ -13,9 +15,9 @@
  * Provides interaction with a database
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model
+ * @package Kodekit\Library\Model
  */
-class KModelDatabase extends KModelAbstract
+class ModelDatabase extends ModelAbstract
 {
     /**
      * Table object or identifier
@@ -27,9 +29,9 @@ class KModelDatabase extends KModelAbstract
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -47,10 +49,10 @@ class KModelDatabase extends KModelAbstract
 
         //Create database.row -> model.entity alias
         $database['path'] = array('database', 'row');
-        $database['name'] = KStringInflector::singularize($database['name']);
+        $database['name'] = StringInflector::singularize($database['name']);
 
         $model['path'] = array('model', 'entity');
-        $model['name'] = KStringInflector::singularize($model['name']);
+        $model['name'] = StringInflector::singularize($model['name']);
 
         $this->getObject('manager')->registerAlias($model, $database);
 
@@ -63,10 +65,10 @@ class KModelDatabase extends KModelAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'table'     => $this->getIdentifier()->name,
@@ -79,13 +81,13 @@ class KModelDatabase extends KModelAbstract
     /**
      * Create a new entity for the data store
      *
-     * @param KModelContext $context A model context object
-     * @return  KModelEntityComposite The model entity
+     * @param ModelContext $context A model context object
+     * @return  ModelEntityComposite The model entity
      */
-    protected function _actionCreate(KModelContext $context)
+    protected function _actionCreate(ModelContext $context)
     {
         //Get the data
-        $data = KModelContext::unbox($context->entity);
+        $data = ModelContext::unbox($context->entity);
 
         if(!is_numeric(key($data))) {
             $data = array($data);
@@ -103,10 +105,10 @@ class KModelDatabase extends KModelAbstract
     /**
      * Fetch a new entity from the data store
      *
-     * @param KModelContext $context A model context object
-     * @return  KModelEntityComposite The model entity
+     * @param ModelContext $context A model context object
+     * @return  ModelEntityComposite The model entity
      */
-    protected function _actionFetch(KModelContext $context)
+    protected function _actionFetch(ModelContext $context)
     {
         $state   = $context->state;
         $table   = $this->getTable();
@@ -127,7 +129,7 @@ class KModelDatabase extends KModelAbstract
             $this->_buildQueryWhere($context->query);
             $this->_buildQueryGroup($context->query);
 
-            $data = $table->select($context->query, KDatabase::FETCH_ROWSET, $options);
+            $data = $table->select($context->query, Database::FETCH_ROWSET, $options);
         }
         else $data = $table->createRowset($options);
 
@@ -137,11 +139,11 @@ class KModelDatabase extends KModelAbstract
     /**
      * Get the total number of entities
      *
-     * @param KModelContext $context A model context object
+     * @param ModelContext $context A model context object
 
      * @return string  The output of the view
      */
-    protected function _actionCount(KModelContext $context)
+    protected function _actionCount(ModelContext $context)
     {
         $context->query->columns('COUNT(*)');
         $context->query->table(array('tbl' => $this->getTable()->getName()));
@@ -155,11 +157,11 @@ class KModelDatabase extends KModelAbstract
     /**
      * Method to get a table object
      *
-     * @return KDatabaseTableInterface
+     * @return DatabaseTableInterface
      */
     public function getTable()
     {
-        if(!($this->_table instanceof KDatabaseTableInterface)) {
+        if(!($this->_table instanceof DatabaseTableInterface)) {
             $this->_table = $this->getObject($this->_table);
         }
 
@@ -171,25 +173,25 @@ class KModelDatabase extends KModelAbstract
      *
      * @param   mixed   $table An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @throws  UnexpectedValueException   If the identifier is not a table identifier
-     * @return  KModelDatabase
+     * @throws  \UnexpectedValueException   If the identifier is not a table identifier
+     * @return  ModelDatabase
      */
     public function setTable($table)
     {
-        if(!($table instanceof KDatabaseTableInterface))
+        if(!($table instanceof DatabaseTableInterface))
         {
             if(is_string($table) && strpos($table, '.') === false )
             {
                 $identifier         = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('database', 'table');
-                $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
+                $identifier['name'] = StringInflector::pluralize(StringInflector::underscore($table));
 
                 $identifier = $this->getIdentifier($identifier);
             }
             else  $identifier = $this->getIdentifier($table);
 
             if($identifier->path[1] != 'table') {
-                throw new UnexpectedValueException('Identifier: '.$identifier.' is not a table identifier');
+                throw new \UnexpectedValueException('Identifier: '.$identifier.' is not a table identifier');
             }
 
             $table = $identifier;
@@ -203,7 +205,7 @@ class KModelDatabase extends KModelAbstract
     /**
      * Get the model context
      *
-     * @return  KModelContext
+     * @return  ModelContext
      */
     public function getContext()
     {
@@ -216,9 +218,9 @@ class KModelDatabase extends KModelAbstract
     /**
      * Builds SELECT columns list for the query
      *
-     * @param KDatabaseQueryInterface $query
+     * @param DatabaseQueryInterface $query
      */
-    protected function _buildQueryColumns(KDatabaseQueryInterface $query)
+    protected function _buildQueryColumns(DatabaseQueryInterface $query)
     {
 
     }
@@ -226,9 +228,9 @@ class KModelDatabase extends KModelAbstract
     /**
      * Builds JOINS clauses for the query
      *
-     * @param KDatabaseQueryInterface $query
+     * @param DatabaseQueryInterface $query
      */
-    protected function _buildQueryJoins(KDatabaseQueryInterface $query)
+    protected function _buildQueryJoins(DatabaseQueryInterface $query)
     {
 
     }
@@ -236,9 +238,9 @@ class KModelDatabase extends KModelAbstract
     /**
      * Builds WHERE clause for the query
      *
-     * @param KDatabaseQueryInterface $query
+     * @param DatabaseQueryInterface $query
      */
-    protected function _buildQueryWhere(KDatabaseQueryInterface $query)
+    protected function _buildQueryWhere(DatabaseQueryInterface $query)
     {
 
     }
@@ -246,9 +248,9 @@ class KModelDatabase extends KModelAbstract
     /**
      * Builds GROUP BY clause for the query
      *
-     * @param KDatabaseQueryInterface $query
+     * @param DatabaseQueryInterface $query
      */
-    protected function _buildQueryGroup(KDatabaseQueryInterface $query)
+    protected function _buildQueryGroup(DatabaseQueryInterface $query)
     {
 
     }

@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Translator Cache
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Translator
+ * @package Kodekit\Library\Translator
  */
-class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
+class TranslatorCache extends ObjectDecorator implements TranslatorInterface
 {
     /**
      * The registry cache namespace
      *
      * @var boolean
      */
-    protected $_namespace = 'nooku';
+    protected $_namespace = 'kodekit';
 
     /**
      * List of url that have been loaded.
@@ -32,15 +34,15 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig  $config  A ObjectConfig object with optional configuration options
-     * @throws RuntimeException    If the APC PHP extension is not enabled or available
+     * @param ObjectConfig  $config  A ObjectConfig object with optional configuration options
+     * @throws \RuntimeException    If the APC PHP extension is not enabled or available
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         if (!static::isSupported()) {
-            throw new RuntimeException('Unable to use TranslatorCache. APC is not enabled.');
+            throw new \RuntimeException('Unable to use TranslatorCache. APC is not enabled.');
         }
 
         $this->_loaded = array();
@@ -50,7 +52,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
      * Get the translator cache namespace
      *
      * @param string $namespace
-     * @return KTranslatorCache
+     * @return TranslatorCache
      */
     public function setNamespace($namespace)
     {
@@ -156,7 +158,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
      * @see $language
      *
      * @param string $language
-     * @return KTranslatorCache
+     * @return TranslatorCache
      */
     public function setLanguage($language)
     {
@@ -187,7 +189,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
      * @see $language
      *
      * @param string $language The fallback language
-     * @return KTranslatorCache
+     * @return TranslatorCache
      */
     public function setLanguageFallback($language)
     {
@@ -208,8 +210,8 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     /**
      * Get the catalogue
      *
-     * @throws UnexpectedValueException    If the catalogue doesn't implement the TranslatorCatalogueInterface
-     * @return KTranslatorCatalogueInterface The translator catalogue.
+     * @throws \UnexpectedValueException    If the catalogue doesn't implement the TranslatorCatalogueInterface
+     * @return TranslatorCatalogueInterface The translator catalogue.
      */
     public function getCatalogue()
     {
@@ -221,7 +223,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
      *
      * @param   mixed   $catalogue An object that implements ObjectInterface, ObjectIdentifier object
      *                             or valid identifier string
-     * @return KTranslatorInterface
+     * @return TranslatorInterface
      */
     public function setCatalogue($catalogue)
     {
@@ -263,14 +265,14 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     /**
      * Set the decorated translator
      *
-     * @param   KTranslatorInterface $delegate The decorated translator
-     * @return  KTranslatorCache
-     * @throws  InvalidArgumentException If the delegate does not implement the TranslatorInterface
+     * @param   TranslatorInterface $delegate The decorated translator
+     * @return  TranslatorCache
+     * @throws  \InvalidArgumentException If the delegate does not implement the TranslatorInterface
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KTranslatorInterface) {
-            throw new InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement KTranslatorInterface');
+        if (!$delegate instanceof TranslatorInterface) {
+            throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement TranslatorInterface');
         }
 
         return parent::setDelegate($delegate);
@@ -279,7 +281,7 @@ class KTranslatorCache extends KObjectDecorator implements KTranslatorInterface
     /**
      * Get the decorated object
      *
-     * @return KTranslatorCache
+     * @return TranslatorCache
      */
     public function getDelegate()
     {

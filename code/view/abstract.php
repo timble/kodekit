@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-abstract class KViewAbstract extends KObject implements KViewInterface, KCommandCallbackDelegate
+abstract class ViewAbstract extends Object implements ViewInterface, CommandCallbackDelegate
 {
     /**
      * Model identifier (com://APP/COMPONENT.model.NAME)
@@ -25,7 +27,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * The uniform resource locator
      *
-     * @var KHttpUrl
+     * @var HttpUrl
      */
     protected $_url;
 
@@ -67,17 +69,17 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Constructor
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Set the data
-        $this->_data = KObjectConfig::unbox($config->data);
+        $this->_data = ObjectConfig::unbox($config->data);
 
         //Set the parameters
-        $this->_parameters = KObjectConfig::unbox($config->parameters);
+        $this->_parameters = ObjectConfig::unbox($config->parameters);
 
         $this->setUrl($config->url);
         $this->setTitle($config->title);
@@ -101,10 +103,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'data'             => array(),
@@ -148,10 +150,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      * Invoke a command handler
      *
      * @param string             $method    The name of the method to be executed
-     * @param KCommandInterface  $command   The command
+     * @param CommandInterface  $command   The command
      * @return mixed Return the result of the handler.
      */
-    public function invokeCommandCallback($method, KCommandInterface $command)
+    public function invokeCommandCallback($method, CommandInterface $command)
     {
         return $this->$method($command);
     }
@@ -159,10 +161,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Render the view
      *
-     * @param KViewContext	$context A view context object
+     * @param ViewContext	$context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(KViewContext $context)
+    protected function _actionRender(ViewContext $context)
     {
         $contents = $this->getContent();
         return trim($contents);
@@ -171,10 +173,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Fetch the view data
      *
-     * @param KViewContext	$context A view context object
+     * @param ViewContext	$context A view context object
      * @return void
      */
-    protected function _fetchData(KViewContext $context)
+    protected function _fetchData(ViewContext $context)
     {
 
     }
@@ -184,7 +186,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      *
      * @param   string $property The property name.
      * @param   mixed  $value    The property value.
-     * @return KViewAbstract
+     * @return ViewAbstract
      */
     public function set($property, $value)
     {
@@ -197,7 +199,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      *
      * @param  string $property The property name.
      * @param  mixed  $default  Default value to return.
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return string  The property value.
      */
     public function get($property, $default = null)
@@ -230,7 +232,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      * Sets the view data
      *
      * @param   array $data The view data
-     * @return  KViewAbstract
+     * @return  ViewAbstract
      */
     public function setData($data)
     {
@@ -255,7 +257,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      * Sets the view parameters
      *
      * @param   array $parameters The view parameters
-     * @return  KViewAbstract
+     * @return  ViewAbstract
      */
     public function setParameters(array $parameters)
     {
@@ -298,7 +300,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      * Get the contents
      *
      * @param  string $content The contents of the view
-     * @return KViewAbstract
+     * @return ViewAbstract
      */
     public function setContent($content)
     {
@@ -309,19 +311,19 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Get the model object attached to the view
      *
-     * @throws  UnexpectedValueException    If the model doesn't implement the ModelInterface
-     * @return  KModelInterface
+     * @throws  \UnexpectedValueException    If the model doesn't implement the ModelInterface
+     * @return  ModelInterface
      */
     public function getModel()
     {
-        if(!$this->_model instanceof KModelInterface)
+        if(!$this->_model instanceof ModelInterface)
         {
             $this->_model = $this->getObject($this->_model);
 
-            if(!$this->_model instanceof KModelInterface)
+            if(!$this->_model instanceof ModelInterface)
             {
-                throw new UnexpectedValueException(
-                    'Model: '.get_class($this->_model).' does not implement KModelInterface'
+                throw new \UnexpectedValueException(
+                    'Model: '.get_class($this->_model).' does not implement ModelInterface'
                 );
             }
         }
@@ -332,19 +334,19 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Method to set a model object attached to the controller
      *
-     * @param   mixed   $model An object that implements KObjectInterface, KObjectIdentifier object
+     * @param   mixed   $model An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @return	KViewAbstract
+     * @return	ViewAbstract
      */
     public function setModel($model)
     {
-        if(!($model instanceof KModelInterface))
+        if(!($model instanceof ModelInterface))
         {
             if(is_string($model) && strpos($model, '.') === false )
             {
                 // Model names are always plural
-                if(KStringInflector::isSingular($model)) {
-                    $model = KStringInflector::pluralize($model);
+                if(StringInflector::isSingular($model)) {
+                    $model = StringInflector::pluralize($model);
                 }
 
                 $identifier			= $this->getIdentifier()->toArray();
@@ -366,7 +368,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Get the view url
      *
-     * @return  KHttpUrl  A HttpUrl object
+     * @return  HttpUrl  A HttpUrl object
      */
     public function getUrl()
     {
@@ -376,10 +378,10 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Set the view url
      *
-     * @param KHttpUrl $url   A KHttpUrl object or a string
-     * @return  KViewAbstract
+     * @param HttpUrl $url   A HttpUrl object or a string
+     * @return  ViewAbstract
      */
-    public function setUrl(KHttpUrl $url)
+    public function setUrl(HttpUrl $url)
     {
         //Remove the user and pass from the view url
         unset($url->user);
@@ -402,7 +404,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
      * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  KDispatcherRouterRoute The route
+     * @return  DispatcherRouterRoute The route
      */
     public function getRoute($route = '', $fqr = true, $escape = true)
     {
@@ -461,11 +463,11 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
     /**
      * Get the view context
      *
-     * @return  KViewContext
+     * @return  ViewContext
      */
     public function getContext()
     {
-        $context = new KViewContext();
+        $context = new ViewContext();
         $context->setSubject($this);
         $context->setData($this->getData());
         $context->setParameters($this->getParameters());
@@ -511,7 +513,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      */
     public function isCollection()
     {
-        return KStringInflector::isPlural($this->getName());
+        return StringInflector::isPlural($this->getName());
     }
 
     /**
@@ -560,7 +562,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
         try {
             $result = $this->toString();
         } catch (Exception $e) {
-            trigger_error('KViewAbstract::__toString exception: '. (string) $e, E_USER_ERROR);
+            trigger_error('ViewAbstract::__toString exception: '. (string) $e, E_USER_ERROR);
         }
 
         return $result;
@@ -574,7 +576,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return  KViewAbstract
+     * @return  ViewAbstract
      *
      * @see http://martinfowler.com/bliki/FluentInterface.html
      */
@@ -594,7 +596,7 @@ abstract class KViewAbstract extends KObject implements KViewInterface, KCommand
             }
 
             //Check if a behavior is mixed
-            $parts = KStringInflector::explode($method);
+            $parts = StringInflector::explode($method);
 
             if ($parts[0] == 'is' && isset($parts[1])) {
                 return false;

@@ -1,28 +1,30 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Recursive Controller Toolbar Iterator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Kodekit\Library\Controller\Toolbar
  */
-class KControllerToolbarIteratorRecursive extends \RecursiveIteratorIterator
+class ControllerToolbarIteratorRecursive extends \RecursiveIteratorIterator
 {
     /**
      * Constructor
      *
-     * @param KControllerToolbarInterface $toolbar
+     * @param ControllerToolbarInterface $toolbar
      * @param integer $max_level The maximum allowed level. 0 is used for any level
-     * @return KControllerToolbarIteratorRecursive
+     * @return ControllerToolbarIteratorRecursive
      */
-    public function __construct(KControllerToolbarInterface $toolbar, $max_level = 0)
+    public function __construct(ControllerToolbarInterface $toolbar, $max_level = 0)
     {
         parent::__construct(static::_createInnerIterator($toolbar), \RecursiveIteratorIterator::SELF_FIRST);
 
@@ -56,7 +58,7 @@ class KControllerToolbarIteratorRecursive extends \RecursiveIteratorIterator
      * Set the maximum iterator level
      *
      * @param int $max
-     * @return KControllerToolbarIteratorRecursive
+     * @return ControllerToolbarIteratorRecursive
      */
     public function setMaxLevel($max = 0)
     {
@@ -78,10 +80,10 @@ class KControllerToolbarIteratorRecursive extends \RecursiveIteratorIterator
     /**
      * Create a recursive iterator from a toolbar
      *
-     * @param KControllerToolbarInterface $toolbar
+     * @param ControllerToolbarInterface $toolbar
      * @return \RecursiveIterator
      */
-    protected static function _createInnerIterator(KControllerToolbarInterface $toolbar)
+    protected static function _createInnerIterator(ControllerToolbarInterface $toolbar)
     {
         $iterator = new \RecursiveArrayIterator($toolbar->getIterator());
         $iterator = new \RecursiveCachingIterator($iterator, \CachingIterator::TOSTRING_USE_KEY);

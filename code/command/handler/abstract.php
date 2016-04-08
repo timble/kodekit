@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Command Handler
@@ -14,9 +16,9 @@
  * _after[Command]) and invoke the method. Command handler methods should be declared protected.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command\Handler
+ * @package Kodekit\Library\Command\Handler
  */
-abstract class KCommandHandlerAbstract extends KObject implements KCommandHandlerInterface
+abstract class CommandHandlerAbstract extends Object implements CommandHandlerInterface
 {
     /**
      * The command priority
@@ -28,9 +30,9 @@ abstract class KCommandHandlerAbstract extends KObject implements KCommandHandle
     /**
      * Object constructor
      *
-     * @param KObjectConfig $config Configuration options
+     * @param ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -43,10 +45,10 @@ abstract class KCommandHandlerAbstract extends KObject implements KCommandHandle
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_NORMAL,
@@ -58,11 +60,11 @@ abstract class KCommandHandlerAbstract extends KObject implements KCommandHandle
     /**
      * Execute the handler
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
      * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
-    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
         $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);

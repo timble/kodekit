@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Command Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command
+ * @package Kodekit\Library\Command
  */
-class KCommand extends KObjectConfig implements KCommandInterface
+class Command extends ObjectConfig implements CommandInterface
 {
     /**
      * The command name
@@ -33,7 +35,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
      * Constructor.
      *
      * @param  string              $name       The command name
-     * @param  array|Traversable   $attributes An associative array or a Traversable object instance
+     * @param  array|\Traversable  $attributes An associative array or a Traversable object instance
      * @param  mixed               $subject    The command subject
      */
     public function __construct($name = '', $attributes = array(), $subject = null)
@@ -42,6 +44,17 @@ class KCommand extends KObjectConfig implements KCommandInterface
 
         $this->setName($name);
         $this->setSubject($subject);
+    }
+
+    /**
+     * Get a new instance
+     *
+     * @return ObjectConfig
+     */
+    final static public function getInstance()
+    {
+        $instance = new ObjectConfig(array());
+        return $instance;
     }
 
     /**
@@ -58,7 +71,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
      * Set the command name
      *
      * @param string $name  The command name
-     * @return KCommand
+     * @return Command
      */
     public function setName($name)
     {
@@ -80,7 +93,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
      * Set the command subject
      *
      * @param mixed $subject The command subject
-     * @return KCommand
+     * @return Command
      */
     public function setSubject($subject)
     {
@@ -93,15 +106,15 @@ class KCommand extends KObjectConfig implements KCommandInterface
      *
      * Overwrites existing attributes
      *
-     * @param  array|Traversable $attributes
-     * @throws InvalidArgumentException If the attributes are not an array or are not traversable.
-     * @return KCommand
+     * @param  array|\Traversable $attributes
+     * @throws \InvalidArgumentException If the attributes are not an array or are not traversable.
+     * @return Command
      */
     public function setAttributes($attributes)
     {
-        if (!is_array($attributes) && !$attributes instanceof Traversable)
+        if (!is_array($attributes) && !$attributes instanceof \Traversable)
         {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Command arguments must be an array or an object implementing the Traversable interface; received "%s"', gettype($attributes)
             ));
         }
@@ -143,23 +156,12 @@ class KCommand extends KObjectConfig implements KCommandInterface
      *
      * @param  string $name The attribute
      * @param  mixed $value
-     * @return KCommand
+     * @return Command
      */
     public function setAttribute($name, $value)
     {
         $this->set($name, $value);
         return $this;
-    }
-
-    /**
-     * Get a new instance
-     *
-     * @return KObjectConfig
-     */
-    final public function getInstance()
-    {
-        $instance = new KObjectConfig(array());
-        return $instance;
     }
 
     /**
@@ -191,7 +193,7 @@ class KCommand extends KObjectConfig implements KCommandInterface
      *
      * @param  string $name
      * @param  mixed  $value
-     * @return KCommand
+     * @return Command
      */
     final public function set($name, $value)
     {

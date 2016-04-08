@@ -1,38 +1,40 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Database Driver Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Driver
+ * @package Kodekit\Library\Database\Driver
  */
-interface KDatabaseDriverInterface
+interface DatabaseDriverInterface
 {
     /**
      * Connect to the db
      *
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function connect();
 
     /**
      * Reconnect to the db
      *
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function reconnect();
 
     /**
      * Disconnect from db
      *
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function disconnect();
 
@@ -50,7 +52,7 @@ interface KDatabaseDriverInterface
      * Set the connection
      *
      * @param 	resource 	$resource The connection resource
-     * @return  KDatabaseDriverAbstract
+     * @return  DatabaseDriverAbstract
      */
     public function setConnection($resource);
 
@@ -72,7 +74,7 @@ interface KDatabaseDriverInterface
      * Retrieves the column schema information about the given table
      *
      * @param 	string 	$table A table name
-     * @return	KDatabaseSchemaTable
+     * @return	DatabaseSchemaTable
      */
     public function getTableSchema($table);
 
@@ -94,62 +96,62 @@ interface KDatabaseDriverInterface
     /**
      * Perform a select query.
      *
-     * @param   KDatabaseQueryInterface  $query A full SQL query to run. Data inside the query should be properly escaped.
-     * @param   integer $mode   The result mode, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
-     *                          depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
-     *                          use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
+     * @param   DatabaseQueryInterface  $query A full SQL query to run. Data inside the query should be properly escaped.
+     * @param   integer $mode   The result mode, either the constant Database::RESULT_USE or Database::RESULT_STORE
+     *                          depending on the desired behavior. By default, Database::RESULT_STORE is used. If you
+     *                          use Database::RESULT_USE all subsequent calls will return error Commands out of sync
      *                          unless you free the result first.
      * @param   string $key  The column name of the index to use.
      * @return  mixed If successful returns a result object otherwise FALSE
      */
-    public function select(KDatabaseQueryInterface $query, $mode = KDatabase::RESULT_STORE, $key = '');
+    public function select(DatabaseQueryInterface $query, $mode = Database::RESULT_STORE, $key = '');
 
     /**
      * Insert a row of data into a table.
      *
-     * @param KDatabaseQueryInsert $query The query object.
+     * @param DatabaseQueryInsert $query The query object.
      * @return bool|integer  If the insert query was executed returns the number of rows updated, or 0 if
      *                       no rows where updated, or -1 if an error occurred. Otherwise FALSE.
      */
-    public function insert(KDatabaseQueryInsert $query);
+    public function insert(DatabaseQueryInsert $query);
 
     /**
      * Update a table with specified data.
      *
-     * @param  KDatabaseQueryUpdate $query The query object.
+     * @param  DatabaseQueryUpdate $query The query object.
      * @return integer  If the update query was executed returns the number of rows updated, or 0 if
      *                  no rows where updated, or -1 if an error occurred. Otherwise FALSE.
     */
-    public function update(KDatabaseQueryUpdate $query);
+    public function update(DatabaseQueryUpdate $query);
 
     /**
      * Delete rows from the table.
      *
-     * @param  KDatabaseQueryDelete $query The query object.
+     * @param  DatabaseQueryDelete $query The query object.
      * @return integer 	Number of rows affected, or -1 if an error occurred.
     */
-    public function delete(KDatabaseQueryDelete $query);
+    public function delete(DatabaseQueryDelete $query);
 
     /**
      * Use and other queries that don't return rows
      *
      * @param  string   $sql  The query to run. Data inside the query should be properly escaped.
-     * @param  integer  $mode The result made, either the constant KDatabase::RESULT_USE or KDatabase::RESULT_STORE
-     *                  depending on the desired behavior. By default, KDatabase::RESULT_STORE is used. If you
-     *                  use KDatabase::RESULT_USE all subsequent calls will return error Commands out of sync
+     * @param  integer  $mode The result made, either the constant Database::RESULT_USE or Database::RESULT_STORE
+     *                  depending on the desired behavior. By default, Database::RESULT_STORE is used. If you
+     *                  use Database::RESULT_USE all subsequent calls will return error Commands out of sync
      *                  unless you free the result first.
      * @throws \RuntimeException If the query could not be executed
      * @return boolean  For SELECT, SHOW, DESCRIBE or EXPLAIN will return a result object.
      *                  For other successful queries  return TRUE.
     */
-    public function execute($sql, $mode = KDatabase::RESULT_STORE );
+    public function execute($sql, $mode = Database::RESULT_STORE );
 
     /**
      * Set the table prefix
      *
      * @param string $prefix The table prefix
-     * @return KDatabaseDriverAbstract
-     * @see KDatabaseDriverAbstract::replaceTableNeedle
+     * @return DatabaseDriverAbstract
+     * @see DatabaseDriverAbstract::replaceTableNeedle
      */
     public function setTablePrefix($prefix);
 
@@ -157,7 +159,7 @@ interface KDatabaseDriverInterface
      * Get the table prefix
      *
      * @return string The table prefix
-     * @see KDatabaseDriverAbstract::replaceTableNeedle
+     * @see DatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTablePrefix();
 
@@ -165,7 +167,7 @@ interface KDatabaseDriverInterface
      * Get the table needle
      *
      * @return string The table needle
-     * @see KDatabaseDriverAbstract::replaceTableNeedle
+     * @see DatabaseDriverAbstract::replaceTableNeedle
      */
     public function getTableNeedle();
 

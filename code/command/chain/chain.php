@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Command Chain
@@ -14,23 +16,23 @@
  * priority is 3 The queue is ordered by priority, commands with a higher priority are called first.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command\Chain
+ * @package Kodekit\Library\Command\Chain
  */
-class KCommandChain extends KObject implements KCommandChainInterface
+class CommandChain extends Object implements CommandChainInterface
 {
     /**
      * The chain stack
      *
      * Used to track recursive chain nesting.
      *
-     * @var KObjectStack
+     * @var ObjectStack
      */
     private $__stack;
 
     /**
      * The handler queue
      *
-     * @var KObjectQueue
+     * @var ObjectQueue
      */
     private $__queue;
 
@@ -51,10 +53,10 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig  $config  An optional KObjectConfig object with configuration options
-     * @return KCommandChain
+     * @param ObjectConfig  $config  An optional ObjectConfig object with configuration options
+     * @return CommandChain
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -73,10 +75,10 @@ class KCommandChain extends KObject implements KCommandChainInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'break_condition' => false,
@@ -92,9 +94,9 @@ class KCommandChain extends KObject implements KCommandChainInterface
      * If a command handler returns the 'break condition' the executing is halted. If no break condition is specified the
      * the command chain will execute all command handlers, regardless of the handler result returned.
      *
-     * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
-     * @param  array|Traversable         $attributes An associative array or a Traversable object
-     * @param  KObjectInterface          $subject    The command subject
+     * @param  string|CommandInterface  $command    The command name or a CommandInterface object
+     * @param  array|\Traversable         $attributes An associative array or a Traversable object
+     * @param  ObjectInterface          $subject    The command subject
      * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
     public function execute($command, $attributes = null, $subject = null)
@@ -106,16 +108,16 @@ class KCommandChain extends KObject implements KCommandChainInterface
             $this->__stack->push(clone $this->__queue);
 
             //Make sure we have an command object
-            if (!$command instanceof KCommandInterface)
+            if (!$command instanceof CommandInterface)
             {
-                if($attributes instanceof KCommandInterface)
+                if($attributes instanceof CommandInterface)
                 {
                     $name    = $command;
                     $command = $attributes;
 
                     $command->setName($name);
                 }
-                else $command = new KCommand($command, $attributes, $subject);
+                else $command = new Command($command, $attributes, $subject);
             }
 
             foreach ($this->__stack->peek() as $handler)
@@ -136,10 +138,10 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Attach a command handler to the chain
      *
-     * @param   KCommandHandlerInterface  $handler  The command handler
-     * @return KCommandChain
+     * @param   CommandHandlerInterface  $handler  The command handler
+     * @return CommandChain
      */
-    public function addHandler(KCommandHandlerInterface $handler)
+    public function addHandler(CommandHandlerInterface $handler)
     {
         $this->__queue->enqueue($handler, $handler->getPriority());
         return $this;
@@ -148,10 +150,10 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Remove a command handlder from the chain
      *
-     * @param  KCommandHandlerInterface  $handler  The command handler
-     * @return  KCommandChain
+     * @param  CommandHandlerInterface  $handler  The command handler
+     * @return  CommandChain
      */
-    public function removeHandler(KCommandHandlerInterface $handler)
+    public function removeHandler(CommandHandlerInterface $handler)
     {
         $this->__queue->dequeue($handler);
         return $this;
@@ -160,7 +162,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Get the list of command handlers enqueued in the chain
      *
-     * @return  KObjectQueue   An object queue containing the handlers
+     * @return  ObjectQueue   An object queue containing the handlers
      */
     public function getHandlers()
     {
@@ -170,11 +172,11 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Set the priority of a command handler
      *
-     * @param  KCommandHandlerInterface $handler   A command handler
+     * @param  CommandHandlerInterface $handler   A command handler
      * @param integer                   $priority  The command priority
-     * @return KCommandChain
+     * @return CommandChain
      */
-    public function setHandlerPriority(KCommandHandlerInterface $handler, $priority)
+    public function setHandlerPriority(CommandHandlerInterface $handler, $priority)
     {
         $this->__queue->setPriority($handler, $priority);
         return $this;
@@ -183,10 +185,10 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Get the priority of a command handler
      *
-     * @param   KCommandHandlerInterface $handler A command handler
+     * @param   CommandHandlerInterface $handler A command handler
      * @return integer The command priority
      */
-    public function getHandlerPriority(KCommandHandlerInterface $handler)
+    public function getHandlerPriority(CommandHandlerInterface $handler)
     {
         return $this->__queue->getPriority($handler);
     }
@@ -195,7 +197,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
      * Set the break condition of the chain
      *
      * @param mixed|null $condition The break condition, or NULL to set reset the break condition
-     * @return KCommandChain
+     * @return CommandChain
      */
     public function setBreakCondition($condition)
     {
@@ -216,7 +218,7 @@ class KCommandChain extends KObject implements KCommandChainInterface
     /**
      * Enable the chain
      *
-     * @return  KCommandChain
+     * @return  CommandChain
      */
     public function setEnabled($enabled)
     {

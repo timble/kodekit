@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Behavior
@@ -14,28 +16,28 @@
  * and add execute the method. Command handlers should be declared protected.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Behavior
+ * @package Kodekit\Library\Behavior
  */
-abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBehaviorInterface
+abstract class BehaviorAbstract extends CommandCallbackAbstract implements BehaviorInterface
 {
     /**
      * The object identifier
      *
-     * @var KObjectIdentifier
+     * @var ObjectIdentifier
      */
     private $__object_identifier;
 
     /**
      * The object manager
      *
-     * @var KObjectManager
+     * @var ObjectManager
      */
     private $__object_manager;
 
     /**
      * The object config
      *
-     * @var KObjectConfig
+     * @var ObjectConfig
      */
     private $__object_config;
 
@@ -49,24 +51,24 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
     /**
      * Constructor.
      *
-     * @param  KObjectConfig $config A ObjectConfig object with configuration options
-     * @throws InvalidArgumentException
+     * @param  ObjectConfig $config A ObjectConfig object with configuration options
+     * @throws \InvalidArgumentException
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         //Set the object manager
-        if (!$config->object_manager instanceof KObjectManagerInterface)
+        if (!$config->object_manager instanceof ObjectManagerInterface)
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'object_manager [ObjectManagerInterface] config option is required, "'.gettype($config->object_manager).'" given.'
             );
         }
         else $this->__object_manager = $config->object_manager;
 
         //Set the object identifier
-        if (!$config->object_identifier instanceof KObjectIdentifierInterface)
+        if (!$config->object_identifier instanceof ObjectIdentifierInterface)
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'object_identifier [ObjectIdentifierInterface] config option is required, "'.gettype($config->object_identifier).'" given.'
             );
         }
@@ -95,10 +97,10 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config A ObjectConfig object with configuration options
+     * @param  ObjectConfig $config A ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'   => self::PRIORITY_NORMAL,
@@ -110,11 +112,11 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
     /**
      * Command handler
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
      * @return mixed If a handler breaks, returns the break condition. Returns the result of the handler otherwise.
      */
-    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
         return parent::invokeCallbacks($command);
     }
@@ -127,15 +129,15 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      *
      * @param  	string          $command  The command name to register the handler for
      * @param 	string|Closure  $method   The name of the method or a Closure object
-     * @param   array|object    $params   An associative array of config parameters or a KObjectConfig object
-     * @throws  InvalidArgumentException If the method does not exist
-     * @return  KCommandHandlerAbstract
+     * @param   array|object    $params   An associative array of config parameters or a ObjectConfig object
+     * @throws  \InvalidArgumentException If the method does not exist
+     * @return  CommandHandlerAbstract
      */
     public function addCommandCallback($command, $method, $params = array())
     {
         if (is_string($method) && !is_callable(array($this, $method)))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Method does not exist '.__CLASS__.'::'.$method
             );
         }
@@ -220,9 +222,9 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
     /**
      * Get an instance of an object identifier
      *
-     * @param KObjectIdentifier|string $identifier An ObjectIdentifier or valid identifier string
+     * @param ObjectIdentifier|string $identifier An ObjectIdentifier or valid identifier string
      * @param array  $config An optional associative array of configuration settings.
-     * @return KObjectInterface  Return object on success, throws exception on failure.
+     * @return ObjectInterface  Return object on success, throws exception on failure.
      */
     final public function getObject($identifier, array $config = array())
     {
@@ -237,7 +239,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * resolves identifier aliases and returns the aliased identifier.
      *
      * @param   string|object $identifier The class identifier or identifier object
-     * @return  KObjectIdentifier
+     * @return  ObjectIdentifier
      */
     final public function getIdentifier($identifier = null)
     {
@@ -257,7 +259,7 @@ abstract class KBehaviorAbstract extends KCommandCallbackAbstract implements KBe
      * resolves identifier aliases and returns the aliased identifier.
      *
      *  @param  string|object $identifier A valid identifier string or object implementing ObjectInterface
-     *  @return KObjectConfig
+     *  @return ObjectConfig
      */
     public function getConfig($identifier = null)
     {

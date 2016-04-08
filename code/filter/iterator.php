@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Filter Iterator
@@ -13,9 +15,9 @@
  * If the data passed is an array or is traversable the filter will iterate over it and filter each individual value.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filter
+ * @package Kodekit\Library\Filter
  */
-class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFilterTraversable
+class FilterIterator extends ObjectDecorator implements FilterInterface, FilterTraversable
 {
     /**
      * Validate a scalar or traversable data
@@ -29,7 +31,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     {
         $result = true;
 
-        if(is_array($data) || $data instanceof Traversable)
+        if(is_array($data) || $data instanceof \Traversable)
         {
             foreach($data as $value)
             {
@@ -51,7 +53,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
      */
     public function sanitize($data)
     {
-        if(is_array($data) || $data instanceof Traversable)
+        if(is_array($data) || $data instanceof \Traversable)
         {
             foreach((array)$data as $key => $value)
             {
@@ -70,7 +72,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     /**
      * Resets any generated errors for the filter
      *
-     * @return KFilterIterator
+     * @return FilterIterator
      */
     public function reset()
     {
@@ -102,7 +104,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
      * Add an error message
      *
      * @param string $message The error message
-     * @return KFilterIterator
+     * @return FilterIterator
      */
     public function addError($message)
     {
@@ -113,14 +115,14 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     /**
      * Set the decorated filter
      *
-     * @param   KFilterInterface $delegate The decorated filter
-     * @return  KFilterIterator
-     * @throws  InvalidArgumentException If the delegate is not a filter
+     * @param   FilterInterface $delegate The decorated filter
+     * @return  FilterIterator
+     * @throws  \InvalidArgumentException If the delegate is not a filter
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KFilterInterface) {
-            throw new InvalidArgumentException('Filter: '.get_class($delegate).' does not implement KFilterInterface');
+        if (!$delegate instanceof FilterInterface) {
+            throw new \InvalidArgumentException('Filter: '.get_class($delegate).' does not implement FilterInterface');
         }
 
         return parent::setDelegate($delegate);
@@ -129,7 +131,7 @@ class KFilterIterator extends KObjectDecorator implements KFilterInterface, KFil
     /**
      * Get the decorated filter
      *
-     * @return KFilterInterface
+     * @return FilterInterface
      */
     public function getDelegate()
     {

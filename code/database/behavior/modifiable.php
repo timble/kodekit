@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Modifiable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorModifiable extends DatabaseBehaviorAbstract
 {
     /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObjectConfig $config 	An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config 	An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'  => self::PRIORITY_LOW,
@@ -35,7 +37,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
     /**
      * Get the user that last edited the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return UserInterface|null Returns a User object or NULL if no user could be found
      */
     public function getEditor()
     {
@@ -60,7 +62,7 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
         $table = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
-        if($table instanceof KDatabaseTableInterface)
+        if($table instanceof DatabaseTableInterface)
         {
             if(!$table->hasColumn('modified_by') && !$table->hasColumn('modified_on')) {
                 return false;
@@ -75,10 +77,10 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      *
      * Requires an 'modified_on' and 'modified_by' column
      *
-     * @param KDatabaseContext	$context A database context object
+     * @param DatabaseContext	$context A database context object
      * @return void
      */
-    protected function _beforeInsert(KDatabaseContext $context)
+    protected function _beforeInsert(DatabaseContext $context)
     {
         if($this->hasProperty('modified_by')) {
             $this->modified_by = (int) $this->getObject('user')->getId();
@@ -94,10 +96,10 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      *
      * Requires a 'modified_on' and 'modified_by' column
      *
-     * @param KDatabaseContext	$context A database context object
+     * @param DatabaseContext	$context A database context object
      * @return void
      */
-    protected function _beforeUpdate(KDatabaseContext $context)
+    protected function _beforeUpdate(DatabaseContext $context)
     {
         //Get the modified columns
         $modified  = $this->getTable()->filter($this->getProperties(true));
@@ -112,14 +114,14 @@ class KDatabaseBehaviorModifiable extends KDatabaseBehaviorAbstract
      *
      * Requires a 'created_by' column
      *
-     * @param KDatabaseContext	$context A database context object
+     * @param DatabaseContext	$context A database context object
      * @return void
      */
-    protected function _afterSelect(KDatabaseContext $context)
+    protected function _afterSelect(DatabaseContext $context)
     {
         $rowset = $context->data;
 
-        if($rowset instanceof KDatabaseRowsetInterface)
+        if($rowset instanceof DatabaseRowsetInterface)
         {
             $users = array();
 

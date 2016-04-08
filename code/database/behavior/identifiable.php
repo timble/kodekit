@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Identifiable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorIdentifiable extends DatabaseBehaviorAbstract
 {
     /**
      * Set to true if uuid should be auto-generated
@@ -26,9 +28,9 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -40,10 +42,10 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config   An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'auto_generate' => true,
@@ -63,7 +65,7 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
         $table = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
-        if($table instanceof KDatabaseTableInterface)
+        if($table instanceof DatabaseTableInterface)
         {
             if(!$table->hasColumn('uuid')) {
                 return false;
@@ -81,12 +83,12 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
      * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
      * hex value will be returned.
      *
-     * @param KDatabaseContext	$context A database context object
+     * @param DatabaseContext	$context A database context object
      * @return void
      */
-    protected function _afterSelect(KDatabaseContext $context)
+    protected function _afterSelect(DatabaseContext $context)
     {
-        if($this->getMixer() instanceof KDatabaseRowInterface && $this->_auto_generate && !$this->isNew())
+        if($this->getMixer() instanceof DatabaseRowInterface && $this->_auto_generate && !$this->isNew())
         {
             if($this->hasProperty('uuid') && empty($this->uuid))
             {
@@ -104,12 +106,12 @@ class KDatabaseBehaviorIdentifiable extends KDatabaseBehaviorAbstract
      * Requires an 'uuid' column, if the column type is char the uuid will be a string, if the column type is binary a
      * hex value will be returned.
      *
-     * @param KDatabaseContextInterface $context
+     * @param DatabaseContextInterface $context
      * @return void
      */
-    protected function _beforeInsert(KDatabaseContextInterface $context)
+    protected function _beforeInsert(DatabaseContextInterface $context)
     {
-        if($this->getMixer() instanceof KDatabaseRowInterface)
+        if($this->getMixer() instanceof DatabaseRowInterface)
         {
             if($this->hasProperty('uuid') && empty($this->uuid))
             {

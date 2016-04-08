@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Http Message
@@ -13,14 +15,14 @@
  * @see http://tools.ietf.org/html/rfc2616#section-4
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Http\Message
+ * @package Kodekit\Library\Http\Message
  */
-abstract class KHttpMessage extends KObject implements KHttpMessageInterface
+abstract class HttpMessage extends Object implements HttpMessageInterface
 {
     /**
      * The message headers
      *
-     * @var KHttpMessageHeaders
+     * @var HttpMessageHeaders
      */
     protected $_headers;
 
@@ -48,10 +50,10 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KHttpMessage
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return HttpMessage
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -68,10 +70,10 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'version'      => '1.1',
@@ -87,7 +89,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      * Set the header parameters
      *
      * @param  array $headers
-     * @return KHttpMessageInterface
+     * @return HttpMessageInterface
      */
     public function setHeaders($headers)
     {
@@ -98,7 +100,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
     /**
      * Get the headers container
      *
-     * @return KHttpMessageHeaders
+     * @return HttpMessageHeaders
      */
     public function getHeaders()
     {
@@ -109,13 +111,13 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
      * Sets the HTTP protocol version (1.0 or 1.1).
      *
      * @param string $version The HTTP protocol version
-     * @throws InvalidArgumentException
-     * @return KHttpResponse
+     * @throws \InvalidArgumentException
+     * @return HttpResponse
      */
     public function setVersion($version)
     {
         if ($version != '1.1' && $version != '1.0') {
-            throw new InvalidArgumentException('Not valid or not supported HTTP version: ' . $version);
+            throw new \InvalidArgumentException('Not valid or not supported HTTP version: ' . $version);
         }
 
         $this->_version = $version;
@@ -146,7 +148,7 @@ abstract class KHttpMessage extends KObject implements KHttpMessageInterface
     {
         if (!is_null($content) && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString')))
         {
-            throw new UnexpectedValueException(
+            throw new \UnexpectedValueException(
                 'The message content must be a string or object implementing __toString(), "'.gettype($content).'" given.'
             );
         }

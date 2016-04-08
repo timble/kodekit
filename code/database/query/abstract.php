@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Database Query
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Query
+ * @package Kodekit\Library\Database\Query
  */
-abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryInterface
+abstract class DatabaseQueryAbstract extends Object implements DatabaseQueryInterface
 {
     /**
      * Query parameters to bind
@@ -25,21 +27,21 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Database driver
      *
-     * @var  KDatabaseDriverInterface
+     * @var  DatabaseDriverInterface
      */
     private $__driver;
 
     /**
      * Constructor
      *
-     * @param KObjectConfig $config  An optional KObjectConfig object with configuration options
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         $this->__driver = $config->driver;
-        $this->setParameters(KObjectConfig::unbox($config->parameters));
+        $this->setParameters(ObjectConfig::unbox($config->parameters));
     }
 
     /**
@@ -47,10 +49,10 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'driver'     => 'lib:database.driver.mysqli',
@@ -62,7 +64,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
      * Bind values to a corresponding named placeholders in the query.
      *
      * @param  array $params Associative array of parameters.
-     * @return \KDatabaseQueryInterface
+     * @return DatabaseQueryInterface
      */
     public function bind(array $params)
     {
@@ -88,7 +90,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Get the query parameters
      *
-     * @return  KDatabaseQueryParameters
+     * @return  DatabaseQueryParameters
      */
     public function getParameters()
     {
@@ -98,19 +100,19 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Gets the database driver
      *
-     * @throws	\UnexpectedValueException	If the driver doesn't implement KDatabaseDriverInterface
-     * @return KDatabaseDriverInterface
+     * @throws	\\UnexpectedValueException	If the driver doesn't implement DatabaseDriverInterface
+     * @return DatabaseDriverInterface
      */
     public function getDriver()
     {
-        if(!$this->__driver instanceof KDatabaseDriverInterface)
+        if(!$this->__driver instanceof DatabaseDriverInterface)
         {
             $this->__driver = $this->getObject($this->__driver);
 
-            if(!$this->__driver instanceof KDatabaseDriverInterface)
+            if(!$this->__driver instanceof DatabaseDriverInterface)
             {
-                throw new UnexpectedValueException(
-                    'Driver: '.get_class($this->__driver).' does not implement KDatabaseDriverInterface'
+                throw new \UnexpectedValueException(
+                    'Driver: '.get_class($this->__driver).' does not implement DatabaseDriverInterface'
                 );
             }
         }
@@ -121,10 +123,10 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
     /**
      * Set the database driver
      *
-     * @param KDatabaseDriverInterface $driver
-     * @return KDatabaseQueryInterface
+     * @param DatabaseDriverInterface $driver
+     * @return DatabaseQueryInterface
      */
-    public function setDriver(KDatabaseDriverInterface $driver)
+    public function setDriver(DatabaseDriverInterface $driver)
     {
         $this->__driver = $driver;
         return $this;
@@ -152,7 +154,7 @@ abstract class KDatabaseQueryAbstract extends KObject implements KDatabaseQueryI
         $key   = substr($matches[0], 1);
         $value = $this->_parameters[$key];
 
-        if(!$value instanceof KDatabaseQuerySelect) {
+        if(!$value instanceof DatabaseQuerySelect) {
             $value = is_object($value) ? (string) $value : $value;
             $replacement = $this->getDriver()->quoteValue($value);
         }

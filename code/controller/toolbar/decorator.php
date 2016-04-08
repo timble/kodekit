@@ -1,29 +1,31 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Controller Toolbar Decorator
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Kodekit\Library\Controller\Toolbar
  */
-abstract class KControllerToolbarDecorator extends KObjectDecorator implements KControllerToolbarInterface, KCommandHandlerInterface
+abstract class ControllerToolbarDecorator extends ObjectDecorator implements ControllerToolbarInterface, CommandHandlerInterface
 {
     /**
      * Command handler
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
      * @return array|mixed Returns an array of the handler results in FIFO order. If a handler returns not NULL and the
      *                     returned value equals the break condition of the chain the break condition will be returned.
      */
-    final public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    final public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
         $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);
@@ -89,11 +91,11 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
      *
      * @param   string    $command The command name
      * @param   mixed    $config  Parameters to be passed to the command
-     * @return  KControllerToolbarCommand  The command that was added
+     * @return  ControllerToolbarCommand  The command that was added
      */
     public function addCommand($command, $config = array())
     {
-        if (!($command instanceof KControllerToolbarCommand)) {
+        if (!($command instanceof ControllerToolbarCommand)) {
             $command = $this->getCommand($command, $config);
         }
 
@@ -112,7 +114,7 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
         if(!$this->getDelegate()->hasCommand($name))
         {
             //Create the config object
-            $command = new KControllerToolbarCommand($name, $config);
+            $command = new ControllerToolbarCommand($name, $config);
 
             //Attach the command to the toolbar
             $command->setToolbar($this);
@@ -187,13 +189,13 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
     /**
      * Set the decorated model
      *
-     * @param   KControllerToolbarInterface $delegate The decorated toolbar
-     * @return  KControllerToolbarDecorator
+     * @param   ControllerToolbarInterface $delegate The decorated toolbar
+     * @return  ControllerToolbarDecorator
      * @throws \InvalidArgumentException If the delegate is not a toolbar
      */
     public function setDelegate($delegate)
     {
-        if (!$delegate instanceof KControllerToolbarInterface) {
+        if (!$delegate instanceof ControllerToolbarInterface) {
             throw new \InvalidArgumentException('Delegate: '.get_class($delegate).' does not implement ControllerToolbarInterface');
         }
 
@@ -203,7 +205,7 @@ abstract class KControllerToolbarDecorator extends KObjectDecorator implements K
     /**
      * Get the decorated toolbar
      *
-     * @return KControllerToolbarInterface
+     * @return ControllerToolbarInterface
      */
     public function getDelegate()
     {

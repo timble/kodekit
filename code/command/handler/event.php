@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Event Command Handler
@@ -17,14 +19,14 @@
  * or passed by reference instead. By default the context is passed by reference.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Command\Handler
+ * @package Kodekit\Library\Command\Handler
  */
-final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObjectSingleton
+final class CommandHandlerEvent extends CommandHandlerAbstract implements ObjectSingleton
 {
     /**
      * The command priority
      *
-     * @var KEventPublisherInterface
+     * @var EventPublisherInterface
      */
     private $__event_publisher;
 
@@ -38,15 +40,15 @@ final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObj
     /**
      * Object constructor
      *
-     * @param KObjectConfig $config Configuration options
-     * @throws InvalidArgumentException
+     * @param ObjectConfig $config Configuration options
+     * @throws \InvalidArgumentException
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         if (is_null($config->event_publisher)) {
-            throw new InvalidArgumentException('event_publisher [KEventPublisherInterface] config option is required');
+            throw new \InvalidArgumentException('event_publisher [EventPublisherInterface] config option is required');
         }
 
         //Set the event dispatcher
@@ -61,10 +63,10 @@ final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObj
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'        => self::PRIORITY_LOWEST,
@@ -78,19 +80,19 @@ final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObj
     /**
      * Get the event publisher
      *
-     * @throws UnexpectedValueException
-     * @return  KEventPublisherInterface
+     * @throws \UnexpectedValueException
+     * @return  EventPublisherInterface
      */
     public function getEventPublisher()
     {
-        if(!$this->__event_publisher instanceof KEventPublisherInterface)
+        if(!$this->__event_publisher instanceof EventPublisherInterface)
         {
             $this->__event_publisher = $this->getObject($this->__event_publisher);
 
-            if(!$this->__event_publisher instanceof KEventPublisherInterface)
+            if(!$this->__event_publisher instanceof EventPublisherInterface)
             {
-                throw new UnexpectedValueException(
-                    'EventPublisher: '.get_class($this->__event_publisher).' does not implement KEventPublisherInterface'
+                throw new \UnexpectedValueException(
+                    'EventPublisher: '.get_class($this->__event_publisher).' does not implement EventPublisherInterface'
                 );
             }
         }
@@ -101,10 +103,10 @@ final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObj
     /**
      * Set the event publisher
      *
-     * @param   KEventPublisherInterface  $publisher An event publisher object
+     * @param   EventPublisherInterface  $publisher An event publisher object
      * @return  Object  The mixer object
      */
-    public function setEventPublisher(KEventPublisherInterface $publisher)
+    public function setEventPublisher(EventPublisherInterface $publisher)
     {
         $this->__event_publisher = $publisher;
         return $this;
@@ -113,11 +115,11 @@ final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObj
     /**
      * Command handler
      *
-     * @param KCommandInterface         $command    The command
-     * @param KCommandChainInterface    $chain      The chain executing the command
+     * @param CommandInterface         $command    The command
+     * @param CommandChainInterface    $chain      The chain executing the command
      * @return mixed|null If a handler breaks, returns the break condition. NULL otherwise.
      */
-    public function execute(KCommandInterface $command, KCommandChainInterface $chain)
+    public function execute(CommandInterface $command, CommandChainInterface $chain)
     {
         $type    = '';
         $package = '';
@@ -138,7 +140,7 @@ final class KCommandHandlerEvent extends KCommandHandlerAbstract implements KObj
 
         $parts  = explode('.', $command->getName());
         $when   = array_shift($parts);               // Before or After
-        $name   = KStringInflector::implode($parts); // Read Dispatch Select etc.
+        $name   = StringInflector::implode($parts); // Read Dispatch Select etc.
 
         // Create Specific and Generic event names
         $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
 
+namespace Kodekit\Library;
+
 /**
- * Koowa Template Engine
+ * Kodekit Template Engine
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Template\Engine
+ * @package Kodekit\Library\Template\Engine
  */
-class KTemplateEngineKoowa extends KTemplateEngineAbstract
+class TemplateEngineKodekit extends TemplateEngineAbstract
 {
     /**
      * The engine file types
@@ -25,16 +27,16 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
     /**
      * The template buffer
      *
-     * @var KFilesystemStreamBuffer
+     * @var FilesystemStreamBuffer
      */
     protected $_buffer;
 
     /**
      * Constructor
      *
-     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -50,9 +52,9 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'functions'           => array(
@@ -67,10 +69,10 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * Load a template by path
      *
      * @param   string  $url      The template url
-     * @throws InvalidArgumentException If the template could not be located
-     * @throws RuntimeException         If the template could not be loaded
-     * @throws RuntimeException         If the template could not be compiled
-     * @return KTemplateEngineKoowa
+     * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException         If the template could not be loaded
+     * @throws \RuntimeException         If the template could not be compiled
+     * @return TemplateEngineKodekit
      */
     public function loadFile($url)
     {
@@ -86,13 +88,13 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
             $content = file_get_contents($file);
 
             if($content === false) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+                throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
 
             //Compile the template
             $content = $this->_compile($content);
             if($content === false) {
-                throw new RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
+                throw new \RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
             }
 
             $this->_source = $this->cache($file, $content);
@@ -106,8 +108,8 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * Set the template source from a string
      *
      * @param  string  $source The template source
-     * @throws RuntimeException If the template could not be compiled
-     * @return KTemplateEngineKoowa
+     * @throws \RuntimeException If the template could not be compiled
+     * @return TemplateEngineKodekit
      */
     public function loadString($source)
     {
@@ -119,7 +121,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
             $source = $this->_compile($source);
 
             if($source === false) {
-                throw new RuntimeException(sprintf('The template content cannot be compiled.'));
+                throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
             }
 
             $file = $this->cache($name, $source);
@@ -137,7 +139,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * Render a template
      *
      * @param   array   $data   The data to pass to the template
-     * @throws RuntimeException If the template could not be rendered
+     * @throws \RuntimeException If the template could not be rendered
      * @return string The rendered template source
      */
     public function render(array $data = array())
@@ -149,7 +151,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
         $content = $this->_evaluate();
 
         if ($content === false) {
-            throw new RuntimeException(sprintf('The template "%s" cannot be evaluated.', $this->_source));
+            throw new \RuntimeException(sprintf('The template "%s" cannot be evaluated.', $this->_source));
         }
 
         //Render the debug information
@@ -169,15 +171,15 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      *
      * @param  string $name     The file name
      * @param  string $source   The template source to cache
-     * @throws RuntimeException If the template cache path is not writable
-     * @throws RuntimeException If template cannot be cached
+     * @throws \RuntimeException If the template cache path is not writable
+     * @throws \RuntimeException If template cannot be cached
      * @return string The cached template file path
      */
     public function cache($name, $source)
     {
         if(!$file = parent::cache($name, $source))
         {
-            $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('koowa-buffer://temp', 'w+b');
+            $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('kodekit-buffer://temp', 'w+b');
             $this->_buffer->truncate(0);
             $this->_buffer->write($source);
 
@@ -195,7 +197,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * @param  \Exception  $exception
      * @return void
      */
-    public function handleException(Exception &$exception)
+    public function handleException(\Exception &$exception)
     {
         if($template = end($this->_stack))
         {
@@ -205,7 +207,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
                 ob_get_clean();
 
                 //Re-create the exception and set the real file path
-                if($exception instanceof ErrorException)
+                if($exception instanceof \ErrorException)
                 {
                     $class = get_class($exception);
 
@@ -226,7 +228,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * Locate the template
      *
      * @param  string $url The template url
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return string   The template real path
      */
     protected function _locate($url)
@@ -248,7 +250,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
 
         //Locate the template
         if (!$file = $locator->setBasePath($base)->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         return $file;
@@ -261,7 +263,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
      * is enabled.
      *
      * @param  string $source The template source to compile
-     * @throws KTemplateExceptionSyntaxError
+     * @throws TemplateExceptionSyntaxError
      * @return string The compiled template content
      */
     protected function _compile($source)
@@ -313,7 +315,7 @@ class KTemplateEngineKoowa extends KTemplateEngineAbstract
                     case T_VARIABLE:
 
                         if ('$this' == $content) {
-                            throw new KTemplateExceptionSyntaxError('Using $this when not in object context');
+                            throw new TemplateExceptionSyntaxError('Using $this when not in object context');
                         }
 
                         $result .= $content;

@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Command Mixin Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Command\Callback
+ * @package Kodekit\Library\Command\Callback
  */
-interface KCommandCallbackInterface extends KCommandCallbackDelegate
+interface CommandCallbackInterface extends CommandCallbackDelegate
 {
     /**
      * Invoke a command by calling all the registered callbacks
      *
-     * @param  string|KCommandInterface  $command    The command name or a KCommandInterface object
-     * @param  array|Traversable         $attributes An associative array or a Traversable object
-     * @param  KObjectInterface          $subject    The command subject
+     * @param  string|CommandInterface  $command    The command name or a CommandInterface object
+     * @param  array|\Traversable         $attributes An associative array or a Traversable object
+     * @param  ObjectInterface          $subject    The command subject
      * @return mixed|null If a callback break, returns the break condition. NULL otherwise.
      */
     public function invokeCallbacks($command, $attributes = null, $subject = null);
@@ -32,10 +34,10 @@ interface KCommandCallbackInterface extends KCommandCallbackDelegate
      * change or add parameters for existing handlers.
      *
      * @param  	string          $command  The command name to register the handler for
-     * @param 	string|Closure  $method   The name of a method or a Closure object
-     * @param   array|object    $params   An associative array of config parameters or a KObjectConfig object
-     * @throws  InvalidArgumentException If the method does not exist
-     * @return  KCommandCallbackAbstract
+     * @param 	string|\Closure  $method   The name of a method or a Closure object
+     * @param   array|object    $params   An associative array of config parameters or a ObjectConfig object
+     * @throws  \InvalidArgumentException If the method does not exist
+     * @return  CommandCallbackAbstract
      */
     public function addCommandCallback($command, $method, $params = array());
 
@@ -44,7 +46,7 @@ interface KCommandCallbackInterface extends KCommandCallbackDelegate
      *
      * @param  	string	$command  The command to unregister the handler from
      * @param 	string	$method   The name of the method to unregister
-     * @return  KCommandCallbackAbstract
+     * @return  CommandCallbackAbstract
      */
     public function removeCommandCallback($command, $method);
 
@@ -60,7 +62,7 @@ interface KCommandCallbackInterface extends KCommandCallbackDelegate
      * Set the break condition
      *
      * @param mixed|null $condition The break condition, or NULL to set reset the break condition
-     * @return KCommandChain
+     * @return CommandChain
      */
     public function setBreakCondition($condition);
 

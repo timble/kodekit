@@ -1,33 +1,35 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Html View
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\View
+ * @package Kodekit\Library\View
  */
-class KViewHtml extends KViewTemplate
+class ViewHtml extends ViewTemplate
 {
     /**
      * Initializes the config for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'mimetype'          => 'text/html',
-            'template_filters'  => array('form'),
+            'template_filters'  => array('form', 'include'),
         ));
 
         parent::_initialize($config);
@@ -39,7 +41,7 @@ class KViewHtml extends KViewTemplate
      * @param string|array  $route  The query string used to create the route
      * @param boolean       $fqr    If TRUE create a fully qualified route. Default FALSE.
      * @param boolean       $escape If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return  KDispatcherRouterRoute The route
+     * @return  DispatcherRouterRoute The route
      */
     public function getRoute($route = '', $fqr = false, $escape = true)
     {

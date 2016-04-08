@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * JSON Dispatcher Response Transport
@@ -13,9 +15,9 @@
  * Response represents an HTTP response in JSON format.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Response\Transport
+ * @package Kodekit\Library\Dispatcher\Response\Transport
  */
-class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
+class DispatcherResponseTransportJson extends DispatcherResponseTransportHttp
 {
     /**
      * The padding for JSONP
@@ -27,9 +29,9 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -41,10 +43,10 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $config  An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority' => self::PRIORITY_NORMAL,
@@ -59,8 +61,8 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
      * Sets the JSONP callback.
      *
      * @param string $callback
-     * @throws InvalidArgumentException If the padding is not a valid javascript identifier
-     * @return KDispatcherResponseTransportJson
+     * @throws \InvalidArgumentException If the padding is not a valid javascript identifier
+     * @return DispatcherResponseTransportJson
      */
     public function setCallback($callback)
     {
@@ -71,7 +73,7 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
         foreach ($parts as $part)
         {
             if (!preg_match($pattern, $part)) {
-                throw new InvalidArgumentException('The callback name is not valid.');
+                throw new \InvalidArgumentException('The callback name is not valid.');
             }
         }
 
@@ -89,10 +91,10 @@ class KDispatcherResponseTransportJson extends KDispatcherResponseTransportHttp
      *
      * @link http://tools.ietf.org/html/rfc2616
      *
-     * @param KDispatcherResponseInterface $response
+     * @param DispatcherResponseInterface $response
      * @return boolean
      */
-    public function send(KDispatcherResponseInterface $response)
+    public function send(DispatcherResponseInterface $response)
     {
         $request = $response->getRequest();
 

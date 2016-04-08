@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 require_once dirname(__FILE__) . '/interface.php';
 require_once dirname(__FILE__) . '/locator/interface.php';
@@ -19,9 +21,9 @@ require_once dirname(__FILE__) . '/registry/cache.php';
  * Loader
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Class
+ * @package Kodekit\Library\Class
  */
-class KClassLoader implements KClassLoaderInterface
+class ClassLoader implements ClassLoaderInterface
 {
     /**
      * The class container
@@ -52,15 +54,15 @@ class KClassLoader implements KClassLoaderInterface
     final private function __construct($config = array())
     {
         //Create the class registry
-        if(isset($config['cache']) && $config['cache'] && KClassRegistryCache::isSupported())
+        if(isset($config['cache']) && $config['cache'] && ClassRegistryCache::isSupported())
         {
-            $this->__registry = new KClassRegistryCache();
+            $this->__registry = new ClassRegistryCache();
 
             if(isset($config['cache_namespace'])) {
                 $this->__registry->setNamespace($config['cache_namespace']);
             }
         }
-        else $this->__registry = new KClassRegistry();
+        else $this->__registry = new ClassRegistry();
 
         //Set the debug mode
         if(isset($config['debug'])) {
@@ -68,10 +70,10 @@ class KClassLoader implements KClassLoaderInterface
         }
 
         //Register the library locator
-        $this->registerLocator(new KClassLocatorLibrary($config));
+        $this->registerLocator(new ClassLocatorLibrary($config));
 
-        //Register the Koowa Library namesoace 'K'
-        $this->getLocator('library')->registerNamespace('K', dirname(dirname(__FILE__)));
+        //Register the library namesoace
+        $this->getLocator('library')->registerNamespace(__NAMESPACE__, dirname(dirname(__FILE__)));
 
         //Register the loader with the PHP autoloader
         $this->register();
@@ -84,14 +86,14 @@ class KClassLoader implements KClassLoaderInterface
      */
     final private function __clone()
     {
-        throw new Exception("An instance of KClassLoader cannot be cloned.");
+        throw new \Exception("An instance of ClassLoader cannot be cloned.");
     }
 
     /**
      * Singleton instance
      *
      * @param  array  $config An optional array with configuration options.
-     * @return KClassLoader
+     * @return ClassLoader
      */
     final public static function getInstance($config = array())
     {
@@ -131,7 +133,7 @@ class KClassLoader implements KClassLoaderInterface
      * Load a class based on a class name
      *
      * @param string  $class    The class name
-     * @throws RuntimeException If debug is enabled and the class could not be found in the file.
+     * @throws \RuntimeException If debug is enabled and the class could not be found in the file.
      * @return boolean  Returns TRUE if the class could be loaded, otherwise returns FALSE.
      */
     public function load($class)
@@ -151,7 +153,7 @@ class KClassLoader implements KClassLoaderInterface
                 {
                     if(!$this->isDeclared($class))
                     {
-                        throw new RuntimeException(sprintf(
+                        throw new \RuntimeException(sprintf(
                             'The autoloader expected class "%s" to be defined in file "%s".
                             The file was found but the class was not in it, the class name
                             or namespace probably has a typo.', $class, $path
@@ -208,11 +210,11 @@ class KClassLoader implements KClassLoaderInterface
     /**
      * Register a class locator
      *
-     * @param  KClassLocatorInterface $locator
+     * @param  ClassLocatorInterface $locator
      * @param  bool $prepend If true, the locator will be prepended instead of appended.
      * @return void
      */
-    public function registerLocator(KClassLocatorInterface $locator, $prepend = false )
+    public function registerLocator(ClassLocatorInterface $locator, $prepend = false )
     {
         $array = array($locator->getName() => $locator);
 
@@ -227,7 +229,7 @@ class KClassLoader implements KClassLoaderInterface
      * Get a registered class locator based on his type
      *
      * @param string $type The locator type
-     * @return KClassLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
+     * @return ClassLocatorInterface|null  Returns the object locator or NULL if it cannot be found.
      */
     public function getLocator($type)
     {
@@ -281,7 +283,7 @@ class KClassLoader implements KClassLoaderInterface
      * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
      *
      * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
-     * @return KClassLoader
+     * @return ClassLoader
      */
     public function setDebug($debug)
     {

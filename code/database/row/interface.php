@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Database Row Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Row
+ * @package Kodekit\Library\Database\Row
  */
-interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializable, Countable
+interface DatabaseRowInterface extends \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
     /**
      * Saves the to the database.
@@ -21,21 +23,21 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * This performs an intelligent insert/update and reloads the properties
      * with fresh data from the table on success.
      *
-     * @return KDatabaseRowInterface
+     * @return DatabaseRowInterface
      */
     public function save();
 
     /**
      * Deletes the row form the database.
      *
-     * @return KDatabaseRowInterface
+     * @return DatabaseRowInterface
      */
     public function delete();
 
     /**
      * Resets to the row to it's default properties
      *
-     * @return KDatabaseRowInterface
+     * @return DatabaseRowInterface
      */
     public function clear();
 
@@ -63,7 +65,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function setProperty($name, $value, $modified = true);
 
@@ -79,7 +81,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function removeProperty($name);
 
@@ -94,9 +96,9 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
     /**
      * Set the properties
      *
-     * @param   mixed   $properties  Either and associative array, an object or a KDatabaseRow
+     * @param   mixed   $properties  Either and associative array, an object or a DatabaseRow
      * @param   boolean $modified    If TRUE, update the modified information for each column being set.
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function setProperties($properties, $modified = true);
 
@@ -118,7 +120,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Set the status
      *
      * @param   string|null $status The status value or NULL to reset the status
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function setStatus($status);
 
@@ -133,7 +135,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function setStatusMessage($message);
 
@@ -143,7 +145,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * Function catches DatabaseTableExceptions that are thrown for tables that
      * don't exist. If no table object can be created the function will return FALSE.
      *
-     * @return KDatabaseTableAbstract
+     * @return DatabaseTableAbstract
      */
     public function getTable();
 
@@ -153,7 +155,7 @@ interface KDatabaseRowInterface extends IteratorAggregate, ArrayAccess, Serializ
      * @param    mixed    $table An object that implements ObjectInterface, ObjectIdentifier object
      *                           or valid identifier string
      * @throws  \UnexpectedValueException    If the identifier is not a table identifier
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function setTable($table);
 

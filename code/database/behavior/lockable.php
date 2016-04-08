@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Lockable Database Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Behavior
+ * @package Kodekit\Library\Database\Behavior
  */
-class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
+class DatabaseBehaviorLockable extends DatabaseBehaviorAbstract
 {
     /**
      * The lock lifetime
@@ -27,10 +29,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'priority'   => self::PRIORITY_HIGH,
@@ -45,7 +47,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
     /**
      * Get the user that owns the lock on the resource
      *
-     * @return KUserInterface|null Returns a User object or NULL if no user could be found
+     * @return UserInterface|null Returns a User object or NULL if no user could be found
      */
     public function getLocker()
     {
@@ -70,7 +72,7 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
         $table = $this->getMixer();
 
         //Only check if we are connected with a table object, otherwise just return true.
-        if($table instanceof KDatabaseTableInterface)
+        if($table instanceof DatabaseTableInterface)
         {
             if(!$table->hasColumn('locked_by') && !$table->hasColumn('locked_on')) {
                 return false;
@@ -158,10 +160,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      * This function determines if a row can be updated based on it's locked_by information. If a row is locked, and
      * not by the logged in user, the function will return false, otherwise it will return true
      *
-     * @param  KDatabaseContextInterface $context
+     * @param  DatabaseContextInterface $context
      * @return boolean         True if row can be updated, false otherwise
      */
-    protected function _beforeUpdate(KDatabaseContextInterface $context)
+    protected function _beforeUpdate(DatabaseContextInterface $context)
     {
         return (bool) !$this->isLocked();
     }
@@ -172,10 +174,10 @@ class KDatabaseBehaviorLockable extends KDatabaseBehaviorAbstract
      * This function determines if a row can be deleted based on it's locked_by information. If a row is locked, and
      * not by the logged in user, the function will return false, otherwise it will return true
      *
-     * @param  KDatabaseContextInterface $context
+     * @param  DatabaseContextInterface $context
      * @return boolean         True if row can be deleted, false otherwise
      */
-    protected function _beforeDelete(KDatabaseContextInterface $context)
+    protected function _beforeDelete(DatabaseContextInterface $context)
     {
         return (bool) !$this->isLocked();
     }

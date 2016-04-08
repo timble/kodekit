@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Database Row
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Database\Row
+ * @package Kodekit\Library\Database\Row
  */
-abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRowInterface
+abstract class DatabaseRowAbstract extends ObjectArray implements DatabaseRowInterface
 {
     /**
      * List of computed properties
@@ -70,9 +72,9 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -110,10 +112,10 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'table'           => $this->getIdentifier()->name,
@@ -143,7 +145,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         {
             if (!$this->isNew())
             {
-                if($this->getStatus() !== KDatabase::STATUS_UPDATED) {
+                if($this->getStatus() !== Database::STATUS_UPDATED) {
                     $result = $this->getTable()->update($this);
                 }
             }
@@ -175,7 +177,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Clear the row data using the defaults
      *
-     * @return KDatabaseRowInterface
+     * @return DatabaseRowInterface
      */
     public function clear()
     {
@@ -197,8 +199,8 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      *
      * @param   mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectMixableInterface
      * @param  array $config  An optional associative array of configuration options
-     * @return  KObjectMixinInterface
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @return  ObjectMixinInterface
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws  \UnexpectedValueException If the mixin does not implement the ObjectMixinInterface
      */
     public function mixin($mixin, $config = array())
@@ -228,7 +230,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
         //Handle computed properties
         if(!parent::offsetExists($name) && $this->hasProperty($name))
         {
-            $getter  = 'getProperty'.KStringInflector::camelize($name);
+            $getter  = 'getProperty'.StringInflector::camelize($name);
             $methods = $this->getMethods();
 
             if(isset($methods[$getter])) {
@@ -267,7 +269,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
                 }
 
                 //Call the setter if it exists
-                $setter  = 'setProperty'.KStringInflector::camelize($name);
+                $setter  = 'setProperty'.StringInflector::camelize($name);
                 $methods = $this->getMethods();
 
                 if(isset($methods[$setter])) {
@@ -281,7 +283,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
                 if($modified || $this->isNew())
                 {
                     $this->__modified_properties[$name] = $name;
-                    $this->setStatus(KDatabase::STATUS_MODIFIED);
+                    $this->setStatus(Database::STATUS_MODIFIED);
                 }
             }
         }
@@ -322,7 +324,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * This function will reset required properties to their default value, not required properties will be unset.
      *
      * @param   string  $name The property name.
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function removeProperty($name)
     {
@@ -363,13 +365,13 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     /**
      * Set the properties
      *
-     * @param   mixed   $properties  Either and associative array, an object or a KDatabaseRow
+     * @param   mixed   $properties  Either and associative array, an object or a DatabaseRow
      * @param   boolean $modified    If TRUE, update the modified information for each property being set.
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function setProperties($properties, $modified = true)
     {
-        if ($properties instanceof KDatabaseRowInterface) {
+        if ($properties instanceof DatabaseRowInterface) {
             $properties = $properties->getProperties(false);
         }
 
@@ -395,7 +397,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
             {
                 if (substr($method, 0, 11) == 'getProperty' && $method !== 'getProperty')
                 {
-                    $property = KStringInflector::underscore(substr($method, 11));
+                    $property = StringInflector::underscore(substr($method, 11));
                     $properties[$property] = $property;
                 }
             }
@@ -420,19 +422,19 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function setStatus($status)
     {
-        if($status === KDatabase::STATUS_CREATED) {
+        if($status === Database::STATUS_CREATED) {
             $this->__new = false;
         }
 
-        if($status === KDatabase::STATUS_DELETED) {
+        if($status === Database::STATUS_DELETED) {
             $this->__new = true;
         }
 
-        if($status === KDatabase::STATUS_FETCHED) {
+        if($status === Database::STATUS_FETCHED) {
             $this->__new = false;
         }
 
@@ -454,7 +456,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KDatabaseRowAbstract
+     * @return  DatabaseRowAbstract
      */
     public function setStatusMessage($message)
     {
@@ -496,7 +498,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      */
     public function getIterator()
     {
-        return new ArrayIterator(array($this));
+        return new \ArrayIterator(array($this));
     }
 
     /**
@@ -505,22 +507,22 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Function catches DatabaseTableExceptions that are thrown for tables that
      * don't exist. If no table object can be created the function will return FALSE.
      *
-     * @return KDatabaseTableAbstract
+     * @return DatabaseTableAbstract
      */
     public function getTable()
     {
         if ($this->_table !== false)
         {
-            if (!($this->_table instanceof KDatabaseTableInterface))
+            if (!($this->_table instanceof DatabaseTableInterface))
             {
                 //Make sure we have a table identifier
-                if (!($this->_table instanceof KObjectIdentifier)) {
+                if (!($this->_table instanceof ObjectIdentifier)) {
                     $this->setTable($this->_table);
                 }
 
                 try {
                     $this->_table = $this->getObject($this->_table);
-                } catch (RuntimeException $e) {
+                } catch (\RuntimeException $e) {
                     $this->_table = false;
                 }
             }
@@ -535,24 +537,24 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * @param    mixed    $table An object that implements ObjectInterface, ObjectIdentifier object
      *                           or valid identifier string
      * @throws  \UnexpectedValueException    If the identifier is not a table identifier
-     * @return  KDatabaseRowInterface
+     * @return  DatabaseRowInterface
      */
     public function setTable($table)
     {
-        if (!($table instanceof KDatabaseTableInterface))
+        if (!($table instanceof DatabaseTableInterface))
         {
             if (is_string($table) && strpos($table, '.') === false)
             {
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('database', 'table');
-                $identifier['name'] = KStringInflector::pluralize(KStringInflector::underscore($table));
+                $identifier['name'] = StringInflector::pluralize(StringInflector::underscore($table));
 
                 $identifier = $this->getIdentifier($identifier);
             }
             else $identifier = $this->getIdentifier($table);
 
             if ($identifier->path[1] != 'table') {
-                throw new UnexpectedValueException('Identifier: ' . $identifier . ' is not a table identifier');
+                throw new \UnexpectedValueException('Identifier: ' . $identifier . ' is not a table identifier');
             }
 
             $table = $identifier;
@@ -676,7 +678,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
      * Search the mixin method map and call the method or trigger an error
      *
      * This function implements a just in time mixin strategy. Available table behaviors are only mixed when needed.
-     * Lazy mixing is triggered by calling KDatabaseRowsetTable::is[Behaviorable]();
+     * Lazy mixing is triggered by calling DatabaseRowsetTable::is[Behaviorable]();
      *
      * @param  string     $method    The function name
      * @param  array      $arguments The function arguments
@@ -687,7 +689,7 @@ abstract class KDatabaseRowAbstract extends KObjectArray implements KDatabaseRow
     {
         if ($this->isConnected())
         {
-            $parts = KStringInflector::explode($method);
+            $parts = StringInflector::explode($method);
 
             //Check if a behavior is mixed
             if ($parts[0] == 'is' && isset($parts[1]))

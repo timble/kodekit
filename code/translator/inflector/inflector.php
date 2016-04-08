@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Returns the plural rules for a given language
@@ -14,9 +16,9 @@
  * Copyright (c) Fabien Potencier <fabien@symfony.com>
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Translator\Inflector
+ * @package Kodekit\Library\Translator\Inflector
  */
-class KTranslatorInflector extends KStringInflector implements KTranslatorInflectorInterface
+class TranslatorInflector extends StringInflector implements TranslatorInflectorInterface
 {
     private static $position_rules = array();
 
@@ -207,7 +209,7 @@ class KTranslatorInflector extends KStringInflector implements KTranslatorInflec
         }
 
         if (!is_callable($rule)) {
-            throw new LogicException('The given rule can not be called');
+            throw new \LogicException('The given rule can not be called');
         }
 
         self::$position_rules[$language] = $rule;

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Model Entity
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Entity
+ * @package Kodekit\Library\Model\Entity
  */
-abstract class KModelEntityAbstract extends KObjectArray implements KModelEntityInterface
+abstract class ModelEntityAbstract extends ObjectArray implements ModelEntityInterface
 {
     /**
      * List of computed properties
@@ -63,9 +65,9 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config  An optional KObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -95,10 +97,10 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional KObjectConfig object with configuration options.
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'data'            => null,
@@ -140,7 +142,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     /**
      * Clear the entity data
      *
-     * @return KModelEntityAbstract
+     * @return ModelEntityAbstract
      */
     public function clear()
     {
@@ -158,8 +160,8 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      *
      * @param   mixed $identifier An ObjectIdentifier, identifier string or object implementing ObjectMixableInterface
      * @param  array $config  An optional associative array of configuration options
-     * @return  KObjectMixinInterface
-     * @throws  KObjectExceptionInvalidIdentifier If the identifier is not valid
+     * @return  ObjectMixinInterface
+     * @throws  ObjectExceptionInvalidIdentifier If the identifier is not valid
      * @throws  \UnexpectedValueException If the mixin does not implement the ObjectMixinInterface
      */
     public function mixin($mixin, $config = array())
@@ -198,7 +200,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
         //Handle computed properties
         if(!parent::offsetExists($name) && $this->hasProperty($name))
         {
-            $getter  = 'getProperty'.KStringInflector::camelize($name);
+            $getter  = 'getProperty'.StringInflector::camelize($name);
             $methods = $this->getMethods();
 
             if(isset($methods[$getter])) {
@@ -237,7 +239,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
                 }
 
                 //Call the setter if it exists
-                $setter  = 'setProperty'.KStringInflector::camelize($name);
+                $setter  = 'setProperty'.StringInflector::camelize($name);
                 $methods = $this->getMethods();
 
                 if(isset($methods[$setter])) {
@@ -251,7 +253,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
                 if($modified || $this->isNew())
                 {
                     $this->__modified_properties[$name] = $name;
-                    $this->setStatus(KDatabase::STATUS_MODIFIED);
+                    $this->setStatus(Database::STATUS_MODIFIED);
                 }
             }
         }
@@ -287,7 +289,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KModelEntityAbstract
+     * @return  ModelEntityAbstract
      */
     public function removeProperty($name)
     {
@@ -317,13 +319,13 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
     /**
      * Set the properties
      *
-     * @param   mixed   $properties  Either and associative array, an object or a KModelEntityInterface
+     * @param   mixed   $properties  Either and associative array, an object or a ModelEntityInterface
      * @param   boolean $modified    If TRUE, update the modified information for each property being set.
      * @return  $this
      */
     public function setProperties($properties, $modified = true)
     {
-        if ($properties instanceof KModelEntityInterface) {
+        if ($properties instanceof ModelEntityInterface) {
             $properties = $properties->getProperties(false);
         }
 
@@ -349,7 +351,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
             {
                 if (substr($method, 0, 11) == 'getProperty' && $method !== 'getProperty')
                 {
-                    $property = KStringInflector::underscore(substr($method, 11));
+                    $property = StringInflector::underscore(substr($method, 11));
                     $properties[$property] = $property;
                 }
             }
@@ -374,19 +376,19 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KModelEntityAbstract
+     * @return  ModelEntityAbstract
      */
     public function setStatus($status)
     {
-        if($status === KDatabase::STATUS_CREATED) {
+        if($status === Database::STATUS_CREATED) {
             $this->__new = false;
         }
 
-        if($status === KDatabase::STATUS_DELETED) {
+        if($status === Database::STATUS_DELETED) {
             $this->__new = true;
         }
 
-        if($status === KDatabase::STATUS_FETCHED) {
+        if($status === Database::STATUS_FETCHED) {
             $this->__new = false;
         }
 
@@ -408,7 +410,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KModelEntityAbstract
+     * @return  ModelEntityAbstract
      */
     public function setStatusMessage($message)
     {
@@ -499,7 +501,7 @@ abstract class KModelEntityAbstract extends KObjectArray implements KModelEntity
 
         foreach ($this->getComputedProperties() as $property)
         {
-            if ($this->{$property} instanceof KModelEntityInterface) {
+            if ($this->{$property} instanceof ModelEntityInterface) {
                 $data[$property] = array_values($this->{$property}->toArray());
             } else {
                 $data[$property] = $this->{$property};

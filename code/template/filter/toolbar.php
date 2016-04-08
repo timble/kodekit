@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Toolbar Template Filter
@@ -14,9 +16,9 @@
  * the toolbar helper for the specific toolbar type.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Template\Filter
+ * @package Kodekit\Library\Template\Filter
  */
-class KTemplateFilterToolbar extends KTemplateFilterAbstract
+class TemplateFilterToolbar extends TemplateFilterAbstract
 {
     /**
      * Toolbars to render such as actionbar, menubar, ...
@@ -28,13 +30,13 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config Configuration options
+     * @param  ObjectConfig $config Configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
-        $this->setToolbars(KObjectConfig::unbox($config->toolbars));
+        $this->setToolbars(ObjectConfig::unbox($config->toolbars));
     }
 
     /**
@@ -42,10 +44,10 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options
+     * @param   ObjectConfig $config Configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'toolbars' => array(),
@@ -68,7 +70,7 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
      * Set the toolbars to render
      *
      * @param array $toolbars
-     * @return KTemplateFilterToolbar
+     * @return TemplateFilterToolbar
      */
     public function setToolbars(array $toolbars)
     {
@@ -83,7 +85,7 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
     /**
      * Get a toolbar by type
      *
-     * @return KControllerToolbarInterface
+     * @return ControllerToolbarInterface
      */
     public function getToolbar($type = 'actionbar')
     {
@@ -93,10 +95,10 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
     /**
      * Sets a toolbar
      *
-     * @param  KControllerToolbarInterface $toolbar
-     * @return KTemplateFilterToolbar
+     * @param  ControllerToolbarInterface $toolbar
+     * @return TemplateFilterToolbar
      */
-    public function setToolbar(KControllerToolbarInterface $toolbar)
+    public function setToolbar(ControllerToolbarInterface $toolbar)
     {
         $this->_toolbars[$toolbar->getType()] = $toolbar;
         return $this;
@@ -106,7 +108,7 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
      * Replace/push the toolbars
      *
      * @param string $text Block of text to parse
-     * @return KTemplateFilterToolbar
+     * @return TemplateFilterToolbar
      */
     public function filter(&$text)
     {
@@ -119,7 +121,7 @@ class KTemplateFilterToolbar extends KTemplateFilterAbstract
                 $attributes = $this->parseAttributes($matches[1][$key]);
 
                 //Create attributes array
-                $config = new KObjectConfig($attributes);
+                $config = new ObjectConfig($attributes);
                 $config->append(array(
                     'type'  => 'actionbar',
                 ));

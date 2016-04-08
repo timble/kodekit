@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Translator Locator Factory
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Translator\Locator
+ * @package Kodekit\Library\Translator\Locator
  */
-class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
+class TranslatorLocatorFactory extends Object implements ObjectSingleton
 {
     /**
      * Registered locators
@@ -25,9 +27,9 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config Configuration options
+     * @param ObjectConfig $config Configuration options
      */
-    public function __construct( KObjectConfig $config)
+    public function __construct( ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -42,10 +44,10 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $config Configuration options.
+     * @param   ObjectConfig $config Configuration options.
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'locators' => array(
@@ -63,10 +65,10 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
      *
      * @param  string $path    The locator path
      * @param  array  $config  An optional associative array of configuration options
-     * @throws InvalidArgumentException If the path is not valid
-     * @throws RuntimeException         If the locator isn't registered
-     * @throws UnexpectedValueException If the locator object doesn't implement the TranslatorLocatorInterface
-     * @return KTranslatorLocatorInterface
+     * @throws \InvalidArgumentException If the path is not valid
+     * @throws \RuntimeException         If the locator isn't registered
+     * @throws \UnexpectedValueException If the locator object doesn't implement the TranslatorLocatorInterface
+     * @return TranslatorLocatorInterface
      */
     public function createLocator($path, array $config = array())
     {
@@ -86,7 +88,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
         //Locator not supported
         if(!in_array($name, $this->getLocators()))
         {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Unable to find the translator locator "%s" - did you forget to register it ?', $name
             ));
         }
@@ -95,10 +97,10 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
         $identifier = $this->getLocator($name);
         $locator    = $this->getObject($identifier, $config);
 
-        if(!$locator instanceof KTranslatorLocatorInterface)
+        if(!$locator instanceof TranslatorLocatorInterface)
         {
-            throw new UnexpectedValueException(
-                'Locator: '.get_class($locator).' does not implement KTranslatorLocatorInterface'
+            throw new \UnexpectedValueException(
+                'Locator: '.get_class($locator).' does not implement TranslatorLocatorInterface'
             );
         }
 
@@ -111,7 +113,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
      * Function prevents from registering the locator twice
      *
      * @param string $identifier A locator identifier string
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function registerLocator($identifier)
@@ -121,10 +123,10 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!$class || !array_key_exists('KTranslatorLocatorInterface', class_implements($class)))
+        if(!$class || !array_key_exists(__NAMESPACE__.'\TranslatorLocatorInterface', class_implements($class)))
         {
-            throw new UnexpectedValueException(
-                'Locator: '.$identifier.' does not implement KTranslatorLocatorInterface'
+            throw new \UnexpectedValueException(
+                'Locator: '.$identifier.' does not implement TranslatorLocatorInterface'
             );
         }
 
@@ -141,7 +143,7 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
      * Unregister a locator
      *
      * @param string $identifier A locator object identifier string or locator name
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @return bool Returns TRUE on success, FALSE on failure.
      */
     public function unregisterLocator($identifier)
@@ -153,10 +155,10 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KTranslatorLocatorInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\TranslatorLocatorInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Locator: '.$identifier.' does not implement KTranslatorLocatorInterface'
+                throw new \UnexpectedValueException(
+                    'Locator: '.$identifier.' does not implement TranslatorLocatorInterface'
                 );
             }
 
@@ -217,10 +219,10 @@ class KTranslatorLocatorFactory extends KObject implements KObjectSingleton
             $identifier = $this->getIdentifier($identifier);
             $class      = $this->getObject('manager')->getClass($identifier);
 
-            if(!$class || !array_key_exists('KTranslatorLocatorInterface', class_implements($class)))
+            if(!$class || !array_key_exists(__NAMESPACE__.'\TranslatorLocatorInterface', class_implements($class)))
             {
-                throw new UnexpectedValueException(
-                    'Locator: '.$identifier.' does not implement KTranslatorLocatorInterface'
+                throw new \UnexpectedValueException(
+                    'Locator: '.$identifier.' does not implement TranslatorLocatorInterface'
                 );
             }
 

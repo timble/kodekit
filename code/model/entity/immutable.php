@@ -1,28 +1,30 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Immutable Model Entity
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Entity
+ * @package Kodekit\Library\Model\Entity
  */
-final class KModelEntityImmutable extends KModelEntityAbstract
+final class ModelEntityImmutable extends ModelEntityAbstract
 {
     /**
      * Constructor
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
-        KObjectArray::__construct($config);
+        ObjectArray::__construct($config);
 
         $this->_identity_key = $config->identity_key;
 
@@ -67,7 +69,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
     /**
      * Clear the entity data
      *
-     * @return KModelEntityImmutable
+     * @return ModelEntityImmutable
      */
     public function clear()
     {
@@ -83,7 +85,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * @param   string  $name       The property name.
      * @param   mixed   $value      The property value.
      * @param   boolean $modified   If TRUE, update the modified information for the property
-     * @return  KModelEntityImmutable
+     * @return  ModelEntityImmutable
      */
     public function setProperty($name, $value, $modified = true)
     {
@@ -94,7 +96,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * Remove a property
      *
      * @param   string  $name The property name.
-     * @return  KModelEntityImmutable
+     * @return  ModelEntityImmutable
      */
     public function removeProperty($name)
     {
@@ -106,7 +108,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      *
      * @param   mixed   $properties  Either and associative array, an object or a ModelEntityInterface
      * @param   boolean $modified    If TRUE, update the modified information for each property being set.
-     * @return  KModelEntityImmutable
+     * @return  ModelEntityImmutable
      */
     public function setProperties($properties, $modified = true)
     {
@@ -117,7 +119,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * Set the status
      *
      * @param   string|null  $status The status value or NULL to reset the status
-     * @return  KModelEntityImmutable
+     * @return  ModelEntityImmutable
      */
     public function setStatus($status)
     {
@@ -138,7 +140,7 @@ final class KModelEntityImmutable extends KModelEntityAbstract
      * Set the status message
      *
      * @param   string $message The status message
-     * @return  KModelEntityImmutable
+     * @return  ModelEntityImmutable
      */
     public function setStatusMessage($message)
     {

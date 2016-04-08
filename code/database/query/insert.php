@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Insert Database Query
  *
  * @author  Gergo Erdosi <https://github.com/gergoerdosi>
- * @package Koowa\Library\Database\Query
+ * @package Kodekit\Library\Database\Query
  */
-class KDatabaseQueryInsert extends KDatabaseQueryAbstract
+class DatabaseQueryInsert extends DatabaseQueryAbstract
 {
     /**
      * The table name.
@@ -40,7 +42,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the table clause
      *
      * @param  string $table The table name.
-     * @return KDatabaseQueryInsert
+     * @return DatabaseQueryInsert
      */
     public function table($table)
     {
@@ -53,7 +55,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the columns clause
      *
      * @param  array $columns Array of column names.
-     * @return KDatabaseQueryInsert
+     * @return DatabaseQueryInsert
      */
     public function columns(array $columns)
     {
@@ -66,11 +68,11 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
      * Build the values clause
      *
      * @param  array $values Array of values.
-     * @return KDatabaseQueryInsert
+     * @return DatabaseQueryInsert
      */
     public function values($values)
     {
-        if(!$values instanceof KDatabaseQuerySelect)
+        if(!$values instanceof DatabaseQuerySelect)
         {
             if (!$this->columns && !is_numeric(key($values))) {
                 $this->columns(array_keys($values));
@@ -104,7 +106,7 @@ class KDatabaseQueryInsert extends KDatabaseQueryAbstract
 
         if($this->values)
         {
-            if(!$this->values instanceof KDatabaseQuerySelect)
+            if(!$this->values instanceof DatabaseQuerySelect)
             {
                 $query .= ' VALUES'.PHP_EOL;
 

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Update Database Query
  *
  * @author  Gergo Erdosi <https://github.com/gergoerdosi>
- * @package Koowa\Library\Database\Query
+ * @package Kodekit\Library\Database\Query
  */
-class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
+class DatabaseQueryUpdate extends DatabaseQueryAbstract
 {
     /**
      * The table name
@@ -61,7 +63,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      * Build the table clause
      *
      * @param   string $table The name of the table to update.
-     * @return  KDatabaseQueryUpdate
+     * @return  DatabaseQueryUpdate
      */
     public function table($table)
     {
@@ -76,7 +78,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      * @param string|array $table      The table name to join to.
      * @param string       $condition  The join condition statement.
      * @param string       $type       The type of join.
-     * @return \KDatabaseQueryUpdate
+     * @return DatabaseQueryUpdate
      */
     public function join($table, $condition = null, $type = 'LEFT')
     {
@@ -115,7 +117,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      *
      * @param   string $condition  The condition.
      * @param   string $combination Combination type, defaults to 'AND'.
-     * @return  \KDatabaseQueryUpdate
+     * @return  DatabaseQueryUpdate
      */
     public function where($condition, $combination = 'AND')
     {
@@ -132,7 +134,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      *
      * @param   array|string $columns   A string or array of ordering columns.
      * @param   string       $direction Either DESC or ASC.
-     * @return  \KDatabaseQueryUpdate
+     * @return  DatabaseQueryUpdate
      */
     public function order($columns, $direction = 'ASC')
     {
@@ -150,7 +152,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
      * Build the limit clause
      *
      * @param   integer $limit Number of items to update.
-     * @return  KDatabaseQueryUpdate
+     * @return  DatabaseQueryUpdate
      */
     public function limit($limit)
     {
@@ -184,7 +186,7 @@ class KDatabaseQueryUpdate extends KDatabaseQueryAbstract
                     $tmp .= ' '.$join['type'];
                 }
 
-                if($join['table'] instanceof KDatabaseQuerySelect) {
+                if($join['table'] instanceof DatabaseQuerySelect) {
                     $tmp .= ' JOIN ('.$join['table'].')'.(is_string($alias) ? ' AS '.$driver->quoteIdentifier($alias) : '');
                 } else {
                     $tmp .= ' JOIN '.$driver->quoteIdentifier($prefix.$join['table'].(is_string($alias) ? ' AS '.$alias : ''));

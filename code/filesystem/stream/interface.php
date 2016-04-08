@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * FileSystem Stream Interface
@@ -20,9 +22,9 @@
  *    supported (like rename) must throw a \BadMethodCallException instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Filesystem\Stream
+ * @package Kodekit\Library\Filesystem\Stream
  */
-interface KFilesystemStreamInterface extends KObjectInterface
+interface FilesystemStreamInterface extends ObjectInterface
 {
     /**
      * Time Constants
@@ -54,9 +56,9 @@ interface KFilesystemStreamInterface extends KObjectInterface
     /**
      * Opens the stream
      *
-     * @throws BadMethodCallException If open is not supported.
-     * @throws RuntimeException If the stream cannot be opened.
-     * @return KFilesystemStreamAbstract|false Return a stream object or FALSE on failure.
+     * @throws \BadMethodCallException If open is not supported.
+     * @throws \RuntimeException If the stream cannot be opened.
+     * @return FilesystemStreamAbstract|false Return a stream object or FALSE on failure.
      */
     public function open();
 
@@ -67,8 +69,8 @@ interface KFilesystemStreamInterface extends KObjectInterface
      *
      * @param integer|null $length How many bytes of data from the current position should be returned. Defaults to -1
      *                            (use the chunk size, default 8192 bytes).
-     * @throws BadMethodCallException If read is not supported.
-     * @throws LogicException If read is not allowed.
+     * @throws \BadMethodCallException If read is not supported.
+     * @throws \LogicException If read is not allowed.
      * @return string If there are less than count bytes available, return as many as are available. If no more data is
      *                available, return either FALSE or an empty string.
      */
@@ -108,7 +110,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      *  LOCK_NB if you don't want flock() to block while locking.
      *
      * @param integer $operation One of the LOCK_* constants
-     * @throws BadMethodCallException if lock is not supported.
+     * @throws \BadMethodCallException if lock is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function lock($operation);
@@ -118,7 +120,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      *
      * This method is called when closing the stream (LOCK_UN).
      *
-     * @throws BadMethodCallException if unlock is not supported.
+     * @throws \BadMethodCallException if unlock is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function unlock();
@@ -131,8 +133,8 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * Note : Don't forget to update the current position of the stream by number of bytes that were successfully written.
      *
      * @param string $data Should be stored into the underlying stream.
-     * @throws BadMethodCallException if write is not supported.
-     * @throws LogicException If write is not allowed.
+     * @throws \BadMethodCallException if write is not supported.
+     * @throws \LogicException If write is not allowed.
      * @return int Should return the number of bytes that were successfully stored, or 0 if none could be stored.
      */
     public function write($data);
@@ -140,7 +142,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
     /**
      * Read data from the stream to another stream
      *
-     * @param resource|KFilesystemStreamInterface $stream The stream resource to copy the data too
+     * @param resource|FilesystemStreamInterface $stream The stream resource to copy the data too
      * @return bool Returns TRUE on success, FALSE on failure
      */
     public function copy($stream);
@@ -149,7 +151,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * Rename a stream
      *
      * @param string $path  The URL which the stream should be renamed to.
-     * @throws BadMethodCallException if rename is not supported.
+     * @throws \BadMethodCallException if rename is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function rename($path);
@@ -157,7 +159,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
     /**
      * Delete a file
      *
-     * @throws BadMethodCallException if unlink is not supported.
+     * @throws \BadMethodCallException if unlink is not supported.
      * @return boolean TRUE on success or FALSE on failure.
      */
     public function unlink();
@@ -176,7 +178,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * If no target stream is being passed and you have cached data that is not yet stored into the underlying storage,
      * you should do so now
      *
-     * @param resource|KFilesystemStreamInterface|null $stream The stream resource to flush the data too
+     * @param resource|FilesystemStreamInterface|null $stream The stream resource to flush the data too
      * @param int   $length  The total bytes to flush, if -1 the stream will be flushed until eof. The limit should
      *                       lie within the total size of the stream.
      * @return boolean Should return TRUE if the cached data was successfully stored (or if there was no data to store),
@@ -238,7 +240,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      *                      or a filesystem symlink). This flag specified that only information about the link itself
      *                      should be returned, not the resource pointed to by the link. This flag is set in response
      *                      to calls to lstat(), is_link(), or filetype().
-     * @throws BadMethodCallException if info is not supported.
+     * @throws \BadMethodCallException if info is not supported.
      * @return array See http://php.net/stat
      */
     public function getInfo($link = false);
@@ -285,8 +287,8 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * Set the stream resource
      *
      * @param resource $resource  Stream resource
-     * @throws RuntimeException  If the resource is not a valid 'stream' resource.
-     * @return KFilesystemStreamInterface
+     * @throws \RuntimeException  If the resource is not a valid 'stream' resource.
+     * @return FilesystemStreamInterface
      */
     public function setResource($resource);
 
@@ -301,7 +303,7 @@ interface KFilesystemStreamInterface extends KObjectInterface
      * Set the chunk size using during read operation
      *
      * @param integer $size The chunk size in bytes
-     * @return KFilesystemStreamInterface
+     * @return FilesystemStreamInterface
      */
     public function setChunkSize($size);
 

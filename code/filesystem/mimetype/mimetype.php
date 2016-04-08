@@ -1,12 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
- *
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Mime type finder chain
@@ -28,9 +29,9 @@
  *     )));
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Filesystem\Mimetype
+ * @package Kodekit\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObjectSingleton
+class FilesystemMimetype extends FilesystemMimetypeAbstract implements ObjectSingleton
 {
     /**
      * List of registered mimetype resolvers
@@ -42,14 +43,14 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
     /**
      * Registers all natively provided mime type resolvers.
      *
-     * @param KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Register the resolvers
-        $resolvers = KObjectConfig::unbox($config->resolvers);
+        $resolvers = ObjectConfig::unbox($config->resolvers);
 
         foreach ($resolvers as $key => $value)
         {
@@ -66,10 +67,10 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         if (empty($config->resolvers))
         {
@@ -86,14 +87,14 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
      *
      * The last added mimetype resolver is preferred over previously registered ones.
      *
-     * @param   mixed $resolver An object that implements KFilesystemMimetypeInterface, KObjectIdentifier object
+     * @param   mixed $resolver An object that implements FilesystemMimetypeInterface, ObjectIdentifier object
      *                          or valid identifier string
      * @param  array $config  An optional associative array of configuration options
      * @return $this
      */
     public function registerResolver($resolver, array $config = array())
     {
-        if(!($resolver instanceof KFilesystemMimetypeInterface))
+        if(!($resolver instanceof FilesystemMimetypeInterface))
         {
             if(is_string($resolver) && strpos($resolver, '.') === false )
             {
@@ -135,7 +136,7 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
      * @param string $path The path to the file
      * @throws \LogicException   If the file cannot be found
      * @throws \RuntimeException If the file is not readable
-     * @throws \UnexpectedValueException If the resolver doesn't implement KFilesystemMimetypeInterface
+     * @throws \UnexpectedValueException If the resolver doesn't implement FilesystemMimetypeInterface
      * @return string The mime type or NULL, if none could be found
      */
     public function fromPath($path)
@@ -153,18 +154,18 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
         foreach (array_reverse($this->__resolvers) as $name => $resolver)
         {
             //Lazy create the resolver
-            if(!($resolver instanceof KFilesystemMimetypeInterface))
+            if(!($resolver instanceof FilesystemMimetypeInterface))
             {
                 $resolver = $this->getObject($resolver);
 
-                if (!$resolver instanceof KFilesystemMimetypeInterface) {
-                    throw new \UnexpectedValueException('Resolver does not implement KFilesystemMimetypeInterface');
+                if (!$resolver instanceof FilesystemMimetypeInterface) {
+                    throw new \UnexpectedValueException('Resolver does not implement FilesystemMimetypeInterface');
                 }
 
                 $this->__resolvers[$name] = $resolver;
             }
 
-            /* @var $resolver KFilesystemMimetypeInterface */
+            /* @var $resolver FilesystemMimetypeInterface */
             if (null !== $mimetype = $resolver->fromPath($path)) {
                 break;
             }
@@ -176,11 +177,11 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
     /**
      * Find the mime type of the given stream
      *
-     * @param KFilesystemStreamInterface $stream
+     * @param FilesystemStreamInterface $stream
      * @throws \RuntimeException If the stream is not readable
      * @return string The mime type or NULL, if none could be guessed
      */
-    public function fromStream(KFilesystemStreamInterface $stream)
+    public function fromStream(FilesystemStreamInterface $stream)
     {
         if (!$stream->isReadable()) {
             throw new \RuntimeException('Stream not readable');
@@ -191,18 +192,18 @@ class KFilesystemMimetype extends KFilesystemMimetypeAbstract implements KObject
         foreach (array_reverse($this->__resolvers) as $name => $resolver)
         {
             //Lazy create the resolver
-            if(!($resolver instanceof KFilesystemMimetypeInterface))
+            if(!($resolver instanceof FilesystemMimetypeInterface))
             {
                 $resolver = $this->getObject($resolver);
 
-                if (!$resolver instanceof KFilesystemMimetypeInterface) {
-                    throw new \UnexpectedValueException('Resolver does not implement KFilesystemMimetypeInterface');
+                if (!$resolver instanceof FilesystemMimetypeInterface) {
+                    throw new \UnexpectedValueException('Resolver does not implement FilesystemMimetypeInterface');
                 }
 
                 $this->__resolvers[$name] = $resolver;
             }
 
-            /* @var $resolver KFilesystemMimetypeInterface */
+            /* @var $resolver FilesystemMimetypeInterface */
             if (null !== $mimetype = $resolver->fromStream($stream)) {
                 break;
             }

@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Dispatcher Authenticatable Behavior
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Dispatcher\Behavior
+ * @package Kodekit\Library\Dispatcher\Behavior
  */
-class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
+class DispatcherBehaviorAuthenticatable extends DispatcherBehaviorAbstract
 {
     /**
      * List of authenticators
@@ -35,9 +37,9 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
     /**
      * Constructor.
      *
-     * @param KObjectConfig $config	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -45,7 +47,7 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
         $this->__authenticator_queue = $this->getObject('lib:object.queue');
 
         //Add the authenticators
-        $authenticators = (array) KObjectConfig::unbox($config->authenticators);
+        $authenticators = (array) ObjectConfig::unbox($config->authenticators);
 
         foreach ($authenticators as $key => $value)
         {
@@ -62,10 +64,10 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param KObjectConfig $config 	An optional ObjectConfig object with configuration options.
+     * @param ObjectConfig $config 	An optional ObjectConfig object with configuration options.
      * @return 	void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'authenticators' => array()
@@ -103,11 +105,11 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
 
         if (!isset($this->__authenticators[(string)$identifier]))
         {
-            if(!$authenticator instanceof KDispatcherAuthenticatorInterface) {
+            if(!$authenticator instanceof DispatcherAuthenticatorInterface) {
                 $authenticator = $this->getObject($identifier, $config);
             }
 
-            if (!($authenticator instanceof KDispatcherAuthenticatorInterface))
+            if (!($authenticator instanceof DispatcherAuthenticatorInterface))
             {
                 throw new \UnexpectedValueException(
                     "Authenticator $identifier does not implement DispatcherAuthenticatorInterface"
@@ -140,8 +142,8 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      *
      * @param   mixed $authenticator An object that implements ObjectInterface, ObjectIdentifier object
      *                               or valid identifier string
-     * @throws \UnexpectedValueException
-     * @return KDispatcherAuthenticatorInterface|null
+     * @throws \\UnexpectedValueException
+     * @return DispatcherAuthenticatorInterface|null
      */
     public function getAuthenticator($authenticator)
     {
@@ -160,10 +162,10 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      * If an authenticator explicitly returns TRUE the authentication process will be halted and other authenticators
      * will not be called.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context	A dispatcher context object
      * @return void
      */
-    protected function _beforeDispatch(KDispatcherContextInterface $context)
+    protected function _beforeDispatch(DispatcherContextInterface $context)
     {
         // Check if the user has been explicitly authenticated for this request
         if (!$this->getUser()->isAuthentic(true))
@@ -184,10 +186,10 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      * If an authenticator explicitly returns TRUE the challenge process will be halted and other authenticators
      * will not be called.
      *
-     * @param KDispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context	A dispatcher context object
      * @return void
      */
-    protected function _beforeSend(KDispatcherContextInterface $context)
+    protected function _beforeSend(DispatcherContextInterface $context)
     {
         foreach($this->__authenticator_queue as $authenticator)
         {
@@ -207,6 +209,6 @@ class KDispatcherBehaviorAuthenticatable extends KDispatcherBehaviorAbstract
      */
     public function getHandle()
     {
-        return KObjectMixinAbstract::getHandle();
+        return ObjectMixinAbstract::getHandle();
     }
 }

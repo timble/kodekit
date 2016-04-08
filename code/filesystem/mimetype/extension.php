@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Find the mime type of a file using the file extension. Lookups are performed using a provided JSON lookup file.
@@ -13,9 +15,9 @@
  * JSON should be structured as a map of extension to mimetype
  *
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
- * @package Koowa\Library\Filesystem\Mimetype
+ * @package Kodekit\Library\Filesystem\Mimetype
  */
-class KFilesystemMimetypeExtension extends KFilesystemMimetypeAbstract
+class FilesystemMimetypeExtension extends FilesystemMimetypeAbstract
 {
     /**
      * The mimetypes
@@ -29,10 +31,10 @@ class KFilesystemMimetypeExtension extends KFilesystemMimetypeAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config An optional ObjectConfig object with configuration options
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'file' => __DIR__.'/mimetypes.json'
@@ -44,10 +46,10 @@ class KFilesystemMimetypeExtension extends KFilesystemMimetypeAbstract
     /**
      * Find the mime type of the given stream
      *
-     * @param KFilesystemStreamInterface $stream
+     * @param FilesystemStreamInterface $stream
      * @return string The mime type or NULL, if none could be guessed
      */
-    public function fromStream(KFilesystemStreamInterface $stream)
+    public function fromStream(FilesystemStreamInterface $stream)
     {
         $mimetype = null;
 

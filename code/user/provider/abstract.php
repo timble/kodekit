@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract User Provider
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User\Provider
+ * @package Kodekit\Library\User\Provider
  */
-class KUserProviderAbstract extends KObject implements KUserProviderInterface
+class UserProviderAbstract extends Object implements UserProviderInterface
 {
     /**
      * The list of users
@@ -35,17 +37,17 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      * The user array is a hash where the keys are user identifier and the values are an array of attributes:
      * 'password', 'enabled', and 'roles' etc. The user identifiers should be unique.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KUserProviderAbstract
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return UserProviderAbstract
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
         //Create the users
         foreach($config->users as $identifier => $user)
         {
-            if(!$user instanceof KUserInterface) {
+            if(!$user instanceof UserInterface) {
                 $user = $this->create($user);
             }
 
@@ -58,10 +60,10 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $object An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'users' => array($this->getObject('user')),
@@ -76,7 +78,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      * If the user could not be loaded an anonymous user will be returned with a user 'id' off 0.
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface Returns a UserInterface object.
+     * @return UserInterface Returns a UserInterface object.
      */
     public function getUser($identifier)
     {
@@ -100,10 +102,10 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
     /**
      * Store user object in the provider
      *
-     * @param KUserInterface $user
-     * @return KUserProviderAbstract
+     * @param UserInterface $user
+     * @return UserProviderAbstract
      */
-    public function setUser(KUserInterface $user)
+    public function setUser(UserInterface $user)
     {
         $this->__users[$user->getId()] = $user;
         return $this;
@@ -113,7 +115,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      * Find a user for the given identifier
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user hasn't been loaded yet
+     * @return UserInterface|null Returns a UserInterface object or NULL if the user hasn't been loaded yet
      */
     public function findUser($identifier)
     {
@@ -166,7 +168,7 @@ class KUserProviderAbstract extends KObject implements KUserProviderInterface
      * Create a user object
      *
      * @param array $data An associative array of user data
-     * @return KUserInterface     Returns a UserInterface object
+     * @return UserInterface     Returns a UserInterface object
      */
     public function create($data)
     {

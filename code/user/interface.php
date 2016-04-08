@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * User Interface
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Kodekit\Library\User
  */
-interface KUserInterface extends KObjectEquatable
+interface UserInterface extends ObjectEquatable
 {
     /**
      * Returns the id of the user
@@ -144,7 +146,7 @@ interface KUserInterface extends KObjectEquatable
      *
      * @param string $name The parameter name
      * @param  mixed $value The parameter value
-     * @return KUserInterface
+     * @return UserInterface
      */
     public function set($name, $value);
 
@@ -160,7 +162,7 @@ interface KUserInterface extends KObjectEquatable
      * Removes an user parameter
      *
      * @param string $name The parameter name
-     * @return KUserInterface
+     * @return UserInterface
      */
     public function remove($name);
 

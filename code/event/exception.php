@@ -1,28 +1,30 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Exception Event
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event
+ * @package Kodekit\Library\Event
  */
-class KEventException extends KEvent implements KException
+class EventException extends Event implements Exception
 {
     /**
      * Set the exception
      *
      * @param Exception $exception
      */
-    public function setException(Exception $exception)
+    public function setException(\Exception $exception)
     {
-        return KObjectConfig::set('exception', $exception);
+        return ObjectConfig::set('exception', $exception);
     }
 
     /**
@@ -32,7 +34,7 @@ class KEventException extends KEvent implements KException
      */
     public function getException()
     {
-        return KObjectConfig::get('exception');
+        return ObjectConfig::get('exception');
     }
 
     /**

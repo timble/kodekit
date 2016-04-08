@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * User Session Interface
@@ -13,9 +15,9 @@
  * Provides access to session-state values as well as session-level settings and lifetime management methods.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\User\Session
+ * @package Kodekit\Library\User\Session
  */
-interface KUserSessionInterface
+interface UserSessionInterface
 {
     /**
      * Get the session life time
@@ -31,7 +33,7 @@ interface KUserSessionInterface
      * automatically during session start.
      *
      * @param integer $lifetime The session lifetime in seconds
-     * @return KUserSessionContainerMetadata
+     * @return UserSessionContainerMetadata
      */
     public function setLifetime($lifetime);
 
@@ -42,8 +44,8 @@ interface KUserSessionInterface
      * namespace prevents session conflicts when the session is shared.
      *
      * @param string $namespace The session namespace
-     * @throws LogicException When changing the namespace of an active session
-     * @return KUserSession
+     * @throws \LogicException When changing the namespace of an active session
+     * @return UserSession
      */
     public function setNamespace($namespace);
 
@@ -73,8 +75,8 @@ interface KUserSessionInterface
      * Set the session id
      *
      * @param string $session_id
-     * @throws LogicException	When changing the id of an active session
-     * @return KUserSessionInterface
+     * @throws \LogicException	When changing the id of an active session
+     * @return UserSessionInterface
      */
     public function setId($session_id);
 
@@ -89,8 +91,8 @@ interface KUserSessionInterface
      * Set the session name
      *
      * @param  string $name
-     * @throws LogicException	When changing the name of an active session
-     * @return KUserSessionInterface
+     * @throws \LogicException	When changing the name of an active session
+     * @return UserSessionInterface
      */
     public function setName($name);
 
@@ -100,15 +102,15 @@ interface KUserSessionInterface
      * @param mixed $handler An object that implements ObjectInterface, ObjectIdentifier object
      *                       or valid identifier string
      * @param array $config An optional associative array of configuration settings
-     * @return KUserSession
+     * @return UserSession
      */
     public function setHandler($handler, $config = array());
 
     /**
      * Get the session handler object
      *
-     * @throws UnexpectedValueException    If the identifier is not a session handler identifier
-     * @return KUserSessionHandlerInterface
+     * @throws \UnexpectedValueException    If the identifier is not a session handler identifier
+     * @return UserSessionHandlerInterface
      */
     public function getHandler();
 
@@ -127,8 +129,8 @@ interface KUserSessionInterface
      *
      * @param   mixed $name An object that implements ObjectInterface, ObjectIdentifier object
      *                      or valid identifier string
-     * @throws UnexpectedValueException    If the identifier is not a session container identifier
-     * @return KUserSessionContainerInterface
+     * @throws \UnexpectedValueException    If the identifier is not a session container identifier
+     * @return UserSessionContainerInterface
      */
     public function getContainer($name);
 
@@ -136,8 +138,8 @@ interface KUserSessionInterface
      * Starts the session storage and load the session data into memory
      *
      * @see  session_start()
-     * @return KUserSessionInterface
-     * @throws RuntimeException If something goes wrong starting the session.
+     * @return UserSessionInterface
+     * @throws \RuntimeException If something goes wrong starting the session.
      */
     public function start();
 
@@ -147,7 +149,7 @@ interface KUserSessionInterface
      * This function will load the data from $_SESSION in the various registered containers, based on the container
      * namespace.
      *
-     * @return KUserSession
+     * @return UserSession
      */
     public function refresh();
 
@@ -162,7 +164,7 @@ interface KUserSessionInterface
      * variables are done.
      *
      * @see  session_write_close()
-     * @return KUserSessionInterface
+     * @return UserSessionInterface
      */
     public function close();
 
@@ -170,7 +172,7 @@ interface KUserSessionInterface
      * Clear all session data in memory.
      *
      * @see session_unset()
-     * @return KUserSessionInterface
+     * @return UserSessionInterface
      */
     public function clear();
 
@@ -183,7 +185,7 @@ interface KUserSessionInterface
      *
      * @see session_unset()
      * @see session_destroy()
-     * @return KUserSessionInterface
+     * @return UserSessionInterface
      */
     public function destroy();
 
@@ -198,8 +200,8 @@ interface KUserSessionInterface
      *                          settings unchanged, 0 sets the cookie to expire with browser session. Time is in seconds,
      *                          and is not a Unix timestamp.
      * @see  session_regenerate_id()
-     * @return KUserSessionInterface
-     * @throws RuntimeException If an error occurs while regenerating this storage
+     * @return UserSessionInterface
+     * @throws \RuntimeException If an error occurs while regenerating this storage
      */
     public function fork($destroy = false, $lifetime = null);
 
@@ -217,7 +219,7 @@ interface KUserSessionInterface
      *
      * @param   mixed   $identifier Attribute identifier, eg foo.bar
      * @param   mixed   $value      Attribute value
-     * @return KUserSessionInterface
+     * @return UserSessionInterface
      */
     public function set($identifier, $value);
 
@@ -233,7 +235,7 @@ interface KUserSessionInterface
      * Removes an session attribute
      *
      * @param string $identifier Attribute identifier, eg foo.bar
-     * @return KUserSessionInterface
+     * @return UserSessionInterface
      */
     public function remove($identifier);
 }

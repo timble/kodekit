@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Event Subscriber
@@ -17,9 +19,9 @@
  * listener priority is usually between 1 (high priority) and 5 (lowest), default is 3 (normal)
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Event\Subscriber
+ * @package Kodekit\Library\Event\Subscriber
  */
-abstract class KEventSubscriberAbstract extends KObject implements KEventSubscriberInterface
+abstract class EventSubscriberAbstract extends Object implements EventSubscriberInterface
 {
     /**
      * List of event listeners
@@ -33,20 +35,20 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
      *
      * Event listeners always start with 'on' and need to be public methods.
      *
-     * @param KEventPublisherInterface $publisher
+     * @param EventPublisherInterface $publisher
      * @param  integer                 $priority   The event priority, usually between 1 (high priority) and 5 (lowest),
      *                                 default is 3 (normal)
      * @return array An array of public methods that have been attached
      */
-    public function subscribe(KEventPublisherInterface $publisher, $priority = KEvent::PRIORITY_NORMAL)
+    public function subscribe(EventPublisherInterface $publisher, $priority = Event::PRIORITY_NORMAL)
     {
         $handle = $publisher->getHandle();
 
         if(!$this->isSubscribed($publisher));
         {
             //Get all the public methods
-            $reflection = new ReflectionClass($this);
-            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
+            $reflection = new \ReflectionClass($this);
+            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
             {
                 if(substr($method->name, 0, 2) == 'on')
                 {
@@ -62,10 +64,10 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
     /**
      * Detach all previously attached listeners for the specific dispatcher
      *
-     * @param KEventPublisherInterface $publisher
+     * @param EventPublisherInterface $publisher
      * @return void
      */
-    public function unsubscribe(KEventPublisherInterface $publisher)
+    public function unsubscribe(EventPublisherInterface $publisher)
     {
         $handle = $publisher->getHandle();
 
@@ -82,10 +84,10 @@ abstract class KEventSubscriberAbstract extends KObject implements KEventSubscri
     /**
      * Check if the subscriber is already subscribed to the dispatcher
      *
-     * @param  KEventPublisherInterface $publisher  The event dispatcher
+     * @param  EventPublisherInterface $publisher  The event dispatcher
      * @return boolean TRUE if the subscriber is already subscribed to the dispatcher. FALSE otherwise.
      */
-    public function isSubscribed(KEventPublisherInterface $publisher)
+    public function isSubscribed(EventPublisherInterface $publisher)
     {
         $handle = $publisher->getHandle();
         return isset($this->__listeners[$handle]);

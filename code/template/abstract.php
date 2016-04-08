@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
  /**
   * Abstract Template
   *
   * @author  Johan Janssens <https://github.com/johanjanssens>
-  * @package Koowa\Library\Template
+  * @package Kodekit\Library\Template
   */
-abstract class KTemplateAbstract extends KObject implements KTemplateInterface
+abstract class TemplateAbstract extends Object implements TemplateInterface
 {
     /**
      * List of template functions
@@ -48,9 +50,9 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * Prevent creating instances of this class by making the constructor private
      *
-     * @param KObjectConfig $config   An optional ObjectConfig object with configuration options
+     * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -64,7 +66,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $this->_debug  = $config->debug;
 
         //Register the functions
-        $functions = KObjectConfig::unbox($config->functions);
+        $functions = ObjectConfig::unbox($config->functions);
 
         foreach ($functions as $name => $callback) {
             $this->registerFunction($name, $callback);
@@ -76,13 +78,13 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param  KObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
      * @return void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'debug'     => Koowa::getInstance()->isDebug(),
+            'debug'     => \Kodekit::getInstance()->isDebug(),
             'functions' => array()
         ));
 
@@ -95,7 +97,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * @param   string  $url      The template url
      * @throws \InvalidArgumentException If the template could not be located
      * @throws \RuntimeException         If the template could not be loaded
-     * @return KTemplateAbstract
+     * @return TemplateAbstract
      */
     public function loadFile($url)
     {
@@ -103,12 +105,12 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
         $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
         if (!$file = $locator->locate($url)) {
-            throw new InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 
         //Load the template
         if(!$source = file_get_contents($file)) {
-            throw new RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
+            throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
         }
 
         $this->_source = $source;
@@ -168,14 +170,14 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      *
      * @param string $name The function name
      * @param string $function The callable
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return $this
      */
     public function registerFunction($name, $function)
     {
         if (!is_callable($function))
         {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The function must be a callable, "'.gettype($function).'" given.'
             );
         }
@@ -188,7 +190,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Unregister a function
      *
      * @param string    $name   The function name
-     * @return KTemplateAbstract
+     * @return TemplateAbstract
      */
     public function unregisterFunction($name)
     {
@@ -203,7 +205,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
      * Enable or disable debug
      *
      * @param bool $debug True or false.
-     * @return KTemplateAbstract
+     * @return TemplateAbstract
      */
     public function setDebug($debug)
     {
@@ -235,7 +237,7 @@ abstract class KTemplateAbstract extends KObject implements KTemplateInterface
     /**
      * Call template functions
      *
-     * This method will not throw a BadMethodCallException as it"s parent does. Instead if the method is not callable
+     * This method will not throw a \BadMethodCallException as it"s parent does. Instead if the method is not callable
      * it will return null
      *
      * @param  string $method    The function name

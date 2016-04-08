@@ -1,19 +1,21 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Abstract Controller Toolbar
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Controller\Toolbar
+ * @package Kodekit\Library\Controller\Toolbar
  */
-abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implements KControllerToolbarInterface
+abstract class ControllerToolbarAbstract extends CommandHandlerAbstract implements ControllerToolbarInterface
 {
     /**
      * Controller object
@@ -46,9 +48,9 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Constructor.
      *
-     * @param  KObjectConfig $config An associative array of configuration settings or a ObjectConfig instance.
+     * @param  ObjectConfig $config An associative array of configuration settings or a ObjectConfig instance.
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -80,10 +82,10 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $object An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'type'       => 'toolbar',
@@ -128,7 +130,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Set the toolbar's title
      *
-     * @return KControllerToolbarAbstract
+     * @return ControllerToolbarAbstract
      */
     public function setTitle($title)
     {
@@ -139,7 +141,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Get the controller
      *
-     * @return  KControllerInterface
+     * @return  ControllerInterface
      */
     public function getController()
     {
@@ -149,9 +151,9 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Set the controller
      *
-     * @return  KControllerToolbarAbstract
+     * @return  ControllerToolbarAbstract
      */
-    public function setController(KControllerInterface $controller)
+    public function setController(ControllerInterface $controller)
     {
         $this->__controller = $controller;
         return $this;
@@ -160,11 +162,11 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Add a separator
      *
-     * @return KControllerToolbarInterface
+     * @return ControllerToolbarInterface
      */
     public function addSeparator()
     {
-        $command = new KControllerToolbarCommand('separator');
+        $command = new ControllerToolbarCommand('separator');
         $this->__commands[] = $command;
         return $command;
     }
@@ -174,11 +176,11 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      *
      * @param   string    $command The command name
      * @param   mixed    $config  Parameters to be passed to the command
-     * @return  KControllerToolbarCommand  The command that was added
+     * @return  ControllerToolbarCommand  The command that was added
      */
     public function addCommand($command, $config = array())
     {
-        if (!($command instanceof KControllerToolbarCommand)) {
+        if (!($command instanceof ControllerToolbarCommand)) {
             $command = $this->getCommand($command, $config);
         }
 
@@ -198,7 +200,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
         if(!isset($this->__commands[$name]))
         {
             //Create the config object
-            $command = new KControllerToolbarCommand($name, $config);
+            $command = new ControllerToolbarCommand($name, $config);
 
             //Attach the command to the toolbar
             $command->setToolbar($this);
@@ -261,7 +263,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
     /**
      * Reset the commands array
      *
-     * @return KControllerToolbarAbstract
+     * @return ControllerToolbarAbstract
      */
     public function reset()
     {
@@ -292,7 +294,7 @@ abstract class KControllerToolbarAbstract extends KCommandHandlerAbstract implem
      */
     public function __call($method, $args)
     {
-        $parts = KStringInflector::explode($method);
+        $parts = StringInflector::explode($method);
 
         if ($parts[0] == 'add' && isset($parts[1]))
         {

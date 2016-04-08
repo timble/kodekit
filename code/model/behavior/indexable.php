@@ -1,26 +1,28 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Indexable Model Behavior
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Koowa\Library\Model\Behavior
+ * @package Kodekit\Library\Model\Behavior
  */
-class KModelBehaviorIndexable extends KModelBehaviorAbstract
+class ModelBehaviorIndexable extends ModelBehaviorAbstract
 {
     /**
      * Constructor.
      *
-     * @param   KObjectConfig $config An optional KObjectConfig object with configuration options
+     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -31,13 +33,13 @@ class KModelBehaviorIndexable extends KModelBehaviorAbstract
     /**
      * Insert the model states
      *
-     * @param KObjectMixable $mixer
+     * @param ObjectMixable $mixer
      */
-    public function onMixin(KObjectMixable $mixer)
+    public function onMixin(ObjectMixable $mixer)
     {
         parent::onMixin($mixer);
 
-        if ($mixer instanceof KModelDatabase)
+        if ($mixer instanceof ModelDatabase)
         {
             $table = $mixer->getTable();
 
@@ -51,15 +53,15 @@ class KModelBehaviorIndexable extends KModelBehaviorAbstract
     /**
      * Add order query
      *
-     * @param   KModelContextInterface $context A model context object
+     * @param   ModelContextInterface $context A model context object
      *
      * @return    void
      */
-    protected function _buildQuery(KModelContextInterface $context)
+    protected function _buildQuery(ModelContextInterface $context)
     {
         $model = $context->getSubject();
 
-        if ($model instanceof KModelDatabase)
+        if ($model instanceof ModelDatabase)
         {
             //Get only the unique states
             $states = $context->state->getValues(true);

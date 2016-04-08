@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Platform - http://www.nooku.org/platform
+ * Kodekit - http://www.timble.net/kodekit
  *
- * @copyright	Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link		http://github.com/nooku/nooku-platform for the canonical source repository
+ * @copyright	Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license		MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link		http://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * User Provider
@@ -14,9 +16,9 @@
  * loaded it is cached in memory. The model entities need to implement the UserInterface
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\User
+ * @package Kodekit\Library\User
  */
-class KUserProviderModel extends KUserProviderAbstract
+class UserProviderModel extends UserProviderAbstract
 {
     /**
      * The list of user emails
@@ -38,10 +40,10 @@ class KUserProviderModel extends KUserProviderAbstract
      * The user array is a hash where the keys are user identifier and the values are an array of attributes:
      * 'password', 'enabled', and 'roles' etc. The user identifiers should be unique.
      *
-     * @param KObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return KUserProviderModel
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     * @return UserProviderModel
      */
-    public function __construct(KObjectConfig $config)
+    public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
 
@@ -54,10 +56,10 @@ class KUserProviderModel extends KUserProviderAbstract
      *
      * Called from {@link __construct()} as a first step of object instantiation
      *
-     * @param   KObjectConfig $object An optional ObjectConfig object with configuration options
+     * @param   ObjectConfig $object An optional ObjectConfig object with configuration options
      * @return  void
      */
-    protected function _initialize(KObjectConfig $config)
+    protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
             'model' => null,
@@ -70,15 +72,15 @@ class KUserProviderModel extends KUserProviderAbstract
      * Get the user modem
      *
      * @throws	\UnexpectedValueException	If the model doesn't implement the ModelInterface
-     * @return	KModelInterface
+     * @return	ModelInterface
      */
     public function getModel()
     {
-        if(!$this->__model instanceof KModelInterface)
+        if(!$this->__model instanceof ModelInterface)
         {
             $this->__model = $this->getObject($this->__model);
 
-            if(!$this->__model instanceof KModelInterface)
+            if(!$this->__model instanceof ModelInterface)
             {
                 throw new \UnexpectedValueException(
                     'Model: '.get_class($this->__model).' does not implement ModelInterface'
@@ -92,10 +94,10 @@ class KUserProviderModel extends KUserProviderAbstract
     /**
      * Set the user model
      *
-     * @param  KModelInterface  $model The user model
-     * @return KUserProviderModel
+     * @param  ModelInterface  $model The user model
+     * @return UserProviderModel
      */
-    public function setModel(KModelInterface $model)
+    public function setModel(ModelInterface $model)
     {
         $this->__model = $model;
         return $this;
@@ -104,10 +106,10 @@ class KUserProviderModel extends KUserProviderAbstract
     /**
      * Set a user in the provider
      *
-     * @param KUserInterface $user
+     * @param UserInterface $user
      * @return boolean
      */
-    public function setUser(KUserInterface $user)
+    public function setUser(UserInterface $user)
     {
         parent::setUser($user);
 
@@ -123,7 +125,7 @@ class KUserProviderModel extends KUserProviderAbstract
      * Find a user for the given identifier
      *
      * @param string $identifier A unique user identifier, (i.e a username or email address)
-     * @return KUserInterface|null Returns a UserInterface object or NULL if the user hasn't been loaded yet
+     * @return UserInterface|null Returns a UserInterface object or NULL if the user hasn't been loaded yet
      */
     public function findUser($identifier)
     {

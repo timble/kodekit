@@ -1,11 +1,13 @@
 <?php
 /**
- * Nooku Framework - http://nooku.org/framework
+ * Kodekit - http://timble.net/kodekit
  *
- * @copyright   Copyright (C) 2007 - 2014 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link        https://github.com/nooku/nooku-framework for the canonical source repository
+ * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+ * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+ * @link        https://github.com/timble/kodekit for the canonical source repository
  */
+
+namespace Kodekit\Library;
 
 /**
  * Behavior Mixin Interface
@@ -14,9 +16,9 @@
  * cannot be overridden by attaching a behaviors with the same.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Koowa\Library\Behavior\Mixin
+ * @package Kodekit\Library\Behavior\Mixin
  */
-interface KBehaviorMixinInterface
+interface BehaviorMixinInterface
 {
     /**
      * Add a behavior
@@ -24,8 +26,8 @@ interface KBehaviorMixinInterface
      * @param   mixed $behavior An object that implements BehaviorInterface, an ObjectIdentifier
      *                            or valid identifier string
      * @param   array $config An optional associative array of configuration settings
-     * @throws UnexpectedValueException
-     * @return  KObject The mixer object
+     * @throws \UnexpectedValueException
+     * @return  Object The mixer object
      */
     public function addBehavior($behavior, $config = array());
 
@@ -41,7 +43,7 @@ interface KBehaviorMixinInterface
      * Get a behavior by name
      *
      * @param  string  $name   The behavior name
-     * @return KBehaviorInterface
+     * @return BehaviorInterface
      */
     public function getBehavior($name);
 
