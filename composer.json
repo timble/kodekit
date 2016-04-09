@@ -21,6 +21,8 @@
         }
     ],
     "require": {
+        "php": ">=5.3",
+        "ext-mbstring": "*",
         "symfony/yaml": "~2.6"
     },
     "suggest": {

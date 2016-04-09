@@ -35,7 +35,7 @@ a developer who wishes to distribute the framework as part of an installable pac
 ## Production Ready
 
 Kodekit uses a conservative development approach focused on the lowest common denominator, at time of writing this
-is PHP 5.5.
+is PHP 5.3.
 
 The framework follows the [semantic versioning standard](http://semver.org/). Rest assured : it's designed for stability
 and compatibility. We promise that all minor versions will be 100% backwards compatible. Only in major versions backwards
