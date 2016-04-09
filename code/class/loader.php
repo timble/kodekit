@@ -160,8 +160,10 @@ class ClassLoader implements ClassLoaderInterface
                         ));
                     }
                 }
+
+                //Class has been loaded
+                $result = true;
             }
-            else $result = false;
         }
 
         return $result;
