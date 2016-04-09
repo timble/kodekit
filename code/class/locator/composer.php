@@ -45,8 +45,11 @@ class ClassLocatorComposer extends ClassLocatorAbstract
             //Proxy class loading
             if(file_exists($config['vendor_path'].'/autoload.php')) {
                 $this->_loader = require $config['vendor_path'].'/autoload.php';
+            } else {
+                throw new \RuntimeException(sprintf('Vendor_path: %s does not exst', $config['vendor_path']));
             }
         }
+        else throw new \InvalidArgumentException('ClassLocatorComposer requires "vendor_path" config parameter');
     }
 
     /**
