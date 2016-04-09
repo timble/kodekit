@@ -62,7 +62,15 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
      * @var string
      * @see _handleFailure
      */
-    protected $_last_unhandled_error;
+    private $__last_unhandled_error;
+
+    /**
+     * Flag to determine if the shutdown handler was registered, avoids over-registering
+     *
+     * @var bool
+     * @see enable
+     */
+    private $__shutdown_registered = false;
 
     /**
      * Constructor.
@@ -74,7 +82,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
         parent::__construct($config);
 
         if ($error = error_get_last()) {
-            $this->_last_unhandled_error = md5(serialize($error));
+            $this->__last_unhandled_error = md5(serialize($error));
         }
 
         //Set the errors to handle
@@ -137,7 +145,12 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
 
         if($type & self::TYPE_FAILURE && !($this->_exception_type & self::TYPE_FAILURE))
         {
-            register_shutdown_function(array($this, '_handleFailure'));
+            if (!$this->__shutdown_registered)
+            {
+                register_shutdown_function(array($this, '_handleFailure'));
+                $this->__shutdown_registered = true;
+            }
+
             $this->_exception_type |= self::TYPE_FAILURE;
         }
 
@@ -398,7 +411,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
             $error = error_get_last();
 
             // Make sure error happened after we started handling them
-            if ($error && md5(serialize($error)) !== $this->_last_unhandled_error)
+            if ($error && md5(serialize($error)) !== $this->__last_unhandled_error)
             {
                 $level = $error['type'];
 
