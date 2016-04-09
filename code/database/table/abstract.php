@@ -66,7 +66,7 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
      *
      * @var array
      */
-    private $__columns = array();
+    private $__column_cache = array();
 
     /**
      * Object constructor
@@ -99,6 +99,9 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
                     break;
                 }
             }
+
+            //Clear the column cache
+            $this->__column_cache = array();
         }
         else $this->_identity_column = $config->identity_column;
 
@@ -284,21 +287,22 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
      * Gets the columns for the table
      *
      * @param   boolean  $base If TRUE, get the column information from the base table.
+     * @param   boolean  $refresh If TRUE, refresh and re-map the columns
      * @return  array    Associative array of DatabaseSchemaColumn objects
      */
-    public function getColumns($base = false)
+    public function getColumns($base = false, $refresh = false)
     {
         //Get the table name
         $name = $base ? $this->getBase() : $this->getName();
 
         //Get the columns from the schema and perform mapping
-        if (!isset($this->__columns[$name]))
+        if (!isset($this->__column_cache[$name]) || $refresh)
         {
             $columns = $this->getSchema($name)->columns;
-            $this->__columns[$name] = $this->mapColumns($columns, true);
+            $this->__column_cache[$name] = $this->mapColumns($columns, true);
         }
 
-        return $this->__columns[$name];
+        return $this->__column_cache[$name];
     }
 
     /**

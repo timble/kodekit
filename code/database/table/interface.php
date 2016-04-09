@@ -99,9 +99,10 @@ interface DatabaseTableInterface
      * Gets the columns for the table
      *
      * @param   boolean  $base If TRUE, get the column information from the base table.
+     * @param   boolean  $refresh If TRUE, refresh and re-map the columns
      * @return  array    Associative array of DatabaseSchemaColumn objects
      */
-    public function getColumns($base = false);
+    public function getColumns($base = false, $refresh = false);
 
     /**
      * Table map method
