@@ -62,6 +62,13 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
     private $__driver;
 
     /**
+     * Array of mapped columns
+     *
+     * @var array
+     */
+    private $__columns = array();
+
+    /**
      * Object constructor
      *
      * @param ObjectConfig $config  An optional ObjectConfig object with configuration options.
@@ -284,10 +291,14 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
         //Get the table name
         $name = $base ? $this->getBase() : $this->getName();
 
-        //Get the columns from the schema
-        $columns = $this->getSchema($name)->columns;
+        //Get the columns from the schema and perform mapping
+        if (!isset($this->__columns[$name]))
+        {
+            $columns = $this->getSchema($name)->columns;
+            $this->__columns[$name] = $this->mapColumns($columns, true);
+        }
 
-        return $this->mapColumns($columns, true);
+        return $this->__columns[$name];
     }
 
     /**
