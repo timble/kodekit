@@ -173,7 +173,7 @@ class HttpUrl extends Object implements HttpUrlInterface
         parent::__construct($config);
 
         //Set the escaping behavior
-        $this->setEscape($config->escape);
+        $this->setEscaped($config->escape);
 
         //Set the url
         $this->setUrl(ObjectConfig::unbox($config->url));
@@ -195,6 +195,26 @@ class HttpUrl extends Object implements HttpUrlInterface
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Serialize the url
+     *
+     * @return string The serialised url
+     */
+    public function serialize()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Unserialize the url
+     *
+     * @return string $url The serialised url
+     */
+    public function unserialize($url)
+    {
+        return $this->setUrl($url);
     }
 
     /**
@@ -391,7 +411,7 @@ class HttpUrl extends Object implements HttpUrlInterface
     public function getQuery($toArray = false, $escape = null)
     {
         $result = $this->_query;
-        $escape = isset($escape) ? (bool) $escape : $this->getEscape();
+        $escape = isset($escape) ? (bool) $escape : $this->isEscaped();
 
         if(!$toArray)
         {
@@ -419,8 +439,10 @@ class HttpUrl extends Object implements HttpUrlInterface
         $result = $query;
         if (!is_array($query))
         {
-            if (strpos($query, '&amp;') !== false) {
+            if (strpos($query, '&amp;') !== false)
+            {
                 $query = str_replace('&amp;', '&', $query);
+                $this->setEscaped(true);
             }
 
             //Set the query vars
@@ -461,10 +483,10 @@ class HttpUrl extends Object implements HttpUrlInterface
     /**
      * Enable/disable URL escaping
      *
-     * @param bool $escape
+     * @param bool $escape If TRUE escapes '&' to '&amp;' for xml compliance
      * @return HttpUrl
      */
-    public function setEscape($escape)
+    public function setEscaped($escape)
     {
         $this->_escape = (bool) $escape;
         return $this;
@@ -473,11 +495,60 @@ class HttpUrl extends Object implements HttpUrlInterface
     /**
      * Get the escape setting
      *
-     * @return bool
+     * @return bool If TRUE escapes '&' to '&amp;' for xml compliance
      */
-    public function getEscape()
+    public function isEscaped()
     {
         return $this->_escape;
+    }
+
+    /**
+     * Return the url components
+     *
+     * @param integer $parts   A bitmask of binary or'ed HTTP_URL constants; FULL is the default
+     * @param boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
+     * @return array Associative array like parse_url() returns.
+     * @see parse_url()
+     */
+    public function toArray($parts = self::FULL, $escape = null)
+    {
+        $result = array();
+        $escape = isset($escape) ? (bool) $escape : $this->isEscaped();
+
+        if (($parts & self::SCHEME) && !empty($this->scheme)) {
+            $result['scheme'] = $this->scheme;
+        }
+
+        if (($parts & self::USER) && !empty($this->user)) {
+            $result['user'] = $this->user;
+        }
+
+        if (($parts & self::PASS) && !empty($this->pass)) {
+            $result['user'] = $this->pass;
+        }
+
+        if (($parts & self::PORT) && !empty($this->port)) {
+            $result['port'] = $this->port;
+        }
+
+        if (($parts & self::HOST) && !empty($this->host)) {
+            $result['host'] = $this->host;
+        }
+
+        if (($parts & self::PATH) && !empty($this->_path)) {
+            $result['path'] = $this->_path;
+        }
+
+
+        if (($parts & self::QUERY) && !empty($this->_query)) {
+            $result['query'] = $this->getQuery(false, $escape);
+        }
+
+        if (($parts & self::FRAGMENT) && trim($this->fragment) !== '') {
+            $result['fragment'] = $this->fragment;
+        }
+
+        return $result;
     }
 
     /**
@@ -526,7 +597,7 @@ class HttpUrl extends Object implements HttpUrlInterface
     public function toString($parts = self::FULL, $escape = null)
     {
         $url = '';
-        $escape = isset($escape) ? (bool) $escape : $this->getEscape();
+        $escape = isset($escape) ? (bool) $escape : $this->isEscaped();
 
         //Add the scheme
         if (($parts & self::SCHEME) && !empty($this->scheme)) {

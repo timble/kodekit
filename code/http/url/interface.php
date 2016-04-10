@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Url
  */
-interface HttpUrlInterface
+interface HttpUrlInterface extends \Serializable
 {
     /**
      * The url parts
@@ -183,17 +183,17 @@ interface HttpUrlInterface
     /**
      * Enable/disable URL escaping
      *
-     * @param bool $escape
+     * @param bool $escape If TRUE escapes '&' to '&amp;' for xml compliance
      * @return HttpUrlInterface
      */
-    public function setEscape($escape);
+    public function setEscaped($escape);
 
     /**
      * Get the escape setting
      *
-     * @return bool
+     * @return bool If TRUE escapes '&' to '&amp;' for xml compliance
      */
-    public function getEscape();
+    public function isEscaped();
 
     /**
      * Build the url from an array
@@ -203,6 +203,16 @@ interface HttpUrlInterface
      * @see     parse_url()
      */
     public static function fromArray(array $parts);
+
+    /**
+     * Return the url components
+     *
+     * @param integer $parts   A bitmask of binary or'ed HTTP_URL constants; FULL is the default
+     * @param boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
+     * @return array Associative array like parse_url() returns.
+     * @see parse_url()
+     */
+    public function toArray($parts = self::FULL, $escape = null);
 
     /**
      * Build the url from a string
