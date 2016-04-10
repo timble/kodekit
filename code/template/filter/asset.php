@@ -26,7 +26,7 @@ class TemplateFilterAsset extends TemplateFilterAbstract
      *
      * @var array
      */
-    protected $_schemes;
+    protected $_schemes = array();
 
     /**
      * Constructor.
@@ -37,7 +37,8 @@ class TemplateFilterAsset extends TemplateFilterAbstract
     {
         parent::__construct($config);
 
-        foreach($config->schemes as $alias => $path) {
+        $schemes = ObjectConfig::unbox($config->schemes);
+        foreach(array_reverse($schemes) as $alias => $path) {
             $this->addScheme($alias, $path);
         }
     }
@@ -65,12 +66,28 @@ class TemplateFilterAsset extends TemplateFilterAbstract
      *
      * @param string $alias  Scheme to be appended
      * @param mixed  $path   The path to replace the scheme
+     * @param boolean $prepend Whether to prepend the autoloader or not
      * @return TemplateFilterAsset
      */
-    public function addScheme($alias, $path)
+    public function addScheme($alias, $path, $prepend = false)
     {
-        $this->_schemes[$alias] = $path;
+        if($prepend) {
+            $this->_schemes = array($alias => $path) + $this->_schemes;
+        } else {
+            $this->_schemes = $this->_schemes + array($alias => $path);
+        }
+
         return $this;
+    }
+
+    /**
+     * Get the schemes
+     *
+     * @return array
+     */
+    public function getSchemes()
+    {
+        return $this->_schemes;
     }
 
     /**
@@ -83,10 +100,21 @@ class TemplateFilterAsset extends TemplateFilterAbstract
     {
         if(!empty($this->_schemes))
         {
-            $text = str_replace(
-                array_keys($this->_schemes),
-                array_values($this->_schemes),
-                $text);
+            $schemes = array();
+            foreach($this->_schemes as $scheme => $path)
+            {
+                //Handle cyclical schemes
+                if(!empty($schemes))
+                {
+                    $scheme = str_replace(
+                        array_keys($schemes),
+                        array_values($schemes),
+                        $scheme);
+                }
+
+                $text = str_replace($scheme, $path, $text);
+                $schemes[$scheme] = $path;
+            }
         }
     }
 }
