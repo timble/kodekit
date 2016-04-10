@@ -42,7 +42,7 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
     {
         $domain  = empty($identifier->domain) ? 'kodekit' : ucfirst($identifier->domain);
         $package = ucfirst($identifier->package);
-        $path    = StringInflector::camelize(implode('_', $identifier->path));
+        $path    = StringInflector::implode($identifier->path);
         $file    = ucfirst($identifier->name);
         $class   = $path.$file;
 

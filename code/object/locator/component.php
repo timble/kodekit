@@ -33,7 +33,7 @@ class ObjectLocatorComponent extends ObjectLocatorAbstract
      */
     public function locate(ObjectIdentifier $identifier, $fallback = true)
     {
-        $class = StringInflector::camelize(implode('_', $identifier->path)).ucfirst($identifier->name);
+        $class = StringInflector::implode($identifier->path).ucfirst($identifier->name);
 
         $domain  = $identifier->domain ? ucfirst($identifier->domain) : null;
         $package = ucfirst($identifier->package);
@@ -46,7 +46,7 @@ class ObjectLocatorComponent extends ObjectLocatorAbstract
         if(in_array($type, array('view','module')) && !in_array('behavior', $path)) {
             $path = ucfirst($type);
         } else {
-            $path = ucfirst($type).StringInflector::camelize(implode('_', $path));
+            $path = ucfirst($type).StringInflector::implode($path);
         }
 
         //Allow locating default classes if $path is empty.
