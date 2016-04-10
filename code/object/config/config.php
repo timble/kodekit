@@ -154,9 +154,9 @@ class ObjectConfig implements ObjectConfigInterface
 
         if(is_array($options) || $options instanceof \Traversable)
         {
-            if(!is_numeric(key($options)))
+            foreach($options as $key => $value)
             {
-                foreach($options as $key => $value)
+                if(!is_numeric($key))
                 {
                     if(array_key_exists($key, $this->__options))
                     {
@@ -166,10 +166,7 @@ class ObjectConfig implements ObjectConfigInterface
                     }
                     else $this->set($key, $value);
                 }
-            }
-            else
-            {
-                foreach($options as $value)
+                else
                 {
                     if (!in_array($value, $this->__options, true)) {
                         $this->__options[] = $value;
