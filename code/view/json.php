@@ -112,6 +112,7 @@ class ViewJson extends ViewAbstract
      * be returned instead.
      *
      * @param ViewContext  $context A view context object
+     * @throws \DomainException Object could not be encoded to valid JSON.
      * @return string A RFC4627-compliant JSON string, which may also be embedded into HTML.
      */
     protected function _actionRender(ViewContext $context)
@@ -126,6 +127,10 @@ class ViewJson extends ViewAbstract
 
             // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
             $this->_content = json_encode($this->_content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+
+            if (json_last_error() > 0) {
+                throw new \DomainException(sprintf('Cannot encode data to JSON string - %s', json_last_error_msg()));
+            }
         }
 
 
