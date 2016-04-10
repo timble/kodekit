@@ -92,7 +92,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
     protected function _addAction(&$text)
     {
         // All: Add the action if left empty
-        if (preg_match_all('#<\s*form.*?action=""#im', $text, $matches, PREG_SET_ORDER))
+        if (preg_match_all('#<\s*form.*?action=""#sim', $text, $matches, PREG_SET_ORDER))
         {
             $action = $this->getTemplate()->route();
 
@@ -117,13 +117,13 @@ class TemplateFilterForm extends TemplateFilterAbstract
         if (!empty($this->_token_value))
         {
             // POST: Add token
-            $text    = preg_replace('/(<form.*method="post"[^>]*>)/i',
+            $text    = preg_replace('/(<form.*method="post"[^>]*>)/si',
                 '\1'.PHP_EOL.'<input type="hidden" name="'.$this->_token_name.'" value="'.$this->_token_value.'" />',
                 $text
             );
 
             // GET: Add token to .-koowa-grid forms
-            $text    = preg_replace('#(<\s*?form\s+?.*?class=(?:\'|")[^\'"]*?-koowa-grid.*?(?:\'|").*?)>#im',
+            $text    = preg_replace('#(<\s*?form\s+?.*?class=(?:\'|")[^\'"]*?-koowa-grid.*?(?:\'|").*?)>#sim',
                 '\1 data-token-name="'.$this->_token_name.'" data-token-value="'.$this->_token_value.'">',
                 $text
             );
@@ -141,7 +141,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
     protected function _addQueryParameters(&$text)
     {
         $matches = array();
-        if (preg_match_all('#<form.*action="[^"]*\?(.*)".*method="get".*>(.*)</form>#isU', $text, $matches))
+        if (preg_match_all('#<form.*action="[^"]*\?(.*)".*method="get".*>(.*)</form>#siU', $text, $matches))
         {
             foreach ($matches[1] as $key => $query)
             {

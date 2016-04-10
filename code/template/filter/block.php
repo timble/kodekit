@@ -200,7 +200,7 @@ class TemplateFilterBlock extends TemplateFilterDecorator
         $replace = array();
         $matches = array();
         // <ktml:blocks name="[name]" condition="[condition]">
-        if(preg_match_all('#<ktml:block\s+name="([^"]+)"(.*"[^"]*")?>#iU', $text, $matches))
+        if(preg_match_all('#<ktml:block\s+name="([^"]+)"(.*"[^"]*")?>#siU', $text, $matches))
         {
             $count = count($matches[1]);
 
