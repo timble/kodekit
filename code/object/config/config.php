@@ -71,7 +71,6 @@ class ObjectConfig implements ObjectConfigInterface
      *
      * @param  string $name
      * @param  mixed  $value
-     * @throws \RuntimeException If the config is read only
      * @return ObjectConfig
      */
     public function set($name, $value)
@@ -100,7 +99,6 @@ class ObjectConfig implements ObjectConfigInterface
      * Remove a configuration option
      *
      * @param   string $name The configuration option name.
-     * @throws  \RuntimeException If the config is read only
      * @return  ObjectConfig
      */
     public function remove( $name )
@@ -122,7 +120,6 @@ class ObjectConfig implements ObjectConfigInterface
      * - Items in $options with STRING keys will overwrite current values.
      *
      * @param  array|\Traversable|ObjectConfigInterface $options A ObjectConfigInterface instance an or array of options to be appended
-     * @throws \RuntimeException If the config is read only
      * @return ObjectConfig
      */
     public function merge($options)
@@ -145,7 +142,6 @@ class ObjectConfig implements ObjectConfigInterface
      * This method only adds keys that don't exist and it filters out any duplicate values
      *
      * @param  array|ObjectConfigInterface|\Traversable    $config A ObjectConfigInterface instance an or array of options to be appended
-     * @throws \RuntimeException If the config is read only
      * @return ObjectConfig
      */
     public function append($options)
