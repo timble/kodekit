@@ -39,7 +39,6 @@ interface StringInflectorInterface
      * Convert a word to "CamelCased"
      *
      * Converts a word like "foo_bar" or "foo bar" to "FooBar".
-     * This method will remove non alphanumeric characters from the resulting word
      *
      * @param   string  $word    Word to convert to camel case
      * @return  string  UpperCamelCasedWord
@@ -69,8 +68,6 @@ interface StringInflectorInterface
 
     /**
      * Convert  an array of strings into a "CamelCased" word
-     *
-     * This method will remove non alphanumeric characters from the resulting word
      *
      * @param  array    $words   Array to implode
      * @return string  UpperCamelCasedWord

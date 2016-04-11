@@ -214,7 +214,6 @@ class StringInflector implements StringInflectorInterface
      * Convert a word to "CamelCased"
      *
      * Converts a word like "foo_bar" or "foo bar" to "FooBar".
-     * This method will remove non alphanumeric characters from the resulting word
      *
      * @param   string  $word    Word to convert to camel case
      * @return  string  UpperCamelCasedWord
@@ -222,8 +221,6 @@ class StringInflector implements StringInflectorInterface
     public static function camelize($word)
     {
         $word = str_replace(' ', '', ucwords(strtolower(str_replace('_', ' ', $word))));
-        $word = preg_replace('/[^a-zA-Z0-9\s]/', '', $word);
-
         return $word;
     }
 
@@ -260,15 +257,12 @@ class StringInflector implements StringInflectorInterface
     /**
      * Convert  an array of strings into a "CamelCased" word
      *
-     * This method will remove non alphanumeric characters from the resulting word
-     *
      * @param  array    $words   Array to implode
      * @return string  UpperCamelCasedWord
      */
     public static function implode($words)
     {
         $word = implode(array_map('ucfirst', $words));
-        $word = preg_replace('/[^a-zA-Z0-9\s]/', '', $word);
         return $word;
     }
 
