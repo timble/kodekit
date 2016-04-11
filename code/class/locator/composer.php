@@ -31,7 +31,7 @@ class ClassLocatorComposer extends ClassLocatorAbstract
      *
      * @var \Composer\Autoload\ClassLoader
      */
-    protected $_loader = null;
+    private static $__loader = null;
 
     /**
      * Constructor
@@ -40,16 +40,17 @@ class ClassLocatorComposer extends ClassLocatorAbstract
      */
     public function __construct($config = array())
     {
-        if(isset($config['vendor_path']))
-        {
-            //Proxy class loading
-            if(file_exists($config['vendor_path'].'/autoload.php')) {
-                $this->_loader = require $config['vendor_path'].'/autoload.php';
-            } else {
-                throw new \RuntimeException(sprintf('Vendor_path: %s does not exst', $config['vendor_path']));
-            }
+        if(isset($config['vendor_path'])) {
+            $vendor_path = $config['vendor_path'];
+        } else {
+            $vendor_path = \Kodekit::getVendorPath();
         }
-        else throw new \InvalidArgumentException('ClassLocatorComposer requires "vendor_path" config parameter');
+
+        if(file_exists($vendor_path.'/autoload.php')) {
+            self::$__loader = require $vendor_path.'/autoload.php';
+        } else {
+            throw new \RuntimeException(sprintf('Vendor_path: %s does not exst', $vendor_path));
+        }
     }
 
     /**
@@ -62,10 +63,20 @@ class ClassLocatorComposer extends ClassLocatorAbstract
     {
         $path = false;
 
-        if($this->_loader) {
-            $path = $this->_loader->findFile($class);
+        if(self::$__loader) {
+            $path = self::$__loader->findFile($class);
         }
 
         return $path;
+    }
+
+    /**
+     * Get the composer class loader
+     *
+     * @return \Composer\Autoload\ClassLoader|mixed
+     */
+    public function getLoader()
+    {
+        return self::$__loader;
     }
 }
