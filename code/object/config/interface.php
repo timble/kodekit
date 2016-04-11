@@ -56,7 +56,7 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
     public function has($name);
 
     /**
-     * Remove a configuration option
+     * Remove a configuration option by name
      *
      * @param   string $name The configuration option name.
      * @throws  \RuntimeException If the config is read only
