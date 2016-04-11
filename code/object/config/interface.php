@@ -42,7 +42,6 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
      *
      * @param  string $name
      * @param  mixed  $value
-     * @throws \RuntimeException If the config is read only
      * @return ObjectConfigInterface
      */
     public function set($name, $value);
@@ -59,7 +58,6 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
      * Remove a configuration option
      *
      * @param   string $name The configuration option name.
-     * @throws  \RuntimeException If the config is read only
      * @return  ObjectConfigInterface
      */
     public function remove( $name );
@@ -76,7 +74,6 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
      * - Items in $options with STRING keys will overwrite current values.
      *
      * @param  array|\Traversable|ObjectConfigInterface  $options A ObjectConfig object an or array of options to be added
-     * @throws \RuntimeException If the config is read only
      * @return ObjectConfigInterface
      */
     public function merge($options);
@@ -87,7 +84,6 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
      * This function only adds keys that don't exist and it filters out any duplicate values
      *
      * @param  array|\Traversable|ObjectConfigInterface  $options A ObjectConfigInterface instance an or array of options to be appended
-     * @throws \RuntimeException If the config is read only
      * @return ObjectConfigInterface
      */
     public function append($options);
