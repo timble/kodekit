@@ -177,9 +177,6 @@ class ClassLoader implements ClassLoaderInterface
      */
     public function getPath($class)
     {
-        $result = false;
-        static $i;
-
         if(!$this->__registry->has($class))
         {
             if(!$locator = $this->__registry->getLocator($class))
@@ -199,7 +196,8 @@ class ClassLoader implements ClassLoaderInterface
 
             $this->__registry->set($class, $path);
 
-        } else $path = $this->__registry->get($class);
+        }
+        else $path = $this->__registry->get($class);
 
         return $path;
     }
