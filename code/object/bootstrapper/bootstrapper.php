@@ -60,6 +60,13 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
     protected $_bootstrapped;
 
     /**
+     * Component info cache
+     *
+     * @var array
+     */
+    private $__component_info = array();
+
+    /**
      * Constructor.
      *
      * @param ObjectConfig $config An optional ObjectConfig object with configuration options
@@ -431,6 +438,29 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
         }
 
         return $result;
+    }
+
+    /**
+     * Get info for a registered component
+     *
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return ObjectConfigJson|false Returns the component info or FALSE if the component couldn't be found.
+     */
+    public function getComponentInfo($name, $domain = null)
+    {
+        $identifier = $this->getComponentIdentifier($name, $domain);
+        if(!isset($this->__component_info[$identifier]))
+        {
+            if($path = $this->getComponentPath($name, $domain))
+            {
+                $info = $this->getObject('object.config.factory')->fromFile($path . '/component.json');
+                $this->__component_info[$identifier] = $info;
+            }
+            else $this->__component_info[$identifier] = false;
+        }
+
+        return  $this->__component_info[$identifier];
     }
 
     /**
