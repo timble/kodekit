@@ -39,6 +39,13 @@ final class ObjectManager implements ObjectInterface, ObjectManagerInterface, Ob
     private $__loader;
 
     /**
+     * Debug
+     *
+     * @var boolean
+     */
+    protected $_debug = false;
+
+    /**
      * The identifier locators
      *
      * @var array
@@ -50,29 +57,9 @@ final class ObjectManager implements ObjectInterface, ObjectManagerInterface, Ob
      *
      * Prevent creating instances of this class by making the constructor private
      */
-    final private function __construct(ObjectConfig $config)
+    public function __construct()
     {
-        //Initialise the object
-        $this->_initialize($config);
-
-        // Set the class loader
-        if (!$config->class_loader instanceof ClassLoaderInterface)
-        {
-            throw new \InvalidArgumentException(
-                'class_loader [ClassLoaderInterface] config option is required, "'.gettype($config->class_loader).'" given.'
-            );
-        }
-
-        //Set the class loader
-        $this->setClassLoader($config->class_loader);
-
-        //Create the object registry
-        if($config->cache && ObjectRegistryCache::isSupported())
-        {
-            $this->__registry = new ObjectRegistryCache();
-            $this->__registry->setNamespace($config->cache_namespace);
-        }
-        else $this->__registry = new ObjectRegistry();
+        $this->__registry = new ObjectRegistry();
 
         //Create the object identifier
         $this->__object_identifier = $this->getIdentifier('object.manager');
@@ -88,55 +75,6 @@ final class ObjectManager implements ObjectInterface, ObjectManagerInterface, Ob
         //Register self and set a 'manager' alias
         $this->setObject('lib:object.manager', $this);
         $this->registerAlias('lib:object.manager', 'manager');
-    }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
-     * @return  void
-     */
-    protected function _initialize(ObjectConfig $config)
-    {
-        $config->append(array(
-            'class_loader'    => null,
-            'cache'           => false,
-            'cache_namespace' => 'kodekit'
-        ));
-    }
-
-    /**
-     * Prevent creating clones of this class
-     *
-     * @throws Exception
-     */
-    final private function __clone()
-    {
-        trigger_error("The object manager cannot be cloned.", E_USER_WARNING);
-    }
-
-    /**
-     * Force creation of a singleton
-     *
-     * @param  array  $config An optional array with configuration options.
-     * @return ObjectManager
-     */
-    final public static function getInstance($config = array())
-    {
-        static $instance;
-
-        if ($instance === NULL)
-        {
-            if(!$config instanceof ObjectConfig) {
-                $config = new ObjectConfig($config);
-            }
-
-            $instance = new self($config);
-        }
-
-        return $instance;
     }
 
     /**
@@ -572,6 +510,65 @@ final class ObjectManager implements ObjectInterface, ObjectManagerInterface, Ob
     public function isAlias($identifier)
     {
         return array_key_exists ($this->__registry->getAliases(), (string) $identifier);
+    }
+
+    /**
+     * Enable or disable the cache
+     *
+     * @param bool $cache True or false.
+     * @param string $namespace The cache namespace
+     * @return ObjectManager
+     */
+    public function setCache($cache, $namespace = null)
+    {
+        if($cache && ObjectRegistryCache::isSupported())
+        {
+            $this->__registry = new ObjectRegistryCache();
+
+            if($namespace) {
+                $this->__registry->setNamespace($namespace);
+            }
+        }
+        else
+        {
+            if(!$this->__registry instanceof ObjectRegistry) {
+                $this->__registry = new ObjectRegistry();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public function isCache()
+    {
+        return $this->__registry instanceof ClassRegistryCache;
+    }
+
+    /**
+     * Enable or disable debug
+     *
+     * @param bool|null $debug True or false.
+     * @return ObjectManager
+     */
+    public function setDebug($debug)
+    {
+        $this->_debug = (bool) $debug;
+        return $this;
+    }
+
+    /**
+     * Check if the object manager is running in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->_debug;
     }
 
     /**
