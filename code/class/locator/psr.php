@@ -35,24 +35,26 @@ class ClassLocatorPsr extends ClassLocatorAbstract
      */
     public function locate($class)
     {
-        //Find the class
-        foreach($this->getNamespaces() as $prefix => $basepaths)
+        if (strpos($class, '\\') !== false)
         {
-            if(strpos('\\'.$class, '\\'.$prefix) !== 0) {
-                continue;
-            }
-
-            if (strpos($class, $prefix) === 0) {
-                $class = trim(substr($class, strlen($prefix)), '\\');
-            }
-
-            $path = str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $class) . '.php';
-
-            foreach($basepaths as $basepath)
+            foreach($this->getNamespaces() as $prefix => $basepaths)
             {
-                $result = $basepath . '/' .$path;
-                if (is_file($result)) {
-                    break;
+                if(strpos('\\'.$class, '\\'.$prefix) !== 0) {
+                    continue;
+                }
+
+                if (strpos($class, $prefix) === 0) {
+                    $class = trim(substr($class, strlen($prefix)), '\\');
+                }
+
+                $path = str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $class) . '.php';
+
+                foreach($basepaths as $basepath)
+                {
+                    $result = $basepath . '/' .$path;
+                    if (is_file($result)) {
+                        break;
+                    }
                 }
             }
         }
