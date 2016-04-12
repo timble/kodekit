@@ -133,24 +133,29 @@ final class ClassLoader implements ClassLoaderInterface
      */
     public function getPath($class)
     {
-        $result   = false;
-
         if(!$this->__registry->has($class))
         {
-            //Locate the class
-            foreach($this->_locators as $locator)
+            if(!$locator = $this->__registry->getLocator($class))
             {
-                if(false !== $result = $locator->locate($class)) {
-                    break;
-                };
+                $locators = $this->getLocators();
+
+                foreach($locators as $locator)
+                {
+                    if(false !== $path = $locator->locate($class))
+                    {
+                        $this->__registry->setLocator($class, $locator->getName());
+                        break;
+                    };
+                }
             }
+            else $path = $this->getLocator($locator)->locate($class);
 
-            //Also store if the class could not be found to prevent repeated lookups.
-            $this->__registry->set($class, $result);
+            $this->__registry->set($class, $path);
 
-        } else $result = $this->__registry->get($class);
+        }
+        else $path = $this->__registry->get($class);
 
-        return $result;
+        return $path;
     }
 
     /**

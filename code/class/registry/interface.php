@@ -28,8 +28,8 @@ interface ClassRegistryInterface
     /**
      * Set a class path in the registry
      *
-     * @param  string $class
-     * @param  string $path
+     * @param  string $class   The class name
+     * @param  string $path    The class path
      * @return ClassRegistryInterface
      */
     public function set($class, $path);
@@ -73,6 +73,27 @@ interface ClassRegistryInterface
      * @return ClassRegistryInterface
      */
     public function alias($class, $alias);
+
+    /**
+     * Get a specific locator from a class namespace
+     *
+     * @return string|false The name of the locator or FALSE if no locator could be found
+     */
+    public function getLocator($class);
+
+    /**
+     * Set a specific locator based on a class namespace
+     *
+     * @return  ClassRegistry
+     */
+    public function setLocator($class, $locator);
+
+    /**
+     * Get a list of all the namespaces
+     *
+     * @return array
+     */
+    public function getNamespaces();
 
     /**
      * Get a list of all the class aliases

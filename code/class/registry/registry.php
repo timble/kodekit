@@ -18,11 +18,18 @@ namespace Kodekit\Library;
 class ClassRegistry extends \ArrayObject implements ClassRegistryInterface
 {
     /**
-     * The identifier aliases
+     * The class aliases
      *
      * @var  array
      */
     protected $_aliases = array();
+
+    /**
+     * The class namespaces by locator
+     *
+     * @var  array
+     */
+    protected $_namespaces = array();
 
     /**
      * Get a class from the registry
@@ -44,9 +51,9 @@ class ClassRegistry extends \ArrayObject implements ClassRegistryInterface
     /**
      * Set a class path in the registry
      *
-     * @param  string $class
-     * @param  string $path
-     * @return ClassRegistry
+     * @param  string $class   The class name
+     * @param  string $path    The class path
+     * @return ClassRegistryInterface
      */
     public function set($class, $path)
     {
@@ -129,7 +136,54 @@ class ClassRegistry extends \ArrayObject implements ClassRegistryInterface
     }
 
     /**
-     * Get a list of all the identifier aliases
+     * Get a specific locator from the class namespace
+     *
+     * @return string|false The name of the locator or FALSE if no locator could be found
+     */
+    public function getLocator($class)
+    {
+        $result = false;
+
+        if(!false == $pos = strrpos($class, '\\'))
+        {
+            $namespace = substr($class, 0, $pos);
+
+            if(isset($this->_namespaces[$namespace])) {
+                $result = $this->_namespaces[$namespace];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set a specific locator based on a class namespace
+     *
+     * @return  ClassRegistry
+     */
+    public function setLocator($class, $locator)
+    {
+        if(!false == $pos = strrpos($class, '\\'))
+        {
+            $namespace = substr($class, 0, $pos);
+            $this->_namespaces[$namespace] = $locator;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get a list of all the namespaces
+     *
+     * @return array
+     */
+    public function getNamespaces()
+    {
+        return array_keys($this->_namespaces);
+    }
+
+    /**
+     * Get a list of all the class aliases
      *
      * @return array
      */

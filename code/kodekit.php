@@ -131,7 +131,7 @@ class Kodekit
         $loader->setCache(self::isCache());
 
         //Register the component class locator
-        $loader->registerLocator(new Library\ClassLocatorComponent());
+        $loader->registerLocator(new Library\ClassLocatorComponent(), true);
 
         //Register the composer class locator
         if(file_exists($this->getVendorPath())) {
