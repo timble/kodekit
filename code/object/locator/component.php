@@ -18,11 +18,11 @@ namespace Kodekit\Library;
 class ObjectLocatorComponent extends ObjectLocatorAbstract
 {
     /**
-     * The locator name
+     * The locator type
      *
      * @var string
      */
-    protected static $_name = 'com';
+    protected static $_type = 'com';
 
     /**
      * Returns a fully qualified class name for a given identifier.

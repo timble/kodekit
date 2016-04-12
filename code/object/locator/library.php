@@ -18,11 +18,11 @@ namespace Kodekit\Library;
 class ObjectLocatorLibrary extends ObjectLocatorAbstract
 {
     /**
-     * The locator name
+     * The locator type
      *
      * @var string
      */
-    protected static $_name = 'lib';
+    protected static $_type = 'lib';
 
     /**
      * Get the list of location templates for an identifier
