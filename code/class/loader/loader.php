@@ -10,12 +10,12 @@
 namespace Kodekit\Library;
 
 require_once dirname(__FILE__) . '/interface.php';
-require_once dirname(__FILE__) . '/locator/interface.php';
-require_once dirname(__FILE__) . '/locator/abstract.php';
-require_once dirname(__FILE__) . '/locator/library.php';
-require_once dirname(__FILE__) . '/registry/interface.php';
-require_once dirname(__FILE__) . '/registry/registry.php';
-require_once dirname(__FILE__) . '/registry/cache.php';
+require_once dirname(__FILE__) . '/../locator/interface.php';
+require_once dirname(__FILE__) . '/../locator/abstract.php';
+require_once dirname(__FILE__) . '/../locator/library.php';
+require_once dirname(__FILE__) . '/../registry/interface.php';
+require_once dirname(__FILE__) . '/../registry/registry.php';
+require_once dirname(__FILE__) . '/../registry/cache.php';
 
 /**
  * Loader
@@ -23,7 +23,7 @@ require_once dirname(__FILE__) . '/registry/cache.php';
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Class
  */
-class ClassLoader implements ClassLoaderInterface
+final class ClassLoader implements ClassLoaderInterface
 {
     /**
      * The class container
@@ -51,59 +51,15 @@ class ClassLoader implements ClassLoaderInterface
      *
      * Prevent creating instances of this class by making the constructor private
      */
-    final private function __construct($config = array())
+    public function __construct()
     {
-        //Create the class registry
-        if(isset($config['cache']) && $config['cache'] && ClassRegistryCache::isSupported())
-        {
-            $this->__registry = new ClassRegistryCache();
-
-            if(isset($config['cache_namespace'])) {
-                $this->__registry->setNamespace($config['cache_namespace']);
-            }
-        }
-        else $this->__registry = new ClassRegistry();
-
-        //Set the debug mode
-        if(isset($config['debug'])) {
-            $this->setDebug($config['debug']);
-        }
+        $this->__registry = new ClassRegistry();
 
         //Register the library locator
-        $this->registerLocator(new ClassLocatorLibrary($config));
-
-        //Register the library namesoace
-        $this->getLocator('library')->registerNamespace(__NAMESPACE__, dirname(dirname(__FILE__)));
+        $this->registerLocator(new ClassLocatorLibrary());
 
         //Register the loader with the PHP autoloader
         $this->register();
-    }
-
-    /**
-     * Clone
-     *
-     * Prevent creating clones of this class
-     */
-    final private function __clone()
-    {
-        throw new \Exception("An instance of ClassLoader cannot be cloned.");
-    }
-
-    /**
-     * Singleton instance
-     *
-     * @param  array  $config An optional array with configuration options.
-     * @return ClassLoader
-     */
-    final public static function getInstance($config = array())
-    {
-        static $instance;
-
-        if ($instance === NULL) {
-            $instance = new self($config);
-        }
-
-        return $instance;
     }
 
     /**
@@ -285,11 +241,11 @@ class ClassLoader implements ClassLoaderInterface
     }
 
     /**
-     * Enable or disable class loading
+     * Enable or disable debug
      *
      * If debug is enabled the class loader will throw an exception if a file is found but does not declare the class.
      *
-     * @param bool|null $debug True or false. If NULL the method will return the current debug setting.
+     * @param bool|null $debug True or false.
      * @return ClassLoader
      */
     public function setDebug($debug)
@@ -306,6 +262,43 @@ class ClassLoader implements ClassLoaderInterface
     public function isDebug()
     {
         return $this->_debug;
+    }
+
+    /**
+     * Enable or disable the cache
+     *
+     * @param bool $cache True or false.
+     * @param string $namespace The cache namespace
+     * @return ClassLoaderInterface
+     */
+    public function setCache($cache, $namespace = null)
+    {
+        if($cache && ClassRegistryCache::isSupported())
+        {
+            $this->__registry = new ClassRegistryCache();
+
+            if($namespace) {
+                $this->__registry->setNamespace($namespace);
+            }
+        }
+        else
+        {
+            if(!$this->__registry instanceof ClassRegistry) {
+                $this->__registry = new ClassRegistry();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public function isCache()
+    {
+        return $this->__registry instanceof ClassRegistryCache;
     }
 
     /**

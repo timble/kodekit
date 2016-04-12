@@ -26,7 +26,7 @@ namespace Kodekit\Library;
  *     // Create a url object;
  *
  *     $url = 'http://anonymous:guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor'
- *     $url = ObjectManager::getInstance()->getObject('http.url', array('url' => $url) );
+ *     $url = Kodekit::getObject('http.url', array('url' => $url) );
  *
  *     // the $url properties are ...
  *     //

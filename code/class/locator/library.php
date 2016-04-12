@@ -48,6 +48,17 @@ class ClassLocatorLibrary extends ClassLocatorAbstract
     protected static $_name = 'library';
 
     /**
+     * Constructor.
+     *
+     * @param  array  $config An optional array with configuration options.
+     */
+    public function __construct( $config = array())
+    {
+        //Register the library namespace
+        $this->registerNamespace(__NAMESPACE__, dirname(dirname(dirname(__FILE__))));
+    }
+
+    /**
      * Get a fully qualified path based on a class name
      *
      * @param  string $class   The class name

@@ -99,7 +99,7 @@ interface ClassLoaderInterface
     public function getAliases($class);
 
     /**
-     * Enable or disable class loading
+     * Enable or disable debug
      *
      * If debug is enabled the class loader should throw an exception if a file is found but does not declare the class.
      *
@@ -114,6 +114,22 @@ interface ClassLoaderInterface
      * @return bool
      */
     public function isDebug();
+
+    /**
+     * Enable or disable the cache
+     *
+     * @param bool $cache True or false.
+     * @param string $namespace The cache namespace
+     * @return ClassLoaderInterface
+     */
+    public function setCache($cache, $namespace = null);
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public function isCache();
 
     /**
      * Tells if a class, interface or trait exists.

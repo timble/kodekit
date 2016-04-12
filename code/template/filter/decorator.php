@@ -28,7 +28,7 @@ class TemplateFilterDecorator extends TemplateFilterAbstract
     public function filter(&$text)
     {
         $matches = array();
-        if(preg_match_all('#<ktml:content(.*)>#iU', $text, $matches))
+        if(preg_match_all('#<ktml:content(.*)>#siU', $text, $matches))
         {
             foreach($matches[1] as $key => $match) {
                 $text = str_replace($matches[0][$key], $this->getTemplate()->content(), $text);

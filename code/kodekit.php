@@ -36,35 +36,42 @@ class Kodekit
      *
      * @var boolean
      */
-    protected $_debug;
+    protected static $_debug;
 
     /**
      * Cache state
      *
      * @var boolean
      */
-    protected $_cache;
+    protected static $_cache;
 
     /**
      * The root path
      *
      * @var string
      */
-    protected $_root_path;
+    protected static $_root_path;
 
     /**
      * The base path
      *
      * @var string
      */
-    protected $_base_path;
+    protected static $_base_path;
 
     /**
      * The vendor path
      *
      * @var string
      */
-    protected $_vendor_path;
+    protected static $_vendor_path;
+
+    /**
+     * The object manager
+     *
+     * @var Library\ObjectManager
+     */
+    private static $__object_manager;
 
     /**
      * Constructor
@@ -75,75 +82,81 @@ class Kodekit
      */
     final private function __construct($config = array())
     {
-        //Initialize the debug state
+        /**
+         * Setup the configuration
+         */
+
         if(isset($config['debug'])) {
-            $this->_debug = $config['debug'];
+            self::$_debug = $config['debug'];
         } else {
-            $this->_debug = false;
+            self::$_debug = false;
         }
 
-        //Initialize the debug state
         if(isset($config['cache'])) {
-            $this->_cache = $config['cache'];
+            self::$_cache = $config['cache'];
         } else {
-            $this->_cache = false;
+            self::$_cache = false;
         }
 
-        //Initialize the root path
         if(isset($config['root_path'])) {
-            $this->_root_path = $config['root_path'];
+            self::$_root_path = $config['root_path'];
         } else {
-            $this->_root_path = realpath($_SERVER['DOCUMENT_ROOT']);
+            self::$_root_path = realpath($_SERVER['DOCUMENT_ROOT']);
         }
 
-        //Initialize the base path
         if(isset($config['base_path'])) {
-            $this->_base_path = $config['base_path'];
+            self::$_base_path = $config['base_path'];
         } else {
-            $this->_base_path = $this->_root_path;
+            self::$_base_path = self::$_root_path;
         }
 
-        //Initialize the vendor path
         if(isset($config['vendor_path'])) {
-            $this->_vendor_path = $config['vendor_path'];
+            self::$_vendor_path = $config['vendor_path'];
         } else {
-            $this->_vendor_path = $this->_root_path.'/vendor';
+            self::$_vendor_path = self::$_root_path.'/vendor';
         }
 
-        //Load the legacy functions
+        /**
+         * Load the legacy functions
+         */
         require_once dirname(__FILE__) . '/legacy.php';
 
-        //Setup the loader
-        require_once dirname(__FILE__).'/class/loader.php';
+        /**
+         * Load the class locator
+         */
+        require_once dirname(__FILE__) . '/class/loader/loader.php';
 
-        if (!isset($config['class_loader'])) {
-            $config['class_loader'] = Library\ClassLoader::getInstance($config);
-        }
-
-        //Setup the factory
-        $manager = Library\ObjectManager::getInstance($config);
+        $loader = new Library\ClassLoader();
+        $loader->setDebug(self::isDebug());
+        $loader->setCache(self::isCache());
 
         //Register the component class locator
-        $manager->getClassLoader()->registerLocator(new Library\ClassLocatorComponent(), true);
+        $loader->registerLocator(new Library\ClassLocatorComponent(), true);
+
+        //Register the composer class locator
+        if(file_exists($this->getVendorPath())) {
+            $loader->registerLocator(new Library\ClassLocatorComposer());
+        }
+
+        //Register the PSR locator
+        $loader->registerLocator(new Library\ClassLocatorPsr);
+
+        /**
+         * Setup the object manager
+         */
+        $manager = new Library\ObjectManager($config);
+        $manager->setCache(self::isCache());
+        $manager->setDebug(self::isDebug());
+        $manager->setClassLoader($loader);
 
         //Register the component object locator
         $manager->registerLocator('lib:object.locator.component');
 
-        //Register the composer class locator
-        if(file_exists($this->getVendorPath()))
-        {
-            $manager->getClassLoader()->registerLocator(new Library\ClassLocatorComposer(
-                array(
-                    'vendor_path' => $this->getVendorPath()
-                )
-            ));
-        }
-
-        //Register the PSR locator
-        $manager->getClassLoader()->registerLocator(new Library\ClassLocatorPsr);
-
         //Warm-up the stream factory
         $manager->getObject('lib:filesystem.stream.factory');
+
+        //Store the object manager
+        self::$__object_manager = $manager;
     }
 
     /**
@@ -175,7 +188,7 @@ class Kodekit
      *
      * @return string
      */
-    public function getVersion()
+    public static function getVersion()
     {
         return self::VERSION;
     }
@@ -185,9 +198,9 @@ class Kodekit
      *
      * @return string
      */
-    public function getVendorPath()
+    public static function getVendorPath()
     {
-        return $this->_vendor_path;
+        return self::$_vendor_path;
     }
 
     /**
@@ -195,9 +208,9 @@ class Kodekit
      *
      * @return string
      */
-    public function getRootPath()
+    public static function getRootPath()
     {
-        return $this->_root_path;
+        return self::$_root_path;
     }
 
     /**
@@ -205,9 +218,9 @@ class Kodekit
      *
      * @return string
      */
-    public function getBasePath()
+    public static function getBasePath()
     {
-        return $this->_base_path;
+        return self::$_base_path;
     }
 
     /**
@@ -216,9 +229,9 @@ class Kodekit
      * @param bool $debug True or false.
      * @return Kodekit
      */
-    public function setDebug($debug)
+    public static function setDebug($debug)
     {
-        return $this->_debug = (bool) $debug;
+        return self::$_debug = (bool) $debug;
     }
 
     /**
@@ -226,9 +239,9 @@ class Kodekit
      *
      * @return bool
      */
-    public function isDebug()
+    public static function isDebug()
     {
-        return $this->_debug;
+        return self::$_debug;
     }
 
     /**
@@ -237,9 +250,9 @@ class Kodekit
      * @param bool $cache True or false.
      * @return Kodekit
      */
-    public function setCache($cache)
+    public static function setCache($cache)
     {
-        return $this->_cache = (bool) $cache;
+        return self::$_cache = (bool) $cache;
     }
 
     /**
@@ -247,8 +260,45 @@ class Kodekit
      *
      * @return bool
      */
-    public function isCache()
+    public static function isCache()
     {
-        return $this->_cache;
+        return self::$_cache;
+    }
+
+    /**
+     * Proxy statid method calls to the object manager
+     *
+     * @param  string     $method    The function name
+     * @param  array      $arguments The function arguments
+     * @throws \BadMethodCallException  If method is called statically before Kodekit has been instantiated.
+     * @return mixed The result of the method
+     */
+    public static function __callStatic($method, $arguments)
+    {
+        if(self::$__object_manager instanceof Library\ObjectManager)
+        {
+            // Call_user_func_array is ~3 times slower than direct method calls.
+            switch (count($arguments))
+            {
+                case 0 :
+                    $result = self::$__object_manager->$method();
+                    break;
+                case 1 :
+                    $result = self::$__object_manager->$method($arguments[0]);
+                    break;
+                case 2 :
+                    $result = self::$__object_manager->$method($arguments[0], $arguments[1]);
+                    break;
+                case 3 :
+                    $result = self::$__object_manager->$method($arguments[0], $arguments[1], $arguments[2]);
+                    break;
+                default:
+                    // Resort to using call_user_func_array for many segments
+                    $result = call_user_func_array(array(self::$__object_manager, $method), $arguments);
+            }
+        }
+        else throw new \BadMethodCallException('Cannot call method: $s. Kodekit has not been instantiated', $method);
+
+        return $result;
     }
 }

@@ -49,8 +49,7 @@ final class FilesystemStreamAdapter
     {
         try
         {
-            $this->__stream = ObjectManager::getInstance()
-                ->getObject('filesystem.stream.factory')
+            $this->__stream = \Kodekit::getObject('filesystem.stream.factory')
                 ->createStream($url, $mode, $this->context);
         }
         catch(Exception $e)

@@ -97,7 +97,7 @@ class ObjectConfig implements ObjectConfigInterface
     }
 
     /**
-     * Remove a configuration option
+     * Remove a configuration option  by name
      *
      * @param   string $name The configuration option name.
      * @throws  \RuntimeException If the config is read only
@@ -105,7 +105,16 @@ class ObjectConfig implements ObjectConfigInterface
      */
     public function remove( $name )
     {
-        unset($this->__options[$name]);
+        $key = false;
+        if(!isset($this->__options[$name])) {
+            $key = array_search($name, $this->__options);
+        } else {
+            $key = $name;
+        }
+
+        if($key !== false) {
+            unset($this->__options[$key]);
+        }
 
         return $this;
     }

@@ -209,4 +209,35 @@ interface ObjectManagerInterface
      * @return boolean Returns TRUE if the identifiers is an alias FALSE otherwise
      */
     public function isAlias($identifier);
+
+    /**
+     * Enable or disable the cache
+     *
+     * @param bool $cache True or false.
+     * @param string $namespace The cache namespace
+     * @return ObjectManagerInterface
+     */
+    public function setCache($cache, $namespace = null);
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public function isCache();
+
+    /**
+     * Enable or disable debug
+     *
+     * @param bool $debug True or false
+     * @return ClassLoaderInterface
+     */
+    public function setDebug($debug);
+
+    /**
+     * Check if the loader is running in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug();
 }
