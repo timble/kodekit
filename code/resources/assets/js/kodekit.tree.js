@@ -7,16 +7,16 @@
  */
 
 /**
- * Koowa jqTree wrapper
+ * Kodekit jqTree wrapper
  *
  * Customized instance of jqTree to render a list of categories in a tree structure.
  * It deals with turning a flat list into a hierarchy structure that jqTree understands.
- * @requires    Koowa.Class, jqTree plugin
+ * @requires    Kodekit.Class, jqTree plugin
  */
 
 (function($){
 
-    Koowa.Tree = Koowa.Class.extend({
+    Kodekit.Tree = Kodekit.Class.extend({
 
         initialize: function(element, options){
 

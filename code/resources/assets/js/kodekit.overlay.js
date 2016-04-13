@@ -9,7 +9,7 @@
 /**
  * Overlay class
  */
-Koowa.Overlay = Koowa.Class.extend({
+Kodekit.Overlay = Kodekit.Class.extend({
     element : null,
     /**
      * @returns {object}
@@ -70,13 +70,13 @@ Koowa.Overlay = Koowa.Class.extend({
                 self.element.find('.submittable').on('click', function(event){
                     event.preventDefault();
 
-                    new Koowa.Form($(event.target).data('config')).submit();
+                    new Kodekit.Form($(event.target).data('config')).submit();
                 });
 
                 self.element.find('.-koowa-grid').each(function(i, el){
                     var grid = $(el);
 
-                    new Koowa.Controller.Grid({
+                    new Kodekit.Controller.Grid({
                         form: grid,
                         ajaxify: true,
                         transport: function(url, data, method){
@@ -88,7 +88,7 @@ Koowa.Overlay = Koowa.Class.extend({
 
                 self.element.find('.-koowa-form').each(function(i, el){
                     var form = $(el);
-                    new Koowa.Controller.Form({
+                    new Kodekit.Controller.Form({
                         form: form,
                         ajaxify: true,
                         transport: function(url, data, method) {

@@ -1,7 +1,7 @@
 /*
  ---
 
- description: Custom configuration of bootstrap-datepicker tuned for Koowa
+ description: Custom configuration of bootstrap-datepicker tuned for Kodekit
 
  authors:
  - Stian Didriksen
@@ -19,12 +19,12 @@
 (function ($) {
     "use strict";
 
-    $.fn.koowaDatepicker = function (options) {
+    $.fn.kodekitDatepicker = function (options) {
 
-        if(!$.fn.koowaDatepicker.container) $.fn.koowaDatepicker.container = $('<div class="koowa"></div>').appendTo('body');
+        if(!$.fn.kodekitDatepicker.container) $.fn.kodekitDatepicker.container = $('<div class="koowa"></div>').appendTo('body');
 
         var settings = {
-                parentEl: $.fn.koowaDatepicker.container
+                parentEl: $.fn.kodekitDatepicker.container
             };
         if (typeof(options) === 'object') {
             $.extend(true, settings, options);
