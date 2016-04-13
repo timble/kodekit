@@ -42,18 +42,18 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         ));
 
         $html = '<ktml:script src="assets://js/jquery'.($config->debug ? '' : '.min').'.js" />';
-        $html .= '<ktml:script src="assets://js/koowa.kquery.js" />';
+        $html .= '<ktml:script src="assets://js/kodekit.kquery.js" />';
 
         return $html;
     }
 
     /**
-     * Loads koowa.js
+     * Loads kodekit.js
      *
      * @param array|ObjectConfig $config
      * @return string
      */
-    public function koowa($config = array())
+    public function kodekit($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -61,8 +61,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         ));
 
         $html = $this->jquery();
-        $html .= '<ktml:script src="assets://js/koowa'.($config->debug ? '' : '.min').'.js" />';
-        $html .= '<ktml:style src="assets://css/koowa.css" />';
+        $html .= '<ktml:script src="assets://js/kodekit'.($config->debug ? '' : '.min').'.js" />';
+        $html .= '<ktml:style src="assets://css/kodekit.css" />';
 
         return $html;
     }
@@ -174,8 +174,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         // Load the necessary files if they haven't yet been loaded
         if (!isset(self::$_loaded['overlay']))
         {
-            $html .= $this->koowa();
-            $html .= '<ktml:script src="assets://js/koowa.overlay.js" />';
+            $html .= $this->kodekit();
+            $html .= '<ktml:script src="assets://js/kodekit.overlay.js" />';
 
             $html .= '
             <style>
@@ -214,14 +214,14 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         //Don't pass an empty array as options
         $options = json_encode($config->options->toArray());
-        $html .= sprintf("<script>kQuery(function(){ new Koowa.Overlay('#%s', %s);});</script>", $id, $options);
+        $html .= sprintf("<script>kQuery(function(){ new Kodekit.Overlay('#%s', %s);});</script>", $id, $options);
 
         $html .= '<div class="-koowa-overlay" id="'.$id.'" '.$attribs.'><div class="-koowa-overlay-status">'.$translator->translate('Loading...').'</div></div>';
         return $html;
     }
 
     /**
-     * Loads the Forms.Validator class and connects it to Koowa.Controller.Form
+     * Loads the Forms.Validator class and connects it to Kodekit.Controller.Form
      *
      * @param array|ObjectConfig $config
      * @return string   The html output
@@ -242,7 +242,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if(!isset(self::$_loaded['validator']))
         {
-            $html .= $this->koowa();
+            $html .= $this->kodekit();
 
             $html .= '<ktml:script src="assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/patch.validator.js" />';
@@ -309,10 +309,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             // Build the keep alive script.
             $html =
                 "<script>
-                Koowa.keepalive =  function() {
+                Kodekit.keepalive =  function() {
                     var request = new Request({method: 'get', url: '" . $config->url . "'}).send();
                 }
-                window.addEvent('domready', function() { Koowa.keepalive.periodical('" . $refresh . "'); });
+                window.addEvent('domready', function() { Kodekit.keepalive.periodical('" . $refresh . "'); });
             </script>";
 
             self::$_loaded['keepalive'] = true;
@@ -344,9 +344,9 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!isset(self::$_loaded['select2']))
         {
-            $html .= $this->koowa();
+            $html .= $this->kodekit();
             $html .= '<ktml:script src="assets://js/select2'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="assets://js/koowa.select2.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.select2.js" />';
 
             self::$_loaded['select2'] = true;
         }
@@ -426,7 +426,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     }
 
     /**
-     * Loads the Koowa customized jQtree behavior and renders a sidebar-nav list useful in split views
+     * Loads the Kodekit customized jQtree behavior and renders a sidebar-nav list useful in split views
      *
      * @see    http://mbraak.github.io/jqTree/
      *
@@ -457,9 +457,9 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
          */
         if (!isset(self::$_loaded['tree']))
         {
-            $html .= $this->koowa();
+            $html .= $this->kodekit();
             $html .= '<ktml:script src="assets://js/jqtree'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="assets://js/koowa.tree'.($config->debug ? '' : '.min').'.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.tree'.($config->debug ? '' : '.min').'.js" />';
 
             self::$_loaded['tree'] = true;
         }
@@ -509,7 +509,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= '<script>
             kQuery(function($){
-                new Koowa.Tree('.json_encode($config->element).', '.$options.');
+                new Kodekit.Tree('.json_encode($config->element).', '.$options.');
             });</script>';
 
             self::$_loaded[$signature] = true;
@@ -708,7 +708,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!isset(self::$_loaded['calendar']))
         {
             $html .= '<ktml:script src="assets://js/datepicker'.($config->debug ? '' : '.min').'.js" />';
-            $html .= '<ktml:script src="assets://js/koowa.datepicker.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.datepicker.js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -772,23 +772,23 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         {
             $html = sprintf("
             <script>
-            if(!Koowa) {
-                var Koowa = {};
+            if(!Kodekit) {
+                var Kodekit = {};
             }
 
-            if (!Koowa.Date) {
-                Koowa.Date = {};
+            if (!Kodekit.Date) {
+                Kodekit.Date = {};
             }
 
-            Koowa.Date.local_month_names = %s;
-            Koowa.Date.getMonthName = function(month, short) {
+            Kodekit.Date.local_month_names = %s;
+            Kodekit.Date.getMonthName = function(month, short) {
                 month = parseInt(month, 10);
 
                 if (month < 1 || month > 12) {
                     throw 'Month index should be between 1 and 12';
                 }
 
-                return Koowa.Date.local_month_names[month][short ? 'short' : 'long'];
+                return Kodekit.Date.local_month_names[month][short ? 'short' : 'long'];
             };
             </script>
             ", json_encode($months));

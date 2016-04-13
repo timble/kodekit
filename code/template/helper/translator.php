@@ -35,11 +35,11 @@ class TemplateHelperTranslator extends TemplateHelperAbstract
         }
 
         $html  = '';
-        $html .= $this->getTemplate()->helper('behavior.koowa') .
+        $html .= $this->getTemplate()->helper('behavior.kodekit') .
             "<script>
-            if (typeof Koowa === 'object' && Koowa !== null) {
-                if (typeof Koowa.translator === 'object' && Koowa.translator !== null) {
-                    Koowa.translator.loadTranslations(".json_encode($translations).");
+            if (typeof Kodekit === 'object' && Kodekit !== null) {
+                if (typeof Kodekit.translator === 'object' && Kodekit.translator !== null) {
+                    Kodekit.translator.loadTranslations(".json_encode($translations).");
                 }
             }
             </script>

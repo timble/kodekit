@@ -6,9 +6,9 @@
  * @link        https://github.com/timble/kodekit for the canonical source repository
  */
 
-if(!Koowa) {
+if(!Kodekit) {
     /** @namespace */
-    var Koowa = {};
+    var Kodekit = {};
 }
 
 /**
@@ -138,27 +138,27 @@ $(function() {
     $('.submittable').on('click.koowa', function(event){
         event.preventDefault();
 
-        new Koowa.Form($(event.target).data('config')).submit();
+        new Kodekit.Form($(event.target).data('config')).submit();
     });
 
     $('.-koowa-grid').each(function() {
-        new Koowa.Controller.Grid({
+        new Kodekit.Controller.Grid({
             form: this
         });
     });
 
     $('.-koowa-form').each(function() {
-        new Koowa.Controller.Form({
+        new Kodekit.Controller.Form({
             form: this
         });
     });
 });
 
 /** @class */
-Koowa.Class = klass({
+Kodekit.Class = klass({
 
     /**
-     * @memberOf Koowa.Class#
+     * @memberOf Kodekit.Class#
      */
     options: {},
     /**
@@ -169,7 +169,7 @@ Koowa.Class = klass({
     },
 
     /**
-     * @constructs Koowa.Class
+     * @constructs Kodekit.Class
      * */
     initialize: function() {
         this.setOptions(this.getOptions());
@@ -183,8 +183,8 @@ Koowa.Class = klass({
     }
 });
 
-if (!Koowa.Translator) {
-    Koowa.Translator = Koowa.Class.extend({
+if (!Kodekit.Translator) {
+    Kodekit.Translator = Kodekit.Class.extend({
         translations: {},
         translate: function(string, parameters) {
             if (typeof this.translations[string.toLowerCase()] !== 'undefined') {
@@ -215,8 +215,8 @@ if (!Koowa.Translator) {
         }
     });
 
-    Koowa.translator = new Koowa.Translator();
-    Koowa.translate = Koowa.translator.translate.bind(Koowa.translator);
+    Kodekit.translator = new Kodekit.Translator();
+    Kodekit.translate = Kodekit.translator.translate.bind(Kodekit.translator);
 }
 
 /**
@@ -224,9 +224,9 @@ if (!Koowa.Translator) {
  *
  * @param   {object} config Configuration object. Accepted keys: method, url, params, element
  * @example new KForm({url:'foo=bar&id=1', params:{field1:'val1', field2...}}).submit();
- * @extends Koowa.Class
+ * @extends Kodekit.Class
  */
-Koowa.Form = Koowa.Class.extend({
+Kodekit.Form = Kodekit.Class.extend({
     initialize: function(config) {
         this.config = config;
         if(this.config.element) {
@@ -268,7 +268,7 @@ Koowa.Form = Koowa.Class.extend({
 /**
  * Grid class
  */
-Koowa.Grid = Koowa.Class.extend({
+Kodekit.Grid = Kodekit.Class.extend({
     initialize: function(element){
         var self = this;
 
@@ -322,7 +322,7 @@ Koowa.Grid = Koowa.Class.extend({
  * @param   {string|object|null} [context]   A DOM Element, Document, or jQuery to use as context
  * @return  array           The items' ids
  */
-Koowa.Grid.getAllSelected = function(context) {
+Kodekit.Grid.getAllSelected = function(context) {
     return $('.-koowa-grid-checkbox:checked', context);
 };
 
@@ -332,14 +332,14 @@ Koowa.Grid.getAllSelected = function(context) {
  * @param   {string|object|null} [context]   A DOM Element, Document, or jQuery to use as context
  * @return  array           The items' ids
  */
-Koowa.Grid.getIdQuery = function(context) {
+Kodekit.Grid.getIdQuery = function(context) {
     return decodeURIComponent(this.getAllSelected(context).serialize());
 };
 
 /**
  * Controller class, execute actions complete with command chains
  */
-Koowa.Controller = Koowa.Class.extend({
+Kodekit.Controller = Kodekit.Class.extend({
     form: null,
     toolbar: null,
     buttons: null,
@@ -485,12 +485,12 @@ Koowa.Controller = Koowa.Class.extend({
 });
 
 /**
- * Controller class specialized for grids, extends Koowa.Controller
+ * Controller class specialized for grids, extends Kodekit.Controller
  *
- * @package     Koowa_Media
+ * @package     Kodekit_Media
  * @subpackage  Javascript
  */
-Koowa.Controller.Grid = Koowa.Controller.extend({
+Kodekit.Controller.Grid = Kodekit.Controller.extend({
     getOptions: function() {
         return $.extend(this.supr(), {
             inputs: '.-koowa-grid-checkbox, .-koowa-grid-checkall',
@@ -503,7 +503,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
 
         this.supr(options);
 
-        this.grid = new Koowa.Grid(this.form);
+        this.grid = new Kodekit.Grid(this.form);
 
         this.on('validate', this.validate);
 
@@ -664,7 +664,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
         });
     },
     validate: function(){
-        return Koowa.Grid.getIdQuery() || false;
+        return Kodekit.Grid.getIdQuery() || false;
     },
 
     _actionDelete: function(context) {
@@ -674,7 +674,7 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
     },
 
     _actionDefault: function(context) {
-        var idQuery = Koowa.Grid.getIdQuery(),
+        var idQuery = Kodekit.Grid.getIdQuery(),
             append  = this.options.url.match(/\?/) ? '&' : '?',
             options;
 
@@ -692,14 +692,14 @@ Koowa.Controller.Grid = Koowa.Controller.extend({
             options.params._method = context.method;
         }
 
-        new Koowa.Form(options).submit();
+        new Kodekit.Form(options).submit();
     }
 });
 
 /**
- * Controller class specialized for forms, extends Koowa.Controller
+ * Controller class specialized for forms, extends Kodekit.Controller
  */
-Koowa.Controller.Form = Koowa.Controller.extend({
+Kodekit.Controller.Form = Kodekit.Controller.extend({
     _actionDefault: function(context){
         if (context.validate && !this.trigger('validate', [context])) {
             return false;

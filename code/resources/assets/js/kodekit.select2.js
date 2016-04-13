@@ -9,7 +9,7 @@
  /*
  ---
 
- description: Custom configuration of Select2 tuned for Koowa
+ description: Custom configuration of Select2 tuned for Kodekit
 
  authors:
  - Stian Didriksen
@@ -23,7 +23,7 @@
 (function ($) {
     "use strict";
 
-    $.fn.koowaSelect2 = function(options) {
+    $.fn.kodekitSelect2 = function(options) {
         var defaults = {
             width: "resolve",
             minimumInputLength: 2,

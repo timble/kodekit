@@ -173,7 +173,8 @@ class TemplateFilterForm extends TemplateFilterAbstract
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$v.'" />';
                         }
                     }
-                    else {
+                    else
+                    {
                         $value  = $this->getTemplate()->escape($value);
                         $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
                     }
