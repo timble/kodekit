@@ -91,13 +91,13 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
     public function getComponentIdentifier($name, $domain = null);
 
     /**
-     * Get info for a registered component
+     * Get manifest for a registered component
      *
      * @param string $name    The component name
      * @param string $domain  The component domain. Domain is optional and can be NULL
      * @return ObjectConfigJson|false Returns the component info or FALSE if the component couldn't be found.
      */
-    public function getComponentInfo($name, $domain = null);
+    public function getComponentManifest($name, $domain = null);
 
     /**
      * Check if the bootstrapper has been run

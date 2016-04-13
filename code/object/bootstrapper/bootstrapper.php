@@ -64,7 +64,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
      *
      * @var array
      */
-    private $__component_info = array();
+    private $__manifest_cache = array();
 
     /**
      * Constructor.
@@ -298,11 +298,11 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
         {
             if(file_exists($path.'/component.json'))
             {
-                $array = $this->getObject('object.config.factory')->fromFile($path . '/component.json');
+                $manifest = $this->getObject('object.config.factory')->fromFile($path . '/component.json', false);
 
-                if (isset($array['identifier']))
+                if (isset($manifest['bootstrap']) && isset($manifest['bootstrap']['identifier']))
                 {
-                    $identifier = $array['identifier'];
+                    $identifier = $manifest['bootstrap']['identifier'];
 
                     //Set the components
                     if(!isset($this->_components[$identifier])) {
@@ -318,9 +318,9 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                     );
 
                     //Set the namespace
-                    if ($array['namespace'])
+                    if (isset($manifest['bootstrap']['namespace']))
                     {
-                        $namespace = $array['namespace'];
+                        $namespace = $manifest['bootstrap']['namespace'];
 
                         if(isset($this->_namespaces[$identifier]))
                         {
@@ -339,9 +339,9 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                         );
                     }
 
-                    if($array['extends'])
+                    if(isset($manifest['bootstrap']['extends']))
                     {
-                        $extends = $array['extends'];
+                        $extends = $manifest['bootstrap']['extends'];
 
                         if(isset($this->_namespaces[$extends]))
                         {
@@ -441,26 +441,28 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
     }
 
     /**
-     * Get info for a registered component
+     * Get manifest for a registered component
+     *
+     * @link https://en.wikipedia.org/wiki/Manifest_file
      *
      * @param string $name    The component name
      * @param string $domain  The component domain. Domain is optional and can be NULL
-     * @return ObjectConfigJson|false Returns the component info or FALSE if the component couldn't be found.
+     * @return ObjectConfigJson|false Returns the component manifest or FALSE if the component couldn't be found.
      */
-    public function getComponentInfo($name, $domain = null)
+    public function getComponentManifest($name, $domain = null)
     {
         $identifier = $this->getComponentIdentifier($name, $domain);
-        if(!isset($this->__component_info[$identifier]))
+        if(!isset($this->__manifest_cache[$identifier]))
         {
             if($path = $this->getComponentPath($name, $domain))
             {
                 $info = $this->getObject('object.config.factory')->fromFile($path . '/component.json');
-                $this->__component_info[$identifier] = $info;
+                $this->__manifest_cache[$identifier] = $info;
             }
-            else $this->__component_info[$identifier] = false;
+            else $this->__manifest_cache[$identifier] = false;
         }
 
-        return  $this->__component_info[$identifier];
+        return  $this->__manifest_cache[$identifier];
     }
 
     /**
