@@ -93,6 +93,9 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
     /**
      * Get manifest for a registered component
      *
+     * @link https://en.wikipedia.org/wiki/Manifest_file
+     *
+     *
      * @param string $name    The component name
      * @param string $domain  The component domain. Domain is optional and can be NULL
      * @return ObjectConfigJson|false Returns the component info or FALSE if the component couldn't be found.

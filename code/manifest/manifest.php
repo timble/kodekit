@@ -12,6 +12,8 @@ namespace Kodekit\Library;
 /**
  * Manifest Object
  *
+ * @link https://en.wikipedia.org/wiki/Manifest_file
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Manifest
  */
