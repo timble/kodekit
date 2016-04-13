@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 class Manifest extends Object implements ManifestInterface
 {
     /**
+     * The manifest object
+     *
+     * @var ObjectConfigJson
+     */
+    private $__manifest;
+
+    /**
      * Constructor
      *
      * @param   ObjectConfig $config Configuration options.
