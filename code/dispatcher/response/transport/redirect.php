@@ -39,6 +39,8 @@ class DispatcherResponseTransportRedirect extends DispatcherResponseTransportHtt
      *
      * If this is a redirect response, send the response and stop the transport handler chain.
      *
+     * @link: https://en.wikipedia.org/wiki/Meta_refresh
+     *
      * @param DispatcherResponseInterface $response
      * @return boolean
      */
@@ -78,10 +80,12 @@ class DispatcherResponseTransportRedirect extends DispatcherResponseTransportHtt
                         <html>
                             <head>
                                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                                <meta http-equiv="refresh" content="1;url=%1$s" />
+                                <noscript>
+                                    <meta http-equiv="refresh" content="1;url=%1$s" />
+                                </noscript>
                                 <title>Redirecting to %1$s</title>
                             </head>
-                            <body>
+                            <body onload="window.location = \'%1$s\'">
                                 Redirecting to <a href="%1$s">%1$s</a>.
                             </body>
                         </html>'
