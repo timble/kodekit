@@ -18,11 +18,11 @@ namespace Kodekit\Library;
 abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInterface
 {
     /**
-     * The locator name
+     * The locator type
      *
      * @var string
      */
-    protected static $_name = '';
+    protected static $_type = '';
 
     /**
      * Locator identifiers
@@ -72,9 +72,9 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
 
         //Get the class templates
         if(!empty($info['domain'])) {
-            $identifier = $this->getName().'://'.$info['domain'].'/'.$info['package'];
+            $identifier = $this->getType().'://'.$info['domain'].'/'.$info['package'];
         } else {
-            $identifier = $this->getName().':'.$info['package'];
+            $identifier = $this->getType().':'.$info['package'];
         }
 
         $templates = $this->getClassTemplates(strtolower($identifier));
@@ -139,12 +139,12 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
     }
 
     /**
-     * Get the name
+     * Get the type
      *
      * @return string
      */
-    public static function getName()
+    public static function getType()
     {
-        return static::$_name;
+        return static::$_type;
     }
 }
