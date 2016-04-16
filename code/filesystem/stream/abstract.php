@@ -593,8 +593,7 @@ abstract class FilesystemStreamAbstract extends Object implements FilesystemStre
 
         if($this->isLocal()) {
             $info = fstat($this->_resource);
-        }
-        else {
+        } else {
             $info = @stat($this->getPath());
         }
 
