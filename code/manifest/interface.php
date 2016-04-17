@@ -22,14 +22,14 @@ interface ManifestInterface extends ObjectInterface
     /**
      * Get the name
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getName();
 
     /**
      * Get the description
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getDescription();
 
@@ -38,35 +38,35 @@ interface ManifestInterface extends ObjectInterface
      *
      * See @link http://semver.org/spec/v2.0.0.html
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getVersion();
 
     /**
      * Get the license
      *
-     * @return string
+     * @return string|false
      */
     public function getLicense();
 
     /**
      * Get the copyright
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getCopyright();
 
     /**
      * Get the homepage
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getHomepage();
 
     /**
      * Get the homepage
      *
-     * @return array
+     * @return array|false Returns FALSE if the manifest doesn't exist
      */
     public function getAuthors();
 

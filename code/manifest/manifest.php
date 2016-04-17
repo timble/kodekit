@@ -45,7 +45,7 @@ class Manifest extends Object implements ManifestInterface
     /**
      * Get the name
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getName()
     {
@@ -55,7 +55,7 @@ class Manifest extends Object implements ManifestInterface
     /**
      * Get the description
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getDescription()
     {
@@ -67,7 +67,7 @@ class Manifest extends Object implements ManifestInterface
      *
      * See @link http://semver.org/spec/v2.0.0.html
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getVersion()
     {
@@ -77,7 +77,7 @@ class Manifest extends Object implements ManifestInterface
     /**
      * Get the license
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getLicense()
     {
@@ -87,7 +87,7 @@ class Manifest extends Object implements ManifestInterface
     /**
      * Get the copyright
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getCopyright()
     {
@@ -97,7 +97,7 @@ class Manifest extends Object implements ManifestInterface
     /**
      * Get the homepage
      *
-     * @return string
+     * @return string|false Returns FALSE if the manifest doesn't exist
      */
     public function getHomepage()
     {
@@ -107,22 +107,34 @@ class Manifest extends Object implements ManifestInterface
     /**
      * Get the homepage
      *
-     * @return array
+     * @return array|false Returns FALSE if the manifest doesn't exist
      */
     public function getAuthors()
     {
-        return $this->authors->toArray();
+        $result = false;
+        if($this->__manifest !== false)
+        {
+            $authors = $this->__manifest->get('authors', array());
+            $result = ObjectConfig::unbox($authors);
+        }
+
+        return $result;
     }
 
     /**
      * Retrieve a manifest option
      *
      * @param string $name
-     * @return mixed
+     * @return mixed|false Returns FALSE if the manifest doesn't exist
      */
     final public function __get($name)
     {
-        return $this->__manifest->get($name, '');
+        $result = false;
+        if($this->__manifest !== false) {
+            $result = $this->__manifest->get($name, '');
+        }
+
+        return $result;
     }
 
     /**
@@ -133,7 +145,12 @@ class Manifest extends Object implements ManifestInterface
      */
     final public function __isset($name)
     {
-        return $this->__manifest->has($name);
+        $result = false;
+        if($this->__manifest !== false) {
+            $result = $this->__manifest->has($name);
+        }
+
+        return $result;
     }
 
     /**
@@ -141,7 +158,7 @@ class Manifest extends Object implements ManifestInterface
      *
      * @param   string  $method Method name
      * @param   array   $args   Array containing all the arguments for the original call
-     * @return  ViewAbstract
+     * @return  string|false Returns FALSE if the manifest doesn't exist
      */
     final public function __call($method, $args)
     {
