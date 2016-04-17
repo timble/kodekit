@@ -47,12 +47,14 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
     /**
      * Register a component to be bootstrapped.
      *
-     * Class and object locators will be setup based on the information in the composer.json file.
+     * Class and object locators will be setup based on the 'bootstrap' information in the composer.json file.
      * If the component contains a /resources/config/bootstrapper.php file it will be registered.
      *
      * @param string $path          The component path
      * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
      * @param array  $directories   Additional array of directories
+     * @throws \RuntimeException  If the component has already been registered
+     * @throws \RuntimeException  If the component being extended from cannot be found
      * @return ObjectBootstrapper
      */
     public function registerComponent($path, $bootstrap = true, array $directories = array());
@@ -79,7 +81,7 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
      * @param string $domain  The component domain. Domain is optional and can be NULL
      * @return string Returns the component path if the component is registered. FALSE otherwise
      */
-    public function getComponentPath($name, $domain = null);
+    public function getComponentPaths($name, $domain = null);
 
     /**
      * Get a hash based on a name and domain

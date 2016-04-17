@@ -35,7 +35,7 @@ class TranslatorLocatorComponent extends TranslatorLocatorIdentifier
         $result = false;
 
         //Base paths
-        $paths = $this->getObject('object.bootstrapper')->getComponentPath($info['package'], $info['domain']);
+        $paths = $this->getObject('object.bootstrapper')->getComponentPaths($info['package'], $info['domain']);
 
         $result = array();
         foreach($paths as $basepath)

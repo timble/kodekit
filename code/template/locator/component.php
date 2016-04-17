@@ -35,7 +35,7 @@ class TemplateLocatorComponent extends TemplateLocatorIdentifier
         $result = false;
 
         //Base paths
-        $paths = $this->getObject('object.bootstrapper')->getComponentPath($info['package'], $info['domain']);
+        $paths = $this->getObject('object.bootstrapper')->getComponentPaths($info['package'], $info['domain']);
 
         //If no type exists create a glob pattern
         if(!empty($info['type'])){
