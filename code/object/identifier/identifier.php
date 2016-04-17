@@ -44,7 +44,7 @@ class ObjectIdentifier implements ObjectIdentifierInterface
     protected $_identifier = '';
 
     /**
-     * The identifier type [com|plg|mod]
+     * The identifier type [lib|com]
      *
      * @var string
      */
