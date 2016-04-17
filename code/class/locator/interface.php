@@ -42,12 +42,12 @@ interface ClassLocatorInterface
     public function registerNamespace($namespace, $path);
 
     /**
-     * Get a namespace path
+     * Get a namespace path(s)
      *
      * @param string $namespace The namespace
      * @return array|false The namespace path(s) or FALSE if the namespace does not exist.
      */
-    public function getNamespacePath($namespace);
+    public function getNamespacePaths($namespace);
 
     /**
      * Get the registered namespaces

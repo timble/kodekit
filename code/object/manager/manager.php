@@ -330,8 +330,9 @@ final class ObjectManager implements ObjectInterface, ObjectManagerInterface, Ob
         }
         else $locator = $identifier;
 
-        //Add the locator
-        $this->_locators[$locator->getName()] = $locator;
+        //Add the locator by name and type
+        $this->_locators[$locator->getType()] = $locator;
+        $this->_locators[$locator->getIdentifier()->getName()] = $locator;
 
         return $this;
     }

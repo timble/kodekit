@@ -18,11 +18,11 @@ namespace Kodekit\Library;
 interface ObjectLocatorInterface
 {
     /**
-     * Get the name
+     * Get the type
      *
      * @return string
      */
-    public static function getName();
+    public static function getType();
 
     /**
      * Returns a fully qualified class name for a given identifier.

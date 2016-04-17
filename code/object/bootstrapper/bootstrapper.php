@@ -243,7 +243,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                 }
 
                 //Register the namespace in the component objects locator
-                $manager->getLocator('com')->registerIdentifier($identifier, array_keys($namespaces));
+                $manager->getLocator('component')->registerIdentifier($identifier, array_keys($namespaces));
             }
 
             $this->_bootstrapped = true;

@@ -49,12 +49,12 @@ abstract class ClassLocatorAbstract implements ClassLocatorInterface
     }
 
     /**
-     * Get a namespace path
+     * Get a namespace path(s)
      *
      * @param string $namespace The namespace
      * @return array|false The namespace path(s) or FALSE if the namespace does not exist.
      */
-    public function getNamespacePath($namespace)
+    public function getNamespacePaths($namespace)
     {
         $namespace = trim($namespace, '\\');
         return isset($this->_namespaces[$namespace]) ?  $this->_namespaces[$namespace] : false;
