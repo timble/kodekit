@@ -25,6 +25,17 @@ interface ViewTemplatable
     public function getLayout();
 
     /**
+     * Qualify the layout
+     *
+     * Convert a relative layout URL into an absolute layout URL
+     *
+     * @param string $layout The view layout name
+     * @param string $type   The filesystem locator type
+     * @return string   The fully qualified template url
+     */
+    public function qualifyLayout($layout, $type = 'com');
+
+    /**
      * Get the template object attached to the view
      *
      *  @throws	\UnexpectedValueException	If the template doesn't implement the TemplateInterface
