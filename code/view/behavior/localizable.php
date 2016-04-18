@@ -39,11 +39,11 @@ class ViewBehaviorLocalizable extends ViewBehaviorAbstract
         $domain  = $this->getIdentifier()->domain;
 
         if($domain) {
-            $identifier = 'com://'.$domain.'/'.$package;
+            $url = 'com://'.$domain.'/'.$package;
         } else {
-            $identifier = 'com:'.$package;
+            $url = 'com:'.$package;
         }
 
-        $this->getObject('translator')->load($identifier);
+        $this->getObject('translator')->load($url);
     }
 }
