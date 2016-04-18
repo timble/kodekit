@@ -23,28 +23,28 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      *
      * @var string
      */
-    protected $_language;
+    private $__language;
 
     /**
      * Language Fallback
      *
      * @var string
      */
-    protected $_language_fallback;
+    private $__language_fallback;
 
     /**
      * The translator catalogue.
      *
      * @var TranslatorCatalogueInterface
      */
-    protected $_catalogue;
+    private $__catalogue;
 
     /**
      * List of file paths that have been loaded.
      *
      * @var array
      */
-    protected $_loaded;
+    private $__loaded;
 
     /**
      * Constructor.
@@ -55,11 +55,11 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
     {
         parent::__construct($config);
 
-        $this->_catalogue = $config->catalogue;
-        $this->_loaded   = array();
+        $this->__catalogue = $config->catalogue;
+        $this->__loaded   = array();
 
         $this->setLanguage($config->language);
-        $this->setLanguageFallback($this->_language_fallback);
+        $this->setLanguageFallback($config->language_fallback);
     }
 
     /**
@@ -186,13 +186,12 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
         {
             $translations = array();
 
-            foreach($this->find($url) as $file)
+            if($file = $this->find($url))
             {
                 try {
                     $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
                 } catch (Exception $e) {
                     return false;
-                    break;
                 }
 
                 $translations = array_merge($translations, $loaded);
@@ -200,7 +199,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
 
             $this->getCatalogue()->add($translations, $override);
 
-            $this->_loaded[] = $url;
+            $this->__loaded[] = $url;
         }
 
         return true;
@@ -209,21 +208,21 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
     /**
      * Find translations from a url
      *
-     * @param string $url      The translation url
+     * @param string $path The language path
      * @return array An array with physical file paths
      */
-    public function find($url)
+    public function find($path)
     {
         $language = $this->getLanguage();
         $fallback = $this->getLanguageFallback();
-        $locator  = $this->getObject('translator.locator.factory')->createLocator($url);
+        $locator  = $this->getObject('translator.locator.factory')->createLocator($path);
 
         //Find translation based on the language
-        $result = $locator->setLanguage($language)->locate($url);
+        $result = $locator->locate($path .'/' .$language);
 
         //If no translations found, try using the fallback language
         if(empty($result) && $fallback && $fallback != $language) {
-            $result = $locator->setLanguage($fallback)->locate($url);
+            $result = $locator->locate($path .'/'.$language);
         }
 
         return $result;
@@ -242,7 +241,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function setLanguage($language)
     {
-        if($this->_language != $language)
+        if($this->__language != $language)
         {
             $this->_language = $language;
 
@@ -273,7 +272,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function getLanguage()
     {
-        return $this->_language;
+        return $this->__language;
     }
 
     /**
@@ -289,7 +288,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function setLanguageFallback($language)
     {
-        $this->_labguage_fallback = $language;
+        $this->__language_fallback = $language;
         return $this;
     }
 
@@ -304,7 +303,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function getLanguageFallback()
     {
-        return $this->_language_fallback;
+        return $this->__language_fallback;
     }
 
     /**
@@ -315,23 +314,23 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function getCatalogue()
     {
-        if (!$this->_catalogue instanceof TranslatorCatalogueInterface)
+        if (!$this->__catalogue instanceof TranslatorCatalogueInterface)
         {
-            if(!($this->_catalogue instanceof ObjectIdentifier)) {
-                $this->setCatalogue($this->_catalogue);
+            if(!($this->__catalogue instanceof ObjectIdentifier)) {
+                $this->setCatalogue($this->__catalogue);
             }
 
-            $this->_catalogue = $this->getObject($this->_catalogue);
+            $this->__catalogue = $this->getObject($this->__catalogue);
         }
 
-        if(!$this->_catalogue instanceof TranslatorCatalogueInterface)
+        if(!$this->__catalogue instanceof TranslatorCatalogueInterface)
         {
             throw new \UnexpectedValueException(
-                'Catalogue: '.get_class($this->_catalogue).' does not implement TranslatorCatalogueInterface'
+                'Catalogue: '.get_class($this->__catalogue).' does not implement TranslatorCatalogueInterface'
             );
         }
 
-        return $this->_catalogue;
+        return $this->__catalogue;
     }
 
     /**
@@ -347,8 +346,8 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
         {
             if(is_string($catalogue) && strpos($catalogue, '.') === false )
             {
-                $identifier			= $this->getIdentifier()->toArray();
-                $identifier['path']	= array('translator', 'catalogue');
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('translator', 'catalogue');
                 $identifier['name'] = $catalogue;
 
                 $identifier = $this->getIdentifier($identifier);
@@ -358,7 +357,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
             $catalogue = $identifier;
         }
 
-        $this->_catalogue = $catalogue;
+        $this->__catalogue = $catalogue;
 
         return $this;
     }
@@ -371,7 +370,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function isLoaded($url)
     {
-        return in_array($url, $this->_loaded);
+        return in_array($url, $this->__loaded);
     }
 
     /**

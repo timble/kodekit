@@ -29,7 +29,7 @@ class TranslatorCache extends ObjectDecorator implements TranslatorInterface
      *
      * @var array
      */
-    protected $_loaded;
+    private $__loaded;
 
     /**
      * Constructor
@@ -45,7 +45,7 @@ class TranslatorCache extends ObjectDecorator implements TranslatorInterface
             throw new \RuntimeException('Unable to use TranslatorCache. APC is not enabled.');
         }
 
-        $this->_loaded = array();
+        $this->__loaded = array();
     }
 
     /**
@@ -132,7 +132,7 @@ class TranslatorCache extends ObjectDecorator implements TranslatorInterface
             //Add the translations to the catalogue
             $this->getCatalogue()->add($translations, $override);
 
-            $this->_loaded[] = $url;
+            $this->__loaded[] = $url;
         }
 
         return true;
@@ -238,7 +238,7 @@ class TranslatorCache extends ObjectDecorator implements TranslatorInterface
      */
     public function isLoaded($url)
     {
-        return in_array($url, $this->_loaded);
+        return in_array($url, $this->__loaded);
     }
 
     /**
