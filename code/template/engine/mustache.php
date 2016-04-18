@@ -179,27 +179,25 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
      *
      * @param  string  $url The template url
      * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException If the url cannot be fully qualified
      * @return string   The template real path
      */
     protected function _locate($url)
     {
-        //Create the locator
-        if($template = end($this->_stack)) {
-            $base = $template['url'];
-        } else {
-            $base = null;
+        //Qualify relative template url's
+        if(!$location = parse_url($url, PHP_URL_SCHEME))
+        {
+            if(!$template = end($this->_stack)) {
+                throw new \RuntimeException('Cannot qualify partial template url');
+            }
+
+            $url = dirname($template['url']) . '/' .basename($url);
         }
 
-        if(!$location = parse_url($url, PHP_URL_SCHEME)) {
-            $location = $base;
-        } else {
-            $location = $url;
-        }
-
-        $locator = $this->getObject('template.locator.factory')->createLocator($location);
+        $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
         //Locate the template
-        if (!$file = $locator->setBasePath($base)->locate($url)) {
+        if (!$file = $locator->locate($url)) {
             throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Locator
  */
-class TemplateLocatorComponent extends TemplateLocatorIdentifier
+class TemplateLocatorComponent extends FilesystemLocatorComponent
 {
     /**
      * The stream name
@@ -25,42 +25,19 @@ class TemplateLocatorComponent extends TemplateLocatorIdentifier
     protected static $_name = 'com';
 
     /**
-     * Find a template path
+     * Initializes the options for the object
      *
-     * @param array  $info      The path information
-     * @return string|false The real template path or FALSE if the template could not be found
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @return void
      */
-    public function find(array $info)
+    protected function _initialize(ObjectConfig $config)
     {
-        $result = false;
+        $config->append(array(
+            'path_templates' => array('view/<Path>/templates/<File>.<Format>.<Type>')
+        ));
 
-        //Base paths
-        $paths = $this->getObject('object.bootstrapper')->getComponentPaths($info['package'], $info['domain']);
-
-        //If no type exists create a glob pattern
-        if(!empty($info['type'])){
-            $filepath =  implode('/', $info['path']).'/templates/'.$info['file'].'.'.$info['format'].'.'.$info['type'];
-        } else {
-            $filepath =  implode('/', $info['path']).'/templates/'.$info['file'].'.'.$info['format'].'.*';
-        }
-
-        foreach($paths as $basepath)
-        {
-            $pattern = $basepath .'/view/'. $filepath;
-            $results = glob($pattern);
-
-            //Try to find the file
-            if ($results)
-            {
-                foreach($results as $file)
-                {
-                    if($result = $this->realPath($file)) {
-                        break (2);
-                    }
-                }
-            }
-        }
-
-        return $result;
+        parent::_initialize($config);
     }
 }
