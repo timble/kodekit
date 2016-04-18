@@ -29,6 +29,8 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
     /**
      * Perform the bootstrapping
      *
+     * @throws \RuntimeException  If the component has already been registered
+     * @throws \RuntimeException  If the parent component cannot be found
      * @return void
      */
     public function bootstrap();
@@ -52,12 +54,10 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
      *
      * @param string $path          The component path
      * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
-     * @param array  $directories   Additional array of directories
-     * @throws \RuntimeException  If the component has already been registered
-     * @throws \RuntimeException  If the component being extended from cannot be found
+     * @param array  $paths         Additional array of paths
      * @return ObjectBootstrapper
      */
-    public function registerComponent($path, $bootstrap = true, array $directories = array());
+    public function registerComponent($path, $bootstrap = true, array $paths = array());
 
     /**
      * Register a configuration file to be bootstrapped
