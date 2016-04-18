@@ -60,6 +60,13 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
     protected $_bootstrapped;
 
     /**
+     * Manifests cache
+     *
+     * @var array
+     */
+    protected $_manifests;
+
+    /**
      * Constructor.
      *
      * @param ObjectConfig $config An optional ObjectConfig object with configuration options
@@ -119,6 +126,8 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
      *
      * The bootstrap cycle can be run only once
      *
+     * @throws \RuntimeException  If the component has already been registered
+     * @throws \RuntimeException  If the parent component cannot be found
      * @return void
      */
     public function bootstrap()
@@ -135,6 +144,83 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
             if(!$this->getConfig()->bootstrapped)
             {
                 $factory = $this->getObject('object.config.factory');
+
+                foreach($this->_manifests as $manifest)
+                {
+                    if (isset($manifest['identifier']))
+                    {
+                        $identifier = $manifest['identifier'];
+
+                        if (isset($this->_components[$identifier])) {
+                            throw new \RuntimeException(sprintf('Cannot re-bootstrap component: %s', $identifier));
+                        }
+
+                        //Set the path
+                        $this->_components[$identifier] = $manifest['paths'];
+
+                        //Set the namespace
+                        if (isset($manifest['namespace']))
+                        {
+                            $namespace = $manifest['namespace'];
+                            $this->_namespaces[$identifier] = array($namespace => $manifest['paths']);
+                        }
+                    }
+                }
+
+                foreach($this->_manifests as  $manifest)
+                {
+                    if (isset($manifest['extends']))
+                    {
+                        $extends = $manifest['extends'];
+
+                        if (!isset($this->_components[$extends])) {
+                            throw new \RuntimeException(sprintf('Component: %s not found', $extends));
+                        }
+
+                        if(isset($manifest['identifier']))
+                        {
+                            $identifier = $manifest['identifier'];
+
+                            //Append paths
+                            $this->_components[$identifier] = array_merge(
+                                $this->_components[$identifier],
+                                $this->_components[$extends]
+                            );
+
+                            //Set the namespace
+                            if (isset($manifest['namespace']))
+                            {
+                                $namespace = $manifest['namespace'];
+
+                                //Append the namespace
+                                $this->_namespaces[$identifier] = array_merge(
+                                    $this->_namespaces[$identifier],
+                                    $this->_components[$extends]
+                                );
+                            }
+                        }
+                        else
+                        {
+                            //Prepend paths
+                            $this->_components[$extends] = array_merge(
+                                $manifest['paths'],
+                                $this->_components[$extends]
+                            );
+
+                            //Set the namespace
+                            if (isset($manifest['namespace']))
+                            {
+                                $namespace = $manifest['namespace'];
+
+                                //Prepend the namespace
+                                $this->_namespaces[$extends] = array_merge(
+                                    array($namespace => $manifest['paths']),
+                                    $this->_namespaces[$extends]
+                                );
+                            }
+                        }
+                    }
+                }
 
                 foreach($this->_files as $path)
                 {
@@ -275,81 +361,32 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
     /**
      * Register a component to be bootstrapped.
      *
-     * Class and object locators will be setup based on the information in the composer.json file.
+     * Class and object locators will be setup based on the 'bootstrap' information in the composer.json file.
      * If the component contains a /resources/config/bootstrapper.php file it will be registered.
      *
      * @param string $path          The component path
      * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
-     * @param array  $directories   Additional array of directories
+     * @param array  $paths         Additional array of paths
      * @return ObjectBootstrapper
      */
-    public function registerComponent($path, $bootstrap = true, array $directories = array())
+    public function registerComponent($path, $bootstrap = true, array $paths = array())
     {
-        $hash = md5($path);
-
-        if(!isset($this->_components[$hash]))
+        if(!isset($this->_manifests[$path]) && file_exists($path.'/component.json'))
         {
-            if(file_exists($path.'/component.json'))
+            $manifest = $this->getObject('object.config.factory')->fromFile($path . '/component.json', false);
+
+            //Register the manifest
+            if (isset($manifest['bootstrap']))
             {
-                $array = $this->getObject('object.config.factory')->fromFile($path . '/component.json');
+                array_unshift($paths, $path);
+                $manifest['bootstrap']['paths'] = $paths;
 
-                if (isset($array['identifier']))
-                {
-                    $identifier = $array['identifier'];
+                $this->_manifests[$path] = $manifest['bootstrap'];
+            }
 
-                    //Set the components
-                    if(!isset($this->_components[$identifier])) {
-                        $this->_components[$identifier] = array($path);
-                    } else {
-                        $this->_components[$identifier][] = $path;
-                    }
-
-                    //Merge the additional directories
-                    $this->_components[$identifier] = array_merge(
-                        $this->_components[$identifier],
-                        $directories
-                    );
-
-                    //Set the namespace
-                    if ($array['namespace'])
-                    {
-                        $namespace = $array['namespace'];
-
-                        if(isset($this->_namespaces[$identifier]))
-                        {
-                            if(isset($this->_namespaces[$identifier][$namespace])) {
-                                $this->_namespaces[$identifier][$namespace][] = $path;
-                            } else {
-                                $this->_namespaces[$identifier][$namespace] = array($path);
-                            }
-                        }
-                        else $this->_namespaces[$identifier] = array($namespace => array($path));
-
-                        //Merge the additional directories
-                        $this->_namespaces[$identifier][$namespace] = array_merge(
-                            $this->_namespaces[$identifier][$namespace],
-                            $directories
-                        );
-                    }
-
-                    if($array['extends'])
-                    {
-                        $extends = $array['extends'];
-
-                        if(isset($this->_namespaces[$extends]))
-                        {
-                            $this->_namespaces[$identifier] = array_merge(
-                                $this->_namespaces[$identifier],
-                                $this->_namespaces[$extends]
-                            );
-                        }
-                    }
-                }
-
-                //Register the config file
-                if ($bootstrap && file_exists($path . '/resources/config/bootstrapper.php')) {
-                    $this->registerFile($path . '/resources/config/bootstrapper.php');
-                }
+            //Register the config file
+            if ($bootstrap && file_exists($path . '/resources/config/bootstrapper.php')) {
+                $this->registerFile($path . '/resources/config/bootstrapper.php');
             }
         }
 
@@ -419,15 +456,49 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
      *
      * @param string $name    The component name
      * @param string $domain  The component domain. Domain is optional and can be NULL
-     * @return string Returns the component path if the component is registered. FALSE otherwise
+     * @return array Returns the component path(s) if the component is registered. FALSE otherwise
      */
-    public function getComponentPath($name, $domain = null)
+    public function getComponentPaths($name, $domain = null)
     {
-        $result = null;
+        $result = array();
 
         $identifier = $this->getComponentIdentifier($name, $domain);
         if(isset($this->_components[$identifier])) {
             $result = $this->_components[$identifier];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get manifest for a registered component
+     *
+     * @link https://en.wikipedia.org/wiki/Manifest_file
+     *
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return ObjectConfigJson|false Returns the component manifest or FALSE if the component couldn't be found.
+     */
+    public function getComponentManifest($name, $domain = null)
+    {
+        $result = false;
+        $paths  = $this->getComponentPaths($name, $domain);
+
+        if(!empty($paths))
+        {
+            $path = $paths[0];
+
+            if(!isset($this->_manifests[$path]) || is_array($this->_manifests[$path]))
+            {
+                if($paths = $this->getComponentPaths($name, $domain))
+                {
+                    $info = $this->getObject('object.config.factory')->fromFile($path . '/component.json');
+                    $this->_manifests[$path] = $info;
+                }
+                else $this->_manifests[$path] = false;
+            }
+
+            $result = $this->_manifests[$path];
         }
 
         return $result;

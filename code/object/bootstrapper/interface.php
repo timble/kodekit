@@ -29,6 +29,8 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
     /**
      * Perform the bootstrapping
      *
+     * @throws \RuntimeException  If the component has already been registered
+     * @throws \RuntimeException  If the parent component cannot be found
      * @return void
      */
     public function bootstrap();
@@ -47,15 +49,15 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
     /**
      * Register a component to be bootstrapped.
      *
-     * Class and object locators will be setup based on the information in the composer.json file.
+     * Class and object locators will be setup based on the 'bootstrap' information in the composer.json file.
      * If the component contains a /resources/config/bootstrapper.php file it will be registered.
      *
      * @param string $path          The component path
      * @param bool   $bootstrap     If TRUE bootstrap all the components in the directory. Default TRUE
-     * @param array  $directories   Additional array of directories
+     * @param array  $paths         Additional array of paths
      * @return ObjectBootstrapper
      */
-    public function registerComponent($path, $bootstrap = true, array $directories = array());
+    public function registerComponent($path, $bootstrap = true, array $paths = array());
 
     /**
      * Register a configuration file to be bootstrapped
@@ -79,7 +81,7 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
      * @param string $domain  The component domain. Domain is optional and can be NULL
      * @return string Returns the component path if the component is registered. FALSE otherwise
      */
-    public function getComponentPath($name, $domain = null);
+    public function getComponentPaths($name, $domain = null);
 
     /**
      * Get a hash based on a name and domain
@@ -89,6 +91,18 @@ interface ObjectBootstrapperInterface extends ObjectHandlable
      * @return string The hash
      */
     public function getComponentIdentifier($name, $domain = null);
+
+    /**
+     * Get manifest for a registered component
+     *
+     * @link https://en.wikipedia.org/wiki/Manifest_file
+     *
+     *
+     * @param string $name    The component name
+     * @param string $domain  The component domain. Domain is optional and can be NULL
+     * @return ObjectConfigJson|false Returns the component info or FALSE if the component couldn't be found.
+     */
+    public function getComponentManifest($name, $domain = null);
 
     /**
      * Check if the bootstrapper has been run
