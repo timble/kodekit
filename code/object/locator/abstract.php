@@ -29,7 +29,7 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
      *
      * @var array
      */
-    protected $_identifiers = array();
+    private $__identifiers = array();
 
     /**
      * Returns a fully qualified class name for a given identifier.
@@ -38,53 +38,19 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
      * @param bool  $fallback   Use the fallback sequence to locate the identifier
      * @return string|false  Return the class name on success, returns FALSE on failure
      */
-    public function locate(ObjectIdentifier $identifier, $fallback = true)
-    {
-        $domain  = empty($identifier->domain) ? 'kodekit' : ucfirst($identifier->domain);
-        $package = ucfirst($identifier->package);
-        $path    = StringInflector::implode($identifier->path);
-        $file    = ucfirst($identifier->name);
-        $class   = $path.$file;
-
-        $info = array(
-            'identifier' => $identifier,
-            'class'      => $class,
-            'package'    => $package,
-            'domain'     => $domain,
-            'path'       => $path,
-            'file'       => $file,
-        );
-
-        return $this->find($info, $fallback);
-    }
-
-    /**
-     * Find a class
-     *
-     * @param array  $info      The class information
-     * @param bool   $fallback  If TRUE use the fallback sequence
-     * @return bool|mixed
-     */
-    public function find(array $info, $fallback = true)
+    final public function locate(ObjectIdentifier $identifier, $fallback = true)
     {
         $result = false;
         $missed = array();
 
-        //Get the class templates
-        if(!empty($info['domain'])) {
-            $identifier = $this->getType().'://'.$info['domain'].'/'.$info['package'];
-        } else {
-            $identifier = $this->getType().':'.$info['package'];
-        }
-
-        $templates = $this->getClassTemplates(strtolower($identifier));
+        $info = $this->parseIdentifier($identifier);
 
         //Find the class
-        foreach($templates as $template)
+        foreach($this->getClassTemplates($identifier) as $template)
         {
             $class = str_replace(
-                array('<Domain>',      '<Package>'     ,'<Path>'      ,'<File>'      , '<Class>'),
-                array($info['domain'], $info['package'], $info['path'], $info['file'], $info['class']),
+                array('<Package>'     ,'<Path>'      ,'<File>'      , '<Class>'),
+                array($info['package'], $info['path'], $info['file'], $info['class']),
                 $template
             );
 
@@ -107,12 +73,43 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
     }
 
     /**
+     * Parse the identifier
+     *
+     * @param  ObjectIdentifier $identifier An object identifier
+     * @return array
+     */
+    public function parseIdentifier(ObjectIdentifier $identifier)
+    {
+        $package = ucfirst($identifier->package);
+        $path    = StringInflector::implode($identifier->path);
+        $file    = ucfirst($identifier->name);
+        $class   = $path.$file;
+
+        $info = array(
+            'class'      => $class,
+            'package'    => $package,
+            'path'       => $path,
+            'file'       => $file,
+        );
+
+        return $info;
+    }
+
+    /**
      * Get the list of class templates for an identifier
      *
-     * @param string $identifier The package identifier
+     * @param ObjectIdentifier $identifier The object identifier
      * @return array The class templates for the identifier
      */
-    abstract public function getClassTemplates($identifier);
+    public function getClassTemplates(ObjectIdentifier $identifier)
+    {
+        $templates = array(
+            __NAMESPACE__.'\<Package><Path><File>',
+            __NAMESPACE__.'\<Package><Path>Default',
+        );
+
+        return $templates;
+    }
 
     /**
      * Register an identifier
@@ -123,7 +120,7 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
      */
     public function registerIdentifier($identifier, $namespaces)
     {
-        $this->_identifiers[$identifier] = (array) $namespaces;
+        $this->__identifiers[$identifier] = (array) $namespaces;
         return $this;
     }
 
@@ -135,7 +132,7 @@ abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInte
      */
     public function getIdentifierNamespaces($identifier)
     {
-        return isset($this->_identifiers[$identifier]) ?  $this->_identifiers[$identifier] : false;
+        return isset($this->__identifiers[$identifier]) ?  $this->__identifiers[$identifier] : false;
     }
 
     /**

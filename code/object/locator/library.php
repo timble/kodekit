@@ -25,12 +25,12 @@ class ObjectLocatorLibrary extends ObjectLocatorAbstract
     protected static $_type = 'lib';
 
     /**
-     * Get the list of location templates for an identifier
+     * Get the list of class templates for an identifier
      *
-     * @param string $identifier The package identifier
-     * @return string The class location templates for the identifier
+     * @param ObjectIdentifier $identifier The object identifier
+     * @return array The class templates for the identifier
      */
-    public function getClassTemplates($identifier)
+    public function getClassTemplates(ObjectIdentifier $identifier)
     {
         $templates = array(
             __NAMESPACE__.'\<Package><Class>',

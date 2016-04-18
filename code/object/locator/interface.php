@@ -34,21 +34,20 @@ interface ObjectLocatorInterface
     public function locate(ObjectIdentifier $identifier, $fallback = true);
 
     /**
-     * Find a class
+     * Parse the identifier
      *
-     * @param array  $info      The class information
-     * @param bool   $fallback  If TRUE use the fallback sequence
-     * @return bool|mixed
+     * @param  ObjectIdentifier $identifier An object identifier
+     * @return array
      */
-    public function find(array $info, $fallback = true);
+    public function parseIdentifier(ObjectIdentifier $identifier);
 
     /**
      * Get the list of class templates for an identifier
      *
-     * @param string $identifier The package identifier
+     * @param ObjectIdentifier $identifier The object identifier
      * @return array The class templates for the identifier
      */
-    public function getClassTemplates($identifier);
+    public function getClassTemplates(ObjectIdentifier $identifier);
 
     /**
      * Register an identifier

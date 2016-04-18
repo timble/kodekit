@@ -25,62 +25,56 @@ class ObjectLocatorComponent extends ObjectLocatorAbstract
     protected static $_type = 'com';
 
     /**
-     * Returns a fully qualified class name for a given identifier.
+     * Parse the identifier
      *
-     * @param ObjectIdentifier $identifier An identifier object
-     * @param bool  $fallback   Use the fallbacks to locate the identifier
-     * @return string|false  Return the class name on success, returns FALSE on failure
+     * @param  ObjectIdentifier $identifier An object identifier
+     * @return array
      */
-    public function locate(ObjectIdentifier $identifier, $fallback = true)
+    public function parseIdentifier(ObjectIdentifier $identifier)
     {
-        $class = StringInflector::implode($identifier->path).ucfirst($identifier->name);
+        $info = parent::parseIdentifier($identifier);
 
-        $domain  = $identifier->domain ? ucfirst($identifier->domain) : null;
-        $package = ucfirst($identifier->package);
-        $file    = ucfirst($identifier->name);
-        $path    = $identifier->path;
-
-        //Make an exception for 'view' and 'module' types
-        $type  = !empty($path) ? array_shift($path) : '';
-
-        if(in_array($type, array('view','module')) && !in_array('behavior', $path)) {
-            $path = ucfirst($type);
-        } else {
-            $path = ucfirst($type).StringInflector::implode($path);
-        }
+        $path  = $identifier->path;
 
         //Allow locating default classes if $path is empty.
         if(empty($path))
         {
-            $path = $file;
-            $file = '';
+            $info['path']    = $info['file'];
+            $info['file']    = '';
+            $info['package'] = '';
+        }
+        else
+        {
+            $package = array_shift($path);
+
+            $info['path']    = StringInflector::implode($path);
+            $info['package'] = ucfirst($package);
         }
 
-        $info = array(
-            'identifier' => $identifier,
-            'class'      => $class,
-            'package'    => $package,
-            'domain'     => $domain,
-            'path'       => $path,
-            'file'       => $file,
-        );
+        //Make an exception for 'view' and 'module' types
+        if(in_array($info['package'], array('View','Module')) && !in_array('behavior', $path)) {
+            $info['path'] = '';
+        }
 
-        return $this->find($info, $fallback);
+        return $info;
     }
 
     /**
      * Get the list of class templates for an identifier
      *
-     * @param string $identifier The package identifier
+     * @param ObjectIdentifier $identifier The object identifier
      * @return array The class templates for the identifier
      */
-    public function getClassTemplates($identifier)
+    public function getClassTemplates(ObjectIdentifier $identifier)
     {
-        //Identifier
         $templates = array();
 
+        //Identifier
+        $component = $this->getObject('object.bootstrapper')
+            ->getComponentIdentifier($identifier->package, $identifier->domain);
+
         //Fallback
-        if($namespaces = $this->getIdentifierNamespaces($identifier))
+        if($namespaces = $this->getIdentifierNamespaces($component))
         {
             foreach($namespaces as $namespace)
             {
@@ -90,13 +84,11 @@ class ObjectLocatorComponent extends ObjectLocatorAbstract
                 }
 
                 $templates[] = $namespace.'<Class>';
-                $templates[] = $namespace.'<Path><File>';
+                $templates[] = $namespace.'<Package><Path><File>';
             }
         }
 
-        //Library
-        $templates[] = __NAMESPACE__.'\<Path><File>';
-        $templates[] = __NAMESPACE__.'\<Path>Default';
+        $templates = array_merge($templates, parent::getClassTemplates($identifier));
 
         return $templates;
     }
