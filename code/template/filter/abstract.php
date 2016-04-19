@@ -113,13 +113,19 @@ abstract class TemplateFilterAbstract extends Object implements TemplateFilterIn
 
         if (!empty($string))
         {
-            $attr = array();
-
-            //Find name/value attributes
-            if(preg_match_all('/(?<name>[\w:-]+)[\s]?=[\s]?"(?<value>[^"]*)"/is', $string, $attr))
+            $pattern = '#(?(DEFINE)
+                (?<name>[a-zA-Z][a-zA-Z0-9-_:]*)
+                (?<value_double>"[^"]+")
+                (?<value_none>[^\s>]+)
+                (?<value>((?&value_double)|(?&value_none)))
+            )
+            (?<n>(?&name))[\s]*(=[\s]*(?<v>(?&value)))?#xs';
+            if (preg_match_all($pattern, $string, $matches, PREG_SET_ORDER))
             {
-                for($i = 0; $i < count($attr['name']); $i++) {
-                    $result[$attr['name'][$i]] = trim($attr['value'][$i]);
+                foreach ($matches as $match) {
+                    if (!empty($match['n'])) {
+                        $result[$match['n']] = isset($match['v']) ? trim($match['v'], '\'"') : '';
+                    }
                 }
             }
         }
