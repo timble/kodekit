@@ -25,6 +25,42 @@ class FilesystemLocatorComponent extends FilesystemLocatorAbstract
     protected static $_name = 'com';
 
     /**
+     * Register a path template
+     *
+     * If the template path start with com:[component]/path/to/file this method will replace com:[component] with the
+     * base path of the component. If the commponent has multiple paths they will also be inserted.
+     *
+     * @param  string $template   The path template
+     * @param  bool $prepend      If true, the template will be prepended instead of appended.
+     * @return FilesystemLocatorAbstract
+     */
+    public function registerPathTemplate($template, $prepend = false)
+    {
+        if(parse_url($template, PHP_URL_SCHEME) === 'com')
+        {
+            $bootstrapper = $this->getObject('object.bootstrapper');
+
+            $info    = $this->parseUrl($template);
+            $package = $info['package'];
+            $domain  = $info['domain'];
+
+            //Remove component identifier from the template
+            $identifier = $bootstrapper->getComponentIdentifier($package, $domain);
+            $template   = ltrim(str_replace($identifier, '', $template), '/');
+
+            $paths = $bootstrapper->getComponentPaths($package, $domain);
+            foreach ($paths as $path)
+            {
+                $path = $path .'/' . $template;
+                parent::registerPathTemplate($path, $prepend);
+            }
+        }
+        else parent::registerPathTemplate($template, $prepend);
+
+        return $this;
+    }
+
+    /**
      * Get the list of path templates
      *
      * @param  string $url The language url
