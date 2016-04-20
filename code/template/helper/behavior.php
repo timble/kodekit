@@ -563,6 +563,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 });
             </script>";
 
+            self::$_loaded[$signature] = true;
+
         }
 
         return $html;
