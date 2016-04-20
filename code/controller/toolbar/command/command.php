@@ -56,6 +56,7 @@ class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbar
             'allowed'    => true,
             'title'      => '',
             'href'       => null,
+            'data'       => array(),
             'attribs'    => array(
                 'class'  => array(),
             ),
@@ -79,13 +80,43 @@ class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbar
     }
 
     /**
-     * Get the toolbar's title
+     * Get the command title
      *
      * @return string
      */
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Get the command label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Check if the commmand is allowed
+     *
+     * @return bool
+     */
+    public function isAllowed()
+    {
+        return $this->allowed;
+    }
+
+    /**
+     * Check if the commmand is disabled
+     *
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->disabled;
     }
 
     /**

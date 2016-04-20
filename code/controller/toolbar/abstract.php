@@ -217,8 +217,8 @@ abstract class ControllerToolbarAbstract extends CommandHandlerAbstract implemen
                 if (!isset($command->href))
                 {
                     $command->append(array(
-                        'attribs' => array(
-                            'data-action' => $command->getName()
+                        'data' => array(
+                            'action' => $command->getName()
                         )
                     ));
                 }
