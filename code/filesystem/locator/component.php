@@ -27,8 +27,9 @@ class FilesystemLocatorComponent extends FilesystemLocatorAbstract
     /**
      * Register a path template
      *
-     * If the template path start with com:[component]/path/to/file this method will replace com:[component] with the
-     * base path of the component. If the commponent has multiple paths they will also be inserted.
+     * If the template path has format com:foo]/path/to/file this method will replace com:foo with the
+     * base path of the component. If the component has additional paths a template path for each will
+     * be added in FIFO order.
      *
      * @param  string $template   The path template
      * @param  bool $prepend      If true, the template will be prepended instead of appended.
@@ -63,6 +64,10 @@ class FilesystemLocatorComponent extends FilesystemLocatorAbstract
     /**
      * Get the list of path templates
      *
+     * This method will qualify relative url's (url not starting with '/') by prepending the component base
+     * path to the url. If the component has additional paths a template path for each will be inserted in
+     * FIFO order.
+     *
      * @param  string $url The language url
      * @return array The path templates
      */
@@ -72,13 +77,15 @@ class FilesystemLocatorComponent extends FilesystemLocatorAbstract
 
         foreach($templates as $key => $template)
         {
-            //Make relative paths absolute
+            //Qualify relative path
             if(substr($template, 0, 1) !== '/')
             {
+                $bootstrapper = $this->getObject('object.bootstrapper');
+
                 unset($templates[$key]);
 
                 $info  = $this->parseUrl($url);
-                $paths = $this->getObject('object.bootstrapper')->getComponentPaths($info['package'], $info['domain']);
+                $paths = $bootstrapper->getComponentPaths($info['package'], $info['domain']);
 
                 $inserts = array();
                 foreach ($paths as $path) {
