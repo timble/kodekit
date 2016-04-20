@@ -89,6 +89,7 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
      * @param   string  $url The template url
      * @throws \InvalidArgumentException If the template could not be located
      * @throws \RuntimeException         If the template could not be loaded
+     * @throws \RuntimeException         If the url cannot be fully qualified
      * @return TemplateEngineMustache|string Returns a string when called by Mustache
      */
     public function loadFile($url)
@@ -162,9 +163,6 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
 
         if(in_array($type, $this->getFileTypes()))
         {
-            //Push the template on the stack
-            array_push($this->_stack, array('url' => $url, 'file' => $file));
-
             if(!$this->_source = file_get_contents($file)) {
                 throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
             }
@@ -179,7 +177,6 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
      *
      * @param  string  $url The template url
      * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException If the url cannot be fully qualified
      * @return string   The template real path
      */
     protected function _locate($url)
@@ -194,12 +191,14 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
             $url = dirname($template['url']) . '/' .basename($url);
         }
 
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-
         //Locate the template
+        $locator = $this->getObject('template.locator.factory')->createLocator($url);
         if (!$file = $locator->locate($url)) {
             throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
+
+        //Push the template on the stack
+        array_push($this->_stack, array('url' => $url, 'file' => $file));
 
         return $file;
     }

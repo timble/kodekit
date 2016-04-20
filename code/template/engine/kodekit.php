@@ -72,15 +72,13 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
      * @throws \InvalidArgumentException If the template could not be located
      * @throws \RuntimeException         If the template could not be loaded
      * @throws \RuntimeException         If the template could not be compiled
+     * @throws \RuntimeException         If the url cannot be fully qualified
      * @return TemplateEngineKodekit
      */
     public function loadFile($url)
     {
         //Locate the template
         $file = $this->_locate($url);
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => $url, 'file' => $file));
 
         if(!$cache_file = $this->isCached($file))
         {
@@ -229,13 +227,13 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
      *
      * @param  string $url The template url
      * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException If the url cannot be fully qualified
+     * @throws \RuntimeException         If the url cannot be fully qualified
      * @return string   The template real path
      */
     protected function _locate($url)
     {
         //Qualify relative template url
-        if(!$location = parse_url($url, PHP_URL_SCHEME))
+        if(!parse_url($url, PHP_URL_SCHEME))
         {
             if(!$template = end($this->_stack)) {
                 throw new \RuntimeException('Cannot qualify partial template url');
@@ -244,12 +242,14 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
             $url = dirname($template['url']) . '/' .basename($url);
         }
 
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-
         //Locate the template
+        $locator = $this->getObject('template.locator.factory')->createLocator($url);
         if (!$file = $locator->locate($url)) {
             throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
+
+        //Push the template on the stack
+        array_push($this->_stack, array('url' => $url, 'file' => $file));
 
         return $file;
     }
