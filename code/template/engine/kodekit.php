@@ -239,7 +239,23 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
                 throw new \RuntimeException('Cannot qualify partial template url');
             }
 
-            $url = dirname($template['url']) . '/' .basename($url);
+            $basepath = dirname($template['url']);
+
+            //Resolve relative path
+            if($path = trim('.', dirname($url)))
+            {
+                $count = 0;
+                $total = count(explode('/', $path));
+
+                while ($count++ < $total) {
+                    $basepath = dirname($basepath);
+                }
+
+                $basename = $url;
+            }
+            else $basename = basename($url);
+
+            $url = $basepath. '/' .$basename;
         }
 
         //Locate the template

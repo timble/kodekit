@@ -105,19 +105,6 @@ class TemplateEngineTwig extends TemplateEngineAbstract
      */
     public function loadFile($url)
     {
-        //Qualify relative template url's
-        if(!$location = parse_url($url, PHP_URL_SCHEME))
-        {
-            if(!$template = end($this->_stack)) {
-                throw new \RuntimeException('Cannot qualify partial template url');
-            }
-
-            $url = dirname($template['url']) . '/' .basename($url);
-        }
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => $url));
-
         $this->_twig_template = $this->_twig->loadTemplate($url);
 
         return $this;
@@ -219,11 +206,40 @@ class TemplateEngineTwig extends TemplateEngineAbstract
      */
     protected function _locate($url)
     {
+        //Qualify relative template url
+        if(!parse_url($url, PHP_URL_SCHEME))
+        {
+            if(!$template = end($this->_stack)) {
+                throw new \RuntimeException('Cannot qualify partial template url');
+            }
+
+            $basepath = dirname($template['url']);
+
+            //Resolve relative path
+            if($path = trim('.', dirname($url)))
+            {
+                $count = 0;
+                $total = count(explode('/', $path));
+
+                while ($count++ < $total) {
+                    $basepath = dirname($basepath);
+                }
+
+                $basename = $url;
+            }
+            else $basename = basename($url);
+
+            $url = $basepath. '/' .$basename;
+        }
+
         $locator = $this->getObject('template.locator.factory')->createLocator($url);
 
         if (!$file = $locator->locate($url)) {
             throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
+
+        //Push the template on the stack
+        array_push($this->_stack, array('url' => $url, 'file' => $file));
 
         return $file;
     }
