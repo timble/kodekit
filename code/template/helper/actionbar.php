@@ -44,9 +44,9 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
                 $name = $command->getName();
 
                 if(method_exists($this, $name)) {
-                    $html .= $this->$name(array('command' => $command));
+                    $html .= $this->$name(ObjectConfig::unbox($command));
                 } else {
-                    $html .= $this->command(array('command' => $command));
+                    $html .= $this->command(ObjectConfig::unbox($command));
                 }
             }
             $html .= '</div>';
@@ -66,34 +66,45 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'command' => array('attribs' => array('class' => array('button', 'toolbar')))
+            'id'      => '',
+            'href'    => '',
+            'allowed' => true,
+            'disabled'=> false,
+            'data'    => array(),
+            'attribs' => array(
+                'href'  => '#',
+                'class' => array('button', 'toolbar')
+            )
         ));
 
         $translator = $this->getObject('translator');
-        $command = $config->command;
 
-        if ($command->allowed === false)
+        if ($config->allowed === false)
         {
-            $command->attribs->title = $translator->translate('You are not allowed to perform this action');
-            $command->attribs->class->append(array('disabled', 'unauthorized'));
+            $config->attribs->title = $translator->translate('You are not allowed to perform this action');
+            $config->attribs->class->append(array('disabled', 'unauthorized'));
         }
 
         //Create the id
-        $command->attribs['id'] = 'command-'.$command->id;
+        $config->attribs['id'] = 'command-'.$config->id;
 
         //Add a disabled class if the command is disabled
-        if($command->disabled) {
-            $command->attribs->class->append(array('nolink'));
+        if($config->disabled) {
+            $config->attribs->class->append(array('nolink'));
+        }
+
+        //Add the data attributes
+        foreach($config->data as $key => $value) {
+            $config->attribs['data-'.$key] = (string) $value;
         }
 
         //Create the href
-        $command->attribs->append(array('href' => '#'));
-        if(!empty($command->href)) {
-            $command->attribs['href'] = $this->getTemplate()->route($command->href);
+        if(!empty($config->href)) {
+            $config->attribs['href'] = $this->getTemplate()->route($config->href);
         }
 
-        $html  = '<a '.$this->buildAttributes($command->attribs).'>';
-        $html .= ucfirst($translator->translate($command->label));
+        $html  = '<a '.$this->buildAttributes($config->attribs).'>';
+        $html .= ucfirst($translator->translate($config->label));
         $html .= '</a>';
 
         return $html;
@@ -109,12 +120,10 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'command' => array('attribs' => array('class' => array('button__group')))
+            'attribs' => array('class' => array('button__group'))
         ));
 
-        $command = $config->command;
-
-        $html = '</div><div '.$this->buildAttributes($command->attribs).'>';
+        $html = '</div><div '.$this->buildAttributes($config->attribs).'>';
 
         return $html;
     }
@@ -127,11 +136,6 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
      */
     public function dialog($config = array())
     {
-        $config = new ObjectConfigJson($config);
-        $config->append(array(
-            'command' => NULL
-        ));
-
         $html  = $this->getTemplate()->helper('behavior.modal');
         $html .= $this->command($config);
 
