@@ -71,12 +71,12 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
             'auto_fetch'         => true,
             'layout'             => '',
             'template'           => 'default',
-            'template_filters'   => array('asset', 'decorator'),
+            'template_filters'   => array('asset'),
             'template_functions' => array(
-                'route'   => array($this, 'getRoute'),
-                'url'     => array($this, 'getUrl'),
-                'title'   => array($this, 'getTitle'),
-                'content' => array($this, 'getContent'),
+                'route'    => array($this, 'getRoute'),
+                'url'      => array($this, 'getUrl'),
+                'title'    => array($this, 'getTitle'),
+                'content'  => array($this, 'getContent'),
             ),
         ));
 
