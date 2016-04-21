@@ -140,10 +140,14 @@ class DispatcherBehaviorDecoratable extends DispatcherBehaviorAbstract
 
                 //Set the view
                 $parameters = array(
-                    'component' => $this->getController()->getIdentifier()->package,
-                    'language'  => $this->getLanguage(),
-                    'status'    => $response->getStatusCode(),
+                    'language' => $this->getLanguage(),
                 );
+
+                if($response->isError()) {
+                    $parameters['status'] = $response->getStatusCode();
+                } else {
+                    $parameters['component'] = $this->getController()->getIdentifier()->package;
+                }
 
                 $controller->getView()
                     ->setParameters($parameters)
