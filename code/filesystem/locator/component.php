@@ -27,7 +27,7 @@ class FilesystemLocatorComponent extends FilesystemLocatorAbstract
     /**
      * Register a path template
      *
-     * If the template path has format com:foo]/path/to/file this method will replace com:foo with the
+     * If the template path has format com:foo/path/to/file this method will replace com:foo with the
      * base path of the component. If the component has additional paths a template path for each will
      * be added in FIFO order.
      *
