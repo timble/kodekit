@@ -243,7 +243,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
     {
         if($this->__language != $language)
         {
-            $this->_language = $language;
+            $this->__language = $language;
 
             //Set runtime locale information for date and time formatting
             setlocale(LC_TIME, $language);
