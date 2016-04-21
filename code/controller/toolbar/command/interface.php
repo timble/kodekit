@@ -26,6 +26,27 @@ interface ControllerToolbarCommandInterface extends ControllerToolbarInterface
     public function __construct( $name, $config = array());
 
     /**
+     * Get the command label
+     *
+     * @return string
+     */
+    public function getLabel();
+
+    /**
+     * Check if the commmand is allowed
+     *
+     * @return bool
+     */
+    public function isAllowed();
+
+    /**
+     * Check if the commmand is disabled
+     *
+     * @return bool
+     */
+    public function isDisabled();
+
+    /**
      * Get the toolbar object
      *
      * @return ControllerToolbarInterface
