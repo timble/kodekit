@@ -41,8 +41,6 @@ abstract class FilesystemLocatorAbstract extends Object implements FilesystemLoc
     /**
      * Constructor
      *
-     * Prevent creating instances of this class by making the constructor private
-     *
      * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
      */
     public function __construct(ObjectConfig $config)
