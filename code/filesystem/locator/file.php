@@ -10,27 +10,32 @@
 namespace Kodekit\Library;
 
 /**
- * Template Locator Factory
+ * File Filesystem Locator
  *
- * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Kodekit\Library\Template\Locator
+ * @author  Johan Janssens <http://github.com/johanjanssens>
+ * @package Kodekit\Library\Filesystem\Locator
  */
-class TemplateLocatorFactory extends FilesystemLocatorFactory
+class FilesystemLocatorFile extends FilesystemLocatorAbstract
 {
+    /**
+     * The locator name
+     *
+     * @var string
+     */
+    protected static $_name = 'file';
+
     /**
      * Initializes the options for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
      *
-     * @param   ObjectConfig $config Configuration options.
-     * @return  void
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @return void
      */
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'locators' => array(
-                'lib:template.locator.component'
-            ),
+            'path_templates' => array('<Package>/<Path>/<File>.<Format>')
         ));
 
         parent::_initialize($config);

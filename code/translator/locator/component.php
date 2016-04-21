@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Translator\Locator
  */
-class TranslatorLocatorComponent extends TranslatorLocatorIdentifier
+class TranslatorLocatorComponent extends FilesystemLocatorComponent
 {
     /**
      * The locator name
@@ -25,28 +25,19 @@ class TranslatorLocatorComponent extends TranslatorLocatorIdentifier
     protected static $_name = 'com';
 
     /**
-     * Find a template path
+     * Initializes the options for the object
      *
-     * @param array  $info      The path information
-     * @return array
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  ObjectConfig $config  An optional ObjectConfig object with configuration options.
+     * @return void
      */
-    public function find(array $info)
+    protected function _initialize(ObjectConfig $config)
     {
-        $result = false;
+        $config->append(array(
+            'path_templates' => array('resources/language/<File>.<Format>')
+        ));
 
-        //Base paths
-        $paths = $this->getObject('object.bootstrapper')->getComponentPaths($info['package'], $info['domain']);
-
-        $result = array();
-        foreach($paths as $basepath)
-        {
-            $info['path'] = $basepath.'/resources/language';
-
-            if($path = parent::find($info)) {
-                $result = array_merge($result, $path);
-            }
-        }
-
-        return $result;
+        parent::_initialize($config);
     }
 }

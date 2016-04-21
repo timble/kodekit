@@ -91,27 +91,12 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      */
     protected function _actionRender(ViewContext $context)
     {
-        $format = $this->getFormat(); //format cannot be changed through context
-        $layout = $context->layout;
-
-        if(!parse_url($layout, PHP_URL_SCHEME))
-        {
-            //Handle partial layout paths
-            if (is_string($layout) && strpos($layout, '.') === false)
-            {
-                $identifier = $this->getIdentifier()->toArray();
-                $identifier['name'] = $layout;
-                unset($identifier['path'][0]);
-
-                $layout = (string) $this->getIdentifier($identifier);
-            }
-        }
-
-        $data = ObjectConfig::unbox($context->data);
+        $data   = ObjectConfig::unbox($context->data);
+        $path   = $this->qualifyLayout($context->layout);
 
         //Render the template
         $this->_content = $this->getTemplate()
-            ->loadFile((string) $layout.'.'.$format)
+            ->loadFile($path)
             ->setParameters($context->parameters)
             ->render($data);
 
@@ -241,6 +226,44 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     {
         $this->_layout = $layout;
         return $this;
+    }
+
+    /**
+     * Qualify the layout
+     *
+     * Convert a relative layout URL into an absolute layout URL
+     *
+     * @param string $layout The view layout name
+     * @param string $type   The filesystem locator type
+     * @return string   The fully qualified template url
+     */
+    public function qualifyLayout($layout, $type = 'com')
+    {
+        $layout = (string) $layout;
+
+        //Handle partial layout paths
+        if(!parse_url($layout, PHP_URL_SCHEME))
+        {
+            $package = $this->getIdentifier()->package;
+            $domain  = $this->getIdentifier()->domain;
+            $format  = $this->getFormat();
+
+            $path = $this->getIdentifier()->getPath();
+            array_shift($path); //remove 'view'
+            $path[] = basename($layout);
+
+            $path = implode('/', $path);
+
+            if($domain) {
+                $layout = $type.'://'.$domain .'/' . $package . '/' .$path;
+            } else {
+                $layout = $type.':' . $package . '/' .$path;
+            }
+
+            $layout = $layout.'.'.$format;
+        }
+
+        return $layout;
     }
 
     /**
