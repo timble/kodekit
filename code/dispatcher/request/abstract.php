@@ -508,7 +508,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     public function getPort()
     {
         if ($this->isProxied() && $this->_headers->has('X-Forwarded-Port')) {
-            $port = $this->_headers->has('X-Forwarded-Port');
+            $port = $this->_headers->get('X-Forwarded-Port');
         } else {
             $port = @$_SERVER['SERVER_PORT'];
         }
