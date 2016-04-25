@@ -69,7 +69,7 @@ namespace Kodekit\Library;
  * ?>
  * </code>
  *
- * @link http://www.faqs.org/rfcs/rfc3986.html
+ * @link https://tools.ietf.org/html/rfc3986
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Url
@@ -350,8 +350,8 @@ class HttpUrl extends Object implements HttpUrlInterface
     /**
      * Returns the path portion as a string or array
      *
-     * This method will encode the path to conform to rfc3986 returned as string.
-     * @link http://www.faqs.org/rfcs/rfc3986.html
+     * This method will encode the path to conform to RFC 3986 returned as string.
+     * @link https://tools.ietf.org/html/rfc3986
      *
      * @param   boolean $toArray If TRUE return an array. Default FALSE
      * @return  string|array The path string; e.g., `path/to/site`.
@@ -399,8 +399,8 @@ class HttpUrl extends Object implements HttpUrlInterface
     /**
      * Returns the query portion as a string or array
      *
-     * This method will encode the query to conform to rfc3986 if returned as string
-     * @link http://www.faqs.org/rfcs/rfc3986.html
+     * This method will encode the query to conform to RFC 3986 if returned as string
+     * @link https://tools.ietf.org/html/rfc3986
      *
      * @param   boolean      $toArray If TRUE return an array. Default FALSE
      * @param   boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
@@ -599,8 +599,8 @@ class HttpUrl extends Object implements HttpUrlInterface
     /**
      * Get the full url, of the format scheme://user:pass@host/path?query#fragment';
      *
-     * This will method will encode the resulting url to comform to rfc3986
-     * @link http://www.faqs.org/rfcs/rfc3986.html
+     * This will method will encode the resulting url to comform to RFC 3986
+     * @link https://tools.ietf.org/html/rfc3986
      *
      * @param integer      $parts   A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @param boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
