@@ -261,7 +261,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                  */
                 $identifiers_flat = array();
 
-                krsort($identifiers);
+                ksort($identifiers);
                 foreach ($identifiers as $priority => $merges) {
                     $identifiers_flat = array_merge_recursive($identifiers_flat, $merges);
                 }
