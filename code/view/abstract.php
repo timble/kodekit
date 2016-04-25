@@ -114,8 +114,8 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
             'command_chain'    => 'lib:command.chain',
             'command_handlers' => array('lib:command.handler.event'),
             'model'      => 'lib:model.empty',
-            'content'	 => '',
-            'mimetype'	 => '',
+            'content'    => '',
+            'mimetype'   => '',
             'url'        =>  $this->getObject('lib:http.url'),
             'title'      => ucfirst($this->getName()),
             'behaviors'  => array('localizable')
@@ -161,7 +161,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     /**
      * Render the view
      *
-     * @param ViewContext	$context A view context object
+     * @param ViewContext   $context A view context object
      * @return string  The output of the view
      */
     protected function _actionRender(ViewContext $context)
@@ -173,7 +173,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     /**
      * Fetch the view data
      *
-     * @param ViewContext	$context A view context object
+     * @param ViewContext   $context A view context object
      * @return void
      */
     protected function _fetchData(ViewContext $context)
@@ -349,8 +349,8 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
                     $model = StringInflector::pluralize($model);
                 }
 
-                $identifier			= $this->getIdentifier()->toArray();
-                $identifier['path']	= array('model');
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('model');
                 $identifier['name'] = $model;
 
                 $identifier = $this->getIdentifier($identifier);
@@ -386,6 +386,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         //Remove the user and pass from the view url
         unset($url->user);
         unset($url->pass);
+        unset($url->port);
 
         $this->_url = $url;
         return $this;
