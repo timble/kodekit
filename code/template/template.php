@@ -82,7 +82,7 @@ class Template extends TemplateAbstract implements TemplateFilterable, TemplateH
             'parameters' => array(),
             'filters'    => array(),
             'functions'  => array(
-                'escape'     => array($this, 'escape'),
+                'escape'     => array(__NAMESPACE__.'\StringEscaper', 'escape'),
                 'helper'     => array($this, 'invokeHelper'),
                 'parameters' => array($this, 'getParameters')
             ),

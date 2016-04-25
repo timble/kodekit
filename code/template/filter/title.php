@@ -102,7 +102,7 @@ class TemplateFilterTitle extends TemplateFilterTag
         $attribs = $this->buildAttributes($attribs);
 
         if($this->getConfig()->escape) {
-            $content = $this->getTemplate()->escape($content);
+            $content = StringEscaper::html($content);
         }
 
         $html = '<title '.$attribs.'>'.$content.'</title>'."\n";

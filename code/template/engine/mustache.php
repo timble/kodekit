@@ -57,9 +57,6 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
         $this->_mustache = new \Mustache_Engine(array(
             'loader' => $this,
             'cache'  => $this->_cache ? $this->_cache_path : null,
-            'escape' => function($value) use($self) {
-                return $self->getTemplate()->escape($value);
-            },
             'strict_callables' => $this->getConfig()->strict_callables,
             'pragmas'          => $this->getConfig()->pragmas,
             'helpers'          => $this->_functions

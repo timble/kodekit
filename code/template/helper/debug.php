@@ -225,7 +225,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                 if ($line >= $range['start'])
                 {
                     // Make the row safe for output
-                    $row = $this->getTemplate()->escape($row);
+                    $row = StringEscaper::html($row);
 
                     // Trim whitespace and sanitize the row
                     $row = '<span class="number">'.sprintf($format, $line).'</span> '.$row;
@@ -462,9 +462,9 @@ class TemplateHelperDebug extends TemplateHelperBehavior
     protected function _dumpString($var, ObjectConfig $config, $level = 0)
     {
         if (mb_strlen($var) > $config->string_length) {
-            $str = $this->getTemplate()->escape(mb_substr($var, 0, $config->string_length)).'&nbsp;&hellip;';
+            $str = StringEscaper::html(mb_substr($var, 0, $config->string_length)).'&nbsp;&hellip;';
         } else {
-            $str = $this->getTemplate()->escape($var);
+            $str = StringEscaper::html($var);
         }
 
         return '<span class="koowa-dump-string">string</span><span>('.strlen($var).')</span> "'.$str.'"';
@@ -507,7 +507,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                         if ($key !== $marker)
                         {
                             $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
-                            $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : $this->getTemplate()->escape($key)) . '</span> => ';
+                            $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : StringEscaper::html($key)) . '</span> => ';
                             $result .= $this->_dumpVar($value, $config, $level + 1);
                         }
                     }
@@ -613,7 +613,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                         }
 
                         $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
-                        $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : $this->getTemplate()->escape($key)) . '</span> '.$vis.' => ';
+                        $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : StringEscaper::html($key)) . '</span> '.$vis.' => ';
                         $result .= $this->_dumpVar($value, $config, $level + 1);
                     }
 
@@ -641,7 +641,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
     {
         $type = get_resource_type($var);
 
-        $result = '<span class="koowa-dump-resource">' . $this->getTemplate()->escape($type) . ' resource</span>';
+        $result = '<span class="koowa-dump-resource">' . StringEscaper::html($type) . ' resource</span>';
 
         if (isset($config->resources[$type]))
         {
@@ -651,7 +651,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
             foreach (call_user_func($config->resources[$type], $var) as $key => $value)
             {
                 $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
-                $result .= '<span class="koowa-dump-key">' . $this->getTemplate()->escape($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
+                $result .= '<span class="koowa-dump-key">' . StringEscaper::html($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
             }
 
             $result .= '</div>';

@@ -158,7 +158,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
                         continue;
                     }
 
-                    $name =  $this->getTemplate()->escape($name);
+                    $name =  StringEscaper::attr($name);
 
                     if (is_array($value))
                     {
@@ -168,14 +168,14 @@ class TemplateFilterForm extends TemplateFilterAbstract
                                 continue;
                             }
 
-                            $v = $this->getTemplate()->escape($v);
+                            $v = StringEscaper::attr($v);
 
                             $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$v.'" />';
                         }
                     }
                     else
                     {
-                        $value  = $this->getTemplate()->escape($value);
+                        $value  = StringEscaper::attr($value);
                         $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
                     }
                 }

@@ -635,7 +635,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         }
 
         $attribs = $this->buildAttributes($config->attribs);
-        $value   = $this->getTemplate()->escape($config->value);
+        $value   = StringEscaper::attr($config->value);
 
         if ($config->attribs->readonly === 'readonly' || $config->attribs->disabled === 'disabled')
         {

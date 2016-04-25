@@ -41,7 +41,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         else
         {
             $column = $config->entity->getIdentityColumn();
-            $value  = $this->getTemplate()->escape($config->entity->{$column});
+            $value  = StringEscaper::attr($config->entity->{$column});
 
             $attribs = $this->buildAttributes($config->attribs);
 
@@ -77,7 +77,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         else
         {
             $column = $config->column;
-            $value  = $this->getTemplate()->escape($config->entity->{$column});
+            $value  = StringEscaper::attr($config->entity->{$column});
 
             $attribs = $this->buildAttributes($config->attribs);
 
@@ -148,7 +148,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
         $html .= '<div class="search__container search__container--has_empty_button">';
         $html .= '<label for="search"><i class="icon-search"></i></label>';
-        $html .= '<input type="search" name="search" class="search_button" placeholder="'.$config->placeholder.'" value="'.$this->getTemplate()->escape($config->search).'" />';
+        $html .= '<input type="search" name="search" class="search_button" placeholder="'.$config->placeholder.'" value="'.StringEscaper::attr($config->search).'" />';
         $html .= '<a class="search_button--empty"><span>X</span></a>';
         $html .= '</div>';
 
