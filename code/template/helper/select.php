@@ -119,7 +119,7 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
             if (is_numeric($group)) {
                 $options = array($options);
             } else {
-                $html[] = '<optgroup label="' . $this->getTemplate()->escape($group) . '">';
+                $html[] = '<optgroup label="' . StringEscaper::attr($group) . '">';
             }
 
             foreach ($options as $option)
