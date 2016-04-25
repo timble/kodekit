@@ -69,6 +69,8 @@ namespace Kodekit\Library;
  * ?>
  * </code>
  *
+ * @link http://www.faqs.org/rfcs/rfc3986.html
+ *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Url
  */
@@ -139,22 +141,7 @@ class HttpUrl extends Object implements HttpUrlInterface
     protected $_path = '';
 
     /**
-     * Url-encode only these characters in path elements.
-     *
-     * Characters are ' ' (space), '/', '?', '&', and '#'.
-     *
-     * @var array
-     */
-    protected $_encode_path = array(
-        ' ' => '+',
-        '/' => '%2F',
-        '?' => '%3F',
-        '&' => '%26',
-        '#' => '%23',
-    );
-
-    /**
-     * Escape '&' to '&amp;'
+     * Escapes '&' to '&amp;'
      *
      * @var boolean
      *
@@ -290,7 +277,7 @@ class HttpUrl extends Object implements HttpUrlInterface
      */
     public function setUser($user)
     {
-        $this->user = $user;
+        $this->user = rawurldecode($user);
         return $this;
     }
 
@@ -312,7 +299,7 @@ class HttpUrl extends Object implements HttpUrlInterface
      */
     public function setPass($pass)
     {
-        $this->pass = $pass;
+        $this->pass = rawurldecode($pass);
         return $this;
     }
 
@@ -334,7 +321,7 @@ class HttpUrl extends Object implements HttpUrlInterface
      */
     public function setHost($host)
     {
-        $this->host = $host;
+        $this->host = rawurldecode($host);
         return $this;
     }
 
@@ -356,20 +343,28 @@ class HttpUrl extends Object implements HttpUrlInterface
      */
     public function setPort($port)
     {
-        $this->port = $port;
+        $this->port = (int) rawurldecode($port);
         return $this;
     }
 
     /**
      * Returns the path portion as a string or array
      *
-     * @param     boolean $toArray If TRUE return an array. Default FALSE
+     * This method will encode the path to conform to rfc3986 returned as string.
+     * @link http://www.faqs.org/rfcs/rfc3986.html
+     *
+     * @param   boolean $toArray If TRUE return an array. Default FALSE
      * @return  string|array The path string; e.g., `path/to/site`.
      */
     public function getPath($toArray = false)
     {
-        $result = $toArray ? $this->_path : $this->_pathEncode($this->_path);
-        return $result;
+        if(!$toArray) {
+            $path = !empty($this->_path) ? '/'.implode('/', array_map('rawurlencode', $this->_path)) : '';
+        }  else {
+            $path = (array) $this->_path;
+        }
+
+        return $path;
     }
 
     /**
@@ -387,14 +382,14 @@ class HttpUrl extends Object implements HttpUrlInterface
         if (is_string($path))
         {
             if (!empty($path)) {
-                $path = explode('/', $path);
+                $path = explode('/', trim($path, '/'));
             } else {
                 $path = array();
             }
         }
 
         foreach ($path as $key => $val) {
-            $path[$key] = urldecode($val);
+            $path[$key] = rawurldecode($val);
         }
 
         $this->_path = $path;
@@ -403,6 +398,9 @@ class HttpUrl extends Object implements HttpUrlInterface
 
     /**
      * Returns the query portion as a string or array
+     *
+     * This method will encode the query to conform to rfc3986 if returned as string
+     * @link http://www.faqs.org/rfcs/rfc3986.html
      *
      * @param   boolean      $toArray If TRUE return an array. Default FALSE
      * @param   boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
@@ -415,7 +413,7 @@ class HttpUrl extends Object implements HttpUrlInterface
 
         if(!$toArray)
         {
-            $result =  http_build_query($this->_query, '', $escape ? '&amp;' : '&');
+            $result = http_build_query($this->_query, '', $escape ? '&amp;' : '&');
 
             // We replace the + used for spaces by http_build_query with the more standard %20.
             $result = str_replace('+', '%20', $result);
@@ -436,7 +434,8 @@ class HttpUrl extends Object implements HttpUrlInterface
      */
     public function setQuery($query, $merge = false)
     {
-        $result = $query;
+        //Parse
+        $array = $query;
         if (!is_array($query))
         {
             if (strpos($query, '&amp;') !== false)
@@ -446,9 +445,20 @@ class HttpUrl extends Object implements HttpUrlInterface
             }
 
             //Set the query vars
-            parse_str($query, $result);
+            parse_str($query, $array);
         }
 
+        //Decode
+        $result = array();
+        foreach($array as $key => $value)
+        {
+            $key   = rawurldecode($key);
+            $value = rawurldecode($value);
+
+            $result[$key] = $value;
+        }
+
+        //Merge
         if ($merge) {
             $this->_query = array_merge($this->_query, $result);
         } else {
@@ -476,7 +486,7 @@ class HttpUrl extends Object implements HttpUrlInterface
      */
     public function setFragment($fragment)
     {
-        $this->fragment = $fragment;
+        $this->fragment = rawurldecode($fragment);
         return $this;
     }
 
@@ -539,7 +549,6 @@ class HttpUrl extends Object implements HttpUrlInterface
             $result['path'] = $this->_path;
         }
 
-
         if (($parts & self::QUERY) && !empty($this->_query)) {
             $result['query'] = $this->getQuery(false, $escape);
         }
@@ -590,6 +599,9 @@ class HttpUrl extends Object implements HttpUrlInterface
     /**
      * Get the full url, of the format scheme://user:pass@host/path?query#fragment';
      *
+     * This will method will encode the resulting url to comform to rfc3986
+     * @link http://www.faqs.org/rfcs/rfc3986.html
+     *
      * @param integer      $parts   A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @param boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
      * @return  string
@@ -601,7 +613,7 @@ class HttpUrl extends Object implements HttpUrlInterface
 
         //Add the scheme
         if (($parts & self::SCHEME) && !empty($this->scheme)) {
-            $url .= urlencode($this->scheme) . ':';
+            $url .= rawurlencode($this->scheme) . ':';
         }
 
         // Add the host and port, if any.
@@ -612,18 +624,18 @@ class HttpUrl extends Object implements HttpUrlInterface
             //Add the username and password
             if (($parts & self::USER) && !empty($this->user))
             {
-                $url .= urlencode($this->user);
+                $url .= rawurlencode($this->user);
                 if (($parts & self::PASS) && !empty($this->pass)) {
-                    $url .= ':' . urlencode($this->pass);
+                    $url .= ':' . rawurlencode($this->pass);
                 }
 
                 $url .= '@';
             }
 
-            $url .= urlencode($this->host);
+            $url .= rawurlencode($this->host);
 
             if (($parts & self::PORT) && !empty($this->port)) {
-                $url .= ':' . (int)$this->port;
+                $url .= ':' . (int)rawurlencode($this->port);
             }
         }
 
@@ -642,7 +654,7 @@ class HttpUrl extends Object implements HttpUrlInterface
         }
 
         if (($parts & self::FRAGMENT) && trim($this->fragment) !== '') {
-            $url .= '#' . urlencode($this->fragment);
+            $url .= '#' . rawurlencode($this->fragment);
         }
 
         return $url;
@@ -666,31 +678,6 @@ class HttpUrl extends Object implements HttpUrlInterface
         }
 
         return true;
-    }
-
-    /**
-     * Converts an array of path elements into a string.
-     *
-     * Does not use urlencode(); instead, only converts characters found in HttpUrl::$_encode_path.
-     *
-     * @param  array $spec The path elements.
-     * @return string A url path string.
-     */
-    protected function _pathEncode($spec)
-    {
-        if (is_string($spec)) {
-            $spec = explode('/', $spec);
-        }
-
-        $keys = array_keys($this->_encode_path);
-        $vals = array_values($this->_encode_path);
-
-        $out = array();
-        foreach ((array)$spec as $elem) {
-            $out[] = str_replace($keys, $vals, $elem);
-        }
-
-        return implode('/', $out);
     }
 
     /**
