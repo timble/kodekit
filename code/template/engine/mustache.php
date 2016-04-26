@@ -29,16 +29,9 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
     /**
      * The mustache engine
      *
-     * @var callable
+     * @var \Mustache_Engine
      */
     protected $_mustache;
-
-    /**
-     * The twig template
-     *
-     * @var callable
-     */
-    protected $_mustache_template;
 
     /**
      * Constructor
@@ -52,14 +45,12 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
         //Reset the stack
         $this->_stack = array();
 
-        $self = $this;
-
         $this->_mustache = new \Mustache_Engine(array(
             'loader' => $this,
             'cache'  => $this->_cache ? $this->_cache_path : null,
             'strict_callables' => $this->getConfig()->strict_callables,
             'pragmas'          => $this->getConfig()->pragmas,
-            'helpers'          => $this->_functions
+            'helpers'          => $this->getFunctions()
         ));
     }
 
@@ -81,139 +72,22 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
     }
 
     /**
-     * Load a template by path
-     *
-     * @param   string  $url The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException         If the template could not be loaded
-     * @throws \RuntimeException         If the url cannot be fully qualified
-     * @return TemplateEngineMustache|string Returns a string when called by Mustache
-     */
-    public function loadFile($url)
-    {
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => $url));
-
-        $this->_mustache_template = $this->_mustache->loadTemplate($url);
-
-        //Load partial templates
-        return $this;
-    }
-
-    /**
-     * Set the template content from a string
-     *
-     * @param  string  $source  The template source
-     * @return TemplateEngineMustache
-     */
-    public function loadString($source)
-    {
-        parent::loadString($source);
-
-        //Let mustache load the source by proxiing through the load() method.
-        $this->_mustache_template = $this->_mustache->loadTemplate($source);
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => ''));
-
-        return $this;
-    }
-
-    /**
      * Render a template
      *
-     * @param   array   $data   The data to pass to the template
-     * @throws \RuntimeException If the template could not be rendered
-     * @return string The rendered template source
+     * @param   string  $source   The template path or content
+     * @param   array   $data     An associative array of data to be extracted in local template scope
+     * @throws \RuntimeException If the template could not be loaded
+     * @return string The rendered template
      */
-    public function render(array $data = array())
+    public function render($source, array $data = array())
     {
-        parent::render($data);
+        parent::render($source, $data);
 
-        if(!$this->_mustache_template instanceof \Mustache_Template) {
-            throw new \RuntimeException(sprintf('The template cannot be rendered'));
-        }
-
-        //Render the template
-        $content = $this->_mustache_template->render($data);
+        //Let mustache load the template by proxiing through the load() method.
+        $result = $this->_mustache->render($source, $data);
 
         //Render the debug information
-        $content = $this->_debug($content);
-
-        //Remove the template from the stack
-        array_pop($this->_stack);
-
-        return $content;
-    }
-
-    /**
-     * Load the template source
-     *
-     * @param   string  $url The template url
-     * @throws \RuntimeException         If the template could not be loaded
-     * @return string   The template source
-     */
-    protected function _load($url)
-    {
-        $file = $this->_locate($url);
-        $type = pathinfo($file, PATHINFO_EXTENSION);
-
-        if(in_array($type, $this->getFileTypes()))
-        {
-            if(!$this->_source = file_get_contents($file)) {
-                throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
-            }
-        }
-        else $this->_source = $this->getTemplate()->loadFile($file)->render($this->getData());
-
-        return $this->_source;
-    }
-
-    /**
-     * Locate the template
-     *
-     * @param  string  $url The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @return string   The template real path
-     */
-    protected function _locate($url)
-    {
-        //Qualify relative template url
-        if(!parse_url($url, PHP_URL_SCHEME))
-        {
-            if(!$template = end($this->_stack)) {
-                throw new \RuntimeException('Cannot qualify partial template url');
-            }
-
-            $basepath = dirname($template['url']);
-
-            //Resolve relative path
-            if($path = trim('.', dirname($url)))
-            {
-                $count = 0;
-                $total = count(explode('/', $path));
-
-                while ($count++ < $total) {
-                    $basepath = dirname($basepath);
-                }
-
-                $basename = $url;
-            }
-            else $basename = basename($url);
-
-            $url = $basepath. '/' .$basename;
-        }
-
-        //Locate the template
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-        if (!$file = $locator->locate($url)) {
-            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
-        }
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => $url, 'file' => $file));
-
-        return $file;
+        return $this->renderDebug($result);
     }
 
     /**
@@ -222,10 +96,23 @@ class TemplateEngineMustache extends TemplateEngineAbstract implements \Mustache
      * Required by Mustache_Loader Interface. Do not call directly.
      *
      * @param  string $name string The name of the template to load
+     * @throws \Mustache_Exception_UnknownTemplateException If a template file is not found.
      * @return string The template source code
      */
     public function load($name)
     {
-        return $this->_load($name);
+        try
+        {
+            $file   = $this->locateSource($name);
+            $source = $this->loadSource($file);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Mustache_Exception_UnknownTemplateException(
+                sprintf('The template "%s" cannot be loaded.', $file)
+            );
+        }
+
+        return $source;
     }
 }

@@ -29,16 +29,9 @@ class TemplateEngineTwig extends TemplateEngineAbstract
     /**
      * The twig environment
      *
-     * @var callable
+     * @var Twig_Environment
      */
     protected $_twig;
-
-    /**
-     * The twig template
-     *
-     * @var callable
-     */
-    protected $_twig_template;
 
     /**
      * Constructor
@@ -62,7 +55,7 @@ class TemplateEngineTwig extends TemplateEngineAbstract
         ));
 
         //Register functions in twig
-        foreach($this->_functions as $name => $callable)
+        foreach($this->getFunctions() as $name => $callable)
         {
             $function = new \Twig_SimpleFunction($name, $callable);
             $this->_twig->addFunction($function);
@@ -86,7 +79,7 @@ class TemplateEngineTwig extends TemplateEngineAbstract
             'optimizations'    => -1,
             'functions'        => array(
                 'import' => function($url, $data) use($self) {
-                    return $self->_import($url, $data);
+                    return $self->renderPartial($url, $data);
                 }
             ),
         ));
@@ -95,64 +88,39 @@ class TemplateEngineTwig extends TemplateEngineAbstract
     }
 
     /**
-     * Load a template by path
-     *
-     * @param  string  $url      The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException         If the template could not be loaded
-     * @throws \RuntimeException         If the url cannot be fully qualified
-     * @return TemplateEngineTwig|string Returns a string when called by Twig.
-     */
-    public function loadFile($url)
-    {
-        $this->_twig_template = $this->_twig->loadTemplate($url);
-
-        return $this;
-    }
-
-    /**
-     * Set the template content from a string
-     *
-     * @param  string  $content  The template content
-     * @return TemplateEngineTwig
-     */
-    public function loadString($content)
-    {
-        parent::loadString($content);
-
-        //Let twig load the content by proxiing through the getSource() method.
-        $this->_twig_template = $this->_twig->loadTemplate($content);
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => ''));
-        return $this;
-    }
-
-    /**
      * Render a template
      *
-     * @param  array   $data   The data to pass to the template
-     * @throws \RuntimeException If the template could not be evaluated
+     * @param   string  $source    The template url or content
+     * @param   array   $data       An associative array of data to be extracted in local template scope
+     * @throws \RuntimeException If the template could not be loaded
      * @return string The rendered template source
      */
-    public function render(array $data = array())
+    public function render($source, array $data = array())
     {
-        parent::render();
+        parent::render($source, $data);
 
-        if(!$this->_twig_template instanceof \Twig_Template) {
-            throw new \RuntimeException(sprintf('The template cannot be rendered'));
-        }
-
-        //Render the template
-        $content = $this->_twig_template->render($data);
+        //Let twig load the content by proxiing through the getSource() method.
+        $result = $this->_twig->render($source, $data);
 
         //Render the debug information
-        $content = $this->_debug($content);
+        return $this->renderDebug($result);
+    }
 
-        //Remove the template from the stack
-        array_pop($this->_stack);
+    /**
+     * Gets the source code of a template, given its name.
+     *
+     * Required by Twig_LoaderInterface Interface. Do not call directly.
+     *
+     * @param  string $name        The name of the template to load
+     * @throws \RuntimeException   If the template could not be loaded
+     * @return string The template source code
+     */
+    public function getSource($name)
+    {
+        $file   = $this->locateSource($name);
+        $source = $this->loadSource($file);
 
-        return $content;
+        return $source;
     }
 
     /**
@@ -172,115 +140,6 @@ class TemplateEngineTwig extends TemplateEngineAbstract
         }
 
         return $this;
-    }
-
-    /**
-     * Load the template source
-     *
-     * @param   string  $url The template url
-     * @throws \RuntimeException         If the template could not be loaded
-     * @return string   The template source
-     */
-    protected function _load($url)
-    {
-        $file = $this->_locate($url);
-        $type = pathinfo($file, PATHINFO_EXTENSION);
-
-        if(in_array($type, $this->getFileTypes()))
-        {
-            if(!$this->_source = file_get_contents($file)) {
-                throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
-            }
-        }
-        else $this->_source = $this->getTemplate()->loadFile($file)->render($this->getData());
-
-        return $this->_source;
-    }
-
-    /**
-     * Locate the template
-     *
-     * @param   string  $url The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @return string   The template real path
-     */
-    protected function _locate($url)
-    {
-        //Qualify relative template url
-        if(!parse_url($url, PHP_URL_SCHEME))
-        {
-            if(!$template = end($this->_stack)) {
-                throw new \RuntimeException('Cannot qualify partial template url');
-            }
-
-            $basepath = dirname($template['url']);
-
-            //Resolve relative path
-            if($path = trim('.', dirname($url)))
-            {
-                $count = 0;
-                $total = count(explode('/', $path));
-
-                while ($count++ < $total) {
-                    $basepath = dirname($basepath);
-                }
-
-                $basename = $url;
-            }
-            else $basename = basename($url);
-
-            $url = $basepath. '/' .$basename;
-        }
-
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-
-        if (!$file = $locator->locate($url)) {
-            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
-        }
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => $url, 'file' => $file));
-
-        return $file;
-    }
-
-    /**
-     * Import a partial template
-     *
-     * If importing a partial merges the data passed in with the data from the call to render. If importing a different
-     * template type jump out of engine scope back to the template.
-     *
-     * @param   string  $url      The template url
-     * @param   array   $data     The data to pass to the template
-     * @return  string The rendered template content
-     */
-    protected function _import($url, array $data = array())
-    {
-        //Locate the template
-        $file = $this->_locate($url);
-        $type = pathinfo($file, PATHINFO_EXTENSION);
-
-        if(in_array($type, $this->getFileTypes()))
-        {
-            $data   = array_merge((array) $this->getData(), $data);
-            $result = $this->_twig->render($file, $data);
-        }
-        else  $result = $this->getTemplate()->loadFile($file)->render($data);
-
-        return $result;
-    }
-
-    /**
-     * Gets the source code of a template, given its name.
-     *
-     * Required by Twig_LoaderInterface Interface. Do not call directly.
-     *
-     * @param  string $name string The name of the template to load
-     * @return string The template source code
-     */
-    public function getSource($name)
-    {
-        return $this->_load($name);
     }
 
     /**
