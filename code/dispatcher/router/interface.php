@@ -25,7 +25,7 @@ interface DispatcherRouterInterface
      * @param   HttpUrlInterface  $url  The url.
      * @return  boolean
      */
-	public function parse(HttpUrlInterface $url);
+    public function parse(HttpUrlInterface $url);
 
     /**
      * Function to convert an internal URI to a route
@@ -33,5 +33,5 @@ interface DispatcherRouterInterface
      * @param   HttpUrl   $url The internal URL
      * @return  boolean
      */
-	public function build(HttpUrlInterface $url);
+    public function build(HttpUrlInterface $url);
 }
