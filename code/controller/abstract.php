@@ -20,7 +20,7 @@ namespace Kodekit\Library;
 abstract class ControllerAbstract extends Object implements ControllerInterface, CommandCallbackDelegate
 {
     /**
-     * The class actions
+     * The actions
      *
      * @var array
      */
@@ -126,7 +126,6 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
         $context_action = $context->getAction();
         $context->setAction($action);
 
-
         //Execute the action
         if($this->invokeCommand('before.'.$action, $context) !== false)
         {
@@ -134,17 +133,13 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
 
             if (!method_exists($this, $method))
             {
-                if (isset($this->_mixed_methods[$action]))
-                {
-                    $context->setName('action.' . $action);
-                    $context->result = $this->_mixed_methods[$action]->execute($context, $this->getCommandChain());
-                }
-                else
+                if (!$this->isMixedMethod($action))
                 {
                     throw new ControllerExceptionActionNotImplemented(
                         "Can't execute '$action', method: '$method' does not exist"
                     );
                 }
+                else $context->result = parent::__call($action, array($context));
             }
             else  $context->result = $this->$method($context);
 
@@ -398,7 +393,7 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
             return $this->execute($method, $context);
         }
 
-        if (!isset($this->_mixed_methods[$method]))
+        if (!$this->isMixedMethod($method))
         {
             //Check if a behavior is mixed
             $parts = StringInflector::explode($method);

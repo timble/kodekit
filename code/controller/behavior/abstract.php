@@ -18,6 +18,30 @@ namespace Kodekit\Library;
 abstract class ControllerBehaviorAbstract extends BehaviorAbstract
 {
     /**
+     * The actions
+     *
+     * @var array
+     */
+    private $__actions = array();
+
+    /**
+     * Constructor.
+     *
+     * @param   ObjectConfig $config Configuration options
+     */
+    public function __construct(ObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        foreach ($this->getMethods() as $method)
+        {
+            if (substr($method, 0, 7) == '_action') {
+                $this->__actions[] = strtolower(substr($method, 7));
+            }
+        }
+    }
+
+    /**
      * Get the methods that are available for mixin based
      *
      * This function dynamically adds mixable methods of format _action[Action]
@@ -31,35 +55,37 @@ abstract class ControllerBehaviorAbstract extends BehaviorAbstract
 
         if($this->isSupported())
         {
-            foreach($this->getMethods() as $method)
-            {
-                if(substr($method, 0, 7) == '_action') {
-                    $methods[strtolower(substr($method, 7))] = $this;
-                }
+            foreach($this->__actions as $action) {
+                $methods[$action] = $this;
             }
         }
 
         return $methods;
     }
 
-    /**
-     * Command handler
-     *
-     * @param CommandInterface         $command    The command
-     * @param CommandChainInterface    $chain      The chain executing the command
-     * @return mixed If a handler breaks, returns the break condition. Returns the result of the handler otherwise.
-     */
-    public function execute(CommandInterface $command, CommandChainInterface $chain)
-    {
-        $parts  = explode('.', $command->getName());
-        $method = '_'.$parts[0].ucfirst($parts[1]);
 
-        if($parts[0] == 'action') {
-            $result = $this->$method($command);
-        } else {
-            $result = parent::execute($command, $chain);
+    /**
+     * Execute a mixed controller action by it's name
+     *
+     * If the method is an action defined by the behavior call _action[Method]
+     *
+     * @param  string  $method Method name
+     * @param  array   $args   Array containing all the arguments for the original call
+     * @return mixed
+     * @see execute()
+     */
+    public function __call($method, $args)
+    {
+        //Handle action alias method
+        if(in_array($method, $this->__actions))
+        {
+            if(isset($args[0]) && $args[0] instanceof CommandInterface)
+            {
+                $method = '_action'.ucfirst($method);
+                return $this->$method($args[0]);
+            }
         }
 
-        return $result;
+        return parent::__call($method, $args);
     }
 }
