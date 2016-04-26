@@ -30,16 +30,10 @@ interface TemplateFilterInterface extends ObjectHandlable
      * Filter the text
      *
      * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object.
      * @return void
      */
-    public function filter(&$text);
-
-    /**
-     * Get the template object
-     *
-     * @return  object	The template object
-     */
-    public function getTemplate();
+    public function filter(&$text, TemplateInterface $template);
 
     /**
      * Get the priority of a behavior

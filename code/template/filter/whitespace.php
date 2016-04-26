@@ -40,9 +40,10 @@ class TemplateFilterWhitespace extends TemplateFilterAbstract
      * Remove all spaces from the template output
      *
      * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object.
      * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
         $text = trim(preg_replace('/>\s+</', '><', $text));
     }

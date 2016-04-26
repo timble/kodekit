@@ -42,8 +42,10 @@ abstract class TemplateFilterTag extends TemplateFilterAbstract
      * This function will pre-pend the tags to the content
      *
      * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object.
+     * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
         //Parse the tags
         $tags = $this->_parseTags($text);

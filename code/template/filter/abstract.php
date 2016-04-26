@@ -25,13 +25,6 @@ abstract class TemplateFilterAbstract extends Object implements TemplateFilterIn
     protected $_priority;
 
     /**
-     * Template object
-     *
-     * @var TemplateInterface
-     */
-    private $__template;
-
-    /**
      * Constructor.
      *
      * @param ObjectConfig $config An optional ObjectConfig object with configuration options
@@ -54,7 +47,6 @@ abstract class TemplateFilterAbstract extends Object implements TemplateFilterIn
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'template' => 'default',
             'priority' => self::PRIORITY_NORMAL
         ));
 
@@ -69,36 +61,6 @@ abstract class TemplateFilterAbstract extends Object implements TemplateFilterIn
     public function getPriority()
     {
         return $this->_priority;
-    }
-
-    /**
-     * Gets the template object
-     *
-     * @return  TemplateInterface	The template object
-     */
-    public function getTemplate()
-    {
-        if(!$this->__template instanceof TemplateInterface)
-        {
-            if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
-            {
-                $identifier         = $this->getIdentifier()->toArray();
-                $identifier['path'] = array('template');
-                $identifier['name'] = $this->__template;
-            }
-            else $identifier = $this->getIdentifier($this->__template);
-
-            $this->__template = $this->getObject($identifier);
-
-            if(!$this->__template instanceof TemplateInterface)
-            {
-                throw new \UnexpectedValueException(
-                    'Template: '.get_class($this->__template).' does not implement TemplateInterface'
-                );
-            }
-        }
-
-        return $this->__template;
     }
 
     /**

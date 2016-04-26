@@ -67,7 +67,7 @@ class TemplateFilterInclude extends TemplateFilterTag
             $result = $this->getObject('com:'.$identifier->package.'.dispatcher.fragment')
                 ->include($url);
 
-            if($this->getTemplate()->isDebug())
+            if($this->getObject('template.engine.factory')->isDebug())
             {
                 $format  = PHP_EOL.'<!--BEGIN ktml:include '.$url.' -->'.PHP_EOL;
                 $format .= '%s';

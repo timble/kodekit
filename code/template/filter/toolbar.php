@@ -107,10 +107,11 @@ class TemplateFilterToolbar extends TemplateFilterAbstract
     /**
      * Replace/push the toolbars
      *
-     * @param string $text Block of text to parse
-     * @return TemplateFilterToolbar
+     * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object
+     * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
         $matches = array();
 
@@ -131,16 +132,19 @@ class TemplateFilterToolbar extends TemplateFilterAbstract
                 {
                     $config->toolbar = $toolbar; //set the toolbar in the config
 
-                    $html = $this->getTemplate()
-                        ->createHelper($config->type)
-                        ->render($config);
+                    if($this->getIdentifier()->type != 'lib') {
+                        $identifier = 'com:'.$this->getIdentifier()->package.'.template.helper.'.$config->type;
+                    } else {
+                        $identifier = 'lib:template.helper.'.$config->type;
+                    }
+
+                    $helper = $this->getObject('template.helper.factory')->createHelper($identifier);
+                    $html   = $helper->render($config, $template);
                 }
 
                 //Remove placeholder
                 $text = str_replace($match, $html, $text);
             }
         }
-
-        return $this;
     }
 }
