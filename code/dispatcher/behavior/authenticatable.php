@@ -142,7 +142,6 @@ class DispatcherBehaviorAuthenticatable extends DispatcherBehaviorAbstract
      *
      * @param   mixed $authenticator An object that implements ObjectInterface, ObjectIdentifier object
      *                               or valid identifier string
-     * @throws \\UnexpectedValueException
      * @return DispatcherAuthenticatorInterface|null
      */
     public function getAuthenticator($authenticator)
