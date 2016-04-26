@@ -138,22 +138,40 @@ abstract class ObjectDecoratorAbstract implements ObjectDecoratorInterface
     {
         if (!$this->__methods)
         {
-            $methods = array();
-            $object = $this->getDelegate();
+            $methods  = array();
+            $delegate = $this->getDelegate();
 
-            if (!($object instanceof ObjectMixable))
+            if (!($delegate instanceof ObjectMixable))
             {
-                $reflection = new \ReflectionClass($object);
+                $reflection = new \ReflectionClass($delegate);
                 foreach ($reflection->getMethods() as $method) {
                     $methods[] = $method->name;
                 }
             }
-            else $methods = $object->getMethods();
+            else $methods = $delegate->getMethods();
 
             $this->__methods = $methods;
         }
 
         return $this->__methods;
+    }
+
+    /**
+     * Check if a mixed method exists
+     *
+     * @param string $name The name of the method
+     * @return mixed
+     */
+    public function isMixedMethod($name)
+    {
+        $result   = false;
+        $delegate = $this->getDelegate();
+
+        if (!($delegate instanceof ObjectMixable)) {
+            $result = $delegate->isMixedMethod($name);
+        }
+
+        return $result;
     }
 
     /**
