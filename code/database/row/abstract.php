@@ -694,7 +694,7 @@ abstract class DatabaseRowAbstract extends ObjectArray implements DatabaseRowInt
             //Check if a behavior is mixed
             if ($parts[0] == 'is' && isset($parts[1]))
             {
-                if(!isset($this->_mixed_methods[$method]))
+                if(!$this->isMixedMethod($method))
                 {
                     //Lazy mix behaviors
                     $behavior = strtolower($parts[1]);

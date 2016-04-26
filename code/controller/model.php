@@ -370,7 +370,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
 
         //Check first if we are calling a mixed in method to prevent the model being
         //loaded during object instantiation.
-        if(!isset($this->_mixed_methods[$method]))
+        if(!$this->isMixedMethod($method))
         {
             //Check for model state properties
             if(isset($this->getModel()->getState()->$method))

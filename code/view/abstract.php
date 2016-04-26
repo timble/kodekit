@@ -583,7 +583,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function __call($method, $args)
     {
-        if (!isset($this->_mixed_methods[$method]))
+        if (!$this->isMixedMethod($method))
         {
             //If one argument is passed we assume a setter method is being called
             if (count($args) == 1)

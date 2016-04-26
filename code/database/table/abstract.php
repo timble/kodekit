@@ -928,7 +928,7 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
      */
     public function __call($method, $arguments)
     {
-        if (!isset($this->_mixed_methods[$method]))
+        if (!$this->isMixedMethod($method))
         {
             // If the method is of the form is[Bahavior] handle it.
             $parts = StringInflector::explode($method);
