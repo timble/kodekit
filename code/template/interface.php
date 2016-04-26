@@ -18,29 +18,13 @@ namespace Kodekit\Library;
 interface TemplateInterface
 {
     /**
-     * Load a template by url
+     * Render a template
      *
-     * @param   string  $url    The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @return TemplateInterface
+     * @param   string  $source  The template url or content
+     * @param   array   $data    An associative array of data to be extracted in local template scope
+     * @return  string  The rendered template source
      */
-    public function loadFile($url);
-
-    /**
-     * Load a template from a string
-     *
-     * @param  string   $content The template content
-     * @return TemplateInterface
-     */
-    public function loadString($content);
-
-    /**
-     * Render the template
-     *
-     * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @return string The rendered template source
-     */
-    public function render(array $data = array());
+    public function render($source, array $data = array());
 
     /**
      * Get a template data property
