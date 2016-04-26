@@ -149,16 +149,6 @@ class TemplateBehaviorFilterable extends TemplateBehaviorAbstract
     }
 
     /**
-     * Gets the toolbars
-     *
-     * @return array  An array of toolbars
-     */
-    public function getFilters()
-    {
-        return array_values($this->__filters);
-    }
-
-    /**
      * Filter template content
      *
      * @param TemplateContextInterface $context	A dispatcher context object
