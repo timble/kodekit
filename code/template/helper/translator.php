@@ -35,7 +35,7 @@ class TemplateHelperTranslator extends TemplateHelperAbstract
         }
 
         $html  = '';
-        $html .= $this->getTemplate()->helper('behavior.kodekit') .
+        $html .= $this->createHelper('behavior')->kodekit() .
             "<script>
             if (typeof Kodekit === 'object' && Kodekit !== null) {
                 if (typeof Kodekit.translator === 'object' && Kodekit.translator !== null) {

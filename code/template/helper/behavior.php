@@ -276,15 +276,15 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
      *
      * This will send an ascynchronous request to the server via AJAX on an interval in miliseconds
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return string    The html output
      */
-    public function keepalive($config = array())
+    public function keepalive($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'refresh' => 15 * 60000, //default refresh is 15min
-            'url'     => $this->getTemplate()->route('', false, false),
+            'url'     => $template->route('', false, false),
         ));
         $html = '';
         // Only load once
