@@ -77,6 +77,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
                 'url'      => array($this, 'getUrl'),
                 'title'    => array($this, 'getTitle'),
                 'content'  => array($this, 'getContent'),
+                'language' => array($this, 'getLanguage')
             ),
         ));
 
