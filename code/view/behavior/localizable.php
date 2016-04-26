@@ -29,6 +29,20 @@ class ViewBehaviorLocalizable extends ViewBehaviorAbstract
     }
 
     /**
+     * Get the language
+     *
+     * Returns a properly formatted language tag, eg xx-XX
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag
+     * @link https://tools.ietf.org/html/rfc5646
+     *
+     * @return string|null The language tag
+     */
+    public function getLanguage()
+    {
+        return $this->getObject('translator')->getLanguage();
+    }
+
+    /**
      * Load the translations
      *
      * @return 	void
