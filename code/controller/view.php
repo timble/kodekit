@@ -208,7 +208,7 @@ abstract class ControllerView extends ControllerAbstract implements ControllerVi
      */
     public function __call($method, $args)
     {
-        if(!isset($this->_mixed_methods[$method]))
+        if(!$this->isMixedMethod($method))
         {
             if(in_array($method, array('layout', 'view', 'format')))
             {

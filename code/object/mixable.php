@@ -46,4 +46,12 @@ interface ObjectMixable
      * @return array An array
      */
     public function getMethods();
+
+    /**
+     * Check if a mixed method exists
+     *
+     * @param string $name The name of the method
+     * @return mixed
+     */
+    public function isMixedMethod($name);
 }

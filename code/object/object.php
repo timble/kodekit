@@ -27,6 +27,13 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
     private $__methods = array();
 
     /**
+     * Mixed in methods
+     *
+     * @var array
+     */
+    private $__mixed_methods = array();
+
+    /**
      * The object identifier
      *
      * @var ObjectIdentifier
@@ -46,13 +53,6 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
      * @var ObjectConfig
      */
     private $__object_config;
-
-    /**
-     * Mixed in methods
-     *
-     * @var array
-     */
-    protected $_mixed_methods = array();
 
     /**
      * Constructor.
@@ -166,7 +166,7 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
         if(!empty($mixed_methods))
         {
             foreach($mixed_methods as $name => $method) {
-                $this->_mixed_methods[$name] = $method;
+                $this->__mixed_methods[$name] = $method;
             }
 
             //Set the object methods, native methods have precedence over mixed methods
@@ -237,7 +237,7 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
             return true;
         }
 
-        $objects = array_values($this->_mixed_methods);
+        $objects = array_values($this->__mixed_methods);
 
         foreach($objects as $object)
         {
@@ -284,6 +284,17 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
         }
 
         return $this->__methods;
+    }
+
+    /**
+     * Check if a mixed method exists
+     *
+     * @param string $name The name of the method
+     * @return mixed
+     */
+    public function isMixedMethod($name)
+    {
+        return isset($this->__mixed_methods[$name]);
     }
 
     /**
@@ -354,10 +365,10 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
      */
     public function __clone()
     {
-        foreach ($this->_mixed_methods as $method => $object)
+        foreach ($this->__mixed_methods as $method => $object)
         {
             if (is_object($object) && !($object instanceof \Closure)){
-                $this->_mixed_methods[$method] = clone $object;
+                $this->__mixed_methods[$method] = clone $object;
             }
         }
     }
@@ -372,13 +383,13 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
      */
     public function __call($method, $arguments)
     {
-        if (isset($this->_mixed_methods[$method]))
+        if (isset($this->__mixed_methods[$method]))
         {
             $result = null;
 
-            if ($this->_mixed_methods[$method] instanceof \Closure)
+            if ($this->__mixed_methods[$method] instanceof \Closure)
             {
-                $closure = $this->_mixed_methods[$method];
+                $closure = $this->__mixed_methods[$method];
 
                 switch (count($arguments)) {
                     case 0 :
@@ -398,9 +409,9 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
                         $result = call_user_func_array($closure, $arguments);
                 }
             }
-            elseif(is_object($this->_mixed_methods[$method]))
+            elseif(is_object($this->__mixed_methods[$method]))
             {
-                $mixin = $this->_mixed_methods[$method];
+                $mixin = $this->__mixed_methods[$method];
 
                 //Switch the mixin's attached mixer
                 $mixin->setMixer($this);
@@ -425,7 +436,7 @@ class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectD
                         $result = call_user_func_array(array($mixin, $method), $arguments);
                 }
             }
-            else $result = $this->_mixed_methods[$method];
+            else $result = $this->__mixed_methods[$method];
 
             return $result;
         }
