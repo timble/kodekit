@@ -12,7 +12,7 @@ namespace Kodekit\Library;
 /**
  * Block Template Filter
  *
- * Filter will parse elements of the form <khtml:block name="[name]" condition=[condition]"> as named blocks
+ * Filter will parse elements of the form <khtml:block name="[name]" condition=[condition]" /> as named blocks
  * and elements of the form <khtml:block (extend|prepend|replace)="[name]">[content]</html:block> to be
  * injected into the named block.
  *
@@ -42,11 +42,12 @@ class TemplateFilterBlock extends TemplateFilterDecorator
      * Parse tags
      *
      * @param string $text Block of text to parse
+     * @param TemplateInterface $template A template object.
      * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
-        parent::filter($text);
+        parent::filter($text, $template);
 
         $this->_parseTags($text);
     }
@@ -199,8 +200,8 @@ class TemplateFilterBlock extends TemplateFilterDecorator
 
         $replace = array();
         $matches = array();
-        // <ktml:blocks name="[name]" condition="[condition]">
-        if(preg_match_all('#<ktml:block\s+name="([^"]+)"(.*"[^"]*")?>#siU', $text, $matches))
+        // <ktml:block name="[name]" condition="[condition]" />
+        if(preg_match_all('#<ktml:block\s+name="([^"]+)"(.*"[^"]*")?\s+\/>#siU', $text, $matches))
         {
             $count = count($matches[1]);
 
