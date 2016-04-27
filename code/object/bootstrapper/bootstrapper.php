@@ -64,7 +64,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
      *
      * @var array
      */
-    protected $_manifests;
+    protected $_manifests = array();
 
     /**
      * Constructor.
