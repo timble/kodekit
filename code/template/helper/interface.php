@@ -18,17 +18,20 @@ namespace Kodekit\Library;
 interface TemplateHelperInterface
 {
     /**
-     * Get the template object
-     *
-     * @return  object	The template object
-     */
-    public function getTemplate();
-
-    /**
      * Method to build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes
      * @return  string  String containing xml style attributes
      */
     public function buildAttributes($array);
+
+    /**
+     * Create a template helper
+     *
+     * @param    mixed $helper ObjectIdentifierInterface
+     * @param    array $config An optional associative array of configuration settings
+     * @throws  \UnexpectedValueException
+     * @return  TemplateHelperInterface
+     */
+    public function createHelper($helper, $config = array());
 }

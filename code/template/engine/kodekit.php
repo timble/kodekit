@@ -29,7 +29,7 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
      *
      * @var FilesystemStreamBuffer
      */
-    protected $_buffer;
+    protected static $__buffer;
 
     /**
      * Constructor
@@ -40,11 +40,12 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
     {
         parent::__construct($config);
 
-        //Reset the stack
-        $this->_stack = array();
-
-        //Intercept template exception
-        $this->getObject('exception.handler')->addExceptionCallback(array($this, 'handleException'), true);
+        //Create the buffer if we are not using a file cache
+        if(!$this->isCache())
+        {
+            static::$__buffer = $this->getObject('filesystem.stream.factory')
+                ->createStream('kodekit-buffer://temp', 'w+b');
+        }
     }
 
     /**
@@ -58,7 +59,7 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
     {
         $config->append(array(
             'functions'           => array(
-                'import' => array($this, '_import'),
+                'import' => array($this, 'renderPartial'),
             ),
         ));
 
@@ -66,99 +67,52 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
     }
 
     /**
-     * Load a template by path
-     *
-     * @param   string  $url      The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException         If the template could not be loaded
-     * @throws \RuntimeException         If the template could not be compiled
-     * @throws \RuntimeException         If the url cannot be fully qualified
-     * @return TemplateEngineKodekit
-     */
-    public function loadFile($url)
-    {
-        //Locate the template
-        $file = $this->_locate($url);
-
-        if(!$cache_file = $this->isCached($file))
-        {
-            //Load the template
-            $content = file_get_contents($file);
-
-            if($content === false) {
-                throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
-            }
-
-            //Compile the template
-            $content = $this->_compile($content);
-            if($content === false) {
-                throw new \RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
-            }
-
-            $this->_source = $this->cache($file, $content);
-        }
-        else $this->_source = $cache_file;
-
-        return $this;
-    }
-
-    /**
-     * Set the template source from a string
-     *
-     * @param  string  $source The template source
-     * @throws \RuntimeException If the template could not be compiled
-     * @return TemplateEngineKodekit
-     */
-    public function loadString($source)
-    {
-        $name = crc32($source);
-
-        if(!$file = $this->isCached($name))
-        {
-            //Compile the template
-            $source = $this->_compile($source);
-
-            if($source === false) {
-                throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
-            }
-
-            $file = $this->cache($name, $source);
-        }
-
-        $this->_source = $file;
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => '', 'file' => $file));
-
-        return $this;
-    }
-
-    /**
      * Render a template
      *
-     * @param   array   $data   The data to pass to the template
-     * @throws \RuntimeException If the template could not be rendered
+     * @param   string  $source   A fully qualified template url or content string
+     * @param   array   $data     An associative array of data to be extracted in local template scope
+     * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException         If a partial template url could not be fully qualified
+     * @throws \RuntimeException         If the template could not be loaded
+     * @throws \RuntimeException         If the template could not be compiled
+
      * @return string The rendered template source
      */
-    public function render(array $data = array())
+    public function render($source, array $data = array())
     {
-        //Set the data
-        $this->_data = $data;
+        $source = parent::render($source, $data);
 
-        //Evaluate the template
-        $content = $this->_evaluate();
+        //Load the template
+        if($this->getObject('filter.path')->validate($source))
+        {
+            $source_file = $this->locateSource($source);
 
-        if ($content === false) {
-            throw new \RuntimeException(sprintf('The template "%s" cannot be evaluated.', $this->_source));
+            if(!$cache_file = $this->isCached($source_file))
+            {
+                $source     = $this->loadSource($source_file);
+                $source     = $this->compileSource($source);
+                $cache_file = $this->cacheSource($source_file, $source);
+            }
+        }
+        else
+        {
+            $name        = crc32($source);
+            $source_file = '';
+
+            if(!$cache_file = $this->isCached($name))
+            {
+                $source     = $this->compileSource($source);
+                $cache_file = $this->cacheSource($name, $source);
+            }
         }
 
+        //Evaluate the template
+        $result = $this->evaluateSource($cache_file);
+
         //Render the debug information
-        $content = $this->_debug($content);
+        $result = $this->renderDebug($result);
 
-        //Remove the template from the stack
-        array_pop($this->_stack);
-
-        return $content;
+        return $result;
     }
 
     /**
@@ -173,99 +127,15 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
      * @throws \RuntimeException If template cannot be cached
      * @return string The cached template file path
      */
-    public function cache($name, $source)
+    public function cacheSource($name, $source)
     {
-        if(!$file = parent::cache($name, $source))
+        if(!$file = parent::cacheSource($name, $source))
         {
-            $this->_buffer = $this->getObject('filesystem.stream.factory')->createStream('kodekit-buffer://temp', 'w+b');
-            $this->_buffer->truncate(0);
-            $this->_buffer->write($source);
+            static::$__buffer->truncate(0);
+            static::$__buffer->write($source);
 
-            $file = $this->_buffer->getPath();
+            $file = static::$__buffer->getPath();
         }
-
-        return $file;
-    }
-
-    /**
-     * Handle template exceptions
-     *
-     * If an ErrorException is thrown create a new exception and set the file location to the real template file.
-     *
-     * @param  \Exception  $exception
-     * @return void
-     */
-    public function handleException(\Exception &$exception)
-    {
-        if($template = end($this->_stack))
-        {
-            if($this->_source == $exception->getFile())
-            {
-                //Prevents any partial templates from leaking.
-                ob_get_clean();
-
-                //Re-create the exception and set the real file path
-                if($exception instanceof \ErrorException)
-                {
-                    $class = get_class($exception);
-
-                    $exception = new $class(
-                        $exception->getMessage(),
-                        $exception->getCode(),
-                        $exception->getSeverity(),
-                        $template['file'],
-                        $exception->getLine(),
-                        $exception
-                    );
-                }
-            }
-        }
-    }
-
-    /**
-     * Locate the template
-     *
-     * @param  string $url The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException         If the url cannot be fully qualified
-     * @return string   The template real path
-     */
-    protected function _locate($url)
-    {
-        //Qualify relative template url
-        if(!parse_url($url, PHP_URL_SCHEME))
-        {
-            if(!$template = end($this->_stack)) {
-                throw new \RuntimeException('Cannot qualify partial template url');
-            }
-
-            $basepath = dirname($template['url']);
-
-            //Resolve relative path
-            if($path = trim('.', dirname($url)))
-            {
-                $count = 0;
-                $total = count(explode('/', $path));
-
-                while ($count++ < $total) {
-                    $basepath = dirname($basepath);
-                }
-
-                $basename = $url;
-            }
-            else $basename = basename($url);
-
-            $url = $basepath. '/' .$basename;
-        }
-
-        //Locate the template
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-        if (!$file = $locator->locate($url)) {
-            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
-        }
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => $url, 'file' => $file));
 
         return $file;
     }
@@ -280,7 +150,7 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
      * @throws TemplateExceptionSyntaxError
      * @return string The compiled template content
      */
-    protected function _compile($source)
+    public function compileSource($source)
     {
         //Convert PHP tags
         if (!ini_get('short_open_tag'))
@@ -295,6 +165,9 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
             $replace = "<?php \$1";
             $source = preg_replace($find, $replace, $source);
         }
+
+        //Get the template functions
+        $functions = $this->getFunctions();
 
         //Compile to valid PHP
         $tokens   = token_get_all($source);
@@ -311,7 +184,7 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
                     //Proxy registered functions through __call()
                     case T_STRING :
 
-                        if(isset($this->_functions[$content]) )
+                        if(isset($functions[$content]) )
                         {
                             $prev = (array) $tokens[$i-1];
                             $next = (array) $tokens[$i+1];
@@ -349,41 +222,19 @@ class TemplateEngineKodekit extends TemplateEngineAbstract
     /**
      * Evaluate the template using a simple sandbox
      *
+     * @param  string $path The template path
+     * @throws \RuntimeException If the template could not be evaluated
      * @return string The evaluated template content
      */
-    protected function _evaluate()
+    public function evaluateSource($path)
     {
         ob_start();
 
         extract($this->getData(), EXTR_SKIP);
-        include $this->_source;
-        $content = ob_get_clean();
-
-        return $content;
-    }
-
-    /**
-     * Import a partial template
-     *
-     * If importing a partial merges the data passed in with the data from the call to render. If importing a different
-     * template type jump out of engine scope back to the template.
-     *
-     * @param   string  $url      The template url
-     * @param   array   $data     The data to pass to the template
-     * @return  string The rendered template content
-     */
-    protected function _import($url, array $data = array())
-    {
-        //Locate the template
-        $file   = $this->_locate($url);
-        $type   = pathinfo($file, PATHINFO_EXTENSION);
-
-        if(in_array($type, $this->getFileTypes()) && $this->loadFile($url))
-        {
-            $data   = array_merge((array) $this->getData(), $data);
-            $result = $this->render($data);
+        include $path;
+        if(!$result = ob_get_clean()) {
+            throw new \RuntimeException(sprintf('The template "%s" cannot be evaluated.', $path));
         }
-        else  $result = $this->getTemplate()->loadFile($file)->render($data);
 
         return $result;
     }

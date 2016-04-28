@@ -20,10 +20,10 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     /**
      * Render the action bar
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function render($config = array())
+    public function render($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -44,9 +44,9 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
                 $name = $command->getName();
 
                 if(method_exists($this, $name)) {
-                    $html .= $this->$name(ObjectConfig::unbox($command));
+                    $html .= $this->$name(ObjectConfig::unbox($command), $template);
                 } else {
-                    $html .= $this->command(ObjectConfig::unbox($command));
+                    $html .= $this->command(ObjectConfig::unbox($command), $template);
                 }
             }
             $html .= '</div>';
@@ -59,10 +59,10 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     /**
      * Render a action bar command
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function command($config = array())
+    public function command($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -100,7 +100,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
 
         //Create the href
         if(!empty($config->href)) {
-            $config->attribs['href'] = $this->getTemplate()->route($config->href);
+            $config->attribs['href'] = $template->route($config->href);
         }
 
         $html  = '<a '.$this->buildAttributes($config->attribs).'>';
@@ -113,7 +113,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     /**
      * Render a separator
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
     public function separator($config = array())
@@ -131,13 +131,13 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     /**
      * Render a dialog button
      *
-     * @param 	array 	$config An optional array with configuration options
+     * @param array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function dialog($config = array())
+    public function dialog($config = array(), TemplateInterface $template)
     {
-        $html  = $this->getTemplate()->helper('behavior.modal');
-        $html .= $this->command($config);
+        $html  = $this->createHelper('behavior')->modal();
+        $html .= $this->command($config, $template);
 
         return $html;
     }

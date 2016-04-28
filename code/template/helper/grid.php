@@ -21,21 +21,21 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
      * Render a radio field
      *
      * @param   array   $config An optional array with configuration options
-     * @return	string  Html
+     * @return  string  Html
      */
     public function radio($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'entity'  		=> null,
+            'entity'  => null,
             'attribs' => array()
         ));
 
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
-            $html = $this->getTemplate()->helper('behavior.tooltip');
+            $html = $this->createHelper('behavior')->tooltip();
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->helper('grid.lock_message', array('entity' => $config->entity)).'">
+                           title="'.$this->creaateHelper('grid')->lock_message(array('entity' => $config->entity)).'">
                     </span>';
         }
         else
@@ -54,14 +54,14 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
     /**
      * Render a checkbox field
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param array $config An optional array with configuration options
+     * @return  string  Html
      */
     public function checkbox($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'entity'  		=> null,
+            'entity'  => null,
             'attribs' => array()
         ))->append(array(
             'column' => $config->entity->getIdentityKey()
@@ -69,9 +69,9 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
-            $html = $this->getTemplate()->helper('behavior.tooltip');
+            $html = $this->createHelper('behavior')->tooltip();
             $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->getTemplate()->helper('grid.lock_message', array('entity' => $config->entity)).'">
+                           title="'.$this->createHelper('grid')->lock_message(array('entity' => $config->entity)).'">
                     </span>';
         }
         else
@@ -107,7 +107,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
         if ($config->submit_on_clear)
         {
-            $html .= $this->getTemplate()->helper('behavior.jquery');
+            $html .= $this->createHelper('behavior')->jquery();
             $html .= '
             <script>
             (function() {
@@ -173,7 +173,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function sort($config = array())
+    public function sort($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -202,7 +202,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             $class = 'class="-koowa-'.$direction.'"';
         }
 
-        $url = clone $this->getTemplate()->url();
+        $url = $template->route();
 
         $query              = $url->getQuery(1);
         $query['sort']      = $config->column;
@@ -231,8 +231,8 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
     /**
      * Render an enable field
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function enable($config = array())
     {
@@ -263,7 +263,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
         $html = '<span class="koowa-tooltip koowa_icon--%s" %s><i>%s</i></span>';
         $html = sprintf($html, $config->icon, $attribs, $config->alt);
-        $html .= $this->getTemplate()->helper('behavior.tooltip');
+        $html .= $this->createHelper('behavior')->tooltip();
 
         return $html;
     }
@@ -271,8 +271,8 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
     /**
      * Render a publish field
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      */
     public function publish($config = array())
     {

@@ -24,7 +24,7 @@ class TemplateEngineMarkdown extends TemplateEngineAbstract
      *
      * @var callable
      */
-    protected $_compiler;
+    private static $__compiler;
 
     /**
      * The engine file types
@@ -65,97 +65,69 @@ class TemplateEngineMarkdown extends TemplateEngineAbstract
     }
 
     /**
-     * Load a template by url
-     *
-     * @param   string  $url The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException         If the template could not be loaded
-     * @throws \RuntimeException         If the template could not be compiled
-     * @return TemplateEngineMarkdown
-     */
-    public function loadFile($url)
-    {
-        if(!$this->_source)
-        {
-            $locator = $this->getObject('template.locator.factory')->createLocator($url);
-
-            //Locate the template
-            if (!$file = $locator->locate($url)) {
-                throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
-            }
-
-            //Push the template on the stack
-            array_push($this->_stack, array('url' => $url, 'file' => $file));
-
-            if(!$cache_file = $this->isCached($file))
-            {
-                //Load the template
-                if(!$source = file_get_contents($file)) {
-                    throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
-                }
-
-                //Compile the template
-                if(!$source = $this->_compile($source)) {
-                    throw new \RuntimeException(sprintf('The template "%s" cannot be compiled.', $file));
-                }
-
-                $this->cache($file, $source);
-                $this->_source = $source;
-            }
-            else  $this->_source = include $cache_file;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Load the template from a string
-     *
-     * @param  string  $source  The template source
-     * @throws \RuntimeException If the template could not be compiled
-     * @return TemplateEngineMarkdown
-     */
-    public function loadString($source)
-    {
-        $file = crc32($source);
-
-        //Push the template on the stack
-        array_push($this->_stack, array('url' => '', 'file' => $file));
-
-        if(!$this->_source = $this->isCached($file))
-        {
-            //Compile the template
-            if(!$source = $this->_compile($source)) {
-                throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
-            }
-
-            $this->cache($file, $source);
-            $this->_source = $source;
-        }
-
-        return $this;
-    }
-
-    /**
      * Render a template
      *
-     * @param   array   $data   The data to pass to the template
-     * @throws \RuntimeException If the template could not be rendered
+     * @param   string  $source     The template url or content
+     * @param   array   $data       An associative array of data to be extracted in local template scope
      * @return string The rendered template source
      */
-    public function render(array $data = array())
+    public function render($source, array $data = array())
     {
-        $content = parent::render($data);
+        parent::render($source, $data);
+
+        //Load the template
+        if($this->getObject('filter.path')->validate($source))
+        {
+            $source_file = $this->locateSource($source);
+
+            if(!$cache_file = $this->isCached($source_file))
+            {
+                $source     = $this->loadSource($source_file);
+                $source     = $this->compileSource($source);
+                $cache_file = $this->cacheSource($source_file, $source);
+            }
+        }
+        else
+        {
+            $name        = crc32($source);
+            $source_file = '';
+
+            if(!$cache_file = $this->isCached($name))
+            {
+                $source     = $this->compileSource($source);
+                $cache_file = $this->cacheSource($name, $source);
+            }
+        }
+
+        //Include the template
+        $result = include $cache_file;
 
         //Render the debug information
-        $content = $this->_debug($content);
-
-        //Remove the template from the stack
-        array_pop($this->_stack);
-
-        return $content;
+        return  $this->renderDebug($result);
     }
 
+    /**
+     * Compile the template
+     *
+     * @param   string  $source The template source to compile
+     * @throws \RuntimeException If the template could not be compiled
+     * @return string|false The compiled template content or FALSE on failure.
+     */
+    public function compileSource($source)
+    {
+        $result = false;
+
+        $compiler = $this->getCompiler();
+        if(is_callable($compiler)) {
+            $result = call_user_func($compiler, $source);
+        }
+
+        if(!is_string($result)) {
+            throw new \RuntimeException(sprintf('The template content cannot be compiled.'));
+        }
+
+        return $result;
+    }
 
     /**
      * Get callback for compiling markdown
@@ -164,7 +136,7 @@ class TemplateEngineMarkdown extends TemplateEngineAbstract
      */
     public function getCompiler()
     {
-        return $this->_compiler;
+        return static::$__compiler;
     }
 
     /**
@@ -175,23 +147,7 @@ class TemplateEngineMarkdown extends TemplateEngineAbstract
      */
     public function setCompiler(callable $compiler)
     {
-        $this->_compiler = $compiler;
+        static::$__compiler = $compiler;
         return $this;
-    }
-
-    /**
-     * Compile the template
-     *
-     * @param   string  $source The template source to compile
-     * @return string|false The compiled template content or FALSE on failure.
-     */
-    protected function _compile($source)
-    {
-        $result = false;
-        if(is_callable($this->_compiler)) {
-            $result = call_user_func($this->_compiler, $source);
-        }
-
-        return $result;
     }
 }

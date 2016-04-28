@@ -25,6 +25,34 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
     private $__engines;
 
     /**
+     * Debug
+     *
+     * @var boolean
+     */
+    protected $_debug;
+
+    /**
+     * Caching enabled
+     *
+     * @var bool
+     */
+    protected $_cache;
+
+    /**
+     * Cache path
+     *
+     * @var string
+     */
+    protected $_cache_path;
+
+    /**
+     * Cache reload
+     *
+     * @var bool
+     */
+    protected $_cache_reload;
+
+    /**
      * Constructor.
      *
      * @param ObjectConfig $config Configuration options
@@ -32,6 +60,12 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
     public function __construct( ObjectConfig $config)
     {
         parent::__construct($config);
+
+        //Set debug
+        $this->setDebug($config->debug);
+
+        //Set cache
+        $this->setCache($config->cache, $config->cache_path, $config->cache_reload);
 
         //Register the engines
         $engines = ObjectConfig::unbox($config->engines);
@@ -57,12 +91,14 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'debug'      => \Kodekit::getInstance()->isDebug(),
-            'cache'      => \Kodekit::getInstance()->isCache(),
-            'cache_path' => '',
-            'engines'    => array(
+            'debug'        => \Kodekit::getInstance()->isDebug(),
+            'cache'        => \Kodekit::getInstance()->isCache(),
+            'cache_path'   => '',
+            'engines'      => array(
                 'lib:template.engine.kodekit'
             ),
+        ))->append(array(
+            'cache_reload' => $config->debug,
         ));
     }
     /**
@@ -73,7 +109,6 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
      *
      * @param  string $url    The template url or engine type
      * @param  array $config  An optional associative array of configuration options
-     *
      * @throws \InvalidArgumentException If the path is not valid
      * @throws \RuntimeException         If the engine isn't registered
      * @throws \UnexpectedValueException If the engine object doesn't implement the TemplateEngineInterface
@@ -141,9 +176,10 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
                 if(!$this->isRegistered($type))
                 {
                     $identifier->getConfig()->merge($config)->append(array(
-                        'debug'      => $this->getConfig()->debug,
-                        'cache'      => $this->getConfig()->cache,
-                        'cache_path' => $this->getConfig()->cache_path
+                        'debug'         => $this->getConfig()->debug,
+                        'cache'         => $this->getConfig()->cache,
+                        'cache_path'    => $this->getConfig()->cache_path,
+                        'cache_refresh' => $this->getConfig()->cache_refresh
                     ));
 
                     $this->__engines[$type] = $identifier;
@@ -254,5 +290,56 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
 
         $result = in_array($types, $this->getFileTypes());
         return $result;
+    }
+
+    /**
+     * Enable or disable engine debugging
+     *
+     * If debug is enabled the engine will throw an exception if caching fails.
+     *
+     * @param bool $debug True or false.
+     * @return TemplateEngineInterface
+     */
+    public function setDebug($debug)
+    {
+        $this->_debug = (bool) $debug;
+        return $this;
+    }
+
+    /**
+     * Check if the engine is running in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->_debug;
+    }
+
+    /**
+     * Enable or disable the cache
+     *
+     * @param bool   $cache True or false.
+     * @param string $path  The cache path
+     * @param bool   $reload
+     * @return TemplateEngineFactory
+     */
+    public function setCache($cache, $path, $reload = true)
+    {
+        $this->_cache        = (bool) $cache;
+        $this->_cache_path   = $path;
+        $this->_caceh_reload = $reload;
+
+        return $this;
+    }
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public function isCache()
+    {
+        return $this->_cache;
     }
 }

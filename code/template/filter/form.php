@@ -71,31 +71,30 @@ class TemplateFilterForm extends TemplateFilterAbstract
     /**
      * Handle form replacements
      *
-     * @param string
-     * @return $this
+     * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object
+     * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
-        $this->_addAction($text);
+        $this->_addAction($text, $template->route());
         $this->_addToken($text);
         $this->_addQueryParameters($text);
-
-        return $this;
     }
 
     /**
      * Add the action if left empty
      *
      * @param string $text Template text
-     * @return $this
+     * @param string The action url
+
+     * @return TemplateFilterForm
      */
-    protected function _addAction(&$text)
+    protected function _addAction(&$text, $action)
     {
         // All: Add the action if left empty
         if (preg_match_all('#<\s*form.*?action=""#sim', $text, $matches, PREG_SET_ORDER))
         {
-            $action = $this->getTemplate()->route();
-
             foreach ($matches as $match)
             {
                 $str = str_replace('action=""', 'action="' . $action . '"', $match[0]);
@@ -110,7 +109,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
      * Add the token to the form
      *
      * @param string $text Template text
-     * @return $this
+     * @return TemplateFilterForm
      */
     protected function _addToken(&$text)
     {
@@ -136,7 +135,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
      * Add query parameters as hidden fields to the GET forms
      *
      * @param string $text Template text
-     * @return $this
+     * @return TemplateFilterForm
      */
     protected function _addQueryParameters(&$text)
     {

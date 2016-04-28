@@ -28,11 +28,11 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead. If no 'text'  option is specified the
      * 'value' option will be used instead.
      *
-     * @param 	array 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array   $config An optional array with configuration options
+     * @return  string  Html
      * @see __call()
      */
-    public function render($config = array())
+    public function render($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfig($config);
         $config->append(array(
@@ -62,9 +62,9 @@ class TemplateHelperListbox extends TemplateHelperSelect
         }
 
         if($config->autocomplete) {
-            $result = $this->__autocomplete($config);
+            $result = $this->__autocomplete($config, $template);
         } else {
-            $result = $this->__listbox($config);
+            $result = $this->__listbox($config, $template);
         }
 
         return $result;
@@ -122,7 +122,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 ));
             }
 
-            $html .= $this->getTemplate()->createHelper('behavior')->select2($config->select2_options);
+            $html .= $this->createHelper('behavior')->select2($config->select2_options);
         }
 
         $html .= parent::optionlist($config);
@@ -247,11 +247,11 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * If no 'value' option is specified the 'name' option will be used instead.
      * If no 'label' option is specified the 'value' option will be used instead.
      *
-     * @param 	array|ObjectConfig 	$config An optional array with configuration options
-     * @return	string	Html
+     * @param   array|ObjectConfig  $config An optional array with configuration options
+     * @return  string  Html
      * @see __call()
      */
-    private function __listbox($config = array())
+    private function __listbox($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -314,9 +314,9 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * Renders a listbox with autocomplete behavior
      *
      * @param  array|ObjectConfig    $config
-     * @return string	The html output
+     * @return string   The html output
      */
-    private function __autocomplete($config = array())
+    private function __autocomplete($config = array(), TemplateInterface $template)
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -352,12 +352,12 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 $parts = array_merge($parts, ObjectConfig::unbox($config->filter));
             }
 
-            $config->url = $this->getTemplate()->route($parts, false, false);
+            $config->url = $template->route($parts, false, false);
         }
 
         $html = '';
 
-        $html .= $this->getTemplate()->createHelper('behavior')->autocomplete($config);
+        $html .= $this->createHelper('behavior')->autocomplete($config);
 
         $config->attribs->name = $config->name;
 
@@ -417,7 +417,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 $config['name']  = StringInflector::singularize(strtolower($method));
             }
 
-            return $this->render($config);
+            return $this->render($config, $arguments[1]);
         }
 
         return parent::__call($method, $arguments);

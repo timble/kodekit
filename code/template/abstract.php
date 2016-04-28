@@ -22,28 +22,14 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
      *
      * @var array
      */
-    protected $_functions;
+    private $__functions;
 
     /**
      * The template data
      *
      * @var array
      */
-    protected $_data;
-
-    /**
-     * The template source
-     *
-     * @var string
-     */
-    protected $_source;
-
-    /**
-     * Debug
-     *
-     * @var boolean
-     */
-    protected $_debug;
+    private $__data;
 
     /**
      * Constructor
@@ -57,13 +43,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
         parent::__construct($config);
 
         //Reset the data
-        $this->_data = array();
-
-        //Reset the content
-        $this->_source = null;
-
-        //Set debug
-        $this->_debug  = $config->debug;
+        $this->__data = array();
 
         //Register the functions
         $functions = ObjectConfig::unbox($config->functions);
@@ -84,7 +64,6 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'debug'     => \Kodekit::getInstance()->isDebug(),
             'functions' => array()
         ));
 
@@ -92,55 +71,17 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
     }
 
     /**
-     * Load a template by path
+     * Render a template
      *
-     * @param   string  $url      The template url
-     * @throws \InvalidArgumentException If the template could not be located
-     * @throws \RuntimeException         If the template could not be loaded
-     * @return TemplateAbstract
-     */
-    public function loadFile($url)
-    {
-        //Locate the template
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-
-        if (!$file = $locator->locate($url)) {
-            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
-        }
-
-        //Load the template
-        if(!$source = file_get_contents($file)) {
-            throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $file));
-        }
-
-        $this->_source = $source;
-
-        return $this;
-    }
-
-    /**
-     * Set the template source from a string
-     *
-     * @param  string   $source The template content
-     * @return $this
-     */
-    public function loadString($source)
-    {
-        $this->_source = $source;
-        return $this;
-    }
-
-    /**
-     * Render the template
-     *
+     * @param   string  $sourece The template url or content
      * @param   array   $data     An associative array of data to be extracted in local template scope
-     * @return string The rendered template
+     * @return  string  The rendered template source
      */
-    public function render(array $data = array())
+    public function render($source, array $data = array())
     {
-        $this->_data = $data;
+        $this->__data = $data;
 
-        return $this->_source;
+        return $source;
     }
 
     /**
@@ -152,7 +93,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
      */
     public function get($property, $default = null)
     {
-        return isset($this->_data[$property]) ? $this->_data[$property] : $default;
+        return isset($this->__data[$property]) ? $this->__data[$property] : $default;
     }
 
     /**
@@ -162,7 +103,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
      */
     public function getData()
     {
-        return $this->_data;
+        return $this->__data;
     }
 
     /**
@@ -182,7 +123,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
             );
         }
 
-        $this->_functions[$name] = $function;
+        $this->__functions[$name] = $function;
         return $this;
     }
 
@@ -194,33 +135,21 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
      */
     public function unregisterFunction($name)
     {
-        if(isset($this->_functions[$name])) {
-            unset($this->_functions[$name]);
+        if(isset($this->__functions[$name])) {
+            unset($this->__functions[$name]);
         }
 
         return $this;
     }
 
     /**
-     * Enable or disable debug
+     * Get the registered functions
      *
-     * @param bool $debug True or false.
-     * @return TemplateAbstract
+     * @return array
      */
-    public function setDebug($debug)
+    public function getFunctions()
     {
-        $this->_debug = (bool) $debug;
-        return $this;
-    }
-
-    /**
-     * Check if the template is running in debug mode
-     *
-     * @return bool
-     */
-    public function isDebug()
-    {
-        return $this->_debug;
+        return $this->__functions;
     }
 
     /**
@@ -237,8 +166,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
     /**
      * Call template functions
      *
-     * This method will not throw a \BadMethodCallException as it"s parent does. Instead if the method is not callable
-     * it will return null
+     * This method will not throw a \BadMethodCallException. Instead if the method is not callable it will return null
      *
      * @param  string $method    The function name
      * @param  array  $arguments The function arguments
@@ -246,7 +174,9 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
      */
     public function __call($method, $arguments)
     {
-        if(!isset($this->_functions[$method]))
+        $functions = $this->getFunctions();
+
+        if(!isset($functions[$method]))
         {
             if (is_callable(array($this, $method))) {
                 $result = parent::__call($method, $arguments);
@@ -254,7 +184,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
                 $result = null;
             }
         }
-        else $result = call_user_func_array($this->_functions[$method], $arguments);
+        else $result = call_user_func_array($functions[$method], $arguments);
 
         return $result;
     }

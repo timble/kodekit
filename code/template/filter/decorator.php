@@ -65,9 +65,10 @@ class TemplateFilterDecorator extends TemplateFilterAbstract
      * Replace <ktml:content> with the view content
      *
      * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object
      * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
         $matches = array();
 
@@ -77,7 +78,7 @@ class TemplateFilterDecorator extends TemplateFilterAbstract
             {
                 $attributes = array_merge($this->_attributes,  $this->parseAttributes($matches[1][$key]));
 
-                $content = $this->getTemplate()->content();
+                $content = $template->content();
                 if(!empty($content))
                 {
                     //If attributes are set but no decorator set it to <div>

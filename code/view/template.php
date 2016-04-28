@@ -97,9 +97,8 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
 
         //Render the template
         $this->_content = $this->getTemplate()
-            ->loadFile($path)
             ->setParameters($context->parameters)
-            ->render($data);
+            ->render($path, $data);
 
         return parent::_actionRender($context);
     }

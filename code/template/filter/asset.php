@@ -94,9 +94,10 @@ class TemplateFilterAsset extends TemplateFilterAbstract
      * Convert the schemes to their real paths
      *
      * @param string $text  The text to parse
+     * @param TemplateInterface $template A template object
      * @return void
      */
-    public function filter(&$text)
+    public function filter(&$text, TemplateInterface $template)
     {
         if(!empty($this->_schemes))
         {

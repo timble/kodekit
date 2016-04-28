@@ -25,20 +25,13 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     protected static $_file_types = array();
 
     /**
-     * Template object
-     *
-     * @var	TemplateInterface
-     */
-    private $__template;
-
-    /**
      * Template stack
      *
-     * Used to track recursive load calls during template evaluation
+     * Used to track recursive template loading
      *
      * @var array
      */
-    protected $_stack;
+    private $__stack;
 
     /**
      * Debug
@@ -62,6 +55,13 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     protected $_cache_path;
 
     /**
+     * Cache reload
+     *
+     * @var bool
+     */
+    protected $_cache_reload;
+
+    /**
      * Constructor
      *
      * @param ObjectConfig $config   An optional ObjectConfig object with configuration options
@@ -70,18 +70,14 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     {
         parent::__construct($config);
 
-        $this->__template = $config->template;
-
         //Reset the stack
-        $this->_stack = array();
+        $this->__stack = array();
 
         //Set debug
-        $this->_debug = $config->debug;
+        $this->setDebug($config->debug);
 
-        //Set caching
-        $this->_cache        = $config->cache;
-        $this->_cache_path   = $config->cache_path;
-        $this->_cache_reload = $config->cache_reload;
+        //Set cache
+        $this->setCache($config->cache, $config->cache_path, $config->cache_reload);
     }
 
     /**
@@ -97,22 +93,164 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
             'debug'        => \Kodekit::getInstance()->isDebug(),
             'cache'        => \Kodekit::getInstance()->isCache(),
             'cache_path'   => '',
-            'cache_reload' => true,
-            'template'     => 'default',
             'functions'    => array(
                 'object'    => array($this, 'getObject'),
                 'translate' => array($this->getObject('translator'), 'translate'),
                 'json'      => 'json_encode',
                 'format'    => 'sprintf',
                 'replace'   => 'strtr',
-            ),
+            )
+        ))->append(array(
+            'cache_reload' => $config->debug,
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Cache the template source in a file
+     * Render a template
+     *
+     * @param   string  $source    The template url or content
+     * @param   array   $data       An associative array of data to be extracted in local template scope
+     * @throws \RuntimeException If the template could not be loaded
+     * @return string The rendered template source
+     */
+    public function render($source, array $data = array())
+    {
+        parent::render($source, $data);
+
+        //Push the template on the stack
+        array_push($this->__stack, $source);
+
+        return $source;
+    }
+
+    /**
+     * Render a partial template
+     *
+     * This method merges the data passed in with the data from the parent template. If the partial template
+     * has different file type the method will try to allocate it by jumping out of the local template scope.
+     *
+     * @param   string  $url      The template url
+     * @param   array   $data     The data to pass to the template
+     * @throws \RuntimeException  If a partial template url could not be fully qualified
+     * @return  string The rendered template content
+     */
+    public function renderPartial($url, array $data = array())
+    {
+        //Qualify relative template url
+        if(!parse_url($url, PHP_URL_SCHEME))
+        {
+            if(!$template = end($this->__stack)) {
+                throw new \RuntimeException('Cannot qualify partial template url');
+            }
+
+            $basepath = dirname($template);
+
+            //Resolve relative path
+            if($path = trim('.', dirname($url)))
+            {
+                $count = 0;
+                $total = count(explode('/', $path));
+
+                while ($count++ < $total) {
+                    $basepath = dirname($basepath);
+                }
+
+                $basename = $url;
+            }
+            else $basename = basename($url);
+
+            $url = $basepath. '/' .$basename;
+        }
+
+        $type = pathinfo( $this->locateSource($url), PATHINFO_EXTENSION);
+        $data = array_merge((array) $this->getData(), $data);
+
+        //If the partial requires a different engine create it and delegate
+        if(!in_array($type, $this->getFileTypes()))
+        {
+            $result = $this->getObject('template.engine.factory')
+                ->createEngine($type, array('functions' => $this->getFunctions()))
+                ->render($url, $data);
+        }
+        else $result = $this->render($url, $data);
+
+        //Remove the template from the stack
+        array_pop($this->__stack);
+
+        return $result;
+    }
+
+    /**
+     * Render debug information
+     *
+     * @param  string  $source  The template source
+     * @return string The rendered template source
+     */
+    public function renderDebug($source)
+    {
+        $template = end($this->__stack);
+
+        if($this->getObject('filter.path')->validate($template)) {
+            $path = $this->locateSource($template);
+        } else {
+            $path = '';
+        }
+
+        //Render debug comments
+        if($this->isDebug())
+        {
+            $type  = $this->getIdentifier()->getName();
+            $path = str_replace(rtrim(\Kodekit::getInstance()->getRootPath(), '/').'/', '', $path);
+
+            $format  = PHP_EOL.'<!--BEGIN '.$type.':render '.$path.' -->'.PHP_EOL;
+            $format .= '%s';
+            $format .= PHP_EOL.'<!--END '.$type.':render '.$path.' -->'.PHP_EOL;
+
+            $source = sprintf($format, trim($source));
+        }
+
+        return $source;
+    }
+
+    /**
+     * Locate a template file, given it's url.
+     *
+     * @param   string  $url The template url
+     * @throws \InvalidArgumentException If the template could not be located
+     * @throws \RuntimeException If a partial template url could not be fully qualified
+     * @return string   The template real path
+     */
+    public function locateSource($url)
+    {
+        $locator = $this->getObject('template.locator.factory')->createLocator($url);
+
+        if (!$file = $locator->locate($url)) {
+            throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
+        }
+
+        return $file;
+    }
+
+    /**
+     * Gets the source code of a template, given its url
+     *
+     * @param  string $path        The path of the template to load
+     * @throws \RuntimeException   If the template could not be loaded
+     * @return string The template source code
+     */
+    public function loadSource($path)
+    {
+        if(!$source = file_get_contents($path)) {
+            throw new \RuntimeException(sprintf('The template "%s" cannot be loaded.', $path));
+        }
+
+        return $source;
+    }
+
+    /**
+     * Cache the template source to a file
      *
      * Write the template source to a file cache. Requires cache to be enabled. This method will throw exceptions if
      * caching fails and debug is enabled. If debug is disabled FALSE will be returned.
@@ -124,7 +262,7 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
      * @throws \RuntimeException If template cannot be written to the cache
      * @return string|false The cached file path. FALSE if the file cannot be stored in the cache
      */
-    public function cache($name, $source)
+    public function cacheSource($name, $source)
     {
         if($this->_cache)
         {
@@ -180,36 +318,6 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     }
 
     /**
-     * Gets the template object
-     *
-     * @return  TemplateInterface	The template object
-     */
-    public function getTemplate()
-    {
-        if(!$this->__template instanceof TemplateInterface)
-        {
-            if(empty($this->__template) || (is_string($this->__template) && strpos($this->__template, '.') === false) )
-            {
-                $identifier         = $this->getIdentifier()->toArray();
-                $identifier['path'] = array('template');
-                $identifier['name'] = $this->__template;
-            }
-            else $identifier = $this->getIdentifier($this->__template);
-
-            $this->__template = $this->getObject($identifier);
-
-            if(!$this->__template instanceof TemplateInterface)
-            {
-                throw new \UnexpectedValueException(
-                    'Template: '.get_class($this->__template).' does not implement TemplateInterface'
-                );
-            }
-        }
-
-        return $this->__template;
-    }
-
-    /**
      * Enable or disable debug
      *
      * @param bool $debug True or false.
@@ -229,6 +337,33 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     public function isDebug()
     {
         return $this->_debug;
+    }
+
+    /**
+     * Enable or disable the cache
+     *
+     * @param bool   $cache True or false.
+     * @param string $path  The cache path
+     * @param bool   $reload
+     * @return TemplateEngineAbstract
+     */
+    public function setCache($cache, $path, $reload = true)
+    {
+        $this->_cache        = (bool) $cache;
+        $this->_cache_path   = $path;
+        $this->_caceh_reload = $reload;
+
+        return $this;
+    }
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public function isCache()
+    {
+        return $this->_cache;
     }
 
     /**
@@ -256,30 +391,5 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
         }
 
         return $result;
-    }
-
-    /**
-     * Render debug information
-     *
-     * @param  string  $source  The template source
-     * @return string The rendered template source
-     */
-    public function _debug($source)
-    {
-        //Render debug comments
-        if($this->isDebug())
-        {
-            $template = end($this->_stack);
-            $path     = str_replace(rtrim(\Kodekit::getInstance()->getRootPath(), '/').'/', '', $template['file']);
-            $type     = $this->getIdentifier()->getName();
-
-            $format  = PHP_EOL.'<!--BEGIN '.$type.':render '.$path.' -->'.PHP_EOL;
-            $format .= '%s';
-            $format .= PHP_EOL.'<!--END '.$type.':render '.$path.' -->'.PHP_EOL;
-
-            $source = sprintf($format, trim($source));
-        }
-
-        return $source;
     }
 }

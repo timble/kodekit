@@ -100,9 +100,8 @@ class ViewBehaviorDecoratable extends ViewBehaviorAbstract
             $data = $context->data->toArray();
 
             $context->result = $this->getTemplate()
-                ->loadFile($layout)
                 ->setParameters($context->parameters)
-                ->render($data);
+                ->render($layout, $data);
         }
     }
 }
