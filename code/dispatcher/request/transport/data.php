@@ -20,13 +20,12 @@ namespace Kodekit\Library;
 class DispatcherRequestTransportData extends DispatcherRequestTransportAbstract
 {
     /**
-     * Receive request
+     * Set the request data
      *
      * @param DispatcherRequestInterface $request
      */
     public function receive(DispatcherRequestInterface $request)
     {
-        //Set request data
         if($request->getContentType() == 'application/x-www-form-urlencoded')
         {
             if (in_array($request->getMethod(), array('PUT', 'DELETE', 'PATCH')))
@@ -35,7 +34,8 @@ class DispatcherRequestTransportData extends DispatcherRequestTransportAbstract
                 $request->getData()->add($data);
             }
         }
-        elseif(in_array($request->getContentType(), array('application/json', 'application/x-json', 'application/vnd.api+json')))
+
+        if(in_array($request->getContentType(), array('application/json', 'application/x-json', 'application/vnd.api+json')))
         {
             if(in_array($request->getMethod(), array('POST', 'PUT', 'DELETE', 'PATCH')))
             {

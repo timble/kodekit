@@ -80,7 +80,7 @@ class ModelCompositeDecorator extends ObjectDecorator implements ModelInterface,
      *
      * This functions accepts either a know position or associative array of property/value pairs
      *
-     * @param 	string $needle The position or the key to search for
+     * @param  string $needle The position or the key to search for
      * @return ModelEntityInterface
      */
     public function find($needle)

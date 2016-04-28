@@ -176,10 +176,10 @@ interface DatabaseRowInterface extends \IteratorAggregate, \ArrayAccess, \Serial
      */
     public function isModified($property = null);
 
-	/**
-	 * Test the connected status of the row.
-	 *
-	 * @return	bool
-	 */
+    /**
+     * Test the connected status of the row.
+     *
+     * @return	bool
+     */
     public function isConnected();
 }

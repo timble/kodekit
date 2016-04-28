@@ -35,7 +35,7 @@ interface DatabaseRowsetInterface extends DatabaseRowInterface
      *
      * This functions accepts either a know position or associative array of key/value pairs
      *
-     * @param   string $needle The position or the key to search for
+     * @param  string $needle The position or the key to search for
      * @return DatabaseRowInterface
      */
     public function find($needle);
@@ -45,7 +45,7 @@ interface DatabaseRowsetInterface extends DatabaseRowInterface
      *
      * The row will be removed based on it's identity_column if set or otherwise by it's object handle.
      *
-     * @param  ObjectHandlable|DatabaseRowInterface $row
+     * @param  DatabaseRowInterface $row
      * @throws \InvalidArgumentException if the object doesn't implement DatabaseRowInterface
      * @return DatabaseRowsetAbstract
      */
@@ -54,7 +54,7 @@ interface DatabaseRowsetInterface extends DatabaseRowInterface
     /**
      * Checks if the collection contains a specific row
      *
-     * @param  ObjectHandlable|DatabaseRowInterface $row
+     * @param  DatabaseRowInterface $row
      * @throws \InvalidArgumentException if the object doesn't implement DatabaseRowInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
