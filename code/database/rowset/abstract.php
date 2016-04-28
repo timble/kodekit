@@ -15,8 +15,15 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Database\Rowset
  */
-abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowsetInterface
+abstract class DatabaseRowsetAbstract extends Object implements DatabaseRowsetInterface
 {
+    /**
+     * The rowset
+     *
+     * @var ObjectSet
+     */
+    private $__rowset;
+
     /**
      * Name of the identity column in the rowset
      *
@@ -55,6 +62,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
     {
         parent::__construct($config);
 
+        //Set the prototypable
         $this->_prototypable = $config->prototypable;
 
         //Set the table identifier
@@ -151,7 +159,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
         }
 
         //Insert the row into the rowset
-        parent::insert($row);
+        $this->__rowset->insert($row);
 
         return $this;
     }
@@ -161,7 +169,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
      *
      * The row will be removed based on it's identity_column if set or otherwise by it's object handle.
      *
-     * @param  ObjectHandlable|DatabaseRowInterface $row
+     * @param  DatabaseRowInterface $row
      * @throws \InvalidArgumentException if the object doesn't implement DatabaseRowInterface
      * @return DatabaseRowsetAbstract
      */
@@ -171,13 +179,13 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
             throw new \InvalidArgumentException('Row needs to implement DatabaseRowInterface');
         }
 
-        return parent::remove($row);
+        return $this->__rowset->remove($row);
     }
 
     /**
      * Checks if the collection contains a specific row
      *
-     * @param  ObjectHandlable|DatabaseRowInterface $row
+     * @param  DatabaseRowInterface $row
      * @throws \InvalidArgumentException if the object doesn't implement DatabaseRowInterface
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
@@ -187,7 +195,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
             throw new \InvalidArgumentException('Entity needs to implement ModelEntityInterface');
         }
 
-        return parent::contains($row);
+        return $this->__rowset->contains($row);
     }
 
     /**
@@ -239,25 +247,32 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
      */
     public function find($needle)
     {
-        $result = null;
-
-        if(is_array($needle))
+        //Filter the objects
+        $objects = $this->__rowset->filter(function($object) use ($needle)
         {
-            $result = clone $this;
-
-            foreach($this as $row)
+            if(is_array($needle))
             {
                 foreach($needle as $key => $value)
                 {
-                    if(!in_array($row->{$key}, (array) $value)) {
-                        $result->remove($row);
+                    if(!in_array($object->getProperty($key), (array) $value)) {
+                        return false;
                     }
                 }
             }
-        }
+            else return (bool) ($object->getHandle() == $needle);
+        });
 
-        if(is_scalar($needle) && isset($this->_data[$needle])) {
-            $result = $this->_data[$needle];
+        $result = false;
+        if(is_array($needle) || count($objects))
+        {
+            //Create the entities
+            $result = clone $this;
+            $result->clear();
+
+            //Create the resultset
+            foreach($objects as $object) {
+                $result->insert($object);
+            }
         }
 
         return $result;
@@ -272,7 +287,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
     {
         $result = false;
 
-        if (count($this))
+        if ($this->count())
         {
             $result = true;
 
@@ -299,7 +314,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
     {
         $result = false;
 
-        if (count($this))
+        if ($this->count())
         {
             $result = true;
 
@@ -324,7 +339,7 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
      */
     public function clear()
     {
-        $this->_data = array();
+        $this->__rowset = $this->getObject('object.set');
         return $this;
     }
 
@@ -448,9 +463,6 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
     }
 
     /**
-
-    /**
-     *
      * Returns the status
      *
      * @return string The status
@@ -594,9 +606,10 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
     public function toArray()
     {
         $result = array();
-        foreach ($this as $key => $row) {
-            $result[$key] = $row->toArray();
+        if($row = $this->getIterator()->current()) {
+            $result = $row->toArray();
         }
+
         return $result;
     }
 
@@ -641,6 +654,97 @@ abstract class DatabaseRowsetAbstract extends ObjectSet implements DatabaseRowse
     public function isConnected()
     {
         return (bool)$this->getTable();
+    }
+
+    /**
+     * Return a string representation of the set
+     *
+     * Required by interface \Serializable
+     *
+     * @return  string  A serialized object
+     */
+    public function serialize()
+    {
+        return $this->__rowset->serialize();
+    }
+
+    /**
+     * Unserializes a set from its string representation
+     *
+     * Required by interface \Serializable
+     *
+     * @param   string  $serialized The serialized data
+     */
+    public function unserialize($serialized)
+    {
+        $this->__rowset->unserialize($serialized);
+    }
+
+    /**
+     * Returns the number of elements in the collection.
+     *
+     * Required by the Countable interface
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->__rowset->count();
+    }
+
+    /**
+     * Defined by IteratorAggregate
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return $this->__rowset->getIterator();
+    }
+
+    /**
+     * Set a property
+     *
+     * @param   string  $property   The property name.
+     * @param   mixed   $value      The property value.
+     * @return  void
+     */
+    final public function offsetSet($property, $value)
+    {
+        $this->setProperty($property, $value);
+    }
+
+    /**
+     * Get a property
+     *
+     * @param   string  $property   The property name.
+     * @return  mixed The property value
+     */
+    final public function offsetGet($property)
+    {
+        return $this->getProperty($property);
+    }
+
+    /**
+     * Check if a property exists
+     *
+     * @param   string  $property   The property name.
+     * @return  boolean
+     */
+    final public function offsetExists($property)
+    {
+        return $this->hasProperty($property);
+    }
+
+    /**
+     * Remove a property
+     *
+     * @param   string  $property The property name.
+     * @return  void
+     */
+    final public function offsetUnset($property)
+    {
+        $this->removeProperty($property);
     }
 
     /**
