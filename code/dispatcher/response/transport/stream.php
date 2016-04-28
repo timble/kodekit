@@ -194,10 +194,15 @@ class DispatcherResponseTransportStream extends DispatcherResponseTransportHttp
             }
 
             //Make sure the output buffers are cleared
-            $level = ob_get_level();
-            while($level > 0) {
+            foreach(ob_get_status(true) as $status)
+            {
+                //Do not try to clear the 'zlib output compression'
+                //See: https://github.com/timble/kodekit/issues/70
+                if($status['name'] == 'zlib output compression') {
+                    break;
+                }
+
                 ob_end_clean();
-                $level--;
             }
 
             $stream  = $response->getStream();
