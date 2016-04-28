@@ -442,7 +442,7 @@ abstract class ModelEntityAbstract extends ObjectArray implements ModelEntityInt
      */
     public function getIterator()
     {
-        return new ArrayIterator(array($this));
+        return new \ArrayIterator(array($this));
     }
 
     /**
