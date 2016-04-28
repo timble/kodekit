@@ -30,37 +30,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      *
      * @var array
      */
-    protected $_data = array();
-
-    /**
-     * Constructor
-     *
-     * @param ObjectConfig $config  A ObjectConfig object with configuration options
-     * @return ObjectSet
-     */
-    public function __construct(ObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_data = ObjectConfig::unbox($config->data);
-    }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   ObjectConfig $config An optional ObjectConfig object with configuration options
-     * @return  void
-     */
-    protected function _initialize(ObjectConfig $config)
-    {
-        $config->append(array(
-            'data' => array(),
-        ));
-
-        parent::_initialize($config);
-    }
+    private $__data = array();
 
     /**
      * Inserts an object in the set
@@ -68,12 +38,8 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      * @param   ObjectHandlable $object
      * @return  boolean TRUE on success FALSE on failure
      */
-    public function insert($object)
+    public function insert(ObjectHandlable $object)
     {
-        if (!$object instanceof ObjectHandlable) {
-            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
-        }
-
         $result = false;
 
         if ($handle = $object->getHandle())
@@ -93,12 +59,8 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      * @param   ObjectHandlable $object
      * @return  ObjectSet
      */
-    public function remove($object)
+    public function remove(ObjectHandlable $object)
     {
-        if (!$object instanceof ObjectHandlable) {
-            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
-        }
-
         if ($this->offsetExists($object)) {
             $this->offsetUnset($object);
         }
@@ -112,12 +74,8 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      * @param   ObjectHandlable $object
      * @return  bool Returns TRUE if the object is in the set, FALSE otherwise
      */
-    public function contains($object)
+    public function contains(ObjectHandlable $object)
     {
-        if (!$object instanceof ObjectHandlable) {
-            throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
-        }
-
         return $this->offsetExists($object);
     }
 
@@ -137,6 +95,29 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
     }
 
     /**
+     * Filter the set using a callback
+     *
+     * If the callback returns FALSE the object will not be included in the resulting object set.
+     *
+     * @param   Callable $filter A callback that will handle the filtering
+     * @return  ObjectSet Returns an object subset
+     */
+    public function filter(/*Callable*/ $filter)
+    {
+        $result = clone $this;
+        $result->clear();
+
+        foreach ($this as $object)
+        {
+            if (call_user_func($filter, $object) !== false) {
+                $result->insert($object);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Check if the object exists in the queue
      *
      * Required by interface ArrayAccess
@@ -151,7 +132,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
             throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
-        return isset($this->_data[$object->getHandle()]);
+        return isset($this->__data[$object->getHandle()]);
     }
 
     /**
@@ -169,7 +150,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
             throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
-        return $this->_data[$object->getHandle()];
+        return $this->__data[$object->getHandle()];
     }
 
     /**
@@ -187,7 +168,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
             throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
-        $this->_data[$object->getHandle()] = $object;
+        $this->__data[$object->getHandle()] = $object;
         return $this;
     }
 
@@ -206,7 +187,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
             throw new \InvalidArgumentException('Object needs to implement ObjectHandlable');
         }
 
-        unset($this->_data[$object->getHandle()]);
+        unset($this->__data[$object->getHandle()]);
         return $this;
     }
 
@@ -219,7 +200,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      */
     public function serialize()
     {
-        return serialize($this->_data);
+        return serialize($this->__data);
     }
 
     /**
@@ -231,7 +212,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      */
     public function unserialize($serialized)
     {
-        $this->_data = unserialize($serialized);
+        $this->__data = unserialize($serialized);
     }
 
     /**
@@ -243,7 +224,18 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      */
     public function count()
     {
-        return count($this->_data);
+        return count($this->__data);
+    }
+
+    /**
+     * Remove all objects from the set
+     *
+     * @return ObjectSet
+     */
+    public function clear()
+    {
+        $this->__data = array();
+        return $this;
     }
 
     /**
@@ -253,7 +245,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      */
     public function top()
     {
-        $objects = array_values($this->_data);
+        $objects = array_values($this->__data);
 
         $object = null;
         if (isset($objects[0])) {
@@ -270,7 +262,7 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->_data);
+        return new \ArrayIterator($this->__data);
     }
 
     /**
@@ -280,6 +272,6 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
      */
     public function toArray()
     {
-        return $this->_data;
+        return iterator_to_array($this);
     }
 }
