@@ -382,7 +382,7 @@ class HttpUrl extends Object implements HttpUrlInterface
         if (is_string($path))
         {
             if (!empty($path)) {
-                $path = explode('/', trim($path, '/'));
+                $path = explode('/', ltrim($path, '/'));
             } else {
                 $path = array();
             }
