@@ -22,14 +22,14 @@ class ObjectConfigYaml extends ObjectConfigFormat
      *
      * @var callable
      */
-    protected static $_encoder;
+    protected static $__encoder;
 
     /**
      * YAML decoder callback
      *
      * @var callable
      */
-    protected static $_decoder;
+    protected static $__decoder;
 
     /**
      * Constructor.
@@ -40,7 +40,7 @@ class ObjectConfigYaml extends ObjectConfigFormat
     {
         parent::__construct($options);
 
-        if(!self::$_encoder)
+        if(!self::$__encoder)
         {
             if (function_exists('yaml_emit')) {
                 $this->setEncoder('yaml_emit');
@@ -49,7 +49,7 @@ class ObjectConfigYaml extends ObjectConfigFormat
             }
         }
 
-        if(!self::$_decoder)
+        if(!self::$__decoder)
         {
             if (function_exists('yaml_parse')) {
                 $this->setDecoder('yaml_parse');
@@ -66,7 +66,7 @@ class ObjectConfigYaml extends ObjectConfigFormat
      */
     public static function getEncoder()
     {
-        return self::$_encoder;
+        return self::$__encoder;
     }
 
     /**
@@ -82,7 +82,7 @@ class ObjectConfigYaml extends ObjectConfigFormat
             throw new \InvalidArgumentException('Invalid parameter to setEncoder(). Must be callable');
         }
 
-        self::$_encoder = $encoder;
+        self::$__encoder = $encoder;
     }
 
     /**
@@ -92,7 +92,7 @@ class ObjectConfigYaml extends ObjectConfigFormat
      */
     public static function getDecoder()
     {
-        return self::$_decoder;
+        return self::$__decoder;
     }
 
     /**
@@ -108,7 +108,7 @@ class ObjectConfigYaml extends ObjectConfigFormat
             throw new \InvalidArgumentException('Invalid parameter to setDecoder(). Must be callable');
         }
 
-        self::$_decoder = $decoder;
+        self::$__decoder = $decoder;
     }
 
     /**
