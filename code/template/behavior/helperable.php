@@ -18,6 +18,17 @@ namespace Kodekit\Library;
 class TemplateBehaviorHelperable extends TemplateBehaviorAbstract
 {
     /**
+     * Register a helper() function in the template
+     *
+     * @param ViewContextInterface $context A view context object
+     * @return void
+     */
+    protected function _beforeRender(TemplateContextInterface $context)
+    {
+        $context->subject->registerFunction('helper', array($this, 'invokeHelper'));
+    }
+
+    /**
      * Invoke a template helper
      *
      * This function accepts a partial identifier, in the form of helper.method or schema:package.helper.method. If
