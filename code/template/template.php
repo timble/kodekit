@@ -58,7 +58,6 @@ class Template extends TemplateAbstract
             'filters'    => array(),
             'functions'  => array(
                 'escape'     => array(__NAMESPACE__.'\StringEscaper', 'escape'),
-                'helper'     => array($this, 'invokeHelper'),
                 'parameter'  => array($this, 'getParameter'),
                 'parameters' => array($this, 'getParameters')
             ),
