@@ -88,22 +88,44 @@ class ControllerBehaviorPermissible extends ControllerBehaviorAbstract
         {
             $action = $parts[1];
 
-            if($this->canExecute($action) === false)
+            $result = $this->canExecute($action);
+
+            $invalid_statuses = array(
+                HttpResponse::NOT_IMPLEMENTED,
+                HttpResponse::UNAUTHORIZED,
+                HttpResponse::FORBIDDEN,
+                false,
+            );
+
+            if (in_array($result, $invalid_statuses))
             {
-                $message = 'Action '.ucfirst($action).' Not Allowed';
-
-                if($this->getUser()->isAuthentic())
-                {
-                    if (!$this->getUser()->isEnabled()) {
-                        $message = 'User account is disabled';
-                    }
-
-                    throw new ControllerExceptionRequestForbidden($message);
+                if ($result === false && $this->getUser()->isAuthentic()) {
+                    $result = HttpResponse::FORBIDDEN;
                 }
-                else throw new ControllerExceptionRequestNotAuthorized($message);
 
-                return false;
+                switch ($result)
+                {
+                    case HttpResponse::NOT_IMPLEMENTED:
+                        throw new HttpExceptionNotImplemented('Action "'.ucfirst($action).'" not implemented');
+                    
+                    case HttpResponse::UNAUTHORIZED:
+                        throw new ControllerExceptionRequestNotAuthenticated('Action "'.ucfirst($action).'" requires authentication');
+
+                    case HttpResponse::FORBIDDEN:
+                        throw new ControllerExceptionRequestForbidden('Action "'.ucfirst($action).'" not allowed');
+
+                    default:
+                        $message = 'Action "'.ucfirst($action).'" not allowed';
+
+                        if ($this->getUser()->isAuthentic() && $this->getUser()->isEnabled()) {
+                            $message .= 'User account is disabled';
+                        }
+
+                        throw new ControllerExceptionRequestForbidden($message);
+                }
             }
+
+            return true;
         }
 
         return true;
@@ -125,7 +147,7 @@ class ControllerBehaviorPermissible extends ControllerBehaviorAbstract
             $actions = $this->getActions();
             $actions = array_flip($actions);
 
-            $result = isset($actions[$action]);
+            $result = isset($actions[$action]) ? HttpResponse::NOT_IMPLEMENTED : true;
         }
         else $result = $this->$method();
 
