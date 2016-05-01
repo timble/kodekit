@@ -187,7 +187,7 @@ abstract class ControllerView extends ControllerAbstract implements ControllerVi
             $content = $view->render($data);
 
             //Set the data in the response
-            $context->response->setContent($content, $view->mimetype);
+            $context->response->setContent($content, $view->getMimetype());
         }
         else throw new ControllerExceptionFormatNotSupported('Format: '.$format.' not supported');
 
