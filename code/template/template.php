@@ -61,7 +61,6 @@ class Template extends TemplateAbstract
                 'parameter'  => array($this, 'getParameter'),
                 'parameters' => array($this, 'getParameters')
             ),
-            'command_chain'   => 'lib:command.chain',
         ))->append(array(
             'behaviors'  => array('filterable' => array('filters' => $config->filters)),
         ));
