@@ -354,7 +354,7 @@ class HttpUrl extends Object implements HttpUrlInterface
      * @link https://tools.ietf.org/html/rfc3986
      *
      * @param   boolean $toArray If TRUE return an array. Default FALSE
-     * @return  string|array The path string; e.g., `path/to/site`.
+     * @return  string|array The path string; e.g., `/path/to/site`.
      */
     public function getPath($toArray = false)
     {
