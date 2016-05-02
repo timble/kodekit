@@ -64,7 +64,7 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
         }
     }
 
- 	/**
+    /**
      * Implements lazy loading of the pages config property.
      *
      * @param string
@@ -79,7 +79,7 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
         return parent::get($name);
     }
 
- 	/**
+    /**
      * Get a list of pages
      *
      * @return  array   Returns and array of pages information

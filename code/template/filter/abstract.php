@@ -82,9 +82,11 @@ abstract class TemplateFilterAbstract extends Object implements TemplateFilterIn
                 (?<value>((?&value_double)|(?&value_none)))
             )
             (?<n>(?&name))[\s]*(=[\s]*(?<v>(?&value)))?#xs';
+
             if (preg_match_all($pattern, $string, $matches, PREG_SET_ORDER))
             {
-                foreach ($matches as $match) {
+                foreach ($matches as $match)
+                {
                     if (!empty($match['n'])) {
                         $result[$match['n']] = isset($match['v']) ? trim($match['v'], '\'"') : '';
                     }

@@ -85,8 +85,8 @@ class TemplateFilterForm extends TemplateFilterAbstract
     /**
      * Add the action if left empty
      *
-     * @param string $text Template text
-     * @param string The action url
+     * @param string $text   Template text
+     * @param string $action The action url
 
      * @return TemplateFilterForm
      */
@@ -97,7 +97,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
         {
             foreach ($matches as $match)
             {
-                $str = str_replace('action=""', 'action="' . $action . '"', $match[0]);
+                $str  = str_replace('action=""', 'action="' . $action . '"', $match[0]);
                 $text = str_replace($match[0], $str, $text);
             }
         }
