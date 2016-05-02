@@ -148,14 +148,11 @@ class ViewJson extends ViewAbstract
     protected function _fetchData(ViewContext $context)
     {
         $output = new \ArrayObject(array(
-            'jsonapi' => array(
-                'version' => $this->_version,
-            ),
-            'links' => array(
-                'self' => $this->getUrl()->toString()
-            ),
+            'jsonapi' => array('version' => $this->_version),
+            'links' => array('self' => $this->getUrl()->toString()),
             'data' => array()
         ));
+
         $model  = $this->getModel();
         $url    = $this->getUrl();
 
@@ -189,7 +186,7 @@ class ViewJson extends ViewAbstract
             $output['included'] = array_values($this->_included_resources);
         }
 
-        $this->setContent($output);
+        $context->content = $output;
     }
 
     /**
@@ -264,7 +261,6 @@ class ViewJson extends ViewAbstract
             )
         );
     }
-
 
     /**
      * Creates resource objects and returns an array of resource identifier objects specified by JSON API
