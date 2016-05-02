@@ -18,9 +18,25 @@ namespace  Kodekit\Library;
 class ViewBehaviorRoutable extends ViewBehaviorAbstract
 {
     /**
+     * Register a route() function in the template
+     *
+     * @param ViewContextInterface $context	A view context object
+     * @return void
+     */
+    protected function _beforeRender(ViewContextInterface $context)
+    {
+        if($context->subject instanceof ViewTemplatable)
+        {
+            $context->subject
+                ->getTemplate()
+                ->registerFunction('route', array($this, 'getRoute'));
+        }
+    }
+
+    /**
      * Get a route based on a full or partial query string
      *
-     * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
+     * 'component', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
      *
      * - foo=bar
      * - component=[package]&view=[name]&foo=bar
@@ -29,10 +45,9 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
      *
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
-     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
      * @return  DispatcherRouterRoute The route
      */
-    public function getRoute($route = '', $fqr = true)
+    public function getRoute($route = '', $fqr = null)
     {
         $parts      = array();
         $identifier = $this->getMixer()->getIdentifier();
@@ -50,7 +65,7 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
 
         //Add the view information to the route if it's not set
         if (!isset($parts['view'])) {
-            $parts['view'] = $this->getName();
+            $parts['view'] = $this->getMixer()->getName();
         }
 
         //Add the format information to the route only if it's not 'html'
@@ -59,7 +74,7 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
         }
 
         //Add the model state and layout only for routes to the same view
-        if ($parts['component'] == $identifier->package && $parts['view'] == $this->getName())
+        if ($parts['component'] == $identifier->package && $parts['view'] == $this->getMixer()->getName())
         {
             $states = array();
             foreach($this->getModel()->getState() as $name => $state)
@@ -86,8 +101,15 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
         $escape = $this->getUrl()->isEscaped();
         $route  = $this->getObject('lib:dispatcher.router.route', array('escape' =>  $escape))->setQuery($parts);
 
-        //Add the host and the schema
-        if ($fqr === true)
+        //Determine of the url needs to be fully qualified
+        if($this->getMixer()->getFormat() == 'html') {
+            $fqr = is_bool($fqr) ? $fqr : false;
+        } else {
+            $fqr = true;
+        }
+
+        //Add the host and the schema to qualify relative url
+        if ($fqr)
         {
             $route->scheme = $this->getUrl()->scheme;
             $route->host   = $this->getUrl()->host;

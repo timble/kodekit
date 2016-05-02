@@ -22,49 +22,49 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      *
      * @var	string|object
      */
-    protected $_model;
+    private $__model;
 
     /**
      * The uniform resource locator
      *
      * @var HttpUrl
      */
-    protected $_url;
+    private $__url;
 
     /**
      * The content of the view
      *
      * @var string
      */
-    protected $_content;
+    private $__content;
 
     /**
      * The title of the view
      *
      * @var string
      */
-    protected $_title;
+    private $__title;
 
     /**
      * The view data
      *
      * @var boolean
      */
-    protected $_data;
+    private $__data;
 
     /**
      * The view parameters
      *
-     * @var boolean
+     * @var array
      */
-    protected $_parameters;
+    private $__parameters;
 
     /**
      * The mimetype
      *
      * @var string
      */
-    public $mimetype = '';
+    private $__mimetype;
 
     /**
      * Constructor
@@ -76,15 +76,15 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         parent::__construct($config);
 
         //Set the data
-        $this->_data = ObjectConfig::unbox($config->data);
+        $this->__data = ObjectConfig::unbox($config->data);
 
         //Set the parameters
-        $this->_parameters = ObjectConfig::unbox($config->parameters);
+        $this->__parameters = ObjectConfig::unbox($config->parameters);
 
         $this->setUrl($config->url);
         $this->setTitle($config->title);
         $this->setContent($config->content);
-        $this->mimetype = $config->mimetype;
+        $this->setMimetype($config->mimetype);
 
         $this->setModel($config->model);
 
@@ -111,14 +111,13 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         $config->append(array(
             'data'             => array(),
             'parameters'       => array(),
-            'command_chain'    => 'lib:command.chain',
             'command_handlers' => array('lib:command.handler.event'),
             'model'      => 'lib:model.empty',
             'content'    => '',
-            'mimetype'   => '',
+            'mimetype'   => 'application/octet-stream ',
             'url'        =>  $this->getObject('lib:http.url'),
             'title'      => ucfirst($this->getName()),
-            'behaviors'  => array('localizable')
+            'behaviors'  => array()
         ));
 
         parent::_initialize($config);
@@ -133,17 +132,19 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     final public function render($data = array())
     {
         $context = $this->getContext();
-        $context->data       = array_merge($this->getData(), $data);
-        $context->action     = 'render';
+        $context->data = array_merge($this->getData(), $data);
 
         if ($this->invokeCommand('before.render', $context) !== false)
         {
             //Render the view
-            $context->result = $this->_actionRender($context);
+            $context->content = $this->_actionRender($context);
             $this->invokeCommand('after.render', $context);
         }
 
-        return $context->result;
+        //Set the content
+        $this->setContent($context->content);
+
+        return $context->content;
     }
 
     /**
@@ -166,8 +167,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     protected function _actionRender(ViewContext $context)
     {
-        $contents = $this->getContent();
-        return trim($contents);
+        return trim($context->content);
     }
 
     /**
@@ -190,7 +190,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function set($property, $value)
     {
-        $this->_data[$property] = $value;
+        $this->__data[$property] = $value;
         return $this;
     }
 
@@ -204,7 +204,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function get($property, $default = null)
     {
-        return isset($this->_data[$property]) ? $this->_data[$property] : $default;
+        return isset($this->__data[$property]) ? $this->__data[$property] : $default;
     }
 
     /**
@@ -215,7 +215,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function has($property)
     {
-        return isset($this->_data[$property]);
+        return isset($this->__data[$property]);
     }
 
     /**
@@ -225,7 +225,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function getData()
     {
-        return $this->_data;
+        return $this->__data;
     }
 
     /**
@@ -250,7 +250,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function getParameters()
     {
-        return $this->_parameters;
+        return $this->__parameters;
     }
 
     /**
@@ -261,7 +261,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function setParameters(array $parameters)
     {
-        $this->_parameters = $parameters;
+        $this->__parameters = $parameters;
         return $this;
     }
 
@@ -272,7 +272,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function getTitle()
     {
-        return $this->_title;
+        return $this->__title;
     }
 
     /**
@@ -282,7 +282,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function setTitle($title)
     {
-        $this->_title = $title;
+        $this->__title = $title;
         return $this;
     }
 
@@ -293,7 +293,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function getContent()
     {
-        return $this->_content;
+        return $this->__content;
     }
 
     /**
@@ -304,7 +304,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function setContent($content)
     {
-        $this->_content = $content;
+        $this->__content = $content;
         return $this;
     }
 
@@ -316,19 +316,19 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function getModel()
     {
-        if(!$this->_model instanceof ModelInterface)
+        if(!$this->__model instanceof ModelInterface)
         {
-            $this->_model = $this->getObject($this->_model);
+            $this->__model = $this->getObject($this->__model);
 
-            if(!$this->_model instanceof ModelInterface)
+            if(!$this->__model instanceof ModelInterface)
             {
                 throw new \UnexpectedValueException(
-                    'Model: '.get_class($this->_model).' does not implement ModelInterface'
+                    'Model: '.get_class($this->__model).' does not implement ModelInterface'
                 );
             }
         }
 
-        return $this->_model;
+        return $this->__model;
     }
 
     /**
@@ -360,7 +360,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
             $model = $identifier;
         }
 
-        $this->_model = $model;
+        $this->__model = $model;
 
         return $this;
     }
@@ -372,7 +372,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     public function getUrl()
     {
-        return $this->_url;
+        return $this->__url;
     }
 
     /**
@@ -388,77 +388,8 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         unset($url->pass);
         unset($url->port);
 
-        $this->_url = $url;
+        $this->__url = $url;
         return $this;
-    }
-
-    /**
-     * Get a route based on a full or partial query string
-     *
-     * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
-     *
-     * - foo=bar
-     * - component=[package]&view=[name]&foo=bar
-     *
-     * In templates, use route()
-     *
-     * @param   string|array $route  The query string or array used to create the route
-     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
-     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  DispatcherRouterRoute The route
-     */
-    public function getRoute($route = '', $fqr = true, $escape = true)
-    {
-        //Parse route
-        $parts = array();
-
-        if(is_string($route)) {
-            parse_str(trim($route), $parts);
-        } else {
-            $parts = $route;
-        }
-
-        //Check to see if there is component information in the route if not add it
-        if (!isset($parts['component'])) {
-            $parts['component'] = $this->getIdentifier()->package;
-        }
-
-        //Add the view information to the route if it's not set
-        if (!isset($parts['view'])) {
-            $parts['view'] = $this->getName();
-        }
-
-        //Add the format information to the route only if it's not 'html'
-        if (!isset($parts['format']) && $this->getIdentifier()->name !== 'html') {
-            $parts['format'] = $this->getIdentifier()->name;
-        }
-
-        //Add the model state only for routes to the same view
-        if ($parts['component'] == $this->getIdentifier()->package && $parts['view'] == $this->getName())
-        {
-            $states = array();
-            foreach($this->getModel()->getState() as $name => $state)
-            {
-                if($state->default != $state->value && !$state->internal) {
-                    $states[$name] = $state->value;
-                }
-            }
-
-            $parts = array_merge($states, $parts);
-        }
-
-        //Create the route
-        $route = $this->getObject('lib:dispatcher.router.route', array('escape' =>  $escape))
-                      ->setQuery($parts);
-
-        //Add the host and the schema
-        if ($fqr === true)
-        {
-            $route->scheme = $this->getUrl()->scheme;
-            $route->host   = $this->getUrl()->host;
-        }
-
-        return $route;
     }
 
     /**
@@ -471,6 +402,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         $context = new ViewContext();
         $context->setSubject($this);
         $context->setData($this->getData());
+        $context->setContent($this->getContent());
         $context->setParameters($this->getParameters());
 
         return $context;
@@ -495,6 +427,16 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     public function getFormat()
     {
         return $this->getIdentifier()->name;
+    }
+
+    /**
+     * Get the mimetype
+     *
+     * @return  string The mimetype of the view
+     */
+    public function getMimetype()
+    {
+        return $this->__mimetype;
     }
 
     /**

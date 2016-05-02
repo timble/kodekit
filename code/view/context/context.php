@@ -56,6 +56,27 @@ class ViewContext extends Command implements ViewContextInterface
     }
 
     /**
+     * Set the view content
+     *
+     * @param array $data
+     * @return ViewContext
+     */
+    public function setContent($content)
+    {
+        return ObjectConfig::set('content', $content);
+    }
+
+    /**
+     * Get the view content
+     *
+     * @return array
+     */
+    public function getContent()
+    {
+        return ObjectConfig::get('content');
+    }
+
+    /**
      * Set the view parameters
      *
      * @param array $parameters

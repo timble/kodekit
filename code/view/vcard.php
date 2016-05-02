@@ -74,9 +74,7 @@ class ViewVcard extends ViewAbstract
         $data   .= 'END:VCARD';
         $data   .= "\r\n";
 
-        $this->setContent($data);
-
-        parent::_actionRender($context);
+        return $data;
     }
 
     /**
@@ -303,19 +301,6 @@ class ViewVcard extends ViewAbstract
     {
         $this->_properties['NOTE;ENCODING=QUOTED-PRINTABLE'] = $this->_quoted_printable_encode($note);
         return $this;
-    }
-
-    /**
-     * Force the route to fully qualified and not escaped by default
-     *
-     * @param   string|array    $route   The query string used to create the route
-     * @param   boolean $fqr    If TRUE create a fully qualified route. Default TRUE.
-     * @param   boolean $escape If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return  HttpUrl        The route
-     */
-    public function getRoute($route = '', $fqr = true, $escape = false)
-    {
-        return parent::getRoute($route, $fqr, $escape);
     }
 
     /**

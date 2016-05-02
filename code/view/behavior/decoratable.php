@@ -94,12 +94,16 @@ class ViewBehaviorDecoratable extends ViewBehaviorAbstract
     {
         foreach ($this->getDecorators() as $decorator)
         {
+            //Set the content to allow it to be decorated
+            $this->setContent($context->content);
+
+            //A fully qualified template path is required
             $layout = $this->qualifyLayout($decorator);
 
             //Unpack the data (first level only)
             $data = $context->data->toArray();
 
-            $context->result = $this->getTemplate()
+            $context->content = $this->getTemplate()
                 ->setParameters($context->parameters)
                 ->render($layout, $data);
         }
