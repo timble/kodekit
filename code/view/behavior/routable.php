@@ -103,7 +103,7 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
 
         //Determine of the url needs to be fully qualified
         if($this->getMixer()->getFormat() == 'html') {
-            $fqe = is_bool($fqr) ? $fqr : false;
+            $fqr = is_bool($fqr) ? $fqr : false;
         } else {
             $fqr = true;
         }
