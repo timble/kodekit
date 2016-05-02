@@ -326,10 +326,8 @@ class ViewJson extends ViewAbstract
      */
     protected function _convertRelativeLinks(ViewContextInterface $context)
     {
-        $content = $context->content;
-
-        if (is_array($content) || $content instanceof \Traversable) {
-            $this->_processLinks($content);
+        if (is_array($context->content) || $context->content instanceof \Traversable) {
+            $this->_processLinks($context->content);
         }
     }
 
