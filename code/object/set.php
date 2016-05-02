@@ -105,12 +105,10 @@ class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Cou
     public function filter(/*Callable*/ $filter)
     {
         $result = clone $this;
-        $result->clear();
-
         foreach ($this as $object)
         {
-            if (call_user_func($filter, $object) !== false) {
-                $result->insert($object);
+            if (call_user_func($filter, $object) === false) {
+                $result->remove($object);
             }
         }
 
