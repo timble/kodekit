@@ -84,14 +84,14 @@ interface ViewInterface
     /**
      * Get the title
      *
-     * @return 	string 	The title of the view
+     * @return 	string  The title of the view
      */
     public function getTitle();
 
     /**
      * Set the title
      *
-     * @return 	string 	The title of the view
+     * @return 	string  The title of the view
      */
     public function setTitle($title);
 
@@ -113,7 +113,7 @@ interface ViewInterface
     /**
      * Get the model object attached to the controller
      *
-     * @return	ModelInterface
+     * @return  ModelInterface
      */
     public function getModel();
 
@@ -122,8 +122,8 @@ interface ViewInterface
      *
      * @param   mixed   $model An object that implements ObjectInterface, ObjectIdentifier object
      *                         or valid identifier string
-     * @throws	\UnexpectedValueException	If the identifier is not a table identifier
-     * @return	ViewInterface
+     * @throws  \UnexpectedValueException   If the identifier is not a table identifier
+     * @return  ViewInterface
      */
     public function setModel($model);
 
@@ -143,23 +143,6 @@ interface ViewInterface
     public function setUrl(HttpUrl $url);
 
     /**
-     * Get a route based on a full or partial query string
-     *
-     * 'option', 'view' and 'layout' can be omitted. The following variations will all result in the same route :
-     *
-     * - foo=bar
-     * - component=[package]&view=[name]&foo=bar
-     *
-     * In templates, use route()
-     *
-     * @param   string|array $route  The query string or array used to create the route
-     * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
-     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE.
-     * @return  DispatcherRouterRoute The route
-     */
-    public function getRoute($route, $fqr = true, $escape = true);
-
-    /**
      * Get the view context
      *
      * @return  ViewContext
@@ -169,16 +152,23 @@ interface ViewInterface
     /**
      * Get the name
      *
-     * @return 	string 	The name of the object
+     * @return 	string The name of the object
      */
     public function getName();
 
     /**
      * Get the format
      *
-     * @return 	string 	The format of the view
+     * @return  string The format of the view
      */
     public function getFormat();
+
+    /**
+     * Get the mimetype
+     *
+     * @return  string The mimetype of the view
+     */
+    public function getMimetype();
 
     /**
      * Returns the views output

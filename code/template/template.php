@@ -58,11 +58,9 @@ class Template extends TemplateAbstract
             'filters'    => array(),
             'functions'  => array(
                 'escape'     => array(__NAMESPACE__.'\StringEscaper', 'escape'),
-                'helper'     => array($this, 'invokeHelper'),
                 'parameter'  => array($this, 'getParameter'),
                 'parameters' => array($this, 'getParameters')
             ),
-            'command_chain'   => 'lib:command.chain',
         ))->append(array(
             'behaviors'  => array('filterable' => array('filters' => $config->filters)),
         ));
@@ -82,18 +80,17 @@ class Template extends TemplateAbstract
     {
         $context = $this->getContext();
         $context->data   = $data;
-        $context->action = 'render';
         $context->source = $source;
         $context->type   = $type;
 
         if ($this->invokeCommand('before.render', $context) !== false)
         {
             //Render the template
-            $context->result = $this->_actionRender($context);
+            $context->source = $this->_actionRender($context);
             $this->invokeCommand('after.render', $context);
         }
 
-        return $context->result;
+        return $context->source;
     }
 
     /**

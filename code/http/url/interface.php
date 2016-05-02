@@ -127,8 +127,11 @@ interface HttpUrlInterface extends \Serializable
     /**
      * Returns the path portion as a string or array
      *
+     * This method will encode the path to conform to RFC 3986 returned as string.
+     * @link https://tools.ietf.org/html/rfc3986
+     *
      * @param     boolean $toArray If TRUE return an array. Default FALSE
-     * @return  string|array The path string; e.g., `path/to/site`.
+     * @return  string|array The path string; e.g., `/path/to/site`.
      */
     public function getPath($toArray = false);
 
@@ -146,6 +149,9 @@ interface HttpUrlInterface extends \Serializable
 
     /**
      * Returns the query portion as a string or array
+     *
+     * This method will encode the query to conform to RFC 3986 if returned as string
+     * @link https://tools.ietf.org/html/rfc3986
      *
      * @param   boolean      $toArray If TRUE return an array. Default FALSE
      * @param   boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.
@@ -228,6 +234,9 @@ interface HttpUrlInterface extends \Serializable
 
     /**
      * Get the full url, of the format scheme://user:pass@host/path?query#fragment';
+     *
+     * This will method will encode the resulting url to comform to RFC 3986
+     * @link https://tools.ietf.org/html/rfc3986
      *
      * @param integer      $parts   A bitmask of binary or'ed HTTP_URL constants; FULL is the default
      * @param boolean|null $escape  If TRUE escapes '&' to '&amp;' for xml compliance. If NULL use the default.

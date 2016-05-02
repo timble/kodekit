@@ -25,6 +25,13 @@ interface ViewContextInterface extends CommandInterface
     public function getData();
 
     /**
+     * Get the view content
+     *
+     * @return array
+     */
+    public function getContent();
+
+    /**
      * Get the view parameters
      *
      * @return array

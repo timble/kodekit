@@ -28,8 +28,9 @@ class ViewRss extends ViewTemplate
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'mimetype' => 'application/rss+xml',
-            'data'     => array(
+            'behaviors' => array('localizable', 'routable'),
+            'mimetype'  => 'application/rss+xml',
+            'data'      => array(
                 'update_period'    => 'hourly',
                 'update_frequency' => 1
             )
@@ -49,19 +50,6 @@ class ViewRss extends ViewTemplate
     }
 
     /**
-     * Force the route to fully qualified and escaped by default
-     *
-     * @param   string  $route   The query string used to create the route
-     * @param   boolean $fqr     If TRUE create a fully qualified route. Default TRUE.
-     * @param   boolean $escape  If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return  DispatcherRouterRoute The route
-     */
-    public function getRoute($route = '', $fqr = true, $escape = true)
-    {
-        return parent::getRoute($route, $fqr, $escape);
-    }
-
-    /**
      * Prepend the xml prolog
      *
      * @param ViewContext  $context A view context object
@@ -70,10 +58,10 @@ class ViewRss extends ViewTemplate
     protected function _actionRender(ViewContext $context)
     {
         //Prepend the xml prolog
-        $result  = '<?xml version="1.0" encoding="utf-8" ?>';
-        $result .=  parent::_actionRender($context);
+        $content  = '<?xml version="1.0" encoding="utf-8" ?>';
+        $content .=  parent::_actionRender($context);
 
-        return $result;
+        return $content;
     }
 
 }

@@ -22,14 +22,14 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      *
      * @var string|object
      */
-    protected $_template;
+    private $__template;
 
     /**
      * Layout name
      *
      * @var string
      */
-    protected $_layout;
+    private $__layout;
 
     /**
      * Auto assign
@@ -68,12 +68,12 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
+            'behaviors'          => array('localizable', 'routable'),
             'auto_fetch'         => true,
             'layout'             => '',
             'template'           => 'default',
             'template_filters'   => array('asset'),
             'template_functions' => array(
-                'route'    => array($this, 'getRoute'),
                 'url'      => array($this, 'getUrl'),
                 'title'    => array($this, 'getTitle'),
                 'content'  => array($this, 'getContent'),
@@ -96,11 +96,11 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
         $path   = $this->qualifyLayout($context->layout);
 
         //Render the template
-        $this->_content = $this->getTemplate()
+        $content = $this->getTemplate()
             ->setParameters($context->parameters)
             ->render($path, $data);
 
-        return parent::_actionRender($context);
+        return $content;
     }
 
     /**
@@ -151,11 +151,11 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      */
     public function getTemplate()
     {
-        if (!$this->_template instanceof TemplateInterface)
+        if (!$this->__template instanceof TemplateInterface)
         {
             //Make sure we have a template identifier
-            if (!($this->_template instanceof ObjectIdentifier)) {
-                $this->setTemplate($this->_template);
+            if (!($this->__template instanceof ObjectIdentifier)) {
+                $this->setTemplate($this->__template);
             }
 
             $options = array(
@@ -163,17 +163,17 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
                 'functions' => $this->getConfig()->template_functions,
             );
 
-            $this->_template = $this->getObject($this->_template, $options);
+            $this->__template = $this->getObject($this->__template, $options);
 
-            if(!$this->_template instanceof TemplateInterface)
+            if(!$this->__template instanceof TemplateInterface)
             {
                 throw new \UnexpectedValueException(
-                    'Template: '.get_class($this->_template).' does not implement TemplateInterface'
+                    'Template: '.get_class($this->__template).' does not implement TemplateInterface'
                 );
             }
         }
 
-        return $this->_template;
+        return $this->__template;
     }
 
     /**
@@ -201,7 +201,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
             $template = $identifier;
         }
 
-        $this->_template = $template;
+        $this->__template = $template;
 
         return $this;
     }
@@ -213,7 +213,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      */
     public function getLayout()
     {
-        return empty($this->_layout) ? 'default' : $this->_layout;
+        return empty($this->__layout) ? 'default' : $this->__layout;
     }
 
     /**
@@ -224,7 +224,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      */
     public function setLayout($layout)
     {
-        $this->_layout = $layout;
+        $this->__layout = $layout;
         return $this;
     }
 
@@ -267,41 +267,17 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     }
 
     /**
-     * Creates a route based on a full or partial query string.
+     * Set the view url
      *
-     * This function adds the layout information to the route if a layout has been set
+     * Ensure the url is properly escaped
      *
-     * @param string|array $route   The query string used to create the route
-     * @param boolean $fqr          If TRUE create a fully qualified route. Default TRUE.
-     * @param boolean $escape       If TRUE escapes the route for xml compliance. Default TRUE.
-     * @return  DispatcherRouterRoute The route
+     * @param HttpUrl $url   A HttpUrl object or a string
+     * @return  ViewAbstract
      */
-    public function getRoute($route = '', $fqr = true, $escape = true)
+    public function setUrl(HttpUrl $url)
     {
-        if(is_string($route)) {
-            parse_str(trim($route), $parts);
-        } else {
-            $parts = $route;
-        }
-
-        //Check to see if there is component information in the route if not add it
-        if (!isset($parts['component'])) {
-            $parts['component'] = $this->getIdentifier()->package;
-        }
-
-        //Add the view information to the route if it's not set
-        if (!isset($parts['view'])) {
-            $parts['view'] = $this->getName();
-        }
-
-        if (!isset($parts['layout']) && !empty($this->_layout))
-        {
-            if (($parts['component'] == $this->getIdentifier()->package) && ($parts['view'] == $this->getName())) {
-                $parts['layout'] = $this->getLayout();
-            }
-        }
-
-        return parent::getRoute($parts, $fqr, $escape);
+        $url->setEscaped(true);
+        return parent::setUrl($url);
     }
 
     /**

@@ -203,9 +203,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             else
             {
                 //Determine the action based on the model state
-                if($controller instanceof ControllerModellable) {
-                    $action = $controller->getModel()->getState()->isUnique() ? 'edit' : 'add';
-                }
+                $action = $controller->getModel()->getState()->isUnique() ? 'edit' : 'add';
             }
 
             //Throw exception if no action could be determined from the request

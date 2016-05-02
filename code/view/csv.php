@@ -97,10 +97,7 @@ class ViewCsv extends ViewAbstract
         // Create the header
         $header = $this->_arrayToString(array_keys($columns)).$this->eol;
 
-        // Set the content
-        $this->setContent($header.$rows);
-
-        return parent::_actionRender($context);
+        return $header.$rows;
     }
 
     /**

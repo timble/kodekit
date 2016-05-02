@@ -95,11 +95,11 @@ class ViewJson extends ViewAbstract
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
+            'behaviors'   => array('localizable', 'routable'),
+            'mimetype'    => 'application/vnd.api+json',
             'version'     => '1.0',
             'fields'      => array(),
             'text_fields' => array('description'), // Links are converted to absolute ones in these fields
-        ))->append(array(
-            'mimetype' => 'application/vnd.api+json',
         ));
 
         parent::_initialize($config);
@@ -117,37 +117,25 @@ class ViewJson extends ViewAbstract
      */
     protected function _actionRender(ViewContext $context)
     {
-        //Serialise
-        if (!is_string($this->_content))
+        //Get the content
+        $content = $context->content;
+
+        if (!is_string($content))
         {
             // Root should be JSON object, not array
-            if (is_array($this->_content) && count($this->_content) === 0) {
-                $this->_content = new \ArrayObject();
+            if (is_array($content) && count($content) === 0) {
+                $content = new \ArrayObject();
             }
 
             // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
-            $this->_content = json_encode($this->_content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+            $content = json_encode($content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 
             if (json_last_error() > 0) {
                 throw new \DomainException(sprintf('Cannot encode data to JSON string - %s', json_last_error_msg()));
             }
         }
 
-
-        return parent::_actionRender($context);
-    }
-
-    /**
-     * Force the route to fully qualified and not escaped by default
-     *
-     * @param   string|array    $route   The query string used to create the route
-     * @param   boolean         $fqr     If TRUE create a fully qualified route. Default TRUE.
-     * @param   boolean         $escape  If TRUE escapes the route for xml compliance. Default FALSE.
-     * @return  DispatcherRouterRoute The route
-     */
-    public function getRoute($route = '', $fqr = true, $escape = false)
-    {
-        return parent::getRoute($route, $fqr, $escape);
+        return $content;
     }
 
     /**
@@ -198,7 +186,7 @@ class ViewJson extends ViewAbstract
             $output['included'] = array_values($this->_included_resources);
         }
 
-        $this->setContent($output);
+        $context->content = $output;
     }
 
     /**
@@ -339,8 +327,8 @@ class ViewJson extends ViewAbstract
      */
     protected function _convertRelativeLinks(ViewContextInterface $context)
     {
-        if (is_array($this->_content) || $this->_content instanceof \Traversable) {
-            $this->_processLinks($this->_content);
+        if (is_array($context->content) || $context->content instanceof \Traversable) {
+            $this->_processLinks($context->content);
         }
     }
 
