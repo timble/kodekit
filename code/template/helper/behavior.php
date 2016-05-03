@@ -274,7 +274,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     /**
      * Keep session alive
      *
-     * This will send an ascynchronous request to the server via AJAX on an interval in miliseconds
+     * This will send an ascynchronous request to the server via AJAX on an interval in secs
      *
      * @param   array   $config An optional array with configuration options
      * @return string    The html output
@@ -283,8 +283,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'refresh' => 15 * 60000, //default refresh is 15min
-            'url'     => '',         //default to window.location.url
+            'refresh' => 15 * 60, //default refresh is 15min
+            'url'     => '',      //default to window.location.url
         ));
 
         $html = '';
@@ -296,16 +296,16 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             if($session->isActive())
             {
                 //Get the config session lifetime
-                $lifetime = $session->getLifetime() * 1000;
+                $lifetime = $session->getLifetime();
 
                 //Refresh time is 1 minute less than the lifetime
-                $refresh =  ($lifetime <= 60000) ? 30000 : $lifetime - 60000;
+                $refresh =  ($lifetime <= 60) ? 30 : $lifetime - 60;
             }
             else $refresh = (int) $config->refresh;
 
             // Longest refresh period is one hour to prevent integer overflow.
-            if ($refresh > 3600000 || $refresh <= 0) {
-                $refresh = 3600000;
+            if ($refresh > 3600 || $refresh <= 0) {
+                $refresh = 3600;
             }
 
             if(empty($config->url)) {
@@ -315,22 +315,18 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             }
 
             // Build the keep alive script.
-            //See: http://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
             $html =
                 "<script>
-                (function keepalive(){
-                    kQuery(function($) {
+                (function($){
+                    var refresh = '" . $refresh . "';
+                    setInterval(function() {
                         $.ajax({
                             url: $url,
                             method: 'HEAD',
-                            cache: false,
-                            complete: function() {
-                                // Schedule the next request when the current one's complete
-                                setTimeout(keepalive, '" . $refresh . "');
-                            }
+                            cache: false
                         })
-                    });
-                })();</script>";
+                    }, refresh * 1000);
+                })(kQuery);</script>";
 
             self::$_loaded['keepalive'] = true;
         }
