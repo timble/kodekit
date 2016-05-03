@@ -149,8 +149,8 @@ class ViewJson extends ViewAbstract
     {
         $output = new \ArrayObject(array(
             'jsonapi' => array('version' => $this->_version),
-            'links' => array('self' => $this->getUrl()->toString()),
-            'data' => array()
+            'links'   => array('self' => $this->getUrl()->toString()),
+            'data'    => array()
         ));
 
         $model  = $this->getModel();
@@ -193,6 +193,7 @@ class ViewJson extends ViewAbstract
      * Creates a resource object specified by JSON API
      *
      * @see   http://jsonapi.org/format/#document-resource-objects
+     *
      * @param ModelEntityInterface  $entity   Document row
      * @param array $config Resource configuration.
      * @return array The array with data to be encoded to json
@@ -204,8 +205,7 @@ class ViewJson extends ViewAbstract
             'relationships' => true
         ), $config);
 
-        $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
-        $data   = array(
+        $data = array(
             'type' => $this->_callCustomMethod($entity, 'type') ?: StringInflector::pluralize($entity->getIdentifier()->name),
             'id'   => $this->_callCustomMethod($entity, 'id') ?: $entity->{$entity->getIdentityKey()},
             'attributes' => $this->_callCustomMethod($entity, 'attributes') ?: $entity->toArray()
@@ -245,7 +245,6 @@ class ViewJson extends ViewAbstract
      */
     protected function _includeResource(ModelEntityInterface $entity)
     {
-        $entity = method_exists($entity, 'top') ? $entity->top() : $entity;
         $cache  = $entity->getIdentifier()->name.'-'.$entity->getHandle();
 
         if (!isset($this->_included_resources[$cache])) {
@@ -294,13 +293,15 @@ class ViewJson extends ViewAbstract
      */
     protected function _callCustomMethod(ModelEntityInterface $entity, $method)
     {
+        $result = false;
         $name   = StringInflector::singularize($entity->getIdentifier()->name);
         $method = '_get'.ucfirst($name).ucfirst($method);
 
         if ($method !== '_getEntity'.ucfirst($method) && method_exists($this, $method)) {
-            return $this->$method($entity);
+            $result = $this->$method($entity);
         }
-        else return false;
+
+        return $result;
     }
 
     /**

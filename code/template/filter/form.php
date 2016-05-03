@@ -77,7 +77,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
      */
     public function filter(&$text, TemplateInterface $template)
     {
-        $this->_addAction($text, $template->route());
+        $this->_addAction($text, $template);
         $this->_addToken($text);
         $this->_addQueryParameters($text);
     }
@@ -85,19 +85,18 @@ class TemplateFilterForm extends TemplateFilterAbstract
     /**
      * Add the action if left empty
      *
-     * @param string $text   Template text
-     * @param string $action The action url
-
+     * @param string $text       Template text
+     * @param TemplateInterface $template A template object
      * @return TemplateFilterForm
      */
-    protected function _addAction(&$text, $action)
+    protected function _addAction(&$text, TemplateInterface $template)
     {
         // All: Add the action if left empty
         if (preg_match_all('#<\s*form.*?action=""#sim', $text, $matches, PREG_SET_ORDER))
         {
             foreach ($matches as $match)
             {
-                $str  = str_replace('action=""', 'action="' . $action . '"', $match[0]);
+                $str  = str_replace('action=""', 'action="' . $template->route() . '"', $match[0]);
                 $text = str_replace($match[0], $str, $text);
             }
         }
