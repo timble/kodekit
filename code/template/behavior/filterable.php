@@ -29,7 +29,7 @@ class TemplateBehaviorFilterable extends TemplateBehaviorAbstract
     /**
      * Filter queue
      *
-     * @var	ObjectQueue
+     * @var ObjectQueue
      */
     private $__filter_queue;
 

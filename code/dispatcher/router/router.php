@@ -33,8 +33,8 @@ class DispatcherRouter extends Object implements DispatcherRouterInterface, Obje
     /**
      * Function to convert an internal URI to a route
      *
-     * @param	HttpUrlInterface   $url	The internal URL
-     * @return	boolean
+     * @param   HttpUrlInterface   $url	The internal URL
+     * @return  boolean
      */
     public function build(HttpUrlInterface $url)
     {
