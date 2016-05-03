@@ -375,7 +375,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
                 $file    = $exception->getFile();
                 $line    = $exception->getLine();
 
-                $result = $this->_handleError(E_ERROR, $message, $file, $line);
+                $result = $this->_handleError(E_ERROR, $message, $file, $line, $exception);
             }
             else $result = $this->handleException($exception);
         }
@@ -395,9 +395,10 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
      * @param string $file       The filename that the error was raised in
      * @param int    $line       The line number the error was raised at
      * @param array  $context    An array that points to the active symbol table at the point the error occurred
+     * @param object $previous   The previous exception used for the exception chaining
      * @return bool
      */
-    public function _handleError($level, $message, $file, $line, $context = null)
+    public function _handleError($level, $message, $file, $line, $context = null, $previous = null)
     {
         $result = false;
 
@@ -414,7 +415,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
                 if ($this->getErrorReporting() & $level)
                 {
                     $exception = new ExceptionError(
-                        $message, HttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line
+                        $message, HttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line, $previous
                     );
 
                     $result = $this->handleException($exception);
