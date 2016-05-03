@@ -91,9 +91,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         // Mixin the behavior (and command) interface
         $this->mixin('lib:behavior.mixin', $config);
 
-        // Mixin the event interface
-        $this->mixin('lib:event.mixin', $config);
-
         //Fetch the view data before rendering
         $this->addCommandCallback('before.render', '_fetchData');
     }
