@@ -15,8 +15,15 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Model\Entity
  */
-class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
+class ModelEntityComposite extends Object implements ModelEntityComposable
 {
+    /**
+     * The entity set
+     *
+     * @var ObjectSet
+     */
+    private $__entities;
+
     /**
      * Name of the identity key in the collection
      *
@@ -144,7 +151,7 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
         }
 
         //Insert the entity into the collection
-        parent::insert($entity);
+        $this->__entities->insert($entity);
 
         return $this;
     }
@@ -155,29 +162,36 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
      * This functions accepts either a know position or associative array of property/value pairs
      *
      * @param   string|array  $needle The position or the key or an associative array of column data to match
-     * @return  ModelEntityComposite Returns a collection if successful. Otherwise NULL.
+     * @return  ModelEntityComposite Returns a collection if successful or FALSE
      */
     public function find($needle)
     {
-        $result = null;
-
-        if(is_array($needle))
+        //Filter the objects
+        $objects = $this->__entities->filter(function($object) use ($needle)
         {
-            $result = clone $this;
-
-            foreach($this as $entity)
+            if(is_array($needle))
             {
                 foreach($needle as $key => $value)
                 {
-                    if(!in_array($entity->{$key}, (array) $value)) {
-                        $result->remove($entity);
+                    if(!in_array($object->getProperty($key), (array) $value)) {
+                        return false;
                     }
                 }
             }
-        }
+            else return (bool) ($object->getHandle() == $needle);
+        });
 
-        if(is_scalar($needle) && isset($this->_data[$needle])) {
-            $result = $this->_data[$needle];
+        $result = false;
+        if(is_array($needle) || count($objects))
+        {
+            //Create the entities
+            $result = clone $this;
+            $result->clear();
+
+            //Create the resultset
+            foreach($objects as $object) {
+                $result->insert($object);
+            }
         }
 
         return $result;
@@ -198,7 +212,7 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
             throw new \InvalidArgumentException('Entity needs to implement ModelEntityInterface');
         }
 
-        return parent::remove($entity);
+        return $this->__entities->remove($entity);
     }
 
     /**
@@ -214,7 +228,7 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
             throw new \InvalidArgumentException('Entity needs to implement ModelEntityInterface');
         }
 
-        return parent::contains($entity);
+        return $this->__entities->contains($entity);
     }
 
     /**
@@ -226,7 +240,7 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
     {
         $result = false;
 
-        if (count($this))
+        if ($this->count())
         {
             $result = true;
 
@@ -253,7 +267,7 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
     {
         $result = false;
 
-        if (count($this))
+        if ($this->count())
         {
             $result = true;
 
@@ -278,7 +292,7 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
      */
     public function clear()
     {
-        $this->_data = array();
+        $this->__entities = $this->getObject('object.set');
         return $this;
     }
 
@@ -528,21 +542,120 @@ class ModelEntityComposite extends ObjectSet implements ModelEntityComposable
     public function toArray()
     {
         $result = array();
-        foreach ($this as $key => $entity) {
-            $result[$key] = $entity->toArray();
+        if($entity = $this->getIterator()->current()) {
+            $result = $entity->toArray();
         }
+
         return $result;
+    }
+
+    /**
+     * Get a handle for this object
+     *
+     * This function returns an unique identifier for the object. This id can be used as a hash key for storing objects
+     * or for identifying an object
+     *
+     * @return string A string that is unique
+     */
+    public function getHandle()
+    {
+        $result = false;
+        if($entity = $this->getIterator()->current()) {
+            $result = $entity->getHandle();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return a string representation of the set
+     *
+     * Required by interface \Serializable
+     *
+     * @return  string  A serialized object
+     */
+    public function serialize()
+    {
+        return $this->__entities->serialize();
+    }
+
+    /**
+     * Unserializes a set from its string representation
+     *
+     * Required by interface \Serializable
+     *
+     * @param   string  $serialized The serialized data
+     */
+    public function unserialize($serialized)
+    {
+        $this->__entities->unserialize($serialized);
+    }
+
+    /**
+     * Returns the number of elements in the collection.
+     *
+     * Required by the Countable interface
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->__entities->count();
+    }
+
+    /**
+     * Defined by IteratorAggregate
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return $this->__entities->getIterator();
+    }
+
+    /**
+     * Set a property
+     *
+     * @param   string  $property   The property name.
+     * @param   mixed   $value      The property value.
+     * @return  void
+     */
+    final public function offsetSet($property, $value)
+    {
+        $this->setProperty($property, $value);
     }
 
     /**
      * Get a property
      *
-     * @param   string  $property The property name.
-     * @return  mixed
+     * @param   string  $property   The property name.
+     * @return  mixed The property value
      */
-    final public function __get($property)
+    final public function offsetGet($property)
     {
         return $this->getProperty($property);
+    }
+
+    /**
+     * Check if a property exists
+     *
+     * @param   string  $property   The property name.
+     * @return  boolean
+     */
+    final public function offsetExists($property)
+    {
+        return $this->hasProperty($property);
+    }
+
+    /**
+     * Remove a property
+     *
+     * @param   string  $property The property name.
+     * @return  void
+     */
+    final public function offsetUnset($property)
+    {
+        $this->removeProperty($property);
     }
 
     /**
