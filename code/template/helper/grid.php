@@ -173,14 +173,15 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function sort($config = array(), TemplateInterface $template)
+    public function sort($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'title'     => '',
             'column'    => '',
             'direction' => 'asc',
-            'sort'      => ''
+            'sort'      => '',
+            'url'       => null
         ));
 
         $translator = $this->getObject('translator');
@@ -191,8 +192,8 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         }
 
         //Set the direction
-        $direction	= strtolower($config->direction);
-        $direction 	= in_array($direction, array('asc', 'desc')) ? $direction : 'asc';
+        $direction  = strtolower($config->direction);
+        $direction  = in_array($direction, array('asc', 'desc')) ? $direction : 'asc';
 
         //Set the class
         $class = '';
@@ -202,14 +203,15 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             $class = 'class="-koowa-'.$direction.'"';
         }
 
-        $url = $template->route();
+        //Set the query in the route
+        if(!$config->url instanceof HttpUrlInterface) {
+            $config->url = HttpUrl::fromString($config->url);
+        }
 
-        $query              = $url->getQuery(1);
-        $query['sort']      = $config->column;
-        $query['direction'] = $direction;
-        $url->setQuery($query);
+        $config->url->query['sort']      = $config->column;
+        $config->url->query['direction'] = $direction;
 
-        $html  = '<a href="'.$url.'" title="'.$translator->translate('Click to sort by this column').'"  '.$class.'>';
+        $html  = '<a href="'.$config->url.'" title="'.$translator->translate('Click to sort by this column').'"  '.$class.'>';
         $html .= $translator->translate($config->title);
 
         // Mark the current column
