@@ -279,14 +279,16 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
      * @param   array   $config An optional array with configuration options
      * @return string    The html output
      */
-    public function keepalive($config = array(), TemplateInterface $template)
+    public function keepalive($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'refresh' => 15 * 60000, //default refresh is 15min
-            'url'     => $template->route('', false, false),
+            'url'     => '',         //default to window.location.url
         ));
+
         $html = '';
+
         // Only load once
         if (!isset(self::$_loaded['keepalive']))
         {
@@ -306,14 +308,29 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $refresh = 3600000;
             }
 
+            if(empty($config->url)) {
+                $url = 'window.location.url';
+            } else {
+                $url = "'.$config->url.'";
+            }
+
             // Build the keep alive script.
+            //See: http://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
             $html =
                 "<script>
-                Kodekit.keepalive =  function() {
-                    var request = new Request({method: 'get', url: '" . $config->url . "'}).send();
-                }
-                window.addEvent('domready', function() { Kodekit.keepalive.periodical('" . $refresh . "'); });
-            </script>";
+                (function keepalive(){
+                    kQuery(function($) {
+                        $.ajax({
+                            url: $url,
+                            method: 'HEAD',
+                            cache: false,
+                            complete: function() {
+                                // Schedule the next request when the current one's complete
+                                setTimeout(keepalive, '" . $refresh . "');
+                            }
+                        })
+                    });
+                })();</script>";
 
             self::$_loaded['keepalive'] = true;
         }
@@ -383,7 +400,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 'validate'      => false, //Toggle if the forms validation helper is loaded
                 'queryVarName'  => 'search',
                 'width'         => 'resolve',
-                'model'		    => $config->model,
+                'model'         => $config->model,
                 'placeholder'   => $config->prompt,
                 'allowClear'    => $config->deselect,
                 'value'         => $config->value,
@@ -405,8 +422,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         }
 
         $config->options->url->setQuery(array('fields' => $config->value.','.$config->text), true);
-
-        $config->options->url = (string)$config->options->url;
+        $config->options->url = (string) $config->options->url;
 
         $options   = $config->options;
         $signature = md5('autocomplete-'.$config->element.$options);
