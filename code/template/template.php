@@ -83,6 +83,18 @@ class Template extends TemplateAbstract
         $context->source = $source;
         $context->type   = $type;
 
+        //If content is a path find the type by locating the file
+        if($this->getObject('filter.path')->validate($source))
+        {
+            $locator = $this->getObject('template.locator.factory')->createLocator($source);
+
+            if (!$file = $locator->locate($source)) {
+                throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $source));
+            }
+
+            $context->type = pathinfo($file, PATHINFO_EXTENSION);
+        }
+
         if ($this->invokeCommand('before.render', $context) !== false)
         {
             //Render the template
@@ -102,18 +114,6 @@ class Template extends TemplateAbstract
     protected function _actionRender(TemplateContext $context)
     {
         $source = parent::render($context->source, ObjectConfig::unbox($context->data));
-
-        //If content is a path find the type by locating the file
-        if($this->getObject('filter.path')->validate($source))
-        {
-            $locator = $this->getObject('template.locator.factory')->createLocator($source);
-
-            if (!$file = $locator->locate($source)) {
-                throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $source));
-            }
-
-            $context->type = pathinfo($file, PATHINFO_EXTENSION);
-        }
 
         if($context->type)
         {

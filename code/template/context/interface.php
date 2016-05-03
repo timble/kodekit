@@ -18,14 +18,21 @@ namespace Kodekit\Library;
 interface TemplateContextInterface extends CommandInterface
 {
     /**
-     * Get the view data
+     * Get the template data
      *
      * @return array
      */
     public function getData();
 
     /**
-     * Get the view parameters
+     * Get the template source
+     *
+     * @return array
+     */
+    public function getSource();
+
+    /**
+     * Get the template parameters
      *
      * @return array
      */

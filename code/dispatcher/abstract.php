@@ -50,7 +50,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         $this->addCommandCallback('before.dispatch', '_resolveRequest');
 
         //Register the default exception handler
-        $this->addEventListener('onException', array($this, 'fail'));
+        $this->getObject('event.publisher')->addListener('onException', array($this, 'fail'));
     }
 
     /**

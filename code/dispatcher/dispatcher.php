@@ -107,8 +107,8 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      * @param DispatcherContextInterface $context	A dispatcher context object
      * @return	mixed
      */
-	protected function _actionDispatch(DispatcherContextInterface $context)
-	{
+    protected function _actionDispatch(DispatcherContextInterface $context)
+    {
         $controller = $this->getController();
 
         if(!$controller instanceof ControllerViewable && !$controller instanceof ControllerModellable)
@@ -354,7 +354,8 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * - Add an Allow header to the response if the status code is 405 METHOD NOT ALLOWED.
      *
-     * {@inheritdoc}
+     * @param DispatcherContextInterface $context   A dispatcher context object
+     * @return mixed
      */
     protected function _actionSend(DispatcherContextInterface $context)
     {
