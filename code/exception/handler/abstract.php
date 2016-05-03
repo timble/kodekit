@@ -133,7 +133,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
     {
         if($type & self::TYPE_EXCEPTION && !($this->_exception_type & self::TYPE_EXCEPTION))
         {
-            set_exception_handler(array($this, 'handleException'));
+            set_exception_handler(array($this, '_handleException'));
             $this->_exception_type |= self::TYPE_EXCEPTION;
         }
 
@@ -351,6 +351,37 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
         }
 
         return false;
+    }
+
+    /**
+     * Exception Handler
+     *
+     * Do not call this method directly. Function visibility is public because set_exception_handler does not allow for
+     * protected method callbacks.
+     *
+     * @param  object $exception  The exception to be handled
+     * @return bool
+     */
+    public function _handleException($exception)
+    {
+        $result = false;
+
+        if($this->isEnabled(self::TYPE_EXCEPTION))
+        {
+            //Handle \Error Exceptions in PHP7
+            if (class_exists('Error') && $exception instanceof \Error)
+            {
+                $message = $exception->getMessage();
+                $file    = $exception->getFile();
+                $line    = $exception->getLine();
+
+                $result = $this->_handleError(E_ERROR, $message, $file, $line);
+            }
+            else $result = $this->handleException($exception);
+        }
+
+        //Let the normal error flow continue
+        return $result;
     }
 
     /**
