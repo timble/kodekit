@@ -80,6 +80,6 @@ class TemplateBehaviorHelperable extends TemplateBehaviorAbstract
             $params = array_merge($this->getParameters()->toArray(), $params);
         }
 
-        return $helper->$function($params, $this->getMixer());
+        return $helper->$function($params);
     }
 }

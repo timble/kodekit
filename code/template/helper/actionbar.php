@@ -23,7 +23,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function render($config = array(), TemplateInterface $template)
+    public function render($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -44,9 +44,9 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
                 $name = $command->getName();
 
                 if(method_exists($this, $name)) {
-                    $html .= $this->$name(ObjectConfig::unbox($command), $template);
+                    $html .= $this->$name(ObjectConfig::unbox($command));
                 } else {
-                    $html .= $this->command(ObjectConfig::unbox($command), $template);
+                    $html .= $this->command(ObjectConfig::unbox($command));
                 }
             }
             $html .= '</div>';
@@ -62,7 +62,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function command($config = array(), TemplateInterface $template)
+    public function command($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -100,7 +100,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
 
         //Create the href
         if(!empty($config->href)) {
-            $config->attribs['href'] = $template->route($config->href);
+            $config->attribs['href'] = $config->href;
         }
 
         $html  = '<a '.$this->buildAttributes($config->attribs).'>';
@@ -134,10 +134,10 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
      * @param array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function dialog($config = array(), TemplateInterface $template)
+    public function dialog($config = array())
     {
         $html  = $this->createHelper('behavior')->modal();
-        $html .= $this->command($config, $template);
+        $html .= $this->command($config);
 
         return $html;
     }
