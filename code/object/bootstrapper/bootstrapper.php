@@ -145,6 +145,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
             {
                 $factory = $this->getObject('object.config.factory');
 
+                $extended_components = array();
                 foreach($this->_manifests as $manifest)
                 {
                     if (isset($manifest['identifier']))
@@ -165,59 +166,60 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                             $this->_namespaces[$identifier] = array($namespace => $manifest['paths']);
                         }
                     }
+
+                    if (isset($manifest['extends'])) {
+                        $extended_components[] = $manifest;
+                    }
                 }
 
-                foreach($this->_manifests as  $manifest)
+                foreach($extended_components as $manifest)
                 {
-                    if (isset($manifest['extends']))
+                    $extends = $manifest['extends'];
+
+                    if (!isset($this->_components[$extends])) {
+                        throw new \RuntimeException(sprintf('Component: %s not found', $extends));
+                    }
+
+                    if(isset($manifest['identifier']))
                     {
-                        $extends = $manifest['extends'];
+                        $identifier = $manifest['identifier'];
 
-                        if (!isset($this->_components[$extends])) {
-                            throw new \RuntimeException(sprintf('Component: %s not found', $extends));
-                        }
+                        //Append paths
+                        $this->_components[$identifier] = array_merge(
+                            $this->_components[$identifier],
+                            $this->_components[$extends]
+                        );
 
-                        if(isset($manifest['identifier']))
+                        //Set the namespace
+                        if (isset($manifest['namespace']))
                         {
-                            $identifier = $manifest['identifier'];
+                            $namespace = $manifest['namespace'];
 
-                            //Append paths
-                            $this->_components[$identifier] = array_merge(
-                                $this->_components[$identifier],
+                            //Append the namespace
+                            $this->_namespaces[$identifier] = array_merge(
+                                $this->_namespaces[$identifier],
                                 $this->_components[$extends]
                             );
-
-                            //Set the namespace
-                            if (isset($manifest['namespace']))
-                            {
-                                $namespace = $manifest['namespace'];
-
-                                //Append the namespace
-                                $this->_namespaces[$identifier] = array_merge(
-                                    $this->_namespaces[$identifier],
-                                    $this->_components[$extends]
-                                );
-                            }
                         }
-                        else
+                    }
+                    else
+                    {
+                        //Prepend paths
+                        $this->_components[$extends] = array_merge(
+                            $manifest['paths'],
+                            $this->_components[$extends]
+                        );
+
+                        //Set the namespace
+                        if (isset($manifest['namespace']))
                         {
-                            //Prepend paths
-                            $this->_components[$extends] = array_merge(
-                                $manifest['paths'],
-                                $this->_components[$extends]
+                            $namespace = $manifest['namespace'];
+
+                            //Prepend the namespace
+                            $this->_namespaces[$extends] = array_merge(
+                                array($namespace => $manifest['paths']),
+                                $this->_namespaces[$extends]
                             );
-
-                            //Set the namespace
-                            if (isset($manifest['namespace']))
-                            {
-                                $namespace = $manifest['namespace'];
-
-                                //Prepend the namespace
-                                $this->_namespaces[$extends] = array_merge(
-                                    array($namespace => $manifest['paths']),
-                                    $this->_namespaces[$extends]
-                                );
-                            }
                         }
                     }
                 }
