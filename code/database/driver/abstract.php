@@ -196,10 +196,15 @@ abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverIn
      * Provides access to the underlying database connection. Useful for when
      * you need to call a proprietary method such as postgresql's lo_* methods
      *
+     * @param bool $autoconnect If connection hasn't been established, auto connect
      * @return resource
      */
-    public function getConnection()
+    public function getConnection($autoconnect = true)
     {
+        if (!$this->_connection && $autoconnect) {
+            $this->connect();
+        }
+
         return $this->_connection;
     }
 

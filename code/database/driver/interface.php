@@ -44,9 +44,10 @@ interface DatabaseDriverInterface
      * Provides access to the underlying database connection. Useful for when you need to call a proprietary method
      * on the database driver
      *
+     * @param bool $autoconnect If connection hasn't been established, auto connect
      * @return resource
      */
-    public function getConnection();
+    public function getConnection($autoconnect = true);
 
     /**
      * Set the connection
