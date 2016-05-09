@@ -269,10 +269,14 @@ abstract class ModelEntityAbstract extends ObjectArray implements ModelEntityInt
      */
     public function hasProperty($name)
     {
+        if (empty($name)) {
+            return false;
+        }
+
         $result = false;
 
         //Handle computed properties
-        if(!parent::offsetExists($name) && !empty($name))
+        if(!parent::offsetExists($name))
         {
             $properties = $this->getComputedProperties();
 
