@@ -83,7 +83,11 @@ abstract class ControllerView extends ControllerAbstract implements ControllerVi
         {
             //Make sure we have a view identifier
             if(!($this->_view instanceof ObjectIdentifier)) {
-                $this->setView($this->_view);
+                if(!$this->getRequest()->query->has('view')) {
+                    $this->setView($this->_view);
+                } else {
+                    $this->setView($this->getRequest()->query->get('view', 'cmd'));
+                }
             }
 
             //Create the view
