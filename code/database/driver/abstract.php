@@ -202,10 +202,10 @@ abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverIn
      */
     public function getConnection($auto_connect = true)
     {
-        if (!$this->_connection && $auto_connect) {
+        if (!$this->isConnected() && $auto_connect) {
             $this->connect();
 
-            if (!$this->_connection) {
+            if (!$this->isConnected()) {
                 throw new \RuntimeException('Database auto connection failed');
             }
         }
