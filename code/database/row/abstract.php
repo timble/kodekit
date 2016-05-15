@@ -95,9 +95,9 @@ abstract class DatabaseRowAbstract extends ObjectArray implements DatabaseRowInt
         }
 
         // Set the row data
-        if (isset($config->data)) {
+        if (isset($config->data))
+        {
             $this->setProperties($config->data->toArray(), $this->isNew());
-
             unset($config->data);
         }
 

@@ -25,10 +25,11 @@ class TemplateHelperPaginator extends TemplateHelperSelect
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function pagination($config = array(), TemplateInterface $template)
+    public function pagination($config = array())
     {
         $config = new ModelPaginator($config);
         $config->append(array(
+            'url'        => null,
             'total'      => 0,
             'display'    => 4,
             'offset'     => 0,
@@ -52,7 +53,7 @@ class TemplateHelperPaginator extends TemplateHelperSelect
             }
 
             if($config->show_pages) {
-                $html .=  $this->pages($config, $template);
+                $html .=  $this->pages($config);
             }
 
             if($config->show_count) {
@@ -73,7 +74,7 @@ class TemplateHelperPaginator extends TemplateHelperSelect
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'limit'	    => 0,
+            'limit'     => 0,
             'attribs'   => array(),
             'page_rows' => array(10, 20, 50, 100)
         ));
@@ -112,10 +113,11 @@ class TemplateHelperPaginator extends TemplateHelperSelect
      * @param   array   $config An optional array with configuration options
      * @return  string  Html
      */
-    public function pages($config = array(), TemplateInterface $template)
+    public function pages($config = array())
     {
         $config = new ModelPaginator($config);
         $config->append(array(
+            'url'      => null,
             'total'    => 0,
             'display'  => 4,
             'offset'   => 0,
@@ -125,15 +127,15 @@ class TemplateHelperPaginator extends TemplateHelperSelect
 
         $html = '<ul class="pagination">';
         if($config->offset) {
-            $html .= $this->link($config->pages->prev, $template);
+            $html .= $this->page($config->pages->prev, $config->url);
         }
 
         foreach($config->pages->offsets as $offset) {
-            $html .= $this->link($offset, $template);
+            $html .= $this->page($offset, $config->url);
         }
 
         if($config->total > ($config->offset + $config->limit)) {
-            $html .= $this->link($config->pages->next, $template);
+            $html .= $this->page($config->pages->next, $config->url);
         }
         $html .= '</ul>';
 
@@ -143,13 +145,13 @@ class TemplateHelperPaginator extends TemplateHelperSelect
     /**
      * Render a page link
      *
-     * @param   array   $config An optional array with configuration options
+     * @param   ObjectConfigInterface  $page The page data
+     * @param   HttpUrlInterface       $url  The base url to create the link
      * @return  string  Html
      */
-    public function link($config, TemplateInterface $template)
+    public function page(ObjectConfigInterface $page, HttpUrlInterface $url)
     {
-        $config = new ObjectConfig($config);
-        $config->append(array(
+        $page->append(array(
             'title'   => '',
             'current' => false,
             'active'  => false,
@@ -159,11 +161,14 @@ class TemplateHelperPaginator extends TemplateHelperSelect
             'attribs'  => array(),
         ));
 
-        $route = $template->route('limit='.$config->limit.'&offset='.$config->offset);
-        $rel   = !empty($config->rel) ? 'rel="'.$config->rel.'"' : '';
+        //Set the offset and limit
+        $url->query['limit']  = $page->limit;
+        $url->query['offset'] = $page->offset;
 
-        $html = '<li '.$this->buildAttributes($config->attribs).'>';
-        $html .= '<a href="'.$route.'" '.$rel.'>'.$this->getObject('translator')->translate($config->title).'</a>';
+        $rel   = !empty($page->rel) ? 'rel="'.$page->rel.'"' : '';
+
+        $html = '<li '.$this->buildAttributes($page->attribs).'>';
+        $html .= '<a href="'.$url.'" '.$rel.'>'.$this->getObject('translator')->translate($page->title).'</a>';
         $html .= '</li>';
 
         return $html;

@@ -62,9 +62,6 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
 
         // Mixin the behavior interface
         $this->mixin('lib:behavior.mixin', $config);
-
-        // Mixin the event interface
-        $this->mixin('lib:event.mixin', $config);
     }
 
     /**
@@ -81,7 +78,6 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
             'identity_key'     => null,
             'state'            => 'lib:model.state',
             'state_defaults'   => array(),
-            'command_chain'    => 'lib:command.chain',
             'command_handlers' => array('lib:command.handler.event'),
         ));
 
@@ -162,7 +158,7 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
      * Reset the model data and state
      *
      * @param  array $modified List of changed state names
-     * @return $this
+     * @return ModelAbstract
      */
     final public function reset(array $modified = array())
     {

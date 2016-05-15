@@ -274,19 +274,21 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     /**
      * Keep session alive
      *
-     * This will send an ascynchronous request to the server via AJAX on an interval in miliseconds
+     * This will send an ascynchronous request to the server via AJAX on an interval in secs
      *
      * @param   array   $config An optional array with configuration options
      * @return string    The html output
      */
-    public function keepalive($config = array(), TemplateInterface $template)
+    public function keepalive($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'refresh' => 15 * 60000, //default refresh is 15min
-            'url'     => $template->route('', false, false),
+            'refresh' => 15 * 60, //default refresh is 15min
+            'url'     => '',      //default to window.location.url
         ));
+
         $html = '';
+
         // Only load once
         if (!isset(self::$_loaded['keepalive']))
         {
@@ -294,26 +296,37 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             if($session->isActive())
             {
                 //Get the config session lifetime
-                $lifetime = $session->getLifetime() * 1000;
+                $lifetime = $session->getLifetime();
 
                 //Refresh time is 1 minute less than the lifetime
-                $refresh =  ($lifetime <= 60000) ? 30000 : $lifetime - 60000;
+                $refresh =  ($lifetime <= 60) ? 30 : $lifetime - 60;
             }
             else $refresh = (int) $config->refresh;
 
             // Longest refresh period is one hour to prevent integer overflow.
-            if ($refresh > 3600000 || $refresh <= 0) {
-                $refresh = 3600000;
+            if ($refresh > 3600 || $refresh <= 0) {
+                $refresh = 3600;
+            }
+
+            if(empty($config->url)) {
+                $url = 'window.location.url';
+            } else {
+                $url = "'.$config->url.'";
             }
 
             // Build the keep alive script.
             $html =
                 "<script>
-                Kodekit.keepalive =  function() {
-                    var request = new Request({method: 'get', url: '" . $config->url . "'}).send();
-                }
-                window.addEvent('domready', function() { Kodekit.keepalive.periodical('" . $refresh . "'); });
-            </script>";
+                (function($){
+                    var refresh = '" . $refresh . "';
+                    setInterval(function() {
+                        $.ajax({
+                            url: $url,
+                            method: 'HEAD',
+                            cache: false
+                        })
+                    }, refresh * 1000);
+                })(kQuery);</script>";
 
             self::$_loaded['keepalive'] = true;
         }
@@ -383,7 +396,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 'validate'      => false, //Toggle if the forms validation helper is loaded
                 'queryVarName'  => 'search',
                 'width'         => 'resolve',
-                'model'		    => $config->model,
+                'model'         => $config->model,
                 'placeholder'   => $config->prompt,
                 'allowClear'    => $config->deselect,
                 'value'         => $config->value,
@@ -405,8 +418,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         }
 
         $config->options->url->setQuery(array('fields' => $config->value.','.$config->text), true);
-
-        $config->options->url = (string)$config->options->url;
+        $config->options->url = (string) $config->options->url;
 
         $options   = $config->options;
         $signature = md5('autocomplete-'.$config->element.$options);

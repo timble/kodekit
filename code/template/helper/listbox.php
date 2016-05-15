@@ -32,7 +32,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * @return  string  Html
      * @see __call()
      */
-    public function render($config = array(), TemplateInterface $template)
+    public function render($config = array())
     {
         $config = new ObjectConfig($config);
         $config->append(array(
@@ -62,9 +62,9 @@ class TemplateHelperListbox extends TemplateHelperSelect
         }
 
         if($config->autocomplete) {
-            $result = $this->__autocomplete($config, $template);
+            $result = $this->__autocomplete($config);
         } else {
-            $result = $this->__listbox($config, $template);
+            $result = $this->__listbox($config);
         }
 
         return $result;
@@ -251,7 +251,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * @return  string  Html
      * @see __call()
      */
-    private function __listbox($config = array(), TemplateInterface $template)
+    private function __listbox($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -316,7 +316,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
      * @param  array|ObjectConfig    $config
      * @return string   The html output
      */
-    private function __autocomplete($config = array(), TemplateInterface $template)
+    private function __autocomplete($config = array())
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
@@ -352,11 +352,10 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 $parts = array_merge($parts, ObjectConfig::unbox($config->filter));
             }
 
-            $config->url = $template->route($parts, false, false);
+            $config->url = $this->getObject('lib:dispatcher.router.route')->setQuery($parts);
         }
 
         $html = '';
-
         $html .= $this->createHelper('behavior')->autocomplete($config);
 
         $config->attribs->name = $config->name;

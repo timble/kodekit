@@ -77,9 +77,6 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
 
         // Mixin the behavior (and command) interface
         $this->mixin('lib:behavior.mixin', $config);
-
-        // Mixin the event interface
-        $this->mixin('lib:event.mixin', $config);
     }
 
     /**
@@ -93,7 +90,6 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'command_chain'    => 'lib:command.chain',
             'command_handlers' => array('lib:command.handler.event'),
             'dispatched'       => false,
             'request'          => array(),

@@ -39,6 +39,27 @@ class TemplateContext extends Command implements TemplateContextInterface
     }
 
     /**
+     * Set the template source
+     *
+     * @param string $source
+     * @return TemplateContext
+     */
+    public function setSource($source)
+    {
+        return ObjectConfig::set('source', $source);
+    }
+
+    /**
+     * Get the template source
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return ObjectConfig::get('source');
+    }
+
+    /**
      * Set the view parameters
      *
      * @param array $parameters

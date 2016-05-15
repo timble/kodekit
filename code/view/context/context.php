@@ -58,7 +58,7 @@ class ViewContext extends Command implements ViewContextInterface
     /**
      * Set the view content
      *
-     * @param array $data
+     * @param string $content
      * @return ViewContext
      */
     public function setContent($content)
@@ -69,7 +69,7 @@ class ViewContext extends Command implements ViewContextInterface
     /**
      * Get the view content
      *
-     * @return array
+     * @return string
      */
     public function getContent()
     {
@@ -80,7 +80,7 @@ class ViewContext extends Command implements ViewContextInterface
      * Set the view parameters
      *
      * @param array $parameters
-     * @return ViewContextTemplate
+     * @return ViewContext
      */
     public function setParameters($parameters)
     {

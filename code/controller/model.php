@@ -49,7 +49,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     {
         $config->append(array(
             'toolbars' => array($this->getIdentifier()->name),
-            'model'	   => $this->getIdentifier()->name,
+            'model'    => $this->getIdentifier()->name,
         ));
 
         parent::_initialize($config);
