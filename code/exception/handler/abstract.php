@@ -374,8 +374,25 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
                 $message = $exception->getMessage();
                 $file    = $exception->getFile();
                 $line    = $exception->getLine();
+                $type    = E_ERROR; //Set to E_ERROR by default
 
-                $result = $this->_handleError(E_ERROR, $message, $file, $line, $exception);
+                if($exception instanceof \DivisionByZeroError) {
+                    $type = E_WARNING;
+                }
+
+                if($exception instanceof \AssertionError) {
+                    $type = E_WARNING;
+                }
+
+                if($exception instanceof \ParseError) {
+                    $type = E_PARSE;
+                }
+
+                if($exception instanceof \TypeError) {
+                    $type =  E_RECOVERABLE_ERROR;
+                }
+
+                $result = $this->_handleError($type, $message, $file, $line, $exception);
             }
             else $result = $this->handleException($exception);
         }
