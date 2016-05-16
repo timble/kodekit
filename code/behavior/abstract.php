@@ -127,8 +127,8 @@ abstract class BehaviorAbstract extends CommandCallbackAbstract implements Behav
      * If the handler has already been added. It will not be re-added but parameters will be merged. This allows to
      * change or add parameters for existing handlers.
      *
-     * @param  	string          $command  The command name to register the handler for
-     * @param 	string|Closure  $method   The name of the method or a Closure object
+     * @param   string          $command  The command name to register the handler for
+     * @param   string|Closure  $method   The name of the method or a Closure object
      * @param   array|object    $params   An associative array of config parameters or a ObjectConfig object
      * @throws  \InvalidArgumentException If the method does not exist
      * @return  CommandHandlerAbstract
@@ -281,5 +281,4 @@ abstract class BehaviorAbstract extends CommandCallbackAbstract implements Behav
     {
         return true;
     }
-
 }
