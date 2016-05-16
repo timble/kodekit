@@ -1,27 +1,27 @@
 <?php
 /**
- * Kodekit - http://timble.net/kodekit
- *
- * @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
- * @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
- * @link        https://github.com/timble/kodekit for the canonical source repository
- */
+* Kodekit - http://timble.net/kodekit
+*
+* @copyright   Copyright (C) 2007 - 2016 Johan Janssens and Timble CVBA. (http://www.timble.net)
+* @license     MPL v2.0 <https://www.mozilla.org/en-US/MPL/2.0>
+* @link        https://github.com/timble/kodekit for the canonical source repository
+*/
 
 namespace Kodekit\Library;
 
 /**
- * Event Command Handler
+ * Eventable Behavior
  *
- * The event handler will translate the command name to a onCommandName format and let the event publisher publish
+ * This behavior will translate the command name to a onCommandName format and let the event publisher publish
  * to any registered event listeners.
  *
- * The 'immutable' config option defines if the context is cloned before being passed to the event publisher or
- * or passed by reference instead. By default the context is passed by reference.
+ * The 'event_immutable' config option defines if the command context is cloned before being passed to the event
+ * publisher or or passed by reference instead. By default the context is cloned.
  *
  * @author  Johan Janssens <http://github.com/johanjanssens>
- * @package Kodekit\Library\Command\Handler
+ * @package Kodekit\Library\Behavior
  */
-final class CommandHandlerEvent extends CommandHandlerAbstract implements ObjectSingleton
+class BehaviorEventable extends BehaviorAbstract
 {
     /**
      * The command priority
@@ -35,7 +35,7 @@ final class CommandHandlerEvent extends CommandHandlerAbstract implements Object
      *
      * @var boolean
      */
-    protected $_immutable;
+    protected $_event_immutable;
 
     /**
      * Object constructor
@@ -55,7 +55,7 @@ final class CommandHandlerEvent extends CommandHandlerAbstract implements Object
         $this->__event_publisher = $config->event_publisher;
 
         //Set the immutable state of the handler
-        $this->_immutable = $config->immutable;
+        $this->_event_immutable = $config->event_immutable;
     }
 
     /**
@@ -71,7 +71,7 @@ final class CommandHandlerEvent extends CommandHandlerAbstract implements Object
         $config->append(array(
             'priority'        => self::PRIORITY_LOWEST,
             'event_publisher' => 'event.publisher',
-            'immutable'       => false,
+            'event_immutable' => true,
         ));
 
         parent::_initialize($config);
@@ -140,21 +140,25 @@ final class CommandHandlerEvent extends CommandHandlerAbstract implements Object
 
         $parts  = explode('.', $command->getName());
         $when   = array_shift($parts);               // Before or After
-        $name   = StringInflector::implode($parts); // Read Dispatch Select etc.
+        $name   = StringInflector::implode($parts);  // Action
 
         // Create Specific and Generic event names
         $event_specific = 'on'.ucfirst($when).ucfirst($package).ucfirst($subject).ucfirst($type).$name;
         $event_generic  = 'on'.ucfirst($when).ucfirst($type).$name;
 
         // Clone the context
-        if($this->_immutable) {
+        if($this->isEventImmutable()) {
             $event = clone($command);
         } else {
             $event = $command;
         }
 
         // Create event object to check for propagation
-        $event = $this->getEventPublisher()->publishEvent($event_specific, $event->getAttributes(), $event->getSubject());
+        $event = $this->getEventPublisher()->publishEvent(
+            $event_specific,
+            $event->getAttributes(),
+            $event->getSubject()
+        );
 
         // Ensure event can be propagated and event name is different
         if ($event->canPropagate() && $event_specific != $event_generic)
@@ -165,12 +169,25 @@ final class CommandHandlerEvent extends CommandHandlerAbstract implements Object
     }
 
     /*
-     * Is the command context immutable
+     * Is the event is immutable
      *
      * @return bool
      */
-    public function isImmutable()
+    public function isEventImmutable()
     {
-        return $this->_immutable;
+        return $this->_event_immutable;
+    }
+
+    /**
+     * Get an object handle
+     *
+     * Force the object to be enqueue in the command chain.
+     *
+     * @return string A string that is unique, or NULL
+     * @see execute()
+     */
+    public function getHandle()
+    {
+        return ObjectMixinAbstract::getHandle();
     }
 }
