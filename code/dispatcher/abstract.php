@@ -50,7 +50,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         $this->addCommandCallback('before.dispatch', '_resolveRequest');
 
         //Register the default exception handler
-        $this->getObject('event.publisher')->addListener('onException', array($this, 'fail'));
+        $this->getObject('exception.handler')->addExceptionCallback(array($this, 'fail'));
     }
 
     /**
@@ -314,11 +314,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         }
 
         //Get the exception object
-        if($context->param instanceof EventException) {
-            $exception = $context->param->getException();
-        } else {
-            $exception = $context->param;
-        }
+        $exception = $context->param;
 
         //If the error code does not correspond to a status message, use 500
         $code = $exception->getCode();
