@@ -166,8 +166,8 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Method to set a controller object attached to the dispatcher
      *
-     * @param	mixed	$controller An object that implements ControllerInterface, ObjectIdentifier object
-     * 					            or valid identifier string
+     * @param   mixed   $controller An object that implements ControllerInterface, ObjectIdentifier object
+     *                  or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
      * @return	$this
      */
@@ -182,9 +182,9 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
                     $controller = StringInflector::singularize($controller);
                 }
 
-                $identifier			= $this->getIdentifier()->toArray();
-                $identifier['path']	= array('controller');
-                $identifier['name']	= $controller;
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('controller');
+                $identifier['name'] = $controller;
 
                 $identifier = $this->getIdentifier($identifier);
             }
@@ -301,7 +301,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
      * Handle errors and exceptions
      *
      * @throws \InvalidArgumentException If the action parameter is not an instance of Exception or ExceptionError
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context   A dispatcher context object
      */
     protected function _actionFail(DispatcherContextInterface $context)
     {
