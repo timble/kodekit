@@ -40,20 +40,20 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
     }
 
     /**
-	 * Force a GET after POST using the referrer
+     * Force a GET after POST using the referrer
      *
      * Redirect if the controller has a returned a 2xx status code.
-	 *
-	 * @param 	DispatcherContextInterface $context The active command context
-	 * @return 	void
-	 */
-	protected function _beforeSend(DispatcherContextInterface $context)
-	{
+     *
+     * @param 	DispatcherContextInterface $context The active command context
+     * @return 	void
+     */
+    protected function _beforeSend(DispatcherContextInterface $context)
+    {
         $response = $context->response;
         $request  = $context->request;
 
         if($response->isSuccess()) {
             $response->setRedirect($request->getReferrer());
         }
-	}
+    }
 }
