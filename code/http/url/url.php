@@ -449,14 +449,26 @@ class HttpUrl extends Object implements HttpUrlInterface
         }
 
         //Decode
-        $result = array();
-        foreach($array as $key => $value)
+        $rawurldecode = function($array) use (&$rawurldecode)
         {
-            $key   = rawurldecode($key);
-            $value = rawurldecode($value);
+            $result = array();
+            foreach($array as $key => $value)
+            {
+                $key = rawurldecode($key);
 
-            $result[$key] = $value;
-        }
+                if(is_array($value)) {
+                    $value = $rawurldecode($value);
+                } else {
+                    $value = rawurldecode($value);
+                }
+
+                $result[$key] = $value;
+            }
+
+            return $result;
+        };
+
+        $result = $rawurldecode($array);
 
         //Merge
         if ($merge) {
