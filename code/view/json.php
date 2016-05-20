@@ -35,11 +35,10 @@ class ViewJson extends ViewAbstract
     protected $_included_resources = array();
 
     /**
-     * A type=>fields map to return in the response. Blank for all.
+     * A type => fields map to return in the response. Blank for all.
      *
-     * Comes from the fields property in the query string. For example:
-     * fields[documents]=foo,bar&fields[categories]=foo,bar,baz would only show foo and bar properties
-     * for documents type and foo, bar, and baz for categories type
+     * Example: fields[documents]=foo,bar&fields[categories]=foo,bar,baz would only show foo and bar properties
+     * for documents type and foo, bar, and baz for categories type.
      *
      * @var array
      */
