@@ -84,7 +84,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
         $config->append(array(
             'prompt'    => '- '.$translator->translate('Select').' -',
             'options'   => array(),
-            'select2'   => false,
+            'select2'   => true,
             'attribs'   => array(),
         ));
 
