@@ -29,6 +29,7 @@
             minimumInputLength: 2,
             ajax: {
                 url: options.url,
+                dataType: 'json',
                 delay: 100,
                 data: function (params) {
                     var page  = params.page || 1,  // page is the one-based page number tracked by Select2
@@ -48,7 +49,6 @@
                         // Change format to what select2 expects
                         item.id   = item.attributes[options.value];
                         item.text = item.attributes[options.text];
-
                         results.push(item);
                     });
 
