@@ -368,8 +368,10 @@ class TemplateHelperListbox extends TemplateHelperSelect
 
             if(!$selected instanceof ModelEntityInterface)
             {
-                $model     = $this->getObject($config->identifier)->setState(ObjectConfig::unbox($config->filter));
-                $selected  = $model->setState(array($config->value => ObjectConfig::unbox($selected)))->fetch();
+                $selected = $config->model
+                    ->setState(ObjectConfig::unbox($config->filter))
+                    ->setState(array($config->value => ObjectConfig::unbox($selected)))
+                    ->fetch();
             }
 
             foreach($selected as $entity)
