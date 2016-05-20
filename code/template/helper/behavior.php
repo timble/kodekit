@@ -349,6 +349,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             'debug'   => \Kodekit::getInstance()->isDebug(),
             'element' => '.select2-listbox',
             'options' => array(
+                'minimumResultsForSearch' => 5,
                 'width' => 'resolve'
             )
         ));
