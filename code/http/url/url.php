@@ -230,8 +230,10 @@ class HttpUrl extends Object implements HttpUrlInterface
             $parts = $url;
         }
 
-        foreach ($parts as $key => $value) {
-            $this->$key = $value;
+        if (is_array($parts)) {
+            foreach ($parts as $key => $value) {
+                $this->$key = $value;
+            }
         }
 
         return $this;
