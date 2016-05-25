@@ -108,13 +108,12 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         $config->append(array(
             'data'             => array(),
             'parameters'       => array(),
-            'command_handlers' => array('lib:command.handler.event'),
             'model'      => 'lib:model.empty',
             'content'    => '',
             'mimetype'   => 'application/octet-stream ',
             'url'        =>  $this->getObject('lib:http.url'),
             'title'      => ucfirst($this->getName()),
-            'behaviors'  => array()
+            'behaviors'  => array('lib:behavior.eventable')
         ));
 
         parent::_initialize($config);

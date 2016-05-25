@@ -90,12 +90,11 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'command_handlers' => array('lib:command.handler.event'),
             'dispatched'       => false,
             'request'          => array(),
             'response'         => array(),
             'user'             => array(),
-            'behaviors'        => array('permissible'),
+            'behaviors'        => array('permissible', 'lib:behavior.eventable'),
         ));
 
         parent::_initialize($config);

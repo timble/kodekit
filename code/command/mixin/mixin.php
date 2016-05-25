@@ -324,7 +324,7 @@ class CommandMixin extends CommandCallbackAbstract implements CommandMixinInterf
     /**
      * Get the priority of the handler
      *
-     * @return	integer The handler priority
+     * @return  integer The handler priority
      */
     public function getPriority()
     {

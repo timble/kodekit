@@ -78,7 +78,7 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
             'identity_key'     => null,
             'state'            => 'lib:model.state',
             'state_defaults'   => array(),
-            'command_handlers' => array('lib:command.handler.event'),
+            'behaviors'        => array('lib:behavior.eventable')
         ));
 
         parent::_initialize($config);

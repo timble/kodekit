@@ -15,4 +15,4 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Event\Publisher
  */
-class EventPublisher extends EventPublisherException implements ObjectSingleton {}
+class EventPublisher extends EventPublisherAbstract implements ObjectSingleton {}
