@@ -269,10 +269,6 @@ abstract class ModelEntityAbstract extends ObjectArray implements ModelEntityInt
      */
     public function hasProperty($name)
     {
-        if (empty($name)) {
-            return false;
-        }
-
         $result = false;
 
         //Handle computed properties
@@ -284,7 +280,7 @@ abstract class ModelEntityAbstract extends ObjectArray implements ModelEntityInt
                 $result = true;
             }
         }
-        else $result = true;
+        elseif (!empty($name)) $result = true;
 
         return $result;
     }
