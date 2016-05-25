@@ -133,7 +133,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
     {
         if($type & self::TYPE_EXCEPTION && !($this->_exception_type & self::TYPE_EXCEPTION))
         {
-            set_exception_handler(array($this, 'handleException'));
+            set_exception_handler(array($this, '_handleException'));
             $this->_exception_type |= self::TYPE_EXCEPTION;
         }
 
@@ -354,6 +354,54 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
     }
 
     /**
+     * Exception Handler
+     *
+     * Do not call this method directly. Function visibility is public because set_exception_handler does not allow for
+     * protected method callbacks.
+     *
+     * @param  object $exception  The exception to be handled
+     * @return bool
+     */
+    public function _handleException($exception)
+    {
+        $result = false;
+
+        if($this->isEnabled(self::TYPE_EXCEPTION))
+        {
+            //Handle \Error Exceptions in PHP7
+            if (class_exists('Error') && $exception instanceof \Error)
+            {
+                $message = $exception->getMessage();
+                $file    = $exception->getFile();
+                $line    = $exception->getLine();
+                $type    = E_ERROR; //Set to E_ERROR by default
+
+                if($exception instanceof \DivisionByZeroError) {
+                    $type = E_WARNING;
+                }
+
+                if($exception instanceof \AssertionError) {
+                    $type = E_WARNING;
+                }
+
+                if($exception instanceof \ParseError) {
+                    $type = E_PARSE;
+                }
+
+                if($exception instanceof \TypeError) {
+                    $type =  E_RECOVERABLE_ERROR;
+                }
+
+                $result = $this->_handleError($type, $message, $file, $line, $exception);
+            }
+            else $result = $this->handleException($exception);
+        }
+
+        //Let the normal error flow continue
+        return $result;
+    }
+
+    /**
      * Error Handler
      *
      * Do not call this method directly. Function visibility is public because set_error_handler does not allow for
@@ -364,9 +412,10 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
      * @param string $file       The filename that the error was raised in
      * @param int    $line       The line number the error was raised at
      * @param array  $context    An array that points to the active symbol table at the point the error occurred
+     * @param object $previous   The previous exception used for the exception chaining
      * @return bool
      */
-    public function _handleError($level, $message, $file, $line, $context = null)
+    public function _handleError($level, $message, $file, $line, $context = null, $previous = null)
     {
         $result = false;
 
@@ -383,7 +432,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
                 if ($this->getErrorReporting() & $level)
                 {
                     $exception = new ExceptionError(
-                        $message, HttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line
+                        $message, HttpResponse::INTERNAL_SERVER_ERROR, $level, $file, $line, $previous
                     );
 
                     $result = $this->handleException($exception);
