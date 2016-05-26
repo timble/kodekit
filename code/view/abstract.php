@@ -90,9 +90,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
 
         // Mixin the behavior (and command) interface
         $this->mixin('lib:behavior.mixin', $config);
-
-        //Fetch the view data before rendering
-        $this->addCommandCallback('before.render', '_fetchData');
     }
 
     /**
@@ -133,14 +130,14 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         if ($this->invokeCommand('before.render', $context) !== false)
         {
             //Render the view
-            $context->content = $this->_actionRender($context);
+            $context->result = $this->_actionRender($context);
             $this->invokeCommand('after.render', $context);
         }
 
         //Set the content
-        $this->setContent($context->content);
+        $this->setContent($context->result);
 
-        return $context->content;
+        return $context->result;
     }
 
     /**
@@ -164,17 +161,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     protected function _actionRender(ViewContext $context)
     {
         return trim($context->content);
-    }
-
-    /**
-     * Fetch the view data
-     *
-     * @param ViewContext   $context A view context object
-     * @return void
-     */
-    protected function _fetchData(ViewContext $context)
-    {
-
     }
 
     /**
@@ -396,9 +382,8 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     public function getContext()
     {
         $context = new ViewContext();
-        $context->setSubject($this);
+        $context->setEntity($this->getModel()->fetch());
         $context->setData($this->getData());
-        $context->setContent($this->getContent());
         $context->setParameters($this->getParameters());
 
         return $context;
@@ -407,7 +392,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     /**
      * Get the name
      *
-     * @return 	string 	The name of the object
+     * @return  string  The name of the view
      */
     public function getName()
     {
