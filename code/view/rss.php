@@ -52,10 +52,10 @@ class ViewRss extends ViewTemplate
     /**
      * Prepend the xml prolog
      *
-     * @param ViewContext  $context A view context object
+     * @param ViewContextTemplate  $context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(ViewContext $context)
+    protected function _actionRender(ViewContextTemplate $context)
     {
         //Prepend the xml prolog
         $content  = '<?xml version="1.0" encoding="utf-8" ?>';
