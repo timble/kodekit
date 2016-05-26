@@ -16,7 +16,7 @@ namespace Kodekit\Library;
  * class names can be namespaced based , if no namespace is registered for a component the class will be located from
  * within the active base path. File and folder names must be lower case.
  *
- * Class names need to be prefixed with 'Com'. Each folder in the file structure must be represented in the class name.
+ * Each folder in the file structure must be represented in the class name.
  *
  * Classname : [Name][Path][To][File]
  * Location  : .../name/path/to/file.php

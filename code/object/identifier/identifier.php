@@ -132,7 +132,7 @@ class ObjectIdentifier implements ObjectIdentifierInterface
     /**
      * Serialize the identifier
      *
-     * @return string 	The serialised identifier
+     * @return string   The serialised identifier
      */
     public function serialize()
     {
@@ -300,11 +300,11 @@ class ObjectIdentifier implements ObjectIdentifierInterface
     public function toArray()
     {
         $data = array(
-            'domain'      => $this->_domain,
-            'type'		  => $this->_type,
-            'package'	  => $this->_package,
-            'path'		  => $this->_path,
-            'name'		  => $this->_name,
+            'domain'   => $this->_domain,
+            'type'     => $this->_type,
+            'package'  => $this->_package,
+            'path'     => $this->_path,
+            'name'     => $this->_name,
         );
 
         return $data;

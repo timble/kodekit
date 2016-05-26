@@ -53,8 +53,8 @@ class DispatcherFragment extends DispatcherAbstract implements ObjectInstantiabl
     /**
      * Force creation of a singleton
      *
-     * @param 	ObjectConfig            $config	  A ObjectConfig object with configuration options
-     * @param 	ObjectManagerInterface	$manager  A ObjectInterface object
+     * @param   ObjectConfig            $config   A ObjectConfig object with configuration options
+     * @param   ObjectManagerInterface  $manager  A ObjectInterface object
      * @return  DispatcherInterface
      */
     public static function getInstance(ObjectConfigInterface $config, ObjectManagerInterface $manager)

@@ -25,7 +25,7 @@ interface ModelStateInterface
      * @param   mixed    $default  The default value of the state
      * @param   boolean  $unique   TRUE if the state uniquely identifies an entity, FALSE otherwise. Default FALSE.
      * @param   array    $required Array of required states to determine if the state is unique. Only applicable if the state is unqiue.
-     * @param   boolean  $internal If TRUE the state will be considered internal and should not be included in a routes.
+     * @param   boolean  $internal If TRUE the state will be considered internal and should not be included in a route.
      *                             Default FALSE.
      * @return  ModelStateInterface
      */
