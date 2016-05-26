@@ -63,6 +63,15 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
     public function remove( $name );
 
     /**
+     * Checks if a value exists
+     *
+     * @param   mixed $needle The searched value
+     * @param   bool  $strict If TRUE then check the types of the needle in the haystack.
+     * @return  bool Returns TRUE if needle is found in the array, FALSE otherwise.
+     */
+    public function contains($needle, $strict = false);
+
+    /**
      * Merge options
      *
      * This method will overwrite keys that already exist, keys that don't exist yet will be added.
