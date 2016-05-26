@@ -31,7 +31,7 @@ class ViewContextTemplate extends ViewContext
     /**
      * Get the view layout
      *
-     * @return array
+     * @return string
      */
     public function getLayout()
     {
