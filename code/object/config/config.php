@@ -87,7 +87,7 @@ class ObjectConfig implements ObjectConfigInterface
     /**
      * Check if a configuration option exists
      *
-     * @param  	string 	$name The configuration option name.
+     * @param   string  $name The configuration option name.
      * @return  boolean
      */
     public function has($name)
@@ -115,6 +115,18 @@ class ObjectConfig implements ObjectConfigInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Checks if a value exists
+     *
+     * @param   mixed $needle The searched value
+     * @param   bool  $strict If TRUE then check the types of the needle in the haystack.
+     * @return  bool Returns TRUE if needle is found in the array, FALSE otherwise.
+     */
+    public function contains($needle, $strict = false)
+    {
+        return in_array($needle, $this->__options, $strict);
     }
 
     /**
