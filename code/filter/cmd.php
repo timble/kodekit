@@ -41,7 +41,7 @@ class FilterCmd extends FilterAbstract implements FilterTraversable
     public function sanitize($value)
     {
         $value = trim($value);
-        $pattern    = '/[^A-Za-z0-9.\-_]*/';
+        $pattern    = '/[^A-Za-z0-9.,\-_]*/';
         return preg_replace($pattern, '', $value);
     }
 }
