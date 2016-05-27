@@ -120,6 +120,11 @@ class CommandChain extends Object implements CommandChainInterface
                 else $command = new Command($command, $attributes, $subject);
             }
 
+            //Set the command subject
+            if($subject) {
+                $command->setSubject($subject);
+            }
+
             foreach ($this->__stack->peek() as $handler)
             {
                 $result = $handler->execute($command, $this);
