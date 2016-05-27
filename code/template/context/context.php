@@ -18,6 +18,23 @@ namespace Kodekit\Library;
 class TemplateContext extends Command implements TemplateContextInterface
 {
     /**
+     * Constructor.
+     *
+     * @param  array|\Traversable  $attributes An associative array or a Traversable object instance
+     */
+    public function __construct($attributes = array())
+    {
+        ObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof TemplateContextInterface)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
+    }
+
+    /**
      * Set the view data
      *
      * @param array $data
