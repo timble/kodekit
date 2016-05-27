@@ -25,13 +25,6 @@ interface ModelContextInterface extends CommandInterface
     public function getState();
 
     /**
-     * Get the model entity
-     *
-     * @return ModelEntityInterface
-     */
-    public function getEntity();
-
-    /**
      * Get the identity key
      *
      * @return mixed
