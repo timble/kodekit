@@ -230,8 +230,6 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     public function getContext()
     {
         $context = new DispatcherContext();
-
-        $context->setSubject($this);
         $context->setRequest($this->getRequest());
         $context->setUser($this->getUser());
         $context->setResponse($this->getResponse());
