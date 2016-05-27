@@ -94,15 +94,14 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
         if(!isset($this->_entity))
         {
             $context = $this->getContext();
-            $context->entity  = null;
 
             if ($this->invokeCommand('before.fetch', $context) !== false)
             {
-                $context->entity = $this->_actionFetch($context);
+                $context->result = $this->_actionFetch($context);
                 $this->invokeCommand('after.fetch', $context);
             }
 
-            $this->_entity = ObjectConfig::unbox($context->entity);
+            $this->_entity = ObjectConfig::unbox($context->result);
         }
 
         return $this->_entity;
@@ -117,15 +116,15 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
     final public function create(array $properties = array())
     {
         $context = $this->getContext();
-        $context->entity = $properties;
+        $context->properties = $properties;
 
         if ($this->invokeCommand('before.create', $context) !== false)
         {
-            $context->entity = $this->_actionCreate($context);
+            $context->result = $this->_actionCreate($context);
             $this->invokeCommand('after.create', $context);
         }
 
-        $this->_entity = ObjectConfig::unbox($context->entity);
+        $this->_entity = ObjectConfig::unbox($context->result);
 
         return $this->_entity;
     }
@@ -140,15 +139,14 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
         if(!isset($this->_count))
         {
             $context = $this->getContext();
-            $context->count = null;
 
             if ($this->invokeCommand('before.count', $context) !== false)
             {
-                $context->count = $this->_actionCount($context);
+                $context->result = $this->_actionCount($context);
                 $this->invokeCommand('after.count', $context);
             }
 
-            $this->_count = ObjectConfig::unbox($context->count);
+            $this->_count = ObjectConfig::unbox($context->result);
         }
 
         return $this->_count;
@@ -170,8 +168,6 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
             $this->_actionReset($context);
             $this->invokeCommand('after.reset', $context);
         }
-
-        $this->_count = ObjectConfig::unbox($context->count);
 
         return $this;
     }
@@ -234,7 +230,6 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
     public function getContext()
     {
         $context = new ModelContext();
-        $context->setSubject($this);
         $context->setState($this->getState());
         $context->setIdentityKey($this->_identity_key);
 
