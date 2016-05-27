@@ -27,11 +27,32 @@ class ViewContext extends Command implements ViewContextInterface
         ObjectConfig::__construct($attributes);
 
         //Set the subject and the name
-        if($attributes instanceof ViewContext)
+        if($attributes instanceof ViewContextInterface)
         {
             $this->setSubject($attributes->getSubject());
             $this->setName($attributes->getName());
         }
+    }
+
+    /**
+     * Set the model entity
+     *
+     * @param ModelEntityInterface $entity
+     * @return ViewContext
+     */
+    public function setEntity(ModelEntityInterface $entity)
+    {
+        return ObjectConfig::set('entity', $entity);
+    }
+
+    /**
+     * Get the model entity
+     *
+     * @return ModelEntityInterface
+     */
+    public function getEntity()
+    {
+        return ObjectConfig::get('entity');
     }
 
     /**
@@ -53,27 +74,6 @@ class ViewContext extends Command implements ViewContextInterface
     public function getData()
     {
         return ObjectConfig::get('data');
-    }
-
-    /**
-     * Set the view content
-     *
-     * @param string $content
-     * @return ViewContext
-     */
-    public function setContent($content)
-    {
-        return ObjectConfig::set('content', $content);
-    }
-
-    /**
-     * Get the view content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return ObjectConfig::get('content');
     }
 
     /**

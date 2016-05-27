@@ -90,7 +90,6 @@ abstract class ControllerView extends ControllerAbstract implements ControllerVi
             $config = array(
                 'url'        => clone $this->getObject('request')->getUrl(),
                 'layout'     => $this->getRequest()->getQuery()->get('layout', 'identifier'),
-                'auto_fetch' => $this instanceof ControllerModellable
             );
 
             $this->_view = $this->getObject($this->_view, $config);
@@ -120,9 +119,9 @@ abstract class ControllerView extends ControllerAbstract implements ControllerVi
         {
             if(is_string($view) && strpos($view, '.') === false )
             {
-                $identifier			= $this->getIdentifier()->toArray();
-                $identifier['path']	= array('view', $view);
-                $identifier['name']	= $this->getRequest()->getFormat();
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('view', $view);
+                $identifier['name'] = $this->getRequest()->getFormat();
 
                 $identifier = $this->getIdentifier($identifier);
             }

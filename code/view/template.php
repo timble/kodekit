@@ -32,13 +32,6 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     private $__layout;
 
     /**
-     * Auto assign
-     *
-     * @var boolean
-     */
-    protected $_auto_fetch;
-
-    /**
      * Constructor
      *
      * @param   ObjectConfig $config Configuration options
@@ -47,14 +40,14 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     {
         parent::__construct($config);
 
-        //Set the auto fetch
-        $this->_auto_fetch = $config->auto_fetch;
-
         //Set the layout
         $this->setLayout($config->layout);
 
         //Set the template object
         $this->setTemplate($config->template);
+
+        //Fetch the view data before rendering
+        $this->addCommandCallback('before.render', '_fetchData');
     }
 
     /**
@@ -69,7 +62,6 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     {
         $config->append(array(
             'behaviors'          => array('localizable', 'routable'),
-            'auto_fetch'         => true,
             'layout'             => '',
             'template'           => 'default',
             'template_filters'   => array('asset'),
@@ -87,13 +79,13 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     /**
      * Return the views output
      *
-     * @param ViewContext  $context A view context object
+     * @param ViewContextTemplate  $context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(ViewContext $context)
+    protected function _actionRender(ViewContextTemplate $context)
     {
-        $data   = ObjectConfig::unbox($context->data);
-        $path   = $this->qualifyLayout($context->layout);
+        $data = ObjectConfig::unbox($context->data);
+        $path = $this->qualifyLayout($context->layout);
 
         //Render the template
         $content = $this->getTemplate()
@@ -106,37 +98,28 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     /**
      * Fetch the view data
      *
-     * This function will always fetch the model state. Model data will only be fetched if the auto_fetch property is
-     * set to TRUE.
-     *
-     * @param ViewContext  $context A view context object
+     * @param ViewContextTemplate  $context A view context object
      * @return void
      */
-    protected function _fetchData(ViewContext $context)
+    protected function _fetchData(ViewContextTemplate $context)
     {
         $model = $this->getModel();
 
-        //Auto-assign the data from the model
-        if($this->_auto_fetch)
-        {
-            //Set the data
-            $name   = $this->getName();
-            $entity = $model->fetch();
-            $context->data->$name = $entity;
+        //Set the data
+        $name = $this->getName();
+        $context->data->$name = $context->entity;
 
-            //Set the parameters
-            if($this->isCollection())
-            {
-                $context->parameters->merge($model->getState()->getValues());
-                $context->parameters->total = $model->count();
-            }
-            else
-            {
-                $context->parameters->merge($entity->getProperties());
-                $context->parameters->total = 1;
-            }
+        //Set the parameters
+        if($this->isCollection())
+        {
+            $context->parameters->merge($model->getState()->getValues());
+            $context->parameters->total = $model->count();
         }
-        else $context->parameters->merge($model->getState()->getValues());
+        else
+        {
+            $context->parameters->merge($context->entity->getProperties());
+            $context->parameters->total = 1;
+        }
 
         //Set the layout and view in the parameters.
         $context->parameters->layout = $context->layout;
@@ -283,7 +266,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
     /**
      * Get the view context
      *
-     * @return  ViewContext
+     * @return  ViewContextTemplate
      */
     public function getContext()
     {

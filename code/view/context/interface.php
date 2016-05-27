@@ -18,18 +18,18 @@ namespace Kodekit\Library;
 interface ViewContextInterface extends CommandInterface
 {
     /**
+     * Get the model entity
+     *
+     * @return ModelEntityInterface
+     */
+    public function getEntity();
+
+    /**
      * Get the view data
      *
      * @return array
      */
     public function getData();
-
-    /**
-     * Get the view content
-     *
-     * @return array
-     */
-    public function getContent();
 
     /**
      * Get the view parameters

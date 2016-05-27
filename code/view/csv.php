@@ -71,10 +71,9 @@ class ViewCsv extends ViewAbstract
     {
         $rows    = '';
         $columns = array();
-        $entities  = $this->getModel()->fetch();
 
         // Get the columns
-        foreach($entities as $entity)
+        foreach($context->entity as $entity)
         {
             $data    = $entity->toArray();
             $columns = array_merge($columns + array_flip(array_keys($data)));
@@ -86,7 +85,7 @@ class ViewCsv extends ViewAbstract
         }
 
         //Create the rows
-        foreach($entities as $entity)
+        foreach($context->entity as $entity)
         {
             $data = $entity->toArray();
             $data = array_merge($columns, $data);
