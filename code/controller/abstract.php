@@ -113,13 +113,9 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
     {
         $action  = strtolower($action);
 
-        //Set the context subject
-        $context_subject = $context->getSubject();
-        $context->setSubject($this);
-
-        //Set the context action
-        $context_action = $context->getAction();
-        $context->setAction($action);
+        //Retrieve the context name and subject
+        $subject = $context->getSubject();
+        $name    = $context->getName();
 
         //Execute the action
         if($this->invokeCommand('before.'.$action, $context) !== false)
@@ -142,8 +138,8 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
         }
 
         //Reset the context
-        $context->setSubject($context_subject);
-        $context->setAction($context_action);
+        $context->setSubject($subject);
+        $context->setName($name);
 
         return $context->result;
     }
@@ -334,7 +330,6 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
     public function getContext()
     {
         $context = new ControllerContext();
-        $context->setSubject($this);
         $context->setRequest($this->getRequest());
         $context->setResponse($this->getResponse());
         $context->setUser($this->getUser());
