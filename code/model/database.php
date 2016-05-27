@@ -58,6 +58,10 @@ class ModelDatabase extends ModelAbstract
 
         //Behavior depends on the database. Need to add if after database has been set.
         $this->addBehavior('indexable');
+
+        //Create the query before fetch and count
+        $this->addCommandCallback('before.fetch', '_buildQuery');
+        $this->addCommandCallback('before.count', '_buildQuery');
     }
 
     /**
@@ -81,13 +85,13 @@ class ModelDatabase extends ModelAbstract
     /**
      * Create a new entity for the data store
      *
-     * @param ModelContext $context A model context object
+     * @param ModelContextDatabase $context A model context object
      * @return  ModelEntityComposite The model entity
      */
-    protected function _actionCreate(ModelContext $context)
+    protected function _actionCreate(ModelContextDatabase $context)
     {
         //Get the data
-        $data = ModelContext::unbox($context->entity);
+        $data = ModelContext::unbox($context->properties);
 
         if(!is_numeric(key($data))) {
             $data = array($data);
@@ -105,13 +109,12 @@ class ModelDatabase extends ModelAbstract
     /**
      * Fetch a new entity from the data store
      *
-     * @param ModelContext $context A model context object
+     * @param ModelContextDatabase $context A model context object
      * @return  ModelEntityComposite The model entity
      */
-    protected function _actionFetch(ModelContext $context)
+    protected function _actionFetch(ModelContextDatabase $context)
     {
-        $state   = $context->state;
-        $table   = $this->getTable();
+        $table = $this->getTable();
 
         //Entity options
         $options = array(
@@ -119,19 +122,11 @@ class ModelDatabase extends ModelAbstract
         );
 
         //Select the rows
-        if (!$state->isEmpty())
-        {
-            $context->query->columns('tbl.*');
-            $context->query->table(array('tbl' => $table->getName()));
-
-            $this->_buildQueryColumns($context->query);
-            $this->_buildQueryJoins($context->query);
-            $this->_buildQueryWhere($context->query);
-            $this->_buildQueryGroup($context->query);
-
+        if (!$context->state->isEmpty()) {
             $data = $table->select($context->query, Database::FETCH_ROWSET, $options);
+        } else {
+            $data = $table->createRowset($options);
         }
-        else $data = $table->createRowset($options);
 
         return $data;
     }
@@ -143,14 +138,8 @@ class ModelDatabase extends ModelAbstract
 
      * @return string  The output of the view
      */
-    protected function _actionCount(ModelContext $context)
+    protected function _actionCount(ModelContextDatabase $context)
     {
-        $context->query->columns('COUNT(*)');
-        $context->query->table(array('tbl' => $this->getTable()->getName()));
-
-        $this->_buildQueryJoins($context->query);
-        $this->_buildQueryWhere($context->query);
-
         return $this->getTable()->count($context->query);
     }
 
@@ -209,10 +198,39 @@ class ModelDatabase extends ModelAbstract
      */
     public function getContext()
     {
-        $context        = parent::getContext();
-        $context->query = $this->getObject('lib:database.query.select');
-
+        $context = new ModelContextDatabase(parent::getContext());
+        $context->setQuery($this->getObject('lib:database.query.select'));
         return $context;
+    }
+
+    /**
+     * Build the query
+     *
+     * @param ModelContextDatabase $context A model context object
+     * @return  void
+     */
+    protected function _buildQuery(ModelContextDatabase $context)
+    {
+        //Initialise the query
+        $context->query->table(array('tbl' => $this->getTable()->getName()));
+
+        if($context->action == 'fetch')
+        {
+            $context->query->columns('tbl.*');
+
+            $this->_buildQueryColumns($context->query);
+            $this->_buildQueryJoins($context->query);
+            $this->_buildQueryWhere($context->query);
+            $this->_buildQueryGroup($context->query);
+        }
+
+        if($context->action == 'count')
+        {
+            $context->query->columns('COUNT(*)');
+
+            $this->_buildQueryJoins($context->query);
+            $this->_buildQueryWhere($context->query);
+        }
     }
 
     /**
