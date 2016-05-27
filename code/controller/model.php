@@ -35,6 +35,11 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
 
         // Set the model identifier
         $this->setModel($config->model);
+
+        //Fetch the entity before add, edit or delete
+        $this->addCommandCallback('before.add'   , '_fetchEntity');
+        $this->addCommandCallback('before.edit'  , '_fetchEntity');
+        $this->addCommandCallback('before.delete', '_fetchEntity');
     }
 
     /**
@@ -161,6 +166,17 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     }
 
     /**
+     * Get the controller context
+     *
+     * @return  ControllerContextModel
+     */
+    public function getContext()
+    {
+        $context = new ControllerContextModel(parent::getContext());
+        return $context;
+    }
+
+    /**
      * Get action
      *
      * This function translates a GET request into a read or browse action. If the view name is singular a read action
@@ -187,7 +203,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic browse action, fetches an entity collection
      *
-     * @param   ControllerContextInterface	$context A controller context object
+     * @param   ControllerContextInterface  $context A controller context object
      * @return  ModelEntityInterface An entity object containing the selected entities
      */
     protected function _actionBrowse(ControllerContextInterface $context)
@@ -233,11 +249,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      */
     protected function _actionEdit(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof ModelEntityInterface) {
-            $entities = $this->getModel()->fetch();
-        } else {
-            $entities = $context->result;
-        }
+        $entities = $context->entity;
 
         if(count($entities))
         {
@@ -264,11 +276,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      */
     protected function _actionAdd(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof ModelEntityInterface) {
-            $entity = $this->getModel()->create($context->request->data->toArray());
-        } else {
-            $entity = $context->result;
-        }
+        $entity = $context->entity;
 
         //Only throw an error if the action explicitly failed.
         if($entity->save() === false)
@@ -290,7 +298,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
                         $url->query[$key] = $entity->getProperty($key);
                     }
                 }
-                else $url->query[$entity->getIdentityKey()] = $entity->getProperty($entity->getIdentityKey());
+                else $url->query[$entity->getIdentityKey()] = $entity->getIdentityValue();
 
                 $context->response->headers->set('Location', (string) $url);
                 $context->response->setStatus(HttpResponse::CREATED);
@@ -310,11 +318,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      */
     protected function _actionDelete(ControllerContextInterface $context)
     {
-        if(!$context->result instanceof ModelEntityInterface) {
-            $entities = $this->getModel()->fetch();
-        } else {
-            $entities = $context->result;
-        }
+        $entities = $context->entity;
 
         if(count($entities))
         {
@@ -333,6 +337,33 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
         else throw new ControllerExceptionResourceNotFound('Resource Not Found');
 
         return $entities;
+    }
+
+    /**
+     * Fetch the model entity
+     *
+     * @param ControllerContextInterface  $context A controller context object
+     * @return void
+     */
+    protected function _fetchEntity(ControllerContextInterface $context)
+    {
+        if(!$context->result instanceof ModelEntityInterface)
+        {
+            switch($context->action)
+            {
+                case 'add'   :
+                    $context->entity =  $this->getModel()->create($context->request->data->toArray());
+                    break;
+
+                case 'edit'  :
+                case 'delete':
+                    $context->entity = $this->getModel()->fetch();
+                    break;
+
+            }
+
+        }
+        else $context->entity = $context->result;
     }
 
     /**
