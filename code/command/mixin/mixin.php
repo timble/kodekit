@@ -88,7 +88,7 @@ class CommandMixin extends CommandCallbackAbstract implements CommandMixinInterf
         $config->append(array(
             'command_chain'     => 'lib:command.chain',
             'command_handlers'  => array(),
-            'priority'          => self::PRIORITY_NORMAL,
+            'priority'          => self::PRIORITY_HIGHEST,
         ));
 
         parent::_initialize($config);
@@ -135,6 +135,9 @@ class CommandMixin extends CommandCallbackAbstract implements CommandMixinInterf
      */
     public function invokeCommand($command, $attributes = null, $subject = null)
     {
+        //Default the subject to the mixer
+        $subject = $subject ?: $this->getMixer();
+
         return $this->getCommandChain()->execute($command, $attributes, $subject);
     }
 
