@@ -71,13 +71,6 @@ interface DatabaseTableInterface
     public function getSchema();
 
     /**
-     * Get the table context
-     *
-     * @return  Command
-     */
-    public function getContext();
-
-    /**
      * Check if the table column exists
      *
      * @param  string  $name The name of the column

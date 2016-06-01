@@ -143,13 +143,6 @@ interface ViewInterface
     public function setUrl(HttpUrl $url);
 
     /**
-     * Get the view context
-     *
-     * @return  ViewContext
-     */
-    public function getContext();
-
-    /**
      * Get the name
      *
      * @return 	string The name of the object

@@ -28,14 +28,6 @@ interface ControllerInterface
     public function execute($action, ControllerContext $context);
 
     /**
-     * Get the controller context
-     *
-     * @param   ControllerContextInterface $context Context to cast to a local context
-     * @return  ControllerContext
-     */
-    public function getContext(ControllerContextInterface $context = null);
-
-    /**
      * Gets the available actions in the controller.
      *
      * @return array Actions
