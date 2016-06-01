@@ -21,6 +21,13 @@ namespace Kodekit\Library;
 interface BehaviorMixinInterface
 {
     /**
+     * Get the behavior context
+     *
+     * @return CommandInterface
+     */
+    public function getContext();
+
+    /**
      * Add a behavior
      *
      * @param   mixed $behavior An object that implements BehaviorInterface, an ObjectIdentifier
