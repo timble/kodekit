@@ -162,11 +162,12 @@ class Template extends TemplateAbstract
     /**
      * Get the template context
      *
+     * @param   TemplateContextInterface $context Context to cast to a local context
      * @return  TemplateContext
      */
-    public function getContext()
+    public function getContext(TemplateContextInterface $context = null)
     {
-        $context = new TemplateContext();
+        $context = new TemplateContext($context);
         $context->setData($this->getData());
         $context->setParameters($this->getParameters());
 
