@@ -225,11 +225,12 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
     /**
      * Get the model context
      *
+     * @param   ModelContextInterface $context Context to cast to a local context
      * @return  ModelContext
      */
-    public function getContext()
+    public function getContext(ModelContextInterface $context = null)
     {
-        $context = new ModelContext();
+        $context = new ModelContext($context);
         $context->setState($this->getState());
         $context->setIdentityKey($this->_identity_key);
 
