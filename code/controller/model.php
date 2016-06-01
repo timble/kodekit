@@ -168,11 +168,12 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Get the controller context
      *
+     * @param   ControllerContextInterface $context Context to cast to a local context
      * @return  ControllerContextModel
      */
-    public function getContext()
+    public function getContext(ControllerContextInterface $context = null)
     {
-        $context = new ControllerContextModel(parent::getContext());
+        $context = new ControllerContextModel(parent::getContext($context));
         return $context;
     }
 
@@ -182,10 +183,10 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      * This function translates a GET request into a read or browse action. If the view name is singular a read action
      * will be executed, if plural a browse action will be executed.
      *
-     * @param   ControllerContextInterface $context A command context object
+     * @param   ControllerContextModel $context  A controller context object
      * @return  string|bool The rendered output of the view or FALSE if something went wrong
      */
-    protected function _actionRender(ControllerContextInterface $context)
+    protected function _actionRender(ControllerContextModel $context)
     {
         $result = false;
 
@@ -203,23 +204,27 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic browse action, fetches an entity collection
      *
-     * @param   ControllerContextInterface  $context A controller context object
+     * @param   ControllerContextModel  $context A controller context object
      * @return  ModelEntityInterface An entity object containing the selected entities
      */
-    protected function _actionBrowse(ControllerContextInterface $context)
+    protected function _actionBrowse(ControllerContextModel $context)
     {
         $entity = $this->getModel()->fetch();
+
+        //Set the entity in the context
+        $context->setEntity($entity);
+
         return $entity;
     }
 
     /**
      * Generic read action, fetches a single entity
      *
-     * @param    ControllerContextInterface $context A controller context object
+     * @param    ControllerContextModel $context A controller context object
      * @throws   ControllerExceptionResourceNotFound
      * @return   ModelEntityInterface
      */
-    protected function _actionRead(ControllerContextInterface $context)
+    protected function _actionRead(ControllerContextModel $context)
     {
         if(!$context->result instanceof ModelEntityInterface)
         {
@@ -237,17 +242,20 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
         }
         else $entity = $context->result;
 
+        //Set the entity in the context
+        $context->setEntity($entity);
+
         return $entity;
     }
 
     /**
      * Generic edit action, saves over an existing entity collection
      *
-     * @param   ControllerContextInterface	$context A command context object
+     * @param   ControllerContextModel $context A controller context object
      * @throws  ControllerExceptionResourceNotFound   If the resource could not be found
      * @return  ModelEntityInterface
      */
-    protected function _actionEdit(ControllerContextInterface $context)
+    protected function _actionEdit(ControllerContextModel $context)
     {
         $entities = $context->entity;
 
@@ -270,11 +278,11 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic add action, saves a new entity
      *
-     * @param   ControllerContextInterface	$context A controller context object
+     * @param   ControllerContextModel   $context A controller context object
      * @throws  ControllerExceptionActionFailed If the delete action failed on the data entity
      * @return  ModelEntityInterface
      */
-    protected function _actionAdd(ControllerContextInterface $context)
+    protected function _actionAdd(ControllerContextModel $context)
     {
         $entity = $context->entity;
 
@@ -311,12 +319,12 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic delete function, deletes an existing entity collection
      *
-     * @param    ControllerContextInterface $context A controller context object
+     * @param    ControllerContextModel $context A controller context object
      * @throws   ControllerExceptionResourceNotFound
      * @throws   ControllerExceptionActionFailed
      * @return   ModelEntityInterface An entity object containing the deleted entities
      */
-    protected function _actionDelete(ControllerContextInterface $context)
+    protected function _actionDelete(ControllerContextModel $context)
     {
         $entities = $context->entity;
 
@@ -342,28 +350,28 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Fetch the model entity
      *
-     * @param ControllerContextInterface  $context A controller context object
+     * @param ControllerContextModel  $context A controller context object
      * @return void
      */
-    protected function _fetchEntity(ControllerContextInterface $context)
+    protected function _fetchEntity(ControllerContextModel $context)
     {
         if(!$context->result instanceof ModelEntityInterface)
         {
             switch($context->action)
             {
                 case 'add'   :
-                    $context->entity =  $this->getModel()->create($context->request->data->toArray());
+                    $context->setEntity($this->getModel()->create($context->request->data->toArray()));
                     break;
 
                 case 'edit'  :
                 case 'delete':
-                    $context->entity = $this->getModel()->fetch();
+                    $context->setEntity($this->getModel()->fetch());
                     break;
 
             }
 
         }
-        else $context->entity = $context->result;
+        else $context->setEntity($context->result);
     }
 
     /**

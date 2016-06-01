@@ -40,10 +40,10 @@ class ControllerBehaviorPersistable extends ControllerBehaviorAbstract
     /**
      * Returns a key based on the context to persist state values
      *
-     * @param 	ControllerContextInterface $context The active controller context
+     * @param 	ControllerContext $context The active controller context
      * @return  string
      */
-    protected function _getStateKey(ControllerContextInterface $context)
+    protected function _getStateKey(ControllerContext $context)
     {
         $view   = $this->getView()->getIdentifier();
         $layout = $this->getView()->getLayout();
@@ -58,10 +58,10 @@ class ControllerBehaviorPersistable extends ControllerBehaviorAbstract
      * This functions merges the request information with any model state information that was saved in the session and
      * returns the result.
      *
-     * @param 	ControllerContextInterface $context The active controller context
-     * @return 	void
+     * @param   ControllerContextModel $context The active controller context
+     * @return  void
      */
-    protected function _beforeBrowse(ControllerContextInterface $context)
+    protected function _beforeBrowse(ControllerContextModel $context)
     {
         $query = $context->getRequest()->query;
 
@@ -73,10 +73,10 @@ class ControllerBehaviorPersistable extends ControllerBehaviorAbstract
     /**
      * Saves the model state in the session
      *
-     * @param 	ControllerContextInterface $context The active controller context
-     * @return 	void
+     * @param   ControllerContextModel $context The active controller context
+     * @return  void
      */
-    protected function _afterBrowse(ControllerContextInterface $context)
+    protected function _afterBrowse(ControllerContextModel $context)
     {
         $state  = $this->getModel()->getState();
 

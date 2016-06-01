@@ -20,10 +20,10 @@ class ControllerBehaviorLocalizable extends ControllerBehaviorAbstract
     /**
      * Load the language if the controller has not been dispatched
      *
-     * @param   ControllerContextInterface $context A controller context object
+     * @param   ControllerContext $context A controller context object
      * @return  void
      */
-    protected function _beforeRender(ControllerContextInterface $context)
+    protected function _beforeRender(ControllerContext $context)
     {
         $controller = $context->getSubject();
 

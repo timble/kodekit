@@ -104,12 +104,12 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string                      $action  The action to execute
-     * @param   ControllerContextInterface $context A command context object
+     * @param   ControllerContext $context A command context object
      * @throws  Exception
      * @throws  \BadMethodCallException
      * @return  mixed|bool The value returned by the called method, false in error case.
      */
-    public function execute($action, ControllerContextInterface $context)
+    public function execute($action, ControllerContext $context)
     {
         $action  = strtolower($action);
 
@@ -325,11 +325,12 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
     /**
      * Get the controller context
      *
+     * @param   ControllerContextInterface $context Context to cast to a local context
      * @return  ControllerContext
      */
-    public function getContext()
+    public function getContext(ControllerContextInterface $context = null)
     {
-        $context = new ControllerContext();
+        $context = new ControllerContext($context);
         $context->setRequest($this->getRequest());
         $context->setResponse($this->getResponse());
         $context->setUser($this->getUser());

@@ -21,18 +21,19 @@ interface ControllerInterface
      * Execute an action by triggering a method in the derived class.
      *
      * @param   string             $action  The action to execute
-     * @param   ControllerContextInterface $context A command context object
+     * @param   ControllerContext $context A command context object
      * @throws  \BadMethodCallException
      * @return  mixed|bool      The value returned by the called method, false in error case.
      */
-    public function execute($action, ControllerContextInterface $context);
+    public function execute($action, ControllerContext $context);
 
     /**
      * Get the controller context
      *
-     * @return  ControllerContextInterface
+     * @param   ControllerContextInterface $context Context to cast to a local context
+     * @return  ControllerContext
      */
-    public function getContext();
+    public function getContext(ControllerContextInterface $context = null);
 
     /**
      * Gets the available actions in the controller.
