@@ -195,11 +195,11 @@ class DispatcherAuthenticatorJwt extends DispatcherAuthenticatorAbstract
     /**
      * Authenticate using a JWT token
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      * @throws ControllerExceptionRequestNotAuthenticated
      * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
-    public function authenticateRequest(DispatcherContextInterface $context)
+    public function authenticateRequest(DispatcherContext $context)
     {
         if($token = $this->getToken())
         {

@@ -116,10 +116,10 @@ class DispatcherBehaviorDecoratable extends DispatcherBehaviorAbstract
      * - language: The language of the response
      * - status: The status code of the response
      *
-     * @param   DispatcherContextInterface $context The active command context
+     * @param   DispatcherContext $context The active command context
      * @return  void
      */
-    protected function _beforeSend(DispatcherContextInterface $context)
+    protected function _beforeSend(DispatcherContext $context)
     {
         $response = $context->getResponse();
 

@@ -23,7 +23,7 @@ class DispatcherBehaviorLocalizable extends DispatcherBehaviorAbstract
      * @param   ViewContextInterface $context A view context object
      * @return  void
      */
-    protected function _beforeDispatch(DispatcherContextInterface $context)
+    protected function _beforeDispatch(DispatcherContext $context)
     {
         $context->getSubject()->loadLanguage();
     }

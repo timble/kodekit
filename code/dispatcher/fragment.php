@@ -107,9 +107,9 @@ class DispatcherFragment extends DispatcherAbstract implements ObjectInstantiabl
     /**
      * Resolve the request
      *
-     * @param DispatcherContextInterface $context A dispatcher context object
+     * @param DispatcherContext $context A dispatcher context object
      */
-    protected function _resolveRequest(DispatcherContextInterface $context)
+    protected function _resolveRequest(DispatcherContext $context)
     {
         if($controller = ObjectConfig::unbox($context->param))
         {
@@ -135,10 +135,10 @@ class DispatcherFragment extends DispatcherAbstract implements ObjectInstantiabl
      * Function makes an internal sub-request, based on the information in the request and passing along the context
      * and will return the result.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
-     * @return	mixed
+     * @param DispatcherContext $context   A dispatcher context object
+     * @return  mixed
      */
-    protected function _actionInclude(DispatcherContextInterface $context)
+    protected function _actionInclude(DispatcherContext $context)
     {
         return $this->_actionDispatch($context);
     }
@@ -146,10 +146,10 @@ class DispatcherFragment extends DispatcherAbstract implements ObjectInstantiabl
     /**
      * Send the response
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      * @return mixed
      */
-    protected function _actionSend(DispatcherContextInterface $context)
+    protected function _actionSend(DispatcherContext $context)
     {
         return $context->result;
     }

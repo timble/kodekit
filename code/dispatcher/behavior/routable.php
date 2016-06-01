@@ -22,10 +22,10 @@ class DispatcherBehaviorRoutable extends DispatcherBehaviorAbstract
     /**
      * Redirects the page to the default view
      *
-     * @param 	DispatcherContextInterface $context The active command context
+     * @param   DispatcherContext $context The active command context
      * @return  bool
      */
-    protected function _beforeDispatch(DispatcherContextInterface $context)
+    protected function _beforeDispatch(DispatcherContext $context)
     {
         $view = $context->request->query->get('view', 'cmd');
 

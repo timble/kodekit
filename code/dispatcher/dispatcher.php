@@ -81,10 +81,10 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
     /**
      * Resolve the request
      *
-     * @param DispatcherContextInterface $context A dispatcher context object
+     * @param DispatcherContext $context A dispatcher context object
      * @throw DispatcherExceptionMethodNotAllowed If the HTTP request method is not allowed.
      */
-    protected function _resolveRequest(DispatcherContextInterface $context)
+    protected function _resolveRequest(DispatcherContext $context)
     {
         //Resolve the controller action
         $method = strtolower($context->request->getMethod());
@@ -104,10 +104,10 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      * Dispatch to a controller internally. Functions makes an internal sub-request, based on the information in
      * the request and passing along the context.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context    A dispatcher context object
      * @return	mixed
      */
-    protected function _actionDispatch(DispatcherContextInterface $context)
+    protected function _actionDispatch(DispatcherContext $context)
     {
         $controller = $this->getController();
 
@@ -120,7 +120,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
                 throw new ControllerExceptionRequestInvalid('Action not found');
             }
 
-            $controller->execute($action, $context);
+            $controller->execute($action, $controller->getContext($context));
         }
         else $this->execute(strtolower($context->request->getMethod()), $context);
 
@@ -133,15 +133,15 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * This function translates a GET request into a render action.
      *
-     * @param DispatcherContextInterface $context  A dispatcher context object
+     * @param DispatcherContext $context  A dispatcher context object
      * @return ModelEntityInterface
      */
-    protected function _actionGet(DispatcherContextInterface $context)
+    protected function _actionGet(DispatcherContext $context)
     {
         $controller = $this->getController();
 
         if($controller instanceof ControllerViewable) {
-            $result = $controller->execute('render', $context);
+            $result = $controller->execute('render', $controller->getContext($context));
         } else {
             throw new DispatcherExceptionMethodNotAllowed('Method GET not allowed');
         }
@@ -152,15 +152,15 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
     /**
      * Head method
      *
-     * @param DispatcherContextInterface $context  A dispatcher context object
+     * @param DispatcherContext $context  A dispatcher context object
      * @return ModelEntityInterface
      */
-    protected function _actionHead(DispatcherContextInterface $context)
+    protected function _actionHead(DispatcherContext $context)
     {
         $controller = $this->getController();
 
         if($controller instanceof ControllerViewable) {
-            $result =  $this->execute('get', $context);
+            $result =  $this->execute('get', $controller->getContext($context));
         } else {
             throw new DispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
         }
@@ -177,14 +177,14 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      * If an _action parameter exists in the request data it will be used instead. If no action can be found an bad
      * request exception will be thrown.
      *
-     * @param   DispatcherContextInterface $context  A dispatcher context object
+     * @param   DispatcherContext $context  A dispatcher context object
      * @throws  DispatcherExceptionMethodNotAllowed  The action specified in the request is not allowed for the
      *          entity identified by the Request-URI. The response MUST include an Allow header containing a list of
      *          valid actions for the requested entity.
      * @throws  ControllerExceptionRequestInvalid    The action could not be found based on the info in the request.
      * @return  ModelEntityInterface
      */
-    protected function _actionPost(DispatcherContextInterface $context)
+    protected function _actionPost(DispatcherContext $context)
     {
         $action     = null;
         $controller = $this->getController();
@@ -211,7 +211,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
                 throw new ControllerExceptionRequestInvalid('Action not found');
             }
 
-            $result = $controller->execute($action, $context);
+            $result = $controller->execute($action, $controller->getContext($context));
         }
         else throw new DispatcherExceptionMethodNotAllowed('Method POST not allowed');
 
@@ -227,11 +227,11 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * If the entity already exists it will be completely replaced based on the data available in the request.
      *
-     * @param   DispatcherContextInterface $context    A dispatcher context object
+     * @param   DispatcherContext $context    A dispatcher context object
      * @throws  ControllerExceptionRequestInvalid  If the model state is not unique
      * @return  ModelEntityInterface
      */
-    protected function _actionPut(DispatcherContextInterface $context)
+    protected function _actionPut(DispatcherContext $context)
     {
         $action     = null;
         $controller = $this->getController();
@@ -261,7 +261,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
                 throw new ControllerExceptionRequestInvalid('Resource not found');
             }
 
-            $result = $controller->execute($action, $context);
+            $result = $controller->execute($action, $controller->getContext($context));
         }
         else throw new DispatcherExceptionMethodNotAllowed('Method PUT not allowed');
 
@@ -273,16 +273,16 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * This function translates a DELETE request into a delete action.
      *
-     * @param   DispatcherContextInterface $context A dispatcher context object
+     * @param   DispatcherContext $context A dispatcher context object
      * @throws  DispatcherExceptionMethodNotAllowed
      * @return  ModelEntityInterface
      */
-    protected function _actionDelete(DispatcherContextInterface $context)
+    protected function _actionDelete(DispatcherContext $context)
     {
         $controller = $this->getController();
 
         if($controller instanceof ControllerModellable) {
-            $result = $controller->execute('delete', $context);
+            $result = $controller->execute('delete', $controller->getContext($context));
         } else {
             throw new DispatcherExceptionMethodNotAllowed('Method DELETE not allowed');
         }
@@ -293,10 +293,10 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
     /**
      * Options method
      *
-     * @param   DispatcherContextInterface $context    A dispatcher context object
+     * @param   DispatcherContext $context    A dispatcher context object
      * @return  string  The allowed actions; e.g., `GET, POST [add, edit, cancel, save], PUT, DELETE`
      */
-    protected function _actionOptions(DispatcherContextInterface $context)
+    protected function _actionOptions(DispatcherContext $context)
     {
         $agent   = $context->request->getAgent();
         $pattern = '#(?:Microsoft Office (?:Protocol|Core|Existence)|Microsoft-WebDAV)#i';
@@ -354,10 +354,10 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * - Add an Allow header to the response if the status code is 405 METHOD NOT ALLOWED.
      *
-     * @param DispatcherContextInterface $context   A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      * @return mixed
      */
-    protected function _actionSend(DispatcherContextInterface $context)
+    protected function _actionSend(DispatcherContext $context)
     {
         $request  = $this->getRequest();
         $response = $this->getResponse();
@@ -367,8 +367,10 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             if ($response->isSuccess())
             {
                 //Render the controller and set the result in the response body
-                if($response->getStatusCode() !== HttpResponse::NO_CONTENT) {
-                    $context->result = $this->getController()->execute('render', $context);
+                if($response->getStatusCode() !== HttpResponse::NO_CONTENT)
+                {
+                    $controller = $this->getController();
+                    $context->result = $controller->execute('render', $controller->getContext($context));
                 }
             }
             else

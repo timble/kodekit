@@ -45,20 +45,20 @@ interface DispatcherAuthenticatorInterface
     /**
      * Authenticate the request
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context    A dispatcher context object
      * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
-    public function authenticateRequest(DispatcherContextInterface $context);
+    public function authenticateRequest(DispatcherContext $context);
 
     /**
      * Challenge the response
      *
      * @link http://tools.ietf.org/html/rfc7235#section-2.1
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      * @return void
      */
-    public function challengeResponse(DispatcherContextInterface $context);
+    public function challengeResponse(DispatcherContext $context);
 
     /**
      * Log the user in

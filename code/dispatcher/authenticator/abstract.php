@@ -118,10 +118,10 @@ abstract class DispatcherAuthenticatorAbstract extends Object implements Dispatc
     /**
      * Challenge the response
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      * @return bool Returns TRUE if the response could be signed, FALSE otherwise.
      */
-    public function challengeResponse(DispatcherContextInterface $context)
+    public function challengeResponse(DispatcherContext $context)
     {
         $response = $context->getResponse();
 

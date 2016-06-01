@@ -44,10 +44,10 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
      *
      * Redirect if the controller has a returned a 2xx status code.
      *
-     * @param 	DispatcherContextInterface $context The active command context
-     * @return 	void
+     * @param   DispatcherContext $context The active command context
+     * @return  void
      */
-    protected function _beforeSend(DispatcherContextInterface $context)
+    protected function _beforeSend(DispatcherContext $context)
     {
         $response = $context->response;
         $request  = $context->request;
