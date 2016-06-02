@@ -519,7 +519,7 @@ abstract class DatabaseTableAbstract extends Object implements DatabaseTableInte
      */
     public function getContext(DatabaseContextInterface $context = null)
     {
-        $context = new DatabaseContextTable();
+        $context = new DatabaseContextTable($context);
         return $context;
     }
 
