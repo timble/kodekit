@@ -76,7 +76,7 @@ class ModelDatabase extends ModelAbstract
     {
         $config->append(array(
             'table'     => $this->getIdentifier()->name,
-            'behaviors' => array('paginatable', 'sortable'),
+            'behaviors' => array('paginatable', 'sortable', 'sparsable'),
         ));
 
         parent::_initialize($config);

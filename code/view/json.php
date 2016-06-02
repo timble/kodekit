@@ -32,26 +32,7 @@ class ViewJson extends ViewAbstract
      *
      * @var array
      */
-    protected $_included_resources = array();
-
-    /**
-     * A type => fields map to return in the response. Blank for all.
-     *
-     * Example: fields[documents]=foo,bar&fields[categories]=foo,bar,baz would only show foo and bar properties
-     * for documents type and foo, bar, and baz for categories type.
-     *
-     * @var array
-     */
-    protected $_fields = array();
-
-    /**
-     * A list of text fields in the row
-     *
-     * URLs will be converted to fully qualified ones in these fields.
-     *
-     * @var string
-     */
-    protected $_text_fields;
+    protected $_includes = array();
 
     /**
      * Constructor
@@ -63,24 +44,6 @@ class ViewJson extends ViewAbstract
         parent::__construct($config);
 
         $this->_version = $config->version;
-
-        $this->_text_fields = ObjectConfig::unbox($config->text_fields);
-        $this->_fields      = ObjectConfig::unbox($config->fields);
-
-        $query = $this->getUrl()->getQuery(true);
-        if (!empty($query['fields']) && is_array($query['fields']))
-        {
-            foreach ($query['fields'] as $type => $list)
-            {
-                if (!isset($this->_fields[$type])) {
-                    $this->_fields[$type] = array();
-                }
-
-                $this->_fields[$type] = explode(',', rawurldecode($list));
-            }
-        }
-
-        $this->addCommandCallback('before.render', '_convertRelativeLinks');
     }
 
     /**
@@ -94,11 +57,9 @@ class ViewJson extends ViewAbstract
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'behaviors'   => array('localizable', 'routable'),
-            'mimetype'    => 'application/vnd.api+json',
-            'version'     => '1.0',
-            'fields'      => array(),
-            'text_fields' => array('description'), // Links are converted to absolute ones in these fields
+            'behaviors'  => array('localizable', 'routable'),
+            'mimetype'   => 'application/vnd.api+json',
+            'version'    => '1.0',
         ));
 
         parent::_initialize($config);
@@ -116,22 +77,17 @@ class ViewJson extends ViewAbstract
      */
     protected function _actionRender(ViewContext $context)
     {
-        //Get the content
-        $content = $context->content;
+        //Get the data
+        $data = $this->_createDocument($context->entity);
 
-        if (!is_string($content))
-        {
-            // Root should be JSON object, not array
-            if (is_array($content) && count($content) === 0) {
-                $content = new \ArrayObject();
-            }
+        // Root should be JSON object, not array
+        $data = new \ArrayObject($data);
 
-            // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
-            $content = json_encode($content, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+        // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
+        $content = json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 
-            if (json_last_error() > 0) {
-                throw new \DomainException(sprintf('Cannot encode data to JSON string - %s', json_last_error_msg()));
-            }
+        if (json_last_error() > 0) {
+            throw new \DomainException(sprintf('Cannot encode data to JSON string - %s', json_last_error_msg()));
         }
 
         return $content;
@@ -142,94 +98,89 @@ class ViewJson extends ViewAbstract
      *
      * It converts relative URLs in the content to relative before returning the result
      *
+     * @see http://jsonapi.org/format/#document-structure
+     *
+     * @param ModelEntityInterface  $entity
      * @return array
      */
-    protected function _fetchData(ViewContext $context)
+    protected function _createDocument(ModelEntityInterface $entity)
     {
-        $output = new \ArrayObject(array(
+        $document = array(
             'jsonapi' => array('version' => $this->_version),
             'links'   => array('self' => $this->getUrl()->toString()),
             'data'    => array()
-        ));
+        );
 
-        $model  = $this->getModel();
-        $url    = $this->getUrl();
-
+        //Resource(s)
         if ($this->isCollection())
         {
-            foreach ($model->fetch() as $entity) {
-                $output['data'][] = $this->_createResource($entity);
+            //Data
+            foreach ($entity as $data) {
+                $document['data'][] = $this->_createResource($data);
             }
 
-            $total  = $model->count();
-            $limit  = (int) $model->getState()->limit;
-            $offset = (int) $model->getState()->offset;
+            //Pagination
+            $model = $this->getModel();
 
-            $output['meta'] = array(
-                'offset'   => $offset,
-                'limit'    => $limit,
-                'total'	   => $total
-            );
+            if($model->isPaginatable())
+            {
+                $url       = $this->getUrl();
+                $paginator = $model->getPaginator();
 
-            if ($limit && $total-($limit + $offset) > 0) {
-                $output['links']['next'] = $url->setQuery(array('offset' => $limit+$offset), true)->toString();
-            }
+                $total  = (int) $paginator->count;
+                $limit  = (int) $paginator->limit;
+                $offset = (int) $paginator->offset;
 
-            if ($limit && $offset && $offset >= $limit) {
-                $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
+                $document['meta'] = array(
+                    'offset'   => $offset,
+                    'limit'    => $limit,
+                    'total'    => $total
+                );
+
+                if ($limit && $total - ($limit + $offset) > 0) {
+                    $document['links']['next'] = (string) $url->setQuery(array('offset' => $limit + $offset), true)->toString();
+                }
+
+                if ($limit && $offset && $offset >= $limit) {
+                    $document['links']['prev'] = (string) $url->setQuery(array('offset' => max($offset - $limit, 0)), true)->toString();
+                }
             }
         }
-        else $output['data'] = $this->_createResource($model->fetch());
+        else $document['data'] = $this->_createResource($entity);
 
-        if ($this->_included_resources) {
-            $output['included'] = array_values($this->_included_resources);
+        //Include(s)
+        if ($this->_includes) {
+            $document['included'] = array_values($this->_includes);
         }
 
-        $context->content = $output;
+        return $document;
     }
 
     /**
      * Creates a resource object specified by JSON API
      *
-     * @see   http://jsonapi.org/format/#document-resource-objects
+     * @link http://jsonapi.org/format/#document-resource-objects
      *
-     * @param ModelEntityInterface  $entity   Document row
-     * @param array $config Resource configuration.
-     * @return array The array with data to be encoded to json
+     * @param ModelEntityInterface  $entity
+     * @return array
      */
-    protected function _createResource(ModelEntityInterface $entity, array $config = array())
+    protected function _createResource(ModelEntityInterface $entity)
     {
-        $config = array_merge(array(
-            'links'         => true,
-            'relationships' => true
-        ), $config);
-
+        //Data
         $data = array(
-            'type' => $this->_callCustomMethod($entity, 'type') ?: StringInflector::pluralize($entity->getIdentifier()->name),
-            'id'   => $this->_callCustomMethod($entity, 'id') ?: $entity->{$entity->getIdentityKey()},
-            'attributes' => $this->_callCustomMethod($entity, 'attributes') ?: $entity->toArray()
+            'type'       => $this->_getEntityType($entity),
+            'id'         => $this->_getEntityId($entity),
+            'attributes' => $this->_getEntityAttributes($entity)
         );
 
-        if (isset($this->_fields[$data['type']]))
-        {
-            $fields = array_flip($this->_fields[$data['type']]);
-            $data['attributes'] = array_intersect_key($data['attributes'], $fields);
+        //Links
+        if($links = $this->_getEntityLinks($entity)) {
+            $data['links'] = $links;
         }
 
-        if ($config['links'])
-        {
-            $links = $this->_callCustomMethod($entity, 'links') ?: array('self' => (string)$this->_getEntityRoute($entity));
-            if ($links) {
-                $data['links'] = $links;
-            }
-        }
-
-        if ($config['relationships'])
-        {
-            $relationships = $this->_callCustomMethod($entity, 'relationships');
-            if ($relationships) {
-                $data['relationships'] = $relationships;
-            }
+        //Relationships
+        if ( $relationships = $this->_getEntityRelationships($entity)) {
+            $data['relationships'] = $relationships;
         }
 
         return $data;
@@ -238,19 +189,20 @@ class ViewJson extends ViewAbstract
     /**
      * Creates a resource object and returns a resource identifier object specified by JSON API
      *
-     * @see   http://jsonapi.org/format/#document-resource-identifier-objects
+     * @link   http://jsonapi.org/format/#document-resource-identifier-objects
+     *
      * @param ModelEntityInterface $entity
      * @return array
      */
     protected function _includeResource(ModelEntityInterface $entity)
     {
-        $cache  = $entity->getIdentifier()->name.'-'.$entity->getHandle();
+        $cache = $entity->getIdentifier()->name.'-'.$entity->getHandle();
 
-        if (!isset($this->_included_resources[$cache])) {
-            $this->_included_resources[$cache] = $this->_createResource($entity, array('relationships' => false));
+        if (!isset($this->_includes[$cache])) {
+            $this->_includes[$cache] = $this->_createResource($entity);
         }
 
-        $resource = $this->_included_resources[$cache];
+        $resource = $this->_includes[$cache];
 
         return array(
             'data' => array(
@@ -263,7 +215,8 @@ class ViewJson extends ViewAbstract
     /**
      * Creates resource objects and returns an array of resource identifier objects specified by JSON API
      *
-     * @see   http://jsonapi.org/format/#document-resource-identifier-objects
+     * @link   http://jsonapi.org/format/#document-resource-identifier-objects
+     *
      * @param ModelEntityInterface $entities
      * @return array
      */
@@ -281,112 +234,70 @@ class ViewJson extends ViewAbstract
     }
 
     /**
-     * Calls a custom method per entity name to modify resource objects
+     * Get the entity id
      *
-     * If the entity is of type foo and the method is links, this method will return the results of
-     * _getFooLinks method if possible
-     *
-     * @param ModelEntityInterface $entity
-     * @param string $method
-     * @return mixed Method results or false if the method not exists
+     * @param ModelEntityInterface  $entity
+     * @return int
      */
-    protected function _callCustomMethod(ModelEntityInterface $entity, $method)
+    protected function _getEntityId(ModelEntityInterface $entity)
     {
-        $result = false;
-        $name   = StringInflector::singularize($entity->getIdentifier()->name);
-        $method = '_get'.ucfirst($name).ucfirst($method);
-
-        if ($method !== '_getEntity'.ucfirst($method) && method_exists($this, $method)) {
-            $result = $this->$method($entity);
-        }
-
-        return $result;
+        return $entity->{$entity->getIdentityKey()};
     }
 
     /**
-     * Provides a default entity link
-     *
-     * It can be overridden by creating a _getFooLinks method where foo is the entity type
+     * Get the entity links
      *
      * @param ModelEntityInterface  $entity
      * @return string
      */
-    protected function _getEntityRoute(ModelEntityInterface $entity)
+    protected function _getEntityType(ModelEntityInterface $entity)
+    {
+        return StringInflector::pluralize($entity->getIdentifier()->name);
+    }
+
+    /**
+     * Get the entity attributes
+     *
+     * @param ModelEntityInterface  $entity
+     * @return array
+     */
+    protected function _getEntityAttributes(ModelEntityInterface $entity)
+    {
+        $attributes = $entity->toArray();
+
+        //Remove the identity key from the attributes
+        $key = $entity->getIdentityKey();
+        if(isset($attributes[$key])) {
+            unset($attributes[$key]);
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Get the entity links
+     *
+     * @param ModelEntityInterface  $entity
+     * @return array
+     */
+    protected function _getEntityLinks(ModelEntityInterface $entity)
     {
         $package = $this->getIdentifier()->package;
         $view    = $entity->getIdentifier()->name;
 
-        return $this->getRoute(sprintf('component=%s&view=%s&slug=%s&format=json', $package, $view, $entity->slug));
+        $self = $this->getRoute(sprintf('component=%s&view=%s&id=%s&format=json', $package, $view, $entity->id));
+
+        return array('self' => (string) $self);
     }
 
     /**
-     * Converts links in the content from relative to absolute
+     * Get the entity relationships
      *
-     * @param ViewContextInterface $context
+     * @param ModelEntityInterface  $entity
+     * @return array
      */
-    protected function _convertRelativeLinks(ViewContextInterface $context)
+    protected function _getEntityRelationships(ModelEntityInterface $entity)
     {
-        if (is_array($context->content) || $context->content instanceof \Traversable) {
-            $this->_processLinks($context->content);
-        }
-    }
-
-    /**
-     * Converts links in the content array from relative to absolute
-     *
-     * @param \Traversable|array $array
-     */
-    protected function _processLinks(&$array)
-    {
-        $base = $this->getUrl()->toString(HttpUrl::AUTHORITY);
-
-        foreach ($array as $key => &$value)
-        {
-            if ($key === 'links')
-            {
-                foreach ($array['links'] as $k => $v)
-                {
-                    if (strpos($v, ':/') === false) {
-                        $array['links'][$k] = $base.$v;
-                    }
-                }
-            }
-            elseif (is_array($value)) {
-                $this->_processLinks($value);
-            }
-            elseif (in_array($key, $this->_text_fields)) {
-                $array[$key] = $this->_processText($value);
-            }
-        }
-    }
-
-    /**
-     * Convert links in a text from relative to absolute and runs them through router
-     *
-     * @param string $text The text processed
-     * @return string Text with converted links
-     */
-    protected function _processText($text)
-    {
-        $matches = array();
-
-        preg_match_all("/(href|src)=\"(?!http|ftp|https|mailto|data)([^\"]*)\"/", $text, $matches, PREG_SET_ORDER);
-
-        foreach ($matches as $match)
-        {
-            $route = $this->getObject('lib:dispatcher.router.route', array(
-                'url'    => $match[2],
-                'escape' => false
-            ));
-
-            //Add the host and the schema
-            $route->scheme = $this->getUrl()->scheme;
-            $route->host   = $this->getUrl()->host;
-
-            $text = str_replace($match[0], $match[1].'="'.$route.'"', $text);
-        }
-
-        return $text;
+        return array();
     }
 }
-

@@ -18,6 +18,44 @@ namespace  Kodekit\Library;
 class ViewBehaviorRoutable extends ViewBehaviorAbstract
 {
     /**
+     * A list of entity properties to route
+     *
+     * URLs will be converted to fully qualified ones in these fields.
+     *
+     * @var string
+     */
+    protected $_properties;
+
+    /**
+     * Constructor
+     *
+     * @param   ObjectConfig $config Configuration options
+     */
+    public function __construct(ObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->_properties = ObjectConfig::unbox($config->properties);
+    }
+
+    /**
+     * Initializes the config for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   ObjectConfig $config Configuration options
+     * @return  void
+     */
+    protected function _initialize(ObjectConfig $config)
+    {
+        $config->append(array(
+            'properties' => array('description'), // Links are converted to absolute ones in these properties
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Register a route() function in the template
      *
      * @param ViewContextInterface $context	A view context object
@@ -25,11 +63,46 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
      */
     protected function _beforeRender(ViewContextInterface $context)
     {
+        //Register 'route' method in template
         if($context->subject instanceof ViewTemplatable)
         {
             $context->subject
                 ->getTemplate()
                 ->registerFunction('route', array($this, 'getRoute'));
+        }
+
+        //Fully quality URL's in entity properties
+        if($this->getFormat() != 'html')
+        {
+            foreach($context->entity as $entity)
+            {
+                foreach($this->_properties as $property)
+                {
+                    $value = $entity->getProperty($property);
+
+                    if(is_string($value) && !empty($value))
+                    {
+                        $matches = array();
+                        preg_match_all("/(href|src)=\"(?!http|ftp|https|mailto|data)([^\"]*)\"/", $value, $matches, PREG_SET_ORDER);
+
+                        foreach ($matches as $match)
+                        {
+                            $route = $this->getObject('lib:dispatcher.router.route', array(
+                                'url'    => $match[2],
+                                'escape' => $this->getUrl()->isEscaped()
+                            ));
+
+                            //Add the host and the schema
+                            $route->scheme = $this->getUrl()->scheme;
+                            $route->host   = $this->getUrl()->host;
+
+                            $value = str_replace($match[0], $match[1].'="'.$route.'"', $value);
+                        }
+
+                        $entity->setProperty($property, $value, false);
+                    }
+                }
+            }
         }
     }
 
