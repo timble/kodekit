@@ -58,9 +58,20 @@ class Command extends ObjectConfig implements CommandInterface
     }
 
     /**
+     * Get the action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        $parts = explode('.', $this->getName());
+        return $parts[1];
+    }
+
+    /**
      * Get the command name
      *
-     * @return string	The command name
+     * @return string The command name
      */
     public function getName()
     {

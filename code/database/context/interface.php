@@ -25,25 +25,9 @@ interface DatabaseContextInterface extends CommandInterface
     public function getQuery();
 
     /**
-     * Set the query object
-     *
-     * @param DatabaseQueryInterface|string $query
-     * @return $this
-     */
-    public function setQuery($query);
-
-    /**
      * Get the number of affected rows
      *
      * @return integer
      */
     public function getAffected();
-
-    /**
-     * Get the number of affected rows
-     *
-     * @param integer $affected
-     * @return DatabaseContext
-     */
-    public function setAffected($affected);
 }

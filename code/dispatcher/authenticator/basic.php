@@ -43,10 +43,10 @@ class DispatcherAuthenticatorBasic extends DispatcherAuthenticatorAbstract
     /**
      * Authenticate using email and password credentials
      *
-     * @param DispatcherContextInterface $context A dispatcher context object
+     * @param DispatcherContext $context A dispatcher context object
      * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
-    public function authenticateRequest(DispatcherContextInterface $context)
+    public function authenticateRequest(DispatcherContext $context)
     {
         $request = $context->request;
 

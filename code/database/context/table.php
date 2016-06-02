@@ -10,24 +10,12 @@
 namespace Kodekit\Library;
 
 /**
- * Model Context Interface
+ * Database Table Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
- * @package Kodekit\Library\Model\Context
+ * @package Kodekit\Library\Database\Context
  */
-interface ModelContextInterface extends CommandInterface
+class DatabaseContextTable extends DatabaseContext
 {
-    /**
-     * Get the model state
-     *
-     * @return ModelState
-     */
-    public function getState();
 
-    /**
-     * Get the identity key
-     *
-     * @return mixed
-     */
-    public function getIdentityKey();
 }

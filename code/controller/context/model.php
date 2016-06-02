@@ -10,31 +10,31 @@
 namespace Kodekit\Library;
 
 /**
- * Controller Context Interface
+ * Model Controller Context
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Controller\Context
  */
-interface ControllerContextInterface extends CommandInterface
+class ControllerContextModel extends ControllerContext
 {
     /**
-     * Get the request object
+     * Set the model entity
      *
-     * @return ControllerRequestInterface
+     * @param ModelEntityInterface $entity
+     * @return ControllerContextModel
      */
-    public function getRequest();
+    public function setEntity($entity)
+    {
+        return ObjectConfig::set('entity', $entity);
+    }
 
     /**
-     * Get the response object
+     * Get the model entity
      *
-     * @return ControllerResponseInterface
+     * @return ModelEntityInterface
      */
-    public function getResponse();
-
-    /**
-     * Get the user object
-     *
-     * @return UserInterface
-     */
-    public function getUser();
+    public function getEntity()
+    {
+        return ObjectConfig::get('entity');
+    }
 }

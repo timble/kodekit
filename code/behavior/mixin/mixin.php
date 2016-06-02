@@ -69,6 +69,17 @@ class BehaviorMixin extends CommandMixin implements BehaviorMixinInterface
     }
 
     /**
+     * Get the behavior context
+     *
+     * @return CommandInterface
+     */
+    public function getContext()
+    {
+        $context = new Command();
+        return $context;
+    }
+
+    /**
      * Add a behavior
      *
      * @param   mixed $behavior An object that implements BehaviorInterface, an ObjectIdentifier

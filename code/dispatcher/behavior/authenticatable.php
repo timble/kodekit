@@ -161,10 +161,10 @@ class DispatcherBehaviorAuthenticatable extends DispatcherBehaviorAbstract
      * If an authenticator explicitly returns TRUE the authentication process will be halted and other authenticators
      * will not be called.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContextInterface $context   A dispatcher context object
      * @return void
      */
-    protected function _beforeDispatch(DispatcherContextInterface $context)
+    protected function _beforeDispatch(DispatcherContext $context)
     {
         // Check if the user has been explicitly authenticated for this request
         if (!$this->getUser()->isAuthentic(true))
@@ -185,10 +185,10 @@ class DispatcherBehaviorAuthenticatable extends DispatcherBehaviorAbstract
      * If an authenticator explicitly returns TRUE the challenge process will be halted and other authenticators
      * will not be called.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      * @return void
      */
-    protected function _beforeSend(DispatcherContextInterface $context)
+    protected function _beforeSend(DispatcherContext $context)
     {
         foreach($this->__authenticator_queue as $authenticator)
         {

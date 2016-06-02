@@ -25,6 +25,13 @@ class DatabaseContext extends Command implements DatabaseContextInterface
     public function __construct($attributes = array())
     {
         ObjectConfig::__construct($attributes);
+
+        //Set the subject and the name
+        if($attributes instanceof DatabaseContextInterface)
+        {
+            $this->setSubject($attributes->getSubject());
+            $this->setName($attributes->getName());
+        }
     }
 
     /**

@@ -64,10 +64,10 @@ class DispatcherAuthenticatorCookie extends DispatcherAuthenticatorCsrf
      *
      * If a session cookie is found and the session session is not active it will be auto-started.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context	A dispatcher context object
      * @return  boolean Returns TRUE if the authentication explicitly succeeded.
      */
-    public function authenticateRequest(DispatcherContextInterface $context)
+    public function authenticateRequest(DispatcherContext $context)
     {
         $session = $context->getUser()->getSession();
         $request = $context->getRequest();

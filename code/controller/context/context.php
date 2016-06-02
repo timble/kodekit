@@ -27,7 +27,7 @@ class ControllerContext extends Command implements ControllerContextInterface
         ObjectConfig::__construct($attributes);
 
         //Set the subject and the name
-        if($attributes instanceof ControllerContext)
+        if($attributes instanceof ControllerContextInterface)
         {
             $this->setSubject($attributes->getSubject());
             $this->setName($attributes->getName());
@@ -95,26 +95,5 @@ class ControllerContext extends Command implements ControllerContextInterface
     public function setUser(UserInterface $user)
     {
         return ObjectConfig::set('user', $user);
-    }
-
-    /**
-     * Get the controller action
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return ObjectConfig::get('action');
-    }
-
-    /**
-     * Set the controller action
-     *
-     * @param string $action
-     * @return ControllerContext
-     */
-    public function setAction($action)
-    {
-        return ObjectConfig::set('action', $action);
     }
 }

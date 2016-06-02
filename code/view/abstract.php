@@ -377,11 +377,12 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     /**
      * Get the view context
      *
+     * @param   ViewContextInterface $context Context to cast to a local context
      * @return  ViewContext
      */
-    public function getContext()
+    public function getContext(ViewContextInterface $context = null)
     {
-        $context = new ViewContext();
+        $context = new ViewContext($context);
         $context->setEntity($this->getModel()->fetch());
         $context->setData($this->getData());
         $context->setParameters($this->getParameters());

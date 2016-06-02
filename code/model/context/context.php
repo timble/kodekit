@@ -27,7 +27,7 @@ class ModelContext extends Command implements ModelContextInterface
         ObjectConfig::__construct($attributes);
 
         //Set the subject and the name
-        if($attributes instanceof ModelContext)
+        if($attributes instanceof ModelContextInterface)
         {
             $this->setSubject($attributes->getSubject());
             $this->setName($attributes->getName());
@@ -37,8 +37,7 @@ class ModelContext extends Command implements ModelContextInterface
     /**
      * Set the model state
      *
-     * @param ModelState $state
-     *
+     * @param ModelStateInterface $state
      * @return ModelContext
      */
     public function setState($state)
@@ -49,32 +48,11 @@ class ModelContext extends Command implements ModelContextInterface
     /**
      * Get the model data
      *
-     * @return array
+     * @return ModelStateInterface
      */
     public function getState()
     {
         return ObjectConfig::get('state');
-    }
-
-    /**
-     * Set the model entity
-     *
-     * @param ModelEntityInterface $entity
-     * @return ModelContext
-     */
-    public function setEntity($entity)
-    {
-        return ObjectConfig::set('entity', $entity);
-    }
-
-    /**
-     * Get the model data
-     *
-     * @return array
-     */
-    public function getEntity()
-    {
-        return ObjectConfig::get('entity');
     }
 
     /**

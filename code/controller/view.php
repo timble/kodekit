@@ -158,11 +158,11 @@ abstract class ControllerView extends ControllerAbstract implements ControllerVi
      * This function will check if the format is supported and if not throw a 406 Not Accepted exception. It will also
      * set the rendered output in the response after it has been created.
      *
-     * @param  ControllerContextInterface $context A command context object
+     * @param  ControllerContext $context A command context object
      * @throws ControllerExceptionFormatNotSupported If the requested format is not supported for the resource
      * @return string|bool The rendered output of the view or false if something went wrong
      */
-    protected function _actionRender(ControllerContextInterface $context)
+    protected function _actionRender(ControllerContext $context)
     {
         $format = $this->getRequest()->getFormat();
 

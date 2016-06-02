@@ -98,11 +98,11 @@ class Template extends TemplateAbstract
         if ($this->invokeCommand('before.render', $context) !== false)
         {
             //Render the template
-            $context->source = $this->_actionRender($context);
+            $context->result = $this->_actionRender($context);
             $this->invokeCommand('after.render', $context);
         }
 
-        return $context->source;
+        return $context->result;
     }
 
     /**
@@ -162,12 +162,12 @@ class Template extends TemplateAbstract
     /**
      * Get the template context
      *
+     * @param   TemplateContextInterface $context Context to cast to a local context
      * @return  TemplateContext
      */
-    public function getContext()
+    public function getContext(TemplateContextInterface $context = null)
     {
-        $context = new TemplateContext();
-        $context->setSubject($this);
+        $context = new TemplateContext($context);
         $context->setData($this->getData());
         $context->setParameters($this->getParameters());
 

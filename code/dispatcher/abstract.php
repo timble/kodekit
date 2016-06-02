@@ -130,8 +130,8 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Method to get a controller object
      *
-     * @throws	\UnexpectedValueException	If the controller doesn't implement the ControllerInterface
-     * @return	ControllerInterface
+     * @throws  \UnexpectedValueException   If the controller doesn't implement the ControllerInterface
+     * @return  ControllerInterface
      */
     public function getController()
     {
@@ -169,7 +169,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
      * @param   mixed   $controller An object that implements ControllerInterface, ObjectIdentifier object
      *                  or valid identifier string
      * @param  array  $config  An optional associative array of configuration options
-     * @return	$this
+     * @return  DispatcherAbstract
      */
     public function setController($controller, $config = array())
     {
@@ -204,7 +204,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Method to get a controller action to be executed
      *
-     * @return	string
+     * @return  string
      */
     public function getControllerAction()
     {
@@ -214,7 +214,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Method to set the controller action to be executed
      *
-     * @return	$this
+     * @return  DispatcherAbstract
      */
     public function setControllerAction($action)
     {
@@ -225,13 +225,12 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Get the controller context
      *
-     * @return  Command
+     * @param   ControllerContextInterface $context Context to cast to a local context
+     * @return  DispatcherContext
      */
-    public function getContext()
+    public function getContext(ControllerContextInterface $context = null)
     {
-        $context = new DispatcherContext();
-
-        $context->setSubject($this);
+        $context = new DispatcherContext($context);
         $context->setRequest($this->getRequest());
         $context->setUser($this->getUser());
         $context->setResponse($this->getResponse());
@@ -242,9 +241,9 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Resolve the request
      *
-     * @param DispatcherContextInterface $context A dispatcher context object
+     * @param DispatcherContext $context A dispatcher context object
      */
-    protected function _resolveRequest(DispatcherContextInterface $context)
+    protected function _resolveRequest(DispatcherContext $context)
     {
         //Resolve the controller
         if($context->request->query->has('view')) {
@@ -263,16 +262,16 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
      * Dispatch to a controller internally or forward to another component.  Functions makes an internal sub-request,
      * based on the information in the request and passing along the context.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
-     * @return	mixed
+     * @param DispatcherContext $context    A dispatcher context object
+     * @return  mixed
      */
-    protected function _actionDispatch(DispatcherContextInterface $context)
+    protected function _actionDispatch(DispatcherContext $context)
     {
         $controller = $this->getController();
         $action     = $this->getControllerAction();
 
-        //Execute the component and pass along the context
-        $controller->execute($action, $context);
+        //Execute the component and cast the context
+        $controller->execute($action, $controller->getContext($context));
 
         //Send the response
         return $this->send($context);
@@ -284,9 +283,9 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
      * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
      * redirect the dispatcher to another URL after a GET request.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context    A dispatcher context object
      */
-    protected function _actionRedirect(DispatcherContextInterface $context)
+    protected function _actionRedirect(DispatcherContext $context)
     {
         $url = $context->param;
 
@@ -301,9 +300,9 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
      * Handle errors and exceptions
      *
      * @throws \InvalidArgumentException If the action parameter is not an instance of Exception or ExceptionError
-     * @param DispatcherContextInterface $context   A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      */
-    protected function _actionFail(DispatcherContextInterface $context)
+    protected function _actionFail(DispatcherContext $context)
     {
         //Check an exception was passed
         if(!isset($context->param) && !$context->param instanceof \Exception)
@@ -341,10 +340,10 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Send the response
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context    A dispatcher context object
      * @return mixed
      */
-    protected function _actionSend(DispatcherContextInterface $context)
+    protected function _actionSend(DispatcherContext $context)
     {
         $context->response->send();
     }

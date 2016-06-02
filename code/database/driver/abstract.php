@@ -468,15 +468,14 @@ abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverIn
     }
 
     /**
-     * Get a database context object
+     * Get the database context
      *
+     * @param   DatabaseContextInterface $context Context to cast to a local context
      * @return  DatabaseContext
      */
-    public function getContext()
+    public function getContext(DatabaseContextInterface $context = null)
     {
-        $context = new DatabaseContext();
-        $context->setSubject($this);
-
+        $context = new DatabaseContextDriver();
         return $context;
     }
 

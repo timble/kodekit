@@ -18,9 +18,16 @@ namespace Kodekit\Library;
 interface CommandInterface
 {
     /**
+     * Get the action
+     *
+     * @return string
+     */
+    public function getAction();
+
+    /**
      * Get the event name
      *
-     * @return string	The event name
+     * @return string   The event name
      */
     public function getName();
 

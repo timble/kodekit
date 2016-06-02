@@ -10,24 +10,31 @@
 namespace Kodekit\Library;
 
 /**
- * Model Context Interface
+ * Model Context Database
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Model\Context
  */
-interface ModelContextInterface extends CommandInterface
+class ModelContextDatabase extends ModelContext
 {
     /**
-     * Get the model state
+     * Set the model query
      *
-     * @return ModelState
+     * @param DatabaseQueryInterface $query
+     * @return ModelContext
      */
-    public function getState();
+    public function setQuery($query)
+    {
+        return ObjectConfig::set('query', $query);
+    }
 
     /**
-     * Get the identity key
+     * Get the model query
      *
-     * @return mixed
+     * @return DatabaseQueryInterface
      */
-    public function getIdentityKey();
+    public function getQuery()
+    {
+        return ObjectConfig::get('query');
+    }
 }

@@ -39,10 +39,10 @@ class DispatcherBehaviorLimitable extends DispatcherBehaviorAbstract
     /**
      * Sets a maximum and a default limit for GET requests
      *
-     * @param 	DispatcherContextInterface $context The active command context
+     * @param 	DispatcherContext $context The active command context
      * @return 	void
      */
-    protected function _beforeGet(DispatcherContextInterface $context)
+    protected function _beforeGet(DispatcherContext $context)
     {
         $controller = $this->getController();
 

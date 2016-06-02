@@ -92,10 +92,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
     /**
      * Get the referrer
      *
-     * @param   ControllerContextInterface $context A controller context object
+     * @param   ControllerContextModel $context A controller context object
      * @return  HttpUrl    A HttpUrl object
      */
-    public function getReferrer(ControllerContextInterface $context)
+    public function getReferrer(ControllerContextModel $context)
     {
         if($context->request->cookies->has($this->_cookie_name))
         {
@@ -105,15 +105,15 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
         else $referrer = $this->findReferrer($context);
 
         return $referrer;
-	}
+    }
 
     /**
      * Set the referrer
      *
-     * @param  ControllerContextInterface $context A controller context object
+     * @param  ControllerContextModel $context A controller context object
      * @return void
      */
-    public function setReferrer(ControllerContextInterface $context)
+    public function setReferrer(ControllerContextModel $context)
     {
         if (!$context->request->cookies->has($this->_cookie_name.'_locked'))
         {
@@ -133,7 +133,7 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
                 $context->response->headers->addCookie($cookie);
             }
         }
-	}
+    }
 
     /**
      * Find the referrer based on the context
@@ -141,10 +141,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      * Method is being called when no referrer can be found in the request or when request url and referrer are
      * identical. Function should return a url that is different from the request url to avoid redirect loops.
      *
-     * @param ControllerContextInterface $context
+     * @param ControllerContextModel $context
      * @return HttpUrl    A HttpUrl object
      */
-    public function findReferrer(ControllerContextInterface $context)
+    public function findReferrer(ControllerContextModel $context)
     {
         $controller = $this->getMixer();
         $identifier = $controller->getIdentifier();
@@ -159,10 +159,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
     /**
      * Lock the referrer from updates
      *
-     * @param  ControllerContextInterface  $context A controller context object
+     * @param  ControllerContextModel  $context A controller context object
      * @return void
      */
-    protected function _lockReferrer(ControllerContextInterface $context)
+    protected function _lockReferrer(ControllerContextModel $context)
     {
         $cookie = $this->getObject('lib:http.cookie', array(
             'name'   => $this->_cookie_name.'_locked',
@@ -176,26 +176,26 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
     /**
      * Unlock the referrer for updates
      *
-     * @param   ControllerContextInterface  $context A controller context object
+     * @param   ControllerContextModel  $context A controller context object
      * @return void
      */
-    protected function _unlockReferrer(ControllerContextInterface $context)
+    protected function _unlockReferrer(ControllerContextModel $context)
     {
         $context->response->headers->clearCookie($this->_cookie_name.'_locked', $this->_cookie_path);
     }
 
-	/**
-	 * Unset the referrer
-	 *
-     * @param  ControllerContextInterface $context A controller context object
-	 * @return void
-	 */
-	protected function _unsetReferrer(ControllerContextInterface $context)
-	{
+    /**
+     * Unset the referrer
+     *
+     * @param  ControllerContextModel $context A controller context object
+     * @return void
+     */
+    protected function _unsetReferrer(ControllerContextModel $context)
+    {
         if($context->result->getStatus() !== ModelEntityInterface::STATUS_FAILED) {
             $context->response->headers->clearCookie($this->_cookie_name, $this->_cookie_path);
         }
-	}
+    }
 
     /**
      * Check if the resource is locked
@@ -246,10 +246,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      * Only lock if the context contains a row object and if the user has an active session he can edit or delete the
      * resource. Otherwise don't lock it.
      *
-     * @param   ControllerContextInterface  $context A controller context object
+     * @param   ControllerContextModel  $context A controller context object
      * @return  void
      */
-    protected function _lockResource(ControllerContextInterface $context)
+    protected function _lockResource(ControllerContextModel $context)
     {
         if($this->isLockable() && $this->canEdit()) {
             $context->result->lock();
@@ -259,10 +259,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
     /**
      * Unlock the resource
      *
-     * @param  ControllerContextInterface  $context A controller context object
+     * @param  ControllerContextModel  $context A controller context object
      * @return void
      */
-    protected function _unlockResource(ControllerContextInterface $context)
+    protected function _unlockResource(ControllerContextModel $context)
     {
         if($this->isLockable() && $this->canEdit()) {
             $context->result->unlock();
@@ -334,10 +334,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      * This function also sets the redirect to the referrer if the action succeeds and will redirect to the
      * current url if the edit/add action fails while setting the status message.
      *
-     * @param   ControllerContextInterface  $context A controller context object
+     * @param   ControllerContextModel  $context A controller context object
      * @return  ModelEntityInterface
      */
-    protected function _actionSave(ControllerContextInterface $context)
+    protected function _actionSave(ControllerContextModel $context)
     {
         $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
         $entity = $context->getSubject()->execute($action, $context);
@@ -364,10 +364,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      * This function also sets the redirect to the current url for 'add' actions and will redirect to current
      * url if the edit/add action fails while setting the status message.
      *
-     * @param    ControllerContextInterface  $context A controller context object
+     * @param    ControllerContextModel  $context A controller context object
      * @return   ModelEntityInterface
      */
-    protected function _actionApply(ControllerContextInterface $context)
+    protected function _actionApply(ControllerContextModel $context)
     {
         $action = $this->getModel()->getState()->isUnique() ? 'edit' : 'add';
         $entity = $context->getSubject()->execute($action, $context);
@@ -396,31 +396,31 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
         return $entity;
     }
 
-	/**
-	 * Cancel action
-	 *
-	 * This function will unlock the row(s) and set the redirect to the referrer
+    /**
+     * Cancel action
      *
-     * @param	ControllerContextInterface $context A command context object
-     * @return 	ModelEntityInterface
-	 */
-	protected function _actionCancel(ControllerContextInterface $context)
-	{
+     * This function will unlock the row(s) and set the redirect to the referrer
+     *
+     * @param   ControllerContextModel $context A command context object
+     * @return  ModelEntityInterface
+     */
+    protected function _actionCancel(ControllerContextModel $context)
+    {
         //Create the redirect
         $context->response->setRedirect($this->getReferrer($context));
 
         $entity = $context->getSubject()->execute('read', $context);
 
         return $entity;
-	}
+    }
 
     /**
      * Add a lock flash message if the resource is locked
      *
-     * @param   ControllerContext	$context A command context object
-     * @return 	void
+     * @param   ControllerContextModel   $context A command context object
+     * @return  void
      */
-    protected function _afterRead(ControllerContext $context)
+    protected function _afterRead(ControllerContextModel $context)
     {
         $entity = $context->result;
 
@@ -450,11 +450,11 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
      * to complete will be added. Clients should wait until at least this time before retrying the request.
      *
-     * @param   ControllerContextInterface	$context A controller context object
+     * @param   ControllerContext   $context A controller context object
      * @throws  ControllerExceptionResourceLocked If the resource is locked
-     * @return 	void
+     * @return  void
      */
-    protected function _beforeEdit(ControllerContextInterface $context)
+    protected function _beforeEdit(ControllerContextModel $context)
     {
         if($this->isLocked())
         {
@@ -469,11 +469,11 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      * If the resource is locked a Retry-After header indicating the time at which the conflicting edits are expected
      * to complete will be added. Clients should wait until at least this time before retrying the request.
      *
-     * @param   ControllerContextInterface	$context A controller context object
+     * @param   ControllerContextModel $context A controller context object
      * @throws  ControllerExceptionResourceLocked If the resource is locked
      * @return 	void
      */
-    protected function _beforeDelete(ControllerContextInterface $context)
+    protected function _beforeDelete(ControllerContextModel $context)
     {
         if($this->isLocked())
         {

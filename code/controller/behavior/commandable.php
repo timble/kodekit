@@ -46,10 +46,10 @@ class ControllerBehaviorCommandable extends ControllerBehaviorAbstract
     /**
      * Add the toolbars to the controller
      *
-     * @param ControllerContextInterface $context
+     * @param ControllerContext $context
      * @return void
      */
-    protected function _beforeRender(ControllerContextInterface $context)
+    protected function _beforeRender(ControllerContext $context)
     {
         $controller = $context->getSubject();
 

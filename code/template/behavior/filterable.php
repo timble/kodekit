@@ -156,15 +156,15 @@ class TemplateBehaviorFilterable extends TemplateBehaviorAbstract
      */
     protected function _afterRender(TemplateContextInterface $context)
     {
-        if(is_string($context->source))
+        if(is_string($context->result))
         {
-            $content = $context->source;
+            $content = $context->result;
 
             foreach($this->__filter_queue as $filter) {
                 $filter->filter($content, $this->getMixer());
             }
 
-            $context->source = $content;
+            $context->result = $content;
         }
     }
 }

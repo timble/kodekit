@@ -79,13 +79,13 @@ class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
      * Method will always perform a referrer check and a cookie token check if the user is not authentic and
      * additionally a session token check if the user is authentic.
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context	A dispatcher context object
      * @throws ControllerExceptionRequestInvalid      If the request referrer is not valid
      * @throws ControllerExceptionRequestForbidden    If the cookie token is not valid
      * @throws ControllerExceptionRequestNotAuthenticated If the session token is not valid
      * @return boolean Returns FALSE if the check failed. Otherwise TRUE.
      */
-    public function authenticateRequest(DispatcherContextInterface $context)
+    public function authenticateRequest(DispatcherContext $context)
     {
         if($context->request->isPost())
         {
@@ -120,9 +120,9 @@ class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
     /**
      * Sign the response with a session token
      *
-     * @param DispatcherContextInterface $context	A dispatcher context object
+     * @param DispatcherContext $context   A dispatcher context object
      */
-    public function challengeResponse(DispatcherContextInterface $context)
+    public function challengeResponse(DispatcherContext $context)
     {
         if($context->request->isGet())
         {
