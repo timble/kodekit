@@ -179,7 +179,6 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         $config->append(array(
             'title'     => '',
             'column'    => '',
-            'direction' => 'asc',
             'sort'      => '',
             'url'       => null
         ));
@@ -191,13 +190,13 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             $config->title = ucfirst($config->column);
         }
 
-        //Set the direction
-        $direction  = strtolower($config->direction);
-        $direction  = in_array($direction, array('asc', 'desc')) ? $direction : 'asc';
+        //Get the direction
+        $direction = substr( $config->sort, 0, 1 ) == '-' ? 'desc' : 'asc';
+        $sort      = ltrim($config->sort, '-');
 
         //Set the class
         $class = '';
-        if($config->column == $config->sort)
+        if($config->column == $sort)
         {
             $direction = $direction == 'desc' ? 'asc' : 'desc'; // toggle
             $class = 'class="-koowa-'.$direction.'"';
@@ -208,16 +207,15 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             $config->url = HttpUrl::fromString($config->url);
         }
 
-        $config->url->query['sort']      = $config->column;
-        $config->url->query['direction'] = $direction;
+        $config->url->query['sort'] = $direction == 'asc' ? $config->column : '-'.$config->column;
 
         $html  = '<a href="'.$config->url.'" title="'.$translator->translate('Click to sort by this column').'"  '.$class.'>';
         $html .= $translator->translate($config->title);
 
         // Mark the current column
-        if ($config->column == $config->sort)
+        if ($config->column == $sort)
         {
-            if (strtolower($config->direction) === 'asc') {
+            if ($direction == 'asc') {
                 $html .= ' <span class="koowa_icon--sort_up koowa_icon--12"></span>';
             } else {
                 $html .= ' <span class="koowa_icon--sort_down koowa_icon--12"></span>';
