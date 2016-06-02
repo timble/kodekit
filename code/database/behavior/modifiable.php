@@ -43,7 +43,7 @@ class DatabaseBehaviorModifiable extends DatabaseBehaviorAbstract
     {
         $user = null;
 
-        if($this->hasProperty('modified_by') && !empty($this->modified_by)) {
+        if(!empty($this->modified_by)) {
             $user = $this->getObject('user.provider')->getUser($this->modified_by);
         }
 
@@ -82,13 +82,8 @@ class DatabaseBehaviorModifiable extends DatabaseBehaviorAbstract
      */
     protected function _beforeInsert(DatabaseContext $context)
     {
-        if($this->hasProperty('modified_by')) {
-            $this->modified_by = (int) $this->getObject('user')->getId();
-        }
-
-        if($this->hasProperty('modified_on')) {
-            $this->modified_on = gmdate('Y-m-d H:i:s');
-        }
+        $this->modified_by = (int) $this->getObject('user')->getId();
+        $this->modified_on = gmdate('Y-m-d H:i:s');
     }
 
     /**

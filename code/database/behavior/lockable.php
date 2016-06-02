@@ -53,7 +53,7 @@ class DatabaseBehaviorLockable extends DatabaseBehaviorAbstract
     {
         $user = null;
 
-        if($this->hasProperty('locked_by') && !empty($this->locked_by)) {
+        if(!empty($this->locked_by)) {
             $user = $this->getObject('user.provider')->load($this->locked_by);
         }
 

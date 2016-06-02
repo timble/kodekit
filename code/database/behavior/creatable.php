@@ -26,7 +26,7 @@ class DatabaseBehaviorCreatable extends DatabaseBehaviorAbstract
     {
         $user = null;
 
-        if($this->hasProperty('created_by') && !empty($this->created_by)) {
+        if(!empty($this->created_by)) {
             $user = $this->getObject('user.provider')->getUser($this->created_by);
         }
 
@@ -68,11 +68,11 @@ class DatabaseBehaviorCreatable extends DatabaseBehaviorAbstract
         $mixer = $this->getMixer();
         $table = $mixer instanceof DatabaseRowInterface ?  $mixer->getTable() : $mixer;
 
-        if($this->hasProperty('created_by') && empty($this->created_by)) {
+        if(empty($this->created_by)) {
             $this->created_by  = (int) $this->getObject('user')->getId();
         }
 
-        if($this->hasProperty('created_on') && (empty($this->created_on) || $this->created_on == $table->getDefault('created_on'))) {
+        if(empty($this->created_on) || $this->created_on == $table->getDefault('created_on')) {
             $this->created_on  = gmdate('Y-m-d H:i:s');
         }
     }

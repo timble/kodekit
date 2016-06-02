@@ -72,31 +72,27 @@ class DatabaseBehaviorParameterizable extends DatabaseBehaviorAbstract
     public function getParameters()
     {
         $result = false;
+        $handle = $this->getMixer()->getHandle();
 
-        if($this->hasProperty($this->_column))
+        if(!isset($this->_parameters[$handle]))
         {
-            $handle = $this->getMixer()->getHandle();
+            $type   = (array) $this->getTable()->getColumn($this->_column)->filter;
+            $data   = $this->getProperty($this->_column);
+            $config = $this->getObject('object.config.factory')->createFormat($type[0]);
 
-            if(!isset($this->_parameters[$handle]))
+            if(!empty($data))
             {
-                $type   = (array) $this->getTable()->getColumn($this->_column)->filter;
-                $data   = $this->getProperty($this->_column);
-                $config = $this->getObject('object.config.factory')->createFormat($type[0]);
-
-                if(!empty($data))
-                {
-                    if (is_string($data)) {
-                        $config->fromString(trim($data));
-                    } else {
-                        $config->append($data);
-                    }
+                if (is_string($data)) {
+                    $config->fromString(trim($data));
+                } else {
+                    $config->append($data);
                 }
-
-                $this->_parameters[$handle] = $config;
             }
 
-            $result = $this->_parameters[$handle];
+            $this->_parameters[$handle] = $config;
         }
+
+        $result = $this->_parameters[$handle];
 
         return $result;
     }
