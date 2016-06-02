@@ -336,7 +336,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     /**
      * Loads the select2 behavior and attaches it to a specified element
      *
-     * @see    http://ivaynberg.github.io/select2/select-2.1.html
+     * @see    https://select2.github.io
      *
      * @param  array|ObjectConfig $config
      * @return string   The html output
@@ -349,6 +349,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             'debug'   => \Kodekit::getInstance()->isDebug(),
             'element' => '.select2-listbox',
             'options' => array(
+                'minimumResultsForSearch' => 5,
                 'width' => 'resolve'
             )
         ));
@@ -358,6 +359,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!isset(self::$_loaded['select2']))
         {
             $html .= $this->kodekit();
+            $html .= '<ktml:style  src="assets://css/select2'.($config->debug ? '' : '.min').'.css" />';
             $html .= '<ktml:script src="assets://js/select2'.($config->debug ? '' : '.min').'.js" />';
             $html .= '<ktml:script src="assets://js/kodekit.select2.js" />';
 
@@ -396,7 +398,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 'validate'      => false, //Toggle if the forms validation helper is loaded
                 'queryVarName'  => 'search',
                 'width'         => 'resolve',
-                'model'         => $config->model,
+                'name'          => '',
                 'placeholder'   => $config->prompt,
                 'allowClear'    => $config->deselect,
                 'value'         => $config->value,
@@ -417,8 +419,11 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $config->options->url = $this->getObject('lib:http.url', array('url' => $config->options->url));
         }
 
-        $config->options->url->setQuery(array('fields' => $config->value.','.$config->text), true);
-        $config->options->url = (string) $config->options->url;
+        if(!empty($config->name))
+        {
+            $config->options->url->setQuery(array('fields['.$config->name.']' => $config->value.','.$config->text), true);
+            $config->options->url = (string) $config->options->url;
+        }
 
         $options   = $config->options;
         $signature = md5('autocomplete-'.$config->element.$options);
@@ -428,7 +433,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $html .= $this->select2(array('element' => false));
             $html .= '<script>
             kQuery(function($){
-                $("'.$config->element.'").koowaSelect2('.$options.');
+                $("'.$config->element.'").kodekitSelect2('.$options.');
             });</script>';
 
             self::$_loaded[$signature] = true;
@@ -668,7 +673,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             {
                 $html .= "<script>
                     kQuery(function($){
-                        $('#".$config->id."').koowaDatepicker(".$config->options.");
+                        $('#".$config->id."').kodekitDatepicker(".$config->options.");
                     });
                 </script>";
 
