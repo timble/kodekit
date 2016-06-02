@@ -14,7 +14,7 @@
     factory(require('jquery'));
   } else {
     // Browser globals
-    factory(jQuery);
+    factory(kQuery);
   }
 }(function (jQuery) {
   // This is needed so we can catch the AMD loader configuration and use it
