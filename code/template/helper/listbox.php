@@ -83,44 +83,49 @@ class TemplateHelperListbox extends TemplateHelperSelect
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'prompt'    => '- '.$translator->translate('Select').' -',
+            'deselect'  => false,
             'options'   => array(),
             'select2'   => true,
             'attribs'   => array(),
         ));
 
-        if ($config->attribs->multiple && $config->name && substr($config->name, -2) !== '[]') {
-            $config->name .= '[]';
+        if ($config->deselect)
+        {
+            $deselect = $this->option(array('value' => '', 'label' => $config->prompt));
+            $options  = $config->options->toArray();
+            array_unshift($options, $deselect);
+            $config->options = $options;
         }
 
-        if($config->deselect) {
-            $config->options = array_merge(array($this->option(array('label' => $config->prompt))), $config->options->toArray());
+        if ($config->attribs->multiple && $config->name && substr($config->name, -2) !== '[]') {
+            $config->name .= '[]';
         }
 
         $html = '';
 
         if ($config->select2)
         {
-            $config->append(array(
-                'select2_options' => array(
-                    'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name=\"'.$config->name.'\"]'
-                )
-            ));
-
-            // special configuration for select2 placeholder
-            if ($config->deselect)
-            {
-                $config->append(array(
-                    'select2_options' => array(
-                        'options' => array(
-                            'placeholder' => array(
-                                'id' => '',
-                                'text' => $config->prompt
-                            ),
-                            'allowClear'  => true
-                        )
-                    )
+            if (!$config->name) {
+                $config->attribs->append(array(
+                    'id' => 'select2-element-'.mt_rand(1000, 100000)
                 ));
             }
+            
+            if ($config->deselect) {
+                $config->attribs->append(array(
+                    'data-placeholder' => $config->prompt
+                ));
+            }
+
+            $config->append(array(
+                'select2_options' => array(
+                    'element' => $config->attribs->id ? '#'.$config->attribs->id : 'select[name=\"'.$config->name.'\"]',
+                    'options' => array(
+                        'allowClear'  => $config->deselect
+                    )
+
+                )
+            ));
 
             $html .= $this->createHelper('behavior')->select2($config->select2_options);
         }
