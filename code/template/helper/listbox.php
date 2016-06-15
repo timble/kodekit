@@ -262,8 +262,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
         $config->append(array(
             'name'       => '',
             'attribs'    => array(),
-            'deselect'   => true,
-            'unique'     => true
+            'deselect'   => true
         ))->append(array(
             'value'      => $config->name,
             'selected'   => $config->{$config->name},
@@ -276,26 +275,26 @@ class TemplateHelperListbox extends TemplateHelperSelect
         //Create the model
         $model = $config->model;
 
-        //Fetch the entities
-        $list = $model->setState(ObjectConfig::unbox($config->filter))->fetch();
-
-        //Get the list of items
-        $items = array();
-        foreach($list as $key => $item) {
-            $items[$key] = $item->getProperty($config->value);
-        }
-
-        if ($config->unique) {
-            $items = array_unique($items);
-        }
-
-        //Compose the options array
         $options = array();
+        $state   = ObjectConfig::unbox($config->filter);
+        $count   = $model->setState($state)->count();
+        $offset  = 0;
+        $limit   = 100;
 
-        foreach ($items as $key => $value)
+        /*
+         * We fetch data gradually here and convert it directly into options
+         * This only loads 100 entities into memory at once so that
+         * we do not run into memory limit issues
+         */
+        while ($offset < $count)
         {
-            $item      = $list->find($key);
-            $options[] = $this->option(array('label' => $item->{$config->label}, 'value' => $item->{$config->value}));
+            $entities = $model->setState($state)->limit($limit)->offset($offset)->fetch();
+
+            foreach ($entities as $entity) {
+                $options[] = $this->option(array('label' => $entity->{$config->label}, 'value' => $entity->{$config->value}));
+            }
+
+            $offset += $limit;
         }
 
         //Compose the selected array
