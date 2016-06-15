@@ -33,7 +33,7 @@ abstract class ControllerToolbarDecorator extends ObjectDecorator implements Con
         if(method_exists($this, $method)) {
             $this->$method($command);
         } else {
-            $this->getDelegate()->execute($command);
+            $this->getDelegate()->execute($command, $chain);
         }
     }
 
@@ -128,7 +128,7 @@ abstract class ControllerToolbarDecorator extends ObjectDecorator implements Con
             else $this->getDelegate()->getCommand($name, $config);
 
         }
-        else $command = $this->getDelegate()->getCommand($name);
+        else $command = $this->getDelegate()->getCommand($name, $config);
 
         return $command;
     }
