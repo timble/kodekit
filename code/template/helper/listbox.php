@@ -89,7 +89,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
             'attribs'   => array(),
         ));
 
-        if ($config->deselect)
+        if ($config->deselect && !$config->attribs->multiple)
         {
             $deselect = $this->option(array('value' => '', 'label' => $config->prompt));
             $options  = $config->options->toArray();
