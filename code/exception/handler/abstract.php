@@ -392,7 +392,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
                     $type =  E_RECOVERABLE_ERROR;
                 }
 
-                $result = $this->_handleError($type, $message, $file, $line, $exception);
+                $result = $this->_handleError($type, $message, $file, $line, null, $exception);
             }
             else $result = $this->handleException($exception);
         }
@@ -415,7 +415,7 @@ class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterfa
      * @param object $previous   The previous exception used for the exception chaining
      * @return bool
      */
-    public function _handleError($level, $message, $file, $line, $context = null, $previous = null)
+    public function _handleError($level, $message, $file, $line, array $context = null, $previous = null)
     {
         $result = false;
 
