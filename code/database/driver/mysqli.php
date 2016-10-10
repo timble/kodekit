@@ -569,7 +569,7 @@ class DatabaseDriverMysqli extends DatabaseDriverAbstract
         $column->primary  = $info->Key == 'PRI';
         $column->unique   = ($info->Key == 'UNI' || $info->Key == 'PRI');
         $column->autoinc  = strpos($info->Extra, 'auto_increment') !== false;
-        $column->filter   = $this->_type_map[$type];
+        $column->filter   = isset($this->_type_map[$type]) ? $this->_type_map[$type] : 'raw';
 
         // Don't keep "size" for integers.
         if(substr($type, -3) == 'int') {
