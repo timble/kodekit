@@ -199,7 +199,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
 
             $this->getCatalogue()->add($translations, $override);
 
-            $this->__loaded[] = $url;
+            $this->setLoaded($url);
         }
 
         return true;
@@ -370,7 +370,29 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
      */
     public function isLoaded($url)
     {
-        return in_array($url, $this->__loaded);
+        return in_array($url, $this->getLoaded());
+    }
+
+    /**
+     * Sets a url as loaded.
+     *
+     * @param mixed $url The url.
+     * @return TranslatorInterface
+     */
+    public function setLoaded($url)
+    {
+        $this->__loaded[] = $url;
+        return $this;
+    }
+
+    /**
+     * Returns a list of loaded urls.
+     *
+     * @return array The loaded urls.
+     */
+    public function getLoaded()
+    {
+        return $this->__loaded;
     }
 
     /**

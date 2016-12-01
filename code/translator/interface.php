@@ -136,4 +136,19 @@ interface TranslatorInterface
      * @return bool TRUE if loaded, FALSE otherwise.
      */
     public function isLoaded($url);
+
+    /**
+     * Sets a url as loaded.
+     *
+     * @param mixed $url The url.
+     * @return TranslatorInterface
+     */
+    public function setLoaded($url);
+
+    /**
+     * Returns a list of loaded urls.
+     *
+     * @return array The loaded urls.
+     */
+    public function getLoaded();
 }
