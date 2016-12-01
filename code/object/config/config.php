@@ -105,7 +105,7 @@ class ObjectConfig implements ObjectConfigInterface
     {
         $key = false;
         if(!isset($this->__options[$name])) {
-            $key = array_search($name, $this->__options);
+            $key = array_search($name, $this->__options, true);
         } else {
             $key = $name;
         }
