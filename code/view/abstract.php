@@ -48,7 +48,7 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     /**
      * The view data
      *
-     * @var boolean
+     * @var array
      */
     private $__data;
 
