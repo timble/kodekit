@@ -42,20 +42,20 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     protected $_content_type;
 
     // [Successful 2xx]
-    const OK                        = 200;
-    const CREATED                   = 201;
-    const ACCEPTED                  = 202;
-    const NO_CONTENT                = 204;
-    const RESET_CONTENT             = 205;
-    const PARTIAL_CONTENT           = 206;
+    const OK                            = 200;
+    const CREATED                       = 201;
+    const ACCEPTED                      = 202;
+    const NO_CONTENT                    = 204;
+    const RESET_CONTENT                 = 205;
+    const PARTIAL_CONTENT               = 206;
 
     // [Redirection 3xx]
-    const MOVED_PERMANENTLY         = 301;
-    const FOUND                     = 302;
-    const SEE_OTHER                 = 303;
-    const NOT_MODIFIED              = 304;
-    const USE_PROXY                 = 305;
-    const TEMPORARY_REDIRECT        = 307;
+    const MOVED_PERMANENTLY             = 301;
+    const FOUND                         = 302;
+    const SEE_OTHER                     = 303;
+    const NOT_MODIFIED                  = 304;
+    const USE_PROXY                     = 305;
+    const TEMPORARY_REDIRECT            = 307;
 
     // [Client Error 4xx]
     const BAD_REQUEST                   = 400;
@@ -74,14 +74,15 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     const UNSUPPORTED_MEDIA_TYPE        = 415;
     const REQUESTED_RANGE_NOT_SATISFIED = 416;
     const EXPECTATION_FAILED            = 417;
+    const TOO_MANY_REQUESTS             = 429;
 
     // [Server Error 5xx]
-    const INTERNAL_SERVER_ERROR     = 500;
-    const NOT_IMPLEMENTED           = 501;
-    const BAD_GATEWAY               = 502;
-    const SERVICE_UNAVAILABLE       = 503;
-    const GATEWAY_TIMEOUT           = 504;
-    const VERSION_NOT_SUPPORTED     = 505;
+    const INTERNAL_SERVER_ERROR         = 500;
+    const NOT_IMPLEMENTED               = 501;
+    const BAD_GATEWAY                   = 502;
+    const SERVICE_UNAVAILABLE           = 503;
+    const GATEWAY_TIMEOUT               = 504;
+    const VERSION_NOT_SUPPORTED         = 505;
 
     /**
      * Status codes translation table.
