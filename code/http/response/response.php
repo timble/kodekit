@@ -484,7 +484,8 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function isInvalid()
     {
-        return $this->_status_code < 100 || $this->_status_code >= 600;
+        $status_code = $this->getStatusCode();
+        return ($status_code < 100 || $status_code >= 600);
     }
 
 
