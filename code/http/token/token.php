@@ -367,7 +367,7 @@ class HttpToken extends Object implements HttpTokenInterface
         if($this->_algorithm)
         {
             $header  = $this->_toBase64url($this->_toJson($this->_header));
-            $payload = $this->_tobase64url($this->_toJson($this->_claims));
+            $payload = $this->_toBase64url($this->_toJson($this->_claims));
 
             $message   = sprintf("%s.%s", $header, $payload);
             $signature = hash_hmac($this->_algorithm, $message, $secret, true);
@@ -454,18 +454,18 @@ class HttpToken extends Object implements HttpTokenInterface
     /**
      * Verify the token
      *
-     * This method is used to verify the digitally signed JWT token. It does nothing, if the token is not signed
-     * (i.e., the crypto segment of the JWT token is an empty string).
+     * This method is used to verify the digitally signed JWT token.
+     *
+     * It makes sure the algorithm is NOT set to 'none' if a secret is passed.
      *
      * @param mixed   $secret  The secret to be used to verify the HMAC signature bytes of the JWT token
-     * @param boolean $signed  Ensure the token is signed. If FALSE, unsigned tokens will pass verification
      * @return bool  Returns TRUE if the signature of the JWT token is valid, FALSE otherwise.
      */
-    public function verify($secret, $signed = true)
+    public function verify($secret)
     {
-        //An unsigned JWT is using the "none" "alg" header parameter value; and an empty string for its signature.
-        if(!$signed && empty($this->_signature) && $this->getAlgorithm() == 'none') {
-           return true;
+        // Force an algorithm to be provided if there is a secret key
+        if ($secret && $this->getAlgorithm() == 'none') {
+            return false;
         }
 
         //Verify the signature

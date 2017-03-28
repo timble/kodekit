@@ -207,14 +207,14 @@ interface HttpTokenInterface
     /**
      * Verify the token
      *
-     * This method is used to verify the digitally signed JWT token. It does nothing, if the token is not signed
-     * (i.e., the crypto segment of the JWT token is an empty string).
+     * This method is used to verify the digitally signed JWT token.
+     *
+     * It makes sure the algorithm is NOT set to 'none' if a secret is passed.
      *
      * @param mixed   $secret  The secret to be used to verify the HMAC signature bytes of the JWT token
-     * @param boolean $signed  Ensure the token is signed. If FALSE, unsigned tokens will pass verification
      * @return bool  Returns TRUE if the signature of the JWT token is valid, FALSE otherwise.
      */
-    public function verify($secret, $signed = false);
+    public function verify($secret);
 
     /**
      * Sign the token
