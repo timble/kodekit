@@ -131,6 +131,14 @@ interface DispatcherRequestInterface extends ControllerRequestInterface
     public function getReferrer($isInternal = true);
 
     /**
+     * Returns the HTTP origin header.
+     *
+     * @param   boolean  $isInternal Only allow internal URLs
+     * @return  HttpUrl|null  A HttpUrl object or NULL if no origin header could be found
+     */
+    public function getOrigin($isInternal = true);
+
+    /**
      * Returns the client information doing the request
      *
      * @return string $_SERVER['HTTP_USER_AGENT'] or an empty string if it's not supplied in the request

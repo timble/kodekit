@@ -92,9 +92,9 @@ class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
             $request = $context->request;
             $user    = $context->user;
 
-            //Check referrer
-            if(!$request->getReferrer()) {
-                throw new ControllerExceptionRequestInvalid('Request Referrer Not Found');
+            //Check referrer or origin
+            if (!$request->getReferrer() && !$request->getOrigin()) {
+                throw new ControllerExceptionRequestInvalid('Request referrer or origin not found');
             }
 
             //Check csrf token

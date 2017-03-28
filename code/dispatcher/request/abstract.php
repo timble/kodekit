@@ -623,15 +623,61 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
             $this->setReferrer($this->getObject('lib:filter.url')->sanitize($referrer));
         }
 
+
         if(isset($this->_referrer) && $isInternal)
         {
-            $url = $this->_referrer->toString(HttpUrl::SCHEME | HttpUrl::HOST);
-            if(!$this->getObject('lib:filter.internalurl')->validate($url)) {
-                return null;
+            $target_origin = $this->getUrl()->getHost();
+            $source_origin = $this->_referrer->getHost();
+
+            // Check if the source matches the target
+            if($target_origin !== $source_origin)
+            {
+                // Special case: check if the source is a subdomain of the target origin
+                if ('.'.$target_origin !== substr($source_origin, -1 * (strlen($target_origin)+1))) {
+                    return null;
+                }
             }
         }
 
         return $this->_referrer;
+    }
+
+    /**
+     * Returns the HTTP origin header.
+     *
+     * @param   boolean  $isInternal Only allow internal URLs
+     * @return  HttpUrl|null  A HttpUrl object or NULL if no origin header could be found
+     */
+    public function getOrigin($isInternal = true)
+    {
+        $origin = null;
+
+        if ($this->_headers->has('Origin'))
+        {
+            try {
+                $origin = $this->getObject('lib:http.url', [
+                    'url' => $this->getObject('lib:filter.url')->sanitize($this->_headers->get('Origin'))
+                ]);
+
+                if($isInternal)
+                {
+                    $target_origin = $this->getUrl()->getHost();
+                    $source_origin = $origin->getHost();
+
+                    // Check if the source matches the target
+                    if($target_origin !== $source_origin)
+                    {
+                        // Special case: check if the source is a subdomain of the target origin
+                        if ('.'.$target_origin !== substr($source_origin, -1 * (strlen($target_origin)+1))) {
+                            $origin = null;
+                        }
+                    }
+                }
+            }
+            catch (\UnexpectedValueException $e) {}
+        }
+
+        return $origin;
     }
 
     /**
