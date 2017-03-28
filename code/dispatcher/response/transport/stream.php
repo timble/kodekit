@@ -176,7 +176,7 @@ class DispatcherResponseTransportStream extends DispatcherResponseTransportHttp
      */
     public function sendContent(DispatcherResponseInterface $response)
     {
-        if ($response->isSuccess())
+        if ($response->isSuccess() && $response->isStreamable())
         {
             //For a certain unmentionable browser
             if(ini_get('zlib.output_compression')) {
