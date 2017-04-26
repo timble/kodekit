@@ -433,6 +433,18 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     }
 
     /**
+     * Set the view mimetype
+     *
+     * @param string $mimetype The mimetype to set
+     * @return ViewAbstract
+     */
+    public function setMimetype($mimetype)
+    {
+        $this->__mimetype = $mimetype;
+        return $this;
+    }
+
+    /**
      * Returns the views output
      *
      * @return string
