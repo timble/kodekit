@@ -77,9 +77,29 @@ class TemplateFilterForm extends TemplateFilterAbstract
      */
     public function filter(&$text, TemplateInterface $template)
     {
+        $this->_addMetatag($text);
         $this->_addAction($text, $template);
         $this->_addToken($text);
         $this->_addQueryParameters($text);
+    }
+
+    /**
+     * Adds the CSRF token to a meta tag to be used in JavaScript
+     *
+     * @param string $text Template text
+     * @return $this
+     */
+    protected function _addMetatag(&$text)
+    {
+        if (!empty($this->_token_value))
+        {
+            $string = '<meta content="'.$this->_token_value.'" name="csrf-token" />';
+            if (stripos($text, $string) === false) {
+                $text = $string.$text;
+            }
+        }
+
+        return $this;
     }
 
     /**
