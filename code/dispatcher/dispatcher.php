@@ -313,37 +313,11 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         foreach($actions as $action)
         {
             if($this->canExecute($action)) {
-                $methods[$action] = $action;
+                $methods[] = strtoupper($action);
             }
         }
 
-        //Retrieve POST actions allowed by the controller
-        if(in_array('post', $methods))
-        {
-            $actions = array_diff($this->getController()->getActions(), array('browse', 'read', 'render'));
-            foreach($actions as $key => $action)
-            {
-                if(!$this->getController()->canExecute($action)) {
-                    unset($actions[$key]);
-                }
-            }
-
-            sort($actions);
-
-            $methods['post'] = array_diff($actions, $methods);
-        }
-
-        //Render to string
-        $result = '';
-        foreach($methods as $method => $actions)
-        {
-            $result .= strtoupper($method). ' ';
-            if(is_array($actions) && !empty($actions)) {
-                $result .= '['.implode(', ', $actions).'] ';
-            }
-        }
-
-        $context->response->headers->set('Allow', $result);
+        $context->response->headers->set('Allow', implode(', ', $methods));
     }
 
     /**
