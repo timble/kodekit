@@ -409,7 +409,10 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
         //Create the redirect
         $context->response->setRedirect($this->getReferrer($context));
 
-        $entity = $context->getSubject()->execute('read', $context);
+        if ($context->result instanceof ModelEntityInterface) {
+            $entity = $context->result;
+        }
+        else $entity = $this->getModel()->fetch();
 
         return $entity;
     }
