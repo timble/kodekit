@@ -64,6 +64,13 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
     protected $_unique;
 
     /**
+     * A string or an array of filter identifiers
+     *
+     * @var string|array
+     */
+    protected $_filter;
+
+    /**
      * Constructor.
      *
      * @param   ObjectConfig $config Configuration options
@@ -77,6 +84,8 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
         $this->_updatable = $config->updatable;
         $this->_length    = $config->length;
         $this->_unique    = $config->unique;
+        $this->_filter    = ObjectConfig::unbox($config->filter);
+
     }
 
     /**
@@ -94,10 +103,25 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
             'separator' => '-',
             'updatable' => true,
             'length'    => null,
-            'unique'    => null
+            'unique'    => null,
+            'filter'    => 'slug'
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * @param ObjectMixable $mixer
+     */
+    public function onMixin(ObjectMixable $mixer)
+    {
+        parent::onMixin($mixer);
+
+        $table = $this->getMixer();
+
+        if ($table instanceof DatabaseTableInterface) {
+            $table->getColumn('slug', true)->filter = (array) ObjectConfig::unbox($this->_filter);
+        }
     }
 
     /**
@@ -216,7 +240,7 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
     /**
      * Create a sluggable filter
      *
-     * @return FilterSlug
+     * @return FilterInterface
      */
     protected function _createFilter()
     {
@@ -230,8 +254,7 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
         }
 
         //Create the filter
-        $filter = $this->getObject('lib:filter.slug', $config);
-        return $filter;
+        return $this->getObject('filter.factory')->createChain($this->_filter, $config);
     }
 
     /**
