@@ -258,16 +258,24 @@ abstract class UserSessionContainerAbstract extends ObjectArray implements UserS
      */
     public function offsetExists($identifier)
     {
-        $keys = $this->_parseIdentifier($identifier);
+        $keys   = $this->_parseIdentifier($identifier);
+        $last   = count($keys)-1;
+        $data   = &$this->_data;
+        $result = false;
 
-        foreach($keys as $key)
+        foreach($keys as $index => $key)
         {
-            if(array_key_exists($key, $this->_data)) {
-                return true;
-            };
+            if (!array_key_exists($key, $data)) {
+                break;
+            }
+
+            if ($index < $last) {
+                $data =& $data[$key];
+            }
+            else $result = true;
         }
 
-        return false;
+        return $result;
     }
 
     /**
@@ -279,14 +287,19 @@ abstract class UserSessionContainerAbstract extends ObjectArray implements UserS
     public function offsetUnset($identifier)
     {
         $keys = $this->_parseIdentifier($identifier);
+        $last = count($keys)-1;
+        $data =& $this->_data;
 
-        foreach($keys as $key)
+        foreach($keys as $index => $key)
         {
-            if(array_key_exists($key, $this->_data))
-            {
-                unset($this->_data[$key]);
+            if (!array_key_exists($key, $data)) {
                 break;
-            };
+            }
+
+            if ($index < $last) {
+                $data =& $data[$key];
+            }
+            else unset($data[$key]);
         }
     }
 

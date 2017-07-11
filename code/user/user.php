@@ -218,12 +218,12 @@ class User extends UserAbstract implements ObjectSingleton
      * Get an user parameter
      *
      * @param string $name The parameter name
-     * @param   mixed   $value      Default value when the attribute doesn't exist
+     * @param   mixed   $default      Default value when the attribute doesn't exist
      * @return  mixed   The value
      */
     public function get($name, $default = null)
     {
-        return $this->getSession()->get('user.parameters'.$name, $default);
+        return $this->getSession()->get('user.parameters.'.$name, $default);
     }
 
     /**
@@ -235,7 +235,7 @@ class User extends UserAbstract implements ObjectSingleton
      */
     public function set($name, $value)
     {
-        $this->getSession()->set('user.parameters'.$name, $value);
+        $this->getSession()->set('user.parameters.'.$name, $value);
         return $this;
     }
 
@@ -247,7 +247,7 @@ class User extends UserAbstract implements ObjectSingleton
      */
     public function has($name)
     {
-        return $this->getSession()->has('user.parameters'.$name);
+        return $this->getSession()->has('user.parameters.'.$name);
     }
 
     /**
@@ -258,7 +258,7 @@ class User extends UserAbstract implements ObjectSingleton
      */
     public function remove($name)
     {
-        $this->getSession()->remove('user.parameters'.$name);
+        $this->getSession()->remove('user.parameters.'.$name);
         return $this;
     }
 
