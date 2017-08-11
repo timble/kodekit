@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Helper
  */
-class TemplateHelperActionbar extends TemplateHelperAbstract
+class TemplateHelperActionbar extends TemplateHelperToolbar
 {
     /**
      * Render the action bar
@@ -28,20 +28,24 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'toolbar' => null,
-            'attribs' => array('class' => array('koowa-toolbar'))
+            'attribs' => array('class' => array('k-toolbar', 'k-js-toolbar'))
         ));
 
         $html = '';
-        if(isset($config->toolbar))
+        if(isset($config->toolbar) && count($config->toolbar))
         {
             //Force the id
             $config->attribs['id'] = 'toolbar-'.$config->toolbar->getType();
 
-            $html  = '<div '.$this->buildAttributes($config->attribs).'>';
-            $html .= '<div class="button__group">';
+            $html .= '<div '.$this->buildAttributes($config->attribs).'>';
+
             foreach ($config->toolbar as $command)
             {
                 $name = $command->getName();
+
+                if ($name === 'title') { // TODO: ercan
+                    continue;
+                }
 
                 if(method_exists($this, $name)) {
                     $html .= $this->$name(ObjectConfig::unbox($command));
@@ -49,7 +53,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
                     $html .= $this->command(ObjectConfig::unbox($command));
                 }
             }
-            $html .= '</div>';
+
             $html .= '</div>';
         }
 
@@ -68,12 +72,13 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
         $config->append(array(
             'id'      => '',
             'href'    => '',
+            'icon'    => '',
             'allowed' => true,
             'disabled'=> false,
             'data'    => array(),
             'attribs' => array(
                 'href'  => '#',
-                'class' => array('button', 'toolbar')
+                'class' => array('toolbar')
             )
         ));
 
@@ -82,15 +87,22 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
         if ($config->allowed === false)
         {
             $config->attribs->title = $translator->translate('You are not allowed to perform this action');
-            $config->attribs->class->append(array('disabled', 'unauthorized'));
+            $config->attribs->class->append(array('k-is-disabled', 'k-is-unauthorized'));
         }
 
         //Create the id
         $config->attribs['id'] = 'command-'.$config->id;
 
+        // TODO: ercan - remove
         //Add a disabled class if the command is disabled
         if($config->disabled) {
             $config->attribs->class->append(array('nolink'));
+        }
+
+        $config->attribs->class->append(array('k-button', 'k-button--default', 'k-button-'.$config->id));
+
+        if ($config->id === 'new' || $config->id === 'apply') {
+            $config->attribs->class->append(array('k-button--success'));
         }
 
         //Add the data attributes
@@ -104,6 +116,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
         }
 
         $html  = '<a '.$this->buildAttributes($config->attribs).'>';
+        $html .= '<span class="'.$config->icon.'" aria-hidden="true"></span> ';
         $html .= ucfirst($translator->translate($config->label));
         $html .= '</a>';
 
@@ -120,7 +133,7 @@ class TemplateHelperActionbar extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'attribs' => array('class' => array('button__group'))
+            'attribs' => array()
         ));
 
         $html = '</div><div '.$this->buildAttributes($config->attribs).'>';

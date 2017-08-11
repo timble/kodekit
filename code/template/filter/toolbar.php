@@ -85,6 +85,7 @@ class TemplateFilterToolbar extends TemplateFilterAbstract
     /**
      * Get a toolbar by type
      *
+     * @param  string $type Toolbar type
      * @return ControllerToolbarInterface
      */
     public function getToolbar($type = 'actionbar')
@@ -127,19 +128,20 @@ class TemplateFilterToolbar extends TemplateFilterAbstract
                     'type'  => 'actionbar',
                 ));
 
+                if($this->getIdentifier()->type != 'lib') {
+                    $identifier = 'com:'.$this->getIdentifier()->package.'.template.helper.'.$config->type;
+                } else {
+                    $identifier = 'lib:template.helper.'.$config->type;
+                }
+
+                $helper = $this->getObject('template.helper.factory')->createHelper($identifier);
+
                 $html = '';
-                if($toolbar = $this->getToolbar($config->type))
+                if($toolbar = $this->getToolbar($helper->getToolbarType()))
                 {
                     $config->toolbar = $toolbar; //set the toolbar in the config
-
-                    if($this->getIdentifier()->type != 'lib') {
-                        $identifier = 'com:'.$this->getIdentifier()->package.'.template.helper.'.$config->type;
-                    } else {
-                        $identifier = 'lib:template.helper.'.$config->type;
-                    }
-
-                    $helper = $this->getObject('template.helper.factory')->createHelper($identifier);
-                    $html   = $helper->render($config, $template);
+                    
+                    $html = $helper->render($config, $template);
                 }
 
                 //Remove placeholder

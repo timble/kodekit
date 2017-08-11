@@ -87,6 +87,8 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
             $identifier    = $this->getController()->getIdentifier();
             $command->href = 'component='.$identifier->package.'&view='.$identifier->name;
         }
+
+        $command->icon = 'k-icon-plus';
     }
 
     /**
@@ -114,7 +116,7 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
      */
     protected function _commandEnable(ControllerToolbarCommand $command)
     {
-        $command->icon = 'icon-publish';
+        $command->icon = 'k-icon-check k-icon--success';
 
         $command->append(array(
             'data' => array(
@@ -132,7 +134,7 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
      */
     protected function _commandDisable(ControllerToolbarCommand $command)
     {
-        $command->icon = 'icon-unpublish';
+        $command->icon = 'k-icon-x k-icon--error';
 
         $command->append(array(
             'data' => array(
@@ -178,11 +180,11 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
             'href' => ''
         ))->append(array(
             'attribs' => array(
-                'class' => array('koowa-modal'),
+                'class' => array('k-modal'),
                 'href'  => $command->href,
             ),
             'data' => array(
-                'koowa-modal' => array('type' => 'ajax')
+                'k-modal' => array('type' => 'iframe')
             )
         ));
     }

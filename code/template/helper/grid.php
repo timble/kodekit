@@ -34,8 +34,9 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
             $html = $this->createHelper('behavior')->tooltip();
-            $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->creaateHelper('grid')->lock_message(array('entity' => $config->entity)).'">
+            $html .= '<span class="k-icon-lock-locked"
+                            data-k-tooltip
+                            title="'.$this->creaateHelper('grid')->lock_message(array('entity' => $config->entity)).'">
                     </span>';
         }
         else
@@ -45,7 +46,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
             $attribs = $this->buildAttributes($config->attribs);
 
-            $html = '<input type="radio" class="-koowa-grid-checkbox" name="%s[]" value="%s" %s />';
+            $html = '<input type="radio" class="k-js-grid-checkbox" name="%s[]" value="%s" %s />';
             $html = sprintf($html, $column, $value, $attribs);
         }
 
@@ -70,8 +71,9 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
             $html = $this->createHelper('behavior')->tooltip();
-            $html .= '<span class="koowa-tooltip koowa_icon--locked"
-                           title="'.$this->createHelper('grid')->lock_message(array('entity' => $config->entity)).'">
+            $html .= '<span class="k-icon-lock-locked"
+                            data-k-tooltip
+                            title="'.$this->createHelper('grid')->lock_message(array('entity' => $config->entity)).'">
                     </span>';
         }
         else
@@ -81,7 +83,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
             $attribs = $this->buildAttributes($config->attribs);
 
-            $html = '<input type="checkbox" class="-koowa-grid-checkbox" name="%s[]" value="%s" %s />';
+            $html = '<input type="checkbox" class="k-js-grid-checkbox" name="%s[]" value="%s" %s />';
             $html = sprintf($html, $column, $value, $attribs);
         }
 
@@ -124,14 +126,29 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
                     }
                 },
                 send = function(event) {
-                    if (event.which === 13 || event.type === "blur") {
+                    var v = kQuery(this).val();
+
+                    if (v) {
+                        kQuery(".k-search__empty").addClass("k-is-visible");
+                    } else {
+                        kQuery(".k-search__empty").removeClass("k-is-visible");
+                    }
+
+                    if (event.which === 13 || (event.type === "blur" && (v || value) && v != value)) {
+                        event.preventDefault();
                         submitForm(kQuery(this).parents("form"));
                     }
                 };
 
             kQuery(function($) {
-                $(".search_button").keypress(send).blur(send);
-                $(".search_button--empty").click(function(event) {
+                $(".k-search__field").keypress(send).blur(send);
+                var empty_button = $(".k-search__empty");
+                
+                if (value) {
+                    empty_button.addClass("k-is-visible");
+                }
+                
+                empty_button.click(function(event) {
                     event.preventDefault();
 
                     var input = $(this).siblings("input");
@@ -146,11 +163,27 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             </script>';
         }
 
-        $html .= '<div class="search__container search__container--has_empty_button">';
-        $html .= '<label for="search"><i class="icon-search"></i></label>';
-        $html .= '<input type="search" name="search" class="search_button" placeholder="'.$config->placeholder.'" value="'.StringEscaper::attr($config->search).'" />';
-        $html .= '<a class="search_button--empty"><span>X</span></a>';
+        $html .= '<div class="k-search k-search--has-both-buttons">';
+        $html .= '<label for="k-search-input">' . $this->getObject('translator')->translate('Search') . '</label>';
+        $html .= '<input id="k-search-input" type="search" name="search" class="k-search__field" placeholder="'.$config->placeholder.'" value="'.StringEscaper::attr($config->search).'" />';
+        $html .= '<button type="submit" class="k-search__submit">';
+        $html .= '<span class="k-icon-magnifying-glass" aria-hidden="true"></span>';
+        $html .= '<span class="k-visually-hidden">' . $this->getObject('translator')->translate('Search') . '</span>';
+        $html .= '</button>';
+        $html .= '<button type="button" class="k-search__empty">';
+        $html .= '<span class="k-search__empty-area">';
+        $html .= '<span class="k-icon-x" aria-hidden="true"></span>';
+        $html .= '<span class="k-visually-hidden">' . $this->getObject('translator')->translate('Clear search') . '</span>';
+        $html .= '</span>';
+        $html .= '</button>';
+
+        if ($config->search) {
+            $html .= '<div class="k-scopebar__item-label k-scopebar__item-label--numberless"></div>';
+        }
+
         $html .= '</div>';
+
+
 
         return $html;
     }
@@ -163,7 +196,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
      */
     public function checkall($config = array())
     {
-        $html = '<input type="checkbox" class="-koowa-grid-checkall" />';
+        $html = '<input type="checkbox" class="k-js-grid-checkall" />';
         return $html;
     }
 
@@ -195,12 +228,9 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         $direction  = strtolower($config->direction);
         $direction  = in_array($direction, array('asc', 'desc')) ? $direction : 'asc';
 
-        //Set the class
-        $class = '';
         if($config->column == $config->sort)
         {
             $direction = $direction == 'desc' ? 'asc' : 'desc'; // toggle
-            $class = 'class="-koowa-'.$direction.'"';
         }
 
         //Set the query in the route
@@ -211,19 +241,15 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         $config->url->query['sort']      = $config->column;
         $config->url->query['direction'] = $direction;
 
-        $html  = '<a href="'.$config->url.'" title="'.$translator->translate('Click to sort by this column').'"  '.$class.'>';
+        $html  = '<a href="'.$config->url.'" data-k-tooltip=\'{"container":".k-ui-container","delay":{"show":500,"hide":50}}\' data-original-title="'.$translator->translate('Click to sort by this column').'">';
         $html .= $translator->translate($config->title);
 
-        // Mark the current column
         if ($config->column == $config->sort)
         {
-            if (strtolower($config->direction) === 'asc') {
-                $html .= ' <span class="koowa_icon--sort_up koowa_icon--12"></span>';
-            } else {
-                $html .= ' <span class="koowa_icon--sort_down koowa_icon--12"></span>';
-            }
+            $direction = $direction == 'desc' ? 'descending' : 'ascending'; // toggle
+            $html .= '<span class="k-sort-'.$direction.'" aria-hidden="true"></span>';
+            $html .= '<span class="k-visually-hidden">'.$direction.'</span>';
         }
-        else $html .= ' <span class="koowa_icon--sort koowa_icon--12"></span>';
 
         $html .= '</a>';
 
@@ -255,16 +281,21 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             'icon'      => $config->enabled ? 'enabled' : 'disabled',
         ));
 
+        $class  = $config->enabled ? 'k-table__item--state-published' : 'k-table__item--state-unpublished';
+
+        $tooltip = '';
+
         if ($config->clickable)
         {
             $data    = htmlentities(json_encode($config->data->toArray()));
-            $attribs = 'style="cursor: pointer;color:'.$config->color.'" data-action="edit" data-data="'.$data.'"
-                title="'.$config->tooltip.'"';
+            $tooltip = 'data-k-tooltip=\'{"container":".k-ui-container","delay":{"show":500,"hide":50}}\'
+            style="cursor: pointer"
+            data-action="edit" 
+            data-data="'.$data.'" 
+            data-original-title="'.$config->tooltip.'"';
         }
-        else $attribs = 'style="color:'.$config->color.'"';
 
-        $html = '<span class="koowa-tooltip koowa_icon--%s" %s><i>%s</i></span>';
-        $html = sprintf($html, $config->icon, $attribs, $config->alt);
+        $html = '<span class="k-table__item--state '.$class.'" '.$tooltip.'>'.$config->alt.'</span>';
         $html .= $this->createHelper('behavior')->tooltip();
 
         return $html;

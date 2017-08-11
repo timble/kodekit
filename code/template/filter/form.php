@@ -107,12 +107,12 @@ class TemplateFilterForm extends TemplateFilterAbstract
      *
      * @param string $text       Template text
      * @param TemplateInterface $template A template object
-     * @return TemplateFilterForm
+     * @return $this
      */
     protected function _addAction(&$text, TemplateInterface $template)
     {
         // All: Add the action if left empty
-        if (preg_match_all('#<\s*form.*?action=""#sim', $text, $matches, PREG_SET_ORDER))
+        if (preg_match_all('#<\s*form[^>]+action=""#si', $text, $matches, PREG_SET_ORDER))
         {
             foreach ($matches as $match)
             {
@@ -128,20 +128,20 @@ class TemplateFilterForm extends TemplateFilterAbstract
      * Add the token to the form
      *
      * @param string $text Template text
-     * @return TemplateFilterForm
+     * @return $this
      */
     protected function _addToken(&$text)
     {
         if (!empty($this->_token_value))
         {
             // POST: Add token
-            $text    = preg_replace('/(<form.*method="post"[^>]*>)/si',
+            $text    = preg_replace('#(<\s*form[^>]+method="post"[^>]*>)#si',
                 '\1'.PHP_EOL.'<input type="hidden" name="'.$this->_token_name.'" value="'.$this->_token_value.'" />',
                 $text
             );
 
-            // GET: Add token to .-koowa-grid forms
-            $text    = preg_replace('#(<\s*?form\s+?.*?class=(?:\'|")[^\'"]*?-koowa-grid.*?(?:\'|").*?)>#sim',
+            // GET: Add token to .k-js-grid-controller forms
+            $text    = preg_replace('#(<\s*form[^>]+class=(?:\'|")[^\'"]*?k-js-grid-controller.*?(?:\'|")[^>]*)>#si',
                 '\1 data-token-name="'.$this->_token_name.'" data-token-value="'.$this->_token_value.'">',
                 $text
             );
@@ -154,25 +154,32 @@ class TemplateFilterForm extends TemplateFilterAbstract
      * Add query parameters as hidden fields to the GET forms
      *
      * @param string $text Template text
-     * @return TemplateFilterForm
+     * @return $this
      */
     protected function _addQueryParameters(&$text)
     {
         $matches = array();
-        if (preg_match_all('#<form.*action="[^"]*\?(.*)".*method="get".*>(.*)</form>#siU', $text, $matches))
+
+        if (preg_match_all('#(<\s*form[^>]+action="[^"]*?\?(.*?)"[^>]*>)(.*?)</form>#si', $text, $matches))
         {
-            foreach ($matches[1] as $key => $query)
+            foreach ($matches[1] as $key => $match)
             {
+                // Only deal with GET forms.
+                if (strpos($match, 'method="get"') !== false)
+                {
+                    $query = $matches[2][$key];
+
                 parse_str(str_replace('&amp;', '&', $query), $query);
 
                 $input = '';
+
                 foreach ($query as $name => $value)
                 {
                     if (is_array($value)) {
                         $name = $name . '[]';
                     }
 
-                    if (strpos($matches[2][$key], 'name="' . $name . '"') !== false) {
+                    if (strpos($matches[3][$key], 'name="' . $name . '"') !== false) {
                         continue;
                     }
 
@@ -198,7 +205,9 @@ class TemplateFilterForm extends TemplateFilterAbstract
                     }
                 }
 
-                $text = str_replace($matches[2][$key], $input.$matches[2][$key], $text);
+                    $text = str_replace($matches[3][$key], $input.$matches[3][$key], $text);
+                }
+
             }
         }
 
