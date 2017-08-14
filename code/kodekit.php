@@ -21,6 +21,9 @@ use Kodekit\Library;
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library
+ *
+ * @method static Kodekit\Library\ObjectInterface getObject(mixed $identifier, array $config = array())
+ * @method static Kodekit\Library\ObjectIdentifier getIdentifier(mixed $identifier = null)
  */
 class Kodekit
 {
