@@ -358,7 +358,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= "<script>
             kQuery(function($){
-                $('$config->selector').on('koowa:validate', function(event){
+                $('$config->selector').on('kodekit:validate', function(event){
                     if(!$(this).valid() || $(this).validate().pendingRequest !== 0) {
                         event.preventDefault();
                     }
@@ -399,7 +399,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('select2'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.select2.js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.select2.js" />';
 
             static::setLoaded('select2');
         }
@@ -485,13 +485,13 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= $this->select2(array('element' => false));
 
-            if (!static::isLoaded('koowa-select2-autocomplete')) {
+            if (!static::isLoaded('kodekit-select2-autocomplete')) {
                 $html .= '<script>
-                if(!Koowa) {
-                    var Koowa = {};
+                if(!Kodekit) {
+                    var Kodekit = {};
                 }
                 
-                Koowa.getSelect2Options = function(options) {
+                Kodekit.getSelect2Options = function(options) {
                     var defaults = {
                         width: "resolve",
                         minimumInputLength: 2,
@@ -533,12 +533,12 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 };
                 </script>';
 
-                static::setLoaded('koowa-select2-autocomplete');
+                static::setLoaded('kodekit-select2-autocomplete');
             }
 
             $html .= '<script>
             kQuery(function($){
-                $("'.$config->element.'").select2(Koowa.getSelect2Options('.$options.'));
+                $("'.$config->element.'").select2(Kodekit.getSelect2Options('.$options.'));
             });</script>';
 
             static::setLoaded($signature);
@@ -581,7 +581,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('tree'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.tree.js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.tree.js" />';
 
             static::setLoaded('tree');
         }
@@ -635,7 +635,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= '<script>
             kQuery(function($){
-                new Koowa.Tree('.json_encode($config->element).', '.$options.');
+                new Kodekit.Tree('.json_encode($config->element).', '.$options.');
             });</script>';
 
             static::setLoaded($signature);
@@ -802,7 +802,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 {
                     $html .= "<script>
                         kQuery(function($){
-                            $('.k-js-form-controller').on('koowa:submit', function() {
+                            $('.k-js-form-controller').on('kodekit:submit', function() {
                                 var element = kQuery('#".$config->id."'),
                                     picker  = element.data('kdatepicker'),
                                     offset  = $config->offset_seconds;
@@ -824,12 +824,13 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $config->format
             );
 
-            $html .= '<div class="input-group date datepicker" data-date-format="'.$format.'" id="'.$config->id.'">';
-            $html .= '<input class="input-group-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
-            $html .= '<span class="input-group-btn">';
-            $html .= '<span class="btn" >';
-            $html .= '<span class="koowa_icon--calendar"><i>calendar</i></span>';
-            $html .= '</span>';
+            $html .= '<div class="k-input-group k-js-datepicker     date     " data-date-format="'.$format.'" id="'.$config->id.'">';
+            $html .= '<input class="k-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
+            $html .= '<span class="k-input-group__button input-group-btn">';
+            $html .= '<button type="button" class="k-button k-button--default     btn     ">';
+            $html .= '<span class="k-icon-calendar" aria-hidden="true"></span>';
+            $html .= '<span class="k-visually-hidden">calendar</span>';
+            $html .= '</button>';
             $html .= '</span>';
             $html .= '</div>';
         }
@@ -847,7 +848,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('calendar'))
         {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.datepicker.js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.datepicker.js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -911,23 +912,23 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         {
             $html = sprintf("
             <script>
-            if(!Koowa) {
-                var Koowa = {};
+            if(!Kodekit) {
+                var Kodekit = {};
             }
 
-            if (!Koowa.Date) {
-                Koowa.Date = {};
+            if (!Kodekit.Date) {
+                Kodekit.Date = {};
             }
 
-            Koowa.Date.local_month_names = %s;
-            Koowa.Date.getMonthName = function(month, short) {
+            Kodekit.Date.local_month_names = %s;
+            Kodekit.Date.getMonthName = function(month, short) {
                 month = parseInt(month, 10);
 
                 if (month < 1 || month > 12) {
                     throw 'Month index should be between 1 and 12';
                 }
 
-                return Koowa.Date.local_month_names[month][short ? 'short' : 'long'];
+                return Kodekit.Date.local_month_names[month][short ? 'short' : 'long'];
             };
             </script>
             ", json_encode($months));
