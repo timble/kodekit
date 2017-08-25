@@ -222,6 +222,9 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                     }
                 }
 
+                $identifiers = array();
+                $aliases     = array();
+
                 foreach($this->_files as $path)
                 {
                     $array = $factory->fromFile($path, false);
