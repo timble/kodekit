@@ -222,12 +222,8 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                     }
                 }
 
-                /*
-                 * Set the identifiers
-                 *
-                 * Collect identifiers by priority and then flatten the array.
-                 */
-                $identifiers = $identifiers_flat = array();
+                $identifiers = array();
+                $aliases     = array();
 
                 foreach($this->_files as $path)
                 {
@@ -261,6 +257,12 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                     }
                 }
 
+                /*
+                 * Set the identifiers
+                 *
+                 * Collect identifiers by priority and then flatten the array.
+                 */
+                $identifiers_flat = array();
 
                 ksort($identifiers);
                 foreach ($identifiers as $priority => $merges) {
