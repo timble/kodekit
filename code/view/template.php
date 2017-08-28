@@ -64,7 +64,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
             'behaviors'          => array('localizable', 'routable'),
             'layout'             => '',
             'template'           => 'default',
-            'template_filters'   => array('asset'),
+            'template_filters'   => array('asset', 'decorator'),
             'template_functions' => array(
                 'url'      => array($this, 'getUrl'),
                 'title'    => array($this, 'getTitle'),
@@ -124,6 +124,8 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
         //Set the layout and view in the parameters.
         $context->parameters->layout = $context->layout;
         $context->parameters->view   = $this->getName();
+
+        $context->parameters->url    = $this->getUrl();
     }
 
     /**
