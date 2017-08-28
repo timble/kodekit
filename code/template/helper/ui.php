@@ -25,11 +25,11 @@ class TemplateHelperUi extends TemplateHelperAbstract
      */
     public function load($config = array())
     {
-        $identifier = $this->getTemplate()->getIdentifier();
+        $identifier = $this->getIdentifier();
 
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false,
+            'debug' => \Kodekit::getInstance()->isDebug(),
             'package' => $identifier->package,
             'domain'  => $identifier->domain,
             'type'    => $identifier->type,
@@ -79,15 +79,15 @@ class TemplateHelperUi extends TemplateHelperAbstract
 
     public function styles($config = array())
     {
-        $identifier = $this->getTemplate()->getIdentifier();
+        $identifier = $this->getIdentifier();
 
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false,
+            'debug' => \Kodekit::getInstance()->isDebug(),
             'package' => $identifier->package,
             'domain'  => $identifier->domain
         ))->append(array(
-            'folder' => 'com_'.$config->package,
+            //'folder' => 'com_'.$config->package,
             'file'   => ($identifier->type === 'mod' ? 'module' : $config->domain) ?: 'admin'
         ));
 
@@ -106,24 +106,24 @@ class TemplateHelperUi extends TemplateHelperAbstract
 
     public function scripts($config = array())
     {
-        $identifier = $this->getTemplate()->getIdentifier();
+        $identifier = $this->getIdentifier();
 
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug' => false,
+            'debug' => \Kodekit::getInstance()->isDebug(),
             'domain'  => $identifier->domain
         ));
 
         $html = '';
 
-        $html .= $this->createHelper('modernizr')->jquery($config);
+        $html .= $this->createHelper('behavior')->modernizr($config);
 
         if (($config->domain === 'admin' || $config->domain === '')  && !TemplateHelperBehavior::isLoaded('admin.js')) {
             // Make sure jQuery is always loaded right before admin.js, helps when wrapping components
             TemplateHelperBehavior::setLoaded('jquery', false);
 
             $html .= $this->createHelper('behavior')->jquery($config);
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'admin.js" />';
+            $html .= '<ktml:script src="assets://js/admin.'.($config->debug ? '' : 'min.').'js" />';
 
             TemplateHelperBehavior::setLoaded('admin.js');
             TemplateHelperBehavior::setLoaded('modal');
@@ -152,9 +152,9 @@ class TemplateHelperUi extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
 
-        $filter = $this->getObject('template.filter.factory')->createFilter('wrapper', [
+        /*$filter = $this->getObject('template.filter.factory')->createFilter('wrapper', [
             'wrapper' => $config->wrapper
-        ]);
+        ]);*/
 
         // TODO need to attach filter to template
 

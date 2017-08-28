@@ -64,7 +64,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('kodekit'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('kodekit');
         }
@@ -91,14 +91,14 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('vue'))
         {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'vue.js" />';
+            $html .= '<ktml:script src="assets://js/vue.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('vue');
         }
 
         if ($config->vuex && !static::isLoaded('vuex'))
         {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'vuex.js" />';
+            $html .= '<ktml:script src="assets://js/vuex.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('vuex');
         }
@@ -127,7 +127,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('modernizr'))
         {
-            $html = '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'modernizr.js" />';
+            $html = '<ktml:script src="assets://js/modernizr.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('modernizr');
         }
@@ -156,7 +156,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('jquery'))
         {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.js" />';
+            $html .= '<ktml:script src="assets://js/jquery.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('jquery');
         }
@@ -184,7 +184,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if ($config->javascript && !static::isLoaded('bootstrap-javascript'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'bootstrap.js" />';
+            $html .= '<ktml:script src="assets://js/bootstrap.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('bootstrap-javascript');
         }
@@ -221,7 +221,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('modal'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.magnific-popup.js" />';
+            $html .= '<ktml:script src="assets://js/jquery.magnific-popup.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('modal');
         }
@@ -342,7 +342,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('validator'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.validate.js" />';
+            $html .= '<ktml:script src="assets://js/jquery.validate.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('validator');
         }
@@ -399,7 +399,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('select2'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.select2.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.select2.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('select2');
         }
@@ -581,7 +581,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('tree'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.tree.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.tree.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('tree');
         }
@@ -665,7 +665,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         // Load Bootstrap with JS plugins.
         if(!static::isLoaded('tooltip'))
         {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'tooltip.js" />';
+            $html .= '<ktml:script src="assets://js/tooltip.'.($config->debug ? '' : 'min.').'js" />';
 
             static::setLoaded('tooltip');
         }
@@ -848,7 +848,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('calendar'))
         {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.datepicker.js" />';
+            $html .= '<ktml:script src="assets://js/kodekit.datepicker.'.($config->debug ? '' : 'min.').'js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
