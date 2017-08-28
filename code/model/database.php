@@ -88,7 +88,7 @@ class ModelDatabase extends ModelAbstract
      * @param ModelContextDatabase $context A model context object
      * @return  ModelEntityComposite The model entity
      */
-    protected function _actionCreate(ModelContextDatabase $context)
+    protected function _actionCreate(ModelContext $context)
     {
         //Get the data
         $data = ModelContext::unbox($context->properties);
@@ -112,7 +112,7 @@ class ModelDatabase extends ModelAbstract
      * @param ModelContextDatabase $context A model context object
      * @return  ModelEntityComposite The model entity
      */
-    protected function _actionFetch(ModelContextDatabase $context)
+    protected function _actionFetch(ModelContext $context)
     {
         $table = $this->getTable();
 
@@ -138,7 +138,7 @@ class ModelDatabase extends ModelAbstract
 
      * @return string  The output of the view
      */
-    protected function _actionCount(ModelContextDatabase $context)
+    protected function _actionCount(ModelContext $context)
     {
         return $this->getTable()->count($context->query);
     }
@@ -194,9 +194,10 @@ class ModelDatabase extends ModelAbstract
     /**
      * Get the model context
      *
+     * @param   ModelContextInterface $context Context to cast to a local context
      * @return  ModelContext
      */
-    public function getContext()
+    public function getContext(ModelContextInterface $context = null)
     {
         $context = new ModelContextDatabase(parent::getContext());
         $context->setQuery($this->getObject('lib:database.query.select'));

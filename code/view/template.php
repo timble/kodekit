@@ -82,7 +82,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      * @param ViewContextTemplate  $context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(ViewContextTemplate $context)
+    protected function _actionRender(ViewContext $context)
     {
         $data = ObjectConfig::unbox($context->data);
         $path = $this->qualifyLayout($context->layout);
@@ -268,7 +268,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      *
      * @return  ViewContextTemplate
      */
-    public function getContext()
+    public function getContext(ViewContextInterface $context = null)
     {
         $context = new ViewContextTemplate(parent::getContext());
         $context->setLayout($this->getLayout());
