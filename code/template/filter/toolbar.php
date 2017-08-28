@@ -128,8 +128,13 @@ class TemplateFilterToolbar extends TemplateFilterAbstract
                     'type'  => 'actionbar',
                 ));
 
-                if($this->getIdentifier()->type != 'lib') {
-                    $identifier = 'com:'.$this->getIdentifier()->package.'.template.helper.'.$config->type;
+                if($this->getIdentifier()->type != 'lib')
+                {
+                    if ($this->getIdentifier()->domain) {
+                        $identifier = 'com://'.$this->getIdentifier()->domain.'/'.$this->getIdentifier()->package.'.template.helper.'.$config->type;
+                    } else {
+                        $identifier = 'com:'.$this->getIdentifier()->package.'.template.helper.'.$config->type;
+                    }
                 } else {
                     $identifier = 'lib:template.helper.'.$config->type;
                 }
