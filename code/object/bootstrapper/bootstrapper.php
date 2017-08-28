@@ -195,7 +195,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                                 //Append the namespace
                                 $this->_namespaces[$identifier] = array_merge(
                                     $this->_namespaces[$identifier],
-                                    $this->_namespaces[$extends]
+                                    $this->_components[$extends]
                                 );
                             }
                         }
@@ -221,9 +221,6 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                         }
                     }
                 }
-
-                $identifiers = array();
-                $aliases     = array();
 
                 foreach($this->_files as $path)
                 {

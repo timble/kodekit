@@ -347,13 +347,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
             if(is_string($catalogue) && strpos($catalogue, '.') === false )
             {
                 $identifier         = $this->getIdentifier()->toArray();
-
-                if($identifier['package'] != 'translator') {
-                    $identifier['path'] = array('translator', 'catalogue');
-                } else {
-                    $identifier['path'] = array('catalogue');
-                }
-
+                $identifier['path'] = array('translator', 'catalogue');
                 $identifier['name'] = $catalogue;
 
                 $identifier = $this->getIdentifier($identifier);
