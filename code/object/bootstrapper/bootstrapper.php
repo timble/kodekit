@@ -195,7 +195,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                                 //Append the namespace
                                 $this->_namespaces[$identifier] = array_merge(
                                     $this->_namespaces[$identifier],
-                                    $this->_components[$extends]
+                                    $this->_namespaces[$extends]
                                 );
                             }
                         }
