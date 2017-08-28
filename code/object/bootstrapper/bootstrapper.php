@@ -278,7 +278,7 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                  *
                  * Collect aliases by priority and then flatten the array.
                  */
-                $aliases = $aliases_flat = array();
+                $aliases_flat = array();
 
                 foreach ($aliases as $priority => $merges) {
                     $aliases_flat = array_merge($merges, $aliases_flat);
